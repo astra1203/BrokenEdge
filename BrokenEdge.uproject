@@ -1,0 +1,22 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{E37ADE0A-4103-556F-9F0C-F5AC2A1CB366}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "BrokenEdge",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		}
+	]
+}

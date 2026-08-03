@@ -1,0 +1,27 @@
+# 编译生成文件
+Binaries/
+Intermediate/
+DerivedDataCache/
+Saved/
+Build/
+StagedBuilds/
+
+# VS/Rider 工程文件
+*.sln
+*.suo
+*.user
+*.sdf
+*.VC.db
+.vs/
+.vscode/
+.idea/
+
+# OS垃圾文件
+.DS_Store
+Thumbs.db
+*.log
+*.bak
+
+# UE自动备份、自动保存
+Saved/Autosaves/
+Saved/Backup/
