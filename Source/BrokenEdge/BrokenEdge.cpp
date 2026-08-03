@@ -9,3 +9,8 @@ void func()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Hello World!"));
 }
+
+void func2()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Hello World!"));
+}

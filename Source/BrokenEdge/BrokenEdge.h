@@ -5,3 +5,4 @@
 #include "CoreMinimal.h"
 
 void func();
+void func2();
