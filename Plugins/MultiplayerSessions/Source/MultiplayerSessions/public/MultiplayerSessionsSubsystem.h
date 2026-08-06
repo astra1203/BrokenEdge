@@ -64,19 +64,19 @@ public:
 
 	/** 加入一个已找到的会话。 */
 	void JoinSession(const FOnlineSessionSearchResult& SessionResult);
+	
+	/** 销毁当前会话。 */
+	void DestorySession();
 
 	// /** 销毁当前会话。 */
 	// void DestorySession();
 	//
-	// /** 启动当前会话（标记可供其他玩家加入）。 */
-	// void StartSession();
 
 	/** 多播委托 - 供外部监听会话事件。 */
 	FMultiplayerOnCreateSessionComplete MultiplayerOnCreateSessionComplete;
 	FMultiplayerOnFindSessionsComplete MultiplayerOnFindSessionsComplete;
 	FMultiplayerOnJoinSessionComplete MultiplayerOnJoinSessionComplete;
-	// FMultiplayerOnDestorySessionComplete MultiplayerOnDestorySessionComplete;
-	// FMultiplayerOnStartSessionComplete MultiplayerOnStartSessionComplete;
+	FMultiplayerOnDestorySessionComplete MultiplayerOnDestorySessionComplete;
 
 	/** 表示创建的会话（房间）支持多少在线玩家 */
 	int32 DesiredNumPublicConnections = 8;
@@ -119,9 +119,11 @@ private:
 	FOnFindSessionsCompleteDelegate FindSessionsCompleteDelegate;
 	FDelegateHandle FindSessionsCompleteDelegateHandle;
 
-	
+	FOnJoinSessionCompleteDelegate JoinSessionCompleteDelegate;
 	FDelegateHandle JoinSessionCompleteDelegateHandle;
 
+	FOnDestroySessionCompleteDelegate DestorySessionCompleteDelegate;
+	FDelegateHandle DestorySessionCompleteDelegateHandle;
 
 	/** 创建请求需要先销毁旧会话时，暂存新的公开连接数。 */
 	// int32 PendingNumPublicConnections = 8;

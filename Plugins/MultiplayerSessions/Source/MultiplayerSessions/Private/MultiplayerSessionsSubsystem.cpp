@@ -9,6 +9,7 @@
 // #include "OnlineSubsystemNames.h"
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystemUtils.h"
+#include "Online/OnlineSessionNames.h"
 
 
 namespace MultiplayerSessionsConstants
@@ -32,6 +33,7 @@ void UMultiplayerSessionsSubsystem::Initialize(FSubsystemCollectionBase& Collect
 	RefreshSessionInterface();
 	
 	// CreateSession();
+	//@TODO
 	CreateSession(8,TEXT("FreeForAll"));
 }
 
@@ -201,179 +203,75 @@ void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FS
 
 void UMultiplayerSessionsSubsystem::FindSessions(const int32 MaxSearchResults)
 {
-	if (!RefreshSessionInterface())
+	// 接口无效时直接返回，避免后续空指针访问。
+	if (!SessionInterface.IsValid())
 	{
+		return;
+	}
+
+	FindSessionsCompleteDelegateHandle = SessionInterface->AddOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegate);
+
+	// 配置查找参数：最大结果数、是否局域网查询，以及基于 Presence 的查询条件。
+	LastSessionSearch = MakeShareable(new FOnlineSessionSearch());
+	LastSessionSearch->MaxSearchResults = MaxSearchResults;
+	LastSessionSearch->bIsLanQuery = IOnlineSubsystem::Get()->GetSubsystemName() == "NULL" ? true : false;
+	LastSessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+
+	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+	if (!SessionInterface->FindSessions(*LocalPlayer->GetPreferredUniqueNetId(), LastSessionSearch.ToSharedRef()))
+	{
+		SessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
+
 		MultiplayerOnFindSessionsComplete.Broadcast(TArray<FOnlineSessionSearchResult>(), false);
 		return;
 	}
 
-	FindSessionsCompleteDelegateHandle =
-		SessionInterface->AddOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegate);
-
-	LastSessionSearch = MakeShared<FOnlineSessionSearch>();
-	LastSessionSearch->MaxSearchResults = FMath::Clamp(MaxSearchResults, 1, 100);
-
-	IOnlineSubsystem* OnlineSubsystem = Online::GetSubsystem(GetWorld());
-
-	const bool bExplicitLanSearch = FParse::Param(FCommandLine::Get(), TEXT("LANSEARCH"));
+	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT("查找会话成功"));
 	
-	LastSessionSearch->bIsLanQuery = bExplicitLanSearch ||
-		(OnlineSubsystem && OnlineSubsystem->GetSubsystemName() == NULL_SUBSYSTEM);
-
-	UE_LOG(
-		LogTemp,
-		Log,
-		TEXT("Searching sessions: OSS=%s LAN=%s MaxResults=%d"),
-		OnlineSubsystem ? *OnlineSubsystem->GetSubsystemName().ToString() : TEXT("None"),
-		LastSessionSearch->bIsLanQuery ? TEXT("true") : TEXT("false"),
-		LastSessionSearch->MaxSearchResults);
-
-	// Presence 搜索选的是 Steam 大厅；专用服务器通过 Steam Game Server API 广播，
-	// 因此显式只搜索专用服务器。
-	// if (OnlineSubsystem && OnlineSubsystem->GetSubsystemName() == STEAM_SUBSYSTEM)
-	// {
-	// 	LastSessionSearch->QuerySettings.Set(
-	// 		SEARCH_DEDICATED_ONLY,
-	// 		true,
-	// 		EOnlineComparisonOp::Equals);
-	// }
-
-	bool bRequestStarted = false;
-	if (const UWorld* World = GetWorld())
-	{
-		const ULocalPlayer* LocalPlayer = World->GetFirstLocalPlayerFromController();
-		if (LocalPlayer && LocalPlayer->GetPreferredUniqueNetId().IsValid())
-		{
-			bRequestStarted = SessionInterface->FindSessions(
-				*LocalPlayer->GetPreferredUniqueNetId(),
-				LastSessionSearch.ToSharedRef());
-		}
-	}
-
-	if (!bRequestStarted)
-	{
-		SessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
-		FindSessionsCompleteDelegateHandle.Reset();
-		MultiplayerOnFindSessionsComplete.Broadcast(TArray<FOnlineSessionSearchResult>(), false);
-		UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
-		       TEXT("搜索会话失败"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
-		       TEXT("搜索会话成功"));
-	}
+	
 }
 
-// void UMultiplayerSessionsSubsystem::JoinSession(const FMultiplayerSessionSearchResult& SearchResult)
-// {
-// 	// 蓝图结构只是缓存索引。既校验搜索代数，又校验当前数组下标，
-// 	// 才能保证取回的原生对象就是 UI 当时展示的那一项。
-// 	if (!LastSessionSearch.IsValid() ||
-// 		!LastSessionSearch->SearchResults.IsValidIndex(SearchResult.ResultIndex))
-// 	{
-// 		UE_LOG(LogMultiplayerSessions, Warning, TEXT("JoinSession rejected a stale or invalid Blueprint search result."));
-// 		// BroadcastJoinSessionComplete(EOnJoinSessionCompleteResult::SessionDoesNotExist);
-// 		return;
-// 	}
-//
-// 	// 通过验证后交给原生入口，后续 C++ 和 Blueprint 共用完全相同的 Join 流程。
-// 	// JoinSessionNative(LastSessionSearch->SearchResults[SearchResult.ResultIndex]);
-//
-//
-// 	// Dedicated Server 只托管会话；加入其他会话是客户端行为。
-// 	if (IsDedicatedServerInstance())
-// 	{
-// 		UE_LOG(LogMultiplayerSessions, Warning, TEXT("JoinSession is a client operation and is unavailable on Dedicated Server."));
-// 		BroadcastJoinSessionComplete(EOnJoinSessionCompleteResult::UnknownError);
-// 		return;
-// 	}
-//
-// 	// IsValid 会同时检查拥有者 ID 和平台 SessionInfo，避免把空快照交给 OSS。
-// 	if (!SearchResult.IsValid() || !RefreshSessionInterface() || !ValidateNullSubsystem(TEXT("JoinSession")))
-// 	{
-// 		BroadcastJoinSessionComplete(EOnJoinSessionCompleteResult::UnknownError);
-// 		return;
-// 	}
-//
-// 	// 一个客户端同时只能维护一个明确的加入流程，防止多个结果争用 NAME_GameSession。
-// 	if (JoinSessionCompleteDelegateHandle.IsValid())
-// 	{
-// 		UE_LOG(LogMultiplayerSessions, Warning, TEXT("JoinSession ignored because another join request is active."));
-// 		BroadcastJoinSessionComplete(EOnJoinSessionCompleteResult::UnknownError);
-// 		return;
-// 	}
-//
-// 	// 完成委托必须先注册；成功回调中还会通过 NAME_GameSession 解析 ConnectString。
-// 	const FOnJoinSessionCompleteDelegate CompletionDelegate =
-// 		FOnJoinSessionCompleteDelegate::CreateUObject(this, &ThisClass::HandleJoinSessionComplete);
-// 	JoinSessionCompleteDelegateHandle =
-// 		SessionInterface->AddOnJoinSessionCompleteDelegate_Handle(CompletionDelegate);
-//
-// 	// 子系统只请求加入会话，不执行 ClientTravel。上层在成功事件中拿 ConnectString 决定跳转时机。
-// 	if (!SessionInterface->JoinSession(
-// 		MultiplayerSessionsConstants::LocalUserNumber,
-// 		NAME_GameSession,
-// 		SearchResult))
-// 	{
-// 		// 请求未进入异步流程，清除句柄并立刻通知所有监听者。
-// 		SessionInterface->ClearOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegateHandle);
-// 		JoinSessionCompleteDelegateHandle.Reset();
-// 		BroadcastJoinSessionComplete(EOnJoinSessionCompleteResult::UnknownError);
-// 	}
-//
-// }
+// 加入指定的会话（传入的搜索结果）。加入结果通过委托广播，失败时使用 UnknownError。
+void UMultiplayerSessionsSubsystem::JoinSession(const FOnlineSessionSearchResult& SessionResult)
+{
+	// 接口无效时直接广播错误，让调用方知道加入失败。
+	if (!SessionInterface.IsValid())
+	{
+		MultiplayerOnJoinSessionComplete.Broadcast(EOnJoinSessionCompleteResult::UnknownError);
+		return;
+	}
 
-// void UMultiplayerSessionsSubsystem::JoinSessionNative(const FOnlineSessionSearchResult& SearchResult)
-// {
-// }
+	JoinSessionCompleteDelegateHandle = SessionInterface->AddOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegate);
 
-// void UMultiplayerSessionsSubsystem::JoinSession(const FOnlineSessionSearchResult& SessionResult)
-// {
-// 	if (!RefreshSessionInterface())
-// 	{
-// 		OnJoinSessionComplete.Broadcast(EOnJoinSessionCompleteResult::UnknownError);
-// 		return;
-// 	}
-// }
+	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+	if (!SessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), NAME_GameSession, SessionResult))
+	{
+		SessionInterface->ClearOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegateHandle);
 
-// void UMultiplayerSessionsSubsystem::HandleFindSessionsComplete(const bool bWasSuccessful)
-// {
-// 	// 搜索对象仍要保留，因为 SearchResults 既要转换给蓝图，也可能被 C++ 调用方继续读取。
-// 	if (SessionInterface.IsValid())
-// 	{
-// 		SessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
-// 	}
-// 	FindSessionsCompleteDelegateHandle.Reset();
-//
-// 	UE_LOG(
-// 		LogMultiplayerSessions,
-// 		Log,
-// 		TEXT("LAN session search completed: success=%s, results=%d."),
-// 		bWasSuccessful ? TEXT("true") : TEXT("false"),
-// 		LastSessionSearch.IsValid() ? LastSessionSearch->SearchResults.Num() : 0);
-// 	BroadcastFindSessionsComplete(bWasSuccessful);
-// }
+		MultiplayerOnJoinSessionComplete.Broadcast(EOnJoinSessionCompleteResult::UnknownError);
+		return;
+	}
 
-// EMultiplayerJoinSessionResult UMultiplayerSessionsSubsystem::ToBlueprintJoinResult(
-// 	const EOnJoinSessionCompleteResult::Type Result)
-// {
-// 	// EOnJoinSessionCompleteResult::Type 是旧式 namespace enum，不能直接作为 Blueprint 参数；
-// 	// 在边界处逐项转换，避免向蓝图泄露 OnlineSubsystem 的非反射类型。
-// 	switch (Result)
-// 	{
-// 	case EOnJoinSessionCompleteResult::Success:
-// 		return EMultiplayerJoinSessionResult::Success;
-// 	case EOnJoinSessionCompleteResult::SessionIsFull:
-// 		return EMultiplayerJoinSessionResult::SessionIsFull;
-// 	case EOnJoinSessionCompleteResult::SessionDoesNotExist:
-// 		return EMultiplayerJoinSessionResult::SessionDoesNotExist;
-// 	case EOnJoinSessionCompleteResult::CouldNotRetrieveAddress:
-// 		return EMultiplayerJoinSessionResult::CouldNotRetrieveAddress;
-// 	case EOnJoinSessionCompleteResult::AlreadyInSession:
-// 		return EMultiplayerJoinSessionResult::AlreadyInSession;
-// 	case EOnJoinSessionCompleteResult::UnknownError:
-// 	default:
-// 		return EMultiplayerJoinSessionResult::UnknownError;
-// 	}
-// }
+	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT("加入会话成功"));
+}
+
+// 销毁指定会话。销毁结果通过委托广播；若此前标记了“销毁后重建”，会由回调负责重建。
+void UMultiplayerSessionsSubsystem::DestorySession()
+{
+	// 接口无效时直接广播失败。
+	if (!SessionInterface.IsValid())
+	{
+		MultiplayerOnDestorySessionComplete.Broadcast(false);
+		return;
+	}
+
+	DestorySessionCompleteDelegateHandle =  SessionInterface->AddOnDestroySessionCompleteDelegate_Handle(DestorySessionCompleteDelegate);
+
+	if (!SessionInterface->DestroySession(NAME_GameSession))
+	{
+		SessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(DestorySessionCompleteDelegateHandle);
+		MultiplayerOnDestorySessionComplete.Broadcast(false);
+		return;
+	}
+	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT("销毁会话成功"));
+}
