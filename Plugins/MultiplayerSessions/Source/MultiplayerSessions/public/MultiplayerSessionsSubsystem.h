@@ -50,7 +50,7 @@ class MULTIPLAYERSESSIONS_API UMultiplayerSessionsSubsystem : public UGameInstan
 	GENERATED_BODY()
 
 public:
-	// UMultiplayerSessionsSubsystem();
+	UMultiplayerSessionsSubsystem();
 
 	/** GameInstance 创建子系统时获取当前 World 对应的 OSS 接口。 */
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -82,19 +82,11 @@ public:
 	int32 DesiredNumPublicConnections = 8;
 	FString DesiredMatchType = TEXT("FreeForAll");
 
-	// 统一广播入口，保证“立即发起失败”和“异步完成”走相同的 Blueprint/C++ 事件路径。
-	void BroadcastCreateSessionComplete(bool bWasSuccessful);
+protected:
+	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
 
-	/** 获取当前 World 对应的 SessionInterface；PIE 多 World 时不能只使用全局默认实例。 */
-
-
-	/** 确认当前活动服务确实是 Null，防止配置错误时静默使用另一套 OSS 行为。 */
-	// bool ValidateNullSubsystem(const TCHAR* OperationName) const;
-
-	/** 将原生搜索结果复制为可反射的蓝图快照。 */
-	// TArray<FMultiplayerSessionSearchResult> MakeBlueprintSearchResults() const;
-	// void BroadcastFindSessionsComplete(bool bWasSuccessful);
-	// void BroadcastJoinSessionComplete(EOnJoinSessionCompleteResult::Type Result);
+	// 搜索请求结束后自动调用这里；搜索到的房间已经被底层写进 LastSessionSearch->SearchResults。
+	void OnFindSessionsComplete(bool bWasSuccessful);
 
 
 private:
