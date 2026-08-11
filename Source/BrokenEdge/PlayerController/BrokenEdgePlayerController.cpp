@@ -33,3 +33,25 @@ void ABrokenEdgePlayerController::SetHUDHealth(float Health, float MaxHealth)
 		HUDMaxHealth = MaxHealth;
 	}
 }
+
+void ABrokenEdgePlayerController::SetHUDShield(float Shield, float MaxShield)
+{
+	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
+	bool bHUDValid = BrokenEdgeHUD &&
+		BrokenEdgeHUD->CharacterOverlay &&
+		BrokenEdgeHUD->CharacterOverlay->ShieldBar &&
+		BrokenEdgeHUD->CharacterOverlay->ShieldText;
+	if (bHUDValid)
+	{
+		const float ShieldPercent = Shield / MaxShield;
+		BrokenEdgeHUD->CharacterOverlay->ShieldBar->SetPercent(ShieldPercent);
+		FString ShieldText = FString::Printf(TEXT("%d/%d"), FMath::CeilToInt(Shield), FMath::CeilToInt(MaxShield));
+		BrokenEdgeHUD->CharacterOverlay->ShieldText->SetText(FText::FromString(ShieldText));
+	}
+	else
+	{
+		bInitializeShield = true;
+		HUDShield = Shield;
+		HUDMaxShield = MaxShield;
+	}
+}

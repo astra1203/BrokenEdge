@@ -24,4 +24,13 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* HealthText;
 
+	/// 护盾进度条
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* ShieldBar;
+
+	/// 护盾文本
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ShieldText;
+
+	
 };

@@ -46,12 +46,28 @@ void UBuffComponent::HealRampUp(float DeltaTime)
 	}
 }
 
+void UBuffComponent::ShieldRampUp(float DeltaTime)
+{
+	if (!bReplenishingShield || Character == nullptr || Character->IsElimed()) return;
+	const float ReplenishThisFrame = ShieldReplenishRate * DeltaTime;
+	Character->SetShield(FMath::Clamp(Character->GetShield() + ReplenishThisFrame, 0.f, Character->GetMaxShield()));
+	Character->UpdateHUDShield();
+	ShieldReplenishAmount -= ReplenishThisFrame;
+	if (ShieldReplenishAmount <= 0.f || Character->GetShield() >= Character->GetMaxShield())
+	{
+		bReplenishingShield = false;
+		ShieldReplenishAmount = 0.f;
+	}
+}
+
+
 // Called every frame
 void UBuffComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	HealRampUp(DeltaTime);
+	ShieldRampUp(DeltaTime);
 }
 
 void UBuffComponent::BuffJump(float BuffJumpVelocity, float BuffTime)
@@ -112,6 +128,13 @@ void UBuffComponent::BuffHeal(float HealAmount, float HealingTime)
 	AmountToHeal += HealAmount;
 }
 
+void UBuffComponent::ReplenishShield(float ShieldAmount, float ReplenishTime)
+{
+	bReplenishingShield = true;
+	ShieldReplenishRate = ShieldAmount / ReplenishTime;
+	ShieldReplenishAmount += ShieldAmount;
+}
+
 /**
  * @brief 重置移动速度为初始值
  */
@@ -120,5 +143,6 @@ void UBuffComponent::ResetSpeeds()
 	if (Character == nullptr || Character->GetCharacterMovement() == nullptr) return;
 	Character->GetCharacterMovement()->MaxWalkSpeed = InitialBaseSpeed;
 	Character->GetCharacterMovement()->MaxWalkSpeedCrouched = InitialCrouchSpeed;
+	//@TODO
 	// MulticastSpeedBuff(InitialBaseSpeed, InitialCrouchSpeed);
 }

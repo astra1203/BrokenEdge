@@ -22,20 +22,25 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	void HealRampUp(float DeltaTime);
+	void ShieldRampUp(float DeltaTime);
 
 private:
 	/** @brief 所属角色指针 */
 	UPROPERTY()
 	TObjectPtr<ABrokenEdgeCharacter> Character;
 
-	/** @brief 是否正在进行治疗 */
-	bool bHealing = false;
 	
-	/** @brief 每秒治疗量 */
-	float HealingRate = 0.f;
+	bool bHealing = false;/** @brief 是否正在进行治疗 */
+	float HealingRate = 0.f;/** @brief 每秒治疗量 */
+	float AmountToHeal = 0.f;/** @brief 剩余治疗总量 */
+	
+	/**
+     * @brief 护盾增益
+    */
+	bool bReplenishingShield = false;      ///< 是否正在恢复护盾
+	float ShieldReplenishRate = 0.f;       ///< 护盾恢复速率
+	float ShieldReplenishAmount = 0.f;     ///< 剩余护盾恢复量
 
-	/** @brief 剩余治疗总量 */
-	float AmountToHeal = 0.f;
 	
 public:
 	// Called every frame
@@ -63,8 +68,14 @@ public:
 	 * @param HealingTime 治疗持续时间
 	 */
 	void BuffHeal(float HealAmount, float HealingTime);
-
-
+	
+	
+	/**
+     * @brief 护盾恢复
+     * @param ShieldAmount 恢复总量
+     * @param ReplenishTime 恢复时间
+     */
+	void ReplenishShield(float ShieldAmount, float ReplenishTime);
 
 private:
 	/**

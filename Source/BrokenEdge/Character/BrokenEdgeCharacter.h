@@ -39,7 +39,8 @@ public:
 
 	/** 更新HUD生命值显示 */
 	void UpdateHUDHealth();
-	
+	void UpdateHUDShield();
+
 	/** 命中碰撞盒映射 */  // unordered_map
 	UPROPERTY()
 	TMap<FName, UBoxComponent*> HitCollisionBoxes;
@@ -184,6 +185,22 @@ private:
 	float Health = 40.f;
 
 	/**
+     * @brief 护盾
+    */
+	UPROPERTY(EditAnywhere, Category = "Player Stats")
+	float MaxShield = 100.f;       ///< 最大护盾值
+
+	UPROPERTY(ReplicatedUsing = OnRep_Shield, VisibleAnywhere, Category = "Player Stats")
+	float Shield = 0.f;            ///< 当前护盾值
+	
+	/**
+	 * @brief 护盾复制回调
+	 * @param LastShield 上一次护盾值
+	 */
+	UFUNCTION()
+	void OnRep_Shield(float LastShield);
+	
+	/**
      * @brief 生命值同步回调
      * @param LastHealth 上一个生命值
     */
@@ -200,6 +217,16 @@ public:
 
 	/** 设置生命值 */
 	FORCEINLINE void SetHealth(float Amount) { Health = FMath::Clamp(Amount, 0.f, MaxHealth); }
+	
+	/// 获取当前护盾值
+	FORCEINLINE [[nodiscard]] float GetShield() const { return Shield; }
+
+	/// 设置护盾值
+	FORCEINLINE void SetShield(float Amount) { Shield = FMath::Clamp(Amount, 0.f, MaxShield); }
+	
+	/// 获取最大护盾值
+	FORCEINLINE [[nodiscard]] float GetMaxShield() const { return MaxShield; }
+	
 	/** 是否禁用游戏逻辑 */
 	// UPROPERTY(Replicated)
 	// bool bDisableGameplay = false;

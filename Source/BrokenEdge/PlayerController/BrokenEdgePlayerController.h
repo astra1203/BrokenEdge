@@ -21,6 +21,12 @@ public:
     */
 	void SetHUDHealth(float Health, float MaxHealth);
 	
+	/**
+	 * @brief 设置 HUD 护盾值
+	 * @param Shield 当前护盾值
+	 * @param MaxShield 最大护盾值
+	 */
+	void SetHUDShield(float Shield, float MaxShield);
 private:
 	/** HUD引用 */
 	UPROPERTY()
@@ -34,5 +40,14 @@ private:
 	
 	/** HUD最大生命值 */
 	float HUDMaxHealth;
+	
+	/// HUD 护盾值
+	float HUDShield;
+	
+	/** 是否初始化护盾值 */
+	bool bInitializeShield = false;
+
+	/// HUD 最大护盾值
+	float HUDMaxShield;
 	
 };

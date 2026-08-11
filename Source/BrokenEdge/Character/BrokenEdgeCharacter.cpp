@@ -239,6 +239,20 @@ void ABrokenEdgeCharacter::UpdateHUDHealth()
 	
 }
 
+
+/**
+ * @brief 更新HUD护盾显示
+ */
+void ABrokenEdgeCharacter::UpdateHUDShield()
+{
+	BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr ? 
+	Cast<ABrokenEdgePlayerController>(Controller) : BrokenEdgePlayerController;
+	if (BrokenEdgePlayerController)
+	{
+		BrokenEdgePlayerController->SetHUDShield(Shield, MaxShield);
+	}
+}
+
 /**
  * @brief 跳跃处理
  */
@@ -313,6 +327,12 @@ void ABrokenEdgeCharacter::CrouchButtonPressed()
 
 }
 
+
+void ABrokenEdgeCharacter::OnRep_Shield(float LastShield)
+{
+	//@TODO
+	// UpdateHUDShield();
+}
 
 void ABrokenEdgeCharacter::OnRep_Health()
 {
