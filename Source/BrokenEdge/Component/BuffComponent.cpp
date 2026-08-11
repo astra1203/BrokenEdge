@@ -3,6 +3,9 @@
 
 #include "BuffComponent.h"
 
+#include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 
 // Sets default values for this component's properties
 UBuffComponent::UBuffComponent()
@@ -21,7 +24,7 @@ void UBuffComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+
 }
 
 
@@ -31,5 +34,34 @@ void UBuffComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UBuffComponent::BuffJump(float BuffJumpVelocity, float BuffTime)
+{
+	if (Character == nullptr) return;
+	Character->GetWorldTimerManager().SetTimer(
+		JumpBuffTimer,
+		this,
+		&UBuffComponent::ResetJump,
+		BuffTime
+	);
+	if (Character->GetCharacterMovement())
+	{
+		Character->GetCharacterMovement()->JumpZVelocity = BuffJumpVelocity;
+	}
+	//@TODO
+	// MulticastJumpBuff(BuffJumpVelocity);
+
+}
+
+void UBuffComponent::ResetJump()
+{
+	if (Character->GetCharacterMovement())
+	{
+		Character->GetCharacterMovement()->JumpZVelocity = InitialJumpZVelocity;
+	}
+	//@TODO
+	// MulticastJumpBuff(InitialJumpVelocity);
+
 }
 

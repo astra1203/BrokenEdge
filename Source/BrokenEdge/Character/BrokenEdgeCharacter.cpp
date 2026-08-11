@@ -32,33 +32,32 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
-	
+
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	
+
 	OverheadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadWidget"));
 	OverheadWidget->SetupAttachment(RootComponent);
-	
+
 	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	Combat->SetIsReplicated(true);
 
 	Buff = CreateDefaultSubobject<UBuffComponent>(TEXT("BuffComponent"));
 	Buff->SetIsReplicated(true);
-	
+
 	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetCollisionObjectType(ECC_SkeletalMesh);
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 0.f, 850.f);
-	
+
 	TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 	// NetUpdateFrequency = 66.f;
 	// MinNetUpdateFrequency = 33.f;
 	SetNetUpdateFrequency(66.f);
 	SetMinNetUpdateFrequency(33.f);
-	GetWorld()
-	
+
 	/*
 	* Hit Boxes(用于服务器倒带命中判断)
 	*/
@@ -134,7 +133,7 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 	foot_r = CreateDefaultSubobject<UBoxComponent>(TEXT("foot_r"));
 	foot_r->SetupAttachment(GetMesh(), FName("foot_r"));
 	HitCollisionBoxes.Add(FName("foot_r"), foot_r);
-	
+
 	// 配置所有命中碰撞盒的碰撞属性
 	for (auto& Box : HitCollisionBoxes)
 	{
@@ -146,7 +145,7 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 			Box.Value->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		}
 	}
-	
+
 }
 
 // Called when the game starts or when spawned
@@ -166,7 +165,7 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
 void ABrokenEdgeCharacter::NotifyControllerChanged()
 {
 	Super::NotifyControllerChanged();
-	
+
 	// Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
@@ -181,20 +180,20 @@ void ABrokenEdgeCharacter::NotifyControllerChanged()
 void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
-	
+
+
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ABrokenEdgeCharacter::StopJumping);
-		
+
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABrokenEdgeCharacter::Move);
-		
+
 		//看
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABrokenEdgeCharacter::Look);
-		
+
 		//蹲伏
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &ABrokenEdgeCharacter::CrouchButtonPressed);
 	}
@@ -202,6 +201,20 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	{
 		UE_LOG(LogTemp, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
+
+}
+
+void ABrokenEdgeCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (Buff)
+	{
+		Buff->Character = this;
+		Buff->InitialJumpZVelocity = GetCharacterMovement()->JumpZVelocity;
+	}
+
+
 
 }
 
@@ -238,11 +251,11 @@ void ABrokenEdgeCharacter::Move(const FInputActionValue& Value)
 
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	
-		// get right vector 
+
+		// get right vector
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		// add movement 
+		// add movement
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
 	}
@@ -276,7 +289,7 @@ void ABrokenEdgeCharacter::CrouchButtonPressed()
 	{
 		Crouch();
 	}
-	
+
 }
 
 

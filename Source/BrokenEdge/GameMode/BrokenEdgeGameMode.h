@@ -17,8 +17,8 @@ class BROKENEDGE_API ABrokenEdgeGameMode : public AGameMode
 public:
 	ABrokenEdgeGameMode();
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
-	UClass* cla;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Classes)
+	// UClass* cla;
 	
 	virtual void BeginPlay() override;
 };
