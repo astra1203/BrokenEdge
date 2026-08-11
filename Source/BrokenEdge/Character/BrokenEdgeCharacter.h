@@ -32,7 +32,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	
 	/// 组件初始化后调用
 	virtual void PostInitializeComponents() override;
 
@@ -170,8 +171,33 @@ private:
 
 	/// 原地转向状态
 	ETurningInPlace TurningInPlace;
+	
+	/** 最大生命值 */
+	UPROPERTY(EditAnywhere, Category = "Player States")
+	float MaxHealth = 100.f;
+	
 
+	/** 当前生命值 */
+	UPROPERTY(ReplicatedUsing = OnRep_Health, VisibleAnywhere, Category = "Player States")
+	float Health = 100.f;
+
+	/**
+     * @brief 生命值同步回调
+     * @param LastHealth 上一个生命值
+    */
+	UFUNCTION()
+	void OnRep_Health()
+	{
+		
+	}
+	
+	
 public:
+	FORCEINLINE [[nodiscard]] float GetHealth() const{return Health;}
+	FORCEINLINE [[nodiscard]] float GetMaxHealth() const{return MaxHealth;}
+
+	/** 设置生命值 */
+	FORCEINLINE void SetHealth(float Amount) { Health = FMath::Clamp(Amount, 0.f, MaxHealth); }
 	/** 是否禁用游戏逻辑 */
 	// UPROPERTY(Replicated)
 	// bool bDisableGameplay = false;
@@ -190,5 +216,6 @@ public:
 
 
 	FORCEINLINE TObjectPtr<UBuffComponent> GetBuff() const { return Buff; }
+	
 
 };

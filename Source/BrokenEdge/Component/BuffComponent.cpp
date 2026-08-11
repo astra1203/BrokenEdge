@@ -26,14 +26,33 @@ void UBuffComponent::BeginPlay()
 	// ...
 
 }
+/**
+ * @brief 每帧治疗更新
+ * @param DeltaTime 帧时间
+ */
+void UBuffComponent::HealRampUp(float DeltaTime)
+{
+	if (!bHealing || Character == nullptr || Character->IsElimed()) return;
 
+	const float HealThisFrame = HealingRate * DeltaTime;
+	// Character->SetHealth(FMath::Clamp(Character->GetHealth() + HealThisFrame, 0.f, Character->GetMaxHealth()));
+	Character->SetHealth(Character->GetHealth() + HealThisFrame);
+	// Character->UpdateHUDHealth();
+	AmountToHeal -= HealThisFrame;
+
+	if (AmountToHeal <= 0.f || Character->GetHealth() >= Character->GetMaxHealth())
+	{
+		bHealing = false;
+		AmountToHeal = 0.f;
+	}
+}
 
 // Called every frame
 void UBuffComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	HealRampUp(DeltaTime);
 }
 
 void UBuffComponent::BuffJump(float BuffJumpVelocity, float BuffTime)
@@ -85,6 +104,13 @@ void UBuffComponent::BuffSpeed(float BuffBaseSpeed, float BuffCrouchSpeed, float
 	// @TODO
 	// MulticastSpeedBuff(BuffBaseSpeed, BuffCrouchSpeed);
 
+}
+
+void UBuffComponent::BuffHeal(float HealAmount, float HealingTime)
+{
+	bHealing = true;
+	HealingRate = HealAmount / HealingTime;
+	AmountToHeal += HealAmount;
 }
 
 /**

@@ -21,12 +21,22 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	void HealRampUp(float DeltaTime);
 
 private:
 	/** @brief 所属角色指针 */
 	UPROPERTY()
 	TObjectPtr<ABrokenEdgeCharacter> Character;
 
+	/** @brief 是否正在进行治疗 */
+	bool bHealing = false;
+	
+	/** @brief 每秒治疗量 */
+	float HealingRate = 0.f;
+
+	/** @brief 剩余治疗总量 */
+	float AmountToHeal = 0.f;
+	
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -46,6 +56,14 @@ public:
 	 * @param BuffTime 增益持续时间（秒）
 	 */
 	void BuffSpeed(float BuffBaseSpeed, float BuffCrouchSpeed, float BuffTime);
+	
+	/**
+	 * @brief 开始治疗
+	 * @param HealAmount 治疗总量
+	 * @param HealingTime 治疗持续时间
+	 */
+	void BuffHeal(float HealAmount, float HealingTime);
+
 
 
 private:
