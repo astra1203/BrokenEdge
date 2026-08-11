@@ -37,7 +37,9 @@ public:
 	/// 组件初始化后调用
 	virtual void PostInitializeComponents() override;
 
-
+	/** 更新HUD生命值显示 */
+	void UpdateHUDHealth();
+	
 	/** 命中碰撞盒映射 */  // unordered_map
 	UPROPERTY()
 	TMap<FName, UBoxComponent*> HitCollisionBoxes;
@@ -179,7 +181,7 @@ private:
 
 	/** 当前生命值 */
 	UPROPERTY(ReplicatedUsing = OnRep_Health, VisibleAnywhere, Category = "Player States")
-	float Health = 100.f;
+	float Health = 40.f;
 
 	/**
      * @brief 生命值同步回调
@@ -188,6 +190,9 @@ private:
 	UFUNCTION()
 	void OnRep_Health();
 	
+	/** 玩家控制器 */
+	UPROPERTY()
+	class ABrokenEdgePlayerController* BrokenEdgePlayerController = nullptr;
 	
 public:
 	FORCEINLINE [[nodiscard]] float GetHealth() const{return Health;}

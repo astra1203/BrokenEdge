@@ -9,6 +9,7 @@
 #include "BrokenEdge/BrokenEdgeTypes/TurningInPlace.h"
 #include "BrokenEdge/Component/BuffComponent.h"
 #include "BrokenEdge/Component/CombatComponent.h"
+#include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -226,6 +227,18 @@ void ABrokenEdgeCharacter::PostInitializeComponents()
 
 }
 
+void ABrokenEdgeCharacter::UpdateHUDHealth()
+{
+	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, Controller?*Controller->GetName():TEXT("空"));
+	BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr ? Cast<ABrokenEdgePlayerController>(GetController()) : BrokenEdgePlayerController;
+	
+	if (BrokenEdgePlayerController)
+	{
+		BrokenEdgePlayerController->SetHUDHealth(Health, MaxHealth);
+	}
+	
+}
+
 /**
  * @brief 跳跃处理
  */
@@ -303,7 +316,10 @@ void ABrokenEdgeCharacter::CrouchButtonPressed()
 
 void ABrokenEdgeCharacter::OnRep_Health()
 {
+	UpdateHUDHealth();
 	//@TODO
+	
+	
 }
 
 bool ABrokenEdgeCharacter::IsWeaponEquipped()

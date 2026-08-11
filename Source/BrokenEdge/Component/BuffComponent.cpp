@@ -33,7 +33,6 @@ void UBuffComponent::BeginPlay()
 void UBuffComponent::HealRampUp(float DeltaTime)
 {
 	if (!bHealing || Character == nullptr || Character->IsElimed()) return;
-
 	const float HealThisFrame = HealingRate * DeltaTime;
 	// Character->SetHealth(FMath::Clamp(Character->GetHealth() + HealThisFrame, 0.f, Character->GetMaxHealth()));
 	Character->SetHealth(Character->GetHealth() + HealThisFrame);
