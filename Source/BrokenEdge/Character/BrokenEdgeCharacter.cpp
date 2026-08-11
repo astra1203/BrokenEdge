@@ -301,6 +301,11 @@ void ABrokenEdgeCharacter::CrouchButtonPressed()
 }
 
 
+void ABrokenEdgeCharacter::OnRep_Health()
+{
+	//@TODO
+}
+
 bool ABrokenEdgeCharacter::IsWeaponEquipped()
 {
 	//@ TODO

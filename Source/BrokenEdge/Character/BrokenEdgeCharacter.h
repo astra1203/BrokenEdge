@@ -186,10 +186,7 @@ private:
      * @param LastHealth 上一个生命值
     */
 	UFUNCTION()
-	void OnRep_Health()
-	{
-		
-	}
+	void OnRep_Health();
 	
 	
 public:
