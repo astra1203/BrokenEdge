@@ -36,7 +36,7 @@ void UBuffComponent::HealRampUp(float DeltaTime)
 	const float HealThisFrame = HealingRate * DeltaTime;
 	// Character->SetHealth(FMath::Clamp(Character->GetHealth() + HealThisFrame, 0.f, Character->GetMaxHealth()));
 	Character->SetHealth(Character->GetHealth() + HealThisFrame);
-	// Character->UpdateHUDHealth();
+	Character->UpdateHUDHealth();
 	AmountToHeal -= HealThisFrame;
 
 	if (AmountToHeal <= 0.f || Character->GetHealth() >= Character->GetMaxHealth())
