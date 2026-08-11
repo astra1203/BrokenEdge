@@ -38,12 +38,33 @@ public:
 	*/
 	void BuffJump(float BuffJumpVelocity, float BuffTime);
 
+
+	/**
+	 * @brief 设置速度增益
+	 * @param BuffBaseSpeed 增益后的基础移动速度
+	 * @param BuffCrouchSpeed 增益后的蹲伏移动速度
+	 * @param BuffTime 增益持续时间（秒）
+	 */
+	void BuffSpeed(float BuffBaseSpeed, float BuffCrouchSpeed, float BuffTime);
+
+
 private:
 	/**
 	* @brief 跳跃增益
 	*/
 	FTimerHandle JumpBuffTimer;             ///< 跳跃增益计时器
 
+	/** @brief 速度增益计时器句柄 */
+	FTimerHandle SpeedBuffTimer;
+
 	void ResetJump();
+	void ResetSpeeds();
+
 	float InitialJumpZVelocity;              ///< 初始跳跃速度
+
+	/** @brief 初始基础移动速度 */
+	float InitialBaseSpeed;
+
+	/** @brief 初始蹲伏移动速度 */
+	float InitialCrouchSpeed;
 };

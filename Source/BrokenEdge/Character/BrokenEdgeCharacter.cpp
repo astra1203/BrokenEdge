@@ -212,6 +212,8 @@ void ABrokenEdgeCharacter::PostInitializeComponents()
 	{
 		Buff->Character = this;
 		Buff->InitialJumpZVelocity = GetCharacterMovement()->JumpZVelocity;
+		Buff->InitialBaseSpeed = GetCharacterMovement()->MaxWalkSpeed;
+		Buff->InitialCrouchSpeed = GetCharacterMovement()->MaxWalkSpeedCrouched;
 	}
 
 
