@@ -62,9 +62,12 @@ void AWeapon::BeginPlay()
 	
 	AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnSphereOverlap);
 	
-	//@TODO
-	// AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AWeapon::OnSphereEndOverlap);
+	AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AWeapon::OnSphereEndOverlap);
 
+	if (PickUpWidget)
+	{
+		PickUpWidget->SetVisibility(false);
+	}
 }
 
 // Called every frame
@@ -85,6 +88,7 @@ void AWeapon::Tick(float DeltaTime)
  */
 void AWeapon::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT(""));
 	ABrokenEdgeCharacter* BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(OtherActor);
 	if (BrokenEdgeCharacter)
 	{
@@ -93,6 +97,21 @@ void AWeapon::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		// if (BrokenEdgeCharacter->IsHoldingTheFlag()) return;
 		BrokenEdgeCharacter->SetOverlappingWeapon(this);
 	}
+}
+
+void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT(""));
+	ABrokenEdgeCharacter* BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(OtherActor);
+	if (BrokenEdgeCharacter)
+	{
+		//@TODO
+		// if (WeaponType == EWeaponType::EWT_Flag && BrokenEdgeCharacter->GetTeam() == Team) return;
+		// if (BrokenEdgeCharacter->IsHoldingTheFlag()) return;
+		BrokenEdgeCharacter->SetOverlappingWeapon(nullptr);
+	}
+	
 }
 
 /**
