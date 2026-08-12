@@ -3,6 +3,7 @@
 
 #include "BrokenEdgePlayerController.h"
 
+#include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/UI/BrokenEdgeHUD.h"
 #include "BrokenEdge/UI/CharacterOverlay.h"
 #include "Components/ProgressBar.h"
@@ -55,3 +56,45 @@ void ABrokenEdgePlayerController::SetHUDShield(float Shield, float MaxShield)
 		HUDMaxShield = MaxShield;
 	}
 }
+
+void ABrokenEdgePlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	if (TObjectPtr<ABrokenEdgeCharacter> BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(InPawn)) 
+	{
+		SetHUDHealth(BrokenEdgeCharacter->GetHealth(), BrokenEdgeCharacter->GetMaxHealth());
+		
+	}
+	
+}
+
+void ABrokenEdgePlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	PollInit();
+}
+
+void ABrokenEdgePlayerController::PollInit()
+{
+	if (CharacterOverlay==nullptr)
+	{
+		if (BrokenEdgeHUD&&BrokenEdgeHUD->CharacterOverlay)
+		{
+			CharacterOverlay = BrokenEdgeHUD->CharacterOverlay;
+			
+			if (CharacterOverlay)
+			{
+				if (!bInitializeHealth) SetHUDHealth(HUDHealth, HUDMaxHealth);
+				if (!bInitializeShield) SetHUDShield(HUDShield, HUDMaxShield);
+				
+				//@TODO
+				
+			}
+			
+		}
+		
+	}
+	
+}
+

@@ -160,7 +160,8 @@ void ABrokenEdgeCharacter::BeginPlay()
 void ABrokenEdgeCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	//@TODO
+	PollInit();
 }
 
 void ABrokenEdgeCharacter::NotifyControllerChanged()
@@ -338,6 +339,26 @@ void ABrokenEdgeCharacter::OnRep_Health()
 {
 	UpdateHUDHealth();
 	//@TODO
+	
+	
+}
+
+void ABrokenEdgeCharacter::PollInit()
+{
+	//@TODO
+	
+	
+	if (BrokenEdgePlayerController==nullptr)
+	{
+		BrokenEdgePlayerController = Cast<ABrokenEdgePlayerController>(Controller);
+		if (BrokenEdgePlayerController)
+		{
+			
+			UpdateHUDHealth();
+			UpdateHUDShield();
+			
+		}
+	}
 	
 	
 }

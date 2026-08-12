@@ -181,8 +181,8 @@ private:
 	
 
 	/** 当前生命值 */
-	UPROPERTY(ReplicatedUsing = OnRep_Health, VisibleAnywhere, Category = "Player States")
-	float Health = 40.f;
+	UPROPERTY(ReplicatedUsing = OnRep_Health, EditAnywhere, Category = "Player States")
+	float Health = 100.f;
 
 	/**
      * @brief 护盾
@@ -190,7 +190,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Player Stats")
 	float MaxShield = 100.f;       ///< 最大护盾值
 
-	UPROPERTY(ReplicatedUsing = OnRep_Shield, VisibleAnywhere, Category = "Player Stats")
+	UPROPERTY(ReplicatedUsing = OnRep_Shield, EditAnywhere, Category = "Player Stats")
 	float Shield = 0.f;            ///< 当前护盾值
 	
 	/**
@@ -210,6 +210,10 @@ private:
 	/** 玩家控制器 */
 	UPROPERTY()
 	class ABrokenEdgePlayerController* BrokenEdgePlayerController = nullptr;
+	
+protected:
+	/// 轮询初始化（等待必要组件加载）
+	void PollInit();
 	
 public:
 	FORCEINLINE [[nodiscard]] float GetHealth() const{return Health;}
