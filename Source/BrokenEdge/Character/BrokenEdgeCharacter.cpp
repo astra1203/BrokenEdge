@@ -421,6 +421,17 @@ void ABrokenEdgeCharacter::SetOverlappingWeapon(AWeapon* Weapon)
 	{
 		OverlappingWeapon->ShowPickupWidget(false);
 	}
+	
+	OverlappingWeapon = Weapon;
+	
+	if (IsLocallyControlled())
+	{
+		if (OverlappingWeapon)
+		{
+			OverlappingWeapon->ShowPickupWidget(true);
+		}
+	}
+	
 }
 
 bool ABrokenEdgeCharacter::IsWeaponEquipped()
