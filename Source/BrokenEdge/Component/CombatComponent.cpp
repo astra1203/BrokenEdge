@@ -3,6 +3,8 @@
 
 #include "CombatComponent.h"
 
+#include "Net/UnrealNetwork.h"
+
 
 // Sets default values for this component's properties
 UCombatComponent::UCombatComponent()
@@ -12,6 +14,13 @@ UCombatComponent::UCombatComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+}
+
+void UCombatComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UCombatComponent, bHoldingTheFlag);
+	DOREPLIFETIME(UCombatComponent, CombatState);
 }
 
 
@@ -31,5 +40,17 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UCombatComponent::OnRep_HoldingTheFlag()
+{
+	//@TODO
+	
+	
+}
+
+void UCombatComponent::OnRep_CombatState()
+{
+	//@TODO
 }
 

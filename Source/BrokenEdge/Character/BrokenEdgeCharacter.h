@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "BrokenEdgeCharacter.generated.h"
 
+class AWeapon;
 class UBoxComponent;
 enum class ETurningInPlace : uint8;
 class UInputAction;
@@ -124,7 +125,8 @@ public:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void CrouchButtonPressed();
-
+	void EquipButtonPressed();
+	
 private:
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -146,6 +148,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* CrouchAction;
 
+	/** Equip Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* EquipAction;
+
 	/// 摄像机弹簧臂组件
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	class USpringArmComponent* CameraBoom;
@@ -158,6 +164,21 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* OverheadWidget;
 
+	/// 重叠的武器（带复制通知）
+	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
+	AWeapon* OverlappingWeapon;
+	
+	/**
+ * @brief 重叠武器复制回调
+ * @param LastWeapon 上一个重叠武器
+ */
+	UFUNCTION()
+	void OnRep_OverlappingWeapon(AWeapon* LastWeapon);
+	
+	/// 服务器处理装备按钮按下
+	UFUNCTION(Server, Reliable)
+	void ServerEquipButtonPressed();
+	
 	/** 战斗组件 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UCombatComponent* Combat;
@@ -216,6 +237,12 @@ protected:
 	void PollInit();
 	
 public:
+	/**
+ * @brief 设置重叠武器
+ * @param Weapon 重叠的武器
+ */
+	void SetOverlappingWeapon(AWeapon* Weapon);
+	
 	FORCEINLINE [[nodiscard]] float GetHealth() const{return Health;}
 	FORCEINLINE [[nodiscard]] float GetMaxHealth() const{return MaxHealth;}
 
@@ -250,5 +277,8 @@ public:
 
 	FORCEINLINE TObjectPtr<UBuffComponent> GetBuff() const { return Buff; }
 	
+	/** 是否禁用游戏逻辑 */
+	UPROPERTY(Replicated)
+	bool bDisableGameplay = false;
 
 };

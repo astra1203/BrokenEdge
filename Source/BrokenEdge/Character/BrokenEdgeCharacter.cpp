@@ -10,6 +10,7 @@
 #include "BrokenEdge/Component/BuffComponent.h"
 #include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
+#include "BrokenEdge/Weapon/Weapon.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -198,6 +199,9 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 		//蹲伏
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &ABrokenEdgeCharacter::CrouchButtonPressed);
+		
+		//装备武器
+		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &ABrokenEdgeCharacter::EquipButtonPressed);
 	}
 	else
 	{
@@ -328,6 +332,54 @@ void ABrokenEdgeCharacter::CrouchButtonPressed()
 
 }
 
+void ABrokenEdgeCharacter::EquipButtonPressed()
+{
+	if (bDisableGameplay) return;
+	//@TODO
+	// if (Combat)
+	// {
+	// 	if (Combat->bHoldingTheFlag) return;
+	// 	if (Combat->CombatState == ECombatState::ECS_Unoccuiped) ServerEquipButtonPressed();
+	// 	bool bSwap = Combat->ShouldSwapWeapons() &&
+	// 		!HasAuthority() &&
+	// 		Combat->CombatState == ECombatState::ECS_Unoccuiped &&
+	// 		OverlappingWeapon == nullptr;
+	//
+	// 	if (bSwap)
+	// 	{
+	// 		PlaySwapMontage();
+	// 		Combat->CombatState = ECombatState::ECS_SwappingWeapon;
+	// 		bFinishedSwapping = false;
+	// 	}
+	// }
+	
+	
+}
+
+void ABrokenEdgeCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
+{
+	//@TODO
+}
+
+/**
+ * @brief 服务器端装备按钮按下（RPC实现）
+ */
+void ABrokenEdgeCharacter::ServerEquipButtonPressed_Implementation()
+{
+	//@TODO
+	// if (Combat)
+	// {
+	// 	if (OverlappingWeapon)
+	// 	{
+	// 		Combat->EquipWeapon(OverlappingWeapon);
+	// 	}
+	// 	else if (Combat->ShouldSwapWeapons())
+	// 	{
+	// 		Combat->SwapWeapons();
+	// 	}
+	// }
+}
+
 
 void ABrokenEdgeCharacter::OnRep_Shield(float LastShield)
 {
@@ -361,6 +413,14 @@ void ABrokenEdgeCharacter::PollInit()
 	}
 	
 	
+}
+
+void ABrokenEdgeCharacter::SetOverlappingWeapon(AWeapon* Weapon)
+{
+	if (OverlappingWeapon)
+	{
+		OverlappingWeapon->ShowPickupWidget(false);
+	}
 }
 
 bool ABrokenEdgeCharacter::IsWeaponEquipped()
