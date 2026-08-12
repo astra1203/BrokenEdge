@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "Pickup.generated.h"
 
+/**
+ * 拾取物基类，所有可拾取道具的基础类
+ */
 UCLASS()
 class BROKENEDGE_API APickup : public AActor
 {
@@ -45,6 +48,10 @@ private:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* PickupMesh;
 
+	/** 拾取特效组件 */
+	UPROPERTY(VisibleAnywhere)
+	class UNiagaraComponent* PickupEffectComponent;
+	
 	/** 拾取特效组件 */
 	// UPROPERTY(VisibleAnywhere)
 	// class UNiagaraComponent* PickupEffectComponent;

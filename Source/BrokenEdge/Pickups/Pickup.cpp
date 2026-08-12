@@ -5,7 +5,8 @@
 
 #include "BrokenEdge/BrokenEdge.h"
 #include "Components/SphereComponent.h"
-
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 APickup::APickup()
@@ -27,6 +28,8 @@ APickup::APickup()
 	PickupMesh->SetupAttachment(OverlapSphere);
 	PickupMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+	PickupEffectComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("PickupEffectComponent"));
+	PickupEffectComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
