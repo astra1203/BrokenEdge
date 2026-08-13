@@ -61,6 +61,7 @@ void UCombatComponent::EquipWeapon(class AWeapon* WeaponToEquip)
 			EquipPrimaryWeapon(WeaponToEquip);
 		}
 
+		//@TODO
 
 	}
 

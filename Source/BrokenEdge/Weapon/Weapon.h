@@ -55,6 +55,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
+	class ABrokenEdgeCharacter* BrokenEdgeOwnerCharacter = nullptr;
+	
+	/// 是否使用服务端回退 @TODO
+	// UPROPERTY(Replicated, EditAnywhere)
+	// bool bUseServerSideRewind = false;
+
+	
 public:	
 
 	void EnableCustomDepth(bool bEnable);
@@ -112,7 +120,17 @@ public:
  * @param State 要设置的状态
 	 */
 	void SetWeaponState(EWeaponState State);
+	
+	/**
+	 * @brief 武器状态设置时调用
+ */
+	virtual void OnWeaponStateSet();
 
+	/**
+	 * @brief 武器被装备时的处理
+ */
+	virtual void OnEquipped();
+	
 	/// 获取当前弹药数
 	FORCEINLINE int32 GetAmmo() const { return Ammo; }
 

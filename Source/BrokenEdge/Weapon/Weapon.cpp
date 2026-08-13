@@ -158,8 +158,8 @@ void AWeapon::Dropped()
 
 void AWeapon::OnRep_WeaponState()
 {
-	//@TODO
-	// OnWeaponStateSet()
+	//@TODO 回调函数没有触发
+	OnWeaponStateSet();
 }
 
 
@@ -167,5 +167,53 @@ void AWeapon::SetWeaponState(EWeaponState State)
 {
 	WeaponState = State;
 
-	// OnWeaponStateSet();TODO
+	OnWeaponStateSet();//TODO
+}
+
+/**
+ * @brief 武器状态改变时的处理
+ */
+void AWeapon::OnWeaponStateSet()
+{
+	switch (WeaponState)
+	{
+	case EWeaponState::EWS_Equipped:
+		OnEquipped();
+		break;
+	case EWeaponState::EWS_EquippedSecondary:
+		// OnEquippedSecondary();//@TODO
+		break;
+	case EWeaponState::EWS_Dropped:
+		// OnDropped();//@TODO
+		break;
+	}
+}
+
+void AWeapon::OnEquipped()
+{
+	ShowPickupWidget(false);
+	AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponMesh->SetSimulatePhysics(false);
+	WeaponMesh->SetEnableGravity(false);
+	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	if (WeaponType == EWeaponType::EWT_SMG)
+	{
+		WeaponMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		WeaponMesh->SetEnableGravity(true);
+		WeaponMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	}
+	EnableCustomDepth(false);
+
+	BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr ? Cast<ABrokenEdgeCharacter>(GetOwner()) : BrokenEdgeOwnerCharacter;
+	
+	//@TODO
+	// if (BrokenEdgeOwnerCharacter && bUseServerSideRewind)
+	// {
+	// 	BlasterOwnerController = BlasterOwnerController == nullptr ? Cast<ABlasterPlayerController>(BlasterOwnerCharacter->Controller) : BlasterOwnerController;
+	// 	if (BlasterOwnerController && HasAuthority() && !BlasterOwnerController->HighPingDelegate.IsBound())
+	// 	{
+	// 		BlasterOwnerController->HighPingDelegate.AddDynamic(this, &AWeapon::OnPingTooHigh);
+	// 	}
+	// }
 }
