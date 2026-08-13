@@ -134,6 +134,9 @@ public:
 	/// 武器作为副武器装备时调用
 	virtual void OnEquippedSecondary();
 	
+	/// 武器掉落时调用
+	virtual void OnDropped();
+	
 	/// 获取当前弹药数
 	FORCEINLINE int32 GetAmmo() const { return Ammo; }
 

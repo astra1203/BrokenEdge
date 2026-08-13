@@ -56,7 +56,7 @@ void UCombatComponent::EquipWeapon(class AWeapon* WeaponToEquip)
 		{
 			EquipSecondaryWeapon(WeaponToEquip);
 		}
-		else
+		else//主武器没装备或者主武器和副武器都装备了
 		{
 			EquipPrimaryWeapon(WeaponToEquip);
 		}
