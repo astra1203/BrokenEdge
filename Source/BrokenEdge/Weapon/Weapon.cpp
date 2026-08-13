@@ -8,6 +8,7 @@
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -17,18 +18,18 @@ AWeapon::AWeapon()
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
 	SetReplicateMovement(true);
-	
+
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	SetRootComponent(WeaponMesh);
-	
+
 	WeaponMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 	WeaponMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
+
 	WeaponMesh->SetCustomDepthStencilValue(CUSTOM_DEPTH_BLUE);
 	WeaponMesh->MarkRenderStateDirty();
 	EnableCustomDepth(true);
-	
+
 	AreaSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AreaSphere"));
 	AreaSphere->SetupAttachment(RootComponent);
 	AreaSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
@@ -50,6 +51,16 @@ void AWeapon::EnableCustomDepth(bool bEnable)
 	{
 		WeaponMesh->SetRenderCustomDepth(bEnable);
 	}
+}
+
+void AWeapon::MulticastAmmo_Implementation(int32 UpdateAmmo)
+{
+	Ammo = UpdateAmmo;
+}
+
+void AWeapon::SetHUDAmmo()
+{
+	//@TODO
 }
 
 // Called when the game starts or when spawned
@@ -75,6 +86,14 @@ void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AWeapon, WeaponState);
+
+	//@TODO
 }
 
 /**
@@ -124,4 +143,29 @@ void AWeapon::ShowPickupWidget(bool bShowWidget)
 	{
 		PickUpWidget->SetVisibility(bShowWidget);
 	}
+}
+
+void AWeapon::Dropped()
+{
+	SetWeaponState(EWeaponState::EWS_Dropped);
+	FDetachmentTransformRules DetachRules(EDetachmentRule::KeepWorld, true);
+	WeaponMesh->DetachFromComponent(DetachRules);
+	SetOwner(nullptr);
+
+	//@TODO
+
+}
+
+void AWeapon::OnRep_WeaponState()
+{
+	//@TODO
+	// OnWeaponStateSet()
+}
+
+
+void AWeapon::SetWeaponState(EWeaponState State)
+{
+	WeaponState = State;
+
+	// OnWeaponStateSet();TODO
 }

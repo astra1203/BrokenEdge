@@ -38,6 +38,11 @@ public:
 	/// 组件初始化后调用
 	virtual void PostInitializeComponents() override;
 
+	/**
+ * @brief 播放武器切换动画
+	 */
+	void PlaySwapMontage();
+
 	/** 更新HUD生命值显示 */
 	void UpdateHUDHealth();
 	void UpdateHUDShield();
@@ -168,6 +173,11 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
 	AWeapon* OverlappingWeapon;
 	
+	/** 武器切换动画 */
+	UPROPERTY(EditAnywhere, Category = Combat)
+	UAnimMontage* SwapMontage = nullptr;
+
+
 	/**
  * @brief 重叠武器复制回调
  * @param LastWeapon 上一个重叠武器
@@ -258,10 +268,6 @@ public:
 	/// 获取最大护盾值
 	FORCEINLINE [[nodiscard]] float GetMaxShield() const { return MaxShield; }
 	
-	/** 是否禁用游戏逻辑 */
-	// UPROPERTY(Replicated)
-	// bool bDisableGameplay = false;
-
 	/** 检查查是否装备了武器 */
 	bool IsWeaponEquipped();
 

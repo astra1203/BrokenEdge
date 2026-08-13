@@ -3,6 +3,10 @@
 
 #include "CombatComponent.h"
 
+#include "BrokenEdge/BrokenEdgeTypes/WeaponType.h"
+#include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/Weapon/Weapon.h"
+#include "Engine/SkeletalMeshSocket.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -21,6 +25,46 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(UCombatComponent, bHoldingTheFlag);
 	DOREPLIFETIME(UCombatComponent, CombatState);
+
+
+
+}
+
+/**
+ * @brief 装备武器
+ * @param WeaponToEquip 要装备的武器
+ */
+void UCombatComponent::EquipWeapon(class AWeapon* WeaponToEquip)
+{
+	if (Character == nullptr || WeaponToEquip == nullptr) return;
+	if (CombatState != ECombatState::ECS_Unoccuiped) return;
+	WeaponToEquip->MulticastAmmo(WeaponToEquip->GetAmmo());
+
+	//拾取的是旗帜的情况下
+	if (WeaponToEquip->GetWeaponType() == EWeaponType::EWT_Flag)
+	{
+		Character->Crouch();
+		bHoldingTheFlag = true;
+		WeaponToEquip->SetWeaponState(EWeaponState::EWS_Equipped);
+		AttachFlagToLeftHand(WeaponToEquip);
+		WeaponToEquip->SetOwner(Character);
+		TheFlag = WeaponToEquip;
+	}
+	else
+	{
+		if (EquippedWeapon != nullptr && SecondaryWeapon == nullptr)
+		{
+			EquipSecondaryWeapon(WeaponToEquip);
+		}
+		else
+		{
+			EquipPrimaryWeapon(WeaponToEquip);
+		}
+
+
+	}
+
+
 }
 
 
@@ -42,6 +86,63 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
+void UCombatComponent::DropEquippedWeapon()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->Dropped();
+	}
+}
+
+void UCombatComponent::AttachFlagToLeftHand(AActor* Flag)
+{
+	if (Character == nullptr || Character->GetMesh() == nullptr || Flag == nullptr) return;
+
+	if (const USkeletalMeshSocket* HandSocket = Character->GetMesh()->GetSocketByName(FName("FlagSocket")))
+	{
+		HandSocket->AttachActor(Flag, Character->GetMesh());
+	}
+}
+
+void UCombatComponent::AttachActorToRightHand(AActor* ActorToAttach)
+{
+	if (Character == nullptr || Character->GetMesh() == nullptr || ActorToAttach == nullptr) return;
+	if (const USkeletalMeshSocket* HandSocket = Character->GetMesh()->GetSocketByName(FName("RightHandSocket")))
+	{
+		HandSocket->AttachActor(ActorToAttach, Character->GetMesh());
+	}
+}
+
+void UCombatComponent::EquipPrimaryWeapon(AWeapon* WeaponToEquip)
+{
+	if (WeaponToEquip == nullptr) return;
+	DropEquippedWeapon();
+	EquippedWeapon = WeaponToEquip;
+	EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
+	AttachActorToRightHand(EquippedWeapon);
+	EquippedWeapon->SetOwner(Character);
+	EquippedWeapon->SetHUDAmmo();
+	//@TODO
+	// UpdateCarriedAmmo();
+	// PlayEquipWeaponSound(WeaponToEquip);
+	// ReloadEmptyWeapon();
+}
+
+void UCombatComponent::EquipSecondaryWeapon(AWeapon* WeaponToEquip)
+{
+	//@TODO
+}
+
+void UCombatComponent::OnRep_EquippedWeapon()
+{
+	//@TODO
+}
+
+void UCombatComponent::OnRep_SecondaryWeapon()
+{
+	//@TODO
+}
+
 void UCombatComponent::OnRep_HoldingTheFlag()
 {
 	//@TODO
@@ -54,3 +155,12 @@ void UCombatComponent::OnRep_CombatState()
 	//@TODO
 }
 
+void UCombatComponent::OnRep_Flag()
+{
+	//@TODO
+}
+
+bool UCombatComponent::ShouldSwapWeapons()
+{
+	return (EquippedWeapon != nullptr && SecondaryWeapon != nullptr);
+}

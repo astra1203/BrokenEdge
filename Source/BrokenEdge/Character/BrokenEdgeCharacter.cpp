@@ -213,12 +213,21 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(ABrokenEdgeCharacter, OverlappingWeapon, COND_OwnerOnly);
 	DOREPLIFETIME(ABrokenEdgeCharacter, Health);
+	DOREPLIFETIME(ABrokenEdgeCharacter, bDisableGameplay);
+	DOREPLIFETIME(ABrokenEdgeCharacter, Shield);
 }
 
 void ABrokenEdgeCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	if (Combat)
+	{
+		Combat->Character = this;
+	}
 
 	if (Buff)
 	{
@@ -228,15 +237,25 @@ void ABrokenEdgeCharacter::PostInitializeComponents()
 		Buff->InitialCrouchSpeed = GetCharacterMovement()->MaxWalkSpeedCrouched;
 	}
 
+	//@TODO
+	//延迟补偿组件
 
+}
 
+void ABrokenEdgeCharacter::PlaySwapMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && SwapMontage)
+	{
+		AnimInstance->Montage_Play(SwapMontage);
+	}
 }
 
 void ABrokenEdgeCharacter::UpdateHUDHealth()
 {
 	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, Controller?*Controller->GetName():TEXT("空"));
 	BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr ? Cast<ABrokenEdgePlayerController>(GetController()) : BrokenEdgePlayerController;
-	
+
 	if (BrokenEdgePlayerController)
 	{
 		BrokenEdgePlayerController->SetHUDHealth(Health, MaxHealth);
@@ -336,24 +355,24 @@ void ABrokenEdgeCharacter::EquipButtonPressed()
 {
 	if (bDisableGameplay) return;
 	//@TODO
-	// if (Combat)
-	// {
-	// 	if (Combat->bHoldingTheFlag) return;
-	// 	if (Combat->CombatState == ECombatState::ECS_Unoccuiped) ServerEquipButtonPressed();
-	// 	bool bSwap = Combat->ShouldSwapWeapons() &&
-	// 		!HasAuthority() &&
-	// 		Combat->CombatState == ECombatState::ECS_Unoccuiped &&
-	// 		OverlappingWeapon == nullptr;
-	//
-	// 	if (bSwap)
-	// 	{
-	// 		PlaySwapMontage();
-	// 		Combat->CombatState = ECombatState::ECS_SwappingWeapon;
-	// 		bFinishedSwapping = false;
-	// 	}
-	// }
-	
-	
+	if (Combat)
+	{
+		if (Combat->bHoldingTheFlag) return;
+		if (Combat->CombatState == ECombatState::ECS_Unoccuiped) ServerEquipButtonPressed();
+		bool bSwap = Combat->ShouldSwapWeapons() &&
+			!HasAuthority() &&
+			Combat->CombatState == ECombatState::ECS_Unoccuiped &&
+			OverlappingWeapon == nullptr;
+
+		if (bSwap)
+		{
+			PlaySwapMontage();
+			Combat->CombatState = ECombatState::ECS_SwappingWeapon;
+			// bFinishedSwapping = false;
+		}
+	}
+
+
 }
 
 void ABrokenEdgeCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
@@ -367,17 +386,17 @@ void ABrokenEdgeCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 void ABrokenEdgeCharacter::ServerEquipButtonPressed_Implementation()
 {
 	//@TODO
-	// if (Combat)
-	// {
-	// 	if (OverlappingWeapon)
-	// 	{
-	// 		Combat->EquipWeapon(OverlappingWeapon);
-	// 	}
-	// 	else if (Combat->ShouldSwapWeapons())
-	// 	{
-	// 		Combat->SwapWeapons();
-	// 	}
-	// }
+	if (Combat)
+	{
+		if (OverlappingWeapon)
+		{
+			Combat->EquipWeapon(OverlappingWeapon);
+		}
+		else if (Combat->ShouldSwapWeapons())
+		{
+			// Combat->SwapWeapons();
+		}
+	}
 }
 
 
@@ -450,4 +469,3 @@ bool ABrokenEdgeCharacter::IsAiming()
 	return true;
 	// return (Combat && Combat->bAiming);
 }
-
