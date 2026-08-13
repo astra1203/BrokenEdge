@@ -182,5 +182,10 @@ void UCombatComponent::OnRep_Flag()
 
 bool UCombatComponent::ShouldSwapWeapons()
 {
+	// UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s %s"),
+	// 	GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+	// 	EquippedWeapon != nullptr?TEXT("有主武器"):TEXT("没有主武器"),
+	// 	SecondaryWeapon != nullptr?TEXT("有副武器"):TEXT("没有副武器"));
+
 	return (EquippedWeapon != nullptr && SecondaryWeapon != nullptr);
 }

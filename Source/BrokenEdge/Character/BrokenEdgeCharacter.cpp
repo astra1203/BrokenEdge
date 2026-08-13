@@ -364,6 +364,17 @@ void ABrokenEdgeCharacter::EquipButtonPressed()
 			Combat->CombatState == ECombatState::ECS_Unoccuiped &&
 			OverlappingWeapon == nullptr;
 
+		UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+		       bSwap?TEXT("切换武器"):TEXT("不切换武器"),Combat->ShouldSwapWeapons()?TEXT("是切换武器"):TEXT("不是切换武器"));
+
+		UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s %s %s %s %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+				bSwap?TEXT("切换武器"):TEXT("不切换武器"),
+				Combat->ShouldSwapWeapons()?TEXT("有副武器和主武器都存在"):TEXT("没有副武器或主武器或武器"),
+				!HasAuthority()?TEXT("客户端点击"):TEXT("服务器点击"),
+		       Combat->CombatState == ECombatState::ECS_Unoccuiped?TEXT("未占用"):TEXT("已占用"),
+		       OverlappingWeapon == nullptr?TEXT("没有重叠武器"):TEXT("有重叠武器"));
+
+
 		if (bSwap)
 		{
 			PlaySwapMontage();
