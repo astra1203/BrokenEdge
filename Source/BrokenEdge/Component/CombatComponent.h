@@ -53,6 +53,14 @@ protected:
  */
 	void AttachActorToRightHand(AActor* ActorToAttach);
 
+	
+	/**
+	 * @brief 将Actor附加到背包
+	 * @param ActorToAttach 要附加的Actor
+	 */
+	void AttachActorToBackpack(AActor* ActorToAttach);
+
+	
 	/**
  * @brief 装备主武器
  * @param WeaponToEquip 要装备的武器

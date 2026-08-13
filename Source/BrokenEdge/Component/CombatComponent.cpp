@@ -114,6 +114,15 @@ void UCombatComponent::AttachActorToRightHand(AActor* ActorToAttach)
 	}
 }
 
+void UCombatComponent::AttachActorToBackpack(AActor* ActorToAttach)
+{
+	if (Character == nullptr || Character->GetMesh() == nullptr || ActorToAttach == nullptr) return;
+	if (const USkeletalMeshSocket* BackpackSocket = Character->GetMesh()->GetSocketByName(FName("BackpackSocket")))
+	{
+		BackpackSocket->AttachActor(ActorToAttach, Character->GetMesh());
+	}
+}
+
 void UCombatComponent::EquipPrimaryWeapon(AWeapon* WeaponToEquip)
 {
 	if (WeaponToEquip == nullptr) return;
@@ -131,7 +140,17 @@ void UCombatComponent::EquipPrimaryWeapon(AWeapon* WeaponToEquip)
 
 void UCombatComponent::EquipSecondaryWeapon(AWeapon* WeaponToEquip)
 {
-	//@TODO
+	
+	if (WeaponToEquip==nullptr) return;
+	
+	SecondaryWeapon = WeaponToEquip;
+	SecondaryWeapon->SetWeaponState(EWeaponState::EWS_EquippedSecondary);
+	
+	AttachActorToBackpack(WeaponToEquip);
+	// PlayEquipWeaponSound(WeaponToEquip);//@TODO
+	SecondaryWeapon->SetOwner(Character);
+	
+	
 }
 
 void UCombatComponent::OnRep_EquippedWeapon()

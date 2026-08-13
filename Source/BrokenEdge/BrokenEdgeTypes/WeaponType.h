@@ -9,7 +9,8 @@
 
 /// 自定义深度值：蓝色（用于武器高亮等）
 #define CUSTOM_DEPTH_BLUE 251
-
+/// 自定义深度值：棕褐色（用于武器高亮等）
+#define CUSTOM_DEPTH_TAN 252
 
 /**
  * @brief 武器类型枚举
