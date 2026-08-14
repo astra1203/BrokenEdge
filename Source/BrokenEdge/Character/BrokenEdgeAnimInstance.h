@@ -22,7 +22,7 @@ public:
 	 * 更新动画实例
 	 * @param DeltaTime 帧时间间隔
 	*/
-	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+	virtual void NativeUpdateAnimation(float DeltaTime) override;
 	
 private:
 	/** 关联的玩家角色 */
@@ -60,4 +60,22 @@ private:
 	/** 是否被淘汰 */
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	bool bElimmed;
+	
+	/** 旋转变化量 */
+	FRotator DeltaRotation;
+	
+	/** 偏航偏移 */
+	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float YawOffset;
+	
+	/** 上一帧角色旋转 */
+	FRotator CharacterRotationLastFrame;
+
+	/** 当前角色旋转 */
+	FRotator CharacterRotation;
+	
+	/** 倾斜角度 */
+	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float Lean;
+	
 };
