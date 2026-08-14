@@ -5,8 +5,11 @@
 
 #include "BrokenEdge/BrokenEdgeTypes/WeaponType.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -18,24 +21,25 @@ UCombatComponent::UCombatComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+
+	BaseWalkSpeed = 600.f;
+	AimWalkSpeed = 450.f;
 }
 
 void UCombatComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	
-	
+
+
 	DOREPLIFETIME(UCombatComponent, EquippedWeapon);
 	DOREPLIFETIME(UCombatComponent, SecondaryWeapon);
-	
+	DOREPLIFETIME(UCombatComponent, bAiming);
 	DOREPLIFETIME(UCombatComponent, bHoldingTheFlag);
 	DOREPLIFETIME(UCombatComponent, CombatState);
 
 	DOREPLIFETIME(UCombatComponent, TheFlag);
-	
+
 	//@TODO
-
-
 }
 
 /**
@@ -64,16 +68,13 @@ void UCombatComponent::EquipWeapon(class AWeapon* WeaponToEquip)
 		{
 			EquipSecondaryWeapon(WeaponToEquip);
 		}
-		else//主武器没装备或者主武器和副武器都装备了
+		else //主武器没装备或者主武器和副武器都装备了
 		{
 			EquipPrimaryWeapon(WeaponToEquip);
 		}
 
 		//@TODO
-
 	}
-
-
 }
 
 void UCombatComponent::SwapWeapons()
@@ -92,9 +93,9 @@ void UCombatComponent::FinishSwap()
 	{
 		CombatState = ECombatState::ECS_Unoccuiped;
 	}
-	
+
 	if (Character) Character->bFinishedSwapping = true;
-	
+
 	if (SecondaryWeapon) SecondaryWeapon->EnableCustomDepth(true);
 }
 
@@ -122,16 +123,25 @@ void UCombatComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
 
 // Called every frame
-void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                     FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT(""));
+	if (Character && Character->IsLocallyControlled())
+	{
+		FHitResult HitResult;
+		TraceUnderCrosshairs(HitResult);
+		HitTarget = HitResult.ImpactPoint;
+
+		SetHUDCrosshairs(DeltaTime);
+		// InterpFOV(DeltaTime);
+	}
 }
 
 void UCombatComponent::DropEquippedWeapon()
@@ -187,17 +197,165 @@ void UCombatComponent::EquipPrimaryWeapon(AWeapon* WeaponToEquip)
 
 void UCombatComponent::EquipSecondaryWeapon(AWeapon* WeaponToEquip)
 {
-	
-	if (WeaponToEquip==nullptr) return;
-	
+	if (WeaponToEquip == nullptr) return;
+
 	SecondaryWeapon = WeaponToEquip;
 	SecondaryWeapon->SetWeaponState(EWeaponState::EWS_EquippedSecondary);
-	
+
 	AttachActorToBackpack(WeaponToEquip);
 	// PlayEquipWeaponSound(WeaponToEquip);//@TODO
 	SecondaryWeapon->SetOwner(Character);
+}
+
+void UCombatComponent::SetAiming(bool bIsAiming)
+{
+	if (Character == nullptr || EquippedWeapon == nullptr) return;
+	bAiming = bIsAiming;
+	ServerSetAiming(bIsAiming);
+	if (Character)
+	{
+		Character->GetCharacterMovement()->MaxWalkSpeed = bIsAiming ? AimWalkSpeed : BaseWalkSpeed;
+	}
+	//@TODO
+	// if (Character->IsLocallyControlled() && EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle)
+	// {
+	// 	Character->ShowSniperScopeWidget(bIsAiming);
+	// }
+	if (Character->IsLocallyControlled()) bAimButtonPressed = bIsAiming;
+}
+
+void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
+{
+	FVector2D ViewportSize;
+	if (GEngine && GEngine->GameViewport)
+	{
+		GEngine->GameViewport->GetViewportSize(ViewportSize);
+	}
+
+	FVector2D CrosshairLocation(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
+
+	FVector CrosshairWorldPosition;
+	FVector CrosshairWorldDirection;
+	bool bScreenToWorld = UGameplayStatics::DeprojectScreenToWorld(
+		UGameplayStatics::GetPlayerController(this, 0),
+		CrosshairLocation,
+		CrosshairWorldPosition,
+		CrosshairWorldDirection
+	);
+
+	if (bScreenToWorld)
+	{
+		FVector Start = CrosshairWorldPosition;
+
+		if (Character)
+		{
+			float DistanceToCharacter = (Character->GetActorLocation() - Start).Size();
+			Start += CrosshairWorldDirection * (DistanceToCharacter + 100.f);
+		}
+
+		FVector End = Start + CrosshairWorldDirection * TRACE_LENGTH;
+
+		bool bHIt = GetWorld()->LineTraceSingleByChannel(
+			TraceHitResult,
+			Start,
+			End,
+			ECollisionChannel::ECC_Visibility
+		);
+		
+		if (bHIt)
+		{
+			//@TODO
+			// if (TraceHitResult.GetActor() && TraceHitResult.GetActor()->Implements<UInteractWithCrosshairsInterface>())
+			if (const ABrokenEdgeCharacter* CharacterHit = Cast<ABrokenEdgeCharacter>(TraceHitResult.GetActor()))
+			{
+				HUDPackage.CrosshairsColor = FLinearColor::Red;
+			}
+			else
+			{
+				HUDPackage.CrosshairsColor = FLinearColor::White;
+			}
+		}
+		else
+		{
+			TraceHitResult.ImpactPoint = FVector_NetQuantize(End);
+		}
+		
+		
+	}
+}
+
+void UCombatComponent::SetHUDCrosshairs(float DeltaTime)
+{
+	if (Character == nullptr || Character->Controller == nullptr) return;
 	
+	Controller = Controller == nullptr ? Cast<ABrokenEdgePlayerController>(Character->Controller) : Controller;
+	if (Controller == nullptr)return;
 	
+	HUD = HUD == nullptr ? Cast<ABrokenEdgeHUD>(Controller->GetHUD()) : HUD;
+	if (HUD == nullptr)return;
+	
+	if (EquippedWeapon)
+	{
+		HUDPackage.CrosshairsCenter = EquippedWeapon->CrosshairsCenter;
+		HUDPackage.CrosshairsLeft = EquippedWeapon->CrosshairsLeft;
+		HUDPackage.CrosshairsRight = EquippedWeapon->CrosshairsRight;
+		HUDPackage.CrosshairsBottom = EquippedWeapon->CrosshairsBottom;
+		HUDPackage.CrosshairsTop = EquippedWeapon->CrosshairsTop;
+	}
+	else
+	{
+		HUDPackage.CrosshairsCenter = nullptr;
+		HUDPackage.CrosshairsLeft = nullptr;
+		HUDPackage.CrosshairsRight = nullptr;
+		HUDPackage.CrosshairsBottom = nullptr;
+		HUDPackage.CrosshairsTop = nullptr;
+	}
+	// 计算准心散布
+
+	FVector2D WalkSpeedRange(0.f, Character->GetCharacterMovement()->MaxWalkSpeed);
+	FVector2D VelocityMultiplierRange(0.f, 1.f);
+	FVector Velocity = Character->GetVelocity();
+	Velocity.Z = 0.f;
+
+	CrosshairVelocityFactor = FMath::GetMappedRangeValueClamped(WalkSpeedRange, VelocityMultiplierRange, Velocity.Size());
+	
+	if (Character->GetCharacterMovement()->IsFalling())
+	{
+		CrosshairInAirFactor = FMath::FInterpTo(CrosshairInAirFactor, 2.25f, DeltaTime, 2.25f);
+	}
+	else
+	{
+		CrosshairInAirFactor = FMath::FInterpTo(CrosshairInAirFactor, 0.f, DeltaTime, 30.f);
+	}
+	
+	if (bAiming)
+	{
+		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, 0.58f, DeltaTime, 30.f);
+	}
+	else
+	{
+		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, 0.f, DeltaTime, 30.f);
+	}
+	
+	CrosshairShootingFactor = FMath::FInterpTo(CrosshairShootingFactor, 0.f, DeltaTime, 40.f);
+
+	HUDPackage.CrosshairSpread =
+	0.5f +
+	CrosshairVelocityFactor +
+	CrosshairInAirFactor -
+	CrosshairAimFactor +
+	CrosshairShootingFactor;
+	
+	HUD->SetHUDPackage(HUDPackage);
+}
+
+void UCombatComponent::ServerSetAiming_Implementation(bool bIsAiming)
+{
+	bAiming = bIsAiming;
+	if (Character)
+	{
+		Character->GetCharacterMovement()->MaxWalkSpeed = bIsAiming ? AimWalkSpeed : BaseWalkSpeed;
+	}
 }
 
 void UCombatComponent::OnRep_EquippedWeapon()
@@ -210,11 +368,17 @@ void UCombatComponent::OnRep_SecondaryWeapon()
 	//@TODO
 }
 
+void UCombatComponent::OnRep_Aiming()
+{
+	if (Character && Character->IsLocallyControlled())
+	{
+		bAiming = bAimButtonPressed;
+	}
+}
+
 void UCombatComponent::OnRep_HoldingTheFlag()
 {
 	//@TODO
-	
-	
 }
 
 void UCombatComponent::OnRep_CombatState()

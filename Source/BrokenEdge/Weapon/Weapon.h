@@ -50,6 +50,28 @@ public:
 	 * 跟新弹药UI
 	 */
 	void SetHUDAmmo();
+	
+	/** 准星中心纹理。 */
+	UPROPERTY(EditAnywhere, Category = Crosshairs)
+	class UTexture2D* CrosshairsCenter;
+
+	/** 准星左侧纹理。 */
+	UPROPERTY(EditAnywhere, Category = Crosshairs)
+	UTexture2D* CrosshairsLeft;
+
+	/** 准星右侧纹理。 */
+	UPROPERTY(EditAnywhere, Category = Crosshairs)
+	UTexture2D* CrosshairsRight;
+
+	/** 准星顶部纹理。 */
+	UPROPERTY(EditAnywhere, Category = Crosshairs)
+	UTexture2D* CrosshairsTop;
+
+	/** 准星底部纹理。 */
+	UPROPERTY(EditAnywhere, Category = Crosshairs)
+	UTexture2D* CrosshairsBottom;
+
+	
 protected:
 	UFUNCTION()
 	// Called when the game starts or when spawned

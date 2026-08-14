@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BrokenEdge/BrokenEdgeTypes/CombatState.h"
+#include "BrokenEdge/UI/BrokenEdgeHUD.h"
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
 
@@ -89,11 +90,44 @@ protected:
  */
 	void EquipSecondaryWeapon(AWeapon* WeaponToEquip);
 
+	/**
+ * @brief 设置瞄准状态
+ * @param bIsAiming 是否瞄准
+ */
+	void SetAiming(bool bIsAiming);
+
+	/**
+ * @brief 服务器端设置瞄准状态
+ * @param bIsAiming 是否瞄准
+ */
+	UFUNCTION(Server, Reliable)
+	void ServerSetAiming(bool bIsAiming);
+	
+	/**
+ * @brief 准星下的射线检测
+ * @param TraceHitResult 输出检测结果
+ */
+	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
+	
+	/**
+ * @brief 更新HUD准星
+ * @param DeltaTime 时间增量
+ */
+	void SetHUDCrosshairs(float DeltaTime);
+	
 private:
 	/// 关联的角色
 	UPROPERTY()
 	class ABrokenEdgeCharacter* Character;
 
+	/** 玩家控制器 */
+	UPROPERTY()
+	class ABrokenEdgePlayerController* Controller;
+	
+	/** HUD引用 */
+	UPROPERTY()
+	class ABrokenEdgeHUD* HUD;
+	
 	/** 当前装备的武器 */
 	UPROPERTY(ReplicatedUsing = OnRep_EquippedWeapon)
 	class AWeapon* EquippedWeapon;
@@ -115,6 +149,43 @@ private:
 	UFUNCTION()
 	void OnRep_SecondaryWeapon();
 
+	
+	/** 是否正在瞄准 */
+	UPROPERTY(ReplicatedUsing = OnRep_Aiming)
+	bool bAiming = false;
+	
+	UFUNCTION()
+	void OnRep_Aiming();
+	
+	/** 瞄准按钮是否按下 */
+	bool bAimButtonPressed = false;
+	
+	/** 基础移动速度 */
+	UPROPERTY(EditAnywhere)
+	float BaseWalkSpeed;
+
+	/** 瞄准移动速度 */
+	UPROPERTY(EditAnywhere)
+	float AimWalkSpeed;
+
+	/** 命中目标位置 */
+	FVector HitTarget;
+	
+	/** 准星速度因子 */
+	float CrosshairVelocityFactor;
+	
+	/** 准星空中因子 */
+	float CrosshairInAirFactor;
+	
+	/** 准星瞄准因子 */
+	float CrosshairAimFactor;
+	
+	/** 准星射击因子 */
+	float CrosshairShootingFactor;
+	
+	/** HUD数据包 */
+	FHUDPackage HUDPackage;
+	
 	/** 是否持有旗帜 */
 	UPROPERTY(ReplicatedUsing = OnRep_HoldingTheFlag)
 	bool bHoldingTheFlag = false;

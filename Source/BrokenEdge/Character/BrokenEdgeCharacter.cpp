@@ -198,10 +198,15 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABrokenEdgeCharacter::Look);
 
 		//蹲伏
-		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &ABrokenEdgeCharacter::CrouchButtonPressed);
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::CrouchButtonPressed);
 		
 		//装备武器
-		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &ABrokenEdgeCharacter::EquipButtonPressed);
+		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::EquipButtonPressed);
+		
+		//瞄准动作
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::AimButtonPressed);
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ABrokenEdgeCharacter::AimButtonReleased);
+	
 	}
 	else
 	{
@@ -385,6 +390,26 @@ void ABrokenEdgeCharacter::EquipButtonPressed()
 	}
 
 
+}
+
+void ABrokenEdgeCharacter::AimButtonPressed()
+{
+	if (Combat && Combat->bHoldingTheFlag) return;
+	if (bDisableGameplay) return;
+	if (Combat)
+	{
+		Combat->SetAiming(true);
+	}
+}
+
+void ABrokenEdgeCharacter::AimButtonReleased()
+{
+	if (Combat && Combat->bHoldingTheFlag) return;
+	if (bDisableGameplay) return;
+	if (Combat)
+	{
+		Combat->SetAiming(false);
+	}
 }
 
 void ABrokenEdgeCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)

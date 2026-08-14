@@ -6,6 +6,8 @@
 
 #pragma once
 
+/** 武器射线追踪的最大长度 */
+#define TRACE_LENGTH 80000.f
 
 /// 自定义深度值：蓝色（用于武器高亮等）
 #define CUSTOM_DEPTH_BLUE 251

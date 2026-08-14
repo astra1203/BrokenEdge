@@ -135,6 +135,16 @@ public:
 	void CrouchButtonPressed();
 	void EquipButtonPressed();
 	
+	/**
+ * @brief 瞄准按钮按下
+ */
+	void AimButtonPressed();
+
+	/**
+	 * @brief 瞄准按钮松开
+	 */
+	void AimButtonReleased();
+	
 private:
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -160,6 +170,11 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* EquipAction;
 
+	/** Equip Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* AimAction;
+
+	
 	/// 摄像机弹簧臂组件
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	class USpringArmComponent* CameraBoom;
