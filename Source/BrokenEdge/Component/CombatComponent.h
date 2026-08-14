@@ -27,6 +27,22 @@ public:
  */
 	void EquipWeapon(class AWeapon* WeaponToEquip);
 
+	/// 切换武器（主/副武器）
+	void SwapWeapons();
+	
+	/**
+ * @brief 完成武器切换（蓝图调用）
+ */
+	UFUNCTION(BlueprintCallable)
+	void FinishSwap();
+	
+	/**
+	 * @brief 完成武器切换并附加武器（蓝图调用）
+	 */
+	UFUNCTION(BlueprintCallable)
+	void FinishSwapAttachWeapons();
+
+	
 	// Called when the game starts
 	virtual void BeginPlay() override;
 

@@ -43,6 +43,9 @@ public:
 	 */
 	void PlaySwapMontage();
 
+	/// 是否完成武器切换
+	bool bFinishedSwapping = false;
+	
 	/** 更新HUD生命值显示 */
 	void UpdateHUDHealth();
 	void UpdateHUDShield();
