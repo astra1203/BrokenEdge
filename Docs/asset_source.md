@@ -1,0 +1,28 @@
+1、[虚幻学习工具包 | Fab](https://www.fab.com/listings/1a2b1d97-bc88-4c3f-98b8-22369b5c3170
+
+或者：\\192.168.1.102\学生\2604期0608UEC++\01资料\源代码&项目素材\UnrealLearningKit.zip
+
+Character骨架、骨架网格体、动画等资源
+
+2、\\192.168.1.102\学生\2604期0608UEC++\01资料\源代码&项目素材\MilitaryWeapSilver.zip
+
+弹药拾取物、枪械模型、音效、粒子特效
+
+3、[FPS Weapon Bundle | Fab](https://www.fab.com/listings/8aeb9c48-b404-4dcd-9e56-1d0ecedba7f5)
+
+\\192.168.1.102\学生\2604期0608UEC++\01资料\源代码&项目素材\FPS_Weapon_Bundle.zip
+
+枪械模型
+
+4、[Basic Pickups VFX Set (Niagara) | Fab](https://www.fab.com/listings/166d8257-d5af-4b8d-bd6c-1ea6d761b07e)
+
+\\192.168.1.102\学生\2604期0608UEC++\01资料\源代码&项目素材\sA_PickupSet_1.zip
+
+buff拾取物模型，比如加生命值、加护盾值、加跳跃高度、加移动速度buff的拾取物模型
+
+5、[动画初学者内容包 | Fab](https://www.fab.com/listings/98ff449d-79db-4f54-9303-75486c4fb9d9)
+
+\\192.168.1.102\学生\2604期0608UEC++\01资料\源代码&项目素材\AnimStarterPack.zip
+
+枪械瞄准等动画
+

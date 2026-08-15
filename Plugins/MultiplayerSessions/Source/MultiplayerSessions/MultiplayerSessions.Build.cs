@@ -16,7 +16,12 @@ public class MultiplayerSessions : ModuleRules
 				"Core",
 				"CoreUObject",
 				"Engine",
-				"OnlineSubsystem"
+				"OnlineSubsystem",
+				// UMenu 公开继承自 UUserWidget 并使用 UButton（UMG），
+				// 因此 UMG/Slate/SlateCore 必须作为公开依赖，否则链接时无法解析 UUserWidget 等符号。
+				"UMG",
+				"Slate",
+				"SlateCore"
 			});
 
 		// OnlineSubsystemUtils 只在 Private 实现中用于按当前 World 获取正确的 OSS 实例，
