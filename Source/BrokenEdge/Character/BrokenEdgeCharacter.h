@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
+#include "BrokenEdge/BrokenEdgeTypes/TurningInPlace.h"
 #include "GameFramework/Character.h"
 #include "BrokenEdgeCharacter.generated.h"
 
@@ -221,8 +222,8 @@ private:
 	/** 是否被淘汰 */
 	bool bElimmed = false;
 
-	/// 原地转向状态
-	ETurningInPlace TurningInPlace;
+	/// 原地转向状态  //@TODO
+	ETurningInPlace TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 	
 	/** 最大生命值 */
 	UPROPERTY(EditAnywhere, Category = "Player States")
@@ -270,6 +271,10 @@ public:
  * @param Weapon 重叠的武器
  */
 	void SetOverlappingWeapon(AWeapon* Weapon);
+	
+	/** 获取原地转身状态 */
+	FORCEINLINE ETurningInPlace GetTurningInPlace() const { return TurningInPlace; }
+
 	
 	FORCEINLINE [[nodiscard]] float GetHealth() const{return Health;}
 	FORCEINLINE [[nodiscard]] float GetMaxHealth() const{return MaxHealth;}

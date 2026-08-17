@@ -6,6 +6,7 @@
 #include "Animation/AnimInstance.h"
 #include "BrokenEdgeAnimInstance.generated.h"
 
+enum class ETurningInPlace : uint8;
 /**
  * 
  */
@@ -73,6 +74,10 @@ private:
 
 	/** 当前角色旋转 */
 	FRotator CharacterRotation;
+	
+	/** 原地转向状态 */
+	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	ETurningInPlace TurningInPlace;
 	
 	/** 倾斜角度 */
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))

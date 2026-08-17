@@ -41,10 +41,11 @@ void UBrokenEdgeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	// EquippedWeapon = BrokenEdgeCharacter->GetEquippedWeapon();                     // 当前装备的武器
 	bIsCrouched = BrokenEdgeCharacter->bIsCrouched;                               // 是否蹲伏
 	bAiming = BrokenEdgeCharacter->IsAiming();                                     // 是否瞄准中
-	//@ TODO
-	// TurningInPlace = BrokenEdgeCharacter->GetTurningInPlace();                     // 原地转向状态
+	
+	TurningInPlace = BrokenEdgeCharacter->GetTurningInPlace();                     // 原地转向状态
 	bRotateRootBone = BrokenEdgeCharacter->ShouldRotateRootBone();                 // 是否旋转根骨骼
 	bElimmed = BrokenEdgeCharacter->IsElimed();                                   // 是否已被淘汰
+	//@ TODO
 	// bHoldingTheFlag = BrokenEdgeCharacter->IsHoldingTheFlag();                     // 是否持有旗帜
 
 	// ========== 3. 计算偏航角偏移（Yaw Offset） ==========
