@@ -28,6 +28,11 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void RotateInPlace(float DeltaTime);
+	float CalculateSpeed();
+	void AimOffset(float DeltaTime);
+	void CalculateAO_Pitch();
+	void TurnInPlace(float DeltaTime);
 
 	virtual void NotifyControllerChanged() override;
 
@@ -146,6 +151,13 @@ public:
 	 */
 	void AimButtonReleased();
 	
+	/** 获取瞄准偏移偏航值 */
+	FORCEINLINE float GetAO_X() const { return AO_X; }
+
+	/** 获取瞄准偏移俯仰值 */
+	FORCEINLINE float GetAO_Y() const { return AO_Y; }
+
+	
 private:
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -225,6 +237,18 @@ private:
 	/// 原地转向状态  //@TODO
 	ETurningInPlace TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 	
+	/** 瞄准偏移偏航值 */
+	float AO_X = 0.f;
+	
+	/** 插值后的瞄准偏移偏航值 */
+	float InterpAO_X = 0.f;
+	
+	/** 瞄准偏移俯仰值 */
+	float AO_Y = 0.f;
+	
+	/** 起始瞄准旋转 */
+	FRotator StartingAimRotation = FRotator::ZeroRotator;
+
 	/** 最大生命值 */
 	UPROPERTY(EditAnywhere, Category = "Player States")
 	float MaxHealth = 100.f;

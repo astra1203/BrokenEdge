@@ -17,6 +17,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -162,7 +163,135 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	//@TODO
+	RotateInPlace(DeltaTime);
 	PollInit();
+}
+
+
+/**
+ * @brief 原地旋转处理
+ * @param DeltaTime 帧时间
+ */
+void ABrokenEdgeCharacter::RotateInPlace(float DeltaTime)
+{
+	if (Combat && Combat->bHoldingTheFlag)
+	{
+		bUseControllerRotationYaw = false;
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		TurningInPlace = ETurningInPlace::ETIP_NotTurning;
+		return;
+	}
+	if (Combat && Combat->EquippedWeapon) GetCharacterMovement()->bOrientRotationToMovement = false;
+	if (Combat && Combat->EquippedWeapon) bUseControllerRotationYaw = true;
+	
+	if (bDisableGameplay)
+	{
+		bUseControllerRotationYaw = false;
+		TurningInPlace = ETurningInPlace::ETIP_NotTurning;
+		return;
+	}
+	
+	if (GetLocalRole() > ENetRole::ROLE_SimulatedProxy && IsLocallyControlled())
+	{
+		AimOffset(DeltaTime);
+	}
+	// else  //@TODO
+	// {
+	// 	TimeSinceLastMovementReplication += DeltaTime;
+	// 	if (TimeSinceLastMovementReplication > 0.25f)
+	// 	{
+	// 		OnRep_ReplicatedMovement();
+	// 	}
+	// 	CalculateAO_Pitch();
+	// }
+}
+
+/**
+ * @brief 计算角色移动速度
+ * @return 水平方向速度大小
+ */
+float ABrokenEdgeCharacter::CalculateSpeed()
+{
+	FVector Velocity = GetVelocity();
+	Velocity.Z = 0.f;
+	return Velocity.Size();
+}
+
+/**
+ * @brief 计算瞄准偏移
+ * @param DeltaTime 帧时间
+ */
+void ABrokenEdgeCharacter::AimOffset(float DeltaTime)
+{
+	if (Combat && Combat->EquippedWeapon == nullptr) return;
+	float Speed = CalculateSpeed();
+	bool bIsInAir = GetCharacterMovement()->IsFalling();
+
+	if (Speed == 0.f && !bIsInAir) // 静止不动，不跳跃
+	{
+		bRotateRootBone = true;
+		FRotator CurrentAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
+		FRotator DeltaAimRotation = UKismetMathLibrary::NormalizedDeltaRotator(CurrentAimRotation, StartingAimRotation);
+		AO_X = DeltaAimRotation.Yaw;
+		if (TurningInPlace == ETurningInPlace::ETIP_NotTurning)
+		{
+			InterpAO_X = AO_X;
+		}
+		bUseControllerRotationYaw = true;
+		TurnInPlace(DeltaTime);
+	}
+	
+	if (Speed > 0.f || bIsInAir) // 跑或者跳
+	{
+		bRotateRootBone = false;
+		StartingAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
+		AO_X = 0.f;
+		bUseControllerRotationYaw = true;
+		TurningInPlace = ETurningInPlace::ETIP_NotTurning;
+	}
+
+	CalculateAO_Pitch();
+}
+
+/**
+ * @brief 计算瞄准俯仰角
+ */
+void ABrokenEdgeCharacter::CalculateAO_Pitch()
+{
+	AO_Y = GetBaseAimRotation().Pitch;
+	if (AO_Y > 90.f && !IsLocallyControlled())
+	{
+		// 将map俯仰角从 [270, 360) 转换为 [-90, 0)
+		FVector2D InRange(270.f, 360.f);
+		FVector2D OutRange(-90.f, 0.f);
+		AO_Y = FMath::GetMappedRangeValueClamped(InRange, OutRange, AO_Y);
+	}
+}
+
+/**
+ * @brief 原地转向插值处理
+ * @param DeltaTime 帧时间
+ */
+void ABrokenEdgeCharacter::TurnInPlace(float DeltaTime)
+{
+	if (AO_X > 90.f)
+	{
+		TurningInPlace = ETurningInPlace::ETIP_Right;
+	}
+	else if (AO_X < -90.f)
+	{
+		TurningInPlace = ETurningInPlace::ETIP_Left;
+	}
+	if (TurningInPlace != ETurningInPlace::ETIP_NotTurning)
+	{
+		InterpAO_X = FMath::FInterpTo(InterpAO_X, 0.f, DeltaTime, 4.f);
+		AO_X = InterpAO_X;
+		if (FMath::Abs(AO_X) < 15.f)
+		{
+			TurningInPlace = ETurningInPlace::ETIP_NotTurning;
+			StartingAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
+		}
+	}
 }
 
 void ABrokenEdgeCharacter::NotifyControllerChanged()

@@ -66,7 +66,11 @@ void UBrokenEdgeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	const float Interp = FMath::FInterpTo(Lean, Target, DeltaTime, 6.f);       // 平滑插值
 	Lean = FMath::Clamp(Interp, -90.f, 90.f);                                  // 限制范围
 
-	
+	// ========== 5. 获取瞄准偏移（Aim Offset） ==========
+	// 用于驱动动画蓝图中的瞄准偏移节点，实现上半身跟随瞄准
+	AO_X = BrokenEdgeCharacter->GetAO_X();                                     // 水平瞄准偏移
+	AO_Y = BrokenEdgeCharacter->GetAO_Y();                                 // 垂直瞄准偏移
+
 	
 	
 	
