@@ -7,8 +7,11 @@
 #include "BrokenEdgeAnimInstance.generated.h"
 
 enum class ETurningInPlace : uint8;
-/**
- * 
+/**动画状态机流程：
+* Standing Idle->Equipped->Slot "WeaponSlot"->WeaponSlot->
+AimOffsets->FullBody->TransformRightHand->TransformLeftHand->
+TransformHand+Unequipped(Blend Poses by bool)->Output Pose
+
  */
 UCLASS()
 class BROKENEDGE_API UBrokenEdgeAnimInstance : public UAnimInstance

@@ -9,6 +9,8 @@
 #include "CombatComponent.generated.h"
 
 
+enum class EWeaponType : uint8;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BROKENEDGE_API UCombatComponent : public UActorComponent
 {
@@ -218,7 +220,20 @@ private:
 	UFUNCTION()
 	void OnRep_Flag();
 
+	/** 各类型武器的携带弹药映射 */
+	TMap<EWeaponType, int32> CarriedAmmoMap;
+	TSortedMap<>
 
+	/** 当前携带的弹药数量 */
+	UPROPERTY(ReplicatedUsing = OnRep_CarriedAmmo)
+	int32 CarriedAmmo;
+
+	/**
+ * @brief 携带弹药复制回调
+ */
+	UFUNCTION()
+	void OnRep_CarriedAmmo();
+	
 public:
 	/**
 	 * @brief 检查是否应该切换武器

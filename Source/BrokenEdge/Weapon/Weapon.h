@@ -80,6 +80,11 @@ protected:
 	UPROPERTY()
 	class ABrokenEdgeCharacter* BrokenEdgeOwnerCharacter = nullptr;
 	
+	/** 缓存的武器所有者玩家控制器。 */
+	UPROPERTY()
+	class ABrokenEdgePlayerController* BrokenEdgeOwnerController;
+
+	
 	/// 是否使用服务端回退 @TODO
 	// UPROPERTY(Replicated, EditAnywhere)
 	// bool bUseServerSideRewind = false;
@@ -132,9 +137,21 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	class UWidgetComponent* PickUpWidget;
 
+	/** 开火时在武器网格体上播放的动画。 */
+	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+	class UAnimationAsset* FireAnimation;
+
+	/** 开火后生成的弹壳 Actor 类型。 */   //@TODO
+	// UPROPERTY(EditAnywhere)
+	// TSubclassOf<class ACasing> CasingClass;
+
 	/// 当前弹药数
 	UPROPERTY(EditAnywhere)
 	int32 Ammo;
+
+	/** 弹匣最大容量。 */
+	UPROPERTY(EditAnywhere)
+	int32 MagCapacity;
 
 	/// 武器类型
 	UPROPERTY(EditAnywhere)

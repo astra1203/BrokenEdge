@@ -6,6 +6,7 @@
 #include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/BrokenEdgeTypes/WeaponType.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Net/UnrealNetwork.h"
@@ -60,7 +61,19 @@ void AWeapon::MulticastAmmo_Implementation(int32 UpdateAmmo)
 
 void AWeapon::SetHUDAmmo()
 {
-	//@TODO
+	BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr ? 
+	Cast<ABrokenEdgeCharacter>(GetOwner()) : BrokenEdgeOwnerCharacter;
+	
+	if (BrokenEdgeOwnerCharacter)
+	{
+		BrokenEdgeOwnerController = BrokenEdgeOwnerController == nullptr ? 
+		Cast<ABrokenEdgePlayerController>(BrokenEdgeOwnerCharacter->Controller) : BrokenEdgeOwnerController;
+		
+		if (BrokenEdgeOwnerController)
+		{
+			BrokenEdgeOwnerController->SetHUDWeaponAmmo(Ammo);
+		}
+	}
 }
 
 // Called when the game starts or when spawned
