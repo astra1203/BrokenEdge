@@ -73,7 +73,8 @@ void UCombatComponent::EquipWeapon(class AWeapon* WeaponToEquip)
 			EquipPrimaryWeapon(WeaponToEquip);
 		}
 
-		//@TODO
+		Character->GetCharacterMovement()->bOrientRotationToMovement = false;
+		Character->bUseControllerRotationYaw = true;
 	}
 }
 
