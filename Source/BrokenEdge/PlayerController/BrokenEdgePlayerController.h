@@ -27,6 +27,7 @@ public:
 	 */
 	void SetHUDShield(float Shield, float MaxShield);
 	
+	void SetHUDWeaponAmmo(int32 Ammo);
 protected:
 	/// 玩家控制角色时调用
 	virtual void OnPossess(APawn* InPawn) override;
@@ -36,7 +37,7 @@ protected:
 	
 	/// 轮询初始化（等待必要组件加载）
 	void PollInit();
-	
+
 private:
 	/** HUD引用 */
 	UPROPERTY()
@@ -63,5 +64,11 @@ private:
 
 	/// HUD 最大护盾值
 	float HUDMaxShield;
+	
+	/** 是否初始化武器弹药 */
+	bool bInitializeWeaponAmmo = false;
+
+	/** HUD武器弹药 */
+	float HUDWeaponAmmo;
 	
 };

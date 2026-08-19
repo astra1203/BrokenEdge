@@ -32,5 +32,12 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ShieldText;
 
+	/** 当前武器弹药数 */
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* WeaponAmmoAmount;
+
+	/** 携带弹药数 */
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* CarriedAmmoAmount;
 	
 };

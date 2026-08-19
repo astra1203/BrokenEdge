@@ -87,7 +87,7 @@ void ABrokenEdgePlayerController::PollInit()
 			{
 				if (!bInitializeHealth) SetHUDHealth(HUDHealth, HUDMaxHealth);
 				if (!bInitializeShield) SetHUDShield(HUDShield, HUDMaxShield);
-				
+				if (!bInitializeWeaponAmmo) SetHUDWeaponAmmo(HUDWeaponAmmo);
 				//@TODO
 				
 			}
@@ -96,5 +96,25 @@ void ABrokenEdgePlayerController::PollInit()
 		
 	}
 	
+}
+
+void ABrokenEdgePlayerController::SetHUDWeaponAmmo(int32 Ammo)
+{
+	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
+	
+	bool bHUDValid = BrokenEdgeHUD &&
+		BrokenEdgeHUD->CharacterOverlay &&
+		BrokenEdgeHUD->CharacterOverlay->WeaponAmmoAmount;
+	
+	if (bHUDValid)
+	{
+		FString AmmoText = FString::Printf(TEXT("%d"), Ammo);
+		BrokenEdgeHUD->CharacterOverlay->WeaponAmmoAmount->SetText(FText::FromString(AmmoText));
+	}
+	else
+	{
+		bInitializeWeaponAmmo = true;
+		HUDWeaponAmmo = Ammo;
+	}
 }
 

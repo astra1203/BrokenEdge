@@ -56,6 +56,7 @@ public:
 	/** 更新HUD生命值显示 */
 	void UpdateHUDHealth();
 	void UpdateHUDShield();
+	void UpdateHUDAmmo();
 
 	/** 命中碰撞盒映射 */  // unordered_map
 	UPROPERTY()

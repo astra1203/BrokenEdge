@@ -412,9 +412,25 @@ void ABrokenEdgeCharacter::UpdateHUDShield()
 {
 	BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr ? 
 	Cast<ABrokenEdgePlayerController>(Controller) : BrokenEdgePlayerController;
+	
 	if (BrokenEdgePlayerController)
 	{
 		BrokenEdgePlayerController->SetHUDShield(Shield, MaxShield);
+	}
+}
+
+/**
+ * @brief 更新HUD弹药显示
+ */
+void ABrokenEdgeCharacter::UpdateHUDAmmo()
+{
+	BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr ? 
+	Cast<ABrokenEdgePlayerController>(Controller) : BrokenEdgePlayerController;
+	
+	if (BrokenEdgePlayerController && Combat && Combat->EquippedWeapon)
+	{
+		// BrokenEdgePlayerController->SetHUDCarriedAmmo(Combat->CarriedAmmo); //TODO
+		BrokenEdgePlayerController->SetHUDWeaponAmmo(Combat->EquippedWeapon->GetAmmo());
 	}
 }
 
@@ -581,7 +597,7 @@ void ABrokenEdgeCharacter::PollInit()
 		BrokenEdgePlayerController = Cast<ABrokenEdgePlayerController>(Controller);
 		if (BrokenEdgePlayerController)
 		{
-			
+			UpdateHUDAmmo();
 			UpdateHUDHealth();
 			UpdateHUDShield();
 			

@@ -392,6 +392,11 @@ void UCombatComponent::OnRep_Flag()
 	//@TODO
 }
 
+void UCombatComponent::OnRep_CarriedAmmo()
+{
+	//@TODO
+}
+
 bool UCombatComponent::ShouldSwapWeapons()
 {
 	// UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s %s"),
