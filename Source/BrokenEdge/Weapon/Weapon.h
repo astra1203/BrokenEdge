@@ -103,6 +103,11 @@ public:
  * @brief 武器掉落时调用
  */
 	virtual void Dropped();
+	
+	
+	/** 获取武器骨骼网格体组件。 */
+	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; }
+	
 private:
 	/// 武器网格体组件
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")

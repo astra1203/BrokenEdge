@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
+#include "BrokenEdge/BrokenEdgeTypes/CombatState.h"
 #include "BrokenEdge/BrokenEdgeTypes/TurningInPlace.h"
 #include "GameFramework/Character.h"
 #include "BrokenEdgeCharacter.generated.h"
@@ -320,6 +321,10 @@ public:
 
 	//是否处于瞄准状态
 	bool IsAiming();
+	AWeapon* GetEquippedWeapon();
+	FVector GetHitTarget() const;
+	ECombatState GetCombatState() const;
+	bool IsLocallyReloading();
 
 	/** 是否应该旋转根骨骼 */  //inline
 	FORCEINLINE bool ShouldRotateRootBone() const { return bRotateRootBone; }
@@ -333,5 +338,8 @@ public:
 	/** 是否禁用游戏逻辑 */
 	UPROPERTY(Replicated)
 	bool bDisableGameplay = false;
+
+	/** 获取是否禁用游戏逻辑 */
+	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }
 
 };

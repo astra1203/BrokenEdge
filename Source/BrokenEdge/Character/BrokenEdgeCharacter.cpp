@@ -165,6 +165,12 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
 	//@TODO
 	RotateInPlace(DeltaTime);
 	PollInit();
+	// bUseControllerRotationYaw = false;
+	// GetCharacterMovement()->bOrientRotationToMovement=true;
+	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s %s"), 
+		GFrameCounter, TEXT(__FUNCTION__), __LINE__, 
+		bUseControllerRotationYaw?TEXT("true"):TEXT("false"),
+		GetCharacterMovement()->bOrientRotationToMovement?TEXT("true"):TEXT("false"));
 }
 
 
@@ -181,6 +187,7 @@ void ABrokenEdgeCharacter::RotateInPlace(float DeltaTime)
 		TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 		return;
 	}
+	
 	if (Combat && Combat->EquippedWeapon) GetCharacterMovement()->bOrientRotationToMovement = false;
 	if (Combat && Combat->EquippedWeapon) bUseControllerRotationYaw = true;
 	
@@ -416,11 +423,9 @@ void ABrokenEdgeCharacter::UpdateHUDShield()
  */
 void ABrokenEdgeCharacter::Jump()
 {
-	// @ TODO
-	// if (Combat && Combat->bHoldingTheFlag) return;
-	// if (Combat) return;
-	// @ TODO
-	// if (bDisableGameplay) return;
+	if (Combat && Combat->bHoldingTheFlag) return;
+	if (Combat==nullptr) return;
+	if (bDisableGameplay) return;
 	if (bIsCrouched)
 	{
 		UnCrouch();
@@ -621,8 +626,7 @@ void ABrokenEdgeCharacter::SetOverlappingWeapon(AWeapon* Weapon)
 
 bool ABrokenEdgeCharacter::IsWeaponEquipped()
 {
-	//@ TODO
-	return true;
+	return (Combat && Combat->EquippedWeapon);
 }
 
 /**
@@ -631,7 +635,45 @@ bool ABrokenEdgeCharacter::IsWeaponEquipped()
  */
 bool ABrokenEdgeCharacter::IsAiming()
 {
-	//@ TODO
-	return true;
-	// return (Combat && Combat->bAiming);
+	return (Combat && Combat->bAiming);
+}
+
+
+/**
+ * @brief 获取当前装备的武器
+ * @return 当前装备的武器
+ */
+AWeapon* ABrokenEdgeCharacter::GetEquippedWeapon()
+{
+	if (Combat == nullptr) return nullptr;
+	return Combat->EquippedWeapon;
+}
+
+/**
+ * @brief 获取命中目标位置
+ * @return 命中目标位置
+ */
+FVector ABrokenEdgeCharacter::GetHitTarget() const
+{
+	if (Combat == nullptr) return FVector();
+	return Combat->HitTarget;
+}
+
+/**
+ * @brief 获取战斗状态
+ * @return 战斗状态
+ */
+ECombatState ABrokenEdgeCharacter::GetCombatState() const
+{
+	if (Combat == nullptr) return ECombatState::ECS_MAX;
+	return Combat->CombatState;
+}
+/**
+* @brief 是否正在本地换弹
+* @return 是否换弹中
+*/
+bool ABrokenEdgeCharacter::IsLocallyReloading()
+{
+	if (Combat == nullptr) return false;
+	return Combat->bLocallyReloading;
 }
