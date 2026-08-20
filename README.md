@@ -144,6 +144,7 @@ git lfs status
 
 ## 项目文档
 
+- [已完成功能、网络同步分析与后续开发路线](Docs/BrokenEdge_Project_Status_Network_Replication_Roadmap.md)
 - [Gitea 局域网 Git 服务器指南](Docs/Gitea_LAN_Git_Server_Guide.md)
 - [Git 使用指南](Docs/Git_Usage_Guide.md)
 - [PlayerController、生命值、护盾与 UI](Docs/UE5_PlayerController_Health_Shield_UI.md)
