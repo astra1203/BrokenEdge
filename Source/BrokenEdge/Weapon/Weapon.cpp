@@ -325,3 +325,13 @@ bool AWeapon::IsFull() const
 
 	return Ammo == MagCapacity;
 }
+/**
+ * @brief 添加弹药
+ * @param AmmoToAdd 要添加的弹药数量
+ */
+void AWeapon::AddAmmo(int32 AmmoToAdd)
+{
+	Ammo = FMath::Clamp(Ammo + AmmoToAdd, 0, MagCapacity);
+	SetHUDAmmo();
+	// ClientAddAmmo(AmmoToAdd);//@TODO
+}

@@ -190,5 +190,9 @@ public:
 	/// 获取武器类型
 	FORCEINLINE EWeaponType GetWeaponType() const { return WeaponType; }
 	
+	/** 获取弹匣最大容量。 */
+	FORCEINLINE int32 GetMagCapacity() const { return MagCapacity; }
+	
 	bool IsFull() const;
+	void AddAmmo(int32 AmmoToAdd);
 };

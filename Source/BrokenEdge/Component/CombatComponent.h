@@ -33,6 +33,20 @@ public:
 	/// 切换武器（主/副武器）
 	void SwapWeapons();
 	void Reload();
+	
+	/**
+	 * @brief 完成换弹（蓝图调用）
+	 */
+	UFUNCTION(BlueprintCallable)
+	void FinishReloading();
+	
+	void UpdateAmmoValues();
+	
+	/**
+ * @brief 计算需要装填的弹药数量
+ * @return 弹药数量
+ */
+	int32 AmountToReload();
 
 	/**
  * @brief 完成武器切换（蓝图调用）
