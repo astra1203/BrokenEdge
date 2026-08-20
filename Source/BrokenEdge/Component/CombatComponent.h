@@ -220,9 +220,6 @@ private:
 	UFUNCTION()
 	void OnRep_Flag();
 
-	/** 各类型武器的携带弹药映射 */
-	TMap<EWeaponType, int32> CarriedAmmoMap;
-	// TSortedMap<>
 
 	/** 当前携带的弹药数量 */
 	UPROPERTY(ReplicatedUsing = OnRep_CarriedAmmo)
