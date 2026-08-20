@@ -118,3 +118,22 @@ void ABrokenEdgePlayerController::SetHUDWeaponAmmo(int32 Ammo)
 	}
 }
 
+void ABrokenEdgePlayerController::SetHUDCarriedAmmo(int32 Ammo)
+{
+	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
+	
+	bool bHUDValid = BrokenEdgeHUD &&
+		BrokenEdgeHUD->CharacterOverlay &&
+		BrokenEdgeHUD->CharacterOverlay->CarriedAmmoAmount;
+	
+	if (bHUDValid)
+	{
+		FString AmmoText = FString::Printf(TEXT("%d"), Ammo);
+		BrokenEdgeHUD->CharacterOverlay->CarriedAmmoAmount->SetText(FText::FromString(AmmoText));
+	}
+	else
+	{
+		bInitializeCarriedAmmo = true;
+		HUDCarriedAmmo = Ammo;
+	}
+}

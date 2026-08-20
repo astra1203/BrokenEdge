@@ -119,6 +119,11 @@ protected:
  */
 	void SetHUDCrosshairs(float DeltaTime);
 	
+	/**
+ * @brief 更新携带弹药数量
+ */
+	void UpdateCarriedAmmo();
+	
 private:
 	/// 关联的角色
 	UPROPERTY()
@@ -230,6 +235,47 @@ private:
  */
 	UFUNCTION()
 	void OnRep_CarriedAmmo();
+	
+	/** 各类型武器的携带弹药映射 */
+	TMap<EWeaponType, int32> CarriedAmmoMap;
+
+	/** 最大携带弹药量 */
+	UPROPERTY(EditAnywhere)
+	int32 MaxCarriedAmmo = 500;
+
+	/** 初始突击步枪弹药 */
+	UPROPERTY(EditAnywhere)
+	int32 StartingARAmmo = 30;
+
+	/** 初始火箭弹药 */
+	UPROPERTY(EditAnywhere)
+	int32 StartingRocketAmmo = 0;
+
+	/** 初始手枪弹药 */
+	UPROPERTY(EditAnywhere)
+	int32 StartingPistolAmmo = 0;
+
+	/** 初始冲锋枪弹药 */
+	UPROPERTY(EditAnywhere)
+	int32 StartingSMGAmmo = 0;
+
+	/** 初始霰弹枪弹药 */
+	UPROPERTY(EditAnywhere)
+	int32 StartingShotgunAmmo = 0;
+
+	/** 初始狙击枪弹药 */
+	UPROPERTY(EditAnywhere)
+	int32 StartingSniperAmmo = 0;
+
+	/** 初始手雷数量 */
+	UPROPERTY(EditAnywhere)
+	int32 StartingGrenadeAmmo = 0;
+
+	/**
+	 * @brief 初始化携带弹药
+	 */
+	void InitializeCarriedAmmo();
+	
 	
 public:
 	/**

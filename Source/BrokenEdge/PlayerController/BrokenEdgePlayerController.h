@@ -28,6 +28,9 @@ public:
 	void SetHUDShield(float Shield, float MaxShield);
 	
 	void SetHUDWeaponAmmo(int32 Ammo);
+	
+	void SetHUDCarriedAmmo(int32 Ammo);
+
 protected:
 	/// 玩家控制角色时调用
 	virtual void OnPossess(APawn* InPawn) override;
@@ -71,4 +74,10 @@ private:
 	/** HUD武器弹药 */
 	float HUDWeaponAmmo;
 	
+	/** HUD携带弹药 */
+	float HUDCarriedAmmo;
+
+	/** 是否初始化携带弹药 */
+	bool bInitializeCarriedAmmo = false;
+
 };
