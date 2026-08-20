@@ -15,7 +15,7 @@
 // Sets default values
 AWeapon::AWeapon()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
 	SetReplicateMovement(true);
@@ -36,10 +36,9 @@ AWeapon::AWeapon()
 	AreaSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	AreaSphere->SetCollisionResponseToChannel(ECC_SkeletalMesh, ECollisionResponse::ECR_Overlap);
-	
+
 	PickUpWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("PickUpWidget"));
 	PickUpWidget->SetupAttachment(RootComponent);
-	
 }
 
 /**
@@ -61,14 +60,16 @@ void AWeapon::MulticastAmmo_Implementation(int32 UpdateAmmo)
 
 void AWeapon::SetHUDAmmo()
 {
-	BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr ? 
-	Cast<ABrokenEdgeCharacter>(GetOwner()) : BrokenEdgeOwnerCharacter;
-	
+	BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr
+		                           ? Cast<ABrokenEdgeCharacter>(GetOwner())
+		                           : BrokenEdgeOwnerCharacter;
+
 	if (BrokenEdgeOwnerCharacter)
 	{
-		BrokenEdgeOwnerController = BrokenEdgeOwnerController == nullptr ? 
-		Cast<ABrokenEdgePlayerController>(BrokenEdgeOwnerCharacter->Controller) : BrokenEdgeOwnerController;
-		
+		BrokenEdgeOwnerController = BrokenEdgeOwnerController == nullptr
+			                            ? Cast<ABrokenEdgePlayerController>(BrokenEdgeOwnerCharacter->Controller)
+			                            : BrokenEdgeOwnerController;
+
 		if (BrokenEdgeOwnerController)
 		{
 			BrokenEdgeOwnerController->SetHUDWeaponAmmo(Ammo);
@@ -80,12 +81,12 @@ void AWeapon::SetHUDAmmo()
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	AreaSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
-	
+
 	AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnSphereBeginOverlap);
-	
+
 	AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AWeapon::OnSphereEndOverlap);
 
 	if (PickUpWidget)
@@ -98,7 +99,6 @@ void AWeapon::BeginPlay()
 void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -107,6 +107,29 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 	DOREPLIFETIME(AWeapon, WeaponState);
 
 	//@TODO
+}
+
+void AWeapon::OnRep_Owner()
+{
+	Super::OnRep_Owner();
+	if (Owner == nullptr)
+	{
+		BrokenEdgeOwnerCharacter = nullptr;
+		BrokenEdgeOwnerController = nullptr;
+	}
+	else
+	{
+		BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr
+			                           ? Cast<ABrokenEdgeCharacter>(Owner)
+			                           : BrokenEdgeOwnerCharacter;
+
+		if (BrokenEdgeOwnerCharacter &&
+			BrokenEdgeOwnerCharacter->GetEquippedWeapon() &&
+			BrokenEdgeOwnerCharacter->GetEquippedWeapon() == this)
+		{
+			SetHUDAmmo();
+		}
+	}
 }
 
 /**
@@ -118,7 +141,9 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
  * @param bFromSweep 是否来自扫描
  * @param SweepResult 扫描结果
  */
-void AWeapon::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AWeapon::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                   UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                                   const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT(""));
 	ABrokenEdgeCharacter* BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(OtherActor);
@@ -132,7 +157,7 @@ void AWeapon::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 }
 
 void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+                                 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT(""));
 	ABrokenEdgeCharacter* BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(OtherActor);
@@ -143,7 +168,6 @@ void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		// if (BrokenEdgeCharacter->IsHoldingTheFlag()) return;
 		BrokenEdgeCharacter->SetOverlappingWeapon(nullptr);
 	}
-	
 }
 
 /**
@@ -166,7 +190,6 @@ void AWeapon::Dropped()
 	SetOwner(nullptr);
 
 	//@TODO
-
 }
 
 void AWeapon::OnRep_WeaponState()
@@ -180,7 +203,7 @@ void AWeapon::SetWeaponState(EWeaponState State)
 {
 	WeaponState = State;
 
-	OnWeaponStateSet();//TODO
+	OnWeaponStateSet(); //TODO
 }
 
 /**
@@ -209,7 +232,7 @@ void AWeapon::OnEquipped()
 	WeaponMesh->SetSimulatePhysics(false);
 	WeaponMesh->SetEnableGravity(false);
 	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
+
 	if (WeaponType == EWeaponType::EWT_SMG)
 	{
 		WeaponMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
@@ -218,8 +241,10 @@ void AWeapon::OnEquipped()
 	}
 	EnableCustomDepth(false);
 
-	BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr ? Cast<ABrokenEdgeCharacter>(GetOwner()) : BrokenEdgeOwnerCharacter;
-	
+	BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr
+		                           ? Cast<ABrokenEdgeCharacter>(GetOwner())
+		                           : BrokenEdgeOwnerCharacter;
+
 	//@TODO
 	// if (BrokenEdgeOwnerCharacter && bUseServerSideRewind)
 	// {
@@ -244,7 +269,7 @@ void AWeapon::OnEquippedSecondary()
 		WeaponMesh->SetEnableGravity(true);
 		WeaponMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	}
-	
+
 	if (WeaponMesh)
 	{
 		WeaponMesh->SetCustomDepthStencilValue(CUSTOM_DEPTH_TAN);
@@ -290,4 +315,13 @@ void AWeapon::OnDropped()
 	// 		BlasterOwnerController->HighPingDelegate.RemoveDynamic(this, &AWeapon::OnPingTooHigh);
 	// 	}
 	// }
+}
+
+bool AWeapon::IsFull() const
+{
+	if (Ammo > MagCapacity)
+		UE_LOG(LogTemp, Warning, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+	       TEXT("当前弹药数大于弹匣最大容量。"));
+
+	return Ammo == MagCapacity;
 }

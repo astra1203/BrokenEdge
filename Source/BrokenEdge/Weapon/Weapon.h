@@ -40,6 +40,11 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	/**
+ * @brief 武器所有者复制完成后的回调，用于刷新所有者缓存和 HUD 弹药。
+ */
+	virtual void OnRep_Owner() override;
+	
+	/**
  * @brief 多播更新弹药数（所有客户端）
  * @param UpdateAmmo 更新后的弹药数
  */
@@ -84,12 +89,10 @@ protected:
 	UPROPERTY()
 	class ABrokenEdgePlayerController* BrokenEdgeOwnerController;
 
-	
 	/// 是否使用服务端回退 @TODO
 	// UPROPERTY(Replicated, EditAnywhere)
 	// bool bUseServerSideRewind = false;
 
-	
 public:	
 
 	void EnableCustomDepth(bool bEnable);
@@ -186,4 +189,6 @@ public:
 
 	/// 获取武器类型
 	FORCEINLINE EWeaponType GetWeaponType() const { return WeaponType; }
+	
+	bool IsFull() const;
 };

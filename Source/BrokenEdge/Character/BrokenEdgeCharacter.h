@@ -49,7 +49,14 @@ public:
  * @brief 播放武器切换动画
 	 */
 	void PlaySwapMontage();
+	
+	void PlayHitReactMontage();
 
+	/**
+ * @brief 播放换弹动画
+ */
+	void PlayReloadMontage();
+	
 	/// 是否完成武器切换
 	bool bFinishedSwapping = false;
 	
@@ -152,7 +159,8 @@ public:
 	 * @brief 瞄准按钮松开
 	 */
 	void AimButtonReleased();
-	
+	void ReloadButtonPressed();
+
 	/** 获取瞄准偏移偏航值 */
 	FORCEINLINE float GetAO_X() const { return AO_X; }
 
@@ -185,9 +193,13 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* EquipAction;
 
-	/** Equip Input Action */
+	/** Aim Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AimAction;
+	
+	/** Reload Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ReloadAction;
 
 	
 	/// 摄像机弹簧臂组件
@@ -209,7 +221,14 @@ private:
 	/** 武器切换动画 */
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* SwapMontage = nullptr;
+	
+	/** 受击反应动画 */
+	UPROPERTY(EditAnywhere, Category = Combat)
+	UAnimMontage* HitReactMontage = nullptr;
 
+	/** 换弹动画 */
+	UPROPERTY(EditAnywhere, Category = Combat)
+	UAnimMontage* ReloadMontage = nullptr;
 
 	/**
  * @brief 重叠武器复制回调
@@ -281,7 +300,7 @@ private:
      * @param LastHealth 上一个生命值
     */
 	UFUNCTION()
-	void OnRep_Health();
+	void OnRep_Health(float LastHealth);
 	
 	/** 玩家控制器 */
 	UPROPERTY()

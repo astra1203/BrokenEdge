@@ -88,6 +88,7 @@ void UCombatComponent::SwapWeapons()
 	if (SecondaryWeapon) SecondaryWeapon->EnableCustomDepth(false);
 }
 
+
 void UCombatComponent::FinishSwap()
 {
 	if (Character && Character->HasAuthority())
@@ -118,6 +119,31 @@ void UCombatComponent::FinishSwapAttachWeapons()
 }
 
 
+/**
+ * @brief 换弹逻辑
+ */
+void UCombatComponent::Reload()
+{
+	if (CarriedAmmo > 0 && CombatState == ECombatState::ECS_Unoccuiped && 
+		!EquippedWeapon->IsFull() && !bLocallyReloading)
+	{
+		ServerReload();
+		HandleReload();
+		bLocallyReloading = true;
+	}
+}
+
+
+void UCombatComponent::ServerReload_Implementation()
+{
+	if (Character == nullptr || EquippedWeapon == nullptr)return;
+	
+	CombatState = ECombatState::ECS_Reloading;
+	
+	if (!Character->IsLocallyReloading())HandleReload();
+	
+}
+
 // Called when the game starts
 void UCombatComponent::BeginPlay()
 {
@@ -133,14 +159,12 @@ void UCombatComponent::BeginPlay()
 		// 	DefaultFOV = Character->GetFollowCamera()->FieldOfView;
 		// 	CurrentFOV = DefaultFOV;
 		// }
-		
+
 		if (Character->HasAuthority())
 		{
 			InitializeCarriedAmmo();
 		}
 	}
-
-	
 }
 
 
@@ -381,6 +405,15 @@ void UCombatComponent::UpdateCarriedAmmo()
 	}
 }
 
+void UCombatComponent::HandleReload()
+{
+	if (Character)
+	{
+		Character->PlayReloadMontage();
+	}
+}
+
+
 void UCombatComponent::ServerSetAiming_Implementation(bool bIsAiming)
 {
 	bAiming = bIsAiming;
@@ -393,6 +426,20 @@ void UCombatComponent::ServerSetAiming_Implementation(bool bIsAiming)
 void UCombatComponent::OnRep_EquippedWeapon()
 {
 	//@TODO
+
+
+	if (EquippedWeapon && Character)
+	{
+		//EquippedWeapon->SetSyncAmmo();
+		// EquippedWeapon->SetSquence();
+		EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
+		AttachActorToRightHand(EquippedWeapon);
+		Character->GetCharacterMovement()->bOrientRotationToMovement = false;
+		Character->bUseControllerRotationYaw = true;
+		// PlayEquipWeaponSound(EquippedWeapon);
+		EquippedWeapon->EnableCustomDepth(false);
+		EquippedWeapon->SetHUDAmmo();
+	}
 }
 
 void UCombatComponent::OnRep_SecondaryWeapon()
@@ -425,7 +472,23 @@ void UCombatComponent::OnRep_Flag()
 
 void UCombatComponent::OnRep_CarriedAmmo()
 {
+	Controller = Controller == nullptr ? Cast<ABrokenEdgePlayerController>(Character->Controller) : Controller;
+
+	if (Controller)
+	{
+		Controller->SetHUDCarriedAmmo(CarriedAmmo);
+	}
+
 	//@TODO
+	// bool bJumpToShotgunEnd =
+	// CombatState == ECombatState::ECS_Reloading &&
+	// EquippedWeapon != nullptr &&
+	// EquippedWeapon->GetWeaponType() == EWeaponType::EWT_Shotgun &&
+	// CarriedAmmo == 0;
+	// if (bJumpToShotgunEnd)
+	// {
+	// 	JumpToShotgunEnd();
+	// }
 }
 
 void UCombatComponent::InitializeCarriedAmmo()

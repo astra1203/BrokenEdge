@@ -84,12 +84,13 @@ void ABrokenEdgePlayerController::PollInit()
 		{
 			CharacterOverlay = BrokenEdgeHUD->CharacterOverlay;
 			
+			if (CharacterOverlay)
 			{
-				if (!HasAuthority())
-				{
-					UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | LocalCharacter: %s"), GFrameCounter, TEXT(__FUNCTION__),
-					       __LINE__, *GetNameSafe(GetCharacter()));
-				}
+				// if (!HasAuthority())
+				// {
+				// 	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | LocalCharacter: %s"), GFrameCounter, TEXT(__FUNCTION__),
+				// 	       __LINE__, *GetNameSafe(GetCharacter()));
+				// }
 				
 				if (bInitializeHealth) SetHUDHealth(HUDHealth, HUDMaxHealth);
 				if (bInitializeShield) SetHUDShield(HUDShield, HUDMaxShield);

@@ -32,7 +32,8 @@ public:
 
 	/// 切换武器（主/副武器）
 	void SwapWeapons();
-	
+	void Reload();
+
 	/**
  * @brief 完成武器切换（蓝图调用）
  */
@@ -124,6 +125,16 @@ protected:
  */
 	void UpdateCarriedAmmo();
 	
+	/**
+ * @brief 服务器端换弹
+ */
+	UFUNCTION(Server, Reliable)
+	void ServerReload();
+	
+	/**
+ * @brief 处理换弹逻辑
+ */
+	void HandleReload();
 private:
 	/// 关联的角色
 	UPROPERTY()

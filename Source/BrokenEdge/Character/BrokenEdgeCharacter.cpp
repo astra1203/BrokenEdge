@@ -324,10 +324,11 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
+		//跳跃
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ABrokenEdgeCharacter::StopJumping);
 
-		// Moving
+		//移动
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABrokenEdgeCharacter::Move);
 
 		//看
@@ -343,6 +344,9 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::AimButtonPressed);
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ABrokenEdgeCharacter::AimButtonReleased);
 	
+		//装备武器
+		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::ReloadButtonPressed);
+		
 	}
 	else
 	{
@@ -392,9 +396,70 @@ void ABrokenEdgeCharacter::PlaySwapMontage()
 	}
 }
 
+/**
+ * @brief 播放受击动画
+ */
+void ABrokenEdgeCharacter::PlayHitReactMontage()
+{
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr||HitReactMontage==nullptr) return;
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_Play(HitReactMontage);
+		// FName SectionName("FromFront");
+		// AnimInstance->Montage_JumpToSection(SectionName);
+	}
+}
+
+void ABrokenEdgeCharacter::PlayReloadMontage()
+{
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr || ReloadMontage == nullptr) return;
+	
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance == nullptr)return;
+	
+	AnimInstance->Montage_Play(ReloadMontage);
+	
+	FName SectionName;
+
+	switch (Combat->EquippedWeapon->GetWeaponType())
+	{
+	case EWeaponType::EWT_AssaultRifle:
+	case EWeaponType::EWT_RocketLauncher:
+	case EWeaponType::EWT_Pistol:
+	case EWeaponType::EWT_SMG:
+	case EWeaponType::EWT_SniperRifle:
+	case EWeaponType::EWT_GrenadeLauncher:
+		SectionName = FName("Rifle");
+		break;
+	case EWeaponType::EWT_Shotgun:
+		SectionName = FName("Shotgun");
+		break;
+	// case EWeaponType::EWT_Pistol:
+	// 	SectionName = FName("Pistol");
+	// 	break;
+	// case EWeaponType::EWT_SMG:
+	// 	SectionName = FName("Pistol");
+	// 	break;
+	// case EWeaponType::EWT_Shotgun:
+	// 	SectionName = FName("Shotgun");
+	// 	break;
+	// case EWeaponType::EWT_SniperRifle:
+	// 	SectionName = FName("SniperRifle");
+	// 	break;
+	// case EWeaponType::EWT_GrenadeLauncher:
+	// 	SectionName = FName("GrenadeLauncher");
+	// 	break;
+	}
+
+	AnimInstance->Montage_JumpToSection(SectionName);
+}
+
+
 void ABrokenEdgeCharacter::UpdateHUDHealth()
 {
-	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, Controller?*Controller->GetName():TEXT("空"));
+	// UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, Controller?*Controller->GetName():TEXT("空"));
 	BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr ? Cast<ABrokenEdgePlayerController>(GetController()) : BrokenEdgePlayerController;
 
 	if (BrokenEdgePlayerController)
@@ -549,6 +614,20 @@ void ABrokenEdgeCharacter::AimButtonReleased()
 	}
 }
 
+/**
+ * @brief 换弹按钮按下处理
+ */
+void ABrokenEdgeCharacter::ReloadButtonPressed()
+{
+	if (Combat && Combat->bHoldingTheFlag) return;
+	if (bDisableGameplay) return;
+	if (Combat)
+	{
+		Combat->Reload();
+	}
+	
+}
+
 void ABrokenEdgeCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 {
 	//@TODO
@@ -576,13 +655,17 @@ void ABrokenEdgeCharacter::ServerEquipButtonPressed_Implementation()
 void ABrokenEdgeCharacter::OnRep_Shield(float LastShield)
 {
 	//@TODO
-	// UpdateHUDShield();
+	UpdateHUDShield();
 }
 
-void ABrokenEdgeCharacter::OnRep_Health()
+void ABrokenEdgeCharacter::OnRep_Health(float LastHealth)
 {
 	UpdateHUDHealth();
 	//@TODO
+	if (Health < LastHealth)
+	{
+		PlayHitReactMontage();
+	}
 	
 	
 }
@@ -591,6 +674,21 @@ void ABrokenEdgeCharacter::PollInit()
 {
 	//@TODO
 	
+	
+	// if (BrokenEdgePlayerState == nullptr)
+	// {
+	// 	BlasterPlayerState = GetPlayerState<ABlasterPlayerState>();
+	// 	if (BlasterPlayerState)
+	// 	{
+	// 		OnPlayerStateInitialized();
+	//
+	// 		ABlasterGameState* BlasterGameState = Cast<ABlasterGameState>(UGameplayStatics::GetGameState(this));
+	// 		if (BlasterGameState && BlasterGameState->TopScoringPlayers.Contains(BlasterPlayerState))
+	// 		{
+	// 			MulticastGainedTheLead();
+	// 		}
+	// 	}
+	// }
 	
 	if (BrokenEdgePlayerController==nullptr)
 	{
