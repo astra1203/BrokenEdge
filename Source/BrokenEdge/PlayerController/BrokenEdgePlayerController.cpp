@@ -64,7 +64,8 @@ void ABrokenEdgePlayerController::OnPossess(APawn* InPawn)
 	if (TObjectPtr<ABrokenEdgeCharacter> BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(InPawn)) 
 	{
 		SetHUDHealth(BrokenEdgeCharacter->GetHealth(), BrokenEdgeCharacter->GetMaxHealth());
-		
+		SetHUDShield(BrokenEdgeCharacter->GetShield(), BrokenEdgeCharacter->GetMaxShield());
+		// SetHUDWeaponAmmo(BrokenEdgeCharacter->Combat->WeaponAmmoAmount);
 	}
 	
 }
@@ -83,11 +84,16 @@ void ABrokenEdgePlayerController::PollInit()
 		{
 			CharacterOverlay = BrokenEdgeHUD->CharacterOverlay;
 			
-			if (CharacterOverlay)
 			{
-				if (!bInitializeHealth) SetHUDHealth(HUDHealth, HUDMaxHealth);
-				if (!bInitializeShield) SetHUDShield(HUDShield, HUDMaxShield);
-				if (!bInitializeWeaponAmmo) SetHUDWeaponAmmo(HUDWeaponAmmo);
+				if (!HasAuthority())
+				{
+					UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | LocalCharacter: %s"), GFrameCounter, TEXT(__FUNCTION__),
+					       __LINE__, *GetNameSafe(GetCharacter()));
+				}
+				
+				if (bInitializeHealth) SetHUDHealth(HUDHealth, HUDMaxHealth);
+				if (bInitializeShield) SetHUDShield(HUDShield, HUDMaxShield);
+				if (bInitializeWeaponAmmo) SetHUDWeaponAmmo(HUDWeaponAmmo);
 				//@TODO
 				
 			}

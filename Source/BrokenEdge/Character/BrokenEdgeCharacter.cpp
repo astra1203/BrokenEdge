@@ -167,10 +167,10 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
 	PollInit();
 	// bUseControllerRotationYaw = false;
 	// GetCharacterMovement()->bOrientRotationToMovement=true;
-	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s %s"), 
-		GFrameCounter, TEXT(__FUNCTION__), __LINE__, 
-		bUseControllerRotationYaw?TEXT("true"):TEXT("false"),
-		GetCharacterMovement()->bOrientRotationToMovement?TEXT("true"):TEXT("false"));
+	// UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s %s"), 
+	// 	GFrameCounter, TEXT(__FUNCTION__), __LINE__, 
+	// 	bUseControllerRotationYaw?TEXT("true"):TEXT("false"),
+	// 	GetCharacterMovement()->bOrientRotationToMovement?TEXT("true"):TEXT("false"));
 }
 
 
@@ -492,7 +492,7 @@ void ABrokenEdgeCharacter::CrouchButtonPressed()
 {
 	if (Combat && Combat->bHoldingTheFlag) return;
 	if (bDisableGameplay) return;
-	if (Combat)return;
+	if (Combat==nullptr) return;
 
 	if (bIsCrouched)
 	{

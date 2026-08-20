@@ -54,28 +54,28 @@ private:
 	bool bInitializeHealth = false;
 	
 	/** HUD生命值 */
-	float HUDHealth;
+	float HUDHealth = 0.f;
 	
 	/** HUD最大生命值 */
-	float HUDMaxHealth;
+	float HUDMaxHealth = 0.f;
 	
 	/// HUD 护盾值
-	float HUDShield;
+	float HUDShield = 0.f;
 	
 	/** 是否初始化护盾值 */
 	bool bInitializeShield = false;
 
 	/// HUD 最大护盾值
-	float HUDMaxShield;
+	float HUDMaxShield = 0.f;
 	
 	/** 是否初始化武器弹药 */
 	bool bInitializeWeaponAmmo = false;
 
 	/** HUD武器弹药 */
-	float HUDWeaponAmmo;
+	float HUDWeaponAmmo = 0.f;
 	
 	/** HUD携带弹药 */
-	float HUDCarriedAmmo;
+	float HUDCarriedAmmo = 0.f;
 
 	/** 是否初始化携带弹药 */
 	bool bInitializeCarriedAmmo = false;
