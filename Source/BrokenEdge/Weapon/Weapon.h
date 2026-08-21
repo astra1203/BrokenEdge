@@ -83,7 +83,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY()
-	class ABrokenEdgeCharacter* BrokenEdgeOwnerCharacter = nullptr;
+	class ABrokenEdgeCharacter* BrokenEdgeOwnerCharacter;
 	
 	/** 缓存的武器所有者玩家控制器。 */
 	UPROPERTY()
@@ -195,4 +195,11 @@ public:
 	
 	bool IsFull() const;
 	void AddAmmo(int32 AmmoToAdd);
+
+	/**
+ * @brief 通知所属客户端增加弹药。
+ * @param AmmoToAdd 要增加的弹药数量。
+ */
+	UFUNCTION(Client, Reliable)
+	void ClientAddAmmo(int32 AmmoToAdd);
 };

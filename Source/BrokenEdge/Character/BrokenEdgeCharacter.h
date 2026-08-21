@@ -69,6 +69,9 @@ public:
 	UPROPERTY()
 	TMap<FName, UBoxComponent*> HitCollisionBoxes;
 
+	/** 获取战斗组件 */
+	FORCEINLINE UCombatComponent* GetCombat() const { return Combat; }
+
 protected:
 
 	/** 头部碰撞盒 */
@@ -218,6 +221,13 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
 	AWeapon* OverlappingWeapon;
 	
+	/**
+ * @brief 重叠武器复制回调
+ * @param LastWeapon 上一个重叠武器
+ */
+	UFUNCTION()
+	void OnRep_OverlappingWeapon(AWeapon* LastWeapon);
+
 	/** 武器切换动画 */
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* SwapMontage = nullptr;
@@ -230,12 +240,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* ReloadMontage = nullptr;
 
-	/**
- * @brief 重叠武器复制回调
- * @param LastWeapon 上一个重叠武器
- */
-	UFUNCTION()
-	void OnRep_OverlappingWeapon(AWeapon* LastWeapon);
 	
 	/// 服务器处理装备按钮按下
 	UFUNCTION(Server, Reliable)
@@ -362,4 +366,5 @@ public:
 	/** 获取是否禁用游戏逻辑 */
 	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }
 
+	AWeapon* GetOverlappingWeapon(){return OverlappingWeapon;}
 };

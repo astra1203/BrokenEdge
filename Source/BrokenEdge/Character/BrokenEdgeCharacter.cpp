@@ -344,7 +344,7 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::AimButtonPressed);
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ABrokenEdgeCharacter::AimButtonReleased);
 	
-		//装备武器
+		//换子弹
 		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::ReloadButtonPressed);
 		
 	}
@@ -360,6 +360,7 @@ void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProp
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(ABrokenEdgeCharacter, OverlappingWeapon, COND_OwnerOnly);
+	// DOREPLIFETIME(ABrokenEdgeCharacter, OverlappingWeapon);
 	DOREPLIFETIME(ABrokenEdgeCharacter, Health);
 	DOREPLIFETIME(ABrokenEdgeCharacter, bDisableGameplay);
 	DOREPLIFETIME(ABrokenEdgeCharacter, Shield);
@@ -630,7 +631,14 @@ void ABrokenEdgeCharacter::ReloadButtonPressed()
 
 void ABrokenEdgeCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 {
-	//@TODO
+	if (OverlappingWeapon)
+	{
+		OverlappingWeapon->ShowPickupWidget(true);
+	}
+	if (LastWeapon)
+	{
+		LastWeapon->ShowPickupWidget(false);
+	}
 }
 
 /**

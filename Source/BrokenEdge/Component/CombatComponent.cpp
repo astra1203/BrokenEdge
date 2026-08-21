@@ -124,7 +124,7 @@ void UCombatComponent::FinishSwapAttachWeapons()
  */
 void UCombatComponent::Reload()
 {
-	if (CarriedAmmo > 0 && CombatState == ECombatState::ECS_Unoccuiped && 
+	if (CarriedAmmo > 0 && CombatState == ECombatState::ECS_Unoccuiped && EquippedWeapon &&
 		!EquippedWeapon->IsFull() && !bLocallyReloading)
 	{
 		ServerReload();
@@ -498,7 +498,12 @@ void UCombatComponent::OnRep_EquippedWeapon()
 
 void UCombatComponent::OnRep_SecondaryWeapon()
 {
-	//@TODO
+	if (SecondaryWeapon && Character)
+	{
+		SecondaryWeapon->SetWeaponState(EWeaponState::EWS_EquippedSecondary);
+		// AttachActorToBackpack(SecondaryWeapon);
+		// PlayEquipWeaponSound(EquippedWeapon);//@TODO
+	}
 }
 
 void UCombatComponent::OnRep_Aiming()
@@ -517,6 +522,33 @@ void UCombatComponent::OnRep_HoldingTheFlag()
 void UCombatComponent::OnRep_CombatState()
 {
 	//@TODO
+
+	switch (CombatState)
+	{
+	case ECombatState::ECS_Reloading:
+		// if (Character && !Character->IsLocallyControlled()) HandleReload();
+		break;
+	case ECombatState::ECS_Unoccuiped:
+		// if (bFireButtonPressed)
+		// {
+		// 	Fire();
+		// }
+		break;
+	case ECombatState::ECS_ThrowingGrenade:
+		// if (Character && !Character->IsLocallyControlled())
+		// {
+		// 	Character->PlayThrowGrenadeMontage();
+		// 	AttachActorToLeftHand(EquippedWeapon);
+		// 	ShowAttachedGrenade(true);
+		// }
+		break;
+	case ECombatState::ECS_SwappingWeapon:
+		// if (Character && !Character->IsLocallyControlled())
+		// {
+		// 	Character->PlaySwapMontage();
+		// }
+		break;
+	}
 }
 
 void UCombatComponent::OnRep_Flag()

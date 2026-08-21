@@ -6,6 +6,7 @@
 #include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/BrokenEdgeTypes/WeaponType.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
@@ -85,9 +86,12 @@ void AWeapon::BeginPlay()
 	AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	AreaSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
-	AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnSphereBeginOverlap);
+	if (HasAuthority())
+	{
+		AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnSphereBeginOverlap);
 
-	AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AWeapon::OnSphereEndOverlap);
+		AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AWeapon::OnSphereEndOverlap);
+	}
 
 	if (PickUpWidget)
 	{
@@ -161,7 +165,7 @@ void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 {
 	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT(""));
 	ABrokenEdgeCharacter* BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(OtherActor);
-	if (BrokenEdgeCharacter)
+	if (BrokenEdgeCharacter && BrokenEdgeCharacter->GetOverlappingWeapon()==this)
 	{
 		//@TODO
 		// if (WeaponType == EWeaponType::EWT_Flag && BrokenEdgeCharacter->GetTeam() == Team) return;
@@ -189,7 +193,8 @@ void AWeapon::Dropped()
 	WeaponMesh->DetachFromComponent(DetachRules);
 	SetOwner(nullptr);
 
-	//@TODO
+	BrokenEdgeOwnerCharacter = nullptr;
+	BrokenEdgeOwnerController = nullptr;
 }
 
 void AWeapon::OnRep_WeaponState()
@@ -333,5 +338,31 @@ void AWeapon::AddAmmo(int32 AmmoToAdd)
 {
 	Ammo = FMath::Clamp(Ammo + AmmoToAdd, 0, MagCapacity);
 	SetHUDAmmo();
-	// ClientAddAmmo(AmmoToAdd);//@TODO
+	ClientAddAmmo(AmmoToAdd);
+}
+
+/**
+ * @brief 客户端添加弹药
+ * @param AmmoToAdd 要添加的弹药数量
+ */
+void AWeapon::ClientAddAmmo_Implementation(int32 AmmoToAdd)
+{
+	if (HasAuthority()) return;
+
+	Ammo = FMath::Clamp(Ammo + AmmoToAdd, 0, MagCapacity);
+	BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr ? Cast<ABrokenEdgeCharacter>(GetOwner()) : BrokenEdgeOwnerCharacter;
+
+	bool IsShotgunFull = BrokenEdgeOwnerCharacter
+		&& BrokenEdgeOwnerCharacter->GetCombat()
+		&& BrokenEdgeOwnerCharacter->GetEquippedWeapon()
+		&& WeaponType == EWeaponType::EWT_Shotgun
+		&& IsFull();
+
+	//@TODO
+	// if (IsShotgunFull)
+	// {
+	// 	// BrokenEdgeOwnerCharacter->GetCombat()->JumpToShotgunEnd();
+	// }
+
+	SetHUDAmmo();
 }
