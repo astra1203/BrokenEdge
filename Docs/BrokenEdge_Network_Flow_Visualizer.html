@@ -1,0 +1,1837 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BrokenEdge 已实现功能的服务器、拥有者客户端与其他客户端网络状态动画。">
+  <title>BrokenEdge · 网络功能流程实验室</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-soft: #0b1722;
+      --panel: rgba(15, 29, 42, 0.92);
+      --panel-strong: #132638;
+      --line: rgba(151, 184, 209, 0.18);
+      --line-strong: rgba(151, 184, 209, 0.32);
+      --text: #eef7ff;
+      --muted: #91a9bb;
+      --cyan: #55d8ff;
+      --cyan-soft: rgba(85, 216, 255, 0.13);
+      --green: #63e6a6;
+      --green-soft: rgba(99, 230, 166, 0.13);
+      --amber: #ffc96b;
+      --amber-soft: rgba(255, 201, 107, 0.13);
+      --violet: #b8a2ff;
+      --violet-soft: rgba(184, 162, 255, 0.13);
+      --red: #ff8496;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+      --radius: 18px;
+      --mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      --sans: Inter, "Segoe UI", "Microsoft YaHei UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      max-width: 100%;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      max-width: 100%;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 18% -10%, rgba(85, 216, 255, 0.15), transparent 32rem),
+        radial-gradient(circle at 90% 5%, rgba(184, 162, 255, 0.13), transparent 28rem),
+        linear-gradient(180deg, #08131d 0%, var(--bg) 48%, #050b11 100%);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.55;
+    }
+
+    button, select, a { font: inherit; }
+
+    button, select {
+      color: inherit;
+    }
+
+    button:focus-visible, select:focus-visible, a:focus-visible {
+      outline: 3px solid rgba(85, 216, 255, 0.55);
+      outline-offset: 3px;
+    }
+
+    a { color: var(--cyan); }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .app-shell {
+      width: min(1480px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 48px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 2px 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: linear-gradient(145deg, var(--cyan), #3985ff);
+      color: #031019;
+      font-weight: 800;
+      box-shadow: 0 10px 32px rgba(85, 216, 255, 0.22);
+    }
+
+    .brand-copy strong,
+    .brand-copy span { display: block; }
+
+    .brand-copy strong { letter-spacing: 0.02em; }
+    .brand-copy span { color: var(--muted); font-size: 13px; }
+
+    .top-links {
+      display: flex;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-links a { color: inherit; text-decoration: none; }
+    .top-links a:hover { color: var(--text); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 24px;
+      align-items: end;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background:
+        linear-gradient(135deg, rgba(85, 216, 255, 0.08), transparent 45%),
+        rgba(8, 20, 30, 0.82);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      border: 1px solid rgba(85, 216, 255, 0.08);
+      border-radius: 50%;
+      right: -170px;
+      top: -190px;
+      box-shadow: 0 0 0 48px rgba(85, 216, 255, 0.025), 0 0 0 96px rgba(85, 216, 255, 0.018);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 780px;
+      font-size: clamp(32px, 5vw, 64px);
+      line-height: 1.06;
+      letter-spacing: -0.045em;
+      font-weight: 720;
+      overflow-wrap: anywhere;
+    }
+
+    .hero-copy {
+      margin: 18px 0 0;
+      max-width: 760px;
+      color: #b5c8d6;
+      font-size: clamp(15px, 1.7vw, 18px);
+      overflow-wrap: anywhere;
+    }
+
+    .hero > * { min-width: 0; }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .meta-item {
+      min-width: 0;
+      min-height: 86px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: rgba(10, 25, 37, 0.78);
+    }
+
+    .meta-item span, .meta-item strong { display: block; }
+    .meta-item span { color: var(--muted); font-size: 12px; }
+    .meta-item strong { margin-top: 6px; font-size: 15px; }
+
+    main {
+      min-width: 0;
+      max-width: 100%;
+      margin-top: 26px;
+    }
+
+    .scenario-nav {
+      display: flex;
+      gap: 10px;
+      padding: 2px 0 14px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .scenario-button {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(11, 25, 37, 0.76);
+      color: #b9cad6;
+      cursor: pointer;
+      transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+    }
+
+    .scenario-button:hover { border-color: var(--line-strong); color: var(--text); }
+    .scenario-button[aria-selected="true"] {
+      color: #05121b;
+      border-color: var(--cyan);
+      background: var(--cyan);
+    }
+
+    .scenario-button .mini-status {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.75;
+    }
+
+    .lab {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(7, 17, 26, 0.86);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .lab-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(15, 30, 43, 0.74);
+    }
+
+    .scenario-heading {
+      min-width: 0;
+    }
+
+    .scenario-heading-top {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .scenario-heading h2 {
+      margin: 0;
+      font-size: clamp(20px, 2.5vw, 29px);
+      line-height: 1.2;
+    }
+
+    .scenario-heading p {
+      margin: 5px 0 0;
+      color: var(--muted);
+    }
+
+    .status-badge, .transport-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: fit-content;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .status-badge.closed { color: var(--green); background: var(--green-soft); }
+    .status-badge.partial { color: var(--amber); background: var(--amber-soft); }
+    .status-badge.engine { color: var(--cyan); background: var(--cyan-soft); }
+    .transport-badge { color: var(--violet); background: var(--violet-soft); font-family: var(--mono); }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .control-button, .speed-select {
+      min-height: 40px;
+      border: 1px solid var(--line-strong);
+      border-radius: 11px;
+      background: #102333;
+      color: var(--text);
+    }
+
+    .control-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-width: 42px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    .control-button:hover { border-color: rgba(85, 216, 255, 0.55); }
+    .control-button.primary { background: var(--cyan); border-color: var(--cyan); color: #04121a; font-weight: 700; }
+    .control-button:disabled { opacity: 0.38; cursor: not-allowed; }
+    .speed-select { padding: 7px 10px; cursor: pointer; }
+
+    .stage-wrap {
+      position: relative;
+      padding: 24px;
+      isolation: isolate;
+    }
+
+    .stage-network-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .stage-network-label::before,
+    .stage-network-label::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+    }
+
+    .stage {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      min-height: 410px;
+    }
+
+    .lane {
+      position: relative;
+      min-width: 0;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(20, 39, 56, 0.92), rgba(10, 23, 34, 0.92));
+      transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+    }
+
+    .lane.is-active {
+      border-color: rgba(85, 216, 255, 0.58);
+      box-shadow: 0 0 0 1px rgba(85, 216, 255, 0.1), 0 18px 44px rgba(0, 0, 0, 0.24);
+      transform: translateY(-2px);
+    }
+
+    .lane.is-warning { border-color: rgba(255, 201, 107, 0.42); }
+
+    .lane-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .role-icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: var(--cyan-soft);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .lane[data-lane="server"] .role-icon { background: var(--violet-soft); color: var(--violet); }
+    .lane[data-lane="other"] .role-icon { background: var(--amber-soft); color: var(--amber); }
+
+    .role-copy strong, .role-copy span { display: block; }
+    .role-copy span { color: var(--muted); font-size: 12px; }
+
+    .state-list {
+      display: grid;
+      gap: 8px;
+      margin: 16px 0 0;
+    }
+
+    .state-row {
+      display: grid;
+      grid-template-columns: minmax(112px, 0.9fr) minmax(0, 1.1fr);
+      align-items: start;
+      gap: 10px;
+      min-height: 38px;
+      padding: 8px 9px;
+      border-radius: 9px;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .state-row dt {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .state-row dd {
+      margin: 0;
+      text-align: right;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .state-row.changed {
+      background: var(--cyan-soft);
+      color: var(--cyan);
+      animation: state-pop 480ms ease both;
+    }
+
+    .state-row.warning-value { background: var(--amber-soft); color: var(--amber); }
+
+    @keyframes state-pop {
+      0% { transform: scale(0.985); }
+      50% { transform: scale(1.015); }
+      100% { transform: scale(1); }
+    }
+
+    .packet-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .packet {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      max-width: 180px;
+      padding: 7px 10px;
+      border: 1px solid rgba(85, 216, 255, 0.48);
+      border-radius: 999px;
+      background: #0b2433;
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 11px;
+      white-space: nowrap;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.38), 0 0 24px rgba(85, 216, 255, 0.13);
+    }
+
+    .packet::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .timeline-wrap {
+      padding: 0 24px 22px;
+    }
+
+    .timeline-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .timeline {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(146px, 1fr);
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 2px 10px;
+      scrollbar-width: thin;
+    }
+
+    .timeline-step {
+      position: relative;
+      min-height: 74px;
+      padding: 11px 11px 10px 36px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(13, 28, 41, 0.78);
+      color: var(--muted);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .timeline-step::before {
+      content: attr(data-index);
+      position: absolute;
+      left: 10px;
+      top: 11px;
+      display: grid;
+      place-items: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(145, 169, 187, 0.16);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+
+    .timeline-step span { display: block; font-size: 12px; line-height: 1.4; }
+    .timeline-step small { display: block; margin-top: 5px; color: #6f899c; font-family: var(--mono); font-size: 10px; }
+    .timeline-step.is-complete { color: #b9cbd8; border-color: rgba(99, 230, 166, 0.28); }
+    .timeline-step.is-complete::before { background: var(--green-soft); color: var(--green); }
+    .timeline-step.is-current { color: var(--text); border-color: var(--cyan); background: var(--cyan-soft); }
+    .timeline-step.is-current::before { background: var(--cyan); color: #04121a; }
+
+    .details {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
+      border-top: 1px solid var(--line);
+    }
+
+    .step-detail, .boundary-detail { padding: 22px 24px 24px; }
+    .boundary-detail { border-left: 1px solid var(--line); background: rgba(15, 29, 42, 0.4); }
+
+    .detail-kicker {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 9px;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .step-detail h3, .boundary-detail h3 { margin: 0; font-size: 18px; }
+    .step-detail p, .boundary-detail p { margin: 10px 0 0; color: #b2c5d3; }
+
+    .source-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin-top: 15px;
+      padding: 11px 12px;
+      border-radius: 11px;
+      background: #07131d;
+      color: #bdeeff;
+      font-family: var(--mono);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .source-line span:first-child { color: var(--muted); }
+
+    .boundary-list {
+      display: grid;
+      gap: 9px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .boundary-list li {
+      position: relative;
+      padding-left: 18px;
+      color: #afc3d0;
+      font-size: 13px;
+    }
+
+    .boundary-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.68em;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      transform: translateY(-50%);
+    }
+
+    .catalog {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(310px, 0.42fr);
+      gap: 18px;
+    }
+
+    .catalog-panel {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(11, 24, 35, 0.78);
+    }
+
+    .catalog-panel h2 { margin: 0; font-size: 20px; }
+    .catalog-panel > p { margin: 7px 0 18px; color: var(--muted); }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .legend-item {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgba(9, 21, 31, 0.72);
+    }
+
+    .legend-item strong, .legend-item span { display: block; }
+    .legend-item span { margin-top: 5px; color: var(--muted); font-size: 12px; }
+
+    .catalog-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 18px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .catalog-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+      color: #b7cad6;
+    }
+
+    .catalog-list code { color: var(--cyan); font-family: var(--mono); font-size: 12px; }
+
+    .footnote {
+      margin: 22px 2px 0;
+      color: #70889a;
+      font-size: 12px;
+    }
+
+    @media (max-width: 1050px) {
+      .hero { grid-template-columns: 1fr; }
+      .stage { grid-template-columns: 1fr; }
+      .lane { min-height: auto; }
+      .details, .catalog { grid-template-columns: 1fr; }
+      .boundary-detail { border-left: 0; border-top: 1px solid var(--line); }
+    }
+
+    @media (max-width: 720px) {
+      .app-shell { width: calc(100% - 20px); max-width: 100%; padding-top: 12px; }
+      .topbar { align-items: flex-start; }
+      .top-links { display: none; }
+      .hero { width: 100%; max-width: 100%; padding: 22px; }
+      h1 { font-size: clamp(30px, 9vw, 42px); word-break: break-all; }
+      .hero-meta { grid-template-columns: 1fr; }
+      .lab-header { align-items: flex-start; flex-direction: column; padding: 18px; }
+      .controls { justify-content: flex-start; }
+      .stage-wrap { padding: 18px; }
+      .timeline-wrap { padding: 0 18px 18px; }
+      .step-detail, .boundary-detail { padding: 18px; }
+      .legend-grid, .catalog-list { grid-template-columns: 1fr; }
+      .state-row { grid-template-columns: minmax(100px, 0.8fr) minmax(0, 1.2fr); }
+      .control-button .label { display: none; }
+    }
+
+    @media (max-width: 440px) {
+      .hero-meta { grid-template-columns: 1fr; }
+      .brand-copy span { display: none; }
+      .scenario-button { min-height: 40px; padding: 7px 11px; }
+      .stage-wrap { padding: 14px; }
+      .timeline-wrap { padding-inline: 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">BE</div>
+        <div class="brand-copy">
+          <strong>BrokenEdge</strong>
+          <span>UE 5.5.4 Multiplayer Teaching Project</span>
+        </div>
+      </div>
+      <nav class="top-links" aria-label="文档链接">
+        <a href="BrokenEdge_Project_Status_Network_Replication_Roadmap.md">项目路线文档</a>
+        <a href="../README.md">仓库说明</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Network Flow Lab / Source-grounded</p>
+        <h1 id="page-title">看见一次输入，如何穿过客户端、服务器与 UI</h1>
+        <p class="hero-copy">逐步播放 BrokenEdge 当前源码中的真实调用链。每一步同时更新三台网络实例的数据，让 RPC、RepNotify、Owner-only 与本地 HUD 的边界变得可观察。</p>
+      </div>
+      <div class="hero-meta" aria-label="页面信息">
+        <div class="meta-item"><span>源码审查快照</span><strong>2026-08-21 当前工作区</strong></div>
+        <div class="meta-item"><span>网络视角</span><strong>Owner / Authority / Simulated</strong></div>
+        <div class="meta-item"><span>交互流程</span><strong id="flow-count">8 条</strong></div>
+        <div class="meta-item"><span>结论边界</span><strong>静态源码证据，不替代 PIE 验收</strong></div>
+      </div>
+    </section>
+
+    <main>
+      <div class="scenario-nav" id="scenario-nav" role="tablist" aria-label="选择功能流程"></div>
+
+      <section class="lab" aria-labelledby="scenario-title">
+        <div class="lab-header">
+          <div class="scenario-heading">
+            <div class="scenario-heading-top">
+              <span class="status-badge" id="scenario-status">源码闭环</span>
+              <h2 id="scenario-title">武器拾取提示</h2>
+            </div>
+            <p id="scenario-summary"></p>
+          </div>
+          <div class="controls" aria-label="动画控制">
+            <button class="control-button" id="restart-button" type="button" aria-label="回到初始状态">↺ <span class="label">重置</span></button>
+            <button class="control-button" id="previous-button" type="button" aria-label="上一步">← <span class="label">上一步</span></button>
+            <button class="control-button primary" id="play-button" type="button" aria-label="播放流程">▶ <span class="label">播放</span></button>
+            <button class="control-button" id="next-button" type="button" aria-label="下一步"><span class="label">下一步</span> →</button>
+            <label for="speed-select" class="sr-only">播放速度</label>
+            <select class="speed-select" id="speed-select" aria-label="播放速度">
+              <option value="0.75">0.75×</option>
+              <option value="1" selected>1×</option>
+              <option value="1.5">1.5×</option>
+              <option value="2">2×</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="stage-wrap" id="stage-wrap">
+          <div class="stage-network-label">GAMEPLAY NETWORK · RELIABLE RPC / REPLICATION / LOCAL UI</div>
+          <div class="stage" id="stage" aria-live="polite">
+            <article class="lane" data-lane="owner" aria-label="拥有者客户端状态">
+              <header class="lane-head">
+                <div class="role-icon" aria-hidden="true">C1</div>
+                <div class="role-copy"><strong>Owning Client</strong><span>Autonomous Proxy · 输入与自己的 HUD</span></div>
+              </header>
+              <dl class="state-list" data-state-list="owner"></dl>
+            </article>
+
+            <article class="lane" data-lane="server" aria-label="服务器状态">
+              <header class="lane-head">
+                <div class="role-icon" aria-hidden="true">SV</div>
+                <div class="role-copy"><strong>Server</strong><span>Authority · 验证并修改最终状态</span></div>
+              </header>
+              <dl class="state-list" data-state-list="server"></dl>
+            </article>
+
+            <article class="lane" data-lane="other" aria-label="其他客户端状态">
+              <header class="lane-head">
+                <div class="role-icon" aria-hidden="true">C2</div>
+                <div class="role-copy"><strong>Other Client</strong><span>Simulated Proxy · 观察远端表现</span></div>
+              </header>
+              <dl class="state-list" data-state-list="other"></dl>
+            </article>
+          </div>
+          <div class="packet-layer" id="packet-layer" aria-hidden="true"></div>
+        </div>
+
+        <div class="timeline-wrap">
+          <div class="timeline-head"><span id="step-counter">初始状态</span><span>点击任意步骤可跳转</span></div>
+          <div class="timeline" id="timeline" aria-label="流程步骤"></div>
+        </div>
+
+        <div class="details">
+          <article class="step-detail" aria-live="polite">
+            <div class="detail-kicker">
+              <span id="step-role">INITIAL STATE</span>
+              <span class="transport-badge" id="transport-badge">LOCAL</span>
+            </div>
+            <h3 id="step-title">准备开始</h3>
+            <p id="step-description"></p>
+            <div class="source-line"><span>source</span><span id="step-source"></span></div>
+          </article>
+          <aside class="boundary-detail">
+            <h3>这一流程要看懂什么</h3>
+            <p id="boundary-summary"></p>
+            <ul class="boundary-list" id="boundary-list"></ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="catalog" aria-label="状态与源码索引">
+        <article class="catalog-panel">
+          <h2>同步机制图例</h2>
+          <p>颜色只是辅助，标签本身说明数据为何会到达某台实例。</p>
+          <div class="legend-grid">
+            <div class="legend-item"><span class="status-badge closed">源码闭环</span><strong>主要调用链已接通</strong><span>仍需在目标网络拓扑中做运行验收。</span></div>
+            <div class="legend-item"><span class="status-badge partial">部分实现</span><strong>权威状态与远端表现不完整</strong><span>动画会在缺口处明确停住或保留旧值。</span></div>
+            <div class="legend-item"><span class="status-badge engine">引擎内建</span><strong>由 CharacterMovement 接管</strong><span>项目不为每一帧移动手写 Reliable RPC。</span></div>
+          </div>
+        </article>
+        <article class="catalog-panel">
+          <h2>核心复制字段</h2>
+          <p>页面动画中的主要数据来源。</p>
+          <ul class="catalog-list">
+            <li><code>OverlappingWeapon</code><span>Owner-only</span></li>
+            <li><code>EquippedWeapon</code><span>RepNotify</span></li>
+            <li><code>SecondaryWeapon</code><span>RepNotify</span></li>
+            <li><code>CombatState</code><span>RepNotify</span></li>
+            <li><code>CarriedAmmo</code><span>Owner-only</span></li>
+            <li><code>Health / Shield</code><span>RepNotify</span></li>
+            <li><code>bAiming</code><span>RepNotify</span></li>
+            <li><code>WeaponState</code><span>RepNotify</span></li>
+          </ul>
+        </article>
+      </section>
+
+      <p class="footnote">页面依据当前磁盘源码生成。蓝图默认值、Actor 实例覆盖、动画通知触发次数以及 Listen/Dedicated Server 的运行结果仍应在 Unreal Editor 中单独验收。</p>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const scenarios = [
+        {
+          id: "movement",
+          icon: "MOVE",
+          title: "角色移动复制",
+          status: "engine",
+          statusLabel: "引擎内建",
+          summary: "IA_Move 只产生本地输入；移动预测、服务器校验、位置复制和平滑由 UCharacterMovementComponent 完成。",
+          initial: {
+            owner: { "InputVector": "(0, 0)", "Local Position": "X=0", "Prediction": "idle", "HUD": "local only" },
+            server: { "Pending Move": "none", "Authority Position": "X=0", "Validation": "idle", "ReplicatedMovement": "X=0" },
+            other: { "Remote Position": "X=0", "Smoothing": "idle", "InputVector": "not owned", "HUD": "none for remote pawn" }
+          },
+          boundaries: [
+            "输入只存在于拥有者客户端，不复制 InputVector 给其他客户端。",
+            "最终位置由服务器确认，其他客户端只消费复制后的移动。",
+            "连续移动使用 CharacterMovement 的专用网络协议，不堆积项目级 Reliable RPC。"
+          ],
+          steps: [
+            {
+              title: "Enhanced Input 产生方向",
+              role: "OWNING CLIENT",
+              transport: "LOCAL",
+              description: "IA_Move 以 Triggered 触发 Character::Move，方向值被转换成控制器朝向下的前/右向量。",
+              source: "Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp:319, 522",
+              routes: [{ from: "owner", to: "owner", label: "IA_Move" }],
+              changes: { owner: { "InputVector": "(0, 1)", "Prediction": "queued" } }
+            },
+            {
+              title: "客户端立即预测移动",
+              role: "OWNING CLIENT",
+              transport: "ENGINE PREDICTION",
+              description: "AddMovementInput 进入 CharacterMovement。自主代理不等待服务器回包，先在本机推进角色。",
+              source: "ACharacter::AddMovementInput → UCharacterMovementComponent",
+              routes: [{ from: "owner", to: "owner", label: "PredictMove" }],
+              changes: { owner: { "Local Position": "X=42", "Prediction": "unconfirmed" } }
+            },
+            {
+              title: "移动数据发送到服务器",
+              role: "NETWORK",
+              transport: "ENGINE SERVER MOVE",
+              description: "CharacterMovement 将时间戳、加速度和客户端位置通过引擎移动协议提交给服务器。",
+              source: "UCharacterMovementComponent::ReplicateMoveToServer",
+              routes: [{ from: "owner", to: "server", label: "ServerMove" }],
+              changes: { server: { "Pending Move": "Accel=(0,1)", "Validation": "checking" } }
+            },
+            {
+              title: "服务器执行并确认权威位置",
+              role: "SERVER AUTHORITY",
+              transport: "AUTHORITY",
+              description: "服务器按当前 MovementMode 执行移动，确认最终位置并准备复制；不接受客户端直接写 Transform。",
+              source: "UCharacterMovementComponent::PerformMovement / StartNewPhysics",
+              routes: [{ from: "server", to: "server", label: "PerformMovement" }],
+              changes: { server: { "Pending Move": "consumed", "Authority Position": "X=40", "Validation": "accepted", "ReplicatedMovement": "X=40" } }
+            },
+            {
+              title: "位置复制给观察者并校正拥有者",
+              role: "REPLICATION",
+              transport: "MOVEMENT REPLICATION",
+              description: "服务器把权威移动发给相关客户端。拥有者若有误差则校正，其他客户端用平滑插值显示远端角色。",
+              source: "ACharacter replicated movement + CharacterMovement smoothing",
+              routes: [
+                { from: "server", to: "owner", label: "Correction X=40" },
+                { from: "server", to: "other", label: "RepMove X=40" }
+              ],
+              changes: {
+                owner: { "Local Position": "X=40", "Prediction": "confirmed" },
+                other: { "Remote Position": "X=40", "Smoothing": "interpolating" }
+              }
+            }
+          ]
+        },
+        {
+          id: "pickup-prompt",
+          icon: "PICK",
+          title: "武器拾取提示",
+          status: "closed",
+          statusLabel: "源码闭环",
+          summary: "服务器独占武器重叠判定，OverlappingWeapon 只复制给拥有者，再由 RepNotify 操作该客户端的拾取 Widget。",
+          initial: {
+            owner: { "OverlappingWeapon": "null", "Pickup Widget": "hidden", "LocalRole": "AutonomousProxy", "Can Equip": "false" },
+            server: { "OverlappingWeapon": "null", "AreaSphere Delegate": "authority only", "Weapon": "BP_SMG", "Widget": "hidden" },
+            other: { "OverlappingWeapon": "not replicated", "Pickup Widget": "hidden", "Remote Pawn": "visible", "Can Equip": "false" }
+          },
+          boundaries: [
+            "AreaSphere 可以存在于各实例，但 Begin/EndOverlap 委托只在 Authority 绑定。",
+            "OverlappingWeapon 使用 COND_OwnerOnly，其他客户端不会获得别人的拾取目标。",
+            "Listen Server 本地玩家由 SetOverlappingWeapon 直接显示；远程玩家由 OnRep 显示。"
+          ],
+          steps: [
+            {
+              title: "角色进入武器重叠球",
+              role: "SERVER AUTHORITY",
+              transport: "COLLISION",
+              description: "角色移动到 AreaSphere 后，只有服务器绑定的 OnSphereBeginOverlap 会进入业务回调。",
+              source: "Source/BrokenEdge/Weapon/Weapon.cpp:82, 148",
+              routes: [{ from: "owner", to: "server", label: "movement → overlap" }],
+              changes: { server: { "AreaSphere Delegate": "OnSphereBeginOverlap" } }
+            },
+            {
+              title: "服务器记录重叠武器",
+              role: "SERVER AUTHORITY",
+              transport: "AUTHORITY WRITE",
+              description: "服务器将该武器写入角色的 OverlappingWeapon。若角色恰好是 Listen Server 本地玩家，同时直接显示 Widget。",
+              source: "Weapon::OnSphereBeginOverlap → Character::SetOverlappingWeapon",
+              routes: [{ from: "server", to: "server", label: "SetOverlappingWeapon" }],
+              changes: { server: { "OverlappingWeapon": "BP_SMG", "Widget": "host-only direct path" } }
+            },
+            {
+              title: "目标只复制给拥有者",
+              role: "REPLICATION",
+              transport: "OWNER-ONLY",
+              description: "DOREPLIFETIME_CONDITION(..., COND_OwnerOnly) 阻止其他客户端收到这条个人交互状态。",
+              source: "Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp:362",
+              routes: [{ from: "server", to: "owner", label: "OverlappingWeapon=BP_SMG" }],
+              changes: { owner: { "OverlappingWeapon": "BP_SMG", "Can Equip": "true" } }
+            },
+            {
+              title: "RepNotify 显示拾取提示",
+              role: "OWNING CLIENT",
+              transport: "REP-NOTIFY",
+              description: "OnRep_OverlappingWeapon 在拥有者客户端调用 ShowPickupWidget(true)，UI 状态不会由服务器直接跨进程修改。",
+              source: "Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp:633",
+              routes: [{ from: "owner", to: "owner", label: "ShowPickupWidget(true)" }],
+              changes: { owner: { "Pickup Widget": "VISIBLE" } }
+            },
+            {
+              title: "离开后清空并隐藏",
+              role: "SERVER → OWNER",
+              transport: "OWNER-ONLY + REP-NOTIFY",
+              description: "EndOverlap 只在当前武器仍是角色的重叠目标时清空指针；客户端收到 null 后隐藏 LastWeapon 的提示。",
+              source: "Weapon.cpp:163 → BrokenEdgeCharacter.cpp:633, 717",
+              routes: [
+                { from: "owner", to: "server", label: "EndOverlap" },
+                { from: "server", to: "owner", label: "OverlappingWeapon=null" }
+              ],
+              changes: {
+                server: { "OverlappingWeapon": "null", "AreaSphere Delegate": "OnSphereEndOverlap" },
+                owner: { "OverlappingWeapon": "null", "Pickup Widget": "hidden", "Can Equip": "false" }
+              }
+            }
+          ]
+        },
+        {
+          id: "equip",
+          icon: "EQUIP",
+          title: "输入装备武器 → 弹药 UI",
+          status: "closed",
+          statusLabel: "主要链路已接通",
+          summary: "拥有者按下 IA_Equip，服务器选择主/副武器并修改状态；复制回调负责远端挂接，只有拥有者的 PlayerController 写入弹药 HUD。",
+          initial: {
+            owner: { "IA_Equip": "ready", "OverlappingWeapon": "BP_SMG", "EquippedWeapon": "null", "Weapon Ammo UI": "—", "Carried Ammo UI": "—" },
+            server: { "OverlappingWeapon": "BP_SMG", "EquippedWeapon": "null", "SecondaryWeapon": "null", "WeaponState": "Initial", "Ammo / Carried": "30 / 120" },
+            other: { "EquippedWeapon": "null", "WeaponState": "Initial", "Attachment": "world", "Weapon Ammo UI": "not owned" }
+          },
+          boundaries: [
+            "客户端只发送装备意图；服务器读取自己的 OverlappingWeapon 决定能否装备。",
+            "EquippedWeapon、WeaponState 和 Actor Attachment 面向观察者复制。",
+            "武器与备用弹药 HUD 只通过拥有者自己的 PlayerController 更新。"
+          ],
+          steps: [
+            {
+              title: "IA_Equip 触发装备入口",
+              role: "OWNING CLIENT",
+              transport: "LOCAL INPUT",
+              description: "Enhanced Input 的 Started 事件调用 EquipButtonPressed，并先检查 bDisableGameplay、持旗与 CombatState。",
+              source: "Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp:319, 575",
+              routes: [{ from: "owner", to: "owner", label: "IA_Equip Started" }],
+              changes: { owner: { "IA_Equip": "pressed" } }
+            },
+            {
+              title: "可靠 RPC 把意图送到服务器",
+              role: "NETWORK",
+              transport: "SERVER · RELIABLE",
+              description: "ServerEquipButtonPressed 不携带客户端提供的武器指针；服务器使用权威 OverlappingWeapon。",
+              source: "ABrokenEdgeCharacter::ServerEquipButtonPressed",
+              routes: [{ from: "owner", to: "server", label: "ServerEquipButtonPressed()" }],
+              changes: { server: { "OverlappingWeapon": "BP_SMG (validated)" } }
+            },
+            {
+              title: "服务器装备主武器",
+              role: "SERVER AUTHORITY",
+              transport: "AUTHORITY WRITE",
+              description: "Combat::EquipWeapon 进入 EquipPrimaryWeapon：设置 EquippedWeapon、WeaponState、Owner，挂到 RightHandSocket，并计算当前武器的备用弹药。",
+              source: "CombatComponent.cpp:49, 279",
+              routes: [{ from: "server", to: "server", label: "EquipPrimaryWeapon" }],
+              changes: {
+                server: { "EquippedWeapon": "BP_SMG", "WeaponState": "Equipped", "Ammo / Carried": "30 / 120", "OverlappingWeapon": "clearing" }
+              }
+            },
+            {
+              title: "同步初始弹匣并复制武器状态",
+              role: "REPLICATION",
+              transport: "MULTICAST + REP-NOTIFY",
+              description: "MulticastAmmo 对齐武器当前 Ammo；EquippedWeapon 与 WeaponState 复制到拥有者和其他观察者。",
+              source: "Weapon::MulticastAmmo / Combat::OnRep_EquippedWeapon / Weapon::OnRep_WeaponState",
+              routes: [
+                { from: "server", to: "owner", label: "EquippedWeapon + Ammo=30" },
+                { from: "server", to: "other", label: "WeaponState=Equipped" }
+              ],
+              changes: {
+                owner: { "EquippedWeapon": "BP_SMG", "OverlappingWeapon": "null" },
+                other: { "EquippedWeapon": "BP_SMG", "WeaponState": "Equipped", "Attachment": "RightHandSocket" }
+              }
+            },
+            {
+              title: "拥有者刷新弹匣与备用弹药 HUD",
+              role: "OWNING CLIENT UI",
+              transport: "ONREP_OWNER + OWNER-ONLY",
+              description: "OnRep_EquippedWeapon/OnRep_Owner 调用 SetHUDAmmo；CarriedAmmo 只复制给拥有者并在 OnRep_CarriedAmmo 中写入 CharacterOverlay。",
+              source: "Weapon.cpp:62, 116 / CombatComponent.cpp:447, 559 / PlayerController.cpp:109, 129",
+              routes: [
+                { from: "server", to: "owner", label: "CarriedAmmo=120" },
+                { from: "owner", to: "owner", label: "SetHUD Ammo" }
+              ],
+              changes: {
+                owner: { "Weapon Ammo UI": "30", "Carried Ammo UI": "120", "IA_Equip": "released" },
+                server: { "OverlappingWeapon": "null" }
+              }
+            }
+          ]
+        },
+        {
+          id: "swap",
+          icon: "SWAP",
+          title: "主副武器切换",
+          status: "partial",
+          statusLabel: "远端蒙太奇待补",
+          summary: "权威武器指针交换与挂接已实现，但 OnRep_CombatState 中模拟代理播放 SwapMontage 的代码仍被注释。",
+          initial: {
+            owner: { "EquippedWeapon": "BP_SMG", "SecondaryWeapon": "BP_Sniper", "CombatState": "Unoccupied", "Swap Montage": "idle" },
+            server: { "EquippedWeapon": "BP_SMG", "SecondaryWeapon": "BP_Sniper", "CombatState": "Unoccupied", "Attach Notify": "waiting" },
+            other: { "EquippedWeapon": "BP_SMG", "SecondaryWeapon": "BP_Sniper", "CombatState": "Unoccupied", "Swap Montage": "idle" }
+          },
+          boundaries: [
+            "拥有者本地预测播放切枪蒙太奇，服务器同时进入 ECS_SwappingWeapon。",
+            "真正交换 EquippedWeapon/SecondaryWeapon 的操作只在服务器 Anim Notify 入口执行。",
+            "其他客户端能收到 CombatState，但当前 OnRep 分支没有播放蒙太奇。"
+          ],
+          steps: [
+            {
+              title: "无重叠武器时按下装备键",
+              role: "OWNING CLIENT",
+              transport: "LOCAL PREDICTION",
+              description: "ShouldSwapWeapons 为真且 OverlappingWeapon 为 null，拥有者立即播放 SwapMontage 并预测 CombatState。",
+              source: "BrokenEdgeCharacter.cpp:575",
+              routes: [{ from: "owner", to: "owner", label: "PlaySwapMontage" }],
+              changes: { owner: { "CombatState": "SwappingWeapon", "Swap Montage": "playing" } }
+            },
+            {
+              title: "服务器进入切枪状态",
+              role: "CLIENT → SERVER",
+              transport: "SERVER · RELIABLE",
+              description: "同一次装备 RPC 在服务器发现没有 OverlappingWeapon，于是调用 Combat::SwapWeapons。",
+              source: "BrokenEdgeCharacter.cpp:648 → CombatComponent.cpp:81",
+              routes: [{ from: "owner", to: "server", label: "ServerEquipButtonPressed" }],
+              changes: { server: { "CombatState": "SwappingWeapon", "Attach Notify": "armed" } }
+            },
+            {
+              title: "CombatState 到达其他客户端",
+              role: "REPLICATION GAP",
+              transport: "REP-NOTIFY · PARTIAL",
+              description: "OnRep_CombatState 确实被设计为表现入口，但 ECS_SwappingWeapon 内的 PlaySwapMontage 目前仍是注释，因此观察者保持 idle。",
+              source: "CombatComponent.cpp:522-550",
+              routes: [{ from: "server", to: "other", label: "CombatState=Swapping" }],
+              changes: { other: { "CombatState": "SwappingWeapon", "Swap Montage": "NOT PLAYED ⚠" } }
+            },
+            {
+              title: "服务器通知点交换武器指针",
+              role: "SERVER AUTHORITY",
+              transport: "ANIM NOTIFY",
+              description: "FinishSwapAttachWeapons 交换主副武器指针，主武器挂右手、副武器挂背包，并刷新权威弹药。",
+              source: "CombatComponent.cpp:104",
+              routes: [{ from: "server", to: "server", label: "FinishSwapAttachWeapons" }],
+              changes: {
+                server: { "EquippedWeapon": "BP_Sniper", "SecondaryWeapon": "BP_SMG", "Attach Notify": "consumed" }
+              }
+            },
+            {
+              title: "新武器指针复制并完成状态",
+              role: "SERVER → CLIENTS",
+              transport: "REP-NOTIFY",
+              description: "EquippedWeapon 与 SecondaryWeapon 复制后触发各自 OnRep；FinishSwap 将服务器 CombatState 恢复 Unoccupied。",
+              source: "CombatComponent.cpp:92, 480, 499",
+              routes: [
+                { from: "server", to: "owner", label: "Equipped=Sniper" },
+                { from: "server", to: "other", label: "Weapon pointers" }
+              ],
+              changes: {
+                owner: { "EquippedWeapon": "BP_Sniper", "SecondaryWeapon": "BP_SMG", "CombatState": "Unoccupied", "Swap Montage": "finished" },
+                server: { "CombatState": "Unoccupied" },
+                other: { "EquippedWeapon": "BP_Sniper", "SecondaryWeapon": "BP_SMG", "CombatState": "Unoccupied", "Swap Montage": "missed transition ⚠" }
+              }
+            }
+          ]
+        },
+        {
+          id: "reload",
+          icon: "AMMO",
+          title: "换弹与弹药 HUD",
+          status: "partial",
+          statusLabel: "远端表现待验收",
+          summary: "客户端预测播放换弹，服务器在通知点扣除备用弹药并增加弹匣；Owner-only 与 Client RPC 分别更新两组 HUD 数字。",
+          initial: {
+            owner: { "Weapon Ammo": "10 / 30", "CarriedAmmo": "50", "CombatState": "Unoccupied", "Reload Montage": "idle", "HUD": "10 | 50" },
+            server: { "Weapon Ammo": "10 / 30", "CarriedAmmoMap": "SMG: 50", "CombatState": "Unoccupied", "ReloadAmount": "—" },
+            other: { "CombatState": "Unoccupied", "Reload Montage": "idle", "Weapon Ammo UI": "not owned", "Observed Weapon": "BP_SMG" }
+          },
+          boundaries: [
+            "拥有者先播蒙太奇降低输入延迟，但最终 Ammo/CarriedAmmo 只由服务器修改。",
+            "CarriedAmmo 使用 Owner-only RepNotify；弹匣 Ammo 通过 ClientAddAmmo Reliable RPC 对齐。",
+            "其他客户端的 OnRep_CombatState 换弹分支仍被注释，远端蒙太奇可能不播放。"
+          ],
+          steps: [
+            {
+              title: "IA_Reload 通过前置条件",
+              role: "OWNING CLIENT",
+              transport: "LOCAL INPUT",
+              description: "Reload 检查备用弹药、Unoccupied、已装备武器、弹匣未满与非本地换弹状态。",
+              source: "BrokenEdgeCharacter.cpp:622 → CombatComponent.cpp:125",
+              routes: [{ from: "owner", to: "owner", label: "IA_Reload" }],
+              changes: { owner: { "Reload Montage": "starting" } }
+            },
+            {
+              title: "本地播放并请求服务器",
+              role: "OWNING CLIENT → SERVER",
+              transport: "SERVER · RELIABLE",
+              description: "客户端调用 ServerReload，同时 HandleReload 本地播放 AM_Reload，并设置 bLocallyReloading 防止重复输入。",
+              source: "CombatComponent.cpp:125, 191, 462",
+              routes: [
+                { from: "owner", to: "owner", label: "HandleReload" },
+                { from: "owner", to: "server", label: "ServerReload()" }
+              ],
+              changes: {
+                owner: { "CombatState": "locally reloading", "Reload Montage": "playing" },
+                server: { "CombatState": "Reloading" }
+              }
+            },
+            {
+              title: "观察者收到状态但缺少表现",
+              role: "REPLICATION GAP",
+              transport: "REP-NOTIFY · PARTIAL",
+              description: "CombatState 复制给其他客户端；当前 ECS_Reloading 分支中的 HandleReload 被注释，所以远端角色可能不播放换弹。",
+              source: "CombatComponent.cpp:522-530",
+              routes: [{ from: "server", to: "other", label: "CombatState=Reloading" }],
+              changes: { other: { "CombatState": "Reloading", "Reload Montage": "NOT PLAYED ⚠" } }
+            },
+            {
+              title: "服务器计算并提交弹药变化",
+              role: "SERVER AUTHORITY",
+              transport: "ANIM NOTIFY + AUTHORITY",
+              description: "FinishReloading 在服务器调用 UpdateAmmoValues：装填 min(弹匣空位, 备用弹药)，本例从 50 扣 20，弹匣增加 20。",
+              source: "CombatComponent.cpp:136, 156, 177",
+              routes: [{ from: "server", to: "server", label: "ReloadAmount=20" }],
+              changes: {
+                server: { "Weapon Ammo": "30 / 30", "CarriedAmmoMap": "SMG: 30", "CombatState": "Unoccupied", "ReloadAmount": "20" }
+              }
+            },
+            {
+              title: "两条拥有者通道更新 HUD",
+              role: "SERVER → OWNING CLIENT",
+              transport: "OWNER-ONLY + CLIENT RPC",
+              description: "CarriedAmmo 的 Owner-only RepNotify 写入备用弹药；Weapon::ClientAddAmmo 更新客户端弹匣并调用 SetHUDAmmo。",
+              source: "CombatComponent.cpp:559 / Weapon.cpp:337-367 / PlayerController.cpp:109,129",
+              routes: [
+                { from: "server", to: "owner", label: "CarriedAmmo=30" },
+                { from: "server", to: "owner", label: "ClientAddAmmo(+20)" }
+              ],
+              changes: {
+                owner: { "Weapon Ammo": "30 / 30", "CarriedAmmo": "30", "CombatState": "Unoccupied", "Reload Montage": "finished", "HUD": "30 | 30" },
+                other: { "CombatState": "Unoccupied", "Reload Montage": "missed transition ⚠" }
+              }
+            }
+          ]
+        },
+        {
+          id: "aim",
+          icon: "AIM",
+          title: "瞄准与动态准星",
+          status: "closed",
+          statusLabel: "主体已实现",
+          summary: "瞄准意图本地立即生效并发送服务器；bAiming 复制给观察者，而屏幕中心追踪与准星扩散只在拥有者本地 HUD 计算。",
+          initial: {
+            owner: { "bAiming": "false", "MaxWalkSpeed": "600", "CrosshairSpread": "0.50", "Target Color": "white" },
+            server: { "bAiming": "false", "MaxWalkSpeed": "600", "Replicated Value": "false", "Authority": "ready" },
+            other: { "Remote bAiming": "false", "Animation": "hip pose", "Crosshair HUD": "not owned", "Movement Speed": "600" }
+          },
+          boundaries: [
+            "拥有者立即修改 bAiming 与移动速度，服务器随后确认同一意图。",
+            "bAiming 是共享表现数据；屏幕准星属于拥有者本地 UI，不复制给别人。",
+            "OnRep_Aiming 会让拥有者保留当前按键意图，避免旧复制值覆盖本地预测。"
+          ],
+          steps: [
+            {
+              title: "按下 IA_Aim",
+              role: "OWNING CLIENT",
+              transport: "LOCAL PREDICTION",
+              description: "AimButtonPressed 调用 SetAiming(true)，本地立即把移动速度从 600 调到 450。",
+              source: "BrokenEdgeCharacter.cpp:599 → CombatComponent.cpp:306",
+              routes: [{ from: "owner", to: "owner", label: "SetAiming(true)" }],
+              changes: { owner: { "bAiming": "true", "MaxWalkSpeed": "450", "CrosshairSpread": "narrowing" } }
+            },
+            {
+              title: "服务器确认瞄准状态",
+              role: "CLIENT → SERVER",
+              transport: "SERVER · RELIABLE",
+              description: "ServerSetAiming 写入服务器 bAiming，并更新服务器 CharacterMovement 的 MaxWalkSpeed。",
+              source: "CombatComponent.cpp:471",
+              routes: [{ from: "owner", to: "server", label: "ServerSetAiming(true)" }],
+              changes: { server: { "bAiming": "true", "MaxWalkSpeed": "450", "Replicated Value": "true" } }
+            },
+            {
+              title: "观察者进入远端瞄准姿态",
+              role: "REPLICATION",
+              transport: "REP-NOTIFY",
+              description: "bAiming 复制到相关客户端。拥有者保留 bAimButtonPressed；其他客户端的动画实例读取远端瞄准状态。",
+              source: "CombatComponent.cpp:33-38, 509",
+              routes: [
+                { from: "server", to: "owner", label: "bAiming=true" },
+                { from: "server", to: "other", label: "bAiming=true" }
+              ],
+              changes: { other: { "Remote bAiming": "true", "Animation": "aim pose", "Movement Speed": "450" } }
+            },
+            {
+              title: "本地追踪并更新准星",
+              role: "OWNING CLIENT UI",
+              transport: "LOCAL TICK",
+              description: "TraceUnderCrosshairs 计算屏幕中心命中点，SetHUDCrosshairs 综合速度、腾空、瞄准和目标颜色后写入 HUDPackage。",
+              source: "CombatComponent.cpp:323, 389-445",
+              routes: [{ from: "owner", to: "owner", label: "HUDPackage" }],
+              changes: { owner: { "CrosshairSpread": "0.15", "Target Color": "red on character" } }
+            },
+            {
+              title: "松开瞄准并恢复速度",
+              role: "OWNER → SERVER → CLIENTS",
+              transport: "LOCAL + RPC + REPLICATION",
+              description: "AimButtonReleased 走同一条反向链路，将 bAiming 恢复 false，准星扩散与速度平滑回到基础值。",
+              source: "BrokenEdgeCharacter.cpp:609 / CombatComponent.cpp:306,471",
+              routes: [
+                { from: "owner", to: "server", label: "ServerSetAiming(false)" },
+                { from: "server", to: "other", label: "bAiming=false" }
+              ],
+              changes: {
+                owner: { "bAiming": "false", "MaxWalkSpeed": "600", "CrosshairSpread": "0.50", "Target Color": "white" },
+                server: { "bAiming": "false", "MaxWalkSpeed": "600", "Replicated Value": "false" },
+                other: { "Remote bAiming": "false", "Animation": "hip pose", "Movement Speed": "600" }
+              }
+            }
+          ]
+        },
+        {
+          id: "health-shield",
+          icon: "HP",
+          title: "生命 / 护盾拾取与 HUD",
+          status: "closed",
+          statusLabel: "拾取恢复链已接通",
+          summary: "拾取重叠只由服务器消费，BuffComponent 逐帧修改权威 Health/Shield；客户端通过 RepNotify 更新各自看到的角色状态，只有拥有者写 HUD。",
+          initial: {
+            owner: { "Health": "45 / 100", "Shield": "20 / 100", "Health HUD": "45 / 100", "Shield HUD": "20 / 100" },
+            server: { "Health": "45 / 100", "Shield": "20 / 100", "bHealing": "false", "Pickup Actor": "HealthPickup" },
+            other: { "Remote Health": "45", "Remote Shield": "20", "Owner HUD": "none", "Pickup Actor": "visible" }
+          },
+          boundaries: [
+            "Pickup 的 Overlap 委托延迟后只在服务器绑定，客户端不能靠本地碰撞领取。",
+            "治疗和回盾的最终值是 Character 复制属性，不直接复制 Widget。",
+            "所有相关客户端都可能收到 Health/Shield，但只有拥有者角色具备自己的 HUD Controller。"
+          ],
+          steps: [
+            {
+              title: "服务器检测生命拾取重叠",
+              role: "SERVER AUTHORITY",
+              transport: "COLLISION",
+              description: "APickup::BeginPlay 只在 Authority 延迟绑定重叠；HealthPickup 命中角色后取得 BuffComponent。",
+              source: "Pickup.cpp:36,66 / HealthPickup.cpp:10",
+              routes: [{ from: "owner", to: "server", label: "HealthPickup overlap" }],
+              changes: { server: { "bHealing": "true", "Pickup Actor": "destroyed" } }
+            },
+            {
+              title: "服务器逐帧增加权威生命",
+              role: "SERVER AUTHORITY",
+              transport: "AUTHORITY TICK",
+              description: "BuffHeal 计算 HealingRate，HealRampUp 每帧 Clamp 后写入 Character::Health，并为 Listen Server 本地 HUD 直接刷新。",
+              source: "BuffComponent.cpp:33-46, 159",
+              routes: [{ from: "server", to: "server", label: "Health += Δ" }],
+              changes: { server: { "Health": "65 / 100", "bHealing": "true" } }
+            },
+            {
+              title: "Health RepNotify 到达客户端",
+              role: "REPLICATION",
+              transport: "REP-NOTIFY",
+              description: "Health 普通复制到相关客户端。拥有者 OnRep_Health 调用 UpdateHUDHealth；其他客户端更新远端属性但没有该 Pawn 的本地 HUD。",
+              source: "BrokenEdgeCharacter.cpp:364, 461, 670",
+              routes: [
+                { from: "server", to: "owner", label: "Health=65" },
+                { from: "server", to: "other", label: "Health=65" }
+              ],
+              changes: { owner: { "Health": "65 / 100", "Health HUD": "65 / 100" }, other: { "Remote Health": "65" } }
+            },
+            {
+              title: "治疗完成并停止 Tick 逻辑",
+              role: "SERVER AUTHORITY",
+              transport: "AUTHORITY STATE",
+              description: "达到 AmountToHeal 或 MaxHealth 后 bHealing 变回 false；最终 85 再复制给客户端。",
+              source: "BuffComponent.cpp:42-46",
+              routes: [
+                { from: "server", to: "owner", label: "Health=85" },
+                { from: "server", to: "other", label: "Health=85" }
+              ],
+              changes: {
+                server: { "Health": "85 / 100", "bHealing": "false" },
+                owner: { "Health": "85 / 100", "Health HUD": "85 / 100" },
+                other: { "Remote Health": "85", "Pickup Actor": "destroyed" }
+              }
+            },
+            {
+              title: "护盾走同一条 RepNotify 边界",
+              role: "SERVER → OWNER",
+              transport: "REP-NOTIFY",
+              description: "ShieldPickup 调用 ReplenishShield；服务器逐帧写 Shield，OnRep_Shield 在客户端调用 UpdateHUDShield。",
+              source: "ShieldPickup.cpp:10 / BuffComponent.cpp:49,166 / BrokenEdgeCharacter.cpp:664",
+              routes: [{ from: "server", to: "owner", label: "Shield=60" }],
+              changes: {
+                server: { "Shield": "60 / 100", "Pickup Actor": "ShieldPickup destroyed" },
+                owner: { "Shield": "60 / 100", "Shield HUD": "60 / 100" },
+                other: { "Remote Shield": "60" }
+              }
+            }
+          ]
+        },
+        {
+          id: "movement-buff",
+          icon: "BUFF",
+          title: "速度 / 跳跃增益",
+          status: "closed",
+          statusLabel: "Multicast 已接入",
+          summary: "服务器领取 Buff 并设置计时器，Reliable Multicast 将 CharacterMovement 参数同步到所有实例，计时结束后再广播初始值。",
+          initial: {
+            owner: { "MaxWalkSpeed": "600", "CrouchSpeed": "300", "JumpZVelocity": "420", "Prediction Params": "base" },
+            server: { "MaxWalkSpeed": "600", "CrouchSpeed": "300", "JumpZVelocity": "420", "Buff Timer": "idle" },
+            other: { "Remote MaxWalkSpeed": "600", "Remote JumpZ": "420", "Animation Speed": "base", "Buff Timer": "not authoritative" }
+          },
+          boundaries: [
+            "是否获得 Buff、持续时间和重置时机由服务器决定。",
+            "移动预测依赖本地 CharacterMovement 参数，因此速度/跳跃值需要到达拥有者客户端。",
+            "当前实现使用 Reliable NetMulticast 同步开始值和重置值。"
+          ],
+          steps: [
+            {
+              title: "服务器消费 SpeedPickup",
+              role: "SERVER AUTHORITY",
+              transport: "COLLISION",
+              description: "SpeedPickup 的服务器重叠回调调用 BuffSpeed，然后销毁拾取 Actor，避免客户端重复领取。",
+              source: "SpeedPickup.cpp:10 → BuffComponent.cpp:115",
+              routes: [{ from: "owner", to: "server", label: "SpeedPickup overlap" }],
+              changes: { server: { "MaxWalkSpeed": "1000", "CrouchSpeed": "600", "Buff Timer": "10s running" } }
+            },
+            {
+              title: "速度参数广播到所有实例",
+              role: "SERVER → CLIENTS",
+              transport: "NETMULTICAST · RELIABLE",
+              description: "MulticastSpeedBuff 在每台客户端的 CharacterMovement 上写入同一组速度参数，拥有者预测不再继续使用旧值。",
+              source: "BuffComponent.cpp:131, 153",
+              routes: [
+                { from: "server", to: "owner", label: "Speed 1000 / 600" },
+                { from: "server", to: "other", label: "Speed 1000 / 600" }
+              ],
+              changes: {
+                owner: { "MaxWalkSpeed": "1000", "CrouchSpeed": "600", "Prediction Params": "buffed" },
+                other: { "Remote MaxWalkSpeed": "1000", "Animation Speed": "buffed" }
+              }
+            },
+            {
+              title: "JumpPickup 使用同样的权威路径",
+              role: "SERVER → CLIENTS",
+              transport: "NETMULTICAST · RELIABLE",
+              description: "BuffJump 先在服务器设置 JumpZVelocity，再用 MulticastJumpBuff 将跳跃参数广播到拥有者和观察者。",
+              source: "JumpPickup.cpp:15 → BuffComponent.cpp:73, 95",
+              routes: [
+                { from: "server", to: "owner", label: "JumpZ=900" },
+                { from: "server", to: "other", label: "JumpZ=900" }
+              ],
+              changes: {
+                server: { "JumpZVelocity": "900", "Buff Timer": "speed + jump running" },
+                owner: { "JumpZVelocity": "900" },
+                other: { "Remote JumpZ": "900" }
+              }
+            },
+            {
+              title: "服务器计时结束并恢复初始值",
+              role: "SERVER AUTHORITY",
+              transport: "TIMER + MULTICAST",
+              description: "ResetSpeeds/ResetJump 由服务器计时器触发，恢复构造时记录的初始参数，并再次 Multicast。",
+              source: "BuffComponent.cpp:103, 139",
+              routes: [
+                { from: "server", to: "owner", label: "Reset movement params" },
+                { from: "server", to: "other", label: "Reset movement params" }
+              ],
+              changes: {
+                server: { "MaxWalkSpeed": "600", "CrouchSpeed": "300", "JumpZVelocity": "420", "Buff Timer": "idle" },
+                owner: { "MaxWalkSpeed": "600", "CrouchSpeed": "300", "JumpZVelocity": "420", "Prediction Params": "base" },
+                other: { "Remote MaxWalkSpeed": "600", "Remote JumpZ": "420", "Animation Speed": "base" }
+              }
+            }
+          ]
+        },
+        {
+          id: "host-session",
+          icon: "HOST",
+          title: "创建 Listen 会话",
+          status: "partial",
+          statusLabel: "Host 链已接通",
+          summary: "菜单 Host 按钮可创建 OnlineSubsystem 会话并在成功回调后 ServerTravel；重复会话销毁重建与 Join 完整回调仍未闭环。",
+          initial: {
+            owner: { "Menu": "visible", "HostButton": "enabled", "Session Request": "none", "World": "MenuMap" },
+            server: { "SessionInterface": "ready / Null", "GameSession": "none", "Travel URL": "Lobby?listen", "NetMode": "Standalone" },
+            other: { "Session Search": "not started", "Join Callback": "not bound ⚠", "World": "not connected", "Visible Session": "none" }
+          },
+          boundaries: [
+            "会话服务解决发现与连接，不负责 Character/Weapon/HUD 的 Actor 复制。",
+            "Host 创建完成委托已绑定，成功后 World::ServerTravel(Lobby?listen)。",
+            "当前 Join 菜单没有消费 FindSessions 结果并执行 Join/ClientTravel。"
+          ],
+          steps: [
+            {
+              title: "Host 按钮发起创建会话",
+              role: "LOCAL MENU",
+              transport: "LOCAL UI",
+              description: "按钮先禁用以防重复点击，再调用 GameInstance Subsystem 的 CreateSession。",
+              source: "Plugins/MultiplayerSessions/.../Menu.cpp:111",
+              routes: [{ from: "owner", to: "owner", label: "HostButtonClicked" }],
+              changes: { owner: { "HostButton": "disabled", "Session Request": "CreateSession(8, FFA)" } }
+            },
+            {
+              title: "Subsystem 配置并提交异步请求",
+              role: "ONLINE SUBSYSTEM",
+              transport: "ASYNC SESSION API",
+              description: "代码刷新当前 World 的 SessionInterface，写入 LAN、连接数、Presence、MatchType 等设置并注册完成委托。",
+              source: "MultiplayerSessionsSubsystem.cpp:109-180",
+              routes: [{ from: "owner", to: "server", label: "CreateSession settings" }],
+              changes: { server: { "GameSession": "creating", "SessionInterface": "delegate bound" } }
+            },
+            {
+              title: "创建完成结果广播回菜单",
+              role: "ASYNC CALLBACK",
+              transport: "DELEGATE",
+              description: "OnCreateSessionComplete 清理一次性委托句柄，再广播 MultiplayerOnCreateSessionComplete。",
+              source: "MultiplayerSessionsSubsystem.cpp:328 → Menu.cpp:85",
+              routes: [{ from: "server", to: "owner", label: "bWasSuccessful=true" }],
+              changes: { owner: { "Session Request": "success" }, server: { "GameSession": "advertised" }, other: { "Visible Session": "discoverable on LAN" } }
+            },
+            {
+              title: "主机切换到 Listen Server 地图",
+              role: "HOST WORLD",
+              transport: "SERVER TRAVEL",
+              description: "菜单成功回调执行 ServerTravel(PathToLobby)，URL 带 ?listen，使当前主机 World 开始接受客户端连接。",
+              source: "Menu.cpp:85-104",
+              routes: [{ from: "owner", to: "server", label: "ServerTravel Lobby?listen" }],
+              changes: {
+                owner: { "Menu": "removed on travel", "World": "Lobby" },
+                server: { "NetMode": "ListenServer", "Travel URL": "Lobby?listen" }
+              }
+            },
+            {
+              title: "Join 链仍停在搜索结果",
+              role: "KNOWN GAP",
+              transport: "PARTIAL",
+              description: "JoinButton 只调用 FindSessions；菜单侧 Find/Join 委托绑定仍被注释，因此不会选房、JoinSession 或 ClientTravel。",
+              source: "Menu.cpp:46-50, 126-132",
+              routes: [{ from: "other", to: "server", label: "FindSessions only" }],
+              changes: { other: { "Session Search": "results available", "Join Callback": "NOT CONSUMED ⚠", "World": "not connected" } }
+            }
+          ]
+        }
+      ];
+
+      const laneKeys = ["owner", "server", "other"];
+      const statusCopy = {
+        closed: "源码中的主要调用链已接通；仍应在目标网络拓扑中验收。",
+        partial: "权威数据或本地路径存在，但至少一条远端表现/回调仍未闭环。",
+        engine: "项目交给 Unreal Engine 内建移动预测和复制系统处理。"
+      };
+
+      const nav = document.getElementById("scenario-nav");
+      const flowCount = document.getElementById("flow-count");
+      const title = document.getElementById("scenario-title");
+      const summary = document.getElementById("scenario-summary");
+      const status = document.getElementById("scenario-status");
+      const timeline = document.getElementById("timeline");
+      const stepCounter = document.getElementById("step-counter");
+      const stepRole = document.getElementById("step-role");
+      const transportBadge = document.getElementById("transport-badge");
+      const stepTitle = document.getElementById("step-title");
+      const stepDescription = document.getElementById("step-description");
+      const stepSource = document.getElementById("step-source");
+      const boundarySummary = document.getElementById("boundary-summary");
+      const boundaryList = document.getElementById("boundary-list");
+      const packetLayer = document.getElementById("packet-layer");
+      const playButton = document.getElementById("play-button");
+      const previousButton = document.getElementById("previous-button");
+      const nextButton = document.getElementById("next-button");
+      const restartButton = document.getElementById("restart-button");
+      const speedSelect = document.getElementById("speed-select");
+
+      let scenarioIndex = 0;
+      let stepIndex = -1;
+      let playing = false;
+      let playToken = 0;
+
+      flowCount.textContent = `${scenarios.length} 条`;
+
+      function copyState(value) {
+        return JSON.parse(JSON.stringify(value));
+      }
+
+      function getScenario() {
+        return scenarios[scenarioIndex];
+      }
+
+      function computeState() {
+        const scenario = getScenario();
+        const state = copyState(scenario.initial);
+        for (let index = 0; index <= stepIndex; index += 1) {
+          const changes = scenario.steps[index]?.changes || {};
+          laneKeys.forEach((lane) => Object.assign(state[lane], changes[lane] || {}));
+        }
+        return state;
+      }
+
+      function renderNav() {
+        nav.innerHTML = "";
+        scenarios.forEach((scenario, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "scenario-button";
+          button.role = "tab";
+          button.setAttribute("aria-selected", String(index === scenarioIndex));
+          button.innerHTML = `<span class="mini-status" aria-hidden="true"></span><span>${scenario.title}</span>`;
+          button.addEventListener("click", () => selectScenario(index));
+          nav.appendChild(button);
+        });
+      }
+
+      function renderScenarioHeader() {
+        const scenario = getScenario();
+        title.textContent = scenario.title;
+        summary.textContent = scenario.summary;
+        status.textContent = scenario.statusLabel;
+        status.className = `status-badge ${scenario.status}`;
+        boundarySummary.textContent = statusCopy[scenario.status];
+        boundaryList.innerHTML = "";
+        scenario.boundaries.forEach((item) => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          boundaryList.appendChild(li);
+        });
+      }
+
+      function renderTimeline() {
+        const scenario = getScenario();
+        timeline.innerHTML = "";
+        scenario.steps.forEach((step, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "timeline-step";
+          button.dataset.index = String(index + 1).padStart(2, "0");
+          if (index < stepIndex) button.classList.add("is-complete");
+          if (index === stepIndex) button.classList.add("is-current");
+          button.setAttribute("aria-current", index === stepIndex ? "step" : "false");
+          button.innerHTML = `<span>${step.title}</span><small>${step.transport}</small>`;
+          button.addEventListener("click", () => goToStep(index, true));
+          timeline.appendChild(button);
+        });
+        stepCounter.textContent = stepIndex < 0 ? "初始状态" : `步骤 ${stepIndex + 1} / ${scenario.steps.length}`;
+      }
+
+      function renderStates() {
+        const state = computeState();
+        const currentChanges = stepIndex >= 0 ? (getScenario().steps[stepIndex].changes || {}) : {};
+        laneKeys.forEach((lane) => {
+          const list = document.querySelector(`[data-state-list="${lane}"]`);
+          list.innerHTML = "";
+          Object.entries(state[lane]).forEach(([key, value]) => {
+            const row = document.createElement("div");
+            row.className = "state-row";
+            if (Object.prototype.hasOwnProperty.call(currentChanges[lane] || {}, key)) row.classList.add("changed");
+            if (String(value).includes("⚠") || String(value).includes("NOT")) row.classList.add("warning-value");
+            const dt = document.createElement("dt");
+            const dd = document.createElement("dd");
+            dt.textContent = key;
+            dd.textContent = value;
+            row.append(dt, dd);
+            list.appendChild(row);
+          });
+        });
+      }
+
+      function renderStepDetail() {
+        const scenario = getScenario();
+        if (stepIndex < 0) {
+          stepRole.textContent = "INITIAL STATE";
+          transportBadge.textContent = "LOCAL";
+          stepTitle.textContent = "准备开始";
+          stepDescription.textContent = `选择播放或点击步骤，观察“${scenario.title}”在三台网络实例中的状态变化。`;
+          stepSource.textContent = "选择流程步骤后显示对应源码位置";
+          return;
+        }
+        const step = scenario.steps[stepIndex];
+        stepRole.textContent = step.role;
+        transportBadge.textContent = step.transport;
+        stepTitle.textContent = step.title;
+        stepDescription.textContent = step.description;
+        stepSource.textContent = step.source;
+      }
+
+      function renderLanes() {
+        document.querySelectorAll(".lane").forEach((lane) => lane.classList.remove("is-active", "is-warning"));
+        if (stepIndex < 0) return;
+        const step = getScenario().steps[stepIndex];
+        const involved = new Set();
+        (step.routes || []).forEach((route) => {
+          involved.add(route.from);
+          involved.add(route.to);
+        });
+        involved.forEach((laneName) => document.querySelector(`[data-lane="${laneName}"]`)?.classList.add("is-active"));
+        if (step.transport.includes("PARTIAL") || step.role.includes("GAP")) {
+          involved.forEach((laneName) => document.querySelector(`[data-lane="${laneName}"]`)?.classList.add("is-warning"));
+        }
+      }
+
+      function updateControls() {
+        const scenario = getScenario();
+        previousButton.disabled = stepIndex < 0;
+        nextButton.disabled = stepIndex >= scenario.steps.length - 1;
+        playButton.innerHTML = playing ? "❚❚ <span class=\"label\">暂停</span>" : "▶ <span class=\"label\">播放</span>";
+        playButton.setAttribute("aria-label", playing ? "暂停流程" : "播放流程");
+      }
+
+      function renderAll() {
+        renderNav();
+        renderScenarioHeader();
+        renderTimeline();
+        renderStates();
+        renderStepDetail();
+        renderLanes();
+        updateControls();
+      }
+
+      function selectScenario(index) {
+        stopPlayback();
+        scenarioIndex = index;
+        stepIndex = -1;
+        packetLayer.innerHTML = "";
+        renderAll();
+      }
+
+      function stopPlayback() {
+        playing = false;
+        playToken += 1;
+        updateControls();
+      }
+
+      function laneCenter(name) {
+        const layerRect = packetLayer.getBoundingClientRect();
+        const laneRect = document.querySelector(`[data-lane="${name}"]`).getBoundingClientRect();
+        return {
+          x: laneRect.left - layerRect.left + laneRect.width / 2,
+          y: laneRect.top - layerRect.top + Math.min(112, laneRect.height * 0.28)
+        };
+      }
+
+      function animateRoute(route) {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return Promise.resolve();
+        const start = laneCenter(route.from);
+        const end = laneCenter(route.to);
+        const packet = document.createElement("div");
+        packet.className = "packet";
+        packet.textContent = route.label;
+        packet.style.left = `${start.x}px`;
+        packet.style.top = `${start.y}px`;
+        packetLayer.appendChild(packet);
+        const dx = end.x - start.x;
+        const dy = end.y - start.y;
+        const local = route.from === route.to;
+        const speed = Number(speedSelect.value) || 1;
+        const duration = (local ? 620 : 920) / speed;
+        const frames = local
+          ? [
+              { transform: "translate(-50%, -50%) scale(0.7)", opacity: 0 },
+              { transform: "translate(-50%, -72%) scale(1)", opacity: 1, offset: 0.35 },
+              { transform: "translate(-50%, -92%) scale(0.92)", opacity: 0 }
+            ]
+          : [
+              { transform: "translate(-50%, -50%) scale(0.8)", opacity: 0 },
+              { transform: `translate(calc(-50% + ${dx * 0.52}px), calc(-50% + ${dy * 0.52 - 34}px)) scale(1)`, opacity: 1, offset: 0.5 },
+              { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.88)`, opacity: 0 }
+            ];
+        const animation = packet.animate(frames, { duration, easing: "cubic-bezier(.22,.78,.26,1)", fill: "forwards" });
+        return animation.finished.catch(() => undefined).finally(() => packet.remove());
+      }
+
+      async function animateCurrentStep() {
+        if (stepIndex < 0) return;
+        packetLayer.innerHTML = "";
+        const routes = getScenario().steps[stepIndex].routes || [];
+        await Promise.all(routes.map(animateRoute));
+      }
+
+      async function goToStep(index, animate = false) {
+        stopPlayback();
+        stepIndex = Math.max(-1, Math.min(index, getScenario().steps.length - 1));
+        renderAll();
+        if (animate) await animateCurrentStep();
+      }
+
+      function wait(milliseconds, token) {
+        return new Promise((resolve) => {
+          window.setTimeout(() => resolve(token === playToken), milliseconds);
+        });
+      }
+
+      async function play() {
+        if (playing) {
+          stopPlayback();
+          return;
+        }
+        if (stepIndex >= getScenario().steps.length - 1) stepIndex = -1;
+        playing = true;
+        const token = ++playToken;
+        updateControls();
+        while (playing && token === playToken && stepIndex < getScenario().steps.length - 1) {
+          stepIndex += 1;
+          renderAll();
+          await animateCurrentStep();
+          const keepGoing = await wait(600 / (Number(speedSelect.value) || 1), token);
+          if (!keepGoing) break;
+        }
+        if (token === playToken) {
+          playing = false;
+          updateControls();
+        }
+      }
+
+      restartButton.addEventListener("click", () => goToStep(-1));
+      previousButton.addEventListener("click", () => goToStep(stepIndex - 1, true));
+      nextButton.addEventListener("click", () => goToStep(stepIndex + 1, true));
+      playButton.addEventListener("click", play);
+      speedSelect.addEventListener("change", () => {
+        if (playing) stopPlayback();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.target.matches("button, select, a")) return;
+        if (event.key === "ArrowRight") goToStep(stepIndex + 1, true);
+        if (event.key === "ArrowLeft") goToStep(stepIndex - 1, true);
+        if (event.key === " ") {
+          event.preventDefault();
+          play();
+        }
+      });
+
+      renderAll();
+    })();
+  </script>
+</body>
+</html>

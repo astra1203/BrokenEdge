@@ -83,9 +83,21 @@ void UBuffComponent::BuffJump(float BuffJumpVelocity, float BuffTime)
 	{
 		Character->GetCharacterMovement()->JumpZVelocity = BuffJumpVelocity;
 	}
-	//@TODO
-	// MulticastJumpBuff(BuffJumpVelocity);
 
+	MulticastJumpBuff(BuffJumpVelocity);
+
+}
+
+/**
+ * @brief 多播跳跃增益效果到所有客户端
+ * @param JumpVelocity 跳跃速度
+ */
+void UBuffComponent::MulticastJumpBuff_Implementation(float JumpVelocity)
+{
+	if (Character && Character->GetCharacterMovement())
+	{
+		Character->GetCharacterMovement()->JumpZVelocity = JumpVelocity;
+	}
 }
 
 void UBuffComponent::ResetJump()
@@ -94,8 +106,8 @@ void UBuffComponent::ResetJump()
 	{
 		Character->GetCharacterMovement()->JumpZVelocity = InitialJumpZVelocity;
 	}
-	//@TODO
-	// MulticastJumpBuff(InitialJumpVelocity);
+
+	MulticastJumpBuff(InitialJumpZVelocity);
 
 }
 
@@ -116,9 +128,32 @@ void UBuffComponent::BuffSpeed(float BuffBaseSpeed, float BuffCrouchSpeed, float
 		Character->GetCharacterMovement()->MaxWalkSpeed = BuffBaseSpeed;
 		Character->GetCharacterMovement()->MaxWalkSpeedCrouched = BuffCrouchSpeed;
 	}
-	// @TODO
-	// MulticastSpeedBuff(BuffBaseSpeed, BuffCrouchSpeed);
+	MulticastSpeedBuff(BuffBaseSpeed, BuffCrouchSpeed);
 
+}
+
+
+/**
+ * @brief 重置移动速度为初始值
+ */
+void UBuffComponent::ResetSpeeds()
+{
+	if (Character == nullptr || Character->GetCharacterMovement() == nullptr) return;
+	Character->GetCharacterMovement()->MaxWalkSpeed = InitialBaseSpeed;
+	Character->GetCharacterMovement()->MaxWalkSpeedCrouched = InitialCrouchSpeed;
+
+	MulticastSpeedBuff(InitialBaseSpeed, InitialCrouchSpeed);
+}
+
+/**
+ * @brief 多播速度增益效果到所有客户端
+ * @param BaseSpeed 基础速度
+ * @param CrouchSpeed 蹲伏速度
+ */
+void UBuffComponent::MulticastSpeedBuff_Implementation(float BaseSpeed, float CrouchSpeed)
+{
+	Character->GetCharacterMovement()->MaxWalkSpeed = BaseSpeed;
+	Character->GetCharacterMovement()->MaxWalkSpeedCrouched = CrouchSpeed;
 }
 
 void UBuffComponent::BuffHeal(float HealAmount, float HealingTime)
@@ -133,16 +168,4 @@ void UBuffComponent::ReplenishShield(float ShieldAmount, float ReplenishTime)
 	bReplenishingShield = true;
 	ShieldReplenishRate = ShieldAmount / ReplenishTime;
 	ShieldReplenishAmount += ShieldAmount;
-}
-
-/**
- * @brief 重置移动速度为初始值
- */
-void UBuffComponent::ResetSpeeds()
-{
-	if (Character == nullptr || Character->GetCharacterMovement() == nullptr) return;
-	Character->GetCharacterMovement()->MaxWalkSpeed = InitialBaseSpeed;
-	Character->GetCharacterMovement()->MaxWalkSpeedCrouched = InitialCrouchSpeed;
-	//@TODO
-	// MulticastSpeedBuff(InitialBaseSpeed, InitialCrouchSpeed);
 }

@@ -284,7 +284,7 @@ void UCombatComponent::EquipPrimaryWeapon(AWeapon* WeaponToEquip)
 	EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
 	AttachActorToRightHand(EquippedWeapon);
 	EquippedWeapon->SetOwner(Character);
-	EquippedWeapon->SetHUDAmmo();
+	EquippedWeapon->SetHUDAmmo();// 聆听服务器才会执行
 	//@TODO
 	UpdateCarriedAmmo();
 	// PlayEquipWeaponSound(WeaponToEquip);

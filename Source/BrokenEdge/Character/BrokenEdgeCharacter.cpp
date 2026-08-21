@@ -24,7 +24,7 @@
 // Sets default values
 ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -148,14 +148,12 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 			Box.Value->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		}
 	}
-
 }
 
 // Called when the game starts or when spawned
 void ABrokenEdgeCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 // Called every frame
@@ -187,17 +185,17 @@ void ABrokenEdgeCharacter::RotateInPlace(float DeltaTime)
 		TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 		return;
 	}
-	
+
 	if (Combat && Combat->EquippedWeapon) GetCharacterMovement()->bOrientRotationToMovement = false;
 	if (Combat && Combat->EquippedWeapon) bUseControllerRotationYaw = true;
-	
+
 	if (bDisableGameplay)
 	{
 		bUseControllerRotationYaw = false;
 		TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 		return;
 	}
-	
+
 	if (GetLocalRole() > ENetRole::ROLE_SimulatedProxy && IsLocallyControlled())
 	{
 		AimOffset(DeltaTime);
@@ -247,7 +245,7 @@ void ABrokenEdgeCharacter::AimOffset(float DeltaTime)
 		bUseControllerRotationYaw = true;
 		TurnInPlace(DeltaTime);
 	}
-	
+
 	if (Speed > 0.f || bIsInAir) // 跑或者跳
 	{
 		bRotateRootBone = false;
@@ -308,7 +306,8 @@ void ABrokenEdgeCharacter::NotifyControllerChanged()
 	// Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
+			UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
@@ -326,7 +325,8 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	{
 		//跳跃
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ABrokenEdgeCharacter::StopJumping);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this,
+		                                   &ABrokenEdgeCharacter::StopJumping);
 
 		//移动
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABrokenEdgeCharacter::Move);
@@ -335,24 +335,30 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABrokenEdgeCharacter::Look);
 
 		//蹲伏
-		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::CrouchButtonPressed);
-		
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this,
+		                                   &ABrokenEdgeCharacter::CrouchButtonPressed);
+
 		//装备武器
-		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::EquipButtonPressed);
-		
+		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Started, this,
+		                                   &ABrokenEdgeCharacter::EquipButtonPressed);
+
 		//瞄准动作
-		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::AimButtonPressed);
-		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ABrokenEdgeCharacter::AimButtonReleased);
-	
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this,
+		                                   &ABrokenEdgeCharacter::AimButtonPressed);
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this,
+		                                   &ABrokenEdgeCharacter::AimButtonReleased);
+
 		//换子弹
-		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::ReloadButtonPressed);
-		
+		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this,
+		                                   &ABrokenEdgeCharacter::ReloadButtonPressed);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+		UE_LOG(LogTemp, Error,
+		       TEXT(
+			       "'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."
+		       ), *GetNameSafe(this));
 	}
-
 }
 
 void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
@@ -385,7 +391,6 @@ void ABrokenEdgeCharacter::PostInitializeComponents()
 
 	//@TODO
 	//延迟补偿组件
-
 }
 
 void ABrokenEdgeCharacter::PlaySwapMontage()
@@ -402,7 +407,7 @@ void ABrokenEdgeCharacter::PlaySwapMontage()
  */
 void ABrokenEdgeCharacter::PlayHitReactMontage()
 {
-	if (Combat == nullptr || Combat->EquippedWeapon == nullptr||HitReactMontage==nullptr) return;
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr || HitReactMontage == nullptr) return;
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance)
@@ -416,12 +421,12 @@ void ABrokenEdgeCharacter::PlayHitReactMontage()
 void ABrokenEdgeCharacter::PlayReloadMontage()
 {
 	if (Combat == nullptr || Combat->EquippedWeapon == nullptr || ReloadMontage == nullptr) return;
-	
+
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance == nullptr)return;
-	
+
 	AnimInstance->Montage_Play(ReloadMontage);
-	
+
 	FName SectionName;
 
 	switch (Combat->EquippedWeapon->GetWeaponType())
@@ -437,21 +442,21 @@ void ABrokenEdgeCharacter::PlayReloadMontage()
 	case EWeaponType::EWT_Shotgun:
 		SectionName = FName("Shotgun");
 		break;
-	// case EWeaponType::EWT_Pistol:
-	// 	SectionName = FName("Pistol");
-	// 	break;
-	// case EWeaponType::EWT_SMG:
-	// 	SectionName = FName("Pistol");
-	// 	break;
-	// case EWeaponType::EWT_Shotgun:
-	// 	SectionName = FName("Shotgun");
-	// 	break;
-	// case EWeaponType::EWT_SniperRifle:
-	// 	SectionName = FName("SniperRifle");
-	// 	break;
-	// case EWeaponType::EWT_GrenadeLauncher:
-	// 	SectionName = FName("GrenadeLauncher");
-	// 	break;
+		// case EWeaponType::EWT_Pistol:
+		// 	SectionName = FName("Pistol");
+		// 	break;
+		// case EWeaponType::EWT_SMG:
+		// 	SectionName = FName("Pistol");
+		// 	break;
+		// case EWeaponType::EWT_Shotgun:
+		// 	SectionName = FName("Shotgun");
+		// 	break;
+		// case EWeaponType::EWT_SniperRifle:
+		// 	SectionName = FName("SniperRifle");
+		// 	break;
+		// case EWeaponType::EWT_GrenadeLauncher:
+		// 	SectionName = FName("GrenadeLauncher");
+		// 	break;
 	}
 
 	AnimInstance->Montage_JumpToSection(SectionName);
@@ -461,13 +466,14 @@ void ABrokenEdgeCharacter::PlayReloadMontage()
 void ABrokenEdgeCharacter::UpdateHUDHealth()
 {
 	// UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, Controller?*Controller->GetName():TEXT("空"));
-	BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr ? Cast<ABrokenEdgePlayerController>(GetController()) : BrokenEdgePlayerController;
+	BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr
+		                             ? Cast<ABrokenEdgePlayerController>(GetController())
+		                             : BrokenEdgePlayerController;
 
 	if (BrokenEdgePlayerController)
 	{
 		BrokenEdgePlayerController->SetHUDHealth(Health, MaxHealth);
 	}
-	
 }
 
 
@@ -476,9 +482,10 @@ void ABrokenEdgeCharacter::UpdateHUDHealth()
  */
 void ABrokenEdgeCharacter::UpdateHUDShield()
 {
-	BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr ? 
-	Cast<ABrokenEdgePlayerController>(Controller) : BrokenEdgePlayerController;
-	
+	BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr
+		                             ? Cast<ABrokenEdgePlayerController>(Controller)
+		                             : BrokenEdgePlayerController;
+
 	if (BrokenEdgePlayerController)
 	{
 		BrokenEdgePlayerController->SetHUDShield(Shield, MaxShield);
@@ -490,9 +497,10 @@ void ABrokenEdgeCharacter::UpdateHUDShield()
  */
 void ABrokenEdgeCharacter::UpdateHUDAmmo()
 {
-	BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr ? 
-	Cast<ABrokenEdgePlayerController>(Controller) : BrokenEdgePlayerController;
-	
+	BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr
+		                             ? Cast<ABrokenEdgePlayerController>(Controller)
+		                             : BrokenEdgePlayerController;
+
 	if (BrokenEdgePlayerController && Combat && Combat->EquippedWeapon)
 	{
 		// BrokenEdgePlayerController->SetHUDCarriedAmmo(Combat->CarriedAmmo); //TODO
@@ -506,7 +514,7 @@ void ABrokenEdgeCharacter::UpdateHUDAmmo()
 void ABrokenEdgeCharacter::Jump()
 {
 	if (Combat && Combat->bHoldingTheFlag) return;
-	if (Combat==nullptr) return;
+	if (Combat == nullptr) return;
 	if (bDisableGameplay) return;
 	if (bIsCrouched)
 	{
@@ -520,6 +528,7 @@ void ABrokenEdgeCharacter::Jump()
 
 void ABrokenEdgeCharacter::Move(const FInputActionValue& Value)
 {
+	if (bDisableGameplay) return;
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -558,7 +567,7 @@ void ABrokenEdgeCharacter::CrouchButtonPressed()
 {
 	if (Combat && Combat->bHoldingTheFlag) return;
 	if (bDisableGameplay) return;
-	if (Combat==nullptr) return;
+	if (Combat == nullptr) return;
 
 	if (bIsCrouched)
 	{
@@ -568,31 +577,28 @@ void ABrokenEdgeCharacter::CrouchButtonPressed()
 	{
 		Crouch();
 	}
-
 }
 
 void ABrokenEdgeCharacter::EquipButtonPressed()
 {
 	if (bDisableGameplay) return;
-	
-	if (Combat)
+	if (Combat == nullptr) return;
+
+	if (Combat->bHoldingTheFlag) return;
+
+	if (Combat->CombatState == ECombatState::ECS_Unoccuiped) ServerEquipButtonPressed();
+
+	bool bSwap = Combat->ShouldSwapWeapons() &&
+		!HasAuthority() &&
+		Combat->CombatState == ECombatState::ECS_Unoccuiped &&
+		OverlappingWeapon == nullptr;
+
+	if (bSwap)
 	{
-		if (Combat->bHoldingTheFlag) return;
-		if (Combat->CombatState == ECombatState::ECS_Unoccuiped) ServerEquipButtonPressed();
-		bool bSwap = Combat->ShouldSwapWeapons() &&
-			!HasAuthority() &&
-			Combat->CombatState == ECombatState::ECS_Unoccuiped &&
-			OverlappingWeapon == nullptr;
-		
-		if (bSwap)
-		{
-			PlaySwapMontage();
-			Combat->CombatState = ECombatState::ECS_SwappingWeapon;
-			bFinishedSwapping = false;
-		}
+		PlaySwapMontage();
+		Combat->CombatState = ECombatState::ECS_SwappingWeapon;
+		bFinishedSwapping = false;
 	}
-
-
 }
 
 void ABrokenEdgeCharacter::AimButtonPressed()
@@ -626,7 +632,6 @@ void ABrokenEdgeCharacter::ReloadButtonPressed()
 	{
 		Combat->Reload();
 	}
-	
 }
 
 void ABrokenEdgeCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
@@ -674,15 +679,13 @@ void ABrokenEdgeCharacter::OnRep_Health(float LastHealth)
 	{
 		PlayHitReactMontage();
 	}
-	
-	
 }
 
 void ABrokenEdgeCharacter::PollInit()
 {
 	//@TODO
-	
-	
+
+
 	// if (BrokenEdgePlayerState == nullptr)
 	// {
 	// 	BlasterPlayerState = GetPlayerState<ABlasterPlayerState>();
@@ -697,8 +700,8 @@ void ABrokenEdgeCharacter::PollInit()
 	// 		}
 	// 	}
 	// }
-	
-	if (BrokenEdgePlayerController==nullptr)
+
+	if (BrokenEdgePlayerController == nullptr)
 	{
 		BrokenEdgePlayerController = Cast<ABrokenEdgePlayerController>(Controller);
 		if (BrokenEdgePlayerController)
@@ -706,11 +709,8 @@ void ABrokenEdgeCharacter::PollInit()
 			UpdateHUDAmmo();
 			UpdateHUDHealth();
 			UpdateHUDShield();
-			
 		}
 	}
-	
-	
 }
 
 void ABrokenEdgeCharacter::SetOverlappingWeapon(AWeapon* Weapon)
@@ -719,9 +719,9 @@ void ABrokenEdgeCharacter::SetOverlappingWeapon(AWeapon* Weapon)
 	{
 		OverlappingWeapon->ShowPickupWidget(false);
 	}
-	
+
 	OverlappingWeapon = Weapon;
-	
+
 	if (IsLocallyControlled())
 	{
 		if (OverlappingWeapon)
@@ -729,7 +729,6 @@ void ABrokenEdgeCharacter::SetOverlappingWeapon(AWeapon* Weapon)
 			OverlappingWeapon->ShowPickupWidget(true);
 		}
 	}
-	
 }
 
 bool ABrokenEdgeCharacter::IsWeaponEquipped()
@@ -776,6 +775,7 @@ ECombatState ABrokenEdgeCharacter::GetCombatState() const
 	if (Combat == nullptr) return ECombatState::ECS_MAX;
 	return Combat->CombatState;
 }
+
 /**
 * @brief 是否正在本地换弹
 * @return 是否换弹中

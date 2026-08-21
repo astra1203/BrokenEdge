@@ -53,6 +53,12 @@ public:
 	*/
 	void BuffJump(float BuffJumpVelocity, float BuffTime);
 
+	/**
+ * @brief 多播跳跃增益效果到所有客户端
+ * @param JumpVelocity 跳跃速度
+ */
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastJumpBuff(float JumpVelocity);
 
 	/**
 	 * @brief 设置速度增益
@@ -63,13 +69,22 @@ public:
 	void BuffSpeed(float BuffBaseSpeed, float BuffCrouchSpeed, float BuffTime);
 	
 	/**
+ * @brief 多播速度增益效果到所有客户端
+ * @param BaseSpeed 基础移动速度
+ * @param CrouchSpeed 蹲伏移动速度
+ */
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastSpeedBuff(float BaseSpeed, float CrouchSpeed);
+
+
+	/**
 	 * @brief 开始治疗
 	 * @param HealAmount 治疗总量
 	 * @param HealingTime 治疗持续时间
 	 */
 	void BuffHeal(float HealAmount, float HealingTime);
-	
-	
+
+
 	/**
      * @brief 护盾恢复
      * @param ShieldAmount 恢复总量

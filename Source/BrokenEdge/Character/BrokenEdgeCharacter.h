@@ -9,6 +9,7 @@
 #include "GameFramework/Character.h"
 #include "BrokenEdgeCharacter.generated.h"
 
+class UCombatComponent;
 class AWeapon;
 class UBoxComponent;
 enum class ETurningInPlace : uint8;

@@ -115,6 +115,16 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 
 void AWeapon::OnRep_Owner()
 {
+	if (HasAuthority())
+	{
+		UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"),
+			GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT("1"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"),
+			GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT("2"));
+	}
 	Super::OnRep_Owner();
 	if (Owner == nullptr)
 	{
