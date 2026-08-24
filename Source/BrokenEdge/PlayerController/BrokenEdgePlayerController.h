@@ -14,6 +14,13 @@ class BROKENEDGE_API ABrokenEdgePlayerController : public APlayerController
 {
 	GENERATED_BODY()
 public:
+
+	/**
+ * @brief 获取需要复制的属性列表
+ * @param OutLifetimeProps 输出属性列表
+ */
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	/**
     * @brief 设置HUD生命值显示
     * @param Health 当前生命值
@@ -46,6 +53,12 @@ public:
 	
 	void SetHUDBlueTeamScore(int32 BlueScore);
 	void SetHUDRedTeamScore(int32 RedScore);
+
+	/** 初始化队伍分数 */
+	void InitTeamScores();
+
+	/** 隐藏队伍分数 */
+	void HideTeamScores();
 
 protected:
 	/// 玩家控制角色时调用
@@ -107,4 +120,8 @@ private:
 
 	/** HUD淘汰数 */
 	int32 HUDDefeats;
+
+	/** 是否显示队伍分数 */
+	UPROPERTY(Replicated)
+	bool bShowTeamScores = false;
 };

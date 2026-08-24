@@ -200,15 +200,15 @@ void ABrokenEdgeCharacter::RotateInPlace(float DeltaTime)
 	{
 		AimOffset(DeltaTime);
 	}
-	// else  //@TODO
-	// {
-	// 	TimeSinceLastMovementReplication += DeltaTime;
-	// 	if (TimeSinceLastMovementReplication > 0.25f)
-	// 	{
-	// 		OnRep_ReplicatedMovement();
-	// 	}
-	// 	CalculateAO_Pitch();
-	// }
+	else
+	{
+		TimeSinceLastMovementReplication += DeltaTime;
+		if (TimeSinceLastMovementReplication > 0.25f)
+		{
+			OnRep_ReplicatedMovement();
+		}
+		CalculateAO_Pitch();
+	}
 }
 
 /**
@@ -351,6 +351,10 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		//换子弹
 		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this,
 		                                   &ABrokenEdgeCharacter::ReloadButtonPressed);
+
+		//丢弃武器
+		EnhancedInputComponent->BindAction(DropAction, ETriggerEvent::Started, this,
+										   &ABrokenEdgeCharacter::DropButtonPressed);
 	}
 	else
 	{
@@ -503,7 +507,7 @@ void ABrokenEdgeCharacter::UpdateHUDAmmo()
 
 	if (BrokenEdgePlayerController && Combat && Combat->EquippedWeapon)
 	{
-		// BrokenEdgePlayerController->SetHUDCarriedAmmo(Combat->CarriedAmmo); //TODO
+		BrokenEdgePlayerController->SetHUDCarriedAmmo(Combat->CarriedAmmo);
 		BrokenEdgePlayerController->SetHUDWeaponAmmo(Combat->EquippedWeapon->GetAmmo());
 	}
 }
@@ -631,6 +635,17 @@ void ABrokenEdgeCharacter::ReloadButtonPressed()
 	if (Combat)
 	{
 		Combat->Reload();
+	}
+}
+
+void ABrokenEdgeCharacter::DropButtonPressed()
+{
+	// if (Combat && Combat->bHoldingTheFlag) return;
+
+	if (bDisableGameplay) return;
+	if (Combat)
+	{
+		Combat->Drop();
 	}
 }
 
@@ -784,4 +799,48 @@ bool ABrokenEdgeCharacter::IsLocallyReloading()
 {
 	if (Combat == nullptr) return false;
 	return Combat->bLocallyReloading;
+}
+
+void ABrokenEdgeCharacter::OnRep_ReplicatedMovement()
+{
+	Super::OnRep_ReplicatedMovement();
+	SimProxiesTurn();
+
+	TimeSinceLastMovementReplication = 0.f;
+
+}
+
+void ABrokenEdgeCharacter::SimProxiesTurn()
+{
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) return;
+	bRotateRootBone = false;
+
+	float Speed = CalculateSpeed();
+	if (Speed > 0.f)
+	{
+		TurningInPlace = ETurningInPlace::ETIP_NotTurning;
+		return;
+	}
+
+	ProxyRotationLastFrame = ProxyRotation;
+	ProxyRotation = GetActorRotation();
+	ProxyYaw = UKismetMathLibrary::NormalizedDeltaRotator(ProxyRotation, ProxyRotationLastFrame).Yaw;
+
+	if (FMath::Abs(ProxyYaw) > TurnThreshold)
+	{
+		if (ProxyYaw > TurnThreshold)
+		{
+			TurningInPlace = ETurningInPlace::ETIP_Right;
+		}
+		else if (ProxyYaw < -TurnThreshold)
+		{
+			TurningInPlace = ETurningInPlace::ETIP_Left;
+		}
+		else
+		{
+			TurningInPlace = ETurningInPlace::ETIP_NotTurning;
+		}
+		return;
+	}
+	TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 }

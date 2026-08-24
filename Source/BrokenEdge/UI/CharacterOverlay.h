@@ -60,4 +60,7 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* BlueTeamScore;
 	
+	/** 分数间隔文本 */
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ScoreSpacerText;
 };

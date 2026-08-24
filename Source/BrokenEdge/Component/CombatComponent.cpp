@@ -133,6 +133,17 @@ void UCombatComponent::Reload()
 	}
 }
 
+void UCombatComponent::Drop()
+{
+	//@TODO 有bug
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->Dropped();
+
+		EquippedWeapon=nullptr;
+	}
+}
+
 void UCombatComponent::FinishReloading()
 {
 	if (Character == nullptr) return;

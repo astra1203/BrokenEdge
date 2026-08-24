@@ -33,7 +33,7 @@ public:
 	/// 切换武器（主/副武器）
 	void SwapWeapons();
 	void Reload();
-	
+	void Drop();
 	/**
 	 * @brief 完成换弹（蓝图调用）
 	 */
@@ -69,6 +69,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
+
 	/** 是否正在本地换弹 */
 	bool bLocallyReloading = false;
 	

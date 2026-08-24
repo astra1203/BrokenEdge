@@ -164,6 +164,7 @@ public:
 	 */
 	void AimButtonReleased();
 	void ReloadButtonPressed();
+	void DropButtonPressed();
 
 	/** 获取瞄准偏移偏航值 */
 	FORCEINLINE float GetAO_X() const { return AO_X; }
@@ -204,8 +205,11 @@ private:
 	/** Reload Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ReloadAction;
-
 	
+	/** Drop Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* DropAction;
+
 	/// 摄像机弹簧臂组件
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	class USpringArmComponent* CameraBoom;
@@ -263,6 +267,21 @@ private:
 	/// 原地转向状态  //@TODO
 	ETurningInPlace TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 	
+	/** 距离上次移动同步的时间 */
+	float TimeSinceLastMovementReplication = 0.f;
+
+	/** 上一帧模拟端旋转 */
+	FRotator ProxyRotationLastFrame = FRotator::ZeroRotator;
+
+	/** 当前模拟端旋转 */
+	FRotator ProxyRotation = FRotator::ZeroRotator;
+
+	/** 模拟端偏航值 */
+	float ProxyYaw = 0.f;
+
+	/** 转身阈值 */
+	float TurnThreshold = 0.5f;
+
 	/** 瞄准偏移偏航值 */
 	float AO_X = 0.f;
 	
@@ -368,4 +387,14 @@ public:
 	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }
 
 	AWeapon* GetOverlappingWeapon(){return OverlappingWeapon;}
+
+	/**
+ * @brief 同步移动回调
+ */
+	virtual void OnRep_ReplicatedMovement() override;
+
+	/**
+ * @brief 模拟端转身
+ */
+	void SimProxiesTurn();
 };
