@@ -351,6 +351,11 @@ void AWeapon::AddAmmo(int32 AmmoToAdd)
 	ClientAddAmmo(AmmoToAdd);
 }
 
+bool AWeapon::IsEmpty()
+{
+	return Ammo <= 0;
+}
+
 /**
  * @brief 客户端添加弹药
  * @param AmmoToAdd 要添加的弹药数量

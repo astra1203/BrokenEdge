@@ -71,6 +71,14 @@ public:
 	
 	/** 是否正在本地换弹 */
 	bool bLocallyReloading = false;
+	
+	/**
+ * @brief 拾取弹药
+ * @param WeaponType 武器类型
+ * @param AmmoAmount 弹药数量
+ */
+	int32 PickupAmmo(EWeaponType WeaponType, int32 AmmoAmount);
+
 protected:
 	/**
  * @brief 掉落当前装备的武器

@@ -202,4 +202,11 @@ public:
  */
 	UFUNCTION(Client, Reliable)
 	void ClientAddAmmo(int32 AmmoToAdd);
+	
+	
+	/**
+ * @brief 判断弹匣是否为空。
+ * @return 弹药为零时返回 true。
+ */
+	bool IsEmpty();
 };

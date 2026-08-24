@@ -240,6 +240,27 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	}
 }
 
+int32 UCombatComponent::PickupAmmo(EWeaponType WeaponType, int32 AmmoAmount)
+{
+	int32 remaining = 0;
+	if (CarriedAmmoMap.Contains(WeaponType))
+	{
+		int32 OldCarriedAmmo = CarriedAmmoMap[WeaponType];
+		CarriedAmmoMap[WeaponType] = FMath::Clamp(CarriedAmmoMap[WeaponType] + AmmoAmount, 0, MaxCarriedAmmo);
+		
+		remaining = AmmoAmount-(CarriedAmmoMap[WeaponType] - OldCarriedAmmo);
+		
+		
+		UpdateCarriedAmmo();
+	}
+	
+	if (EquippedWeapon && EquippedWeapon->IsEmpty() && EquippedWeapon->GetWeaponType() == WeaponType)
+	{
+		Reload();
+	}
+	return remaining;
+}
+
 void UCombatComponent::DropEquippedWeapon()
 {
 	if (EquippedWeapon)
