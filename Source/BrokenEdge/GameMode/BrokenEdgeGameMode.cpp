@@ -23,18 +23,6 @@ ABrokenEdgeGameMode::ABrokenEdgeGameMode()
 void ABrokenEdgeGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	// UCombatObserver* CombatObserver = NewObject<UCombatObserver>();
-	//
-	// const FTransform SpawnTransform(
-	// 	FRotator::ZeroRotator,
-	// 	FVector(0.0f, 0.0f, 100.0f));
-	//
-	// AMyCharacter* PlayerCharacter = GetWorld()->SpawnActor<AMyCharacter>(
-	// 	AMyCharacter::StaticClass(),
-	// 	SpawnTransform);
-	//
-	// CombatObserver->StartObserving(PlayerCharacter);
-	//
-	// PlayerCharacter->TakeDamage(10.0f);
+
 
 }

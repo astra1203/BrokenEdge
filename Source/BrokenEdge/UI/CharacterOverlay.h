@@ -40,4 +40,24 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* CarriedAmmoAmount;
 	
+	/** 分数文本 */
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ScoreAmount;
+	
+	/** 击杀数文本 */
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* DefeatsAmount;
+	
+	/** 比赛倒计时文本 */
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MatchCountdownText;
+	
+	/** 红队分数文本 */
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* RedTeamScore;
+
+	/** 蓝队分数文本 */
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* BlueTeamScore;
+	
 };
