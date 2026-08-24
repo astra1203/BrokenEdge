@@ -8,7 +8,14 @@
 #include "BrokenEdge/UI/CharacterOverlay.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Net/UnrealNetwork.h"
 
+
+void ABrokenEdgePlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ABrokenEdgePlayerController, bShowTeamScores);
+}
 
 void ABrokenEdgePlayerController::SetHUDHealth(float Health, float MaxHealth)
 {
@@ -86,12 +93,6 @@ void ABrokenEdgePlayerController::PollInit()
 			
 			if (CharacterOverlay)
 			{
-				// if (!HasAuthority())
-				// {
-				// 	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | LocalCharacter: %s"), GFrameCounter, TEXT(__FUNCTION__),
-				// 	       __LINE__, *GetNameSafe(GetCharacter()));
-				// }
-				
 				if (bInitializeHealth) SetHUDHealth(HUDHealth, HUDMaxHealth);
 				if (bInitializeShield) SetHUDShield(HUDShield, HUDMaxShield);
 				if (bInitializeWeaponAmmo) SetHUDWeaponAmmo(HUDWeaponAmmo);
@@ -100,6 +101,20 @@ void ABrokenEdgePlayerController::PollInit()
 				if (bInitializeScore) SetHUDScore(HUDScore);
 				if (bInitializeDefeats) SetHUDDefeats(HUDDefeats);
 				//@TODO
+				// ABlasterCharacter* BlasterCharacter = Cast<ABlasterCharacter>(GetPawn());
+				// if (BlasterCharacter && BlasterCharacter->GetCombat())
+				// {
+				// 	if (bInitializeGrenades) SetHUDGrenades(BlasterCharacter->GetCombat()->GetGrenades());
+				// }
+
+				if (bShowTeamScores)
+				{
+					InitTeamScores();
+				}
+				else
+				{
+					HideTeamScores();
+				}
 				
 			}
 			
@@ -224,5 +239,43 @@ void ABrokenEdgePlayerController::SetHUDRedTeamScore(int32 RedScore)
 	{
 		FString ScoreText = FString::Printf(TEXT("%d"), RedScore);
 		BrokenEdgeHUD->CharacterOverlay->RedTeamScore->SetText(FText::FromString(ScoreText));
+	}
+}
+
+void ABrokenEdgePlayerController::InitTeamScores()
+{
+	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
+
+	bool bHUDValid = BrokenEdgeHUD &&
+		BrokenEdgeHUD->CharacterOverlay &&
+		BrokenEdgeHUD->CharacterOverlay->RedTeamScore &&
+		BrokenEdgeHUD->CharacterOverlay->BlueTeamScore &&
+		BrokenEdgeHUD->CharacterOverlay->ScoreSpacerText;
+
+	if (bHUDValid)
+	{
+		FString Zero("0");
+		FString Spacer("|");
+		BrokenEdgeHUD->CharacterOverlay->RedTeamScore->SetText(FText::FromString(Zero));
+		BrokenEdgeHUD->CharacterOverlay->BlueTeamScore->SetText(FText::FromString(Zero));
+		BrokenEdgeHUD->CharacterOverlay->ScoreSpacerText->SetText(FText::FromString(Spacer));
+	}
+}
+
+void ABrokenEdgePlayerController::HideTeamScores()
+{
+	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
+
+	bool bHUDValid = BrokenEdgeHUD &&
+		BrokenEdgeHUD->CharacterOverlay &&
+		BrokenEdgeHUD->CharacterOverlay->RedTeamScore &&
+		BrokenEdgeHUD->CharacterOverlay->BlueTeamScore &&
+		BrokenEdgeHUD->CharacterOverlay->ScoreSpacerText;
+
+	if (bHUDValid)
+	{
+		BrokenEdgeHUD->CharacterOverlay->RedTeamScore->SetText(FText());
+		BrokenEdgeHUD->CharacterOverlay->BlueTeamScore->SetText(FText());
+		BrokenEdgeHUD->CharacterOverlay->ScoreSpacerText->SetText(FText());
 	}
 }
