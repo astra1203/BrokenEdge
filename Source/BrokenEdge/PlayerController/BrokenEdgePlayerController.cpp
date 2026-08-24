@@ -96,6 +96,9 @@ void ABrokenEdgePlayerController::PollInit()
 				if (bInitializeShield) SetHUDShield(HUDShield, HUDMaxShield);
 				if (bInitializeWeaponAmmo) SetHUDWeaponAmmo(HUDWeaponAmmo);
 				if (bInitializeCarriedAmmo) SetHUDCarriedAmmo(HUDCarriedAmmo);
+				
+				if (bInitializeScore) SetHUDScore(HUDScore);
+				if (bInitializeDefeats) SetHUDDefeats(HUDDefeats);
 				//@TODO
 				
 			}
@@ -143,5 +146,83 @@ void ABrokenEdgePlayerController::SetHUDCarriedAmmo(int32 Ammo)
 	{
 		bInitializeCarriedAmmo = true;
 		HUDCarriedAmmo = Ammo;
+	}
+}
+
+void ABrokenEdgePlayerController::SetHUDScore(float Score)
+{
+	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
+	
+	bool bHUDValid = BrokenEdgeHUD &&
+		BrokenEdgeHUD->CharacterOverlay &&
+		BrokenEdgeHUD->CharacterOverlay->ScoreAmount;
+	
+	if (bHUDValid)
+	{
+		FString ScoreText = FString::Printf(TEXT("%d"), FMath::FloorToInt(Score));
+		BrokenEdgeHUD->CharacterOverlay->ScoreAmount->SetText(FText::FromString(ScoreText));
+	}
+	else
+	{
+		bInitializeScore = true;
+		HUDScore = Score;
+	}
+}
+
+void ABrokenEdgePlayerController::SetHUDDefeats(int32 Defeats)
+{
+	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
+	
+	bool bHUDValid = BrokenEdgeHUD &&
+		BrokenEdgeHUD->CharacterOverlay &&
+		BrokenEdgeHUD->CharacterOverlay->DefeatsAmount;
+	
+	if (bHUDValid)
+	{
+		FString DefeatsText = FString::Printf(TEXT("%d"), Defeats);
+		BrokenEdgeHUD->CharacterOverlay->DefeatsAmount->SetText(FText::FromString(DefeatsText));
+	}
+	else
+	{
+		bInitializeDefeats = true;
+		HUDDefeats = Defeats;
+	}
+}
+
+/**
+ * @brief 设置蓝队分数
+ * @param BlueScore 蓝队分数
+ */
+void ABrokenEdgePlayerController::SetHUDBlueTeamScore(int32 BlueScore)
+{
+	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
+	
+	bool bHUDValid = BrokenEdgeHUD &&
+		BrokenEdgeHUD->CharacterOverlay &&
+		BrokenEdgeHUD->CharacterOverlay->BlueTeamScore;
+	
+	if (bHUDValid)
+	{
+		FString ScoreText = FString::Printf(TEXT("%d"), BlueScore);
+		BrokenEdgeHUD->CharacterOverlay->BlueTeamScore->SetText(FText::FromString(ScoreText));
+	}
+}
+
+/**
+ * @brief 设置红队分数
+ * @param RedScore 红队分数
+ */
+void ABrokenEdgePlayerController::SetHUDRedTeamScore(int32 RedScore)
+{
+	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
+	
+	bool bHUDValid = BrokenEdgeHUD &&
+		BrokenEdgeHUD->CharacterOverlay &&
+		BrokenEdgeHUD->CharacterOverlay->RedTeamScore;
+	
+	if (bHUDValid)
+	{
+		FString ScoreText = FString::Printf(TEXT("%d"), RedScore);
+		BrokenEdgeHUD->CharacterOverlay->RedTeamScore->SetText(FText::FromString(ScoreText));
 	}
 }

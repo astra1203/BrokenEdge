@@ -1,0 +1,79 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "BrokenEdgePlayerState.h"
+
+#include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
+#include "Net/UnrealNetwork.h"
+
+
+void ABrokenEdgePlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ABrokenEdgePlayerState, Team);
+	DOREPLIFETIME(ABrokenEdgePlayerState, Defeats);
+}
+
+void ABrokenEdgePlayerState::AddToScore(float ScoreAmount)
+{
+	SetScore(GetScore() + ScoreAmount);
+	Character = Character == nullptr ? Cast<ABrokenEdgeCharacter>(GetPawn()) : Character;
+	if (Character)
+	{
+		Controller = Controller == nullptr ? Cast<ABrokenEdgePlayerController>(Character->Controller) : Controller;
+		if (Controller)
+		{
+			Controller->SetHUDScore(GetScore());
+		}
+	}
+}
+
+void ABrokenEdgePlayerState::AddToDefeats(int32 DefeatsAmount)
+{
+	Defeats += DefeatsAmount;
+	Character = Character == nullptr ? Cast<ABrokenEdgeCharacter>(GetPawn()) : Character;
+	if (Character)
+	{
+		Controller = Controller == nullptr ? Cast<ABrokenEdgePlayerController>(Character->Controller) : Controller;
+		if (Controller)
+		{
+			Controller->SetHUDDefeats(Defeats);
+		}
+	}
+}
+
+void ABrokenEdgePlayerState::OnRep_Defeats()
+{
+	Character = Character == nullptr ? Cast<ABrokenEdgeCharacter>(GetPawn()) : Character;
+	if (Character)
+	{
+		Controller = Controller == nullptr ? Cast<ABrokenEdgePlayerController>(Character->Controller) : Controller;
+		if (Controller)
+		{
+			Controller->SetHUDDefeats(Defeats);
+		}
+	}
+}
+
+void ABrokenEdgePlayerState::OnRep_Team()
+{
+	//@TODO
+}
+
+void ABrokenEdgePlayerState::OnRep_Score()
+{
+	Super::OnRep_Score();
+	
+	Character = Character == nullptr ? Cast<ABrokenEdgeCharacter>(GetPawn()) : Character;
+	if (Character)
+	{
+		Controller = Controller == nullptr ? Cast<ABrokenEdgePlayerController>(Character->Controller) : Controller;
+		if (Controller)
+		{
+			Controller->SetHUDScore(GetScore());
+		}
+	}
+	
+	
+}

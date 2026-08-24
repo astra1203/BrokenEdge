@@ -31,6 +31,22 @@ public:
 	
 	void SetHUDCarriedAmmo(int32 Ammo);
 
+	/**
+ * @brief 设置HUD分数显示
+ * @param Score 分数值
+ */
+	void SetHUDScore(float Score);
+	
+	/**
+ * @brief 设置HUD淘汰数显示
+ * @param Defeats 淘汰数
+ */
+	void SetHUDDefeats(int32 Defeats);
+	
+	
+	void SetHUDBlueTeamScore(int32 BlueScore);
+	void SetHUDRedTeamScore(int32 RedScore);
+
 protected:
 	/// 玩家控制角色时调用
 	virtual void OnPossess(APawn* InPawn) override;
@@ -79,5 +95,16 @@ private:
 
 	/** 是否初始化携带弹药 */
 	bool bInitializeCarriedAmmo = false;
+	
+	/** 是否初始化分数 */
+	bool bInitializeScore = false;
+	
+	/** HUD分数 */
+	float HUDScore;
+	
+	/** 是否初始化淘汰数 */
+	bool bInitializeDefeats = false;
 
+	/** HUD淘汰数 */
+	int32 HUDDefeats;
 };
