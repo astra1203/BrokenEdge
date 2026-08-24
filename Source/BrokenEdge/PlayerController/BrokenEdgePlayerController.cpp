@@ -4,12 +4,20 @@
 #include "BrokenEdgePlayerController.h"
 
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/GameMode/BrokenEdgeGameMode.h"
 #include "BrokenEdge/UI/BrokenEdgeHUD.h"
 #include "BrokenEdge/UI/CharacterOverlay.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
+
+void ABrokenEdgePlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	BrokenEdgeHUD = Cast<ABrokenEdgeHUD>(GetHUD());
+}
 
 void ABrokenEdgePlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -122,6 +130,31 @@ void ABrokenEdgePlayerController::PollInit()
 		
 	}
 	
+}
+
+void ABrokenEdgePlayerController::ClientJoinMidgame_Implementation(FName StateOfMatch, float Warmup, float Match,
+	float Cooldown, float StartingTime, bool bIsTeamsMatch)
+{
+}
+
+void ABrokenEdgePlayerController::OnRep_MatchState()
+{
+}
+
+void ABrokenEdgePlayerController::ServerCheckMatchState_Implementation()
+{
+	ABrokenEdgeGameMode* GameMode = Cast<ABrokenEdgeGameMode>(UGameplayStatics::GetGameMode(this));
+	if (GameMode==nullptr)return;
+
+	WarmupTime = GameMode->WarmupTime;
+	MatchTime = GameMode->MatchTime;
+	CooldownTime = GameMode->CooldownTime;
+	LevelStartingTime = GameMode->LevelStartingTime;
+	MatchState = GameMode->GetMatchState();
+	bShowTeamScores = GameMode->bTeamsMatch;
+
+	// ClientJoinMidgame();
+
 }
 
 void ABrokenEdgePlayerController::SetHUDWeaponAmmo(int32 Ammo)

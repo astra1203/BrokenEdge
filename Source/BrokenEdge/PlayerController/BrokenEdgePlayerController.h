@@ -14,6 +14,10 @@ class BROKENEDGE_API ABrokenEdgePlayerController : public APlayerController
 {
 	GENERATED_BODY()
 public:
+	/**
+	 * @brief 游戏开始时初始化
+	 */
+	virtual void BeginPlay() override;
 
 	/**
  * @brief 获取需要复制的属性列表
@@ -70,6 +74,24 @@ protected:
 	/// 轮询初始化（等待必要组件加载）
 	void PollInit();
 
+	/**
+ * @brief 服务器端检查匹配状态
+ */
+	UFUNCTION(Server, Reliable)
+	void ServerCheckMatchState();
+
+	/**
+ * @brief 客户端加入中途游戏
+ * @param StateOfMatch 匹配状态
+ * @param Warmup 热身时间
+ * @param Match 比赛时间
+ * @param Cooldown 冷却时间
+ * @param StartingTime 开始时间
+ * @param bIsTeamsMatch 是否团队匹配
+ */
+	UFUNCTION(Client, Reliable)
+	void ClientJoinMidgame(FName StateOfMatch, float Warmup, float Match, float Cooldown, float StartingTime, bool bIsTeamsMatch);
+
 private:
 	/** HUD引用 */
 	UPROPERTY()
@@ -124,4 +146,30 @@ private:
 	/** 是否显示队伍分数 */
 	UPROPERTY(Replicated)
 	bool bShowTeamScores = false;
+
+	/** 游戏模式 */
+	// UPROPERTY()
+	// class ABlasterGameMode* BlasterGameMode;
+
+	/** 关卡开始时间 */
+	float LevelStartingTime = 0.f;
+
+	/** 比赛时间 */
+	float MatchTime = 0.f;
+
+	/** 热身时间 */
+	float WarmupTime = 0.f;
+
+	/** 冷却时间 */
+	float CooldownTime = 0.f;
+
+	/** 匹配状态 */	//冷却中、等待开始、进行中
+	UPROPERTY(ReplicatedUsing = OnRep_MatchState)
+	FName MatchState;
+
+	/**
+ * @brief 匹配状态复制回调
+ */
+	UFUNCTION()
+	void OnRep_MatchState();
 };
