@@ -1,766 +1,639 @@
-# BrokenEdge 已完成功能、网络同步分析与后续开发路线
+# BrokenEdge 与 UE5BlasterLearning 功能对比及教学完善路线
 
-> 项目：`C:\UnrealProjects\BrokenEdge`
+> 当前项目：`C:\UnrealProjects\BrokenEdge`
 >
 > 参考项目：`D:\SourceFiles\UnrealProjects\UE5BlasterLearning-main`
 >
-> 审查日期：2026-08-21
+> 当前源码基线：分支 `master_20260824`，提交 `4ddc16f`（2026-08-25 审计）
 >
-> 定位：用于 Unreal Engine 5.5.4 多人第三人称射击项目的课堂教学与阶段验收
+> 引擎基线：Unreal Engine 5.5.4
+>
+> 用途：教师备课、学生任务拆分、阶段验收和多人网络排错
 
 ## 1. 结论先行
 
-BrokenEdge 当前已经完成了一个多人第三人称射击项目的主要基础层：角色移动与视角、蹲伏、武器拾取、主副武器装备与切换、瞄准、动态准星、生命/护盾 HUD、四类属性拾取物，以及换弹与备用弹药的主体代码。
+BrokenEdge 已经完成了多人第三人称射击项目的“基础设施层”：
 
-在继续增加开火、伤害、淘汰等新玩法前，当前最重要的是先把已有功能的正确性和联机闭环补齐：
+- Enhanced Input 移动、视角、跳跃、蹲伏、装备、瞄准、换弹和丢枪输入；
+- 角色网络移动、Aim Offset、原地转向和动画实例数据；
+- 武器重叠提示、主副武器装备、背包挂接、切枪和基础掉落状态；
+- 动态准星、屏幕中心追踪、弹匣/备用弹药 HUD 和换弹主体代码；
+- 生命、护盾、弹药的复制与本地 HUD 桥接；
+- 生命、护盾、速度、跳跃和弹药五类拾取物；
+- 速度/跳跃 Buff 的 Multicast 表现同步；
+- PlayerState、GameState、队伍分数 HUD 和比赛状态字段；
+- OnlineSubsystemNull 会话插件、Game/Editor/Server Target 及客户端/服务端打包脚本。
 
-- 换弹存在空指针和 Listen Server 重复播放风险；
-- 武器重叠提示没有形成服务器权威闭环；
-- 主副武器、战斗状态和弹匣弹药的远端同步不完整；
-- 速度/跳跃 Buff 没有同步客户端预测参数；
-- HUD、远端 Aim Offset、准星状态和输入禁用仍有不一致；
-- 多处无效 Tick、运行时测试代码和宽松成员权限可以收紧。
+但它目前还不是一个完整可玩的联机射击闭环。最关键的断点是：
 
-因此，**当前执行重点调整为“优化现有功能”，暂不开发参考项目中的新功能，也不把会话系统纳入本轮优化范围**。推荐顺序是：崩溃与服务器权威状态 → 远端表现与 HUD → 性能、封装和命名。原来的命中扫描射击路线保留在后文作为暂缓计划。
+```text
+当前已有：瞄准 + 准星追踪 + 武器 + 弹药 + Health/Shield
+                         ↓
+当前缺失：IA_Fire → 射速/扣弹 → ServerFire/MulticastFire
+                         ↓
+当前缺失：HitScan/Projectile → 服务器伤害 → 淘汰/重生
+                         ↓
+当前缺失：计分事件 → 比赛倒计时 → 队伍规则 → 完整对局
+```
 
-## 2. 审查方法与结论边界
+因此最适合学生的下一阶段不是直接做延迟补偿、夺旗或复杂弹丸，而是：
 
-本次结论来自：
+1. 先修完现有网络状态闭环和明确缺陷；
+2. 完成“基础联机命中扫描射击”；
+3. 接上护盾/生命、淘汰和重生；
+4. 再让现有 PlayerState、GameState 和比赛状态框架真正工作；
+5. 最后扩展队伍、更多武器、会话和服务器倒带。
 
-- 当前项目 `Source/BrokenEdge`、`Plugins/MultiplayerSessions`、`Config` 与 Target 文件；
-- `BP_BrokenEdgeCharacter`、`BP_BrokenEdgeGameMode`、`BP_BrokenEdgeHUD` 和地图资产中可读取的类/资源引用；
-- 当前项目与完整参考项目的源码类和关键调用链对照；
-- 当前工作区的静态检查。
+## 2. 审计方法与结论边界
 
-状态标记含义：
+本次对比实际检查了：
 
-| 标记 | 含义 |
+- BrokenEdge 的 `Source/BrokenEdge`、`Plugins/MultiplayerSessions`、`Config`、Target 和打包脚本；
+- 当前 Input Action、Input Mapping Context、角色/GameMode/HUD/PlayerState/GameState Blueprint 中可读取的资源引用；
+- `MainMap` 中可读取的武器、拾取物和 GameMode 引用；
+- 完整参考项目的 Character、Combat、Weapon、GameMode、GameState、PlayerState、HUD、Pickup、Session 和 Lag Compensation 源码；
+- 当前的 [武器手部 IK 问题诊断与修复指南](UE5_Weapon_Hand_IK_Diagnosis_and_Fix.md)。
+
+本文使用以下状态：
+
+| 状态 | 含义 |
 | --- | --- |
-| 已实现 | 当前源码或资产中存在完整的主要调用链 |
-| 部分实现 | 已有主体结构，但回调、远端表现或边界处理仍不完整 |
-| 仅预留 | 只有类型、碰撞盒、枚举、注释或空函数，不能当作可用功能 |
-| 未实现 | 当前项目没有对应入口或业务链 |
+| 已完成主体 | 源码和必要 Blueprint/资源入口存在，主要调用链闭合 |
+| 部分完成 | 主体存在，但至少一个联机、表现、边界或配置环节未闭合 |
+| 已搭架 | 只有字段、类型、空回调、TODO 或零散 UI，不能算可用功能 |
+| 未实现 | 当前工程没有对应的业务入口或核心类 |
 
-本文没有修改 C++ 或 Blueprint 业务逻辑。除非在文末验证记录中另有说明，“已实现”表示有静态代码/资产证据，不自动等于已经通过 Listen Server、Dedicated Server、丢包、延迟、打包和多人运行测试。
+“已完成主体”仍是源码和资源静态结论，不自动代表已通过 PIE、Dedicated Server、高延迟、丢包、Late Join 或打包运行验收。参考项目用于说明功能依赖和目标形态，不建议逐行照抄，也不把参考代码本身视为无缺陷标准库。
 
-## 3. 当前项目架构
+## 3. 当前 Blueprint 和资源的实际落地情况
 
-| 层 | 当前主要类 | 职责 |
-| --- | --- | --- |
-| 玩家输入与角色 | `ABrokenEdgeCharacter` | Enhanced Input、移动、跳跃、蹲伏、装备、瞄准、换弹、动画入口 |
-| 战斗状态 | `UCombatComponent` | 主副武器、瞄准、准星追踪、换弹、备用弹药、战斗状态复制 |
-| 武器 | `AWeapon`、`AHitScanWeapon` | 武器状态、碰撞、拾取提示、挂接、弹药 HUD；命中扫描尚未实现 |
-| 属性增益 | `UBuffComponent` | 治疗、回盾、加速、跳跃增益及定时恢复 |
-| 拾取物 | `APickup` 及四个派生类 | 服务器判定重叠，触发属性增益并销毁拾取物 |
-| 本地 UI | `ABrokenEdgePlayerController`、`ABrokenEdgeHUD`、`UCharacterOverlay` | 把本地角色数据写入生命、护盾、弹药和动态准星 UI |
-| 游戏规则 | `ABrokenEdgeGameMode` | 当前主要负责默认 Pawn；淘汰、重生、计分、比赛状态尚未实现 |
-| 会话 | `UMultiplayerSessionsSubsystem`、`UMenu` | Online Subsystem Null 下的建房/搜房基础结构与菜单入口 |
+### 3.1 已确认的实际 GameMode 配置
 
-资产引用检查显示，`BP_BrokenEdgeGameMode` 配置中引用了：
+`Content/Blueprints/GameMode/BP_BrokenEdgeGameMode.uasset` 中能读取到以下引用：
 
 - `BP_BrokenEdgeCharacter`；
 - `BP_BrokenEdgePlayerController`；
+- `BP_BrokenEdgePlayerState`；
+- `BP_BrokenEdgeGameState`；
 - `BP_BrokenEdgeHUD`。
 
-这比只看 `ABrokenEdgeGameMode` 构造函数中的 C++ 默认 Pawn 更接近实际配置。`MainMap` 资产中也能找到 `BP_BrokenEdgeGameMode`、四类拾取物和武器实例引用。不过，本次没有在 Unreal Editor 的 World Settings/蓝图 Defaults 面板中逐项目视复核，所以这里记录的是二进制资产引用证据，不把它扩大为运行时 PIE 结论。
+这说明当前实际玩法框架不只依赖 `ABrokenEdgeGameMode` 构造函数里的 C++ 默认 Pawn。判断当前运行配置时，应以 Blueprint Class Defaults、地图 World Settings 和实际 PIE GameMode 为准。
 
-## 4. 已完成与已搭建的功能
+### 3.2 已确认的 Enhanced Input 资源
 
-### 4.1 角色输入与基础移动：已实现
-
-角色使用 Enhanced Input，当前输入包括：
-
-- 移动 `IA_Move`；
-- 视角 `IA_Look`；
-- 跳跃 `IA_Jump`；
-- 蹲伏 `IA_Crouch`；
-- 装备/切枪 `IA_Equip`；
-- 瞄准 `IA_Aim`；
-- 换弹 `IA_Reload`。
-
-输入绑定位于 [`BrokenEdgeCharacter.cpp`](../Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp#L319)。`BP_BrokenEdgeCharacter` 中也能读取到上述 Input Action、`IMC_CharacterDefault`、`AM_Swap`、`AM_Reload` 和 `AM_HitReact` 的资产引用，因此它们不只是 C++ 中未赋值的声明。
-
-角色移动本身依赖 `ACharacter` 和 `UCharacterMovementComponent` 的引擎网络预测与移动复制，不是项目自己为每一帧位置编写 Server RPC。
-
-### 4.2 角色动画数据：已实现主体
-
-`UBrokenEdgeAnimInstance` 已计算并向动画蓝图暴露：
-
-- 速度、是否腾空、是否加速、是否蹲伏；
-- 是否装备武器、是否瞄准；
-- 偏航差、倾斜、瞄准偏移；
-- FABRIK、Aim Offset 和右手变换等动画状态；
-- 武器切换与本地换弹状态。
-
-角色还包含 Aim Offset、原地转向和远端 Pitch 压缩值修正。这里已经具备教学“本地控制角色与模拟代理动画数据差异”的条件，但 `RotateInPlace()` 中的模拟代理分支仍有 TODO/注释代码，因此应做双客户端可见性验收。
-
-### 4.3 武器拾取、装备和切换：部分实现
-
-当前已经具备：
-
-- 武器 Actor 开启复制和移动复制；
-- 武器重叠检测与拾取 Widget；
-- `WeaponState` 的 `ReplicatedUsing`；
-- 主武器挂到右手、第二武器挂到背包；
-- 丢弃旧主武器；
-- 主副武器交换；
-- 交换蒙太奇与 Anim Notify 调用入口；
-- 旗帜类型、左手挂点和持旗状态的预留结构。
-
-服务器装备入口为 [`ServerEquipButtonPressed`](../Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp#L639)，主要状态在 [`CombatComponent.cpp`](../Source/BrokenEdge/Component/CombatComponent.cpp#L49) 中修改。
-
-仍不能把这一模块标记为“联机表现全部完成”，因为：
-
-- `OnRep_OverlappingWeapon()` 为空，远端 Owning Client 的拾取提示可能不更新；
-- `OnRep_SecondaryWeapon()` 为空；
-- `OnRep_CombatState()` 为空，模拟代理可能不会播放切枪/换弹蒙太奇；
-- `OnRep_HoldingTheFlag()` 和 `OnRep_Flag()` 为空，夺旗玩法只是结构预留。
-
-### 4.4 瞄准、追踪与动态准星：已实现主体
-
-已有链路：
+`BP_BrokenEdgeCharacter` 和 `IMC_CharacterDefault` 已引用：
 
 ```text
+IA_Move
+IA_Look
+IA_Jump
+IA_Crouch
+IA_Equip
 IA_Aim
-  -> Character::AimButtonPressed/Released
-  -> CombatComponent::SetAiming
-  -> 本地立即修改 bAiming 与移动速度
-  -> ServerSetAiming RPC
-  -> 服务器复制 bAiming
+IA_Reload
+IA_Drop
 ```
 
-本地玩家每帧使用 `TraceUnderCrosshairs()` 得到屏幕中心射线结果，并由 `SetHUDCrosshairs()` 综合：
+当前 `Content/Input/Actions` 中没有 `IA_Fire`，角色源码也没有 Fire 输入绑定。这是“射击功能未实现”的直接资源和源码双重证据。
 
-- 基础扩散；
-- 移动速度；
-- 腾空；
-- 瞄准；
-- 准星目标颜色。
+### 3.3 已确认的 HUD 与地图资源
 
-HUD 再绘制中心、上下左右五张准星纹理。这个追踪结果可以直接作为下一阶段开火目标点的来源。
+- `WBP_CharacterOverlay` 已包含 Health、Shield、WeaponAmmo、CarriedAmmo、Score、Defeats、MatchCountdown、RedTeamScore 和 BlueTeamScore 控件名；
+- `BP_BrokenEdgeHUD` 引用了 `WBP_CharacterOverlay`；
+- `MainMap` 中能读取到 `BP_SMG_Ammo` 实例引用；
+- 当前有 SMG 与狙击枪 Blueprint，但没有参考项目中的完整武器 Blueprint 族、弹丸 Blueprint、夺旗地图和队伍出生点资源。
 
-### 4.5 换弹、弹匣与备用弹药：部分实现
+## 4. 功能对比总表
 
-当前源码已经具有：
-
-- `IA_Reload` 输入；
-- `Reload()` 的弹药量、战斗状态和弹匣是否已满检查；
-- `ServerReload` 可靠 RPC；
-- `ECS_Reloading` 战斗状态；
-- 按武器类型选择换弹蒙太奇段；
-- Anim Notify 触发 `FinishReloading()`；
-- 服务器计算装填量并从 `CarriedAmmoMap` 扣除；
-- `CarriedAmmo` 使用 `COND_OwnerOnly` 复制；
-- 当前弹匣和备用弹药的 HUD 接口。
-
-关键实现位于 [`CombatComponent.cpp`](../Source/BrokenEdge/Component/CombatComponent.cpp#L125)。它适合用来讲解“客户端先播表现、服务器修改权威弹药、Owner-only 数据只发给拥有者”。
-
-当前仍有四个重要缺口：
-
-1. `Reload()` 在访问 `EquippedWeapon->IsFull()` 前没有先判空，未装备武器时按换弹存在空指针风险；
-2. `OnRep_CombatState()` 为空，非本地模拟代理没有由复制状态触发 `HandleReload()`；
-3. `AWeapon::Ammo` 不是复制属性，`ClientAddAmmo` 仍被注释，远端 Owning Client 换弹后的弹匣数字可能不同步；
-4. `PlayerController::PollInit()` 缓存了备用弹药，但没有消费 `bInitializeCarriedAmmo`，Widget 晚初始化时可能漏显示。
-
-所以这一模块应标记为“主体已搭建、联机闭环待验收和补全”。
-
-### 4.6 生命、护盾、HUD 与受击表现：部分实现
-
-当前已经具备：
-
-- `Health`、`Shield` 使用 `ReplicatedUsing`；
-- `OnRep_Health()` 刷新 HUD，数值下降时播放受击蒙太奇；
-- `OnRep_Shield()` 刷新 HUD；
-- PlayerController 负责把数据写入本地 Character Overlay；
-- HUD 尚未创建时缓存生命、护盾和弹药数据，随后轮询补写；
-- 蓝图 HUD 引用 `WBP_CharacterOverlay`。
-
-该设计正确地把“网络玩法状态”和“本地 UI”分开：服务器不需要直接操作远端客户端的 Widget，远端客户端在复制值到达后，通过自己的 `OnRep` 和本地 PlayerController 更新 HUD。
-
-但是当前角色没有绑定 `OnTakeAnyDamage`，也没有 `ReceiveDamage()`，因此生命/护盾还没有接入武器伤害；`bDisableGameplay` 虽然复制了，也没有淘汰流程去设置它。
-
-### 4.7 属性拾取物：部分实现
-
-已有四类拾取物：
-
-- `AHealthPickup`：一段时间内治疗；
-- `AShieldPickup`：一段时间内恢复护盾；
-- `ASpeedPickup`：临时提高站立/蹲伏移动速度；
-- `AJumpPickup`：临时提高跳跃速度。
-
-`APickup` 只在服务器通过 `HasAuthority()` 绑定重叠事件，派生类触发增益后由服务器销毁拾取物。这保证了客户端不能仅靠本地重叠重复领取道具。
-
-生命和护盾的最终值会通过 Character 属性复制到客户端。速度和跳跃增益则不同：当前对应 Multicast 代码仍被注释，增益参数本身也未复制。服务器仍会约束移动结果，但客户端预测使用的本地速度参数可能没有同步，可能出现手感不一致或位置修正。该部分需要专门做两客户端测试。
-
-### 4.8 多人会话与运行目标：部分实现
-
-当前项目具备：
-
-- `BrokenEdge` Game、Editor 和 Server Target；
-- `OnlineSubsystem` 默认使用 `Null`；
-- `MultiplayerSessions` GameInstance Subsystem；
-- 创建、查找、加入、销毁会话的接口声明和部分实现；
-- 创建成功后以 `?listen` 进行 `ServerTravel`；
-- 主菜单 Host/Join 按钮；
-- `MainMap` 和 `Lobby` 地图；
-- Dedicated Server 的连接数配置。
-
-但当前只能把它称为“会话基础结构”，不能称为完整可用的建房加入流程：
-
-- `UMenu` 只绑定了创建完成委托，查找和加入委托绑定被注释；
-- Join 按钮只发起 `FindSessions()`，没有消费结果、选择房间、调用 `JoinSession()` 和 `ClientTravel()`；
-- Join/Destroy/Start 完成回调链尚未完整接入；
-- 已存在同名会话时，`DestorySession()` 调用被注释，重建会直接停住；
-- Dedicated Server 分支仍会获取 `ULocalPlayer`，而专用服务器没有本地玩家，对应的 user-number 创建路径仍在注释中。
-
-这套会话系统解决的是“怎样发现并连接某个服务器”，不负责 Health、Weapon、CombatState 等游戏内 Actor 数据的复制。
-
-### 4.9 延迟补偿：仅预留
-
-角色构造函数中已经创建头、躯干、四肢等 HitBox，并配置了自定义 `ECC_HitBox` 通道。这是服务器倒带命中判定需要的数据基础。
-
-但是当前项目没有 `ULagCompensationComponent`、历史帧缓存、时间同步、Server Score Request 或回放命中确认。碰撞盒存在不等于服务器回退已经实现。延迟补偿应放在基础射击、伤害和网络测试稳定之后教学。
-
-## 5. 当前网络同步是怎样实现的
-
-### 5.1 三种网络角色
-
-以一个客户端控制的角色为例：
-
-| 实例 | 常见网络角色 | 主要职责 |
-| --- | --- | --- |
-| 服务器上的该角色 | Authority | 验证请求、修改权威状态、产生复制数据 |
-| 拥有它的客户端 | Autonomous Proxy | 收集输入、本地预测、发送 Server RPC、显示自己的 HUD |
-| 其他客户端上的该角色 | Simulated Proxy | 接收移动和属性复制，播放远端表现 |
-
-教学时应始终问三个问题：
-
-1. 谁产生输入？
-2. 谁有权修改最终玩法状态？
-3. 谁需要收到状态或表现？
-
-### 5.2 角色移动：使用引擎内建同步
-
-`ABrokenEdgeCharacter` 继承 `ACharacter`，移动通过 `AddMovementInput()` 驱动 `UCharacterMovementComponent`。拥有者客户端进行移动预测，服务器校验并复制权威移动，其他客户端进行平滑显示。
-
-项目没有为 Move/Look 每帧自行调用 Reliable RPC，这是正确方向。高频连续移动不应该被实现为项目级 Reliable RPC 队列。
-
-### 5.3 自定义属性复制
-
-#### Character
-
-| 属性 | 复制策略 | 客户端用途 | 当前状态 |
+| 功能域 | BrokenEdge 当前状态 | 完整参考项目 | 教学判断 |
 | --- | --- | --- | --- |
-| `OverlappingWeapon` | `COND_OwnerOnly` + RepNotify | 只让拥有者看到拾取提示 | 回调为空，表现待补 |
-| `Health` | 全部相关客户端 + RepNotify | 更新生命 HUD、受击表现 | 已接入 HUD，尚无伤害入口 |
-| `Shield` | 全部相关客户端 + RepNotify | 更新护盾 HUD | 已接入 HUD |
-| `bDisableGameplay` | 普通复制 | 统一禁用输入/战斗 | 有声明和输入检查，尚无淘汰流程 |
+| 角色移动与视角 | 已完成主体：Enhanced Input + CharacterMovement | 已完成 | 可作为网络移动基础，不必重写移动 RPC |
+| 跳跃、蹲伏、瞄准 | 已完成主体 | 已完成 | 继续做多人状态验收 |
+| Aim Offset / 原地转向 | 已完成主体，含 Simulated Proxy 计算 | 已完成 | 适合讲 Autonomous/Simulated Proxy 差异 |
+| 武器手部 IK | 部分完成，Socket/ABP/开关存在已知问题 | 已完成主体 | 先按专项文档修复并多人验收 |
+| 武器拾取提示 | 已完成主体：OwnerOnly `OverlappingWeapon` + RepNotify | 已完成 | 可作为 Owner-only 复制示例 |
+| 主副武器装备 | 已完成主体 | 已完成 | 仍需补副武器远端挂接验收 |
+| 主副武器切换 | 部分完成 | 已完成 | `OnRep_CombatState` 远端蒙太奇仍未接通 |
+| 主动丢枪 | 已搭架且有缺陷 | 参考项目主要在替换/淘汰时掉落 | 当前没有 Server RPC，客户端路径不能作为权威实现 |
+| 瞄准与动态准星 | 已完成主体 | 已完成并含 FOV/狙击镜 | 可复用命中目标点作为开火输入 |
+| 换弹与备用弹药 | 部分完成 | 已完成，含逐发霰弹枪换弹 | 当前无开火扣弹，远端换弹表现仍不完整 |
+| 弹药拾取 | 已完成主体，当前只有 SMG 资产 | 多武器弹药 + 生成点 | 先验收容量与剩余量，再扩资产 |
+| 基础开火 | 未实现，无 `IA_Fire`、`Fire()` 主链 | Fire/CanFire/Timer/RPC/Multicast 完整 | 最适合的下一项核心功能 |
+| 命中扫描 | `AHitScanWeapon` 为空 | 射线、头部伤害、枪口/弹道/命中特效 | 在开火框架后实现 |
+| 弹丸武器 | 未实现 | 子弹、火箭、榴弹及移动组件 | 命中扫描稳定后再教 |
+| 霰弹枪 | 只有类型和换弹注释 | 散射、多目标合并伤害、逐发换弹 | 后续综合题 |
+| 手雷 | 只有 `CombatState` 枚举预留 | 输入、蒙太奇、Server RPC、生成弹丸 | 后续 Actor 复制课程 |
+| 生命/护盾 | 属性复制、Buff 和 HUD 已完成主体 | 接入服务器伤害 | 只差伤害入口，不能称为战斗系统完成 |
+| 受伤/淘汰/重生 | 未实现 | ReceiveDamage、Elim、溶解、Respawn | 基础射击之后的第二个核心闭环 |
+| PlayerState 分数/失败数 | 字段、RepNotify、HUD 已搭架 | 接入淘汰、排行榜 | 当前没有业务事件调用计分 |
+| GameState 队伍分数 | 已搭架，但当前 RepNotify 红蓝写反 | 正确复制并驱动 HUD | 适合作为短小的 RepNotify 修复练习 |
+| 比赛 Warmup/Match/Cooldown | 只有字段、RPC 壳和空回调 | GameMode Tick、状态切换、时间同步、Late Join | 当前不能算比赛流程 |
+| 队伍分配与友伤 | `TeamsGameMode::PostLogin` 为空 | 自动分队、退出清理、友伤规则、队伍得分 | 在淘汰计分之后实现 |
+| 夺旗 | 只有 Flag 类型和状态预留 | Flag、FlagZone、CTF GameMode 和地图 | 明确延期 |
+| 拾取物刷新 | 地图固定实例 | `PickupSpawnPoint` 服务器随机刷新 | 射击闭环后的小型 Actor 生命周期课程 |
+| 会话 Host/Find/Join | Host/Find 主体存在，Join UI 链不完整 | 查找、筛选、加入、Travel、销毁 | 与核心战斗分开作为网络服务专题 |
+| Dedicated Server | Target、配置和打包脚本存在 | 参考工程以多人流程为主 | 基础设施存在，仍需实际双客户端运行验收 |
+| 返回主菜单/离开会话 | 未实现 | ReturnToMainMenu + DestroySession | 会话专题后半段 |
+| 时间同步/高 Ping | 未实现 | Server time、SingleTripTime、高 Ping 回调 | 比赛倒计时和 SSR 的前置课 |
+| 延迟补偿 | 只有角色 HitBox | 历史帧、回退、HitScan/Projectile/Shotgun 请求 | 最后阶段，不能提前 |
 
-#### CombatComponent
+## 5. BrokenEdge 已完成了哪些功能
 
-| 属性 | 复制策略 | 用途 | 当前状态 |
-| --- | --- | --- | --- |
-| `EquippedWeapon` | RepNotify | 同步主武器、挂接和 HUD | 主链已实现 |
-| `SecondaryWeapon` | RepNotify | 同步副武器 | 回调为空 |
-| `bAiming` | RepNotify | 同步瞄准姿态和速度状态 | 有本地预测回写 |
-| `CarriedAmmo` | `COND_OwnerOnly` + RepNotify | 只给拥有者显示备用弹药 | 值复制已接入 |
-| `CombatState` | RepNotify | 换弹/切枪等互斥状态 | 回调为空 |
-| `bHoldingTheFlag`、`TheFlag` | RepNotify | 夺旗状态 | 仅预留 |
+### 5.1 角色输入、移动与网络移动
 
-#### Weapon
-
-| 属性 | 复制策略 | 用途 | 当前状态 |
-| --- | --- | --- | --- |
-| `WeaponState` | RepNotify | 装备、背包、掉落状态 | 已实现主要状态切换 |
-| Actor Transform/Attachment | Actor/移动复制 | 同步武器空间状态 | 已开启复制 |
-| `Ammo` | 非属性复制 | 当前弹匣 | 仅装备时有 Multicast，持续同步不完整 |
-
-### 5.4 Server RPC：客户端请求，服务器决定
-
-当前项目已有三个主要 Server RPC：
-
-| RPC | 客户端意图 | 服务器行为 |
-| --- | --- | --- |
-| `ServerEquipButtonPressed` | 拾取或切换武器 | 服务器检查重叠武器/主副武器后修改装备状态 |
-| `ServerSetAiming` | 开始或停止瞄准 | 服务器更新 `bAiming` 和移动速度 |
-| `ServerReload` | 请求换弹 | 服务器进入 Reloading，最终计算并修改弹药 |
-
-以装备为例：
-
-```mermaid
-sequenceDiagram
-    participant C as Owning Client
-    participant S as Server
-    participant O as Other Clients
-    C->>S: ServerEquipButtonPressed()
-    S->>S: 检查 OverlappingWeapon / CombatState
-    S->>S: 修改 EquippedWeapon、Owner、WeaponState
-    S-->>C: 属性复制 + OnRep
-    S-->>O: 属性复制 + OnRep
-```
-
-RPC 不是“把整个函数自动同步到所有机器”。它只是在指定网络方向上调用函数；最终状态仍需要属性复制、Actor 复制或 Multicast 传播。
-
-### 5.5 RepNotify：状态到达后的本地反应
-
-`ReplicatedUsing` 适合复制“最终状态”，`OnRep` 适合做客户端本地表现，例如：
+输入绑定集中在 [`BrokenEdgeCharacter.cpp`](../Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp)：
 
 ```text
-服务器 BuffComponent 修改 Shield
-  -> Shield 被 DOREPLIFETIME 注册
-  -> 客户端收到新 Shield
-  -> OnRep_Shield(LastShield)
-  -> 本地 PlayerController::SetHUDShield
-  -> 本地 Widget 更新
+Enhanced Input
+  -> Move / Look / Jump / Crouch
+  -> Equip / Aim / Reload / Drop
+  -> ACharacter / UCharacterMovementComponent
 ```
 
-服务器上的属性赋值通常不会因为网络复制而自动调用服务器自己的 `OnRep`。所以当前 Buff 在服务器修改数值后直接更新服务器本地 HUD，而远端客户端依靠 `OnRep` 更新，两条路径是分开的。
+移动使用 UE 的 CharacterMovement 客户端预测、服务器校验和模拟代理平滑，没有为每一帧 Move/Look 自建 Reliable RPC，这是正确的多人移动基础。
 
-### 5.6 本地预测与服务器回正
+### 5.2 角色动画数据与远端转向
 
-瞄准和换弹已经出现简单的本地预测思想：客户端按下按键后立即改本地状态或播放蒙太奇，同时向服务器发送请求，避免等待一个往返时间才看到反馈。
+[`BrokenEdgeAnimInstance.cpp`](../Source/BrokenEdge/Character/BrokenEdgeAnimInstance.cpp) 已收集：
 
-`OnRep_Aiming()` 对本地控制角色使用 `bAimButtonPressed` 覆盖刚收到的旧复制值，也是为了避免网络包较慢时把玩家仍按住的瞄准临时回滚。
+- 速度、腾空、加速度和蹲伏；
+- 是否装备、是否瞄准；
+- Yaw Offset、Lean、AO_X、AO_Y；
+- FABRIK、Aim Offset 和右手变换开关；
+- 淘汰、换弹和切枪相关状态入口。
 
-预测只负责响应速度，服务器仍应负责：
+[`BrokenEdgeCharacter.cpp`](../Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp) 已实现本地 Aim Offset、远端 Pitch 映射、`OnRep_ReplicatedMovement()` 和 `SimProxiesTurn()`。这部分可直接用于讲解“本地控制角色”和“其他客户端看到的模拟代理”为何采用不同的数据来源。
 
-- 是否允许开火/换弹；
-- 射速是否满足；
-- 弹药是否足够；
-- 命中是否成立；
-- 伤害和淘汰结果。
+### 5.3 武器拾取、装备和主副武器结构
 
-### 5.7 Multicast 的当前用途和边界
+已存在的主要链路：
 
-当前武器有 `MulticastAmmo()`，装备时把弹匣值广播给所有实例。但弹药通常只需要服务器和拥有者知道，把每次弹药变化 Multicast 给所有客户端不是最佳长期设计。
+```text
+服务器 Weapon AreaSphere 重叠
+  -> Character::SetOverlappingWeapon
+  -> OverlappingWeapon OwnerOnly 复制
+  -> OnRep_OverlappingWeapon
+  -> 仅拥有者显示 Pickup Widget
 
-更合适的划分是：
+Equip 输入
+  -> ServerEquipButtonPressed
+  -> CombatComponent::EquipWeapon
+  -> EquippedWeapon / SecondaryWeapon RepNotify
+  -> 右手或背包 Socket 挂接
+```
 
-- 权威弹药：服务器修改；
-- HUD 弹药：Owner-only 属性复制或 Client RPC；
-- 枪口火焰、声音、蒙太奇：必要时用 Unreliable Multicast 或由复制状态触发；
-- 命中和伤害：服务器最终判定，不能依赖 Multicast 决定。
+武器 Actor 已开启复制和移动复制，`WeaponState` 使用 RepNotify 控制 Equipped、Secondary 和 Dropped 三种状态。拾取提示的本地分支与远端 Owning Client RepNotify 都已存在。
 
-## 6. 与完整参考项目的差距
+### 5.4 瞄准、准星追踪和 HUD
 
-| 功能域 | BrokenEdge 当前状态 | 参考项目已有内容 |
+[`CombatComponent.cpp`](../Source/BrokenEdge/Component/CombatComponent.cpp) 已完成：
+
+- 本地屏幕中心 Deproject；
+- Visibility 射线与 `HitTarget`；
+- 移动、腾空、瞄准造成的准星扩散；
+- 瞄准状态本地响应和 `ServerSetAiming`；
+- 武器准星纹理写入 HUD。
+
+[`BrokenEdgePlayerController.cpp`](../Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.cpp) 和 [`CharacterOverlay.h`](../Source/BrokenEdge/UI/CharacterOverlay.h) 已建立本地 HUD 桥接与 Widget 晚初始化缓存，涵盖生命、护盾、当前弹匣、备用弹药、个人分数、失败数和队伍分数。
+
+### 5.5 换弹、备用弹药和弹药拾取
+
+现有换弹链包含：
+
+```text
+IA_Reload
+  -> CombatComponent::Reload
+  -> ServerReload
+  -> CombatState = Reloading
+  -> Reload Montage / Anim Notify
+  -> FinishReloading
+  -> 服务器 UpdateAmmoValues
+  -> Owner HUD 更新
+```
+
+`CarriedAmmo` 使用 `COND_OwnerOnly`，`ClientAddAmmo` 已用于把服务器装填结果发给所属客户端。`AAmmoPickup` 会调用 `PickupAmmo()`，按 `MaxCarriedAmmo` 截断并保留未被取走的剩余数量；当前地图和资源只确认了 SMG 弹药拾取。
+
+### 5.6 五类服务器权威拾取物
+
+当前已有：
+
+- `AHealthPickup`；
+- `AShieldPickup`；
+- `ASpeedPickup`；
+- `AJumpPickup`；
+- `AAmmoPickup`。
+
+`APickup` 只在 Authority 端延迟绑定重叠，派生类由服务器应用效果。Health/Shield 最终值通过 Character 属性复制；Speed/Jump 会调用 NetMulticast，把客户端预测所用的 CharacterMovement 参数同步过去。
+
+### 5.7 基础复制框架
+
+当前主要复制数据如下：
+
+| 所属类 | 属性 | 策略 |
 | --- | --- | --- |
-| 基础开火 | 未实现 | Fire 输入、射速、自动武器、Server/Multicast Fire |
-| 命中扫描 | 空类 | 射线、头部伤害、命中特效和声音 |
-| 弹丸武器 | 未实现 | Projectile、Rocket、Grenade、ProjectileWeapon |
-| 霰弹枪 | 未实现 | 多弹丸散射、逐发换弹、合并伤害 |
-| 伤害与淘汰 | 未实现 | 护盾吸收、生命扣除、Elim、Respawn |
-| 计分 | 未实现 | PlayerState、GameState、领先玩家 |
-| 比赛流程 | 未实现 | Warmup、Match、Cooldown、时间同步 |
-| 队伍玩法 | 仅旗帜状态预留 | Teams、TeamPlayerStart、Capture The Flag |
-| 拾取刷新 | 单个地图实例 | PickupSpawnPoint、AmmoPickup |
-| 延迟补偿 | 只有 HitBox | 历史帧、命中回放、HitScan/Projectile/Shotgun SSR |
-| 返回菜单 | 未实现 | ReturnToMainMenu 与离开会话 |
-| 会话加入 | 基础接口未接完 | 查找、筛选、加入、连接字符串、ClientTravel |
-
-不建议按参考项目文件顺序机械复制。教学上应按依赖顺序建立可以独立验收的小闭环。
-
-## 7. 当前执行重点：优化现有功能（不含会话）
-
-本节只处理 BrokenEdge 已有的移动、拾取、武器、切枪、瞄准、换弹、弹药、HUD、Buff 和动画功能。不实现开火、伤害、淘汰、计分、弹丸、延迟补偿或新的会话能力。
-
-优化优先级：
-
-| 优先级 | 目标 | 判断标准 |
-| ---: | --- | --- |
-| P0 | 消除崩溃、客户端越权和权威状态不一致 | 不修复就不应继续扩展玩法 |
-| P1 | 补齐远端表现、HUD、输入和动画一致性 | 主机、拥有者和模拟代理看到一致结果 |
-| P2 | 减少无效 Tick、组件和日志，收紧类边界 | 不改变玩法结果，降低维护和运行成本 |
-
-### 7.1 P0：换弹安全与本地预测
-
-[`UCombatComponent::Reload()`](../Source/BrokenEdge/Component/CombatComponent.cpp#L125) 在访问 `EquippedWeapon->IsFull()` 前没有判空。角色未装备武器时按下换弹键，存在空指针崩溃风险。
-
-[`ServerReload_Implementation()`](../Source/BrokenEdge/Component/CombatComponent.cpp#L191) 使用 `IsLocallyReloading()` 判断是否补播蒙太奇，而 `Reload()` 在调用 Server RPC 后还会本地执行一次 `HandleReload()`。Listen Server 的本地角色可能在同一操作中执行两次换弹表现。
-
-优化要求：
-
-1. 提取唯一的 `CanReload()`，集中检查 Character、EquippedWeapon、CarriedAmmo、CombatState、弹匣容量和本地换弹标记；
-2. 客户端可以立即预测播放一次，但服务器必须重新验证；
-3. 服务器只为非本地控制角色补播换弹表现；
-4. `FinishReloading()` 只允许服务器修改权威弹药；
-5. [`FinishSwapAttachWeapons()`](../Source/BrokenEdge/Component/CombatComponent.cpp#L104) 增加主副武器和战斗状态检查，避免错误 Anim Notify 触发时解引用空指针；
-6. 在 Unreal Editor 中目视确认 `AM_Reload`、`AM_Swap` 的 Notify 名称、位置和调用次数。二进制资产中能确认 Notify 轨道存在，但不能仅靠静态字符串证明三个 BlueprintCallable 完成函数已经正确接线。
-
-验收：
-
-- [ ] 未装备武器按换弹不会崩溃；
-- [ ] 空弹匣、有子弹、满弹匣和无备用弹药的分支正确；
-- [ ] Listen Server 本地玩家的换弹蒙太奇只播放一次；
-- [ ] 远端拥有者立即看到本地反馈，服务器最终弹药一致；
-- [ ] 模拟代理也能看到一次正确的换弹蒙太奇。
-
-### 7.2 P0：武器重叠必须由服务器决定
-
-[`AWeapon::BeginPlay()`](../Source/BrokenEdge/Weapon/Weapon.cpp#L81) 当前在所有网络实例上启用 `AreaSphere` 并绑定重叠；客户端会直接调用 `SetOverlappingWeapon()`。与此同时 [`OnRep_OverlappingWeapon()`](../Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp#L631) 仍为空。
-
-这会造成两套互相竞争的来源：客户端本地碰撞结果和服务器 Owner-only 复制结果。当前实现还存在多武器边界问题：角色同时进入两把武器的范围后，离开其中任意一把都会无条件清空 `OverlappingWeapon`。
-
-优化要求：
-
-1. 只在 Authority 上启用/绑定拾取重叠；
-2. 服务器设置 `OverlappingWeapon`；
-3. 保留 `COND_OwnerOnly`，由 `OnRep_OverlappingWeapon(LastWeapon)` 在 Owning Client 隐藏旧 Widget、显示新 Widget；
-4. EndOverlap 只有在当前重叠武器确实等于 `this` 时才清空；
-5. 掉落武器重新启用服务器重叠后，远端拥有者仍必须依靠 RepNotify 得到提示；
-6. 检查 Blueprint/CDO 对 `AreaSphere` 的 Collision Enabled、Object Type、Response 和 Generate Overlap Events 是否覆盖了 C++ 默认值。
-
-验收：
-
-- [ ] 拾取提示只出现在实际拥有该 Pawn 的客户端；
-- [ ] 服务器上可以看到唯一的 Overlap Begin/End 权威链；
-- [ ] 同时重叠两把武器，离开其中一把不会错误清除另一把；
-- [ ] 掉落武器再次进入范围时提示恢复；
-- [ ] 客户端不能仅靠本地碰撞伪造可拾取状态。
-
-### 7.3 P0：补齐主副武器与 CombatState 的 RepNotify
-
-当前以下回调为空：
-
-- [`OnRep_SecondaryWeapon()`](../Source/BrokenEdge/Component/CombatComponent.cpp#L499)；
-- [`OnRep_CombatState()`](../Source/BrokenEdge/Component/CombatComponent.cpp#L517)；
-- 持旗相关 `OnRep_HoldingTheFlag()`、`OnRep_Flag()` 仍属于未完成占位，本轮不扩展旗帜玩法。
-
-Owning Client 可能因为本地预测看起来正常，但第三个玩家作为 Simulated Proxy 可能看不到背包武器挂接、换弹或切枪蒙太奇。
-
-优化要求：
-
-- `OnRep_SecondaryWeapon()` 设置 Secondary 状态、挂到 BackpackSocket、关闭拾取碰撞并设置描边；
-- `OnRep_CombatState()` 根据 Reloading/Swapping 状态为非本地角色补播表现；
-- 回调必须幂等：重复执行不得再次交换主副武器指针；
-- 服务器直接赋值后仍负责执行自己的状态处理，不能误以为服务器会自动调用 OnRep；
-- 所有挂接结果用 Listen Server + 2 Clients 从第三人视角验收。
-
-### 7.4 P0：统一服务器权威弹药
-
-`CarriedAmmo` 已使用 Owner-only 复制，这是正确方向；但 `AWeapon::Ammo` 不是复制属性。当前只在装备时调用一次 Reliable `MulticastAmmo()`，[`ClientAddAmmo`](../Source/BrokenEdge/Weapon/Weapon.cpp#L332) 仍被注释。
-
-可能结果是服务器和 Listen Server HUD 正确，但远端 Owning Client 换弹后的弹匣数字没有更新。
-
-优化要求：
-
-1. 只有服务器修改弹匣和备用弹药；
-2. 弹匣弹药通过 Owner-only RepNotify 或 Client RPC 发给拥有者；
-3. 枪内弹药不需要 Reliable Multicast 给所有客户端；
-4. 切枪时同时刷新当前弹匣和对应武器类型的备用弹药；
-5. 实际使用 `MaxCarriedAmmo` 进行 Clamp，或者删除这个无效配置；
-6. [`PlayerController::PollInit()`](../Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.cpp#L79) 补写 `bInitializeCarriedAmmo/HUDCarriedAmmo`。
-
-验收：服务器、Owning Client HUD 在装备、切枪、换弹完成和 Widget 晚初始化后始终显示相同弹药。
-
-### 7.5 P0：同步速度与跳跃 Buff 的预测参数
-
-[`BuffComponent.cpp`](../Source/BrokenEdge/Component/BuffComponent.cpp#L73) 当前只在服务器修改 `JumpZVelocity`、`MaxWalkSpeed` 和 `MaxWalkSpeedCrouched`，对应 Multicast 被注释。
-
-服务器能够约束最终移动，但拥有者客户端仍可能使用旧参数进行预测，产生加速手感延迟、跳跃高度不一致和位置修正。
-
-优化要求：
-
-- 服务器决定 Buff 是否生效、参数和结束时间；
-- 把速度/跳跃参数同步到相关客户端的 CharacterMovement；
-- 明确重复拾取策略：覆盖、刷新持续时间、取最大值或叠加，不能依赖计时器被动覆盖；
-- 对 Amount、Duration、Speed、JumpVelocity 设置合理的 `ClampMin`，防止持续时间为零导致除零；
-- Buff 重置时恢复“当前基础值”，避免与瞄准减速等已有状态互相覆盖；
-- 生命/护盾逐帧变化仍由服务器执行，客户端通过 RepNotify 更新 HUD。
-
-### 7.6 P1：输入、远端动画与准星一致性
-
-#### 输入禁用
-
-[`Move()`](../Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp#L520) 和 `Look()` 没有检查 `bDisableGameplay`，但跳跃、蹲伏、装备、瞄准和换弹都检查了。应选择统一策略：所有入口检查，或在状态切换时集中禁用输入/移动。
-
-#### 模拟代理 Aim Offset
-
-[`RotateInPlace()`](../Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp#L181) 的 Simulated Proxy 分支仍被注释。远端角色可能无法更新 AO_X、AO_Y 和原地转向。应恢复基于复制移动的代理计算，并分别观察服务器、拥有者和第三方客户端上的动画变量。
-
-#### 准星状态
-
-[`TraceUnderCrosshairs()`](../Source/BrokenEdge/Component/CombatComponent.cpp#L323) 命中角色后会把准星设为红色，但没有命中时只更新 ImpactPoint，没有恢复白色，准星可能残留红色。
-
-还应：
-
-- 在没有 Viewport、PlayerController 或 Deproject 失败时提前返回并重置结果；
-- 避免依赖硬编码 Player 0，优先使用 Character 的本地 Controller；
-- 将 CrosshairSpread Clamp 到非负值，防止完全瞄准时纹理穿过中心反向排列；
-- 未装备武器时清空纹理、颜色和扩散状态。
-
-### 7.7 P1：HUD 初始化和边界检查
-
-当前 PlayerController 直接穿透 HUD、CharacterOverlay 和具体控件。短期不必重写 UI 架构，但应先保证：
-
-- 最大生命/护盾为零时不执行除法；
-- 缓存的 Health、Shield、WeaponAmmo、CarriedAmmo 都会在 Widget 创建后补写；
-- 地图切换或 Widget 重建后使用 `IsValid()` 重新取得引用；
-- `OnPossess`、Character `PollInit` 和 RepNotify 不会重复创建 Overlay；
-- 服务器不会尝试操作远端玩家的 Widget，远端 HUD 始终由自己的 PlayerController 更新。
-
-中期再把 `SetHealth/SetShield/SetWeaponAmmo/SetCarriedAmmo` 封装进 `UCharacterOverlay`，减少 Controller 对具体控件层级的依赖。
-
-### 7.8 P2：性能和工程结构
-
-不改变玩法结果的优化项：
-
-1. `AWeapon` 开启 Tick，但 [`Tick()`](../Source/BrokenEdge/Weapon/Weapon.cpp#L99) 为空，直接关闭；
-2. `UBuffComponent` 不应在所有角色、所有网络实例上永久 Tick，只在服务器治疗/回盾生效时启用，结束后关闭；
-3. `UCombatComponent` 的准星追踪只对本地控制角色有意义，避免模拟代理组件每帧空转；
-4. 拾取物旋转属于视觉效果，Dedicated Server 不必每帧旋转 Mesh；
-5. 当前角色为尚未实现的延迟补偿预创建大量 HitBox，可暂时条件化创建，减少每个角色的组件和初始化成本；
-6. `Source/BrokenEdge/test` 仍编入 Runtime 模块，GameMode 还包含测试类头文件，应移到独立测试/开发模块；
-7. 清理 Weapon、Pickup、Jump/Shield Pickup 中每次重叠都会输出的临时日志；
-8. 删除或明确隐藏没有真实用途的 `CrosshairShootingFactor`、旗帜占位和旧 TODO。
-
-结构优化：
-
-- 当前 Health、Shield 等运行时权威值不宜使用 `EditAnywhere`；
-- 默认子对象和碰撞盒指针宜使用 `VisibleAnywhere`，避免 Blueprint 替换内部组件引用；
-- 减少 Character 通过 `friend` 直接写 Combat 私有状态，改用查询接口和意图方法；
-- 修正 `ECS_Unoccuiped`、`HealthingTime`、`IsElimed` 等命名时，应使用 Rider/Unreal 感知的安全重命名并重新编译 Blueprint；
-- 反射成员、组件布局或构造函数调整后关闭 Editor，使用 `-NoHotReloadFromIDE` 完整构建，再重新打开并编译相关 Blueprint。
-
-### 7.9 实施顺序与阶段验收
-
-#### 第一轮：正确性基线
-
-1. Reload 判空、本地预测和 Anim Notify 防重；
-2. 服务器权威武器重叠与 `OnRep_OverlappingWeapon`；
-3. `OnRep_SecondaryWeapon`、`OnRep_CombatState`；
-4. 弹匣/备用弹药 Owner-only 闭环；
-5. Buff 移动参数同步。
-
-完成标准：Listen Server + 2 Clients 中，三台实例看到相同挂接和换弹结果；提示只属于正确玩家；无武器换弹不崩溃；主机蒙太奇不重复；服务器与拥有者 HUD 弹药一致。
-
-#### 第二轮：表现一致性
-
-1. bDisableGameplay 覆盖全部输入；
-2. 模拟代理 Aim Offset/原地转向；
-3. 准星颜色、扩散和 Deproject 失败路径；
-4. HUD 晚初始化和 Widget 重建。
-
-完成标准：从第三个客户端观察拥有者，瞄准、切枪、换弹、原地转身均正确；准星不会残留红色；地图加载顺序变化不会漏掉 HUD 数据。
-
-#### 第三轮：性能与可维护性
-
-关闭无效 Tick、条件化未使用组件、隔离测试代码、清理日志、收紧 UPROPERTY 和 Combat API。使用 `stat game`、`stat net` 和 Unreal Insights 比较优化前后，而不是仅凭代码行数判断性能收益。
-
-## 8. 暂缓的新功能路线：基础联机命中扫描射击闭环
-
-> 当前不实施本节。只有第 7 节的现有功能优化完成并通过多人验收后，才重新评估新玩法开发。
-
-### 8.1 为什么它原本被列为下一阶段
-
-当前项目已经有：
-
-- 瞄准输入；
-- 屏幕中心追踪；
-- 武器与弹药；
-- 动态准星；
-- HUD；
-- Server RPC 与 RepNotify 示例；
-- 生命和护盾变量。
-
-基础射击可以复用这些模块，并暴露最有教学价值的网络边界：输入属于客户端，弹药、射速、命中和伤害属于服务器，枪声/动画属于所有观察者的表现。
-
-### 8.2 建议拆成六课
-
-#### 第 1 课：开火输入与接口
-
-实现：
-
-- 新建 `IA_Fire`；
-- 加入 `IMC_CharacterDefault`；
-- Character 绑定 Pressed/Released；
-- `CombatComponent::FireButtonPressed(bool)`；
-- `AWeapon::Fire(const FVector&)` 虚函数。
-
-验收：按键能进入 Combat，但还不造成伤害；松开按键能停止自动开火。
-
-#### 第 2 课：射速、弹药和状态门禁
-
-实现：
-
-- `bCanFire`；
-- `FireDelay`；
-- `FireTimer`；
-- 自动/半自动武器；
-- `CanFire()` 同时检查 Weapon、Ammo、CombatState；
-- 服务器权威扣弹，拥有者 HUD 及时更新。
-
-验收：客户端不能通过高频点击突破射速，空弹匣不能继续开火。
-
-#### 第 3 课：RPC 与远端表现
-
-建议链路：
-
-```mermaid
-sequenceDiagram
-    participant C as Owning Client
-    participant S as Server
-    participant O as Other Clients
-    C->>C: 本地立即播放开火反馈
-    C->>S: ServerFire(Target, ShotId/Time)
-    S->>S: 校验状态、射速、弹药、目标范围
-    S->>S: 扣除权威弹药并执行命中判定
-    S-->>C: Owner-only 弹药结果/必要校正
-    S-->>O: Multicast/复制状态播放开火表现
+| Character | `OverlappingWeapon` | OwnerOnly + RepNotify |
+| Character | `Health`、`Shield` | RepNotify |
+| Character | `bDisableGameplay` | 普通复制 |
+| CombatComponent | `EquippedWeapon`、`SecondaryWeapon` | RepNotify |
+| CombatComponent | `bAiming`、`CombatState` | RepNotify |
+| CombatComponent | `CarriedAmmo` | OwnerOnly + RepNotify |
+| Weapon | `WeaponState` | RepNotify |
+| PlayerState | `Defeats`、`Team` | RepNotify |
+| GameState | `RedTeamScore`、`BlueTeamScore` | RepNotify |
+| PlayerController | `bShowTeamScores` | 普通复制 |
+| PlayerController | `MatchState` | 声明了 RepNotify，但当前未注册到 Lifetime Props |
+
+这已经足够让学生对照学习 Server RPC、Client RPC、NetMulticast、普通属性复制、Owner-only 复制和 RepNotify 的不同职责。
+
+## 6. 已搭架但不能写成“已完成”的功能
+
+### 6.1 丢枪不是服务器权威闭环
+
+当前 `DropButtonPressed()` 直接调用 `CombatComponent::Drop()`，没有 Server RPC。远端客户端本地修改 `EquippedWeapon` 和 `WeaponState` 不能替代服务器权威修改，而且源码已经标注“有 bug”。
+
+建议目标：
+
+```text
+Owning Client Drop 输入
+  -> ServerDropWeapon RPC
+  -> 服务器校验 CombatState / 当前武器
+  -> Weapon::Dropped + 清理 EquippedWeapon
+  -> RepNotify/Attachment 让所有客户端得到一致结果
 ```
 
-验收：Listen Server、客户端和旁观的第二客户端都能看到开火表现，而且拥有者不会重复播放两次。
+还要明确有副武器时的策略：自动切到副武器、保留空手，或禁止丢弃最后一把武器。
 
-#### 第 4 课：命中扫描武器
+### 6.2 远端切枪和换弹表现不完整
 
-在 `AHitScanWeapon::Fire()` 中实现：
+- `OnRep_SecondaryWeapon()` 中背包挂接仍被注释；
+- `OnRep_CombatState()` 中 Reloading 和 SwappingWeapon 的远端蒙太奇分支仍被注释；
+- `FinishSwapAttachWeapons()` 只允许 Authority 修改状态，必须依靠正确的 RepNotify 让其他机器更新表现；
+- Ammo 不是复制属性，当前依赖装备时 Multicast 和换弹时 Client RPC，需要做丢包、切枪和 Late Join 验收。
 
-- 从枪口到目标的射线；
-- 普通命中与头部命中；
-- 枪口、弹道、Impact 特效和声音；
-- 服务器调用 `ApplyDamage()`。
+### 6.3 队伍分数 RepNotify 有确定错误
 
-验收：所有客户端看到一致的命中特效，只有服务器改变受击角色的玩法属性。
+[`BrokenEdgeGameState.cpp`](../Source/BrokenEdge/GameState/BrokenEdgeGameState.cpp) 当前存在红蓝写反：
 
-#### 第 5 课：伤害、护盾与生命
+- `OnRep_RedTeamScore()` 调用了 `SetHUDBlueTeamScore(BlueTeamScore)`；
+- `OnRep_BlueTeamScore()` 调用了 `SetHUDRedTeamScore(BlueTeamScore)`。
 
-实现：
+这不是“未来优化建议”，而是当前应先修的确定性缺陷。它非常适合作为一节 RepNotify 调试练习：让学生分别在 Server、Owning Client 和另一 Client 记录红蓝分数与对应 TextBlock。
 
-- 服务器绑定 `OnTakeAnyDamage`；
-- 先扣 Shield，再扣 Health；
-- 保留 `OnRep_Shield/Health` 负责客户端 HUD 和受击表现；
-- 生命归零进入淘汰状态。
+### 6.4 PlayerState、Team 和 MatchState 只是框架
 
-验收：服务器、受击者和攻击者观察到相同的最终生命/护盾，普通客户端不能直接给自己加血或给别人扣血。
+当前已经有 Score、Defeats、Team、Red/Blue Team Score 和 MatchState 字段，但缺少驱动它们的完整规则：
 
-#### 第 6 课：双客户端网络验收
+- 没有伤害/淘汰事件调用 `AddToScore()` 和 `AddToDefeats()`；
+- `TeamsGameMode::PostLogin()` 仍是 TODO；
+- 当前 PlayerState 没有完整的 `GetTeam()/SetTeam()` 业务接口，`OnRep_Team()` 为空；
+- GameMode 没有 `bDelayedStart`、比赛状态 Tick、`OnMatchStateSet()` 广播和重开逻辑；
+- `MatchState` 虽声明为 `ReplicatedUsing`，但当前 `GetLifetimeReplicatedProps()` 没有 `DOREPLIFETIME` 注册；
+- `bShowTeamScores` 只有普通复制，没有复制通知；Overlay 已初始化后再收到变化时不会主动切换队伍分数显示；
+- `ClientJoinMidgame()` 与 `OnRep_MatchState()` 为空；
+- `ServerCheckMatchState()` 没有在 `BeginPlay()` 中形成实际调用闭环；
+- HUD 虽有 `MatchCountdownText`，但 Controller 没有倒计时更新函数。
 
-至少测试：
+因此最新提交“搭建比赛状态同步框架”的准确含义是“字段和 RPC 入口已搭建”，不是“比赛流程已完成”。
 
-- Listen Server + 2 Clients；
-- 客户端 A 射击客户端 B；
-- 高延迟和丢包模拟；
-- 空弹匣、换弹中、切枪中、未装备武器时开火；
-- 快速连点是否突破 FireDelay；
-- 客户端断开后会话和 Actor 是否正常清理。
+### 6.5 手部 IK 尚未修复和运行验收
 
-### 8.3 开发前先补的现有 P0 问题
+专项检查已确认：
 
-为了避免在射击课中混入旧同步 Bug，应先完成第 7 节的全部第一轮优化。原简要清单如下：
+- 当前狙击枪缺少 `LeftHandSocket`；
+- 右手 Transform Bone 的 Rotation Mode 为 Ignore；
+- IK 开关在武器失效后可能残留；
+- 当前本地右手计算与动画蓝图门控仍需统一；
+- 尚未完成 Standalone、Listen Server 和 Client 动画验收。
 
-1. 为 `Reload()` 增加 Character/EquippedWeapon 判空；
-2. 实现 `OnRep_OverlappingWeapon()`；
-3. 实现 `OnRep_SecondaryWeapon()`；
-4. 实现 `OnRep_CombatState()` 的换弹和切枪远端表现；
-5. 设计 Ammo 的 Owner-only 同步或 Client RPC，不再依赖一次性的装备 Multicast；
-6. 在 PlayerController 初始化补写 `CarriedAmmo`；
-7. 给速度/跳跃增益补上适合客户端预测的同步方式。
+详细证据、修复顺序和检查表见 [武器手部 IK 问题诊断与修复指南](UE5_Weapon_Hand_IK_Diagnosis_and_Fix.md)。
 
-### 8.4 阶段完成标准
+### 6.6 会话系统仍未形成 Join 闭环
 
-只有同时满足以下条件，才建议把“基础联机射击”标记为完成：
+当前 Host 和 Find 已有主体，但仍有关键缺口：
 
-- [ ] `IA_Fire` 在 Blueprint Character 中正确赋值并绑定；
-- [ ] 主机和远端客户端都能开火；
-- [ ] 服务器控制 FireDelay、Ammo 和 Damage；
-- [ ] 其他客户端能看到一次且仅一次的开火表现；
-- [ ] 当前弹匣和备用弹药在 Owning Client HUD 正确；
-- [ ] 命中后 Shield/Health 在服务器和所有相关客户端一致；
-- [ ] 换弹、切枪、开火的 CombatState 互斥正确；
-- [ ] 无武器、空弹匣和换弹中不会崩溃；
-- [ ] 至少完成 Listen Server + 2 Clients 的 PIE 验收；
-- [ ] 记录一次带网络模拟的验收结果。
+- Menu 中 Find/Join 委托绑定被注释；
+- Join 按钮只调用 `FindSessions()`，没有筛选结果、`JoinSession()` 和 `ClientTravel()`；
+- Join/Destroy 的原生完成委托没有完成初始化和回调实现；
+- 已存在同名会话时只设置了“销毁后重建”标记，实际 `DestorySession()` 调用仍被注释；
+- Dedicated Server 路径仍取得 `ULocalPlayer` 并解引用，而专用服务器没有本地玩家；
+- `DefaultGame.ini` 的自动启动配置没有对应的已确认启动调用链。
 
-## 9. 后续路线建议（全部暂缓）
+所以打包脚本和 Server Target 存在，不等于会话发现、加入、地图旅行和断线清理已经可用。
 
-建议顺序：
+### 6.7 生命和护盾尚未接入战斗
 
-| 优先级 | 阶段 | 主要教学目标 |
-| ---: | --- | --- |
-| P0 | 修复现有 RepNotify、弹药和增益同步缺口 | 建立可靠的网络测试基线 |
-| P1 | 基础联机命中扫描射击 | RPC、服务器权威、表现广播、射速与弹药 |
-| P2 | 伤害、淘汰和重生 | GameMode 权威规则、Pawn 生命周期 |
-| P3 | PlayerState/GameState 与计分 HUD | 玩家持久状态、全局复制状态 |
-| P4 | 完整会话加入与 Lobby 流程 | Online Session、Travel、断线与退出 |
-| P5 | 弹丸武器、手雷和霰弹枪 | Actor 生成复制、Projectile Movement、散射 |
-| P6 | 拾取物生成点和弹药拾取 | 服务器生成、定时器、资源循环 |
-| P7 | 比赛状态、倒计时和队伍玩法 | 时间同步、GameState、团队规则 |
-| P8 | 服务器倒带延迟补偿 | 历史帧、时间轴、网络公平性与安全边界 |
+Health/Shield、Buff、RepNotify 和 HUD 已经存在，但 Character 没有：
 
-不建议把延迟补偿提前到 P1。延迟补偿会同时引入时间同步、历史缓存、碰撞回放与安全校验；若基础伤害链尚未稳定，学生很难区分错误来自射击本身还是回退系统。
+- `OnTakeAnyDamage` 绑定；
+- `ReceiveDamage()`；
+- GameMode 伤害修正；
+- 护盾优先吸收、生命扣除后的淘汰入口；
+- Elim、武器掉落、输入禁用、重生计时器和 Respawn。
 
-## 10. 建议的多人验收矩阵
+因此当前“生命/护盾系统”是属性与 UI 系统，不是完整伤害系统。
+
+## 7. 推荐给学生的教学完善顺序
+
+### P0：先建立可信的多人基线（2～3 课时）
+
+目标：不增加大玩法，先让已有状态在 Listen Server + 2 Clients 中一致。
+
+任务：
+
+1. 修复 GameState 红蓝分数 RepNotify 写反；
+2. 为主动丢枪增加 Server RPC、权限校验和主副武器策略；
+3. 完成 `OnRep_SecondaryWeapon()` 的背包挂接；
+4. 完成 `OnRep_CombatState()` 的远端换弹/切枪表现；
+5. 处理未命中时准星颜色恢复、Viewport/Controller 无效路径；
+6. 按 IK 专项文档补齐 Socket、ABP 配置和状态清零；
+7. 为关键日志统一打印 NetMode、LocalRole 和 `IsLocallyControlled()`。
+
+验收：
+
+- Client A 丢枪后，Server、Client A、Client B 都看到同一把武器落地；
+- 切枪和换弹在第三方观察者上只播放一次且挂接正确；
+- 红蓝分数分别只更新对应 TextBlock；
+- 未装备/丢枪/换弹/切枪后 IK 不残留；
+- 无空指针、无客户端私自改变权威状态。
+
+### P1：基础联机开火框架（3～4 课时）
+
+这是当前最适合新增的核心功能。
+
+任务拆分：
+
+1. 新建 `IA_Fire`，加入 `IMC_CharacterDefault` 并在 Character Blueprint 赋值；
+2. Character 绑定 Pressed/Released，转发 `FireButtonPressed(bool)`；
+3. 在 CombatComponent 增加 `CanFire()`、`bCanFire`、`FireDelay` 和 FireTimer；
+4. 在 Weapon 增加虚函数 `Fire()`、`SpendRound()`、自动/半自动配置；
+5. 增加 `ServerFire` 校验和 `MulticastFire` 表现；
+6. 处理拥有者本地预测，避免本地开火蒙太奇/特效播放两次；
+7. 服务器权威扣弹，所属客户端 HUD 及时更新。
+
+推荐链路：
+
+```text
+Owning Client 输入
+  -> 本地即时反馈
+  -> ServerFire(HitTarget, FireDelay)
+  -> 服务器校验 Weapon / Ammo / CombatState / FireDelay
+  -> 服务器扣弹并决定是否允许开火
+  -> Multicast/复制状态让观察者播放表现
+  -> Owner-only/Client RPC 校正弹药
+```
+
+验收：
+
+- 无武器、空弹匣、换弹中和切枪中不能开火；
+- 快速连点不能突破 FireDelay；
+- 自动武器按住连续射击，松开立即停止；
+- 三台实例只看到一次开火表现；
+- 最终弹药以服务器为准。
+
+### P2：命中扫描、护盾和服务器伤害（2～3 课时）
+
+任务：
+
+1. 实现 `AHitScanWeapon::Fire()`；
+2. 从 Muzzle Socket 向 `HitTarget` 延伸射线；
+3. 区分普通命中和头部命中；
+4. 只由服务器调用 `ApplyDamage()`；
+5. Character 绑定 `OnTakeAnyDamage` 并实现 `ReceiveDamage()`；
+6. 伤害先扣 Shield，再扣 Health；
+7. 保留 `OnRep_Shield/Health` 更新远端 HUD 与受击表现；
+8. 增加枪口、弹道、Impact 和声音，但把“表现广播”和“伤害判定”分开。
+
+验收：普通客户端不能直接修改别人 Health；Server、受击者和第三方观察者最终数值一致；Listen Server 主机不会因为本地/服务器双路径受到两次伤害。
+
+### P3：淘汰、重生和个人计分（3～4 课时）
+
+任务：
+
+- GameMode 增加 `PlayerEliminated()` 和 `RequestRespawn()`；
+- Character 增加 Elim 状态、Multicast 表现、输入禁用、碰撞关闭和定时重生；
+- 淘汰时处理主副武器掉落或销毁；
+- 攻击者 `AddToScore()`，受害者 `AddToDefeats()`；
+- GameState 维护最高分玩家；
+- HUD 增加淘汰播报；
+- 处理自杀、空 Attacker、玩家离开和重生失败边界。
+
+验收：Client A 淘汰 Client B 后所有机器看到同一结果；分数只增加一次；B 在服务器选择的出生点重生，HUD 和武器状态重新初始化。
+
+### P4：比赛状态、倒计时和 Late Join（3～4 课时）
+
+复用当前已经搭好的字段，补齐：
+
+- GameMode `bDelayedStart`；
+- WaitingToStart → InProgress → Cooldown → RestartGame；
+- `OnMatchStateSet()` 通知所有 PlayerController；
+- PlayerController 的 `ClientJoinMidgame()` 与 `OnRep_MatchState()`；
+- 客户端/服务器时间同步和倒计时显示；
+- Cooldown 胜者文本、玩法禁用和 HUD 切换；
+- Late Join 获取当前比赛状态和剩余时间。
+
+验收：服务器与两个客户端倒计时误差稳定在可接受范围；中途加入的客户端不会从完整 Warmup 重新计时，也不会漏掉当前 MatchState。
+
+### P5：队伍模式（2～3 课时）
+
+任务：
+
+- PlayerState 补 `GetTeam()/SetTeam()`，`OnRep_Team()` 更新角色材质；
+- TeamsGameMode 在 PostLogin/HandleMatchHasStarted 分配人数较少的队伍；
+- Logout 清理队伍数组；
+- 同队伤害规则；
+- 淘汰时增加正确队伍分数；
+- 队伍出生点和队伍颜色；
+- 修复并验收现有队伍 HUD。
+
+此阶段完成后，再考虑夺旗。当前 Flag 字段不是夺旗功能完成的证据。
+
+### P6：更多武器和拾取循环（按课程长度选做）
+
+推荐顺序：
+
+1. `PickupSpawnPoint`：服务器生成、随机计时、销毁后重刷；
+2. 完善各武器类型弹药拾取资产；
+3. Projectile Weapon：Actor 生成复制与 ProjectileMovement；
+4. 手雷：投掷蒙太奇、Server RPC、弹跳与径向伤害；
+5. Shotgun：散射、多目标伤害合并和逐发换弹；
+6. Sniper：FOV 插值、Scope Widget；
+7. Capture The Flag：Flag、FlagZone、重置和计分。
+
+每增加一种武器都必须复用统一的 Fire/Ammo/Damage 接口，避免在 Character 中堆积武器类型分支。
+
+### P7：会话、退出和 Dedicated Server 专题（3～5 课时）
+
+建议与核心战斗课程分开：
+
+1. 补全 Find/Join 委托；
+2. 按 MatchType 筛选并调用 JoinSession；
+3. 解析连接字符串并 ClientTravel；
+4. 已有会话先销毁再创建；
+5. ReturnToMainMenu、DestroySession 和离开游戏；
+6. Dedicated Server 使用无 `ULocalPlayer` 的创建路径；
+7. 分别验证 Listen Server 与真正 Dedicated Server；
+8. 最后再讨论 Steam/互联网 OSS，先不要把 Null/LAN 验证等同于公网服务。
+
+### P8：服务器倒带延迟补偿（最后阶段）
+
+前置条件必须全部满足：
+
+- 基础射击、伤害和服务器权威稳定；
+- 客户端/服务器时间同步稳定；
+- HitBox 名称与骨骼对应；
+- HitScan、Projectile 和 Shotgun 各自已有无 SSR 的正确版本；
+- 已有高延迟/丢包测试记录。
+
+随后再实现历史帧缓存、帧插值、碰撞盒回放、Server Score Request 和安全校验。当前仅创建 HitBox 不等于已实现 SSR。
+
+## 8. 建议的课堂阶段表
+
+| 阶段 | 建议课时 | 学生交付物 | 必须通过的多人验收 |
+| --- | ---: | --- | --- |
+| P0 现有功能收口 | 2～3 | RepNotify/丢枪/IK 修复记录 | Listen + 2 Clients 状态一致 |
+| P1 开火框架 | 3～4 | IA_Fire、FireTimer、RPC、扣弹 | 射速与弹药服务器权威 |
+| P2 命中与伤害 | 2～3 | HitScan、Shield/Health 伤害链 | 三方数值一致、无双重伤害 |
+| P3 淘汰与重生 | 3～4 | Elim、Respawn、Score/Defeats | 一次淘汰一次计分，正确重生 |
+| P4 比赛状态 | 3～4 | 倒计时、Late Join、Cooldown | 三端时间与状态一致 |
+| P5 队伍模式 | 2～3 | 分队、友伤、队伍分数 | 退出/重连/得分边界正确 |
+| P6 武器扩展 | 选做 | Projectile/Shotgun/Grenade/PickupSpawn | Actor 生成和伤害仍由服务器决定 |
+| P7 会话与专服 | 3～5 | Host/Find/Join/Return/DS 报告 | 两独立客户端能加入与退出 |
+| P8 延迟补偿 | 高阶选做 | 帧历史、回退判定、对比数据 | 有/无 SSR 在模拟延迟下可对比 |
+
+## 9. 第一轮最具体的学生任务单
+
+若下一次课就开始实施，建议按以下顺序发任务：
+
+### 任务 1：修复队伍 HUD RepNotify
+
+- 找出红蓝回调写反；
+- 用 Server 按键或临时权威测试入口分别加红/蓝分；
+- 记录三台实例上的 GameState 值和 TextBlock；
+- 删除临时测试入口前保留验收截图或日志。
+
+### 任务 2：把丢枪改成服务器权威
+
+- 添加 `ServerDropWeapon`；
+- 服务器检查武器与 CombatState；
+- 明确副武器接替策略；
+- 通过 RepNotify 修复三端挂接和准星/HUD；
+- 测试客户端快速连续按 Drop。
+
+### 任务 3：补远端换弹和切枪表现
+
+- 实现 `OnRep_SecondaryWeapon()`；
+- 实现 `OnRep_CombatState()` 的 Reloading/Swapping；
+- 保证拥有者预测与 Multicast/RepNotify 不重复播放；
+- 用第三个客户端观察另一个客户端。
+
+### 任务 4：按专项文档修手部 IK
+
+- 先补 `LeftHandSocket`；
+- 再修 Transform Bone Rotation Mode 和本地门控；
+- 最后处理无武器时的 IK 状态清零；
+- 不允许通过盲调 RightHandSocket 掩盖左手目标点错误。
+
+### 任务 5：建立最小 IA_Fire 闭环
+
+- 只做到输入、状态门禁、射速和扣弹；
+- 第一版先不造成伤害；
+- 验收稳定后再进入 HitScan，避免一次同时调试输入、RPC、射线和伤害。
+
+## 10. 多人验收矩阵
 
 | 场景 | 必测内容 |
 | --- | --- |
-| Standalone | 输入、动画、HUD 基本功能 |
-| Listen Server + 1 Client | 主机与远端客户端双向拾取、瞄准、换弹、射击 |
-| Listen Server + 2 Clients | Owning Client 与 Simulated Proxy 表现差异 |
-| Dedicated Server + 2 Clients | 不依赖服务器本地 PlayerController/ULocalPlayer |
-| 延迟 100 ms | 本地预测、状态回正、动画重复或回滚 |
-| 丢包 5% | Reliable RPC 队列、Unreliable 表现容错、最终状态一致性 |
-| Late Join | 新加入客户端的武器、生命、护盾、战斗状态是否正确 |
-| Disconnect/Reconnect | Session、Pawn、武器 Owner 与 UI 清理 |
+| Standalone | 输入、动画、HUD、基础功能无网络依赖错误 |
+| Listen Server + 1 Client | 主机和客户端双向拾取、丢枪、切枪、换弹、射击 |
+| Listen Server + 2 Clients | Owning Client 与 Simulated Proxy 表现是否一致 |
+| Dedicated Server + 2 Clients | 不依赖服务器本地 HUD、PlayerController 或 ULocalPlayer |
+| 延迟 100 ms | 本地预测、服务器回正、蒙太奇是否重复 |
+| 丢包 5% | 最终状态是否一致，Unreliable 表现丢失是否可接受 |
+| Late Join | 武器、弹药、生命、分数、MatchState 是否补齐 |
+| Disconnect/Reconnect | PlayerState、队伍数组、武器 Owner、Session 清理 |
 
-每次验收都建议同时记录：
+日志至少同时记录：
 
 ```text
-NetMode / LocalRole / RemoteRole
-是否本地控制
-触发 RPC 的机器
-修改权威状态的机器
-触发 OnRep 的机器
-最终服务器值与客户端值
+NetMode
+LocalRole / RemoteRole
+IsLocallyControlled
+RPC 发起端与执行端
+OnRep 执行端
+服务器最终值
+Owning Client 最终值
+第三方观察者最终值
 ```
 
-## 11. 关键证据索引
+## 11. 当前项目关键证据索引
 
-### 当前项目
-
-- 输入与角色：[`BrokenEdgeCharacter.h`](../Source/BrokenEdge/Character/BrokenEdgeCharacter.h)、[`BrokenEdgeCharacter.cpp`](../Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp)
-- 战斗与复制：[`CombatComponent.h`](../Source/BrokenEdge/Component/CombatComponent.h)、[`CombatComponent.cpp`](../Source/BrokenEdge/Component/CombatComponent.cpp)
-- 武器：[`Weapon.h`](../Source/BrokenEdge/Weapon/Weapon.h)、[`Weapon.cpp`](../Source/BrokenEdge/Weapon/Weapon.cpp)
-- 空的命中扫描实现：[`HitScanWeapon.h`](../Source/BrokenEdge/Weapon/HitScanWeapon.h)、[`HitScanWeapon.cpp`](../Source/BrokenEdge/Weapon/HitScanWeapon.cpp)
-- 属性增益：[`BuffComponent.cpp`](../Source/BrokenEdge/Component/BuffComponent.cpp)
-- 本地 HUD 桥接：[`BrokenEdgePlayerController.cpp`](../Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.cpp)
+- 角色输入、复制和动画入口：[`BrokenEdgeCharacter.h`](../Source/BrokenEdge/Character/BrokenEdgeCharacter.h)、[`BrokenEdgeCharacter.cpp`](../Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp)
+- 动画数据和手部 IK：[`BrokenEdgeAnimInstance.h`](../Source/BrokenEdge/Character/BrokenEdgeAnimInstance.h)、[`BrokenEdgeAnimInstance.cpp`](../Source/BrokenEdge/Character/BrokenEdgeAnimInstance.cpp)
+- 武器、换弹、准星和备用弹药：[`CombatComponent.h`](../Source/BrokenEdge/Component/CombatComponent.h)、[`CombatComponent.cpp`](../Source/BrokenEdge/Component/CombatComponent.cpp)
+- 武器状态和弹匣：[`Weapon.h`](../Source/BrokenEdge/Weapon/Weapon.h)、[`Weapon.cpp`](../Source/BrokenEdge/Weapon/Weapon.cpp)
+- 空的命中扫描入口：[`HitScanWeapon.h`](../Source/BrokenEdge/Weapon/HitScanWeapon.h)、[`HitScanWeapon.cpp`](../Source/BrokenEdge/Weapon/HitScanWeapon.cpp)
+- 属性增益：[`BuffComponent.h`](../Source/BrokenEdge/Component/BuffComponent.h)、[`BuffComponent.cpp`](../Source/BrokenEdge/Component/BuffComponent.cpp)
+- 五类拾取物：[`Pickups`](../Source/BrokenEdge/Pickups)
+- PlayerState：[`BrokenEdgePlayerState.cpp`](../Source/BrokenEdge/PlayerState/BrokenEdgePlayerState.cpp)
+- GameState 和队伍分数：[`BrokenEdgeGameState.cpp`](../Source/BrokenEdge/GameState/BrokenEdgeGameState.cpp)
+- 比赛字段和 HUD 桥接：[`BrokenEdgePlayerController.cpp`](../Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.cpp)
+- GameMode 与队伍框架：[`GameMode`](../Source/BrokenEdge/GameMode)
 - 会话插件：[`MultiplayerSessionsSubsystem.cpp`](../Plugins/MultiplayerSessions/Source/MultiplayerSessions/Private/MultiplayerSessionsSubsystem.cpp)、[`Menu.cpp`](../Plugins/MultiplayerSessions/Source/MultiplayerSessions/Private/Menu.cpp)
-- 网络配置：[`DefaultEngine.ini`](../Config/DefaultEngine.ini)、[`DefaultGame.ini`](../Config/DefaultGame.ini)
-- 独立服务器目标：[`BrokenEdgeServer.Target.cs`](../Source/BrokenEdgeServer.Target.cs)
+- Dedicated Server Target：[`BrokenEdgeServer.Target.cs`](../Source/BrokenEdgeServer.Target.cs)
+- IK 专项审计：[武器手部 IK 问题诊断与修复指南](UE5_Weapon_Hand_IK_Diagnosis_and_Fix.md)
 
-### 参考项目
-
-重点对照文件：
+## 12. 参考项目重点文件
 
 ```text
 D:\SourceFiles\UnrealProjects\UE5BlasterLearning-main\Source\BlasterLearing\
 ├─ Character\BlasterCharacter.cpp
 ├─ BlasterComponent\CombatComponent.cpp
 ├─ BlasterComponent\LagCompensationComponent.cpp
+├─ Weapon\Weapon.cpp
 ├─ Weapon\HitScanWeapon.cpp
 ├─ Weapon\ProjectileWeapon.cpp
 ├─ Weapon\Shotgun.cpp
 ├─ GameMode\BlasterGameMode.cpp
+├─ GameMode\TeamsGameMode.cpp
+├─ GameMode\CaptureTheFlagGameMode.cpp
 ├─ GameState\BlasterGameState.cpp
-└─ PlayerState\BlasterPlayerState.cpp
+├─ PlayerState\BlasterPlayerState.cpp
+├─ PlayerController\BlasterPlayerController.cpp
+├─ Pickups\PickupSpawnPoint.cpp
+└─ HUD\ReturnToMainMenu.cpp
 ```
 
-参考项目用于确定功能依赖和完整形态；BrokenEdge 仍应按教学阶段逐步实现，并为每个阶段保留独立的验收标准。
+参考工程的核心依赖顺序是：
 
-## 12. 本次文档验证记录
+```text
+Fire/Ammo
+  -> HitScan/Projectile/Shotgun
+  -> ReceiveDamage
+  -> Elim/Respawn
+  -> PlayerState/GameState
+  -> Match/Teams/CTF
+  -> Session/Return
+  -> Time Sync/Lag Compensation
+```
+
+教学时应按这个依赖顺序建立小闭环，而不是按参考工程文件夹顺序机械搬运。
+
+## 13. 本次验证记录
 
 已完成：
 
-- Markdown 为 UTF-8，只有一个一级标题；
-- 代码围栏成对；
-- 第 7 节的优化项已重新对应当前 Character、Combat、Weapon、Buff、HUD 和 Pickup 源码；
-- 文档内当前项目的相对链接均能解析到真实文件；
-- 关键 RPC、RepNotify、命中扫描空实现和参考项目开火/延迟补偿符号已重新检索；
-- 文档无行尾空白或 Unicode 替换字符，`git diff --check` 通过。
+- 对照当前提交后的 Character、Combat、Weapon、Buff、Pickup、HUD、PlayerState、GameState、GameMode 和 Session 源码；
+- 对照参考项目的开火、三类武器、伤害、淘汰、比赛、队伍、夺旗、拾取生成和延迟补偿源码；
+- 检查当前 Input Action、Character/GameMode/HUD Blueprint 和 MainMap 中可读取的资源引用；
+- 核对最新新增的 Drop、AmmoPickup、PlayerState/GameState、队伍分数 HUD 和 MatchState 框架；
+- 把“已完成主体”“部分完成”“已搭架”“未实现”分开标注；
+- 把 IK 专项诊断纳入第一轮教学任务。
 
-未完成：
+本次未完成：
 
-- 没有启动 Unreal Editor 目视检查 Blueprint 默认值和 World Settings；
-- 没有在 Montage 编辑器中确认 Reload/Swap Anim Notify 的函数名、位置和触发次数；
-- 没有执行 PIE Listen Server/Dedicated Server 多客户端测试；
-- 没有 Cook/Package；
-- 没有把“参考项目能运行”当作当前项目功能已完成的证据。
+- 未在 Unreal Editor 中逐项打开 Blueprint Class Defaults、AnimGraph 和 World Settings 目视确认；
+- 未执行编辑器外部完整构建；检查时 UnrealEditor 正在运行，本次也只修改了文档；
+- 未运行 Standalone、PIE Listen Server、Dedicated Server 或网络模拟；
+- 未把打包产物存在视为多人运行通过；
+- 未修改任何 C++、Blueprint 或 Gameplay 业务逻辑；
+- 文档中的“推荐”均为下一阶段任务，不是当前已实现功能。

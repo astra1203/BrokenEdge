@@ -133,17 +133,6 @@ void UCombatComponent::Reload()
 	}
 }
 
-void UCombatComponent::Drop()
-{
-	//@TODO 有bug
-	if (EquippedWeapon)
-	{
-		EquippedWeapon->Dropped();
-
-		EquippedWeapon=nullptr;
-	}
-}
-
 void UCombatComponent::FinishReloading()
 {
 	if (Character == nullptr) return;
@@ -160,6 +149,134 @@ void UCombatComponent::FinishReloading()
 	// 	Fire();
 	// }
 }
+
+void UCombatComponent::Drop()
+{
+	//@TODO 有bug
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->Dropped();
+
+		EquippedWeapon=nullptr;
+	}
+}
+
+/**
+ * @brief 开火按钮按下处理
+ * @param bPressed 是否按下
+ */
+void UCombatComponent::FireButtonPressed(bool bPressed)
+{
+	bFireButtonPressed = bPressed;
+	if (bFireButtonPressed)
+	{
+		Fire();
+	}
+}
+
+
+/**
+ * @brief 开火逻辑
+ */
+void UCombatComponent::Fire()
+{
+	if (CanFire())
+	{
+		if (EquippedWeapon==nullptr)return;
+
+		CrosshairShootingFactor = .75f;
+
+		switch (EquippedWeapon->FireType)
+		{
+		case EFireType::EFT_Projectile:
+
+			break;
+		case EFireType::EFT_HitScan:
+			FireHitScanWeapon();
+			break;
+		case EFireType::EFT_Shotgun:
+
+			break;
+		}
+
+	}
+}
+
+void UCombatComponent::FireHitScanWeapon()
+{
+	if (EquippedWeapon==nullptr||Character==nullptr) return;
+
+	HitTarget = EquippedWeapon->bUseScatter ? EquippedWeapon->TraceEndWithScatter(HitTarget) : HitTarget;
+
+	if (!Character->HasAuthority()) LocalFire(HitTarget);
+	ServerFire(HitTarget, EquippedWeapon->FireDelay);
+}
+/**
+ * @brief 服务器端开火（RPC实现）
+ * @param TraceHitTarget 命中目标位置
+ * @param FireDelay 开火延迟
+ */
+void UCombatComponent::ServerFire_Implementation(const FVector_NetQuantize& TraceHitTarget, float FireDelay)
+{
+	MulticastFire(TraceHitTarget);
+}
+/**
+ * @brief 服务器端开火验证（RPC验证）
+ * @param TraceHitTarget 命中目标位置
+ * @param FireDelay 开火延迟
+ * @return 是否验证通过
+ */
+bool UCombatComponent::ServerFire_Validate(const FVector_NetQuantize& TraceHitTarget, float FireDelay)
+{
+	if (EquippedWeapon)
+	{
+		bool bNearlyEqual = FMath::IsNearlyEqual(EquippedWeapon->FireDelay, FireDelay, 0.001f);
+		return bNearlyEqual;
+	}
+	return true;
+}
+
+void UCombatComponent::MulticastFire_Implementation(const FVector_NetQuantize& TraceHitTarget)
+{
+	if (Character && Character->IsLocallyControlled() && !Character->HasAuthority()) return;
+
+	LocalFire(TraceHitTarget);
+
+
+}
+/**
+ * @brief 本地开火
+ * @param TraceHitTarget 命中目标位置
+ */
+void UCombatComponent::LocalFire(const FVector_NetQuantize& TraceHitTarget)
+{
+	if (EquippedWeapon == nullptr) return;
+	if (Character && CombatState == ECombatState::ECS_Unoccuiped)
+	{
+		Character->PlayFireMontage(bAiming);
+		EquippedWeapon->Fire(TraceHitTarget);
+	}
+}
+
+/**
+ * @brief 判断是否可以开火
+ * @return 是否可以开火
+ */
+bool UCombatComponent::CanFire()
+{
+	if (EquippedWeapon==nullptr||bLocallyReloading)return false;
+
+	if (!EquippedWeapon->IsEmpty()&&
+		bCanFire&&
+		CombatState==ECombatState::ECS_Reloading&&
+		EquippedWeapon->GetWeaponType()==EWeaponType::EWT_Shotgun)
+		return true;
+
+	return !EquippedWeapon->IsEmpty()&&bCanFire&&CombatState==ECombatState::ECS_Unoccuiped;
+
+}
+
+
 
 /**
  * @brief 更新弹药数值

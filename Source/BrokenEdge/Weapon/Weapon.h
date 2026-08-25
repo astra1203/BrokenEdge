@@ -21,6 +21,20 @@ enum class EWeaponState : uint8
 	EWS_MAX UMETA(DisplayName = "DefaultMAX")                   ///< 默认最大值
 };
 
+/**
+ * @brief 武器开火方式
+ *
+ * 决定武器使用即时射线、实体弹丸还是霰弹枪多射线逻辑。
+ */
+UENUM(BlueprintType)
+enum class EFireType : uint8
+{
+	EFT_HitScan UMETA(DisplayName = "Hit Scan Weapon"),       ///< 使用射线检测立即判定命中
+	EFT_Projectile UMETA(DisplayName = "Projectile Weapon"),  ///< 生成弹丸 Actor 处理飞行和碰撞
+	EFT_Shotgun UMETA(DisplayName = "Shotgun Weapon"),        ///< 一次发射多条带散射的射线
+
+	EFT_MAX UMETA(DisplayName = "DefaultMAX")                 ///< 枚举边界值，不作为实际类型使用
+};
 
 // enum class EWeaponType;
 
@@ -108,6 +122,13 @@ public:
 	void ShowPickupWidget(bool bShowWidget);
 
 	/**
+ * @brief 执行一次开火并播放武器基础表现。
+ * @param HitTarget 本次射击瞄准的世界坐标。
+ */
+	virtual void Fire(const FVector& HitTarget);
+	void SpendRound();
+
+	/**
  * @brief 武器掉落时调用
  */
 	virtual void Dropped();
@@ -142,7 +163,7 @@ private:
 
 	/** 开火时在武器网格体上播放的动画。 */
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
-	class UAnimationAsset* FireAnimation;
+	UAnimationAsset* FireAnimation;
 
 	/** 开火后生成的弹壳 Actor 类型。 */   //@TODO
 	// UPROPERTY(EditAnywhere)
@@ -209,4 +230,37 @@ public:
  * @return 弹药为零时返回 true。
  */
 	bool IsEmpty();
+
+	/**
+ * @brief 根据散射参数计算实际射线终点。
+ * @param HitTarget 未应用散射前的瞄准目标。
+ * @return 应用随机散射后的世界坐标。
+ */
+	FVector TraceEndWithScatter(const FVector& HitTarget);
+
+
+
+	/** 当前武器的开火方式。 */
+	UPROPERTY(EditAnywhere)
+	EFireType FireType;
+
+	/** 是否对射击终点应用随机散射。 */
+	UPROPERTY(EditAnywhere, Category = "Weapon Scatter")
+	bool bUseScatter = false;
+
+	/** 武器枪口位置到散射球中心的距离。 */
+	UPROPERTY(EditAnywhere, Category = "Weapon Scatter")
+	float DistanceToSphere = 800.f;
+
+	/** 用于随机选取射击终点的散射球半径。 */
+	UPROPERTY(EditAnywhere, Category = "Weapon Scatter")
+	float SphereRadius = 75.f;
+
+	/** 两次射击之间的最小时间间隔（秒）。 */
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float FireDelay = 0.15f;
+
+	/** 是否支持按住开火键连续射击。 */
+	UPROPERTY(EditAnywhere, Category = Combat)
+	bool bAutomatic = true;
 };

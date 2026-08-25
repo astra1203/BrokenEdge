@@ -34,12 +34,36 @@ public:
 	void SwapWeapons();
 	void Reload();
 	void Drop();
+	void FireButtonPressed(bool bPressed);
+	void Fire();
+	void FireHitScanWeapon();
+
+	/**
+ * @brief 服务器端开火
+ * @param TraceHitTarget 命中目标
+ * @param FireDelay 开火延迟
+ */
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerFire(const FVector_NetQuantize& TraceHitTarget, float FireDelay);
+
+	/**
+	 * @brief 多播开火效果
+	 * @param TraceHitTarget 命中目标
+	 */
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastFire(const FVector_NetQuantize& TraceHitTarget);
+
 	/**
 	 * @brief 完成换弹（蓝图调用）
 	 */
 	UFUNCTION(BlueprintCallable)
 	void FinishReloading();
-	
+	/**
+	 * @brief 本地开火效果
+	 * @param TraceHitTarget 命中目标
+	 */
+	void LocalFire(const FVector_NetQuantize& TraceHitTarget);
+	bool CanFire();
 	void UpdateAmmoValues();
 	
 	/**
@@ -206,6 +230,12 @@ private:
 	/** 基础移动速度 */
 	UPROPERTY(EditAnywhere)
 	float BaseWalkSpeed;
+
+	/** 开火按钮是否按下 */
+	bool bFireButtonPressed;
+
+	/** 是否可以开火 */
+	bool bCanFire = true;
 
 	/** 瞄准移动速度 */
 	UPROPERTY(EditAnywhere)

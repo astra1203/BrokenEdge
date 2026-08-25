@@ -355,6 +355,12 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		//丢弃武器
 		EnhancedInputComponent->BindAction(DropAction, ETriggerEvent::Started, this,
 										   &ABrokenEdgeCharacter::DropButtonPressed);
+
+		//开火动作
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this,
+										   &ABrokenEdgeCharacter::FireButtonPressed);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this,
+										   &ABrokenEdgeCharacter::FireButtonReleased);
 	}
 	else
 	{
@@ -466,6 +472,22 @@ void ABrokenEdgeCharacter::PlayReloadMontage()
 	AnimInstance->Montage_JumpToSection(SectionName);
 }
 
+void ABrokenEdgeCharacter::PlayFireMontage(bool bAiming)
+{
+	if (Combat==nullptr||Combat->EquippedWeapon==nullptr||FireWeaponMontage==nullptr) return;
+
+	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+	{
+		AnimInstance->Montage_Play(FireWeaponMontage);
+		FName SectionName = bAiming ? FName("RifleAim"):FName("RifleHip");
+		UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+		       TEXT(""));
+		AnimInstance->Montage_JumpToSection(SectionName);
+	}
+
+
+
+}
 
 void ABrokenEdgeCharacter::UpdateHUDHealth()
 {
@@ -648,6 +670,33 @@ void ABrokenEdgeCharacter::DropButtonPressed()
 		Combat->Drop();
 	}
 }
+
+/**
+ * @brief 开火按钮按下处理
+ */
+void ABrokenEdgeCharacter::FireButtonPressed()
+{
+	if (Combat && Combat->bHoldingTheFlag) return;
+	if (bDisableGameplay) return;
+	if (Combat)
+	{
+		Combat->FireButtonPressed(true);
+	}
+}
+
+/**
+ * @brief 开火按钮松开处理
+ */
+void ABrokenEdgeCharacter::FireButtonReleased()
+{
+	if (Combat && Combat->bHoldingTheFlag) return;
+	if (bDisableGameplay) return;
+	if (Combat)
+	{
+		Combat->FireButtonPressed(false);
+	}
+}
+
 
 void ABrokenEdgeCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 {

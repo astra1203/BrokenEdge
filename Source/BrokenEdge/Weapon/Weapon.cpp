@@ -3,6 +3,7 @@
 
 #include "Weapon.h"
 
+#include "VectorTypes.h"
 #include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/BrokenEdgeTypes/WeaponType.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
@@ -10,6 +11,9 @@
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Engine/SkeletalMeshSocket.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Math/UnitConversion.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -196,6 +200,26 @@ void AWeapon::ShowPickupWidget(bool bShowWidget)
 	}
 }
 
+void AWeapon::Fire(const FVector& HitTarget)
+{
+	if (FireAnimation)
+	{
+		WeaponMesh->PlayAnimation(FireAnimation,false);
+	}
+
+	//@TODO
+
+	SpendRound();
+}
+
+void AWeapon::SpendRound()
+{
+	Ammo = FMath::Clamp(Ammo-1,0,MagCapacity);
+	SetHUDAmmo();
+
+	//@TODO
+}
+
 void AWeapon::Dropped()
 {
 	SetWeaponState(EWeaponState::EWS_Dropped);
@@ -354,6 +378,24 @@ void AWeapon::AddAmmo(int32 AmmoToAdd)
 bool AWeapon::IsEmpty()
 {
 	return Ammo <= 0;
+}
+
+FVector AWeapon::TraceEndWithScatter(const FVector& HitTarget)
+{
+	const USkeletalMeshSocket* MuzzleFlashSocket = GetWeaponMesh()->GetSocketByName("MuzzleFlash");
+	if (MuzzleFlashSocket==nullptr)return FVector::ZeroVector;
+	const FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());
+	const FVector TraceStart = SocketTransform.GetLocation();
+
+	const FVector ToTargetNormalized = (HitTarget - TraceStart).GetSafeNormal();
+	const FVector SphereCenter = TraceStart + ToTargetNormalized*DistanceToSphere;
+	const FVector RandVec = UKismetMathLibrary::RandomUnitVector() * FMath::FRandRange(0.f, SphereRadius);
+	const FVector EndLoc = SphereCenter + RandVec;
+
+	const FVector ToEndLoc = EndLoc - TraceStart;
+
+	return FVector(TraceStart+ToEndLoc * TRACE_LENGTH / ToEndLoc.Size());
+
 }
 
 /**

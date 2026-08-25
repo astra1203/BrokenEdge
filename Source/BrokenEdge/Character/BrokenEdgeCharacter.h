@@ -57,7 +57,8 @@ public:
  * @brief 播放换弹动画
  */
 	void PlayReloadMontage();
-	
+	void PlayFireMontage(bool bAiming);
+
 	/// 是否完成武器切换
 	bool bFinishedSwapping = false;
 	
@@ -165,6 +166,8 @@ public:
 	void AimButtonReleased();
 	void ReloadButtonPressed();
 	void DropButtonPressed();
+	void FireButtonPressed();
+	void FireButtonReleased();
 
 	/** 获取瞄准偏移偏航值 */
 	FORCEINLINE float GetAO_X() const { return AO_X; }
@@ -210,6 +213,11 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* DropAction;
 
+	/** Fire Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* FireAction;
+
+
 	/// 摄像机弹簧臂组件
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	class USpringArmComponent* CameraBoom;
@@ -245,7 +253,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* ReloadMontage = nullptr;
 
-	
+	/** 开火动画 */
+	UPROPERTY(EditAnywhere, Category = Combat)
+	UAnimMontage* FireWeaponMontage = nullptr;
+
 	/// 服务器处理装备按钮按下
 	UFUNCTION(Server, Reliable)
 	void ServerEquipButtonPressed();
