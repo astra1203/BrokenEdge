@@ -152,19 +152,19 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 }
 
 void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
-                                         class AController* InstigatedBy, AActor* DamageCauser)
+                                         class AController* InstigatorController, AActor* DamageCauser)
 {
 	BrokenEdgeGameMode = BrokenEdgeGameMode == nullptr
 		                     ? GetWorld()->GetAuthGameMode<ABrokenEdgeGameMode>()
 		                     : BrokenEdgeGameMode;
-	
+
 	if (bDefeated || BrokenEdgeGameMode == nullptr)return;
-	Damage = BrokenEdgeGameMode->CalculateDamage(InstigatedBy, GetController(), Damage);
-	
+	Damage = BrokenEdgeGameMode->CalculateDamage(InstigatorController, GetController(), Damage);
+
 	float DamageToHealth = Damage;
-	if (Shield>0.f)
+	if (Shield > 0.f)
 	{
-		if (Shield>=Damage)
+		if (Shield >= Damage)
 		{
 			Shield = FMath::Clamp(Shield - Damage, 0.f, MaxShield);
 			DamageToHealth = 0.f;
@@ -175,19 +175,24 @@ void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, con
 			Shield = 0.f;
 		}
 	}
-	
+
 	Health = FMath::Clamp(Health - DamageToHealth, 0.f, MaxHealth);
-	
+
 	UpdateHUDHealth();
 	UpdateHUDShield();
 	PlayHitReactMontage();
-	
-	if (Health<=0.f)
+
+	if (Health <= 0.f)
 	{
-		
+		BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr
+			                             ? Cast<ABrokenEdgePlayerController>(Controller)
+			                             : BrokenEdgePlayerController;
+
+		ABrokenEdgePlayerController* AttackerController = Cast<ABrokenEdgePlayerController>(InstigatorController);
+
+		BrokenEdgeGameMode->PlayerDefeated(this,
+		                                   BrokenEdgePlayerController, AttackerController);
 	}
-	
-	
 }
 
 // Called when the game starts or when spawned
@@ -531,6 +536,16 @@ void ABrokenEdgeCharacter::PlayFireMontage(bool bAiming)
 	}
 }
 
+void ABrokenEdgeCharacter::PlayDefeatMontage()
+{
+	if (DefeatedMontage==nullptr)return;
+	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+	{
+		AnimInstance->Montage_Play(DefeatedMontage);
+	}
+
+}
+
 void ABrokenEdgeCharacter::UpdateHUDHealth()
 {
 	// UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, Controller?*Controller->GetName():TEXT("空"));
@@ -783,7 +798,7 @@ void ABrokenEdgeCharacter::OnRep_Shield(float LastShield)
 void ABrokenEdgeCharacter::OnRep_Health(float LastHealth)
 {
 	UpdateHUDHealth();
-	
+
 	if (Health < LastHealth)
 	{
 		PlayHitReactMontage();
@@ -936,4 +951,43 @@ void ABrokenEdgeCharacter::SimProxiesTurn()
 		return;
 	}
 	TurningInPlace = ETurningInPlace::ETIP_NotTurning;
+}
+
+void ABrokenEdgeCharacter::Defeated(bool bPlayerLeftGame)
+{
+	DropWeapons();
+	MulticastDefeated(bPlayerLeftGame);
+}
+
+void ABrokenEdgeCharacter::MulticastDefeated_Implementation(bool bPlayerLeftGame)
+{
+	bLeftGame = bPlayerLeftGame;
+
+	if (BrokenEdgePlayerController)
+	{
+		BrokenEdgePlayerController->SetHUDWeaponAmmo(0);
+	}
+	bDefeated = true;
+
+	PlayDefeatMontage();
+
+}
+
+void ABrokenEdgeCharacter::DropWeapons()
+{
+	if (Combat == nullptr) return;
+
+	if (Combat->EquippedWeapon)
+	{
+		Combat->EquippedWeapon->Dropped();
+		Combat->EquippedWeapon=nullptr;
+
+	}
+	if (Combat->SecondaryWeapon)
+	{
+		Combat->SecondaryWeapon->Dropped();
+		Combat->SecondaryWeapon=nullptr;
+
+	}
+
 }

@@ -32,7 +32,7 @@ void UBuffComponent::BeginPlay()
  */
 void UBuffComponent::HealRampUp(float DeltaTime)
 {
-	if (!bHealing || Character == nullptr || Character->IsElimed()) return;
+	if (!bHealing || Character == nullptr || Character->IsDefeated()) return;
 	const float HealThisFrame = HealingRate * DeltaTime;
 	// Character->SetHealth(FMath::Clamp(Character->GetHealth() + HealThisFrame, 0.f, Character->GetMaxHealth()));
 	Character->SetHealth(Character->GetHealth() + HealThisFrame);
@@ -48,7 +48,7 @@ void UBuffComponent::HealRampUp(float DeltaTime)
 
 void UBuffComponent::ShieldRampUp(float DeltaTime)
 {
-	if (!bReplenishingShield || Character == nullptr || Character->IsElimed()) return;
+	if (!bReplenishingShield || Character == nullptr || Character->IsDefeated()) return;
 	const float ReplenishThisFrame = ShieldReplenishRate * DeltaTime;
 	Character->SetShield(FMath::Clamp(Character->GetShield() + ReplenishThisFrame, 0.f, Character->GetMaxShield()));
 	Character->UpdateHUDShield();

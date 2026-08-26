@@ -47,7 +47,7 @@ void UBrokenEdgeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	
 	TurningInPlace = BrokenEdgeCharacter->GetTurningInPlace();                     // 原地转向状态
 	bRotateRootBone = BrokenEdgeCharacter->ShouldRotateRootBone();                 // 是否旋转根骨骼
-	bElimmed = BrokenEdgeCharacter->IsElimed();                                   // 是否已被淘汰
+	bElimmed = BrokenEdgeCharacter->IsDefeated();                                   // 是否已被淘汰
 	//@ TODO
 	// bHoldingTheFlag = BrokenEdgeCharacter->IsHoldingTheFlag();                     // 是否持有旗帜
 

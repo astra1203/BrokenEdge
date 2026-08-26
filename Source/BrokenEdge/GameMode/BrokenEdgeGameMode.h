@@ -28,6 +28,17 @@ public:
  */
 	virtual float CalculateDamage(AController* Attacker, AController* Victim, float BaseDamage);
 
+	/**
+ * 玩家被淘汰
+ * @param DefeatedCharacter 被淘汰的角色
+ * @param DefeatedController 受害者控制器
+ * @param AttackerController 攻击者控制器
+ */
+	virtual void PlayerDefeated(class ABrokenEdgeCharacter* DefeatedCharacter,
+		class ABrokenEdgePlayerController* DefeatedController,
+		ABrokenEdgePlayerController* AttackerController);
+
+
 	/** 热身时间（秒） */
 	UPROPERTY(EditDefaultsOnly)
 	float WarmupTime = 10.f;

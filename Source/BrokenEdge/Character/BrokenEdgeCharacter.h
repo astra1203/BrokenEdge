@@ -58,6 +58,7 @@ public:
  */
 	void PlayReloadMontage();
 	void PlayFireMontage(bool bAiming);
+	void PlayDefeatMontage();
 
 	/// 是否完成武器切换
 	bool bFinishedSwapping = false;
@@ -261,6 +262,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* FireWeaponMontage = nullptr;
 
+	/** 被击败动画 */
+	UPROPERTY(EditAnywhere, Category = Combat)
+	UAnimMontage* DefeatedMontage = nullptr;
+
 	/// 服务器处理装备按钮按下
 	UFUNCTION(Server, Reliable)
 	void ServerEquipButtonPressed();
@@ -277,7 +282,7 @@ private:
 	bool bRotateRootBone = false;
 
 	/** 是否被淘汰 */
-	bool bElimmed = false;
+	// bool bElimmed = false;
 
 	/// 原地转向状态  //@TODO
 	ETurningInPlace TurningInPlace = ETurningInPlace::ETIP_NotTurning;
@@ -353,7 +358,8 @@ protected:
 	void PollInit();
 	
 	UFUNCTION()
-	void ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	void ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
+		class AController* InstigatorController, AActor* DamageCauser);
 	
 public:
 	/**
@@ -395,8 +401,7 @@ public:
 	FORCEINLINE bool ShouldRotateRootBone() const { return bRotateRootBone; }
 
 	/** 是否被淘汰 */
-	FORCEINLINE bool IsElimed() const { return bElimmed; }
-
+	FORCEINLINE bool IsDefeated() const { return bDefeated; }
 
 	FORCEINLINE TObjectPtr<UBuffComponent> GetBuff() const { return Buff; }
 	
@@ -418,4 +423,25 @@ public:
  * @brief 模拟端转身
  */
 	void SimProxiesTurn();
+
+	/**
+ * @brief 角色淘汰
+	 * @param bPlayerLeftGame 玩家是否离开游戏
+	 */
+	void Defeated(bool bPlayerLeftGame);
+
+	/**
+ * @brief 多播淘汰事件
+ * @param bPlayerLeftGame 玩家是否离开游戏
+ */
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastDefeated(bool bPlayerLeftGame);
+
+	/** 是否离开游戏 */
+	bool bLeftGame = false;
+
+	/**
+ * @brief 丢弃或销毁所有武器
+	 */
+	void DropWeapons();
 };
