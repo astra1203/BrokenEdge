@@ -3,6 +3,7 @@
 
 #include "HitScanWeapon.h"
 
+#include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -22,6 +23,29 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 	FVector Start = SocketTransform.GetLocation();
 
 	//@TODO
+
+	FHitResult FireHit;
+	WeaponTraceHit(Start, HitTarget, FireHit);
+
+	ABrokenEdgeCharacter* BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(FireHit.GetActor());
+	AController* InstigatorController = OwnerPawn->GetController();
+
+	if (BrokenEdgeCharacter && InstigatorController)
+	{
+		bool bCauseAuthDamage = !bUseServerSideRewind || OwnerPawn->IsLocallyControlled();
+		if (HasAuthority() && bCauseAuthDamage)
+		{
+			const float DamageToCause = FireHit.BoneName.ToString() == FString("head") ? HeadShotDamage : Damage;
+
+			UGameplayStatics::ApplyDamage(
+				BrokenEdgeCharacter,
+				DamageToCause,
+				InstigatorController,
+				this,
+				UDamageType::StaticClass()
+			);
+		}
+	}
 }
 
 void AHitScanWeapon::WeaponTraceHit(const FVector& TraceStart, const FVector& HitTarget, FHitResult& OutHit)
@@ -48,6 +72,8 @@ void AHitScanWeapon::WeaponTraceHit(const FVector& TraceStart, const FVector& Hi
 		OutHit.ImpactPoint = End;
 	}
 
+	DrawDebugSphere(GetWorld(), BeamEnd, 16.f, 12, FColor::Orange, true);
+
 	if (BeamParticles)
 	{
 		UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(
@@ -62,7 +88,4 @@ void AHitScanWeapon::WeaponTraceHit(const FVector& TraceStart, const FVector& Hi
 			Beam->SetVectorParameter(FName("Target"), BeamEnd);
 		}
 	}
-
-
-
 }

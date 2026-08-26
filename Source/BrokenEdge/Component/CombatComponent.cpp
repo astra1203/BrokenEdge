@@ -182,6 +182,7 @@ void UCombatComponent::Fire()
 {
 	if (CanFire())
 	{
+		bCanFire = false;
 		if (EquippedWeapon==nullptr)return;
 
 		CrosshairShootingFactor = .75f;
@@ -198,9 +199,13 @@ void UCombatComponent::Fire()
 
 			break;
 		}
-
+		StartFireTimer();
 	}
 }
+
+
+
+
 
 void UCombatComponent::FireHitScanWeapon()
 {
@@ -276,6 +281,45 @@ bool UCombatComponent::CanFire()
 
 }
 
+/**
+ * @brief 启动开火计时器
+ */
+void UCombatComponent::StartFireTimer()
+{
+	if (EquippedWeapon == nullptr || Character == nullptr) return;
+	
+	Character->GetWorldTimerManager().SetTimer(
+		FireTimer,
+		this,
+		&UCombatComponent::FireTimerFinished,
+		EquippedWeapon->FireDelay
+	);
+}
+
+/**
+ * @brief 开火计时器完成
+ */
+void UCombatComponent::FireTimerFinished()
+{
+	if (EquippedWeapon == nullptr) return;
+	bCanFire = true;
+	if (bFireButtonPressed && EquippedWeapon->bAutomatic)
+	{
+		Fire();
+	}
+	ReloadEmptyWeapon();
+}
+
+/**
+ * @brief 当武器弹药为空时自动换弹
+ */
+void UCombatComponent::ReloadEmptyWeapon()
+{
+	if (EquippedWeapon && EquippedWeapon->IsEmpty())
+	{
+		Reload();
+	}
+}
 
 
 /**

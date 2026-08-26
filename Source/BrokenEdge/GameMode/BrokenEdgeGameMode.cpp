@@ -26,3 +26,8 @@ void ABrokenEdgeGameMode::BeginPlay()
 
 
 }
+
+float ABrokenEdgeGameMode::CalculateDamage(AController* Attacker, AController* Victim, float BaseDamage)
+{
+	return BaseDamage;
+}

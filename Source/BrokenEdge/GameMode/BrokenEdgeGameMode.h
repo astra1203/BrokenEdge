@@ -19,6 +19,15 @@ public:
 	
 	virtual void BeginPlay() override;
 	
+	/**
+ * 计算伤害
+ * @param Attacker 攻击者控制器
+ * @param Victim 受害者控制器
+ * @param BaseDamage 基础伤害
+ * @return 最终伤害值
+ */
+	virtual float CalculateDamage(AController* Attacker, AController* Victim, float BaseDamage);
+
 	/** 热身时间（秒） */
 	UPROPERTY(EditDefaultsOnly)
 	float WarmupTime = 10.f;

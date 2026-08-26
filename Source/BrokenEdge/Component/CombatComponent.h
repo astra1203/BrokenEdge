@@ -36,6 +36,9 @@ public:
 	void Drop();
 	void FireButtonPressed(bool bPressed);
 	void Fire();
+	void StartFireTimer();
+	void FireTimerFinished();
+	void ReloadEmptyWeapon();
 	void FireHitScanWeapon();
 
 	/**
@@ -237,6 +240,9 @@ private:
 	/** 是否可以开火 */
 	bool bCanFire = true;
 
+	/** 开火计时器 */
+	FTimerHandle FireTimer;
+	
 	/** 瞄准移动速度 */
 	UPROPERTY(EditAnywhere)
 	float AimWalkSpeed;

@@ -263,4 +263,18 @@ public:
 	/** 是否支持按住开火键连续射击。 */
 	UPROPERTY(EditAnywhere, Category = Combat)
 	bool bAutomatic = true;
+	
+protected:
+	/** 命中身体时造成的基础伤害。 */
+	UPROPERTY(EditAnywhere)
+	float Damage = 20.f;
+
+	/** 命中头部时造成的伤害。 */
+	UPROPERTY(EditAnywhere)
+	float HeadShotDamage = 40.f;
+
+	/** 是否使用服务端倒带进行命中确认。 */
+	UPROPERTY(Replicated, EditAnywhere)
+	bool bUseServerSideRewind = false;
+
 };

@@ -234,6 +234,10 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
 	AWeapon* OverlappingWeapon;
 	
+	/** 游戏模式 */
+	UPROPERTY()
+	class ABrokenEdgeGameMode* BrokenEdgeGameMode = nullptr;
+
 	/**
  * @brief 重叠武器复制回调
  * @param LastWeapon 上一个重叠武器
@@ -341,9 +345,15 @@ private:
 	UPROPERTY()
 	class ABrokenEdgePlayerController* BrokenEdgePlayerController = nullptr;
 	
+	/** 是否被击败 */
+	bool bDefeated = false;
+
 protected:
 	/// 轮询初始化（等待必要组件加载）
 	void PollInit();
+	
+	UFUNCTION()
+	void ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 	
 public:
 	/**

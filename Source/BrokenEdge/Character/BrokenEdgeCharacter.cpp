@@ -9,6 +9,7 @@
 #include "BrokenEdge/BrokenEdgeTypes/TurningInPlace.h"
 #include "BrokenEdge/Component/BuffComponent.h"
 #include "BrokenEdge/Component/CombatComponent.h"
+#include "BrokenEdge/GameMode/BrokenEdgeGameMode.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "Camera/CameraComponent.h"
@@ -150,10 +151,54 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 	}
 }
 
+void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
+                                         class AController* InstigatedBy, AActor* DamageCauser)
+{
+	BrokenEdgeGameMode = BrokenEdgeGameMode == nullptr
+		                     ? GetWorld()->GetAuthGameMode<ABrokenEdgeGameMode>()
+		                     : BrokenEdgeGameMode;
+	
+	if (bDefeated || BrokenEdgeGameMode == nullptr)return;
+	Damage = BrokenEdgeGameMode->CalculateDamage(InstigatedBy, GetController(), Damage);
+	
+	float DamageToHealth = Damage;
+	if (Shield>0.f)
+	{
+		if (Shield>=Damage)
+		{
+			Shield = FMath::Clamp(Shield - Damage, 0.f, MaxShield);
+			DamageToHealth = 0.f;
+		}
+		else
+		{
+			DamageToHealth = FMath::Clamp(DamageToHealth - Shield, 0.f, Damage);
+			Shield = 0.f;
+		}
+	}
+	
+	Health = FMath::Clamp(Health - DamageToHealth, 0.f, MaxHealth);
+	
+	UpdateHUDHealth();
+	UpdateHUDShield();
+	PlayHitReactMontage();
+	
+	if (Health<=0.f)
+	{
+		
+	}
+	
+	
+}
+
 // Called when the game starts or when spawned
 void ABrokenEdgeCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (HasAuthority())
+	{
+		OnTakeAnyDamage.AddDynamic(this, &ABrokenEdgeCharacter::ReceiveDamage);
+	}
 }
 
 // Called every frame
@@ -354,13 +399,13 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 		//丢弃武器
 		EnhancedInputComponent->BindAction(DropAction, ETriggerEvent::Started, this,
-										   &ABrokenEdgeCharacter::DropButtonPressed);
+		                                   &ABrokenEdgeCharacter::DropButtonPressed);
 
 		//开火动作
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this,
-										   &ABrokenEdgeCharacter::FireButtonPressed);
+		                                   &ABrokenEdgeCharacter::FireButtonPressed);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this,
-										   &ABrokenEdgeCharacter::FireButtonReleased);
+		                                   &ABrokenEdgeCharacter::FireButtonReleased);
 	}
 	else
 	{
@@ -417,14 +462,14 @@ void ABrokenEdgeCharacter::PlaySwapMontage()
  */
 void ABrokenEdgeCharacter::PlayHitReactMontage()
 {
-	if (Combat == nullptr || Combat->EquippedWeapon == nullptr || HitReactMontage == nullptr) return;
+	if (Combat == nullptr || HitReactMontage == nullptr) return;
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance)
 	{
 		AnimInstance->Montage_Play(HitReactMontage);
-		// FName SectionName("FromFront");
-		// AnimInstance->Montage_JumpToSection(SectionName);
+		FName SectionName("FromRight");
+		AnimInstance->Montage_JumpToSection(SectionName);
 	}
 }
 
@@ -474,19 +519,16 @@ void ABrokenEdgeCharacter::PlayReloadMontage()
 
 void ABrokenEdgeCharacter::PlayFireMontage(bool bAiming)
 {
-	if (Combat==nullptr||Combat->EquippedWeapon==nullptr||FireWeaponMontage==nullptr) return;
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr || FireWeaponMontage == nullptr) return;
 
 	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
 	{
 		AnimInstance->Montage_Play(FireWeaponMontage);
-		FName SectionName = bAiming ? FName("RifleAim"):FName("RifleHip");
+		FName SectionName = bAiming ? FName("RifleAim") : FName("RifleHip");
 		UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
 		       TEXT(""));
 		AnimInstance->Montage_JumpToSection(SectionName);
 	}
-
-
-
 }
 
 void ABrokenEdgeCharacter::UpdateHUDHealth()
@@ -731,14 +773,17 @@ void ABrokenEdgeCharacter::ServerEquipButtonPressed_Implementation()
 
 void ABrokenEdgeCharacter::OnRep_Shield(float LastShield)
 {
-	//@TODO
 	UpdateHUDShield();
+	if (Shield < LastShield)
+	{
+		PlayHitReactMontage();
+	}
 }
 
 void ABrokenEdgeCharacter::OnRep_Health(float LastHealth)
 {
 	UpdateHUDHealth();
-	//@TODO
+	
 	if (Health < LastHealth)
 	{
 		PlayHitReactMontage();
@@ -856,7 +901,6 @@ void ABrokenEdgeCharacter::OnRep_ReplicatedMovement()
 	SimProxiesTurn();
 
 	TimeSinceLastMovementReplication = 0.f;
-
 }
 
 void ABrokenEdgeCharacter::SimProxiesTurn()
