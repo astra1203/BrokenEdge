@@ -39,6 +39,14 @@ public:
 		ABrokenEdgePlayerController* AttackerController);
 
 
+	/**
+ * 请求重生
+ * @param DefeatedCharacter 被淘汰的角色
+ * @param DefeatedController 被淘汰的控制器
+	 */
+	virtual void RequestRespawn(ACharacter* DefeatedCharacter, AController* DefeatedController);
+
+
 	/** 热身时间（秒） */
 	UPROPERTY(EditDefaultsOnly)
 	float WarmupTime = 10.f;

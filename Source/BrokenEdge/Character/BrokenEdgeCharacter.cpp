@@ -971,6 +971,41 @@ void ABrokenEdgeCharacter::MulticastDefeated_Implementation(bool bPlayerLeftGame
 
 	PlayDefeatMontage();
 
+	// 禁用角色移动
+	bDisableGameplay = true;
+	GetCharacterMovement()->DisableMovement();
+
+	if (Combat)
+	{
+		Combat->FireButtonPressed(false);
+	}
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	// 设置淘汰计时器，触发重生或离开游戏
+	GetWorldTimerManager().SetTimer(
+		RespawnTimer,
+		this,
+		&ABrokenEdgeCharacter::RespawnTimerFinished,
+		RespawnDelay
+	);
+
+}
+
+void ABrokenEdgeCharacter::RespawnTimerFinished()
+{
+	BrokenEdgeGameMode = BrokenEdgeGameMode == nullptr ?
+	GetWorld()->GetAuthGameMode<ABrokenEdgeGameMode>() : BrokenEdgeGameMode;
+
+	if (BrokenEdgeGameMode && !bLeftGame)
+	{
+		// BrokenEdgeGameMode->RequestRespawn(this, Controller);
+	}
+	// if (bLeftGame && IsLocallyControlled())
+	// {
+	// 	OnLeftGame.Broadcast();
+	// }
 }
 
 void ABrokenEdgeCharacter::DropWeapons()

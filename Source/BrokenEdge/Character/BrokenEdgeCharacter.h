@@ -353,6 +353,13 @@ private:
 	/** 是否被击败 */
 	bool bDefeated = false;
 
+	/** 淘汰计时器 */
+	FTimerHandle RespawnTimer;
+
+	/** 淘汰延迟时间 */
+	UPROPERTY(EditDefaultsOnly)
+	float RespawnDelay = 3.f;
+
 protected:
 	/// 轮询初始化（等待必要组件加载）
 	void PollInit();
@@ -440,6 +447,7 @@ public:
 	/** 是否离开游戏 */
 	bool bLeftGame = false;
 
+	void RespawnTimerFinished();
 	/**
  * @brief 丢弃或销毁所有武器
 	 */

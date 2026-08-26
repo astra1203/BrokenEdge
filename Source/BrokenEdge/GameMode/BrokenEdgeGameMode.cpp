@@ -63,3 +63,13 @@ void ABrokenEdgeGameMode::PlayerDefeated(class ABrokenEdgeCharacter* DefeatedCha
 	}
 
 }
+
+void ABrokenEdgeGameMode::RequestRespawn(ACharacter* DefeatedCharacter, AController* DefeatedController)
+{
+	if (DefeatedCharacter)
+	{
+		DefeatedCharacter->Reset();
+		DefeatedCharacter->Destroy();
+	}
+
+}
