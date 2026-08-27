@@ -190,7 +190,7 @@ void UCombatComponent::Fire()
 		switch (EquippedWeapon->FireType)
 		{
 		case EFireType::EFT_Projectile:
-
+			FireProjectileWeapon();
 			break;
 		case EFireType::EFT_HitScan:
 			FireHitScanWeapon();
@@ -203,7 +203,15 @@ void UCombatComponent::Fire()
 	}
 }
 
+void UCombatComponent::FireProjectileWeapon()
+{
+	if (EquippedWeapon==nullptr||Character==nullptr) return;
+	
+	HitTarget = EquippedWeapon->bUseScatter ? EquippedWeapon->TraceEndWithScatter(HitTarget) : HitTarget;
 
+	if (!Character->HasAuthority()) LocalFire(HitTarget);
+	ServerFire(HitTarget, EquippedWeapon->FireDelay);
+}
 
 
 

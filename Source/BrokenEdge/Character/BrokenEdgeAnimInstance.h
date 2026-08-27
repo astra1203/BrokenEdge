@@ -66,7 +66,7 @@ private:
 	
 	/** 是否被淘汰 */
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	bool bElimmed;
+	bool bDefeated;
 	
 	/** 旋转变化量 */
 	FRotator DeltaRotation;

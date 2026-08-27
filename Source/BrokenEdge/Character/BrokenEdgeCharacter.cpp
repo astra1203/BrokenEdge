@@ -467,7 +467,7 @@ void ABrokenEdgeCharacter::PlaySwapMontage()
  */
 void ABrokenEdgeCharacter::PlayHitReactMontage()
 {
-	if (Combat == nullptr || HitReactMontage == nullptr) return;
+	if (bDefeated||Combat == nullptr || HitReactMontage == nullptr) return;
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance)
@@ -1000,7 +1000,7 @@ void ABrokenEdgeCharacter::RespawnTimerFinished()
 
 	if (BrokenEdgeGameMode && !bLeftGame)
 	{
-		// BrokenEdgeGameMode->RequestRespawn(this, Controller);
+		BrokenEdgeGameMode->RequestRespawn(this, Controller);
 	}
 	// if (bLeftGame && IsLocallyControlled())
 	// {

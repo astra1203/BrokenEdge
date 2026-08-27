@@ -39,6 +39,7 @@ public:
 	void StartFireTimer();
 	void FireTimerFinished();
 	void ReloadEmptyWeapon();
+	void FireProjectileWeapon();
 	void FireHitScanWeapon();
 
 	/**

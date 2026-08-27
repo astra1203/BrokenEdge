@@ -9,6 +9,8 @@
 #include "BrokenEdge/PlayerState/BrokenEdgePlayerState.h"
 #include "BrokenEdge/test/CombatObserver.h"
 #include "BrokenEdge/test/MyCharacter.h"
+#include "GameFramework/PlayerStart.h"
+#include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
 
 ABrokenEdgeGameMode::ABrokenEdgeGameMode()
@@ -71,5 +73,17 @@ void ABrokenEdgeGameMode::RequestRespawn(ACharacter* DefeatedCharacter, AControl
 		DefeatedCharacter->Reset();
 		DefeatedCharacter->Destroy();
 	}
+	
+	if (DefeatedController)
+	{
+		TArray<AActor*> PlayerStarts;
+		UGameplayStatics::GetAllActorsOfClass(this, APlayerStart::StaticClass(), PlayerStarts);
+		
+		int32 Selection = FMath::RandRange(0, PlayerStarts.Num() - 1);
+		
+		RestartPlayerAtPlayerStart(DefeatedController,PlayerStarts[Selection]);
+		
+	}
+	
 
 }
