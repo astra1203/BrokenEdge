@@ -404,6 +404,14 @@ public:
 	ECombatState GetCombatState() const;
 	bool IsLocallyReloading();
 
+	/**
+ * @brief 显示狙击镜UI
+ * @param bShowScope 是否显示
+ */
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowSniperScopeWidget(bool bShowScope);
+
+	
 	/** 是否应该旋转根骨骼 */  //inline
 	FORCEINLINE bool ShouldRotateRootBone() const { return bRotateRootBone; }
 
@@ -419,6 +427,8 @@ public:
 	/** 获取是否禁用游戏逻辑 */
 	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }
 
+	
+	
 	AWeapon* GetOverlappingWeapon(){return OverlappingWeapon;}
 
 	/**

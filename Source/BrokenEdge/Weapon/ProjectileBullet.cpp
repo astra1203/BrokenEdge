@@ -18,6 +18,9 @@ AProjectileBullet::AProjectileBullet()
 	ProjectileMovementComponent->SetIsReplicated(true);
 	ProjectileMovementComponent->InitialSpeed =InitialSpeed;
 	ProjectileMovementComponent->MaxSpeed = InitialSpeed;
+	
+	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
+	ProjectileMesh->SetupAttachment(RootComponent);
 }
 
 void AProjectileBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -28,7 +31,12 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 	ABrokenEdgeCharacter* OwnerCharacter = Cast<ABrokenEdgeCharacter>(GetOwner());
 	ABrokenEdgePlayerController* OwnerController = Cast<ABrokenEdgePlayerController>(OwnerCharacter->Controller);
 
-	if (BrokenEdgeCharacter == nullptr || OwnerCharacter == nullptr||OwnerController == nullptr)return;
+	if (BrokenEdgeCharacter == nullptr || OwnerCharacter == nullptr||OwnerController == nullptr)
+	{
+		Destroy();
+		return;
+	}
+		
 	
 	if (OwnerCharacter->HasAuthority()&&!bUseServerSideRewind)
 	{

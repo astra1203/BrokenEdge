@@ -513,11 +513,12 @@ void UCombatComponent::SetAiming(bool bIsAiming)
 	{
 		Character->GetCharacterMovement()->MaxWalkSpeed = bIsAiming ? AimWalkSpeed : BaseWalkSpeed;
 	}
-	//@TODO
-	// if (Character->IsLocallyControlled() && EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle)
-	// {
-	// 	Character->ShowSniperScopeWidget(bIsAiming);
-	// }
+	
+	if (Character->IsLocallyControlled() && EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle)
+	{
+		Character->ShowSniperScopeWidget(bIsAiming);
+	}
+	
 	if (Character->IsLocallyControlled()) bAimButtonPressed = bIsAiming;
 }
 
