@@ -40,15 +40,16 @@ void ABrokenEdgeGameState::OnRep_RedTeamScore()
 	ABrokenEdgePlayerController* BrokenEdgePlayerController = Cast<ABrokenEdgePlayerController>(GetWorld()->GetFirstPlayerController());
 	if (BrokenEdgePlayerController)
 	{
-		BrokenEdgePlayerController->SetHUDBlueTeamScore(BlueTeamScore);
+		BrokenEdgePlayerController->SetHUDRedTeamScore(BlueTeamScore);
 	}
+
 }
 
 void ABrokenEdgeGameState::OnRep_BlueTeamScore()
-{
+{	
 	ABrokenEdgePlayerController* BrokenEdgePlayerController = Cast<ABrokenEdgePlayerController>(GetWorld()->GetFirstPlayerController());
 	if (BrokenEdgePlayerController)
 	{
-		BrokenEdgePlayerController->SetHUDRedTeamScore(BlueTeamScore);
+		BrokenEdgePlayerController->SetHUDBlueTeamScore(BlueTeamScore);
 	}
 }

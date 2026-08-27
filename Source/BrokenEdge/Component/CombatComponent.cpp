@@ -374,6 +374,9 @@ void UCombatComponent::ServerReload_Implementation()
 	
 	CombatState = ECombatState::ECS_Reloading;
 	
+	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), 
+		GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT(""));
+	
 	if (!Character->IsLocallyReloading())HandleReload();
 	
 }
@@ -703,7 +706,7 @@ void UCombatComponent::OnRep_SecondaryWeapon()
 	if (SecondaryWeapon && Character)
 	{
 		SecondaryWeapon->SetWeaponState(EWeaponState::EWS_EquippedSecondary);
-		// AttachActorToBackpack(SecondaryWeapon);
+		AttachActorToBackpack(SecondaryWeapon);
 		// PlayEquipWeaponSound(EquippedWeapon);//@TODO
 	}
 }
@@ -728,7 +731,7 @@ void UCombatComponent::OnRep_CombatState()
 	switch (CombatState)
 	{
 	case ECombatState::ECS_Reloading:
-		// if (Character && !Character->IsLocallyControlled()) HandleReload();
+		if (Character && !Character->IsLocallyControlled()) HandleReload();
 		break;
 	case ECombatState::ECS_Unoccuiped:
 		// if (bFireButtonPressed)
