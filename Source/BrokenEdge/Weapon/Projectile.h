@@ -58,6 +58,45 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	class UProjectileMovementComponent* ProjectileMovementComponent;
 
+	/** 造成径向爆炸伤害 */
+	void ExplodeDamage();
+
+	/** 爆炸伤害内半径 */
+	UPROPERTY(EditAnywhere)
+	float DamageInnerRadius = 200.f;
+
+	/** 爆炸伤害外半径 */
+	UPROPERTY(EditAnywhere)
+	float DamageOutRadius = 500.f;
+
+	/** 启动销毁计时器 */
+	void StartDestroyTimer();
+
+	/** 延迟销毁时间（秒） */
+	UPROPERTY(EditAnywhere)
+	float DestroyTime = 3.f;
+
+	/** 销毁计时器结束回调 */
+	void DestroyTimerFinished();
+
+	/** 销毁计时器句柄 */
+	FTimerHandle DestroyTimer;
+
+	/** 命中粒子特效 */
+	UPROPERTY(EditAnywhere)
+	class UParticleSystem* ImpactParticles;
+
+	/** 命中音效 */
+	UPROPERTY(EditAnywhere)
+	class USoundCue* ImpactSound;
+
+	/** Niagara 轨迹特效 */
+	UPROPERTY(EditAnywhere)
+	class UNiagaraSystem* TrailSystem;
+
+	/** 运行时生成的 Niagara 轨迹组件 */
+	UPROPERTY()
+	class UNiagaraComponent* TrailSystemComponent;
 	
 public:	
 	// Called every frame
