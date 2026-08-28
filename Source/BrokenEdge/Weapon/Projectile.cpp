@@ -71,6 +71,23 @@ void AProjectile::ExplodeDamage()
 
 }
 
+/**
+ * @brief 生成轨迹特效
+ */
+// void AProjectile::SpawnTrailSystem()
+// {
+// 	if (TrailSystem)
+// 	{
+// 		TrailSystemComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(TrailSystem,
+// 			GetRootComponent(),
+// 			FName(),
+// 			GetActorLocation(),
+// 			GetActorRotation(),
+// 			EAttachLocation::KeepWorldPosition,
+// 			false);
+// 	}
+// }
+
 void AProjectile::StartDestroyTimer()
 {
 	GetWorldTimerManager().SetTimer(
