@@ -90,7 +90,14 @@ public:
 	UPROPERTY(EditAnywhere, Category = Crosshairs)
 	UTexture2D* CrosshairsBottom;
 
-	
+	/** 瞄准时的目标视野角。 */
+	UPROPERTY(EditAnywhere)
+	float ZoomedFOV = 30.f;
+
+	/** 视野角切换时的插值速度。 */
+	UPROPERTY(EditAnywhere)
+	float ZoomInterpSpeed = 20.f;
+
 protected:
 	UFUNCTION()
 	// Called when the game starts or when spawned

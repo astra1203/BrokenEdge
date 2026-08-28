@@ -9,6 +9,7 @@
 #include "GameFramework/Character.h"
 #include "BrokenEdgeCharacter.generated.h"
 
+class UCameraComponent;
 class UCombatComponent;
 class AWeapon;
 class UBoxComponent;
@@ -176,7 +177,9 @@ public:
 	/** 获取瞄准偏移俯仰值 */
 	FORCEINLINE float GetAO_Y() const { return AO_Y; }
 
-	
+	/** 获取跟随相机 */
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
 private:
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))

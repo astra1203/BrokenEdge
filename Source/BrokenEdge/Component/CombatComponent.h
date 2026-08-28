@@ -266,6 +266,22 @@ private:
 	/** HUD数据包 */
 	FHUDPackage HUDPackage;
 	
+	/**
+ * @brief 视野插值
+ * @param DeltaTime 时间增量
+ */
+	void InterpFOV(float DeltaTime);
+	
+	/** 默认视野 */
+	float DefaultFOV;
+	
+	/** 当前视野 */
+	float CurrentFOV;
+	
+	/** 视野插值速度 */
+	UPROPERTY(EditAnywhere, Category = Combat)
+	float ZoomInterpSpeed = 20.f;
+
 	/** 是否持有旗帜 */
 	UPROPERTY(ReplicatedUsing = OnRep_HoldingTheFlag)
 	bool bHoldingTheFlag = false;

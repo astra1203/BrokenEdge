@@ -7,6 +7,7 @@
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "BrokenEdge/Weapon/Weapon.h"
+#include "Camera/CameraComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -390,12 +391,11 @@ void UCombatComponent::BeginPlay()
 	{
 		Character->GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 
-		//@TODO
-		// if (Character->GetFollowCamera())
-		// {
-		// 	DefaultFOV = Character->GetFollowCamera()->FieldOfView;
-		// 	CurrentFOV = DefaultFOV;
-		// }
+		if (Character->GetFollowCamera())
+		{
+			DefaultFOV = Character->GetFollowCamera()->FieldOfView;
+			CurrentFOV = DefaultFOV;
+		}
 
 		if (Character->HasAuthority())
 		{
@@ -419,7 +419,7 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		HitTarget = HitResult.ImpactPoint;
 
 		SetHUDCrosshairs(DeltaTime);
-		// InterpFOV(DeltaTime);
+		InterpFOV(DeltaTime);
 	}
 }
 
@@ -717,6 +717,27 @@ void UCombatComponent::OnRep_Aiming()
 	{
 		bAiming = bAimButtonPressed;
 	}
+}
+
+void UCombatComponent::InterpFOV(float DeltaTime)
+{
+	if (EquippedWeapon == nullptr) return;
+	
+	if (bAiming)
+	{
+		CurrentFOV = FMath::FInterpTo(CurrentFOV, EquippedWeapon->ZoomedFOV, DeltaTime, EquippedWeapon->ZoomInterpSpeed);
+	}
+	else
+	{
+		CurrentFOV = FMath::FInterpTo(CurrentFOV, DefaultFOV, DeltaTime, ZoomInterpSpeed);
+	}
+	
+	if (Character&&Character->GetFollowCamera())
+	{
+		Character->GetFollowCamera()->SetFieldOfView(CurrentFOV);
+	}
+	
+	
 }
 
 void UCombatComponent::OnRep_HoldingTheFlag()
