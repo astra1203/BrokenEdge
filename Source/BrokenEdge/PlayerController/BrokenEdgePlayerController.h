@@ -64,13 +64,48 @@ public:
 	/** 隐藏队伍分数 */
 	void HideTeamScores();
 
+	/** 单程时间 */
+	float SingleTripTime = 0.f;
+
+	/**
+ * @brief 获取服务器时间
+ * @return 服务器时间
+ */
+	virtual float GetServerTime();
+	
 protected:
 	/// 玩家控制角色时调用
 	virtual void OnPossess(APawn* InPawn) override;
 	
 	/// 每帧更新
 	virtual void Tick(float DeltaTime) override;
-	
+	void CheckTimeSync(float DeltaTime);
+
+	/** 时间同步频率 */
+	UPROPERTY(EditAnywhere, Category = Time)
+	float TimeSyncFrequency = 5.f;
+
+	/** 时间同步运行时间 */
+	float TimeSyncRunningTime = 0.f;
+
+	/**
+ * @brief 请求服务器时间
+ * @param TimeOfClientRequest 客户端请求时间
+ */
+	UFUNCTION(Server, Reliable)
+	void ServerRequestServerTime(float TimeOfClientRequest);
+
+	/**
+ * @brief 报告服务器时间到客户端
+ * @param TimeOfClientRequest 客户端请求时间
+ * @param TimeServerReceivedClientRequest 服务器接收请求时间
+ */
+	UFUNCTION(Client, Reliable)
+	void ClientReportServerTime(float TimeOfClientRequest, float TimeServerReceivedClientRequest);
+
+	/** 客户端和服务器的时间差 */
+	float ClientServerDelta = 0.f;
+
 	/// 轮询初始化（等待必要组件加载）
 	void PollInit();
 

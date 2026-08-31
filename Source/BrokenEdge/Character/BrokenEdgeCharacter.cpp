@@ -9,6 +9,7 @@
 #include "BrokenEdge/BrokenEdgeTypes/TurningInPlace.h"
 #include "BrokenEdge/Component/BuffComponent.h"
 #include "BrokenEdge/Component/CombatComponent.h"
+#include "BrokenEdge/Component/LagCompensationComponent.h"
 #include "BrokenEdge/GameMode/BrokenEdgeGameMode.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "BrokenEdge/Weapon/Weapon.h"
@@ -49,6 +50,8 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 	Buff = CreateDefaultSubobject<UBuffComponent>(TEXT("BuffComponent"));
 	Buff->SetIsReplicated(true);
 
+	LagCompensation = CreateDefaultSubobject<ULagCompensationComponent>(TEXT("LagCompensation"));
+	
 	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetCollisionObjectType(ECC_SkeletalMesh);
@@ -449,8 +452,18 @@ void ABrokenEdgeCharacter::PostInitializeComponents()
 		Buff->InitialCrouchSpeed = GetCharacterMovement()->MaxWalkSpeedCrouched;
 	}
 
-	//@TODO
 	//延迟补偿组件
+	if (LagCompensation)
+	{
+		LagCompensation->Character = this;
+		
+		if (Controller)
+		{
+			LagCompensation->Controller = Cast<ABrokenEdgePlayerController>(Controller);
+		}
+		
+	}
+	
 }
 
 void ABrokenEdgeCharacter::PlaySwapMontage()

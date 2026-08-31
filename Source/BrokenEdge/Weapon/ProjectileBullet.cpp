@@ -4,6 +4,7 @@
 #include "ProjectileBullet.h"
 
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/Component/LagCompensationComponent.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -27,17 +28,16 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
                               FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Cast<ABrokenEdgeCharacter>(GetOwner())
-	ABrokenEdgeCharacter* BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(OtherActor);
+	ABrokenEdgeCharacter* HitCharacter = Cast<ABrokenEdgeCharacter>(OtherActor);
 	ABrokenEdgeCharacter* OwnerCharacter = Cast<ABrokenEdgeCharacter>(GetOwner());
 	ABrokenEdgePlayerController* OwnerController = Cast<ABrokenEdgePlayerController>(OwnerCharacter->Controller);
 
-	if (BrokenEdgeCharacter == nullptr || OwnerCharacter == nullptr||OwnerController == nullptr)
+	if (HitCharacter == nullptr || OwnerCharacter == nullptr||OwnerController == nullptr)
 	{
 		Destroy();
 		return;
 	}
 		
-	
 	if (OwnerCharacter->HasAuthority()&&!bUseServerSideRewind)
 	{
 		const float DamageToCause = Hit.BoneName.ToString() == FString("head") ? HeadShotDamage : Damage;
@@ -47,10 +47,17 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 		return;
 	}
 	
-	//@TODO
+	if (bUseServerSideRewind&&OwnerCharacter->GetLagCompensation()&&
+		OwnerCharacter->IsLocallyControlled() && HitCharacter)
+	{
+		OwnerCharacter->GetLagCompensation()->ProjectileServerScoreRequest(
+		HitCharacter,
+		TraceStart,
+		InitialVelocity,
+		OwnerController->GetServerTime()-OwnerController->SingleTripTime
+		);
+		
+	}
 	
-	
-
-
 	Super::OnHit(HitComp, OtherActor, OtherComp, NormalImpulse, Hit);
 }

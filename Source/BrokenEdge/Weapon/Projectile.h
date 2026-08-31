@@ -18,6 +18,12 @@ public:
 	/** 是否使用服务器倒带 */
 	bool bUseServerSideRewind = false;
 	
+	/** 服务器倒带检测的射线起点 */
+	FVector_NetQuantize TraceStart;
+
+	/** 服务器倒带检测使用的初始速度 */
+	FVector_NetQuantize100 InitialVelocity;
+	
 	/** 基础伤害 */
 	UPROPERTY(EditAnywhere)
 	float Damage = 20.f;

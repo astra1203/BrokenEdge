@@ -72,6 +72,12 @@ void ABrokenEdgePlayerController::SetHUDShield(float Shield, float MaxShield)
 	}
 }
 
+float ABrokenEdgePlayerController::GetServerTime()
+{
+	if (HasAuthority())return GetWorld()->GetTimeSeconds();
+	return GetWorld()->GetTimeSeconds()+ClientServerDelta;
+}
+
 void ABrokenEdgePlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
@@ -89,6 +95,37 @@ void ABrokenEdgePlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	PollInit();
+	CheckTimeSync(DeltaTime);
+	//@TODO
+	
+}
+
+void ABrokenEdgePlayerController::CheckTimeSync(float DeltaTime)
+{
+	TimeSyncRunningTime+=DeltaTime;
+	if (IsLocalController() && TimeSyncRunningTime > TimeSyncFrequency)
+	{
+		TimeSyncRunningTime = 0.f;
+		ServerRequestServerTime(GetWorld()->GetTimeSeconds());
+		
+	}
+	
+	
+}
+
+void ABrokenEdgePlayerController::ServerRequestServerTime_Implementation(float TimeOfClientRequest)
+{
+	float ServerTimeOfReceipt = GetWorld()->GetTimeSeconds();
+	ClientReportServerTime(TimeOfClientRequest, ServerTimeOfReceipt);
+}
+
+void ABrokenEdgePlayerController::ClientReportServerTime_Implementation(float TimeOfClientRequest,
+	float TimeServerReceivedClientRequest)
+{
+	float RoundTripTime = GetWorld()->GetTimeSeconds() - TimeOfClientRequest;
+	SingleTripTime = RoundTripTime * 0.5f;
+	float CurrentServerTime = TimeServerReceivedClientRequest + SingleTripTime;
+	ClientServerDelta = CurrentServerTime- GetWorld()->GetTimeSeconds();
 }
 
 void ABrokenEdgePlayerController::PollInit()

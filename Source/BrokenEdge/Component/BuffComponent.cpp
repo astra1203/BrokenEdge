@@ -102,6 +102,8 @@ void UBuffComponent::MulticastJumpBuff_Implementation(float JumpVelocity)
 
 void UBuffComponent::ResetJump()
 {
+	if (Character == nullptr) return;
+	
 	if (Character->GetCharacterMovement())
 	{
 		Character->GetCharacterMovement()->JumpZVelocity = InitialJumpZVelocity;

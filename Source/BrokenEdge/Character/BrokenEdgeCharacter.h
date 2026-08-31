@@ -74,8 +74,12 @@ public:
 	TMap<FName, UBoxComponent*> HitCollisionBoxes;
 
 	/** 获取战斗组件 */
-	FORCEINLINE UCombatComponent* GetCombat() const { return Combat; }
+	FORCEINLINE TObjectPtr<UCombatComponent> GetCombat() const { return Combat; }
 
+	FORCEINLINE TObjectPtr<class UBuffComponent> GetBuff() const { return Buff; }
+	
+	FORCEINLINE TObjectPtr<class ULagCompensationComponent> GetLagCompensation() const { return LagCompensation; }
+	
 protected:
 
 	/** 头部碰撞盒 */
@@ -281,6 +285,10 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UBuffComponent* Buff;
 
+	/** 延迟补偿组件 */
+	UPROPERTY(VisibleAnywhere)
+	class ULagCompensationComponent* LagCompensation;
+
 	/** 是否旋转根骨骼 */
 	bool bRotateRootBone = false;
 
@@ -421,8 +429,6 @@ public:
 	/** 是否被淘汰 */
 	FORCEINLINE bool IsDefeated() const { return bDefeated; }
 
-	FORCEINLINE TObjectPtr<UBuffComponent> GetBuff() const { return Buff; }
-	
 	/** 是否禁用游戏逻辑 */
 	UPROPERTY(Replicated)
 	bool bDisableGameplay = false;

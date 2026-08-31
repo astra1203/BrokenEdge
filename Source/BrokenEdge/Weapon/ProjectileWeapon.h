@@ -26,4 +26,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AProjectile> ProjectileClass;
 
+	/** 服务器端倒带用的射弹类 */
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AProjectile> ServerSideRewindProjectileClass;
+
 };
