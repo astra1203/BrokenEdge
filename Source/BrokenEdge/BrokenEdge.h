@@ -10,4 +10,4 @@
 /// 命中盒碰撞通道（用于服务端回退时的命中检测）
 #define ECC_HitBox ECollisionChannel::ECC_GameTraceChannel2
 
-void PrintNetMode();
+FString PrintNetMode();

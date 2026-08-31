@@ -63,4 +63,8 @@ public:
 	/** 分数间隔文本 */
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ScoreSpacerText;
+	
+	/** 延迟 */
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LagText;
 };

@@ -6,12 +6,12 @@
 
 IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, BrokenEdge, "BrokenEdge" );
 
-void PrintNetMode()
+FString PrintNetMode()
 {
 	if (GWorld == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[NetMode] World=null | Mode=Unavailable"));
-		return;
+		return FString("Unavailable");
 	}
 
 	const TCHAR* NetModeText = TEXT("Unknown");
@@ -33,5 +33,6 @@ void PrintNetMode()
 		break;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("[NetMode] World=%s | Mode=%s"), *GetNameSafe(GWorld), NetModeText);
+	return NetModeText;
+	// UE_LOG(LogTemp, Warning, TEXT("[NetMode] World=%s | Mode=%s"), *GetNameSafe(GWorld), NetModeText);
 }

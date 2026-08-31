@@ -50,6 +50,9 @@ void AProjectileBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 	if (bUseServerSideRewind&&OwnerCharacter->GetLagCompensation()&&
 		OwnerCharacter->IsLocallyControlled() && HitCharacter)
 	{
+		UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+		       TEXT(""));
+		
 		OwnerCharacter->GetLagCompensation()->ProjectileServerScoreRequest(
 		HitCharacter,
 		TraceStart,

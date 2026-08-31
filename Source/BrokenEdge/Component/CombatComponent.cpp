@@ -3,6 +3,7 @@
 
 #include "CombatComponent.h"
 
+#include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/BrokenEdgeTypes/WeaponType.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
@@ -234,6 +235,7 @@ void UCombatComponent::ServerFire_Implementation(const FVector_NetQuantize& Trac
 {
 	MulticastFire(TraceHitTarget);
 }
+
 /**
  * @brief 服务器端开火验证（RPC验证）
  * @param TraceHitTarget 命中目标位置
@@ -264,6 +266,7 @@ void UCombatComponent::MulticastFire_Implementation(const FVector_NetQuantize& T
  */
 void UCombatComponent::LocalFire(const FVector_NetQuantize& TraceHitTarget)
 {
+	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, *PrintNetMode());
 	if (EquippedWeapon == nullptr) return;
 	if (Character && CombatState == ECombatState::ECS_Unoccuiped)
 	{
@@ -375,8 +378,8 @@ void UCombatComponent::ServerReload_Implementation()
 	
 	CombatState = ECombatState::ECS_Reloading;
 	
-	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), 
-		GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT(""));
+	// UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), 
+	// 	GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT(""));
 	
 	if (!Character->IsLocallyReloading())HandleReload();
 	

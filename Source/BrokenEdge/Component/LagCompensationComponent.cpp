@@ -109,6 +109,7 @@ FServerSideRewindResult ULagCompensationComponent::ProjectileServerSideRewind(AB
 {
 	FFramePackage FrameToChrck = GetFrameToCheck(HitCharacter, HitTime);
 	// return ProjectileConfirmHit(FrameToChrck, HitCharacter, TraceStart, InitialVelocity, HitTime);
+	return FServerSideRewindResult();
 }
 
 FFramePackage ULagCompensationComponent::GetFrameToCheck(ABrokenEdgeCharacter* HitCharacter, float HitTime)
@@ -168,7 +169,7 @@ FFramePackage ULagCompensationComponent::GetFrameToCheck(ABrokenEdgeCharacter* H
 		
 	}
 	
-	
+	return FFramePackage();
 }
 
 FFramePackage ULagCompensationComponent::InterpBetweenFrames(const FFramePackage& OlderFrame,

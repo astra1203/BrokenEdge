@@ -4,6 +4,7 @@
 #include "ProjectileWeapon.h"
 
 #include "Projectile.h"
+#include "BrokenEdge/BrokenEdge.h"
 #include "Engine/SkeletalMeshSocket.h"
 
 
@@ -35,15 +36,22 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 		{
 			if (InstigatorPawn->IsLocallyControlled()) //服务器玩家，生成真实的投射物
 			{
+				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+				       *PrintNetMode());
+				
 				SpawnedProjectile = World->SpawnActor<AProjectile>(ProjectileClass,
 				                                                   SocketTransform.GetLocation(), TargetRotation,
 				                                                   SpawnParams);
+
 				SpawnedProjectile->bUseServerSideRewind = false;
 				SpawnedProjectile->Damage = Damage;
 				SpawnedProjectile->HeadShotDamage = HeadShotDamage;
 			}
 			else //服务器上的远程玩家，生成用于倒带的投射物
 			{
+				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+						*PrintNetMode());
+
 				SpawnedProjectile = World->SpawnActor<AProjectile>(ServerSideRewindProjectileClass,
 				                                                   SocketTransform.GetLocation(), TargetRotation,
 				                                                   SpawnParams);
@@ -55,6 +63,9 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 		{
 			if (InstigatorPawn->IsLocallyControlled()) //本地所控制的玩家，生成用于倒带的投射物
 			{
+				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+						*PrintNetMode());
+				
 				SpawnedProjectile = World->SpawnActor<AProjectile>(ServerSideRewindProjectileClass,
 				                                                   SocketTransform.GetLocation(), TargetRotation,
 				                                                   SpawnParams);
@@ -63,10 +74,13 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 				
 				SpawnedProjectile->TraceStart = SocketTransform.GetLocation();
 				SpawnedProjectile->InitialVelocity = SpawnedProjectile->GetActorForwardVector() * SpawnedProjectile->InitialSpeed;
-					 
+
 			}
 			else
 			{
+				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+					*PrintNetMode());
+				
 				SpawnedProjectile = World->SpawnActor<AProjectile>(ServerSideRewindProjectileClass,
 				                                                   SocketTransform.GetLocation(), TargetRotation,
 				                                                   SpawnParams);

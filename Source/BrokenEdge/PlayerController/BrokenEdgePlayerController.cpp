@@ -126,6 +126,12 @@ void ABrokenEdgePlayerController::ClientReportServerTime_Implementation(float Ti
 	SingleTripTime = RoundTripTime * 0.5f;
 	float CurrentServerTime = TimeServerReceivedClientRequest + SingleTripTime;
 	ClientServerDelta = CurrentServerTime- GetWorld()->GetTimeSeconds();
+	
+	if (BrokenEdgeHUD&&BrokenEdgeHUD->CharacterOverlay&&BrokenEdgeHUD->CharacterOverlay->LagText)
+	{
+		BrokenEdgeHUD->CharacterOverlay->LagText->SetText(FText::FromString(FString::Printf(TEXT("延迟：%.2f"), SingleTripTime)));
+	}
+	
 }
 
 void ABrokenEdgePlayerController::PollInit()
