@@ -150,6 +150,7 @@ git lfs status
 - [Git 使用指南](Docs/Git_Usage_Guide.md)
 - [PlayerController、生命值、护盾与 UI](Docs/UE5_PlayerController_Health_Shield_UI.md)
 - [武器手部 IK 问题诊断与修复指南](Docs/UE5_Weapon_Hand_IK_Diagnosis_and_Fix.md)
+- [多人武器丢弃功能实现指南](Docs/UE5_Weapon_Drop_Network_Implementation.md)
 - [UE5 委托说明](Docs/UE5_Delegate.md)
 - [函数归属与访问边界审计](Docs/BrokenEdge_Function_Placement_and_Access_Audit.md)
 - [项目资产来源记录](Docs/asset_source.md)
