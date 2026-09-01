@@ -34,10 +34,10 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 	{
 		if (InstigatorPawn->HasAuthority()) //在服务器上
 		{
-			if (InstigatorPawn->IsLocallyControlled()) //服务器玩家，生成真实的投射物
+			if (InstigatorPawn->IsLocallyControlled()) //聆听服务器模式下本地所控制的玩家（服务器端同时也是客户端所控制的玩家），生成真实的投射物
 			{
-				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
-				       *PrintNetMode());
+				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+				       *PrintNetMode(),TEXT("聆听服务器上生成子弹实体"));
 				
 				SpawnedProjectile = World->SpawnActor<AProjectile>(ProjectileClass,
 				                                                   SocketTransform.GetLocation(), TargetRotation,
@@ -49,8 +49,8 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 			}
 			else //服务器上的远程玩家，生成用于倒带的投射物
 			{
-				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
-						*PrintNetMode());
+				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+						*PrintNetMode(),TEXT("服务器上的远程玩家生成用于倒带的子弹实体"));
 
 				SpawnedProjectile = World->SpawnActor<AProjectile>(ServerSideRewindProjectileClass,
 				                                                   SocketTransform.GetLocation(), TargetRotation,
@@ -63,8 +63,8 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 		{
 			if (InstigatorPawn->IsLocallyControlled()) //本地所控制的玩家，生成用于倒带的投射物
 			{
-				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
-						*PrintNetMode());
+				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+						*PrintNetMode(),TEXT("客户端本地所控制的玩家生成用于倒带的子弹实体"));
 				
 				SpawnedProjectile = World->SpawnActor<AProjectile>(ServerSideRewindProjectileClass,
 				                                                   SocketTransform.GetLocation(), TargetRotation,
@@ -78,8 +78,8 @@ void AProjectileWeapon::Fire(const FVector& HitTarget)
 			}
 			else
 			{
-				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
-					*PrintNetMode());
+				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+					*PrintNetMode(),TEXT("客户端远程玩家生成不使用倒带的子弹实体"));
 				
 				SpawnedProjectile = World->SpawnActor<AProjectile>(ServerSideRewindProjectileClass,
 				                                                   SocketTransform.GetLocation(), TargetRotation,

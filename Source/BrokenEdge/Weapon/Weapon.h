@@ -270,7 +270,18 @@ public:
 	/** 是否支持按住开火键连续射击。 */
 	UPROPERTY(EditAnywhere, Category = Combat)
 	bool bAutomatic = true;
-	
+
+
+	[[nodiscard]] float GetDamage() const
+	{
+		return Damage;
+	}
+
+	[[nodiscard]] float GetHeadShotDamage() const
+	{
+		return HeadShotDamage;
+	}
+
 protected:
 	/** 命中身体时造成的基础伤害。 */
 	UPROPERTY(EditAnywhere)

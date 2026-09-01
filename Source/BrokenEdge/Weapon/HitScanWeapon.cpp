@@ -4,6 +4,8 @@
 #include "HitScanWeapon.h"
 
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/Component/LagCompensationComponent.h"
+#include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -22,28 +24,47 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 	FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());
 	FVector Start = SocketTransform.GetLocation();
 
-	//@TODO
-
 	FHitResult FireHit;
 	WeaponTraceHit(Start, HitTarget, FireHit);
 
-	ABrokenEdgeCharacter* BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(FireHit.GetActor());
+	ABrokenEdgeCharacter* HitCharacter = Cast<ABrokenEdgeCharacter>(FireHit.GetActor());
 	AController* InstigatorController = OwnerPawn->GetController();
 
-	if (BrokenEdgeCharacter && InstigatorController)
+	if (HitCharacter && InstigatorController)
 	{
 		bool bCauseAuthDamage = !bUseServerSideRewind || OwnerPawn->IsLocallyControlled();
-		if (HasAuthority() && bCauseAuthDamage)
+		if (HasAuthority() && bCauseAuthDamage) //服务端开火
 		{
 			const float DamageToCause = FireHit.BoneName.ToString() == FString("head") ? HeadShotDamage : Damage;
 
 			UGameplayStatics::ApplyDamage(
-				BrokenEdgeCharacter,
+				HitCharacter,
 				DamageToCause,
 				InstigatorController,
 				this,
 				UDamageType::StaticClass()
 			);
+		}
+
+		if (!HasAuthority() && bUseServerSideRewind)
+		{
+			BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr
+				                           ? Cast<ABrokenEdgeCharacter>(OwnerPawn)
+				                           : BrokenEdgeOwnerCharacter;
+			BrokenEdgeOwnerController = BrokenEdgeOwnerController == nullptr
+				                            ? Cast<ABrokenEdgePlayerController>(InstigatorController)
+				                            : BrokenEdgeOwnerController;
+
+			if (BrokenEdgeOwnerController && BrokenEdgeOwnerCharacter &&
+				BrokenEdgeOwnerCharacter->GetLagCompensation() && BrokenEdgeOwnerCharacter->IsLocallyControlled())
+			{
+				BrokenEdgeOwnerCharacter->GetLagCompensation()->HitScanServerScoreRequest(
+					HitCharacter,
+					Start,
+					HitTarget,
+					BrokenEdgeOwnerController->GetServerTime() - BrokenEdgeOwnerController->SingleTripTime
+				);
+			}
 		}
 	}
 }

@@ -105,7 +105,7 @@ public:
 		
 	void SaveFramePackageServer();
 	void SaveFramePackage(FFramePackage& Package);
-	
+
 	/**
  * @brief 执行服务器端倒带（投射物武器）
  * @param HitCharacter 被命中的角色
@@ -127,6 +127,31 @@ public:
  */
 	UFUNCTION(Server, Reliable)
 	void ProjectileServerScoreRequest(ABrokenEdgeCharacter* HitCharacter, const FVector_NetQuantize& TraceStart, const FVector_NetQuantize100& InitialVelocity, float HitTime);
+
+
+
+	FServerSideRewindResult ProjectileConfirmHit(const FFramePackage& FramePackage, ABrokenEdgeCharacter* HitCharacter,
+		const FVector_NetQuantize& TraceStart, const FVector_NetQuantize100& InitialVelocity, float HitTime);
+
+	void CacheBoxPositions(ABrokenEdgeCharacter* HitCharacter, FFramePackage& OutFramePackage);
+	void MoveBoxes(ABrokenEdgeCharacter* HitCharacter, const FFramePackage& FramePackage);
+	void EnableCharacterMeshCollision(ABrokenEdgeCharacter* HitCharacter, ECollisionEnabled::Type CollisionEnabled);
+	void ResetHitBoxes(ABrokenEdgeCharacter* HitCharacter, const FFramePackage& Package);
+
+
+	/**
+ * 服务器分数请求（扫描武器）
+ * @param HitCharacter 命中角色
+ * @param TraceStart 射线起点
+ * @param HitLocation 命中位置
+ * @param HitTime 命中时间
+ */
+	UFUNCTION(Server, Reliable)
+	void HitScanServerScoreRequest(ABrokenEdgeCharacter* HitCharacter, const FVector_NetQuantize& TraceStart, const FVector_NetQuantize& HitLocation, float HitTime);
+
+	FServerSideRewindResult HitScanServerSideRewind(ABrokenEdgeCharacter* HitCharacter, const FVector_NetQuantize& TraceStart, const FVector_NetQuantize& HitLocation, float HitTime);
+
+	FServerSideRewindResult HitScanConfirmHit(const FFramePackage& FramePackage, ABrokenEdgeCharacter* HitCharacter, const FVector_NetQuantize& TraceStart, const FVector_NetQuantize& HitLocation);
 
 private:
 	/** 关联的角色 */

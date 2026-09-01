@@ -266,7 +266,7 @@ void UCombatComponent::MulticastFire_Implementation(const FVector_NetQuantize& T
  */
 void UCombatComponent::LocalFire(const FVector_NetQuantize& TraceHitTarget)
 {
-	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, *PrintNetMode());
+	// UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, *PrintNetMode());
 	if (EquippedWeapon == nullptr) return;
 	if (Character && CombatState == ECombatState::ECS_Unoccuiped)
 	{
