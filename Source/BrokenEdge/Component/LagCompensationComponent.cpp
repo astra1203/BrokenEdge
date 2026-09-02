@@ -3,6 +3,7 @@
 
 #include "LagCompensationComponent.h"
 
+#include "MovieSceneSequencePlayer.h"
 #include "ScreenPass.h"
 #include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
@@ -125,9 +126,7 @@ FServerSideRewindResult ULagCompensationComponent::ProjectileServerSideRewind(
 	FFramePackage FrameToChrck = GetFrameToCheck(HitCharacter, HitTime);
 
 	return ProjectileConfirmHit(FrameToChrck, HitCharacter, TraceStart, InitialVelocity, HitTime);
-	// return FServerSideRewindResult();
 }
-
 
 FFramePackage ULagCompensationComponent::GetFrameToCheck(ABrokenEdgeCharacter* HitCharacter, float HitTime)
 {
@@ -474,4 +473,110 @@ FServerSideRewindResult ULagCompensationComponent::HitScanConfirmHit(const FFram
 	ResetHitBoxes(HitCharacter, CurrentFrame);
 	EnableCharacterMeshCollision(HitCharacter, ECollisionEnabled::QueryAndPhysics);
 	return FServerSideRewindResult{true, false};
+}
+
+void ULagCompensationComponent::ShotgunServerScoreRequest_Implementation(
+	const TArray<ABrokenEdgeCharacter*>& HitCharacters, const FVector& TraceStart,
+	const TArray<FVector_NetQuantize>& HitLocations, float HitTime)
+{
+	FShotgunServerSideRewindResult Confirm = ShotgunServerSideRewind(HitCharacters, TraceStart, HitLocations, HitTime);
+
+
+
+}
+
+
+FShotgunServerSideRewindResult ULagCompensationComponent::ShotgunServerSideRewind(
+	const TArray<ABrokenEdgeCharacter*>& HitCharacters, const FVector& TraceStart,
+	const TArray<FVector_NetQuantize>& HitLocations, float HitTime)
+{
+	TArray<FFramePackage> FrameToChecks;
+
+	for (auto& HitCharacter : HitCharacters)
+	{
+		FrameToChecks.Add(GetFrameToCheck(HitCharacter, HitTime));
+	}
+
+	return ShotgunConfirmHit(FrameToChecks,TraceStart,HitLocations);
+}
+
+FShotgunServerSideRewindResult ULagCompensationComponent::ShotgunConfirmHit(const TArray<FFramePackage>& FramePackages,
+	const FVector& TraceStart, const TArray<FVector_NetQuantize>& HitLocations)
+{
+	for (auto& Frame : FramePackages)
+	{
+		if (Frame.Character == nullptr) return FShotgunServerSideRewindResult();
+	}
+
+	FShotgunServerSideRewindResult ShotgunResult;
+
+	TArray<FFramePackage> CurrentFrames;
+
+	for (auto& Frame : FramePackages)
+	{
+		FFramePackage CurrentFrame;
+		CurrentFrame.Character = Frame.Character;
+		CacheBoxPositions(Frame.Character, CurrentFrame);
+		CurrentFrames.Add(CurrentFrame);
+
+		MoveBoxes(Frame.Character,Frame);
+		EnableCharacterMeshCollision(Frame.Character, ECollisionEnabled::NoCollision);
+
+	}
+
+
+	for (auto& Frame : FramePackages)
+	{
+		for (auto& HitBoxPair : Frame.Character->HitCollisionBoxes)
+		{
+			if (HitBoxPair.Value != nullptr)
+			{
+				HitBoxPair.Value->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+				HitBoxPair.Value->SetCollisionResponseToChannel(ECC_HitBox, ECollisionResponse::ECR_Block);
+			}
+		}
+	}
+
+	for (auto& HitLocation : HitLocations)
+	{
+		FHitResult ConfirmHitResult;
+
+		const FVector TraceEnd = TraceStart + (HitLocation - TraceStart) * 1.25f;
+
+		if (UWorld*World =GetWorld())
+		{
+			World->LineTraceSingleByChannel(
+				ConfirmHitResult,
+				TraceStart,
+				TraceEnd,
+				ECC_HitBox
+			);
+
+			if (ABrokenEdgeCharacter* HitCharacter = Cast<ABrokenEdgeCharacter>(ConfirmHitResult.GetActor()))
+			{
+				UBoxComponent* HitBox = Cast<UBoxComponent>(ConfirmHitResult.GetComponent());
+				const bool bHead = (HitBox == HitCharacter->HitCollisionBoxes[FName("head")]);
+				if (bHead)
+				{
+					ShotgunResult.HeadShots[HitCharacter]++;
+				}
+				else
+				{
+					ShotgunResult.BodyShots[HitCharacter]++;
+				}
+
+			}
+
+		}
+
+	}
+
+	for (auto& Frame : CurrentFrames)
+	{
+		ResetHitBoxes(Frame.Character, Frame);
+		EnableCharacterMeshCollision(Frame.Character, ECollisionEnabled::QueryAndPhysics);
+	}
+
+
+	return ShotgunResult;
 }

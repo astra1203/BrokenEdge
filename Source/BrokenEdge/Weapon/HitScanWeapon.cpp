@@ -3,9 +3,11 @@
 
 #include "HitScanWeapon.h"
 
+#include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/LagCompensationComponent.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
+#include "Components/CapsuleComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -36,6 +38,12 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 		if (HasAuthority() && bCauseAuthDamage) //服务端开火
 		{
 			const float DamageToCause = FireHit.BoneName.ToString() == FString("head") ? HeadShotDamage : Damage;
+
+			UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s Damage:%.2f"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+			       TEXT(""), DamageToCause);
+
+			PrintCollisionPresetSettings(HitCharacter->GetCapsuleComponent());
+			PrintCollisionPresetSettings(HitCharacter->GetMesh());
 
 			UGameplayStatics::ApplyDamage(
 				HitCharacter,

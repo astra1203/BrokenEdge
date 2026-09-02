@@ -66,17 +66,35 @@ struct FServerSideRewindResult
 	bool bHeadShot = false;
 };
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+/**
+ * 霰弹枪服务器端倒带结果结构
+ */
+USTRUCT(BlueprintType)
+struct FShotgunServerSideRewindResult
+{
+	GENERATED_BODY()
+
+	/** 爆头结果映射 */
+	UPROPERTY()
+	TMap<ABrokenEdgeCharacter*, uint32> HeadShots;
+
+	/** 身体命中结果映射 */
+	UPROPERTY()
+	TMap<ABrokenEdgeCharacter*, uint32> BodyShots;
+};
+
+
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class BROKENEDGE_API ULagCompensationComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	ULagCompensationComponent();
 
 	friend class ABrokenEdgeCharacter;
-	
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -96,13 +114,14 @@ protected:
  * @param HitTime 命中时间
  * @return 插值后的帧数据包
  */
-	FFramePackage InterpBetweenFrames(const FFramePackage& OlderFrame, const FFramePackage& YoungerFrame, float HitTime);
+	FFramePackage InterpBetweenFrames(const FFramePackage& OlderFrame, const FFramePackage& YoungerFrame,
+	                                  float HitTime);
 
-	
 public:
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-		
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
+
 	void SaveFramePackageServer();
 	void SaveFramePackage(FFramePackage& Package);
 
@@ -126,12 +145,13 @@ public:
  * @param HitTime 命中时间
  */
 	UFUNCTION(Server, Reliable)
-	void ProjectileServerScoreRequest(ABrokenEdgeCharacter* HitCharacter, const FVector_NetQuantize& TraceStart, const FVector_NetQuantize100& InitialVelocity, float HitTime);
-
+	void ProjectileServerScoreRequest(ABrokenEdgeCharacter* HitCharacter, const FVector_NetQuantize& TraceStart,
+	                                  const FVector_NetQuantize100& InitialVelocity, float HitTime);
 
 
 	FServerSideRewindResult ProjectileConfirmHit(const FFramePackage& FramePackage, ABrokenEdgeCharacter* HitCharacter,
-		const FVector_NetQuantize& TraceStart, const FVector_NetQuantize100& InitialVelocity, float HitTime);
+	                                             const FVector_NetQuantize& TraceStart,
+	                                             const FVector_NetQuantize100& InitialVelocity, float HitTime);
 
 	void CacheBoxPositions(ABrokenEdgeCharacter* HitCharacter, FFramePackage& OutFramePackage);
 	void MoveBoxes(ABrokenEdgeCharacter* HitCharacter, const FFramePackage& FramePackage);
@@ -147,11 +167,37 @@ public:
  * @param HitTime 命中时间
  */
 	UFUNCTION(Server, Reliable)
-	void HitScanServerScoreRequest(ABrokenEdgeCharacter* HitCharacter, const FVector_NetQuantize& TraceStart, const FVector_NetQuantize& HitLocation, float HitTime);
+	void HitScanServerScoreRequest(ABrokenEdgeCharacter* HitCharacter, const FVector_NetQuantize& TraceStart,
+	                               const FVector_NetQuantize& HitLocation, float HitTime);
 
-	FServerSideRewindResult HitScanServerSideRewind(ABrokenEdgeCharacter* HitCharacter, const FVector_NetQuantize& TraceStart, const FVector_NetQuantize& HitLocation, float HitTime);
+	FServerSideRewindResult HitScanServerSideRewind(ABrokenEdgeCharacter* HitCharacter,
+	                                                const FVector_NetQuantize& TraceStart,
+	                                                const FVector_NetQuantize& HitLocation, float HitTime);
 
-	FServerSideRewindResult HitScanConfirmHit(const FFramePackage& FramePackage, ABrokenEdgeCharacter* HitCharacter, const FVector_NetQuantize& TraceStart, const FVector_NetQuantize& HitLocation);
+	FServerSideRewindResult HitScanConfirmHit(const FFramePackage& FramePackage, ABrokenEdgeCharacter* HitCharacter,
+	                                          const FVector_NetQuantize& TraceStart,
+	                                          const FVector_NetQuantize& HitLocation);
+
+	/**
+ * 服务器分数请求（霰弹枪）
+ * @param HitCharacters 命中角色列表
+ * @param TraceStart 射线起点
+ * @param HitLocations 命中位置列表
+ * @param HitTime 命中时间
+ */
+	UFUNCTION(Server, Reliable)
+	void ShotgunServerScoreRequest(const TArray<ABrokenEdgeCharacter*>& HitCharacters,
+	                               const FVector& TraceStart, const TArray<FVector_NetQuantize>& HitLocations,
+	                               float HitTime);
+
+	FShotgunServerSideRewindResult ShotgunServerSideRewind(const TArray<ABrokenEdgeCharacter*>& HitCharacters,
+	                                                       const FVector& TraceStart,
+	                                                       const TArray<FVector_NetQuantize>& HitLocations,
+	                                                       float HitTime);
+
+	FShotgunServerSideRewindResult ShotgunConfirmHit(const TArray<FFramePackage>& FramePackages,
+	                                                 const FVector& TraceStart,
+	                                                 const TArray<FVector_NetQuantize>& HitLocations);
 
 private:
 	/** 关联的角色 */
@@ -168,4 +214,6 @@ private:
 	/** 最大记录时间 */
 	UPROPERTY(EditAnywhere)
 	float MaxRecordTime = 4.f;
+
+
 };

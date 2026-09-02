@@ -42,6 +42,17 @@ public:
 	void FireProjectileWeapon();
 	void FireHitScanWeapon();
 
+	void FireShotgunWeapon();
+	void ShotgunLocalFire(const TArray<FVector_NetQuantize>& TraceHitTargets);
+
+	/**
+	 * @brief 服务器端霰弹枪开火
+	 * @param TraceHitTargets 多个命中目标
+	 * @param FireDelay 开火延迟
+	 */
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerShotgunFire(const TArray<FVector_NetQuantize>& TraceHitTargets, float FireDelay);
+
 	/**
  * @brief 服务器端开火
  * @param TraceHitTarget 命中目标
