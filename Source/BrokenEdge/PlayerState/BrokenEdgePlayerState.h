@@ -32,7 +32,17 @@ public:
 	 * @param DefeatsAmount 要添加的击杀数
 	 */
 	void AddToDefeats(int32 DefeatsAmount);
-	
+
+	[[nodiscard]] ETeam GetTeam() const
+	{
+		return Team;
+	}
+
+	void SetTeam(ETeam TeamToSet)
+	{
+		Team = TeamToSet;
+	}
+
 private:
 	/** 关联的玩家角色 */
 	UPROPERTY()

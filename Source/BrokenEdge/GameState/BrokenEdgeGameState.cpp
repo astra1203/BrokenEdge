@@ -15,7 +15,7 @@ void ABrokenEdgeGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(ABrokenEdgeGameState, BlueTeamScore);
 }
 
-void ABrokenEdgeGameState::BlueTeamScores()
+void ABrokenEdgeGameState::AddBlueTeamScores()
 {
 	++BlueTeamScore;
 	ABrokenEdgePlayerController* BrokenEdgePlayerController = Cast<ABrokenEdgePlayerController>(GetWorld()->GetFirstPlayerController());
@@ -25,7 +25,7 @@ void ABrokenEdgeGameState::BlueTeamScores()
 	}
 }
 
-void ABrokenEdgeGameState::RedTeamScores()
+void ABrokenEdgeGameState::AddRedTeamScores()
 {
 	++RedTeamScore;
 	ABrokenEdgePlayerController* BrokenEdgePlayerController = Cast<ABrokenEdgePlayerController>(GetWorld()->GetFirstPlayerController());

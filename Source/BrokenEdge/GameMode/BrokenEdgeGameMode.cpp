@@ -54,9 +54,6 @@ void ABrokenEdgeGameMode::PlayerDefeated(class ABrokenEdgeCharacter* DefeatedCha
 		AttackerPlayerState->AddToDefeats(1);
 		AttackerPlayerState->AddToScore(1);
 
-		//@TODO
-		// BrokenEdgeGameState->AddToDefeats(1);
-
 	}
 
 	if (DefeatedCharacter)

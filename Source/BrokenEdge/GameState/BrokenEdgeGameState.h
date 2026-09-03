@@ -33,8 +33,8 @@ public:
 	/**
 	 * 队伍相关功能
 	 */
-	void BlueTeamScores();
-	void RedTeamScores();
+	void AddBlueTeamScores();
+	void AddRedTeamScores();
 	
 	/** 红队分数，变化时触发OnRep_RedTeamScore */
 	UPROPERTY(ReplicatedUsing = OnRep_RedTeamScore)
