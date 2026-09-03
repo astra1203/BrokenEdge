@@ -152,6 +152,16 @@ void UCombatComponent::FinishReloading()
 	}
 }
 
+void UCombatComponent::ShotgunReloadOnce()
+{
+	if (Character&&Character->HasAuthority())
+	{
+		UpdateShotgunAmmoValues();
+	}
+
+}
+
+
 void UCombatComponent::Drop()
 {
 	//@TODO 有bug
@@ -260,10 +270,11 @@ void UCombatComponent::ShotgunLocalFire(const TArray<FVector_NetQuantize>& Trace
 
 }
 
-void UCombatComponent::ServerShotgunFire_Implementation(const TArray<FVector_NetQuantize>& TraceHitTargets,
-	float FireDelay)
-{
 
+void UCombatComponent::ServerShotgunFire_Implementation(const TArray<FVector_NetQuantize>& TraceHitTargets,
+                                                        float FireDelay)
+{
+	MulticastShotgunFire(TraceHitTargets);
 
 }
 
@@ -278,6 +289,12 @@ bool UCombatComponent::ServerShotgunFire_Validate(const TArray<FVector_NetQuanti
 	return true;
 }
 
+
+void UCombatComponent::MulticastShotgunFire_Implementation(const TArray<FVector_NetQuantize>& TraceHitTargets)
+{
+	if (Character && Character->IsLocallyControlled() && !Character->HasAuthority()) return;
+	ShotgunLocalFire(TraceHitTargets);
+}
 
 /**
  * @brief 服务器端开火（RPC实现）
@@ -333,13 +350,16 @@ void UCombatComponent::LocalFire(const FVector_NetQuantize& TraceHitTarget)
  */
 bool UCombatComponent::CanFire()
 {
-	if (EquippedWeapon == nullptr || bLocallyReloading)return false;
+	// if (EquippedWeapon == nullptr || bLocallyReloading)return false;
+	if (EquippedWeapon == nullptr)return false;
 
 	if (!EquippedWeapon->IsEmpty() &&
 		bCanFire &&
 		CombatState == ECombatState::ECS_Reloading &&
 		EquippedWeapon->GetWeaponType() == EWeaponType::EWT_Shotgun)
 		return true;
+
+	if (bLocallyReloading)return false;
 
 	return !EquippedWeapon->IsEmpty() && bCanFire && CombatState == ECombatState::ECS_Unoccuiped;
 }
@@ -403,6 +423,45 @@ void UCombatComponent::UpdateAmmoValues()
 		Controller->SetHUDCarriedAmmo(CarriedAmmo);
 	}
 	EquippedWeapon->AddAmmo(ReloadAmount);
+}
+
+
+void UCombatComponent::UpdateShotgunAmmoValues()
+{
+	if (Character == nullptr || EquippedWeapon == nullptr) return;
+
+	// int32 ReloadAmount = AmountToReload();
+	if (CarriedAmmoMap.Contains(EquippedWeapon->GetWeaponType()))
+	{
+		CarriedAmmoMap[EquippedWeapon->GetWeaponType()] -= 1;
+		CarriedAmmo = CarriedAmmoMap[EquippedWeapon->GetWeaponType()];
+	}
+	Controller = Controller == nullptr ? Cast<ABrokenEdgePlayerController>(Character->Controller) : Controller;
+	if (Controller)
+	{
+		Controller->SetHUDCarriedAmmo(CarriedAmmo);
+	}
+	EquippedWeapon->AddAmmo(1);
+
+	bCanFire = true;
+
+	if (EquippedWeapon->IsFull() || CarriedAmmo == 0)
+	{
+		JumpToShotgunEnd();
+	}
+
+}
+
+/**
+ * @brief 跳转到霰弹枪换弹动画结束
+ */
+void UCombatComponent::JumpToShotgunEnd()
+{
+	UAnimInstance* AnimInstance = Character->GetMesh()->GetAnimInstance();
+	if (AnimInstance && Character->GetReloadMontage())
+	{
+		AnimInstance->Montage_JumpToSection(FName("ShotgunEnd"));
+	}
 }
 
 /**

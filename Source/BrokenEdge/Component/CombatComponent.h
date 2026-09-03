@@ -33,6 +33,7 @@ public:
 	/// 切换武器（主/副武器）
 	void SwapWeapons();
 	void Reload();
+
 	void Drop();
 	void FireButtonPressed(bool bPressed);
 	void Fire();
@@ -54,6 +55,14 @@ public:
 	void ServerShotgunFire(const TArray<FVector_NetQuantize>& TraceHitTargets, float FireDelay);
 
 	/**
+ * @brief 多播霰弹枪开火效果
+ * @param TraceHitTargets 多个命中目标
+ */
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastShotgunFire(const TArray<FVector_NetQuantize>& TraceHitTargets);
+
+
+	/**
  * @brief 服务器端开火
  * @param TraceHitTarget 命中目标
  * @param FireDelay 开火延迟
@@ -73,6 +82,11 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable)
 	void FinishReloading();
+
+	UFUNCTION(BlueprintCallable)
+	void ShotgunReloadOnce();
+
+
 	/**
 	 * @brief 本地开火效果
 	 * @param TraceHitTarget 命中目标
@@ -81,6 +95,9 @@ public:
 	bool CanFire();
 	void UpdateAmmoValues();
 	
+	void UpdateShotgunAmmoValues();
+	void JumpToShotgunEnd();
+
 	/**
  * @brief 计算需要装填的弹药数量
  * @return 弹药数量
@@ -249,7 +266,7 @@ private:
 	/** 开火按钮是否按下 */
 	bool bFireButtonPressed;
 
-	/** 是否可以开火 */
+	/** 是否可以开火,防止玩家连续点击开火大于射速 */
 	bool bCanFire = true;
 
 	/** 开火计时器 */
@@ -322,7 +339,6 @@ private:
 	 */
 	UFUNCTION()
 	void OnRep_Flag();
-
 
 	/** 当前携带的弹药数量 */
 	UPROPERTY(ReplicatedUsing = OnRep_CarriedAmmo)

@@ -56,8 +56,12 @@ public:
 
 	/**
  * @brief 播放换弹动画
- */
+	 */
 	void PlayReloadMontage();
+
+	/** 获取换弹动画 */
+	FORCEINLINE UAnimMontage* GetReloadMontage() const { return ReloadMontage; }
+
 	void PlayFireMontage(bool bAiming);
 	void PlayDefeatMontage();
 
