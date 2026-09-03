@@ -15,6 +15,7 @@ class BROKENEDGE_API ATeamsGameMode : public ABrokenEdgeGameMode
 	GENERATED_BODY()
 	
 public:
+	ATeamsGameMode();
 	/**
  * 玩家登录后调用（重写）
  * @param NewPlayer 新登录的玩家控制器

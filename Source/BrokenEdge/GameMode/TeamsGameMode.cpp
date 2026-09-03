@@ -8,6 +8,11 @@
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "BrokenEdge/PlayerState/BrokenEdgePlayerState.h"
 
+ATeamsGameMode::ATeamsGameMode()
+{
+	bTeamsMatch = true;
+}
+
 /**
  * @brief 玩家登录后的处理，分配队伍
  * @param NewPlayer 新登录的玩家控制器

@@ -164,7 +164,7 @@ void ABrokenEdgePlayerController::PollInit()
 				}
 				else
 				{
-					HideTeamScores();
+					// HideTeamScores();
 				}
 				
 			}
