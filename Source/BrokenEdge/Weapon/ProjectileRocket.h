@@ -18,6 +18,7 @@ public:
 	AProjectileRocket();
 
 protected:
+	virtual void BeginPlay() override;
 	/**
  * 碰撞命中回调（重写）
  * @param HitComp 碰撞组件
@@ -31,7 +32,21 @@ protected:
 
 
 
+
 	/** 火箭移动组件 */
 	UPROPERTY(VisibleAnywhere)
 	class URocketMovementComponent* RocketMovementComponent;
+
+	/** 火箭飞行循环音效 */
+	UPROPERTY(EditAnywhere)
+	USoundCue* ProjectileLoop;
+
+	/** 火箭飞行音效组件 */
+	UPROPERTY()
+	UAudioComponent* ProjectileLoopComponent;
+
+	/** 循环音效衰减设置 */
+	UPROPERTY(EditAnywhere)
+	USoundAttenuation* LoopingSoundAttenuation;
+
 };

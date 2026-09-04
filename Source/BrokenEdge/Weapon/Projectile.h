@@ -67,6 +67,8 @@ protected:
 	/** 造成径向爆炸伤害 */
 	void ExplodeDamage();
 
+	void SpawnTrailSystem();
+
 	/** 爆炸伤害内半径 */
 	UPROPERTY(EditAnywhere)
 	float DamageInnerRadius = 200.f;

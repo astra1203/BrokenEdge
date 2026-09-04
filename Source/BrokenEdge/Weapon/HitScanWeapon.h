@@ -30,10 +30,26 @@ protected:
 	 */
 	void WeaponTraceHit(const FVector& TraceStart, const FVector& HitTarget, FHitResult& OutHit);
 
+
+	/** 命中特效粒子 */
+	UPROPERTY(EditAnywhere)
+	class UParticleSystem* ImpactParticles;
+
+	/** 命中音效 */
+	UPROPERTY(EditAnywhere)
+	USoundCue* HitSound;
+
 private:
 	/** 光束粒子效果 */
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* BeamParticles;
 
+	/** 枪口火焰粒子 */
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* MuzzleFlash;
+
+	/** 开火音效 */
+	UPROPERTY(EditAnywhere)
+	USoundCue* FireSound;
 	
 };

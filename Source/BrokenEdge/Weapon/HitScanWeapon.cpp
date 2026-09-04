@@ -11,6 +11,7 @@
 #include "Engine/SkeletalMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Sound/SoundCue.h"
 
 
 void AHitScanWeapon::Fire(const FVector& HitTarget)
@@ -39,7 +40,8 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 		{
 			const float DamageToCause = FireHit.BoneName.ToString() == FString("head") ? HeadShotDamage : Damage;
 
-			UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s Damage:%.2f"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+			UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s Damage:%.2f"), GFrameCounter, TEXT(__FUNCTION__),
+			       __LINE__,
 			       TEXT(""), DamageToCause);
 
 			PrintCollisionPresetSettings(HitCharacter->GetCapsuleComponent());
@@ -74,6 +76,40 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 				);
 			}
 		}
+	}
+	if (ImpactParticles)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			ImpactParticles,
+			FireHit.ImpactPoint,
+			FireHit.ImpactNormal.Rotation()
+		);
+	}
+	if (HitSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			HitSound,
+			FireHit.ImpactPoint
+		);
+	}
+
+	if (MuzzleFlash)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			MuzzleFlash,
+			SocketTransform
+		);
+	}
+	if (FireSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(
+			this,
+			FireSound,
+			GetActorLocation()
+		);
 	}
 }
 
