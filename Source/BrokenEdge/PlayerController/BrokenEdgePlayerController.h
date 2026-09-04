@@ -73,6 +73,16 @@ public:
  */
 	virtual float GetServerTime();
 	
+	/**
+* @brief 客户端淘汰公告
+* @param Attacker 攻击者
+* @param Victim 受害者
+*/
+	UFUNCTION(Client, Reliable)
+	void ClientDefeatedAnnouncement(APlayerState* Attacker, APlayerState* Victim);
+
+
+
 protected:
 	/// 玩家控制角色时调用
 	virtual void OnPossess(APawn* InPawn) override;
@@ -126,6 +136,7 @@ protected:
  */
 	UFUNCTION(Client, Reliable)
 	void ClientJoinMidgame(FName StateOfMatch, float Warmup, float Match, float Cooldown, float StartingTime, bool bIsTeamsMatch);
+
 
 private:
 	/** HUD引用 */

@@ -9,6 +9,7 @@
 #include "BrokenEdge/UI/CharacterOverlay.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
@@ -28,17 +29,17 @@ void ABrokenEdgePlayerController::GetLifetimeReplicatedProps(TArray<FLifetimePro
 void ABrokenEdgePlayerController::SetHUDHealth(float Health, float MaxHealth)
 {
 	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
-	
+
 	bool bHUDValid = BrokenEdgeHUD &&
 		BrokenEdgeHUD->CharacterOverlay &&
 		BrokenEdgeHUD->CharacterOverlay->HealthBar &&
 		BrokenEdgeHUD->CharacterOverlay->HealthText;
-	
+
 	if (bHUDValid)
 	{
 		const float HealthPercent = Health / MaxHealth;
 		BrokenEdgeHUD->CharacterOverlay->HealthBar->SetPercent(HealthPercent);
-		
+
 		FString HealthText = FString::Printf(TEXT("%d/%d"), FMath::CeilToInt(Health), FMath::CeilToInt(MaxHealth));
 		BrokenEdgeHUD->CharacterOverlay->HealthText->SetText(FText::FromString(HealthText));
 	}
@@ -75,20 +76,19 @@ void ABrokenEdgePlayerController::SetHUDShield(float Shield, float MaxShield)
 float ABrokenEdgePlayerController::GetServerTime()
 {
 	if (HasAuthority())return GetWorld()->GetTimeSeconds();
-	return GetWorld()->GetTimeSeconds()+ClientServerDelta;
+	return GetWorld()->GetTimeSeconds() + ClientServerDelta;
 }
 
 void ABrokenEdgePlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	if (TObjectPtr<ABrokenEdgeCharacter> BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(InPawn)) 
+	if (TObjectPtr<ABrokenEdgeCharacter> BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(InPawn))
 	{
 		SetHUDHealth(BrokenEdgeCharacter->GetHealth(), BrokenEdgeCharacter->GetMaxHealth());
 		SetHUDShield(BrokenEdgeCharacter->GetShield(), BrokenEdgeCharacter->GetMaxShield());
 		// SetHUDWeaponAmmo(BrokenEdgeCharacter->Combat->WeaponAmmoAmount);
 	}
-	
 }
 
 void ABrokenEdgePlayerController::Tick(float DeltaTime)
@@ -97,20 +97,16 @@ void ABrokenEdgePlayerController::Tick(float DeltaTime)
 	PollInit();
 	CheckTimeSync(DeltaTime);
 	//@TODO
-	
 }
 
 void ABrokenEdgePlayerController::CheckTimeSync(float DeltaTime)
 {
-	TimeSyncRunningTime+=DeltaTime;
+	TimeSyncRunningTime += DeltaTime;
 	if (IsLocalController() && TimeSyncRunningTime > TimeSyncFrequency)
 	{
 		TimeSyncRunningTime = 0.f;
 		ServerRequestServerTime(GetWorld()->GetTimeSeconds());
-		
 	}
-	
-	
 }
 
 void ABrokenEdgePlayerController::ServerRequestServerTime_Implementation(float TimeOfClientRequest)
@@ -120,35 +116,35 @@ void ABrokenEdgePlayerController::ServerRequestServerTime_Implementation(float T
 }
 
 void ABrokenEdgePlayerController::ClientReportServerTime_Implementation(float TimeOfClientRequest,
-	float TimeServerReceivedClientRequest)
+                                                                        float TimeServerReceivedClientRequest)
 {
 	float RoundTripTime = GetWorld()->GetTimeSeconds() - TimeOfClientRequest;
 	SingleTripTime = RoundTripTime * 0.5f;
 	float CurrentServerTime = TimeServerReceivedClientRequest + SingleTripTime;
-	ClientServerDelta = CurrentServerTime- GetWorld()->GetTimeSeconds();
-	
-	if (BrokenEdgeHUD&&BrokenEdgeHUD->CharacterOverlay&&BrokenEdgeHUD->CharacterOverlay->LagText)
+	ClientServerDelta = CurrentServerTime - GetWorld()->GetTimeSeconds();
+
+	if (BrokenEdgeHUD && BrokenEdgeHUD->CharacterOverlay && BrokenEdgeHUD->CharacterOverlay->LagText)
 	{
-		BrokenEdgeHUD->CharacterOverlay->LagText->SetText(FText::FromString(FString::Printf(TEXT("延迟：%.2f"), SingleTripTime)));
+		BrokenEdgeHUD->CharacterOverlay->LagText->SetText(
+			FText::FromString(FString::Printf(TEXT("延迟：%.2f"), SingleTripTime)));
 	}
-	
 }
 
 void ABrokenEdgePlayerController::PollInit()
 {
-	if (CharacterOverlay==nullptr)
+	if (CharacterOverlay == nullptr)
 	{
-		if (BrokenEdgeHUD&&BrokenEdgeHUD->CharacterOverlay)
+		if (BrokenEdgeHUD && BrokenEdgeHUD->CharacterOverlay)
 		{
 			CharacterOverlay = BrokenEdgeHUD->CharacterOverlay;
-			
+
 			if (CharacterOverlay)
 			{
 				if (bInitializeHealth) SetHUDHealth(HUDHealth, HUDMaxHealth);
 				if (bInitializeShield) SetHUDShield(HUDShield, HUDMaxShield);
 				if (bInitializeWeaponAmmo) SetHUDWeaponAmmo(HUDWeaponAmmo);
 				if (bInitializeCarriedAmmo) SetHUDCarriedAmmo(HUDCarriedAmmo);
-				
+
 				if (bInitializeScore) SetHUDScore(HUDScore);
 				if (bInitializeDefeats) SetHUDDefeats(HUDDefeats);
 				//@TODO
@@ -166,28 +162,63 @@ void ABrokenEdgePlayerController::PollInit()
 				{
 					// HideTeamScores();
 				}
-				
 			}
-			
 		}
-		
 	}
+}
+
+void ABrokenEdgePlayerController::ClientDefeatedAnnouncement_Implementation(APlayerState* Attacker,
+                                                                            APlayerState* Victim)
+{
+	APlayerState* Self = GetPlayerState<APlayerState>();
+	if (Attacker == nullptr || Victim == nullptr || Self == nullptr)return;
+
+	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
+	if (BrokenEdgeHUD == nullptr)return;
+
+	if (Attacker == Self && Victim != Self)
+	{
+		BrokenEdgeHUD->AddDefeatedAnnouncement(TEXT("你"),Victim->GetPlayerName());
+		return;
+	}
+
+	if (Attacker != Self && Victim == Self)
+	{
+		BrokenEdgeHUD->AddDefeatedAnnouncement(Attacker->GetPlayerName(),TEXT("你自己"));
+		return;
+	}
+
+	if (Attacker == Self && Victim == Self)
+	{
+		BrokenEdgeHUD->AddDefeatedAnnouncement(TEXT("你"),TEXT("你自己"));
+		return;
+	}
+	if (Attacker==Victim&&Attacker!=Self)
+	{
+		BrokenEdgeHUD->AddDefeatedAnnouncement(Attacker->GetPlayerName(),TEXT("他自己"));
+		return;
+	}
+	BrokenEdgeHUD->AddDefeatedAnnouncement(Attacker->GetPlayerName(),Victim->GetPlayerName());
+
 	
 }
 
 void ABrokenEdgePlayerController::ClientJoinMidgame_Implementation(FName StateOfMatch, float Warmup, float Match,
-	float Cooldown, float StartingTime, bool bIsTeamsMatch)
+                                                                   float Cooldown, float StartingTime,
+                                                                   bool bIsTeamsMatch)
 {
+	//@TODO
 }
 
 void ABrokenEdgePlayerController::OnRep_MatchState()
 {
+	//@TODO
 }
 
 void ABrokenEdgePlayerController::ServerCheckMatchState_Implementation()
 {
 	ABrokenEdgeGameMode* GameMode = Cast<ABrokenEdgeGameMode>(UGameplayStatics::GetGameMode(this));
-	if (GameMode==nullptr)return;
+	if (GameMode == nullptr)return;
 
 	WarmupTime = GameMode->WarmupTime;
 	MatchTime = GameMode->MatchTime;
@@ -197,17 +228,16 @@ void ABrokenEdgePlayerController::ServerCheckMatchState_Implementation()
 	bShowTeamScores = GameMode->bTeamsMatch;
 
 	// ClientJoinMidgame();
-
 }
 
 void ABrokenEdgePlayerController::SetHUDWeaponAmmo(int32 Ammo)
 {
 	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
-	
+
 	bool bHUDValid = BrokenEdgeHUD &&
 		BrokenEdgeHUD->CharacterOverlay &&
 		BrokenEdgeHUD->CharacterOverlay->WeaponAmmoAmount;
-	
+
 	if (bHUDValid)
 	{
 		FString AmmoText = FString::Printf(TEXT("%d"), Ammo);
@@ -223,11 +253,11 @@ void ABrokenEdgePlayerController::SetHUDWeaponAmmo(int32 Ammo)
 void ABrokenEdgePlayerController::SetHUDCarriedAmmo(int32 Ammo)
 {
 	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
-	
+
 	bool bHUDValid = BrokenEdgeHUD &&
 		BrokenEdgeHUD->CharacterOverlay &&
 		BrokenEdgeHUD->CharacterOverlay->CarriedAmmoAmount;
-	
+
 	if (bHUDValid)
 	{
 		FString AmmoText = FString::Printf(TEXT("%d"), Ammo);
@@ -243,11 +273,11 @@ void ABrokenEdgePlayerController::SetHUDCarriedAmmo(int32 Ammo)
 void ABrokenEdgePlayerController::SetHUDScore(float Score)
 {
 	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
-	
+
 	bool bHUDValid = BrokenEdgeHUD &&
 		BrokenEdgeHUD->CharacterOverlay &&
 		BrokenEdgeHUD->CharacterOverlay->ScoreAmount;
-	
+
 	if (bHUDValid)
 	{
 		FString ScoreText = FString::Printf(TEXT("%d"), FMath::FloorToInt(Score));
@@ -263,11 +293,11 @@ void ABrokenEdgePlayerController::SetHUDScore(float Score)
 void ABrokenEdgePlayerController::SetHUDDefeats(int32 Defeats)
 {
 	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
-	
+
 	bool bHUDValid = BrokenEdgeHUD &&
 		BrokenEdgeHUD->CharacterOverlay &&
 		BrokenEdgeHUD->CharacterOverlay->DefeatsAmount;
-	
+
 	if (bHUDValid)
 	{
 		FString DefeatsText = FString::Printf(TEXT("%d"), Defeats);
@@ -287,11 +317,11 @@ void ABrokenEdgePlayerController::SetHUDDefeats(int32 Defeats)
 void ABrokenEdgePlayerController::SetHUDBlueTeamScore(int32 BlueScore)
 {
 	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
-	
+
 	bool bHUDValid = BrokenEdgeHUD &&
 		BrokenEdgeHUD->CharacterOverlay &&
 		BrokenEdgeHUD->CharacterOverlay->BlueTeamScore;
-	
+
 	if (bHUDValid)
 	{
 		FString ScoreText = FString::Printf(TEXT("%d"), BlueScore);
@@ -306,11 +336,11 @@ void ABrokenEdgePlayerController::SetHUDBlueTeamScore(int32 BlueScore)
 void ABrokenEdgePlayerController::SetHUDRedTeamScore(int32 RedScore)
 {
 	BrokenEdgeHUD = BrokenEdgeHUD == nullptr ? Cast<ABrokenEdgeHUD>(GetHUD()) : BrokenEdgeHUD;
-	
+
 	bool bHUDValid = BrokenEdgeHUD &&
 		BrokenEdgeHUD->CharacterOverlay &&
 		BrokenEdgeHUD->CharacterOverlay->RedTeamScore;
-	
+
 	if (bHUDValid)
 	{
 		FString ScoreText = FString::Printf(TEXT("%d"), RedScore);

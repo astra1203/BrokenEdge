@@ -61,6 +61,17 @@ void ABrokenEdgeGameMode::PlayerDefeated(class ABrokenEdgeCharacter* DefeatedCha
 		DefeatedCharacter->Defeated(false);
 	}
 
+	for (auto It=GetWorld()->GetPlayerControllerIterator();It;It++)
+	{
+		ABrokenEdgePlayerController* PlayerController = Cast<ABrokenEdgePlayerController>(*It);
+
+		if (PlayerController&&AttackerPlayerState&&DefeatedPlayerState)
+		{
+			PlayerController->ClientDefeatedAnnouncement(AttackerPlayerState,DefeatedPlayerState);
+		}
+
+	}
+
 }
 
 void ABrokenEdgeGameMode::RequestRespawn(ACharacter* DefeatedCharacter, AController* DefeatedController)

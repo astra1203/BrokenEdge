@@ -59,6 +59,9 @@ public:
 	/** 添加角色覆盖层 */
 	void AddCharacterOverlay();
 
+	/** 添加淘汰公告 */
+	void AddDefeatedAnnouncement(FString AttackerName, FString VictimName);
+
 	/** 角色覆盖层实例 */
 	UPROPERTY()
 	class UCharacterOverlay* CharacterOverlay;
@@ -80,6 +83,25 @@ private:
 	/** 准星最大扩散程度 */
 	UPROPERTY(EditAnywhere)
 	float CrosshairSpreadMax = 16.f;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UDefeatedAnnouncement> DefeatedAnnouncementClass;
+
+	/** 淘汰消息列表 */
+	UPROPERTY()
+	TArray<UDefeatedAnnouncement*> DefeatedMessages;
+
+	/** 淘汰公告显示时间 */
+	UPROPERTY(EditAnywhere)
+	float DefeatedAnnouncementTime = 3.0f;
+
+	/**
+ * @brief 淘汰公告计时器完成回调
+ * @param MsgToRemove 要移除的消息
+ */
+	UFUNCTION()
+	void DefeatedAnnouncementTimerFinished(UDefeatedAnnouncement* MsgToRemove);
+
 
 public:
 	/**

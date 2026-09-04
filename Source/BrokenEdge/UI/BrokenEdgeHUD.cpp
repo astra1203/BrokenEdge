@@ -4,7 +4,11 @@
 #include "BrokenEdgeHUD.h"
 
 #include "CharacterOverlay.h"
+#include "DefeatedAnnouncement.h"
 #include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Components/HorizontalBox.h"
 
 
 void ABrokenEdgeHUD::BeginPlay()
@@ -51,7 +55,6 @@ void ABrokenEdgeHUD::DrawHUD()
 			DrawCrosshair(HUDPackage.CrosshairsBottom, ViewportCenter, Spread, HUDPackage.CrosshairsColor);
 		}
 	}
-	
 }
 
 void ABrokenEdgeHUD::AddCharacterOverlay()
@@ -62,19 +65,74 @@ void ABrokenEdgeHUD::AddCharacterOverlay()
 		CharacterOverlay = CreateWidget<UCharacterOverlay>(PlayerController, CharacterOverlayClass);
 		CharacterOverlay->AddToViewport();
 	}
+}
 
+void ABrokenEdgeHUD::AddDefeatedAnnouncement(FString AttackerName, FString VictimName)
+{
+	TObjectPtr<APlayerController> PlayerController = GetOwningPlayerController();
+	if (PlayerController == nullptr || DefeatedAnnouncementClass == nullptr) return;
+
+	UDefeatedAnnouncement* DefeatedAnnouncement = CreateWidget<UDefeatedAnnouncement>(
+		PlayerController, DefeatedAnnouncementClass);
+	if (DefeatedAnnouncement == nullptr) return;
+
+	DefeatedAnnouncement->SetDefeatedAnnouncementText(AttackerName, VictimName);
+	DefeatedAnnouncement->AddToViewport();
+
+	for (UDefeatedAnnouncement* DefeatedMessage : DefeatedMessages)
+	{
+		if (DefeatedMessage && DefeatedMessage->AnnouncementBox)
+		{
+			UCanvasPanelSlot* CanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(DefeatedMessage->AnnouncementBox);
+
+			if (CanvasSlot)
+			{
+				FVector2D Position = CanvasSlot->GetPosition();
+
+				FVector2D NewPosition(
+					Position.X,
+					Position.Y - CanvasSlot->GetSize().Y
+				);
+
+				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s  %f, %f"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+				       TEXT("NewPosition:"), NewPosition.X, NewPosition.Y);
+
+				CanvasSlot->SetPosition(NewPosition);
+			}
+		}
+	}
+
+	DefeatedMessages.Add(DefeatedAnnouncement);
+
+	FTimerHandle DefeatedMsgTimerHandle;
+
+	FTimerDelegate DefeatedMsgDelegate;
+	DefeatedMsgDelegate.BindUFunction(this, FName("DefeatedAnnouncementTimerFinished"), DefeatedAnnouncement);
+
+	GetWorldTimerManager().SetTimer(
+		DefeatedMsgTimerHandle,
+		DefeatedMsgDelegate,
+		DefeatedAnnouncementTime,
+		false);
 }
 
 void ABrokenEdgeHUD::DrawCrosshair(UTexture2D* Texture, FVector2D ViewportCenter, FVector2D Spread,
-	FLinearColor CrosshairColor)
+                                   FLinearColor CrosshairColor)
 {
 	const float TextureWidth = Texture->GetSizeX();
 	const float TextureHeight = Texture->GetSizeY();
-	
-	const FVector2D TextureDrawPoint(ViewportCenter.X - (TextureWidth / 2.f) + Spread.X, 
-		ViewportCenter.Y - (TextureHeight / 2.f) + Spread.Y);
 
-	DrawTexture(Texture, TextureDrawPoint.X, TextureDrawPoint.Y, TextureWidth, 
-		TextureHeight, 0.f, 0.f, 1.f, 1.f, CrosshairColor);
+	const FVector2D TextureDrawPoint(ViewportCenter.X - (TextureWidth / 2.f) + Spread.X,
+	                                 ViewportCenter.Y - (TextureHeight / 2.f) + Spread.Y);
 
+	DrawTexture(Texture, TextureDrawPoint.X, TextureDrawPoint.Y, TextureWidth,
+	            TextureHeight, 0.f, 0.f, 1.f, 1.f, CrosshairColor);
+}
+
+void ABrokenEdgeHUD::DefeatedAnnouncementTimerFinished(UDefeatedAnnouncement* MsgToRemove)
+{
+	if (MsgToRemove)
+	{
+		MsgToRemove->RemoveFromParent();
+	}
 }
