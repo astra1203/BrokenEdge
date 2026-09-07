@@ -74,13 +74,39 @@ git lfs ls-files | Select-Object -First 20
 
 ## 地图与运行目标
 
-- `Content/Maps/MainMap.umap`：编辑器、游戏和服务器的默认地图
-- `Content/Maps/Lobby.umap`：联机会话大厅地图
+- `Content/Maps/MainMap.umap`：编辑器和服务器的默认地图
+- `Content/Maps/Lobby.umap`：游戏默认入口；离线启动显示菜单，建房后作为监听大厅
+- `Content/Maps/FreeForAll.umap`、`Content/Maps/Teams.umap`：自由模式和团队模式比赛地图
 - `BrokenEdge.Target.cs`：游戏客户端目标
 - `BrokenEdgeEditor.Target.cs`：编辑器目标
 - `BrokenEdgeServer.Target.cs`：独立服务器目标
 
-`DefaultGame.ini` 中的独立服务器会话配置当前为最多 8 个公开连接，并启用自动启动会话。联机功能应分别在 Standalone、Listen Server、Client 和 Dedicated Server 场景中验证。
+`DefaultGame.ini` 中保留了独立服务器会话配置，但当前没有读取这些配置并自动注册专服的启动入口。
+
+### 多人会话运行与验收
+
+当前默认使用 `OnlineSubsystemNull`，菜单流程面向 LAN 监听服务器：
+
+1. 打开 `Lobby`，以独立游戏进程启动。离线入口会创建现有的 `WBP_Menu`。
+2. 主机点击 Host：创建并广播房间，再以普通跳转进入 `Lobby?listen`，建立监听端口。
+3. 另一个独立进程点击 Join：搜索同项目、同模式且未满的房间，加入会话后解析地址并执行 `ClientTravel`。
+4. 大厅达到建房人数后启动在线会话，并无缝跳转到 `FreeForAll` 或 `Teams`。
+
+在 `BP_LobbyGameMode` 的 Class Defaults → Sessions 中配置 `Menu Num Public Connections` 和 `Menu Match Type`；默认 8 人、`FreeForAll`。也可由蓝图调用 `MenuSetup` 传参。双进程手动测试时将人数设为 2，两个进程选择相同模式。当前没有夺旗地图。
+
+多网卡、VPN/TUN 环境中，UE 可能广播虚拟网卡的连接地址。跨电脑测试时，在主机启动参数中添加 `-MULTIHOME=<主机的局域网IPv4地址>`，并检查日志里的 `Menu ClientTravel` 地址。本机双进程测试不能证明跨机器广播和访问已经可用。
+
+菜单会在搜索失败、无匹配房间、加入失败后恢复按钮；重复初始化不会重复订阅回调。创建已有同名会话时先销毁再重建。`DestorySession` 和 `StartSession` 可从会话子系统的蓝图接口调用；保留原有 `Destory` 拼写以兼容调用方。
+
+编译 Editor 目标后，可运行自动验收：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Scripts\Test-LanSessions.ps1 -EngineRoot "<UE_ROOT>"
+```
+
+脚本启动独立的无渲染游戏进程，通过现有 UMG 按钮委托执行实际菜单逻辑，覆盖空搜索重试、模式不匹配、销毁重建、搜索加入，以及两个模式的双人跳图。测试临时使用 2 人，不修改蓝图默认值；日志位于 `Saved/SessionTests/<时间戳>/`。这项验收不覆盖画面、跨机器广播、防火墙、Steam 公网匹配或专服自动注册。
+
+2026-09-08：`BrokenEdgeEditor Win64 Development` 编译通过；上述 7 项独立进程验收全部通过，本次日志位于 `Saved/SessionTests/20260908-001600/`。
 
 ## 目录结构
 
