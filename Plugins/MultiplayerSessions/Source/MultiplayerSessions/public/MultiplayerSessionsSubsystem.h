@@ -34,6 +34,10 @@ public:
 	bool IsBusy() const;
 	bool HasSession() const;
 	bool GetResolvedConnectString(FString& Address) const;
+	/** 在专服 World 已开始运行后读取配置并注册会话；失败由大厅定时重试。 */
+	void InitializeDedicatedServer();
+	int32 GetMinPlayersToStart() const { return MinPlayersToStart; }
+	bool ShouldAutoStartSession() const { return bAutoStartSession; }
 
 	UPROPERTY(BlueprintAssignable, Category = "Multiplayer Sessions")
 	FMultiplayerOnCreateSessionComplete MultiplayerOnCreateSessionComplete;
@@ -76,4 +80,6 @@ private:
 	bool bCreateSessionOnDestory = false;
 	int32 LastNumPublicConnections = 8;
 	FString LastMatchType;
+	int32 MinPlayersToStart = 2;
+	bool bAutoStartSession = true;
 };

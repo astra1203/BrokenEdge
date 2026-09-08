@@ -1,4 +1,4 @@
-// 独立进程验收：-game /Game/Maps/Lobby -SessionTestRole=Host|Join|Empty
+// 独立进程验收：-game /Game/Maps/Lobby -SessionTestRole=Server|Join|Empty
 // -SessionTestMatchType=FreeForAll|Teams -ExecCmds="Automation RunTests MultiplayerSessions.LAN.MenuFlow"
 #if WITH_DEV_AUTOMATION_TESTS
 
@@ -11,6 +11,8 @@
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "GameFramework/GameStateBase.h"
+#include "GameFramework/GameModeBase.h"
+#include "GameFramework/GameSession.h"
 #include "Menu.h"
 #include "MultiplayerSessionsSubsystem.h"
 #include "OnlineSessionSettings.h"
@@ -29,7 +31,7 @@ public:
 		const double Now = FPlatformTime::Seconds();
 		if (Phase == 3 && Role != TEXT("Empty"))
 		{
-			if (Now - StableSince < (Role == TEXT("Host") ? 20.0 : 5.0)) return false;
+			if (Now - StableSince < (Role == TEXT("Server") ? 20.0 : 5.0)) return false;
 			Test->AddInfo(FString::Printf(TEXT("SESSION_FLOW_OK Role=%s Map=/Game/Maps/%s"), *Role, *MatchType));
 			return true;
 		}
@@ -49,31 +51,25 @@ public:
 
 		if (Phase == 0)
 		{
+			if (Role == TEXT("Server"))
+			{
+				if (Sessions->IsBusy() || !Sessions->HasSession()) return false;
+				Test->TestTrue(TEXT("Server started without local players"), World->GetGameInstance()->GetNumLocalPlayers() == 0);
+				Test->TestTrue(TEXT("Server is dedicated"), World->GetNetMode() == NM_DedicatedServer);
+				Phase = 2;
+				return false;
+			}
 			TArray<UUserWidget*> Widgets;
 			UWidgetBlueprintLibrary::GetAllWidgetsOfClass(World, Widgets, UMenu::StaticClass(), true);
 			if (Widgets.Num() != 1) return false;
 			Menu = Cast<UMenu>(Widgets[0]);
-			// 两次 Setup 后按钮仍只发出一次有效请求。
 			Menu->MenuSetup(2, MatchType, TEXT("/Game/Maps/Lobby"));
 			Menu->MenuSetup(2, MatchType, TEXT("/Game/Maps/Lobby"));
-			if (Role == TEXT("Host"))
-			{
-				// 先建立旧会话；随后 Host 按钮必须正确销毁并按新参数重建。
-				Sessions->CreateSession(3, TEXT("PreviousMatch"));
-				Phase = 1;
-			}
-			else
-			{
-				Click(TEXT("JoinButton"));
-				Phase = 2;
-			}
-			return false;
-		}
-		if (Phase == 1)
-		{
-			if (Sessions->IsBusy()) return false;
-			if (!Test->TestTrue(TEXT("Old session created"), Sessions->HasSession())) return true;
-			Click(TEXT("HostButton"));
+			UButton* Host = Cast<UButton>(Menu->GetWidgetFromName(TEXT("HostButton")));
+			Test->TestTrue(TEXT("Listen hosting is unavailable in client menu"), Host && !Host->GetIsEnabled() && Host->GetVisibility() == ESlateVisibility::Collapsed);
+			Sessions->CreateSession(2, MatchType);
+			Test->TestFalse(TEXT("Client cannot register a hosted session"), Sessions->HasSession());
+			Click(TEXT("JoinButton"));
 			Phase = 2;
 			return false;
 		}
@@ -95,18 +91,22 @@ public:
 
 		const FString Target = TEXT("/Game/Maps/") + MatchType;
 		if (World->GetPackage()->GetName() != Target || World->IsInSeamlessTravel()) return false;
-		if (Role == TEXT("Host"))
+		if (Role == TEXT("Server"))
 		{
 			if (!World->GetGameState() || World->GetGameState()->PlayerArray.Num() != 2) return false;
 			const IOnlineSessionPtr Interface = Online::GetSessionInterface(World);
 			const FNamedOnlineSession* Session = Interface.IsValid() ? Interface->GetNamedSession(NAME_GameSession) : nullptr;
-			if (!Test->TestNotNull(TEXT("Hosted session survives seamless travel"), Session)) return true;
+			if (!Test->TestNotNull(TEXT("Dedicated session survives seamless travel"), Session)) return true;
 			FString AdvertisedMatch;
 			Session->SessionSettings.Get(FName(TEXT("MatchType")), AdvertisedMatch);
-			Test->TestEqual(TEXT("Advertised mode survives destroy/recreate"), AdvertisedMatch, MatchType);
-			Test->TestEqual(TEXT("Recreated room uses requested capacity"), Session->SessionSettings.NumPublicConnections, 2);
+			Test->TestEqual(TEXT("Server advertises configured mode"), AdvertisedMatch, MatchType);
+			Test->TestEqual(TEXT("Server uses configured capacity"), Session->SessionSettings.NumPublicConnections, 2);
 			Test->TestTrue(TEXT("Session started"), Session->SessionState == EOnlineSessionState::InProgress);
-			Test->TestTrue(TEXT("Host is a listen server"), World->GetNetMode() == NM_ListenServer);
+			Test->TestTrue(TEXT("Server remains dedicated after travel"), World->GetNetMode() == NM_DedicatedServer);
+			Test->TestTrue(TEXT("Session advertises a dedicated server"), Session->SessionSettings.bIsDedicated);
+			const AGameModeBase* GameMode = World->GetAuthGameMode();
+			Test->TestTrue(TEXT("GameSession enforces configured capacity after travel"),
+				GameMode && GameMode->GameSession && GameMode->GameSession->MaxPlayers == 2);
 		}
 		else
 		{
@@ -136,7 +136,7 @@ private:
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FSessionMenuFlowTest, "MultiplayerSessions.LAN.MenuFlow",
-	EAutomationTestFlags::ClientContext | EAutomationTestFlags::ProductFilter)
+	EAutomationTestFlags::ClientContext | EAutomationTestFlags::ServerContext | EAutomationTestFlags::ProductFilter)
 
 bool FSessionMenuFlowTest::RunTest(const FString& Parameters)
 {
@@ -144,9 +144,9 @@ bool FSessionMenuFlowTest::RunTest(const FString& Parameters)
 	FString MatchType = TEXT("FreeForAll");
 	FParse::Value(FCommandLine::Get(), TEXT("SessionTestRole="), Role);
 	FParse::Value(FCommandLine::Get(), TEXT("SessionTestMatchType="), MatchType);
-	if (Role != TEXT("Host") && Role != TEXT("Join") && Role != TEXT("Empty"))
+	if (Role != TEXT("Server") && Role != TEXT("Join") && Role != TEXT("Empty"))
 	{
-		AddError(TEXT("Run in standalone -game with -SessionTestRole=Host, Join or Empty."));
+		AddError(TEXT("Run in standalone -game with -SessionTestRole=Server, Join or Empty."));
 		return false;
 	}
 	ADD_LATENT_AUTOMATION_COMMAND(SessionMenuTests::FMenuFlow(this, Role, MatchType));

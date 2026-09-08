@@ -17,7 +17,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-	/** 默认地图 Lobby 在离线启动时显示菜单；监听大厅等待配置人数。 */
+	/** 客户端离线入口显示加入菜单；专服人数与模式由启动配置决定。 */
 	UPROPERTY(EditDefaultsOnly, Category = "Sessions")
 	TSubclassOf<class UMenu> MenuClass;
 	UPROPERTY(EditDefaultsOnly, Category = "Sessions", meta = (ClampMin = "1", ClampMax = "64"))
@@ -35,4 +35,5 @@ private:
 	FString PendingMap;
 	bool bStartingSession = false;
 	bool bTravelRequested = false;
+	double NextSessionRetryTime = 0.0;
 };

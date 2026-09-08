@@ -4,6 +4,9 @@
 #include "Engine/LocalPlayer.h"
 #include "Engine/World.h"
 #include "Misc/App.h"
+#include "Misc/CommandLine.h"
+#include "Misc/ConfigCacheIni.h"
+#include "Misc/Parse.h"
 #include "MultiplayerSessions.h"
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
@@ -105,9 +108,9 @@ void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FS
 {
 	// 忽略重复请求，不让额外失败事件提前解锁等待原请求的 UI。
 	if (IsBusy()) return;
-	FUniqueNetIdRepl PlayerId;
 	const bool bDedicated = IsDedicatedServerInstance();
-	if (!RefreshSessionInterface() || (!bDedicated && !TryGetLocalPlayerId(PlayerId)) || MatchType.TrimStartAndEnd().IsEmpty())
+	// 客户端不再提供监听建房；专服不存在 ULocalPlayer。
+	if (!bDedicated || !RefreshSessionInterface() || MatchType.TrimStartAndEnd().IsEmpty())
 	{
 		MultiplayerOnCreateSessionComplete.Broadcast(false);
 		return;
@@ -126,23 +129,41 @@ void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FS
 	const IOnlineSubsystem* Subsystem = Online::GetSubsystem(GetWorld());
 	LastSessionSettings = MakeShared<FOnlineSessionSettings>();
 	LastSessionSettings->bIsLANMatch = Subsystem && Subsystem->GetSubsystemName() == NULL_SUBSYSTEM;
-	LastSessionSettings->bIsDedicated = bDedicated;
+	LastSessionSettings->bIsDedicated = true;
 	LastSessionSettings->NumPublicConnections = DesiredNumPublicConnections;
 	LastSessionSettings->bAllowJoinInProgress = true;
 	LastSessionSettings->bShouldAdvertise = true;
-	LastSessionSettings->bAllowInvites = !bDedicated;
-	LastSessionSettings->bUsesPresence = !bDedicated && !LastSessionSettings->bIsLANMatch;
-	LastSessionSettings->bAllowJoinViaPresence = LastSessionSettings->bUsesPresence;
-	LastSessionSettings->bUseLobbiesIfAvailable = LastSessionSettings->bUsesPresence;
+	LastSessionSettings->bAllowInvites = false;
+	LastSessionSettings->bUsesPresence = false;
+	LastSessionSettings->bAllowJoinViaPresence = false;
+	LastSessionSettings->bUseLobbiesIfAvailable = false;
 	// 保留构造函数的 GetBuildUniqueId()；Null 搜索会丢弃版本号不同的房间。
-	LastSessionSettings->Set(FName(TEXT("MatchType")), DesiredMatchType, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-	LastSessionSettings->Set(FName(TEXT("ProjectName")), FString(FApp::GetProjectName()), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	LastSessionSettings->Set(MultiplayerSessionKeys::MatchType, DesiredMatchType, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	LastSessionSettings->Set(MultiplayerSessionKeys::ProjectName, FString(FApp::GetProjectName()), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	CreateSessionCompleteDelegateHandle = SessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
-	const bool bSubmitted = bDedicated
-		? SessionInterface->CreateSession(0, NAME_GameSession, *LastSessionSettings)
-		: SessionInterface->CreateSession(*PlayerId, NAME_GameSession, *LastSessionSettings);
+	const bool bSubmitted = SessionInterface->CreateSession(0, NAME_GameSession, *LastSessionSettings);
 	// Null 可以同步回调后再返回 false；只在句柄仍有效时补发失败。
 	if (!bSubmitted && CreateSessionCompleteDelegateHandle.IsValid()) OnCreateSessionComplete(NAME_GameSession, false);
+}
+
+void UMultiplayerSessionsSubsystem::InitializeDedicatedServer()
+{
+	if (!IsDedicatedServerInstance() || IsBusy() || HasSession()) return;
+	int32 Capacity = 8;
+	FString ServerMatchType = TEXT("FreeForAll");
+	GConfig->GetInt(MultiplayerSessionKeys::DedicatedServerConfig, TEXT("NumPublicConnections"), Capacity, GGameIni);
+	GConfig->GetInt(MultiplayerSessionKeys::DedicatedServerConfig, TEXT("MinPlayersToStart"), MinPlayersToStart, GGameIni);
+	GConfig->GetString(MultiplayerSessionKeys::DedicatedServerConfig, TEXT("MatchType"), ServerMatchType, GGameIni);
+	GConfig->GetBool(MultiplayerSessionKeys::DedicatedServerConfig, TEXT("bAutoStartSession"), bAutoStartSession, GGameIni);
+	// 启动参数覆盖配置，便于一份服务器包运行不同模式和人数。
+	FParse::Value(FCommandLine::Get(), TEXT("NumPublicConnections="), Capacity);
+	FParse::Value(FCommandLine::Get(), TEXT("MinPlayersToStart="), MinPlayersToStart);
+	FParse::Value(FCommandLine::Get(), TEXT("MatchType="), ServerMatchType);
+	Capacity = FMath::Clamp(Capacity, 1, 64);
+	MinPlayersToStart = FMath::Clamp(MinPlayersToStart, 1, Capacity);
+	UE_LOG(LogMultiplayerSessions, Log, TEXT("Dedicated bootstrap: Capacity=%d MinPlayers=%d MatchType=%s AutoStart=%d LocalPlayers=%d"),
+		Capacity, MinPlayersToStart, *ServerMatchType, bAutoStartSession, GetGameInstance()->GetNumLocalPlayers());
+	CreateSession(Capacity, ServerMatchType);
 }
 
 void UMultiplayerSessionsSubsystem::FindSessions(int32 MaxSearchResults)
@@ -158,11 +179,8 @@ void UMultiplayerSessionsSubsystem::FindSessions(int32 MaxSearchResults)
 	LastSessionSearch = MakeShared<FOnlineSessionSearch>();
 	LastSessionSearch->MaxSearchResults = FMath::Clamp(MaxSearchResults, 1, 10000);
 	LastSessionSearch->bIsLanQuery = Subsystem && Subsystem->GetSubsystemName() == NULL_SUBSYSTEM;
-	// LAN 不附加 Presence/Lobby 限制；在线搜索与建房设置对应。
-	if (!LastSessionSearch->bIsLanQuery)
-	{
-		LastSessionSearch->QuerySettings.Set(SEARCH_LOBBIES, true, EOnlineComparisonOp::Equals);
-	}
+	// 专服不使用 Presence/Lobby；LAN 返回结果后仍需检查 bIsDedicated。
+	LastSessionSearch->QuerySettings.Set(SEARCH_DEDICATED_ONLY, true, EOnlineComparisonOp::Equals);
 	FindSessionsCompleteDelegateHandle = SessionInterface->AddOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegate);
 	if (!SessionInterface->FindSessions(*PlayerId, LastSessionSearch.ToSharedRef()) && FindSessionsCompleteDelegateHandle.IsValid())
 	{
@@ -174,7 +192,8 @@ void UMultiplayerSessionsSubsystem::JoinSession(const FOnlineSessionSearchResult
 {
 	if (IsBusy()) return;
 	FUniqueNetIdRepl PlayerId;
-	if (!RefreshSessionInterface() || !TryGetLocalPlayerId(PlayerId) || !SessionResult.IsValid())
+	if (!RefreshSessionInterface() || !TryGetLocalPlayerId(PlayerId) || !SessionResult.IsValid()
+		|| !SessionResult.Session.SessionSettings.bIsDedicated)
 	{
 		MultiplayerOnJoinSessionComplete.Broadcast(EOnJoinSessionCompleteResult::UnknownError);
 		return;

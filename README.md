@@ -74,39 +74,78 @@ git lfs ls-files | Select-Object -First 20
 
 ## 地图与运行目标
 
-- `Content/Maps/MainMap.umap`：编辑器和服务器的默认地图
-- `Content/Maps/Lobby.umap`：游戏默认入口；离线启动显示菜单，建房后作为监听大厅
-- `Content/Maps/FreeForAll.umap`、`Content/Maps/Teams.umap`：自由模式和团队模式比赛地图
-- `BrokenEdge.Target.cs`：游戏客户端目标
-- `BrokenEdgeEditor.Target.cs`：编辑器目标
-- `BrokenEdgeServer.Target.cs`：独立服务器目标
+- `Content/Maps/MainMap.umap`：编辑器启动地图。
+- `Content/Maps/Lobby.umap`：客户端和专用服务器的默认入口；客户端显示加入菜单，专服等待玩家。
+- `Content/Maps/FreeForAll.umap`、`Content/Maps/Teams.umap`：自由模式和团队模式比赛地图。
+- `BrokenEdge.Target.cs`：Windows 游戏程序，用于运行客户端。
+- `BrokenEdgeEditor.Target.cs`：编辑器目标。
+- `BrokenEdgeServer.Target.cs`：无本地玩家、无渲染的专用服务器目标。
 
-`DefaultGame.ini` 中保留了独立服务器会话配置，但当前没有读取这些配置并自动注册专服的启动入口。
+### 专用服务器会话
 
-### 多人会话运行与验收
+当前使用 `OnlineSubsystemNull`。专服在大厅 `BeginPlay` 后自动创建并广播专用会话，失败时每 5 秒重试。客户端的 Host 按钮隐藏，只搜索同项目、同模式、有空位的专服；加入后解析服务器地址并执行 `ClientTravel`。
 
-当前默认使用 `OnlineSubsystemNull`，菜单流程面向 LAN 监听服务器：
+专服从 `Config/DefaultGame.ini` 读取：
 
-1. 打开 `Lobby`，以独立游戏进程启动。离线入口会创建现有的 `WBP_Menu`。
-2. 主机点击 Host：创建并广播房间，再以普通跳转进入 `Lobby?listen`，建立监听端口。
-3. 另一个独立进程点击 Join：搜索同项目、同模式且未满的房间，加入会话后解析地址并执行 `ClientTravel`。
-4. 大厅达到建房人数后启动在线会话，并无缝跳转到 `FreeForAll` 或 `Teams`。
+```ini
+[MultiplayerSessions.DedicatedServer]
+NumPublicConnections=8
+MinPlayersToStart=2
+MatchType=FreeForAll
+bAutoStartSession=True
+```
 
-在 `BP_LobbyGameMode` 的 Class Defaults → Sessions 中配置 `Menu Num Public Connections` 和 `Menu Match Type`；默认 8 人、`FreeForAll`。也可由蓝图调用 `MenuSetup` 传参。双进程手动测试时将人数设为 2，两个进程选择相同模式。当前没有夺旗地图。
+`NumPublicConnections` 是容量；`MinPlayersToStart` 是开局所需的真实客户端数量，专服本身不算玩家。满足人数后启动在线会话，并无缝跳转到所选比赛地图。将 `bAutoStartSession` 设为 False 会停留在大厅。当前支持 `FreeForAll` 和 `Teams`。
 
-多网卡、VPN/TUN 环境中，UE 可能广播虚拟网卡的连接地址。跨电脑测试时，在主机启动参数中添加 `-MULTIHOME=<主机的局域网IPv4地址>`，并检查日志里的 `Menu ClientTravel` 地址。本机双进程测试不能证明跨机器广播和访问已经可用。
+启动参数 `-NumPublicConnections=`、`-MinPlayersToStart=`、`-MatchType=` 优先于配置。客户端菜单模式可以由 `BP_LobbyGameMode.MenuMatchType` 或启动参数 `-MatchType=` 指定；旧的 `Menu Num Public Connections` 不再决定服务器容量。
 
-菜单会在搜索失败、无匹配房间、加入失败后恢复按钮；重复初始化不会重复订阅回调。创建已有同名会话时先销毁再重建。`DestorySession` 和 `StartSession` 可从会话子系统的蓝图接口调用；保留原有 `Destory` 拼写以兼容调用方。
+### 打包与启动
 
-编译 Editor 目标后，可运行自动验收：
+保存并关闭 UE 编辑器后，依次运行仓库根目录的 `PackageServer.bat` 和 `PackageClient.bat`。两个包都包含 Lobby、FreeForAll、Teams，避免大厅跳图后缺少已烘焙地图。
+
+也可以在未被编辑器打开的完整工程副本中顺序打包，以保留当前编辑器。脚本只检查目标工程是否打开；环境变量 `BROKENEDGE_PACKAGE_ROOT` 可指定产物根目录，两个脚本分别输出到其 `Server` 和 `Client` 子目录。副本仅包含磁盘上已保存的内容。
+
+- 服务器：`Packaged/Server/WindowsServer/StartServer.bat [端口] [模式] [开局人数] [绑定IPv4]`
+- 客户端：`Packaged/Client/Windows/StartClient.bat [服务器地址] [模式]`
+
+直接双击 StartServer 默认启动 7777 端口、FreeForAll、2 人开局；双击 StartClient 进入菜单，点击“加入服务器”。分别启动两个客户端即可进行默认人数的测试。客户端传入服务器 IP:端口时走直接连接；要验证会话搜索，应使用菜单加入。
+
+示例（在各自包目录运行）：
+
+```bat
+StartServer.bat 7777 Teams 2
+StartClient.bat "" Teams
+```
+
+多网卡或 VPN/TUN 环境中，应在服务器脚本的第四个参数传入实际局域网 IPv4，或直接使用 `-MULTIHOME=<IPv4>`。检查客户端日志中的 `Menu ClientTravel` 地址。Null 的自动发现适用于局域网；公网运行需要可达的服务器地址和端口，当前未接入公网服务器目录或 Steam 匹配。
+
+### 自动验收
+
+编译 Editor 目标后，可用编辑器可执行程序启动一个专服和两个独立客户端：
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Scripts\Test-LanSessions.ps1 -EngineRoot "<UE_ROOT>"
 ```
 
-脚本启动独立的无渲染游戏进程，通过现有 UMG 按钮委托执行实际菜单逻辑，覆盖空搜索重试、模式不匹配、销毁重建、搜索加入，以及两个模式的双人跳图。测试临时使用 2 人，不修改蓝图默认值；日志位于 `Saved/SessionTests/<时间戳>/`。这项验收不覆盖画面、跨机器广播、防火墙、Steam 公网匹配或专服自动注册。
+服务器和客户端打包完成后，直接测试打包产物：
 
-2026-09-08：`BrokenEdgeEditor Win64 Development` 编译通过；上述 7 项独立进程验收全部通过，本次日志位于 `Saved/SessionTests/20260908-001600/`。
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Scripts\Test-LanSessions.ps1 -Packaged
+```
+
+可追加 `-BindAddress <本机IPv4>` 指定测试网卡。脚本使用无渲染模式，通过实际 UMG 按钮委托检查客户端禁止建房、空搜索重试、模式过滤、专服自动注册、两名客户端搜索加入，以及两个模式的无缝跳图。日志保存到 `Saved/SessionTests/Dedicated-<时间戳>/`。本机进程验收不等于跨机器网络或画面验证。
+
+### 已验证的打包结果（2026-09-08）
+
+本次使用 `Saved/PackagingWorkspace/20260908-093209` 中的已保存工程副本构建，产物归档到原工程的 `Packaged` 目录，保留原工程编辑器运行。服务器和 Windows 客户端的 Build/Cook/Stage/Pak/IoStore/Archive 均成功，UAT 退出码均为 0；两个包的 EXE、`.pak`、`.ucas`、`.utoc` 齐全，启动脚本 SHA-256 与 `Deployment` 中的版本一致。
+
+实际执行 `Test-LanSessions.ps1 -Packaged -BindAddress 192.168.1.111`，9 项独立进程测试全部通过：空搜索重试 1 项；FreeForAll、Teams 各包含模式过滤、两个客户端加入和服务器状态检查 4 项。两个客户端均经菜单 Find/Join 连接到专服，达到 2 人后分别无缝进入对应比赛地图；切图后仍为专服，在线会话和容量配置有效。
+
+- [服务器打包日志](Saved/PackagingLogs/DedicatedServer-20260908.log)
+- [客户端成功打包日志](Saved/PackagingLogs/WindowsClient-20260908-resume.log)（首次编译在链接前中断，续跑复用了编译结果）
+- [打包产物联机测试日志](Saved/SessionTests/Dedicated-20260908-122341/)
+
+日志为本机产物，不纳入 Git。烘焙仍报告两项已有警告：`BrokenEdgePlayerController.MatchState` 未注册复制，以及动画蓝图 `hand_r` 修改骨骼节点没有启用变换。这次验收覆盖会话连接与地图切换，不代表已验证完整战斗流程、画面或跨机器网络。
 
 ## 目录结构
 

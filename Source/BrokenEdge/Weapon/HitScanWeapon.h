@@ -6,6 +6,8 @@
 #include "Weapon.h"
 #include "HitScanWeapon.generated.h"
 
+class USoundCue;
+
 /**
  * 
  */

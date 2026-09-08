@@ -6,6 +6,7 @@ set "PROJECT_FILE=%PROJECT_ROOT%BrokenEdge.uproject"
 set "UE_ROOT=D:\UnrealEngine-5.5.4-release"
 set "RUN_UAT=%UE_ROOT%\Engine\Build\BatchFiles\RunUAT.bat"
 set "OUTPUT_DIR=%PROJECT_ROOT%Packaged\Server"
+if defined BROKENEDGE_PACKAGE_ROOT set "OUTPUT_DIR=%BROKENEDGE_PACKAGE_ROOT%\Server"
 
 if not exist "%RUN_UAT%" (
 	echo [ERROR] RunUAT.bat was not found: "%RUN_UAT%"
@@ -17,9 +18,9 @@ if not exist "%PROJECT_FILE%" (
 	exit /b 1
 )
 
-tasklist /FI "IMAGENAME eq UnrealEditor.exe" 2>NUL | find /I "UnrealEditor.exe" >NUL
-if not errorlevel 1 (
-	echo [ERROR] Unreal Editor is running. Close it before packaging.
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%PROJECT_ROOT%Scripts\Assert-EditorClosed.ps1" -ProjectFile "%PROJECT_FILE%"
+if errorlevel 1 (
+	echo [ERROR] The target project is open in Unreal Editor or its state could not be checked.
 	exit /b 1
 )
 
@@ -38,7 +39,7 @@ call "%RUN_UAT%" BuildCookRun ^
 	-noclient ^
 	-serverplatform=Win64 ^
 	-serverconfig=Development ^
-	-map=/Game/Maps/MainMap ^
+	-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams ^
 	-prereqs ^
 	-ubtargs="-NoHotReloadFromIDE" ^
 	-utf8output

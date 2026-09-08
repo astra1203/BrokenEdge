@@ -6,7 +6,7 @@
 #include "Engine/EngineBaseTypes.h"
 #include "Menu.generated.h"
 
-/** 主机/加入菜单，异步请求期间锁定按钮，失败后可重试。 */
+/** 专服加入菜单，保留旧蓝图绑定；异步请求期间锁定按钮，失败后可重试。 */
 UCLASS()
 class MULTIPLAYERSESSIONS_API UMenu : public UUserWidget
 {

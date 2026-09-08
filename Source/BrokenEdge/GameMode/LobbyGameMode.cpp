@@ -5,8 +5,11 @@
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "GameFramework/GameStateBase.h"
+#include "GameFramework/GameSession.h"
 #include "GameFramework/PlayerController.h"
 #include "Misc/PackageName.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Parse.h"
 #include "TimerManager.h"
 #include "UObject/ConstructorHelpers.h"
 
@@ -15,8 +18,11 @@ ALobbyGameMode::ALobbyGameMode()
 	// 大厅尚未满员时，不让 AGameMode 自动开始比赛/在线会话。
 	bDelayedStart = true;
 	bUseSeamlessTravel = true;
-	static ConstructorHelpers::FClassFinder<UMenu> MenuBlueprint(TEXT("/Game/Blueprints/UI/WBP_Menu"));
-	if (MenuBlueprint.Succeeded()) MenuClass = MenuBlueprint.Class;
+	if (!IsRunningDedicatedServer())
+	{
+		static ConstructorHelpers::FClassFinder<UMenu> MenuBlueprint(TEXT("/Game/Blueprints/UI/WBP_Menu"));
+		if (MenuBlueprint.Succeeded()) MenuClass = MenuBlueprint.Class;
+	}
 }
 
 void ALobbyGameMode::BeginPlay()
@@ -33,13 +39,19 @@ void ALobbyGameMode::BeginPlay()
 		{
 			if (UMenu* Menu = CreateWidget<UMenu>(Player, MenuClass))
 			{
+				FParse::Value(FCommandLine::Get(), TEXT("MatchType="), MenuMatchType);
 				Menu->MenuSetup(MenuNumPublicConnections, MenuMatchType, TEXT("/Game/Maps/Lobby"));
 			}
 		}
 		return;
 	}
-	// 在登录初始化完成后判断人数，并允许开始会话失败后重新尝试。
-	GetWorldTimerManager().SetTimer(ReadyCheckTimer, this, &ThisClass::TryStartGame, 1.f, true);
+	if (GetNetMode() == NM_DedicatedServer)
+	{
+		Sessions->InitializeDedicatedServer();
+		if (GameSession) GameSession->MaxPlayers = Sessions->DesiredNumPublicConnections;
+		NextSessionRetryTime = GetWorld()->GetTimeSeconds() + 5.0;
+		GetWorldTimerManager().SetTimer(ReadyCheckTimer, this, &ThisClass::TryStartGame, 1.f, true);
+	}
 }
 
 void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
@@ -53,8 +65,19 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 
 void ALobbyGameMode::TryStartGame()
 {
-	if (!Sessions || !Sessions->HasSession() || Sessions->IsBusy() || !GameState || bStartingSession || bTravelRequested) return;
-	if (GameState->PlayerArray.Num() < FMath::Max(1, Sessions->DesiredNumPublicConnections)) return;
+	if (GetNetMode() != NM_DedicatedServer || !Sessions || Sessions->IsBusy() || !GameState || bStartingSession || bTravelRequested) return;
+	if (!Sessions->HasSession())
+	{
+		if (GetWorld()->GetTimeSeconds() >= NextSessionRetryTime)
+		{
+			NextSessionRetryTime = GetWorld()->GetTimeSeconds() + 5.0;
+			Sessions->InitializeDedicatedServer();
+			if (GameSession) GameSession->MaxPlayers = Sessions->DesiredNumPublicConnections;
+		}
+		return;
+	}
+	// 专服本身不算玩家；开局人数与最大容量分开配置。
+	if (!Sessions->ShouldAutoStartSession() || GameState->PlayerArray.Num() < Sessions->GetMinPlayersToStart()) return;
 
 	if (Sessions->DesiredMatchType == TEXT("FreeForAll")) PendingMap = TEXT("/Game/Maps/FreeForAll");
 	else if (Sessions->DesiredMatchType == TEXT("Teams")) PendingMap = TEXT("/Game/Maps/Teams");
@@ -84,8 +107,10 @@ void ALobbyGameMode::OnStartSession(bool bWasSuccessful)
 		return;
 	}
 	// 等待异步开始期间有人离开时，继续等人；StartSession 的重复调用是幂等的。
-	if (!GameState || GameState->PlayerArray.Num() < Sessions->DesiredNumPublicConnections) return;
-	bTravelRequested = GetWorld()->ServerTravel(PendingMap + TEXT("?listen"));
+	if (!GameState || GameState->PlayerArray.Num() < Sessions->GetMinPlayersToStart()) return;
+	// 将容量传给下一张地图的 GameSession，直接 IP 连接也受人数限制。
+	bTravelRequested = GetWorld()->ServerTravel(FString::Printf(TEXT("%s?MaxPlayers=%d"),
+		*PendingMap, Sessions->DesiredNumPublicConnections));
 	UE_LOG(LogTemp, Log, TEXT("Lobby travel: Map=%s Players=%d Accepted=%d"),
 		*PendingMap, GameState->PlayerArray.Num(), bTravelRequested);
 	if (bTravelRequested) GetWorldTimerManager().ClearTimer(ReadyCheckTimer);
