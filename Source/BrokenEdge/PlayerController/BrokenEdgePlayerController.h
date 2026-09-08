@@ -14,6 +14,10 @@ class BROKENEDGE_API ABrokenEdgePlayerController : public APlayerController
 {
 	GENERATED_BODY()
 public:
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Lobby")
+	void ServerSetLobbyReady(bool bReady);
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void PreClientTravel(const FString& PendingURL, ETravelType TravelType, bool bIsSeamlessTravel) override;
 	/**
 	 * @brief 游戏开始时初始化
 	 */
@@ -139,6 +143,11 @@ protected:
 
 
 private:
+	void UpdateLobbyUI();
+	void RemoveLobbyUI();
+	UPROPERTY(Transient)
+	class ULobbyWidget* LobbyWidget = nullptr;
+	TWeakObjectPtr<UWorld> LobbyTravelWorld;
 	/** HUD引用 */
 	UPROPERTY()
 	class ABrokenEdgeHUD* BrokenEdgeHUD;

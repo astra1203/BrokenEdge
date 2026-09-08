@@ -11,7 +11,11 @@ class BROKENEDGE_API ALobbyGameMode : public AGameMode
 
 public:
 	ALobbyGameMode();
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 	virtual void PostLogin(APlayerController* NewPlayer) override;
+	virtual void Logout(AController* Exiting) override;
+	void SetPlayerReady(APlayerController* Player, bool bReady);
 
 protected:
 	virtual void BeginPlay() override;
@@ -27,6 +31,8 @@ protected:
 
 private:
 	void TryStartGame();
+	bool AreAllPlayersReady() const;
+	void CancelCountdown();
 	UFUNCTION()
 	void OnStartSession(bool bWasSuccessful);
 	UPROPERTY(Transient)

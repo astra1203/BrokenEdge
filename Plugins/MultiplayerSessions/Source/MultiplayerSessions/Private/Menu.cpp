@@ -10,6 +10,12 @@
 #include "GameFramework/PlayerController.h"
 #include "Misc/App.h"
 #include "OnlineSessionSettings.h"
+#include "SessionRoomRow.h"
+#include "SessionWidgetStyle.h"
+#include "Components/ScrollBox.h"
+#include "Components/ScrollBoxSlot.h"
+#include "Components/HorizontalBox.h"
+#include "Components/HorizontalBoxSlot.h"
 
 void UMenu::MenuSetup(int32 NumOfPublicConnections, FString TypeOfMatch, FString LobbyPath)
 {
@@ -53,14 +59,46 @@ void UMenu::MenuSetup(int32 NumOfPublicConnections, FString TypeOfMatch, FString
 	if (HostButton) HostButton->SetVisibility(ESlateVisibility::Collapsed);
 	if (JoinButton)
 	{
-		if (UTextBlock* Label = Cast<UTextBlock>(JoinButton->GetChildAt(0))) Label->SetText(FText::FromString(TEXT("加入服务器")));
+		if (UTextBlock* Label = Cast<UTextBlock>(JoinButton->GetChildAt(0))) Label->SetText(FText::FromString(TEXT("刷新房间")));
 	}
-	SetStatus(MultiplayerSessionsSubsystem ? TEXT("请选择加入服务器") : TEXT("在线会话接口不可用"), false);
+	SetStatus(MultiplayerSessionsSubsystem ? TEXT("点击刷新搜索房间，再选择要加入的房间") : TEXT("在线会话接口不可用"), false);
+	RefreshRooms();
 }
 
 bool UMenu::Initialize()
 {
 	if (!Super::Initialize()) return false;
+	// 替换旧蓝图的双按钮布局；现有 MenuSetup 调用无需重新绑定。
+	UVerticalBox* Content = SessionWidgetStyle::Frame(WidgetTree);
+	SessionWidgetStyle::Line(Content, SessionWidgetStyle::Text(WidgetTree, TEXT("BROKEN EDGE  /  多人游戏"), 15));
+	SessionWidgetStyle::Line(Content, SessionWidgetStyle::Text(WidgetTree, TEXT("房间列表"), 32));
+	SessionWidgetStyle::Line(Content, SessionWidgetStyle::Text(WidgetTree,
+		TEXT("选择房间加入 · 进入大厅后准备 · 全员准备自动开局"), 17));
+	JoinButton = SessionWidgetStyle::Button(WidgetTree, TEXT("RefreshRoomsButton"), TEXT("刷新房间"));
+	SessionWidgetStyle::Line(Content, JoinButton);
+	UHorizontalBox* Header = WidgetTree->ConstructWidget<UHorizontalBox>();
+	auto HeaderCell = [this, Header](const FString& Value, float Weight)
+	{
+		FSlateChildSize Size(ESlateSizeRule::Fill);
+		Size.Value = Weight;
+		UHorizontalBoxSlot* Slot = Header->AddChildToHorizontalBox(SessionWidgetStyle::Text(WidgetTree, Value, 16));
+		Slot->SetSize(Size);
+		Slot->SetPadding(FMargin(14.f, 0.f, 12.f, 0.f));
+	};
+	HeaderCell(TEXT("房间名称"), 3.f);
+	HeaderCell(TEXT("模式"), 1.6f);
+	HeaderCell(TEXT("人数"), 1.f);
+	HeaderCell(TEXT("延迟"), 1.f);
+	USizeBox* ActionHeader = WidgetTree->ConstructWidget<USizeBox>();
+	ActionHeader->SetWidthOverride(138.f);
+	ActionHeader->AddChild(SessionWidgetStyle::Text(WidgetTree, TEXT("操作"), 16));
+	Header->AddChildToHorizontalBox(ActionHeader);
+	SessionWidgetStyle::Line(Content, Header);
+	RoomList = WidgetTree->ConstructWidget<UScrollBox>(UScrollBox::StaticClass(), TEXT("RoomList"));
+	Content->AddChildToVerticalBox(RoomList)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+	StatusText = SessionWidgetStyle::Text(WidgetTree, TEXT(""), 17);
+	StatusText->SetAutoWrapText(true);
+	SessionWidgetStyle::Line(Content, StatusText, 0.f);
 	if (HostButton) HostButton->OnClicked.AddUniqueDynamic(this, &ThisClass::HostButtonClicked);
 	if (JoinButton) JoinButton->OnClicked.AddUniqueDynamic(this, &ThisClass::JoinButtonClicked);
 	return true;
@@ -77,9 +115,9 @@ void UMenu::SetStatus(const FString& Message, bool bBusy)
 {
 	if (HostButton) HostButton->SetIsEnabled(false);
 	if (JoinButton) JoinButton->SetIsEnabled(!bBusy && MultiplayerSessionsSubsystem != nullptr);
+	if (RoomList) RoomList->SetIsEnabled(!bBusy);
 	if (StatusText) StatusText->SetText(FText::FromString(Message));
 	UE_LOG(LogMultiplayerSessions, Log, TEXT("Menu: %s"), *Message);
-	if (GEngine) GEngine->AddOnScreenDebugMessage(static_cast<uint64>(GetUniqueID()), 8.f, bBusy ? FColor::Cyan : FColor::Yellow, Message);
 }
 
 void UMenu::HostButtonClicked()
@@ -95,6 +133,11 @@ void UMenu::OnCreateSession(bool bWasSuccessful)
 
 void UMenu::JoinButtonClicked()
 {
+	RefreshRooms();
+}
+
+void UMenu::RefreshRooms()
+{
 	if (Request != EMenuRequest::Idle || !MultiplayerSessionsSubsystem || MultiplayerSessionsSubsystem->IsBusy()) return;
 	if (MultiplayerSessionsSubsystem->HasSession())
 	{
@@ -103,6 +146,8 @@ void UMenu::JoinButtonClicked()
 		return;
 	}
 	Request = EMenuRequest::Find;
+	Rooms.Reset();
+	RebuildRoomList();
 	SetStatus(TEXT("正在搜索房间…"), true);
 	MultiplayerSessionsSubsystem->FindSessions(10000);
 }
@@ -110,27 +155,71 @@ void UMenu::JoinButtonClicked()
 void UMenu::OnFindSessions(const TArray<FOnlineSessionSearchResult>& SessionResults, bool bWasSuccessful)
 {
 	if (Request != EMenuRequest::Find) return;
+	Rooms.Reset();
 	if (bWasSuccessful && MultiplayerSessionsSubsystem)
 	{
 		for (const FOnlineSessionSearchResult& Result : SessionResults)
 		{
-			FString FoundMatchType;
 			FString ProjectName;
-			Result.Session.SessionSettings.Get(FName(TEXT("MatchType")), FoundMatchType);
 			Result.Session.SessionSettings.Get(FName(TEXT("ProjectName")), ProjectName);
-			// 跳过其他项目、模式不符、无效及已满房间。
-			if (Result.IsValid() && FoundMatchType == MatchType && ProjectName == FApp::GetProjectName()
-				&& Result.Session.SessionSettings.bIsDedicated && Result.Session.NumOpenPublicConnections > 0)
+			// 显示本项目所有模式，满员房间也显示，由行按钮表达是否可加入。
+			if (Result.IsValid() && ProjectName == FApp::GetProjectName()
+				&& Result.Session.SessionSettings.bIsDedicated)
 			{
-				Request = EMenuRequest::Join;
-				SetStatus(TEXT("找到匹配房间，正在加入…"), true);
-				MultiplayerSessionsSubsystem->JoinSession(Result);
-				return;
+				Rooms.Add(Result);
 			}
 		}
 	}
 	Request = EMenuRequest::Idle;
-	SetStatus(bWasSuccessful ? TEXT("没有可加入的同模式房间，请稍后重试") : TEXT("搜索失败，请重试"), false);
+	RebuildRoomList();
+	SetStatus(bWasSuccessful ? (Rooms.IsEmpty() ? TEXT("暂未发现房间，请确认服务器已启动后刷新")
+		: FString::Printf(TEXT("找到 %d 个房间，请点击房间右侧的加入按钮"), Rooms.Num()))
+		: TEXT("搜索失败，请点击刷新重试"), false);
+}
+
+void UMenu::RebuildRoomList()
+{
+	if (!RoomList) return;
+	RoomList->ClearChildren();
+	for (int32 Index = 0; Index < Rooms.Num(); ++Index)
+	{
+		const FOnlineSessionSearchResult& Result = Rooms[Index];
+		FString RoomName;
+		FString RoomMode;
+		Result.Session.SessionSettings.Get(FName(TEXT("RoomName")), RoomName);
+		Result.Session.SessionSettings.Get(MultiplayerSessionKeys::MatchType, RoomMode);
+		if (RoomName.IsEmpty()) RoomName = Result.Session.OwningUserName;
+		if (RoomName.IsEmpty()) RoomName = TEXT("游戏房间");
+		RoomName += TEXT(" #") + Result.GetSessionIdStr().Right(6);
+		const int32 Capacity = Result.Session.SessionSettings.NumPublicConnections;
+		const int32 Players = FMath::Clamp(Capacity - Result.Session.NumOpenPublicConnections, 0, Capacity);
+		USessionRoomRow* Row = CreateWidget<USessionRoomRow>(GetOwningPlayer());
+		if (!Row) continue;
+		Row->Setup(this, Index, RoomName, RoomMode, Players, Capacity, Result.PingInMs,
+			Result.Session.NumOpenPublicConnections > 0 && (RoomMode == TEXT("FreeForAll") || RoomMode == TEXT("Teams")));
+		RoomList->AddChild(Row);
+	}
+}
+
+void UMenu::JoinRoom(int32 RoomIndex)
+{
+	if (Request != EMenuRequest::Idle || !MultiplayerSessionsSubsystem || MultiplayerSessionsSubsystem->IsBusy()
+		|| !Rooms.IsValidIndex(RoomIndex)) return;
+	const FOnlineSessionSearchResult Selected = Rooms[RoomIndex];
+	if (Selected.Session.NumOpenPublicConnections <= 0)
+	{
+		SetStatus(TEXT("房间已满，请刷新后选择其他房间"), false);
+		return;
+	}
+	if (MultiplayerSessionsSubsystem->HasSession())
+	{
+		bSearchAfterCleanup = true;
+		CleanUpSession(TEXT("正在清理旧会话，请刷新后重新选择房间"));
+		return;
+	}
+	Request = EMenuRequest::Join;
+	SetStatus(TEXT("正在加入所选房间…"), true);
+	MultiplayerSessionsSubsystem->JoinSession(Selected);
 }
 
 void UMenu::OnJoinSession(EOnJoinSessionCompleteResult::Type Result)

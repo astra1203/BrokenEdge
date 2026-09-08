@@ -13,6 +13,14 @@ void ABrokenEdgePlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ABrokenEdgePlayerState, Team);
 	DOREPLIFETIME(ABrokenEdgePlayerState, Defeats);
+	DOREPLIFETIME(ABrokenEdgePlayerState, bLobbyReady);
+}
+
+void ABrokenEdgePlayerState::SetLobbyReady(bool bReady)
+{
+	if (!HasAuthority()) return;
+	bLobbyReady = bReady;
+	ForceNetUpdate();
 }
 
 void ABrokenEdgePlayerState::AddToScore(float ScoreAmount)

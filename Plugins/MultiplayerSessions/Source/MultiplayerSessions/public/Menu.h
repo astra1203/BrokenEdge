@@ -4,9 +4,10 @@
 #include "Blueprint/UserWidget.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Engine/EngineBaseTypes.h"
+#include "OnlineSessionSettings.h"
 #include "Menu.generated.h"
 
-/** 专服加入菜单，保留旧蓝图绑定；异步请求期间锁定按钮，失败后可重试。 */
+/** 原生房间列表，保留旧蓝图入口；搜索与点击加入是两个独立操作。 */
 UCLASS()
 class MULTIPLAYERSESSIONS_API UMenu : public UUserWidget
 {
@@ -16,6 +17,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MenuSetup(int32 NumOfPublicConnections = 8, FString TypeOfMatch = FString(TEXT("FreeForAll")),
 		FString LobbyPath = FString(TEXT("/Game/Maps/Lobby")));
+
+	UFUNCTION(BlueprintCallable, Category = "Sessions")
+	void RefreshRooms();
+	UFUNCTION(BlueprintCallable, Category = "Sessions")
+	void JoinRoom(int32 RoomIndex);
+	const TArray<FOnlineSessionSearchResult>& GetRooms() const { return Rooms; }
+	bool IsRequestPending() const { return Request != EMenuRequest::Idle; }
 
 protected:
 	virtual bool Initialize() override;
@@ -44,6 +52,7 @@ private:
 	void MenuTearDown();
 	void SetStatus(const FString& Message, bool bBusy);
 	void CleanUpSession(const FString& Message);
+	void RebuildRoomList();
 	void OnNetworkFailure(UWorld* World, class UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& Error);
 	void OnTravelFailure(UWorld* World, ETravelFailure::Type FailureType, const FString& Error);
 
@@ -55,6 +64,9 @@ private:
 	FString MatchType = TEXT("FreeForAll");
 
 	FString PathToLobby;
+	TArray<FOnlineSessionSearchResult> Rooms;
+	UPROPERTY(Transient)
+	class UScrollBox* RoomList = nullptr;
 	enum class EMenuRequest : uint8 { Idle, Host, Find, Join, Cleanup, Travel };
 	EMenuRequest Request = EMenuRequest::Idle;
 	bool bSearchAfterCleanup = false;

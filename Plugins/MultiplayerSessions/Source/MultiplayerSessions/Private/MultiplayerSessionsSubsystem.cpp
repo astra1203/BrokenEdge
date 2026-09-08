@@ -140,6 +140,9 @@ void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FS
 	// 保留构造函数的 GetBuildUniqueId()；Null 搜索会丢弃版本号不同的房间。
 	LastSessionSettings->Set(MultiplayerSessionKeys::MatchType, DesiredMatchType, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	LastSessionSettings->Set(MultiplayerSessionKeys::ProjectName, FString(FApp::GetProjectName()), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	FString RoomName = FString::Printf(TEXT("BrokenEdge %s"), *DesiredMatchType);
+	FParse::Value(FCommandLine::Get(), TEXT("RoomName="), RoomName);
+	LastSessionSettings->Set(FName(TEXT("RoomName")), RoomName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	CreateSessionCompleteDelegateHandle = SessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
 	const bool bSubmitted = SessionInterface->CreateSession(0, NAME_GameSession, *LastSessionSettings);
 	// Null 可以同步回调后再返回 false；只在句柄仍有效时补发失败。

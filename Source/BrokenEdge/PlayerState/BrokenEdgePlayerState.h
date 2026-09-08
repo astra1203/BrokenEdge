@@ -15,6 +15,9 @@ class BROKENEDGE_API ABrokenEdgePlayerState : public APlayerState
 {
 	GENERATED_BODY()
 public:
+	bool IsLobbyReady() const { return bLobbyReady; }
+	/** 仅由服务器大厅调用，不从上一场比赛继承准备状态。 */
+	void SetLobbyReady(bool bReady);
 	/**
  * 获取需要复制的属性列表
  * @param OutLifetimeProps 输出的属性列表
@@ -44,6 +47,8 @@ public:
 	}
 
 private:
+	UPROPERTY(Replicated)
+	bool bLobbyReady = false;
 	/** 关联的玩家角色 */
 	UPROPERTY()
 	class ABrokenEdgeCharacter* Character;

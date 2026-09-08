@@ -1,6 +1,7 @@
 ﻿param(
     [string]$EngineRoot = 'D:\UnrealEngine-5.5.4-release',
     [switch]$Packaged,
+    [switch]$Render,
     [ValidateSet('FreeForAll', 'Teams')]
     [string[]]$MatchTypes = @('FreeForAll', 'Teams'),
     [string]$BindAddress = ''
@@ -18,12 +19,12 @@ if ($BindAddress) {
     if ($parsedAddress.AddressFamily -ne [System.Net.Sockets.AddressFamily]::InterNetwork) { throw 'BindAddress must be IPv4.' }
 }
 
-function Start-SessionTest([string]$Role, [string]$MatchType, [string]$Name) {
+function Start-SessionTest([string]$Role, [string]$MatchType, [string]$Name, [int]$Port = 7777) {
     $log = Join-Path $resultRoot ($Name + '.log')
     $arguments = @()
     $executable = $editor
     if ($Packaged) {
-        $relative = if ($Role -eq 'Server') {
+        $relative = if ($Role -in @('Server', 'Advertise')) {
             'Packaged/Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe'
         } else {
             'Packaged/Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe'
@@ -31,18 +32,27 @@ function Start-SessionTest([string]$Role, [string]$MatchType, [string]$Name) {
         $executable = Join-Path $projectRoot $relative
     } else {
         $arguments += ('"' + $project + '"')
-        $arguments += if ($Role -eq 'Server') { '-server' } else { '-game' }
+        $arguments += if ($Role -in @('Server', 'Advertise')) { '-server' } else { '-game' }
     }
     if (!(Test-Path -LiteralPath $executable)) { throw "Executable not found: $executable" }
     $arguments += @(
-        '/Game/Maps/Lobby', '-nullrhi',
+        '/Game/Maps/Lobby',
         '-nosound', '-unattended', '-nosplash', '-NoLoadingScreen',
         '-LogCmds="LogOnlineSession Verbose,LogOnline Verbose"',
         ('-SessionTestRole=' + $Role), ('-SessionTestMatchType=' + $MatchType),
+        ('-port=' + $Port), '-SessionTestExpectedRooms=2',
         ('-MatchType=' + $MatchType), '-NumPublicConnections=2', '-MinPlayersToStart=2',
-        '-ExecCmds="Automation RunTests MultiplayerSessions.LAN.MenuFlow"',
-        '-TestExit="Automation Test Queue Empty"', ('-abslog="' + $log + '"')
+        ('-abslog="' + $log + '"')
     )
+    if ($Render -and $Role -notin @('Server', 'Advertise', 'Empty')) {
+        $arguments += @('-RenderOffscreen', '-windowed', '-ResX=1280', '-ResY=800',
+            ('-SessionTestScreenshotDir="' + $resultRoot + '"'))
+    } else {
+        $arguments += '-nullrhi'
+    }
+    if ($Role -ne 'Advertise') {
+        $arguments += @('-ExecCmds="Automation RunTests MultiplayerSessions.LAN.MenuFlow"', '-TestExit="Automation Test Queue Empty"')
+    }
     if ($BindAddress) { $arguments += ('-MULTIHOME=' + $BindAddress) }
     $process = Start-Process -FilePath $executable -ArgumentList $arguments -WindowStyle Hidden -PassThru
     $ownedProcesses.Add($process)
@@ -59,7 +69,7 @@ function Wait-SessionTest($Run) {
     $text = Get-Content -LiteralPath $Run.Log -Raw -Encoding UTF8
     if ($text -notmatch 'Test Completed\. Result=\{(成功|Success)\}' -or
         $text -match 'Test Completed\. Result=\{(失败|Fail|Failed)\}|Fatal error:') {
-        throw "Test failed: $($Run.Log)"
+        throw "Test failed (exit $($Run.Process.ExitCode)): $($Run.Log)"
     }
     Write-Host "PASS $($Run.Name)"
 }
@@ -83,21 +93,31 @@ try {
         }
         if (!$listening) { throw "Dedicated server did not register and listen: $($hostRun.Log)" }
 
-        # 房间可见但模式不匹配时，不应错误加入。
+        # 同时启动另一模式的房间，验证列表不再按菜单模式过滤或自动加入。
         $otherType = if ($matchType -eq 'FreeForAll') { 'Teams' } else { 'FreeForAll' }
-        $mismatch = Start-SessionTest 'Empty' $otherType ("Mismatch-" + $matchType)
-        Wait-SessionTest $mismatch
-        if (!(Select-String -LiteralPath $mismatch.Log -Pattern 'Find complete: Success=1 Results=[1-9]' -Quiet)) {
-            throw "Mismatch test did not discover the server: $($mismatch.Log)"
+        $otherRun = Start-SessionTest 'Advertise' $otherType ("Other-" + $matchType) 7778
+        $deadline = (Get-Date).AddSeconds(90)
+        $otherListening = $false
+        while ((Get-Date) -lt $deadline -and !$otherRun.Process.HasExited) {
+            if (Test-Path -LiteralPath $otherRun.Log) {
+                $text = Get-Content -LiteralPath $otherRun.Log -Raw -Encoding UTF8
+                $otherListening = $text -match 'listening on port' -and $text -match 'Create complete: Success=1'
+            }
+            if ($otherListening) { break }
+            Start-Sleep -Seconds 1
+            $otherRun.Process.Refresh()
         }
+        if (!$otherListening) { throw "Second room did not register: $($otherRun.Log)" }
 
         $clientRun = Start-SessionTest 'Join' $matchType ("Client1-" + $matchType)
-        $clientTwo = Start-SessionTest 'Join' $matchType ("Client2-" + $matchType)
+        $clientTwo = Start-SessionTest 'Cancel' $matchType ("Client2-" + $matchType)
         Wait-SessionTest $clientRun
         Wait-SessionTest $clientTwo
         Wait-SessionTest $hostRun
+        $otherRun.Process.Refresh()
+        if (!$otherRun.Process.HasExited) { Stop-Process -Id $otherRun.Process.Id }
     }
-    Write-Host "All dedicated server tests passed. Logs: $resultRoot"
+    Write-Host "All room browser and readiness tests passed. Logs: $resultRoot"
 }
 finally {
     # 仅清理此脚本创建的测试进程。

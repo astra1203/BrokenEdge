@@ -12,6 +12,9 @@
 #include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+#include "BrokenEdge/GameMode/LobbyGameMode.h"
+#include "BrokenEdge/GameState/LobbyGameState.h"
+#include "BrokenEdge/UI/LobbyWidget.h"
 
 
 void ABrokenEdgePlayerController::BeginPlay()
@@ -94,6 +97,7 @@ void ABrokenEdgePlayerController::OnPossess(APawn* InPawn)
 void ABrokenEdgePlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	UpdateLobbyUI();
 	PollInit();
 	CheckTimeSync(DeltaTime);
 	//@TODO
@@ -201,6 +205,58 @@ void ABrokenEdgePlayerController::ClientDefeatedAnnouncement_Implementation(APla
 	BrokenEdgeHUD->AddDefeatedAnnouncement(Attacker->GetPlayerName(),Victim->GetPlayerName());
 
 	
+}
+
+void ABrokenEdgePlayerController::ServerSetLobbyReady_Implementation(bool bReady)
+{
+	if (ALobbyGameMode* Lobby = GetWorld()->GetAuthGameMode<ALobbyGameMode>())
+	{
+		Lobby->SetPlayerReady(this, bReady);
+	}
+}
+
+void ABrokenEdgePlayerController::UpdateLobbyUI()
+{
+	if (!IsLocalController()) return;
+	if (GetNetMode() != NM_Standalone && GetWorld()->GetGameState<ALobbyGameState>()
+		&& LobbyTravelWorld.Get() != GetWorld())
+	{
+		if (!LobbyWidget)
+		{
+			LobbyWidget = CreateWidget<ULobbyWidget>(this);
+			if (!LobbyWidget) return;
+			LobbyWidget->AddToViewport(100);
+			FInputModeUIOnly Input;
+			Input.SetWidgetToFocus(LobbyWidget->TakeWidget());
+			Input.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+			SetInputMode(Input);
+			SetShowMouseCursor(true);
+		}
+		LobbyWidget->Refresh();
+	}
+	else RemoveLobbyUI();
+}
+
+void ABrokenEdgePlayerController::RemoveLobbyUI()
+{
+	if (!LobbyWidget) return;
+	LobbyWidget->RemoveFromParent();
+	LobbyWidget = nullptr;
+	SetInputMode(FInputModeGameOnly());
+	SetShowMouseCursor(false);
+}
+
+void ABrokenEdgePlayerController::PreClientTravel(const FString& PendingURL, ETravelType TravelType, bool bIsSeamlessTravel)
+{
+	LobbyTravelWorld = GetWorld();
+	RemoveLobbyUI();
+	Super::PreClientTravel(PendingURL, TravelType, bIsSeamlessTravel);
+}
+
+void ABrokenEdgePlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	RemoveLobbyUI();
+	Super::EndPlay(EndPlayReason);
 }
 
 void ABrokenEdgePlayerController::ClientJoinMidgame_Implementation(FName StateOfMatch, float Warmup, float Match,
