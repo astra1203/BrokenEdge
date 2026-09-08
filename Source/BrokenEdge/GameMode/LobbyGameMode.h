@@ -27,7 +27,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Sessions", meta = (ClampMin = "1", ClampMax = "64"))
 	int32 MenuNumPublicConnections = 8;
 	UPROPERTY(EditDefaultsOnly, Category = "Sessions")
-	FString MenuMatchType = TEXT("FreeForAll");
+	FString MenuMatchType = TEXT("Teams");
 
 private:
 	void TryStartGame();

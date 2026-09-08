@@ -51,7 +51,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Multiplayer Sessions")
 	int32 DesiredNumPublicConnections = 8;
 	UPROPERTY(BlueprintReadOnly, Category = "Multiplayer Sessions")
-	FString DesiredMatchType = TEXT("FreeForAll");
+	FString DesiredMatchType = TEXT("Teams");
 
 private:
 	bool RefreshSessionInterface();

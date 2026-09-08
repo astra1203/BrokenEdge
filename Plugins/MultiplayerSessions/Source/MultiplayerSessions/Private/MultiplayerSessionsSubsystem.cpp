@@ -153,7 +153,7 @@ void UMultiplayerSessionsSubsystem::InitializeDedicatedServer()
 {
 	if (!IsDedicatedServerInstance() || IsBusy() || HasSession()) return;
 	int32 Capacity = 8;
-	FString ServerMatchType = TEXT("FreeForAll");
+	FString ServerMatchType = TEXT("Teams");
 	GConfig->GetInt(MultiplayerSessionKeys::DedicatedServerConfig, TEXT("NumPublicConnections"), Capacity, GGameIni);
 	GConfig->GetInt(MultiplayerSessionKeys::DedicatedServerConfig, TEXT("MinPlayersToStart"), MinPlayersToStart, GGameIni);
 	GConfig->GetString(MultiplayerSessionKeys::DedicatedServerConfig, TEXT("MatchType"), ServerMatchType, GGameIni);

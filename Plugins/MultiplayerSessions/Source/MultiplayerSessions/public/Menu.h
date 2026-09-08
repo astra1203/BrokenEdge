@@ -15,7 +15,7 @@ class MULTIPLAYERSESSIONS_API UMenu : public UUserWidget
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void MenuSetup(int32 NumOfPublicConnections = 8, FString TypeOfMatch = FString(TEXT("FreeForAll")),
+	void MenuSetup(int32 NumOfPublicConnections = 8, FString TypeOfMatch = FString(TEXT("Teams")),
 		FString LobbyPath = FString(TEXT("/Game/Maps/Lobby")));
 
 	UFUNCTION(BlueprintCallable, Category = "Sessions")
@@ -61,7 +61,7 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int32 NumPublicConnections = 8;
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	FString MatchType = TEXT("FreeForAll");
+	FString MatchType = TEXT("Teams");
 
 	FString PathToLobby;
 	TArray<FOnlineSessionSearchResult> Rooms;
