@@ -58,7 +58,8 @@ bool UMultiplayerSessionsSubsystem::IsBusy() const
 		|| FindSessionsCompleteDelegateHandle.IsValid()
 		|| JoinSessionCompleteDelegateHandle.IsValid()
 		|| DestorySessionCompleteDelegateHandle.IsValid()
-		|| StartSessionCompleteDelegateHandle.IsValid();
+		|| StartSessionCompleteDelegateHandle.IsValid()
+		|| UpdateSessionCompleteDelegateHandle.IsValid();
 }
 
 bool UMultiplayerSessionsSubsystem::HasSession() const
@@ -96,12 +97,56 @@ void UMultiplayerSessionsSubsystem::ClearOnlineDelegates()
 		SessionInterface->ClearOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegateHandle);
 		SessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(DestorySessionCompleteDelegateHandle);
 		SessionInterface->ClearOnStartSessionCompleteDelegate_Handle(StartSessionCompleteDelegateHandle);
+		SessionInterface->ClearOnUpdateSessionCompleteDelegate_Handle(UpdateSessionCompleteDelegateHandle);
 	}
 	CreateSessionCompleteDelegateHandle.Reset();
 	FindSessionsCompleteDelegateHandle.Reset();
 	JoinSessionCompleteDelegateHandle.Reset();
 	DestorySessionCompleteDelegateHandle.Reset();
 	StartSessionCompleteDelegateHandle.Reset();
+	UpdateSessionCompleteDelegateHandle.Reset();
+	PendingMatchType.Reset();
+}
+
+void UMultiplayerSessionsSubsystem::UpdateMatchType(const FString& MatchType)
+{
+	if (IsBusy()) return;
+	if (!IsDedicatedServerInstance() || !RefreshSessionInterface() || !HasSession()
+		|| (MatchType != TEXT("FreeForAll") && MatchType != TEXT("Teams")))
+	{
+		MultiplayerOnUpdateMatchTypeComplete.Broadcast(false);
+		return;
+	}
+	FOnlineSessionSettings Settings = SessionInterface->GetNamedSession(NAME_GameSession)->SessionSettings;
+	Settings.Set(MultiplayerSessionKeys::MatchType, MatchType, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	// 自动生成的房名跟随模式；命令行指定的房名保持其自定义含义。
+	if (!FParse::Param(FCommandLine::Get(), TEXT("RoomName")))
+	{
+		FString CustomRoomName;
+		if (!FParse::Value(FCommandLine::Get(), TEXT("RoomName="), CustomRoomName))
+			Settings.Set(FName(TEXT("RoomName")), FString::Printf(TEXT("BrokenEdge %s"), *MatchType), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	}
+	PendingMatchType = MatchType;
+	UpdateSessionCompleteDelegateHandle = SessionInterface->AddOnUpdateSessionCompleteDelegate_Handle(
+		FOnUpdateSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnUpdateMatchTypeComplete));
+	if (!SessionInterface->UpdateSession(NAME_GameSession, Settings, true) && UpdateSessionCompleteDelegateHandle.IsValid())
+		OnUpdateMatchTypeComplete(NAME_GameSession, false);
+}
+
+void UMultiplayerSessionsSubsystem::OnUpdateMatchTypeComplete(FName SessionName, bool bWasSuccessful)
+{
+	if (SessionName != NAME_GameSession) return;
+	if (SessionInterface) SessionInterface->ClearOnUpdateSessionCompleteDelegate_Handle(UpdateSessionCompleteDelegateHandle);
+	UpdateSessionCompleteDelegateHandle.Reset();
+	if (bWasSuccessful)
+	{
+		DesiredMatchType = PendingMatchType;
+		if (const FNamedOnlineSession* Session = SessionInterface->GetNamedSession(NAME_GameSession))
+			LastSessionSettings = MakeShared<FOnlineSessionSettings>(Session->SessionSettings);
+	}
+	PendingMatchType.Reset();
+	UE_LOG(LogMultiplayerSessions, Log, TEXT("Update mode complete: Success=%d MatchType=%s"), bWasSuccessful, *DesiredMatchType);
+	MultiplayerOnUpdateMatchTypeComplete.Broadcast(bWasSuccessful);
 }
 
 void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FString MatchType)

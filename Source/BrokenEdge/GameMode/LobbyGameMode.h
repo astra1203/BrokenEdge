@@ -16,6 +16,7 @@ public:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void Logout(AController* Exiting) override;
 	void SetPlayerReady(APlayerController* Player, bool bReady);
+	void SetMatchType(APlayerController* Player, const FString& MatchType);
 
 protected:
 	virtual void BeginPlay() override;
@@ -33,6 +34,7 @@ private:
 	void TryStartGame();
 	bool AreAllPlayersReady() const;
 	void CancelCountdown();
+	void OnMatchTypeUpdated(bool bWasSuccessful);
 	UFUNCTION()
 	void OnStartSession(bool bWasSuccessful);
 	UPROPERTY(Transient)

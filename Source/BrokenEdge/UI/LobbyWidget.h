@@ -15,6 +15,14 @@ protected:
 private:
     UFUNCTION()
     void ReadyClicked();
+    UFUNCTION()
+    void FreeForAllClicked();
+    UFUNCTION()
+    void TeamsClicked();
+    UPROPERTY(Transient)
+    TObjectPtr<class UButton> FreeForAllButton;
+    UPROPERTY(Transient)
+    TObjectPtr<UButton> TeamsButton;
     UPROPERTY(Transient)
     TObjectPtr<class UTextBlock> RoomInfo;
     UPROPERTY(Transient)

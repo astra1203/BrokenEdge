@@ -16,6 +16,8 @@ class BROKENEDGE_API ABrokenEdgePlayerController : public APlayerController
 public:
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Lobby")
 	void ServerSetLobbyReady(bool bReady);
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Lobby")
+	void ServerSetLobbyMatchType(const FString& MatchType);
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void PreClientTravel(const FString& PendingURL, ETravelType TravelType, bool bIsSeamlessTravel) override;
 	/**

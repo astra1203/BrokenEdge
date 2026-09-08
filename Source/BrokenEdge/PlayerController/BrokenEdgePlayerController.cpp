@@ -215,6 +215,12 @@ void ABrokenEdgePlayerController::ServerSetLobbyReady_Implementation(bool bReady
 	}
 }
 
+void ABrokenEdgePlayerController::ServerSetLobbyMatchType_Implementation(const FString& MatchType)
+{
+	if (ALobbyGameMode* Lobby = GetWorld()->GetAuthGameMode<ALobbyGameMode>())
+		Lobby->SetMatchType(this, MatchType);
+}
+
 void ABrokenEdgePlayerController::UpdateLobbyUI()
 {
 	if (!IsLocalController()) return;

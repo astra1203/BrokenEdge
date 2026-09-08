@@ -55,6 +55,7 @@ void ALobbyGameMode::BeginPlay()
 	Sessions = GetGameInstance() ? GetGameInstance()->GetSubsystem<UMultiplayerSessionsSubsystem>() : nullptr;
 	if (!Sessions) return;
 	Sessions->MultiplayerOnStartSessionComplete.AddUniqueDynamic(this, &ThisClass::OnStartSession);
+	Sessions->MultiplayerOnUpdateMatchTypeComplete.AddUObject(this, &ThisClass::OnMatchTypeUpdated);
 
 	if (GetNetMode() == NM_Standalone && !Sessions->HasSession())
 	{
@@ -101,12 +102,47 @@ void ALobbyGameMode::Logout(AController* Exiting)
 void ALobbyGameMode::SetPlayerReady(APlayerController* Player, bool bReady)
 {
 	if (bTravelRequested || !Player || !GameState || GetNetMode() == NM_Standalone) return;
+	if (const ALobbyGameState* GS = GetGameState<ALobbyGameState>(); GS && GS->bModeUpdating) return;
 	ABrokenEdgePlayerState* PS = Player->GetPlayerState<ABrokenEdgePlayerState>();
 	if (!PS || PS->GetOwner() != Player || !GameState->PlayerArray.Contains(PS)
 		|| PS->IsInactive() || PS->IsOnlyASpectator()) return;
 	PS->SetLobbyReady(bReady);
 	UE_LOG(LogTemp, Log, TEXT("Lobby ready: Player=%s Ready=%d"), *PS->GetPlayerName(), bReady);
 	if (!bReady) CancelCountdown();
+}
+
+void ALobbyGameMode::SetMatchType(APlayerController* Player, const FString& MatchType)
+{
+	ALobbyGameState* GS = GetGameState<ALobbyGameState>();
+	if (GetNetMode() != NM_DedicatedServer || !Player || !GS || !Sessions
+		|| bTravelRequested || bStartingSession || GS->bModeUpdating || Sessions->IsBusy()
+		|| !Sessions->HasSession() || MatchType == Sessions->DesiredMatchType
+		|| (MatchType != TEXT("FreeForAll") && MatchType != TEXT("Teams"))) return;
+	const ABrokenEdgePlayerState* PS = Player->GetPlayerState<ABrokenEdgePlayerState>();
+	if (!PS || PS->GetOwner() != Player || !GS->PlayerArray.Contains(PS)
+		|| PS->IsInactive() || PS->IsOnlyASpectator() || PS->IsLobbyReady()) return;
+	CancelCountdown();
+	GS->bModeUpdating = true;
+	GS->LobbyStatus = TEXT("正在切换游戏模式…");
+	GS->ForceNetUpdate();
+	Sessions->UpdateMatchType(MatchType);
+}
+
+void ALobbyGameMode::OnMatchTypeUpdated(bool bWasSuccessful)
+{
+	ALobbyGameState* GS = GetGameState<ALobbyGameState>();
+	if (!GS || !GS->bModeUpdating) return;
+	GS->bModeUpdating = false;
+	if (bWasSuccessful)
+	{
+		GS->RoomMatchType = Sessions->DesiredMatchType;
+		for (APlayerState* State : GS->PlayerArray)
+			if (ABrokenEdgePlayerState* PS = Cast<ABrokenEdgePlayerState>(State)) PS->SetLobbyReady(false);
+		PendingMap.Reset();
+		GS->LobbyStatus = TEXT("模式已切换，请所有玩家重新准备");
+	}
+	else GS->LobbyStatus = TEXT("模式切换失败，请重试");
+	GS->ForceNetUpdate();
 }
 
 bool ALobbyGameMode::AreAllPlayersReady() const
@@ -224,6 +260,7 @@ void ALobbyGameMode::OnStartSession(bool bWasSuccessful)
 void ALobbyGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	GetWorldTimerManager().ClearTimer(ReadyCheckTimer);
+	if (Sessions) Sessions->MultiplayerOnUpdateMatchTypeComplete.RemoveAll(this);
 	if (Sessions) Sessions->MultiplayerOnStartSessionComplete.RemoveDynamic(this, &ThisClass::OnStartSession);
 	Super::EndPlay(EndPlayReason);
 }

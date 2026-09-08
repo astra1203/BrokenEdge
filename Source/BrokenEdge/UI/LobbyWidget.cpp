@@ -18,6 +18,20 @@ bool ULobbyWidget::Initialize()
     SessionWidgetStyle::Line(Content, SessionWidgetStyle::Text(WidgetTree, TEXT("准备大厅"), 32));
     RoomInfo = SessionWidgetStyle::Text(WidgetTree, TEXT("正在同步房间信息…"));
     SessionWidgetStyle::Line(Content, RoomInfo);
+    UHorizontalBox* Modes = WidgetTree->ConstructWidget<UHorizontalBox>();
+    FreeForAllButton = SessionWidgetStyle::Button(WidgetTree, TEXT("FreeForAllButton"), TEXT("FreeForAll · 自由混战"));
+    TeamsButton = SessionWidgetStyle::Button(WidgetTree, TEXT("TeamsButton"), TEXT("Teams · 团队对抗"));
+    FreeForAllButton->OnClicked.AddUniqueDynamic(this, &ThisClass::FreeForAllClicked);
+    TeamsButton->OnClicked.AddUniqueDynamic(this, &ThisClass::TeamsClicked);
+    UHorizontalBoxSlot* FreeForAllSlot = Modes->AddChildToHorizontalBox(FreeForAllButton);
+    FreeForAllSlot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+    FreeForAllSlot->SetPadding(FMargin(0.f, 0.f, 12.f, 0.f));
+    Modes->AddChildToHorizontalBox(TeamsButton)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+    FreeForAllButton->SetIsEnabled(false);
+    TeamsButton->SetIsEnabled(false);
+    SessionWidgetStyle::Line(Content, Modes);
+    SessionWidgetStyle::Line(Content, SessionWidgetStyle::Text(WidgetTree,
+        TEXT("未准备的玩家可切换模式 · 切换后所有玩家需要重新准备"), 15));
     UHorizontalBox* Header = WidgetTree->ConstructWidget<UHorizontalBox>();
     Header->AddChildToHorizontalBox(SessionWidgetStyle::Text(WidgetTree, TEXT("玩家"), 16))->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
     USizeBox* StateHeader = WidgetTree->ConstructWidget<USizeBox>();
@@ -43,6 +57,18 @@ void ULobbyWidget::ReadyClicked()
     ABrokenEdgePlayerController* PC = GetOwningPlayer<ABrokenEdgePlayerController>();
     const ABrokenEdgePlayerState* PS = PC ? PC->GetPlayerState<ABrokenEdgePlayerState>() : nullptr;
     if (PC && PS) PC->ServerSetLobbyReady(!PS->IsLobbyReady());
+}
+
+void ULobbyWidget::FreeForAllClicked()
+{
+    if (ABrokenEdgePlayerController* PC = GetOwningPlayer<ABrokenEdgePlayerController>())
+        PC->ServerSetLobbyMatchType(TEXT("FreeForAll"));
+}
+
+void ULobbyWidget::TeamsClicked()
+{
+    if (ABrokenEdgePlayerController* PC = GetOwningPlayer<ABrokenEdgePlayerController>())
+        PC->ServerSetLobbyMatchType(TEXT("Teams"));
 }
 
 void ULobbyWidget::Refresh()
@@ -100,6 +126,16 @@ void ULobbyWidget::Refresh()
             FMath::Clamp(FMath::CeilToInt(GS->CountdownEndTime - GS->GetServerWorldTimeSeconds()), 0, 3));
     else if (StatusMessage.IsEmpty()) StatusMessage = FString::Printf(TEXT("至少 %d 人，所有玩家准备后自动开始"), GS->MinimumPlayers);
     Status->SetText(FText::FromString(StatusMessage));
-    ReadyButton->SetIsEnabled(LocalPS && !GS->bTravelling);
+    const bool bCanChooseMode = LocalPS && !LocalPS->IsLobbyReady() && !LocalPS->IsInactive()
+        && !LocalPS->IsOnlyASpectator() && !GS->bTravelling && !GS->bModeUpdating && GS->CountdownEndTime <= 0.0;
+    const bool bFreeForAll = GS->RoomMatchType == TEXT("FreeForAll");
+    const bool bTeams = GS->RoomMatchType == TEXT("Teams");
+    FreeForAllButton->SetIsEnabled(bCanChooseMode && !bFreeForAll);
+    TeamsButton->SetIsEnabled(bCanChooseMode && !bTeams);
+    const FLinearColor Selected(0.12f, 0.60f, 0.36f);
+    const FLinearColor Unselected(0.08f, 0.40f, 0.64f);
+    FreeForAllButton->SetBackgroundColor(bFreeForAll ? Selected : Unselected);
+    TeamsButton->SetBackgroundColor(bTeams ? Selected : Unselected);
+    ReadyButton->SetIsEnabled(LocalPS && !GS->bTravelling && !GS->bModeUpdating);
     ReadyLabel->SetText(FText::FromString(LocalPS && LocalPS->IsLobbyReady() ? TEXT("取消准备") : TEXT("准备")));
 }

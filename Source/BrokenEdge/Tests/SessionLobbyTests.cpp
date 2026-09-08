@@ -13,6 +13,7 @@
 #include "GameFramework/GameSession.h"
 #include "BrokenEdge/GameState/LobbyGameState.h"
 #include "BrokenEdge/PlayerState/BrokenEdgePlayerState.h"
+#include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "BrokenEdge/UI/LobbyWidget.h"
 #include "Menu.h"
 #include "SessionRoomRow.h"
@@ -27,7 +28,11 @@ class FMenuFlow : public IAutomationLatentCommand
 {
 public:
     FMenuFlow(FAutomationTestBase* InTest, FString InRole, FString InMode)
-        : Test(InTest), Role(MoveTemp(InRole)), Mode(MoveTemp(InMode)), Started(FPlatformTime::Seconds()) {}
+        : Test(InTest), Role(MoveTemp(InRole)), Mode(MoveTemp(InMode)), Started(FPlatformTime::Seconds())
+    {
+        bSwitchMode = FParse::Param(FCommandLine::Get(), TEXT("SessionTestSwitchMode"));
+        TargetMode = bSwitchMode ? (Mode == TEXT("Teams") ? TEXT("FreeForAll") : TEXT("Teams")) : Mode;
+    }
 
     virtual bool Update() override
     {
@@ -52,7 +57,7 @@ public:
                 Test->AddInfo(TEXT("SESSION_FLOW_OK Role=Server"));
                 return true;
             }
-            if (World->GetPackage()->GetName() != TEXT("/Game/Maps/") + Mode || World->IsInSeamlessTravel()) return false;
+            if (World->GetPackage()->GetName() != TEXT("/Game/Maps/") + TargetMode || World->IsInSeamlessTravel()) return false;
             if (!World->GetGameState() || World->GetGameState()->PlayerArray.Num() != 2) return false;
             if (StableSince == 0.0)
             {
@@ -62,6 +67,9 @@ public:
                 const FNamedOnlineSession* Session = Interface.IsValid() ? Interface->GetNamedSession(NAME_GameSession) : nullptr;
                 if (!Test->TestNotNull(TEXT("Session survives travel"), Session)) return true;
                 Test->TestTrue(TEXT("Session has started"), Session->SessionState == EOnlineSessionState::InProgress);
+                FString AdvertisedMode;
+                Session->SessionSettings.Get(FName(TEXT("MatchType")), AdvertisedMode);
+                Test->TestEqual(TEXT("Advertised mode agrees with destination map"), AdvertisedMode, TargetMode);
                 Test->TestEqual(TEXT("Capacity survives travel"), World->GetAuthGameMode()->GameSession->MaxPlayers, 2);
                 StableSince = Now;
             }
@@ -126,7 +134,7 @@ public:
             return true;
         }
 
-        const FString Target = TEXT("/Game/Maps/") + Mode;
+        const FString Target = TEXT("/Game/Maps/") + TargetMode;
         if (World->GetPackage()->GetName() == Target && !World->IsInSeamlessTravel())
         {
             if (!World->GetGameState() || World->GetGameState()->PlayerArray.Num() != 2) return false;
@@ -157,6 +165,64 @@ public:
         if (Phase == 2)
         {
             if (GS->PlayerArray.Num() < 2) return false;
+            if (bSwitchMode && !bModeSwitchVerified)
+            {
+                ABrokenEdgePlayerController* LobbyPC = Cast<ABrokenEdgePlayerController>(PC);
+                if (!Test->TestNotNull(TEXT("Lobby controller"), LobbyPC)) return true;
+                UButton* ModeButton = Cast<UButton>(Widgets[0]->GetWidgetFromName(
+                    TargetMode == TEXT("Teams") ? TEXT("TeamsButton") : TEXT("FreeForAllButton")));
+                if (!Test->TestNotNull(TEXT("Mode selection button"), ModeButton)) return true;
+                if (ModePhase == 0)
+                {
+                    if (Role == TEXT("Join"))
+                    {
+                        Ready->OnClicked.Broadcast();
+                        ModePhase = 1;
+                    }
+                    else
+                    {
+                        bool bPeerReady = false;
+                        for (APlayerState* State : GS->PlayerArray)
+                            if (const ABrokenEdgePlayerState* Peer = Cast<ABrokenEdgePlayerState>(State))
+                                bPeerReady |= Peer != PS && Peer->IsLobbyReady();
+                        if (!bPeerReady) return false;
+                        LobbyPC->ServerSetLobbyMatchType(TEXT("InvalidMode"));
+                        ModePhase = 1;
+                        ModeSince = Now;
+                    }
+                    return false;
+                }
+                if (ModePhase == 1)
+                {
+                    if (Role == TEXT("Join"))
+                    {
+                        if (!PS->IsLobbyReady()) return false;
+                        Test->TestFalse(TEXT("Ready player cannot click mode selection"), ModeButton->GetIsEnabled());
+                        LobbyPC->ServerSetLobbyMatchType(TargetMode);
+                        ModePhase = 2;
+                        ModeSince = Now;
+                    }
+                    else
+                    {
+                        if (Now - ModeSince < 3.0) return false;
+                        Test->TestEqual(TEXT("Invalid and ready-player requests leave mode unchanged"), GS->RoomMatchType, Mode);
+                        Test->TestTrue(TEXT("Unready player can change mode"), ModeButton->GetIsEnabled());
+                        ModeButton->OnClicked.Broadcast();
+                        ModePhase = 2;
+                    }
+                    return false;
+                }
+                if (GS->RoomMatchType != TargetMode || GS->bModeUpdating) return false;
+                for (APlayerState* State : GS->PlayerArray)
+                    if (const ABrokenEdgePlayerState* Peer = Cast<ABrokenEdgePlayerState>(State))
+                        if (Peer->IsLobbyReady()) return false;
+                Test->TestEqual(TEXT("Switching mode clears countdown"), GS->CountdownEndTime, 0.0);
+                Test->AddInfo(FString::Printf(TEXT("MODE_SWITCH_OK From=%s To=%s AllUnready=1"), *Mode, *TargetMode));
+                Capture(TEXT("ModeChanged"));
+                bModeSwitchVerified = true;
+                PhaseSince = Now;
+                return false;
+            }
             if (PhaseSince == 0.0)
             {
                 Capture(TEXT("Lobby"));
@@ -214,6 +280,11 @@ private:
     FAutomationTestBase* Test;
     FString Role;
     FString Mode;
+    FString TargetMode;
+    bool bSwitchMode = false;
+    bool bModeSwitchVerified = false;
+    int32 ModePhase = 0;
+    double ModeSince = 0.0;
     TWeakObjectPtr<UMenu> Menu;
     double Started;
     double StableSince = 0.0;

@@ -14,6 +14,8 @@ public:
     UPROPERTY(Replicated, BlueprintReadOnly, Category = "Lobby")
     FString RoomMatchType;
     UPROPERTY(Replicated, BlueprintReadOnly, Category = "Lobby")
+    bool bModeUpdating = false;
+    UPROPERTY(Replicated, BlueprintReadOnly, Category = "Lobby")
     int32 MinimumPlayers = 2;
     UPROPERTY(Replicated, BlueprintReadOnly, Category = "Lobby")
     int32 Capacity = 8;

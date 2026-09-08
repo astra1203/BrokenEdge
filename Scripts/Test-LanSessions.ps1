@@ -2,6 +2,7 @@
     [string]$EngineRoot = 'D:\UnrealEngine-5.5.4-release',
     [switch]$Packaged,
     [switch]$Render,
+    [switch]$SwitchMode,
     [ValidateSet('FreeForAll', 'Teams')]
     [string[]]$MatchTypes = @('FreeForAll', 'Teams'),
     [string]$BindAddress = ''
@@ -51,6 +52,7 @@ function Start-SessionTest([string]$Role, [string]$MatchType, [string]$Name, [in
         $arguments += '-nullrhi'
     }
     if ($Role -ne 'Advertise') {
+        if ($SwitchMode) { $arguments += '-SessionTestSwitchMode' }
         $arguments += @('-ExecCmds="Automation RunTests MultiplayerSessions.LAN.MenuFlow"', '-TestExit="Automation Test Queue Empty"')
     }
     if ($BindAddress) { $arguments += ('-MULTIHOME=' + $BindAddress) }
