@@ -659,8 +659,16 @@ void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
 	if (bScreenToWorld)
 	{
 		FVector Start = CrosshairWorldPosition;
+		FCollisionQueryParams QueryParams;
 
-		if (Character)
+		if (Character && Character->IsFirstPersonView())
+		{
+			// Keep nearby targets hittable without tracing into our own body or weapons.
+			QueryParams.AddIgnoredActor(Character);
+			if (EquippedWeapon) QueryParams.AddIgnoredActor(EquippedWeapon);
+			if (SecondaryWeapon) QueryParams.AddIgnoredActor(SecondaryWeapon);
+		}
+		else if (Character)
 		{
 			float DistanceToCharacter = (Character->GetActorLocation() - Start).Size();
 			Start += CrosshairWorldDirection * (DistanceToCharacter + 100.f);
@@ -672,7 +680,8 @@ void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
 			TraceHitResult,
 			Start,
 			End,
-			ECollisionChannel::ECC_Visibility
+			ECollisionChannel::ECC_Visibility,
+			QueryParams
 		);
 
 		if (bHIt)

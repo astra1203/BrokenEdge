@@ -16,6 +16,7 @@ class UBoxComponent;
 enum class ETurningInPlace : uint8;
 class UInputAction;
 class UInputMappingContext;
+enum class EVisibilityBasedAnimTickOption : uint8;
 
 UCLASS()
 class BROKENEDGE_API ABrokenEdgeCharacter : public ACharacter
@@ -188,10 +189,43 @@ public:
 	/** 获取跟随相机 */
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	UFUNCTION(BlueprintPure, Category = Camera)
+	bool IsFirstPersonView() const { return bFirstPersonView; }
+
 private:
+	void ToggleCameraView();
+	void SetFirstPersonView(bool bEnabled);
+	void UpdateFirstPersonCameraLocation();
+	bool CreateFirstPersonBody();
+	void UpdateFirstPersonBodyPose();
+
+	// Local view preference; other players keep seeing the third-person character.
+	bool bFirstPersonView = false;
+	FTransform ThirdPersonCameraTransform = FTransform::Identity;
+	bool bThirdPersonCameraUsesControlRotation = false;
+	bool bOriginalMeshOwnerNoSee = false;
+	bool bOriginalMeshCastHiddenShadow = false;
+	FDelegateHandle FirstPersonPoseDelegateHandle;
+
+	// Reuses the existing body asset and final pose, with no gameplay collision.
+	UPROPERTY(Transient)
+	TObjectPtr<class UPoseableMeshComponent> FirstPersonBody = nullptr;
+	EVisibilityBasedAnimTickOption OriginalMeshAnimTickOption{};
+
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	FName FirstPersonHeadBone = TEXT("head");
+
+	// Offset from BaseEyeHeight, aligned with view yaw (centimeters).
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	FVector FirstPersonCameraOffset = FVector(10.f, 0.f, 0.f);
+
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
+
+	/** Camera view toggle Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ToggleCameraViewAction = nullptr;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))

@@ -16,6 +16,9 @@
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/InputComponent.h"
+#include "Components/PoseableMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -213,6 +216,10 @@ void ABrokenEdgeCharacter::BeginPlay()
 void ABrokenEdgeCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (bFirstPersonView)
+	{
+		UpdateFirstPersonCameraLocation();
+	}
 	//@TODO
 	RotateInPlace(DeltaTime);
 	PollInit();
@@ -355,6 +362,10 @@ void ABrokenEdgeCharacter::TurnInPlace(float DeltaTime)
 void ABrokenEdgeCharacter::NotifyControllerChanged()
 {
 	Super::NotifyControllerChanged();
+	if (bFirstPersonView && !IsLocallyControlled())
+	{
+		SetFirstPersonView(false);
+	}
 
 	// Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
@@ -376,6 +387,12 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
+		if (ensureMsgf(ToggleCameraViewAction, TEXT("Assign ToggleCameraViewAction in the character Blueprint.")))
+		{
+			EnhancedInputComponent->BindAction(ToggleCameraViewAction, ETriggerEvent::Started,
+				this, &ABrokenEdgeCharacter::ToggleCameraView);
+		}
+
 		//跳跃
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this,
@@ -422,6 +439,105 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 			       "'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."
 		       ), *GetNameSafe(this));
 	}
+}
+
+void ABrokenEdgeCharacter::ToggleCameraView()
+{
+	if (!IsLocallyControlled() || bDisableGameplay || bDefeated) return;
+	SetFirstPersonView(!bFirstPersonView);
+}
+
+void ABrokenEdgeCharacter::SetFirstPersonView(bool bEnabled)
+{
+	if (bFirstPersonView == bEnabled || !FollowCamera || !CameraBoom || !GetMesh()) return;
+
+	if (bEnabled)
+	{
+		if (!IsLocallyControlled() || !CreateFirstPersonBody()) return;
+
+		// Cache the Blueprint's actual camera settings before changing the attachment.
+		ThirdPersonCameraTransform = FollowCamera->GetRelativeTransform();
+		bThirdPersonCameraUsesControlRotation = FollowCamera->bUsePawnControlRotation;
+		bOriginalMeshOwnerNoSee = GetMesh()->bOwnerNoSee;
+		bOriginalMeshCastHiddenShadow = GetMesh()->bCastHiddenShadow;
+		OriginalMeshAnimTickOption = GetMesh()->VisibilityBasedAnimTickOption;
+
+		FollowCamera->AttachToComponent(GetCapsuleComponent(),
+		                                FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		FollowCamera->bUsePawnControlRotation = true;
+		UpdateFirstPersonCameraLocation();
+		// The owner sees the headless display body; the original keeps full collision and shadows.
+		GetMesh()->SetOwnerNoSee(true);
+		GetMesh()->SetCastHiddenShadow(true);
+		// Keep evaluating the original animation, including weapon sockets and reload notifies.
+		GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+	}
+	else
+	{
+		FollowCamera->AttachToComponent(CameraBoom, FAttachmentTransformRules::KeepRelativeTransform,
+		                                USpringArmComponent::SocketName);
+		FollowCamera->SetRelativeTransform(ThirdPersonCameraTransform);
+		FollowCamera->bUsePawnControlRotation = bThirdPersonCameraUsesControlRotation;
+		GetMesh()->SetOwnerNoSee(bOriginalMeshOwnerNoSee);
+		GetMesh()->SetCastHiddenShadow(bOriginalMeshCastHiddenShadow);
+		GetMesh()->UnregisterOnBoneTransformsFinalizedDelegate(FirstPersonPoseDelegateHandle);
+		FirstPersonPoseDelegateHandle.Reset();
+		if (FirstPersonBody)
+		{
+			FirstPersonBody->DestroyComponent();
+			FirstPersonBody = nullptr;
+		}
+		GetMesh()->VisibilityBasedAnimTickOption = OriginalMeshAnimTickOption;
+	}
+
+	bFirstPersonView = bEnabled;
+}
+
+bool ABrokenEdgeCharacter::CreateFirstPersonBody()
+{
+	if (!GetMesh()->GetSkeletalMeshAsset() || GetMesh()->GetBoneIndex(FirstPersonHeadBone) == INDEX_NONE)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot enter first person: head bone '%s' is missing on %s."),
+			*FirstPersonHeadBone.ToString(), *GetName());
+		return false;
+	}
+
+	FirstPersonBody = NewObject<UPoseableMeshComponent>(this);
+	FirstPersonBody->SetupAttachment(GetMesh());
+	FirstPersonBody->SetSkinnedAssetAndUpdate(GetMesh()->GetSkinnedAsset());
+	for (int32 MaterialIndex = 0; MaterialIndex < GetMesh()->GetNumMaterials(); ++MaterialIndex)
+	{
+		FirstPersonBody->SetMaterial(MaterialIndex, GetMesh()->GetMaterial(MaterialIndex));
+	}
+	FirstPersonBody->SetOnlyOwnerSee(true);
+	FirstPersonBody->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	FirstPersonBody->SetGenerateOverlapEvents(false);
+	FirstPersonBody->SetCastShadow(false);
+	FirstPersonBody->SetCanEverAffectNavigation(false);
+	FirstPersonBody->RegisterComponent();
+	FirstPersonBody->SetComponentTickEnabled(false);
+	FirstPersonBody->HideBoneByName(FirstPersonHeadBone, PBO_None);
+
+	// Copy only after animation/IK finishes, so the visible hands match the weapon sockets.
+	FirstPersonPoseDelegateHandle = GetMesh()->RegisterOnBoneTransformsFinalizedDelegate(
+		FOnBoneTransformsFinalizedMultiCast::FDelegate::CreateUObject(this,
+			&ABrokenEdgeCharacter::UpdateFirstPersonBodyPose));
+	UpdateFirstPersonBodyPose();
+	return true;
+}
+
+void ABrokenEdgeCharacter::UpdateFirstPersonBodyPose()
+{
+	if (!FirstPersonBody || !GetMesh()) return;
+	FirstPersonBody->CopyPoseFromSkeletalComponent(GetMesh());
+	FirstPersonBody->RefreshBoneTransforms();
+}
+
+void ABrokenEdgeCharacter::UpdateFirstPersonCameraLocation()
+{
+	// BaseEyeHeight is updated by ACharacter when entering or leaving crouch.
+	const FRotator ViewYaw(0.f, GetViewRotation().Yaw, 0.f);
+	FollowCamera->SetWorldLocation(GetPawnViewLocation() + ViewYaw.RotateVector(FirstPersonCameraOffset));
 }
 
 void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
@@ -974,6 +1090,7 @@ void ABrokenEdgeCharacter::Defeated(bool bPlayerLeftGame)
 
 void ABrokenEdgeCharacter::MulticastDefeated_Implementation(bool bPlayerLeftGame)
 {
+	SetFirstPersonView(false);
 	bLeftGame = bPlayerLeftGame;
 
 	if (BrokenEdgePlayerController)
