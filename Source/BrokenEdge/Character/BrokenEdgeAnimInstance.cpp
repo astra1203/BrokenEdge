@@ -71,8 +71,8 @@ void UBrokenEdgeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 
 	// ========== 5. 获取瞄准偏移（Aim Offset） ==========
 	// 用于驱动动画蓝图中的瞄准偏移节点，实现上半身跟随瞄准
-	AO_X = BrokenEdgeCharacter->GetAO_X();                                     // 水平瞄准偏移
-	AO_Y = BrokenEdgeCharacter->GetAO_Y();                                 // 垂直瞄准偏移
+	AO_Yaw = BrokenEdgeCharacter->GetAO_Yaw();                                     // 水平瞄准偏移
+	AO_Pitch = BrokenEdgeCharacter->GetAO_Pitch();                                 // 垂直瞄准偏移
 
 	// ========== 6. 计算手部IK（Inverse Kinematics） ==========
 	if (bWeaponEquipped && EquippedWeapon && EquippedWeapon->GetWeaponMesh() && BrokenEdgeCharacter->GetMesh())

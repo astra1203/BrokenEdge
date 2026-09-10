@@ -297,10 +297,10 @@ void ABrokenEdgeCharacter::AimOffset(float DeltaTime)
 		bRotateRootBone = true;
 		FRotator CurrentAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
 		FRotator DeltaAimRotation = UKismetMathLibrary::NormalizedDeltaRotator(CurrentAimRotation, StartingAimRotation);
-		AO_X = DeltaAimRotation.Yaw;
+		AO_Yaw = DeltaAimRotation.Yaw;
 		if (TurningInPlace == ETurningInPlace::ETIP_NotTurning)
 		{
-			InterpAO_X = AO_X;
+			InterpAO_Yaw = AO_Yaw;
 		}
 		bUseControllerRotationYaw = true;
 		TurnInPlace(DeltaTime);
@@ -310,7 +310,7 @@ void ABrokenEdgeCharacter::AimOffset(float DeltaTime)
 	{
 		bRotateRootBone = false;
 		StartingAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
-		AO_X = 0.f;
+		AO_Yaw = 0.f;
 		bUseControllerRotationYaw = true;
 		TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 	}
@@ -323,13 +323,13 @@ void ABrokenEdgeCharacter::AimOffset(float DeltaTime)
  */
 void ABrokenEdgeCharacter::CalculateAO_Pitch()
 {
-	AO_Y = GetBaseAimRotation().Pitch;
-	if (AO_Y > 90.f && !IsLocallyControlled())
+	AO_Pitch = GetBaseAimRotation().Pitch;
+	if (AO_Pitch > 90.f && !IsLocallyControlled())
 	{
 		// 将map俯仰角从 [270, 360) 转换为 [-90, 0)
 		FVector2D InRange(270.f, 360.f);
 		FVector2D OutRange(-90.f, 0.f);
-		AO_Y = FMath::GetMappedRangeValueClamped(InRange, OutRange, AO_Y);
+		AO_Pitch = FMath::GetMappedRangeValueClamped(InRange, OutRange, AO_Pitch);
 	}
 }
 
@@ -339,19 +339,19 @@ void ABrokenEdgeCharacter::CalculateAO_Pitch()
  */
 void ABrokenEdgeCharacter::TurnInPlace(float DeltaTime)
 {
-	if (AO_X > 90.f)
+	if (AO_Yaw > 90.f)
 	{
 		TurningInPlace = ETurningInPlace::ETIP_Right;
 	}
-	else if (AO_X < -90.f)
+	else if (AO_Yaw < -90.f)
 	{
 		TurningInPlace = ETurningInPlace::ETIP_Left;
 	}
 	if (TurningInPlace != ETurningInPlace::ETIP_NotTurning)
 	{
-		InterpAO_X = FMath::FInterpTo(InterpAO_X, 0.f, DeltaTime, 4.f);
-		AO_X = InterpAO_X;
-		if (FMath::Abs(AO_X) < 15.f)
+		InterpAO_Yaw = FMath::FInterpTo(InterpAO_Yaw, 0.f, DeltaTime, 4.f);
+		AO_Yaw = InterpAO_Yaw;
+		if (FMath::Abs(AO_Yaw) < 15.f)
 		{
 			TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 			StartingAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);

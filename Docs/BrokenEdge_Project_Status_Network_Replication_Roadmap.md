@@ -158,7 +158,7 @@ Enhanced Input
 
 - 速度、腾空、加速度和蹲伏；
 - 是否装备、是否瞄准；
-- Yaw Offset、Lean、AO_X、AO_Y；
+- Yaw Offset、Lean、AO_Yaw、AO_Pitch；
 - FABRIK、Aim Offset 和右手变换开关；
 - 淘汰、换弹和切枪相关状态入口。
 

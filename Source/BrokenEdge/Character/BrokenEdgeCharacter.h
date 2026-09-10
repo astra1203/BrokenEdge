@@ -181,10 +181,10 @@ public:
 	void FireButtonReleased();
 
 	/** 获取瞄准偏移偏航值 */
-	FORCEINLINE float GetAO_X() const { return AO_X; }
+	FORCEINLINE float GetAO_Yaw() const { return AO_Yaw; }
 
 	/** 获取瞄准偏移俯仰值 */
-	FORCEINLINE float GetAO_Y() const { return AO_Y; }
+	FORCEINLINE float GetAO_Pitch() const { return AO_Pitch; }
 
 	/** 获取跟随相机 */
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
@@ -352,13 +352,13 @@ private:
 	float TurnThreshold = 0.5f;
 
 	/** 瞄准偏移偏航值 */
-	float AO_X = 0.f;
+	float AO_Yaw = 0.f;
 	
 	/** 插值后的瞄准偏移偏航值 */
-	float InterpAO_X = 0.f;
+	float InterpAO_Yaw = 0.f;
 	
 	/** 瞄准偏移俯仰值 */
-	float AO_Y = 0.f;
+	float AO_Pitch = 0.f;
 	
 	/** 起始瞄准旋转 */
 	FRotator StartingAimRotation = FRotator::ZeroRotator;

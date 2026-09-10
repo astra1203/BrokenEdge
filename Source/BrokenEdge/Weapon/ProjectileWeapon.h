@@ -6,6 +6,8 @@
 #include "Weapon.h"
 #include "ProjectileWeapon.generated.h"
 
+//#defin PI 3.14159
+//#define UCLASS()
 /**
  * 
  */

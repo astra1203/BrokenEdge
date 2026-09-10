@@ -91,11 +91,11 @@ private:
 	
 	/** 瞄准偏航 */
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	float AO_X;
+	float AO_Yaw;
 
 	/** 瞄准俯仰 */
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	float AO_Y;
+	float AO_Pitch;
 	
 	/** 左手变换 */
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
