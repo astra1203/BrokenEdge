@@ -124,7 +124,6 @@ public:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
 
 	/** 是否正在本地换弹 */
 	bool bLocallyReloading = false;

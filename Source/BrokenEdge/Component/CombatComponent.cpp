@@ -533,6 +533,8 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		SetHUDCrosshairs(DeltaTime);
 		InterpFOV(DeltaTime);
 	}
+
+
 }
 
 int32 UCombatComponent::PickupAmmo(EWeaponType WeaponType, int32 AmmoAmount)
