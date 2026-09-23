@@ -30,6 +30,7 @@ APickup::APickup()
 
 	PickupEffectComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("PickupEffectComponent"));
 	PickupEffectComponent->SetupAttachment(RootComponent);
+	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT(""));
 }
 
 // Called when the game starts or when spawned

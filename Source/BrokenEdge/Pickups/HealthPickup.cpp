@@ -3,6 +3,7 @@
 
 #include "HealthPickup.h"
 
+#include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/BuffComponent.h"
 
@@ -11,6 +12,8 @@ void AHealthPickup::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
                                     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Super::OnSphereOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+
+	UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, *PrintNetMode());
 	
 	if (TObjectPtr<ABrokenEdgeCharacter> BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(OtherActor))
 	{
