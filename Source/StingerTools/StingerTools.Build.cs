@@ -6,6 +6,6 @@ public class StingerTools : ModuleRules
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         PublicDependencyModuleNames.AddRange(new[] { "Core", "CoreUObject", "Engine" });
-        PrivateDependencyModuleNames.AddRange(new[] { "UnrealEd", "AssetRegistry", "BlueprintGraph", "AnimGraph", "Kismet", "AnimationDataController", "EnhancedInput", "InputCore", "Json" });
+        PrivateDependencyModuleNames.AddRange(new[] { "UnrealEd", "AssetRegistry", "BlueprintGraph", "AnimGraph", "Kismet", "AnimationDataController", "EnhancedInput", "InputCore", "Json", "BrokenEdge" });
     }
 }

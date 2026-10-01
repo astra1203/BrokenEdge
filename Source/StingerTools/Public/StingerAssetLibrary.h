@@ -37,6 +37,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static AActor* SpawnValidationWeapon(UWorld* World, TSubclassOf<AActor> Class, FVector Location);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static bool DropValidationWeapon(APawn* Pawn);
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static FString GetMontageDescription(UAnimMontage* Montage);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Import")
 	static void ResetAnimation(UAnimSequence* Sequence);

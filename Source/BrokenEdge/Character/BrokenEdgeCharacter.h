@@ -63,6 +63,7 @@ public:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -271,6 +272,8 @@ public:
 	bool UsesFirstPersonWeaponFit() const;
 	FTransform GetFirstPersonGripTarget(FName Socket) const;
 	float GetFirstPersonReloadProgress() const;
+	void RefreshFirstPersonWorldWeapons();
+	void TrackFirstPersonWorldWeapon(AWeapon* Weapon);
 
 private:
 	void UpdateFirstPersonWeapon();
@@ -291,8 +294,7 @@ private:
 	TObjectPtr<USkeletalMeshComponent> FirstPersonWeaponMesh = nullptr;
 	UPROPERTY(Transient)
 	TObjectPtr<AWeapon> FirstPersonSourceWeapon = nullptr;
-	bool bOriginalWeaponOwnerNoSee = false;
-	EFirstPersonPrimitiveType OriginalWeaponPrimitiveType;
+	TSet<TWeakObjectPtr<AWeapon>> FirstPersonWorldWeapons;
 	FTransform ViewWeaponTarget = FTransform::Identity;
 	UPROPERTY(Transient)
 	TObjectPtr<UAnimMontage> ViewActionMontage;

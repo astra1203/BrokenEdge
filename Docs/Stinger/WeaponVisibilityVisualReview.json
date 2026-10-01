@@ -1,0 +1,20 @@
+{
+  "result": "accepted",
+  "scope": "Owned world-weapon duplication and visibility restoration only",
+  "frame_directory": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\WeaponVisibilityFrames\\20261002-014338-2p",
+  "stills_directory": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\WeaponVisibilityFrames\\20261002-015203-2p",
+  "reviewed_frame_count": 240,
+  "method": "All 240 frames reviewed in five contact sheets; six critical frames and eight lifecycle stills inspected at full size",
+  "full_size_frames": [12, 60, 76, 130, 196, 214],
+  "stills": ["equip_secondary", "third_person", "first_person", "drop", "re_pickup", "repossess", "respawn_equip", "destroy_weapon"],
+  "findings": [
+    "No second owned world weapon appears in first-person low-look, crouch, aim or swap frames",
+    "Third-person switch removes the dedicated view weapon; returning restores one view weapon",
+    "Drop and weapon destruction remove the dedicated view weapon; pickup and respawn equip restore one",
+    "Remote body remains visible; both remote world weapons retain their normal render flags in every sampled frame"
+  ],
+  "separate_observations": [
+    "In repossess.png the first-person arms and gun appear at the top of the screen. Visibility counts pass, but this frame is not accepted as proof of correct animation or camera fitting. Cause not diagnosed in this visibility fix.",
+    "HUD crosshair is offset in HighResShot output; this capture is not a HUD alignment validation."
+  ]
+}

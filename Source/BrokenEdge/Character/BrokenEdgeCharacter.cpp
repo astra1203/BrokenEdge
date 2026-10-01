@@ -214,6 +214,14 @@ void ABrokenEdgeCharacter::BeginPlay()
 	}
 }
 
+void ABrokenEdgeCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	SetFirstPersonView(false);
+	RefreshFirstPersonWorldWeapons();
+	FirstPersonWorldWeapons.Reset();
+	Super::EndPlay(EndPlayReason);
+}
+
 // Called every frame
 void ABrokenEdgeCharacter::Tick(float DeltaTime)
 {
@@ -376,6 +384,7 @@ void ABrokenEdgeCharacter::NotifyControllerChanged()
 	{
 		SetFirstPersonView(false);
 	}
+	RefreshFirstPersonWorldWeapons();
 
 	// Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
@@ -496,12 +505,7 @@ void ABrokenEdgeCharacter::SetFirstPersonView(bool bEnabled)
 	}
 	else
 	{
-		if (FirstPersonSourceWeapon)
-		{
-			FirstPersonSourceWeapon->GetWeaponMesh()->SetOwnerNoSee(bOriginalWeaponOwnerNoSee);
-			FirstPersonSourceWeapon->GetWeaponMesh()->SetFirstPersonPrimitiveType(OriginalWeaponPrimitiveType);
-			FirstPersonSourceWeapon = nullptr;
-		}
+		FirstPersonSourceWeapon = nullptr;
 		if (FirstPersonWeaponMesh)
 		{
 			FirstPersonWeaponMesh->DestroyComponent();
@@ -532,6 +536,29 @@ void ABrokenEdgeCharacter::SetFirstPersonView(bool bEnabled)
 	}
 
 	bFirstPersonView = bEnabled;
+	RefreshFirstPersonWorldWeapons();
+}
+
+void ABrokenEdgeCharacter::TrackFirstPersonWorldWeapon(AWeapon* Weapon)
+{
+	if (IsValid(Weapon)) FirstPersonWorldWeapons.Add(Weapon);
+}
+
+void ABrokenEdgeCharacter::RefreshFirstPersonWorldWeapons()
+{
+	if (Combat)
+	{
+		if (IsValid(Combat->EquippedWeapon)) Combat->EquippedWeapon->RefreshOwnerViewVisibility();
+		if (IsValid(Combat->SecondaryWeapon)) Combat->SecondaryWeapon->RefreshOwnerViewVisibility();
+	}
+	// Retain swapped weapons, and revisit removed slots without keeping actors alive.
+	for (const auto WeakWeapon : FirstPersonWorldWeapons.Array())
+	{
+		auto Weapon = WeakWeapon.Get();
+		if (Weapon) Weapon->RefreshOwnerViewVisibility();
+		if (!Weapon || Weapon->GetOwner() != this || !bFirstPersonView || !IsLocallyControlled())
+			FirstPersonWorldWeapons.Remove(WeakWeapon);
+	}
 }
 
 bool ABrokenEdgeCharacter::CreateFirstPersonBody()
@@ -605,6 +632,7 @@ void ABrokenEdgeCharacter::UpdateFirstPersonCameraLocation()
 
 void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 {
+	RefreshFirstPersonWorldWeapons();
 	if (!DedicatedFirstPersonMesh) return;
 	const FVector AimOffset = FirstPersonWeaponFit.bEnabled
 		                          ? FVector::ZeroVector
@@ -614,20 +642,14 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 	                                                               GetWorld()->GetDeltaSeconds(),
 	                                                               FirstPersonAimInterpSpeed));
 	AWeapon* Weapon = GetEquippedWeapon();
+	// Owner/state replication can arrive before the equipment slot is cleared.
+	if (!IsValid(Weapon) || Weapon->GetOwner() != this || Weapon->GetWeaponState() == EWeaponState::EWS_Dropped)
+		Weapon = nullptr;
 	if (FirstPersonSourceWeapon != Weapon)
 	{
-		if (FirstPersonSourceWeapon)
-		{
-			FirstPersonSourceWeapon->GetWeaponMesh()->SetOwnerNoSee(bOriginalWeaponOwnerNoSee);
-			FirstPersonSourceWeapon->GetWeaponMesh()->SetFirstPersonPrimitiveType(OriginalWeaponPrimitiveType);
-		}
 		FirstPersonSourceWeapon = Weapon;
 		if (Weapon)
 		{
-			bOriginalWeaponOwnerNoSee = Weapon->GetWeaponMesh()->bOwnerNoSee;
-			OriginalWeaponPrimitiveType = Weapon->GetWeaponMesh()->FirstPersonPrimitiveType;
-			Weapon->GetWeaponMesh()->SetOwnerNoSee(true);
-			Weapon->GetWeaponMesh()->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::WorldSpaceRepresentation);
 			if (!FirstPersonWeaponMesh)
 			{
 				FirstPersonWeaponMesh = NewObject<USkeletalMeshComponent>(this);

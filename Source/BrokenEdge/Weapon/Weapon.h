@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
+enum class EFirstPersonPrimitiveType : uint8;
+
 /**
  * @brief 武器状态枚举
  * @details 定义武器在游戏中的不同状态，用于控制武器行为和显示
@@ -14,11 +16,11 @@
 UENUM(BlueprintType)
 enum class EWeaponState : uint8
 {
-	EWS_Initial UMETA(DisplayName = "Initial State"),           ///< 初始状态
-	EWS_Equipped UMETA(DisplayName = "Equipped"),               ///< 主武器装备状态
+	EWS_Initial UMETA(DisplayName = "Initial State"), ///< 初始状态
+	EWS_Equipped UMETA(DisplayName = "Equipped"), ///< 主武器装备状态
 	EWS_EquippedSecondary UMETA(DisplayName = "Equipped Secondary"), ///< 副武器装备状态
-	EWS_Dropped UMETA(DisplayName = "Dropped"),                 ///< 掉落状态
-	EWS_MAX UMETA(DisplayName = "DefaultMAX")                   ///< 默认最大值
+	EWS_Dropped UMETA(DisplayName = "Dropped"), ///< 掉落状态
+	EWS_MAX UMETA(DisplayName = "DefaultMAX") ///< 默认最大值
 };
 
 /**
@@ -29,11 +31,11 @@ enum class EWeaponState : uint8
 UENUM(BlueprintType)
 enum class EFireType : uint8
 {
-	EFT_HitScan UMETA(DisplayName = "Hit Scan Weapon"),       ///< 使用射线检测立即判定命中
-	EFT_Projectile UMETA(DisplayName = "Projectile Weapon"),  ///< 生成弹丸 Actor 处理飞行和碰撞
-	EFT_Shotgun UMETA(DisplayName = "Shotgun Weapon"),        ///< 一次发射多条带散射的射线
+	EFT_HitScan UMETA(DisplayName = "Hit Scan Weapon"), ///< 使用射线检测立即判定命中
+	EFT_Projectile UMETA(DisplayName = "Projectile Weapon"), ///< 生成弹丸 Actor 处理飞行和碰撞
+	EFT_Shotgun UMETA(DisplayName = "Shotgun Weapon"), ///< 一次发射多条带散射的射线
 
-	EFT_MAX UMETA(DisplayName = "DefaultMAX")                 ///< 枚举边界值，不作为实际类型使用
+	EFT_MAX UMETA(DisplayName = "DefaultMAX") ///< 枚举边界值，不作为实际类型使用
 };
 
 // enum class EWeaponType;
@@ -43,7 +45,7 @@ class BROKENEDGE_API AWeapon : public AActor
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this actor's properties
 	AWeapon();
 
@@ -57,7 +59,13 @@ public:
  * @brief 武器所有者复制完成后的回调，用于刷新所有者缓存和 HUD 弹药。
  */
 	virtual void OnRep_Owner() override;
-	
+	virtual void SetOwner(AActor* NewOwner) override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	/** Local rendering only; preserve each weapon's original world-mesh settings. */
+	void RefreshOwnerViewVisibility();
+	void RestoreOwnerViewVisibility();
+
 	/**
  * @brief 多播更新弹药数（所有客户端）
  * @param UpdateAmmo 更新后的弹药数
@@ -69,7 +77,7 @@ public:
 	 * 跟新弹药UI
 	 */
 	void SetHUDAmmo();
-	
+
 	/** 准星中心纹理。 */
 	UPROPERTY(EditAnywhere, Category = Crosshairs)
 	class UTexture2D* CrosshairsCenter;
@@ -105,7 +113,7 @@ protected:
 
 	UPROPERTY()
 	class ABrokenEdgeCharacter* BrokenEdgeOwnerCharacter;
-	
+
 	/** 缓存的武器所有者玩家控制器。 */
 	UPROPERTY()
 	class ABrokenEdgePlayerController* BrokenEdgeOwnerController;
@@ -114,16 +122,16 @@ protected:
 	// UPROPERTY(Replicated, EditAnywhere)
 	// bool bUseServerSideRewind = false;
 
-public:	
-
+public:
 	void EnableCustomDepth(bool bEnable);
 	UFUNCTION()
-	void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	                     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	                          UPrimitiveComponent* OtherComp,
+	                          int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
-	void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
-		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 
 	void ShowPickupWidget(bool bShowWidget);
@@ -139,12 +147,18 @@ public:
  * @brief 武器掉落时调用
  */
 	virtual void Dropped();
-	
-	
+
+
 	/** 获取武器骨骼网格体组件。 */
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; }
-	
+	EWeaponState GetWeaponState() const { return WeaponState; }
+
 private:
+	bool bOwnerViewVisibilityOverridden = false;
+	bool bSavedOwnerNoSee = false;
+	EFirstPersonPrimitiveType SavedPrimitiveType{};
+	TWeakObjectPtr<ABrokenEdgeCharacter> VisibilityOwner;
+
 	/// 武器网格体组件
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	USkeletalMeshComponent* WeaponMesh;
@@ -163,7 +177,7 @@ private:
 	UFUNCTION()
 	void OnRep_WeaponState();
 
-	
+
 	/// 拾取提示 Widget
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	class UWidgetComponent* PickUpWidget;
@@ -172,7 +186,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	UAnimationAsset* FireAnimation;
 
-	/** 开火后生成的弹壳 Actor 类型。 */   //@TODO
+	/** 开火后生成的弹壳 Actor 类型。 */ //@TODO
 	// UPROPERTY(EditAnywhere)
 	// TSubclassOf<class ACasing> CasingClass;
 
@@ -188,14 +202,13 @@ private:
 	UPROPERTY(EditAnywhere)
 	EWeaponType WeaponType;
 
-
 public:
 	/**
  * @brief 设置武器状态
  * @param State 要设置的状态
 	 */
 	void SetWeaponState(EWeaponState State);
-	
+
 	/**
 	 * @brief 武器状态设置时调用
  */
@@ -205,22 +218,22 @@ public:
 	 * @brief 武器被装备时的处理
  */
 	virtual void OnEquipped();
-	
+
 	/// 武器作为副武器装备时调用
 	virtual void OnEquippedSecondary();
-	
+
 	/// 武器掉落时调用
 	virtual void OnDropped();
-	
+
 	/// 获取当前弹药数
 	FORCEINLINE int32 GetAmmo() const { return Ammo; }
 
 	/// 获取武器类型
 	FORCEINLINE EWeaponType GetWeaponType() const { return WeaponType; }
-	
+
 	/** 获取弹匣最大容量。 */
 	FORCEINLINE int32 GetMagCapacity() const { return MagCapacity; }
-	
+
 	bool IsFull() const;
 	void AddAmmo(int32 AmmoToAdd);
 
@@ -230,8 +243,8 @@ public:
  */
 	UFUNCTION(Client, Reliable)
 	void ClientAddAmmo(int32 AmmoToAdd);
-	
-	
+
+
 	/**
  * @brief 判断弹匣是否为空。
  * @return 弹药为零时返回 true。
@@ -244,7 +257,6 @@ public:
  * @return 应用随机散射后的世界坐标。
  */
 	FVector TraceEndWithScatter(const FVector& HitTarget);
-
 
 
 	/** 当前武器的开火方式。 */
@@ -294,5 +306,4 @@ protected:
 	/** 是否使用服务端倒带进行命中确认。 */
 	UPROPERTY(Replicated, EditAnywhere)
 	bool bUseServerSideRewind = false;
-
 };

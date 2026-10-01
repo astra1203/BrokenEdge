@@ -119,6 +119,7 @@ void UCombatComponent::FinishSwapAttachWeapons()
 
 	SecondaryWeapon->SetWeaponState(EWeaponState::EWS_EquippedSecondary);
 	AttachActorToBackpack(SecondaryWeapon);
+	Character->RefreshFirstPersonWorldWeapons();
 }
 
 
@@ -593,6 +594,7 @@ void UCombatComponent::EquipPrimaryWeapon(AWeapon* WeaponToEquip)
 	EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
 	AttachActorToRightHand(EquippedWeapon);
 	EquippedWeapon->SetOwner(Character);
+	Character->RefreshFirstPersonWorldWeapons();
 	EquippedWeapon->SetHUDAmmo(); // 聆听服务器才会执行
 	//@TODO
 	UpdateCarriedAmmo();
@@ -610,6 +612,7 @@ void UCombatComponent::EquipSecondaryWeapon(AWeapon* WeaponToEquip)
 	AttachActorToBackpack(WeaponToEquip);
 	// PlayEquipWeaponSound(WeaponToEquip);//@TODO
 	SecondaryWeapon->SetOwner(Character);
+	Character->RefreshFirstPersonWorldWeapons();
 }
 
 void UCombatComponent::SetAiming(bool bIsAiming)
@@ -813,6 +816,7 @@ void UCombatComponent::OnRep_EquippedWeapon()
 		EquippedWeapon->EnableCustomDepth(false);
 		EquippedWeapon->SetHUDAmmo();
 	}
+	if (Character) Character->RefreshFirstPersonWorldWeapons();
 }
 
 void UCombatComponent::OnRep_SecondaryWeapon()
@@ -823,6 +827,7 @@ void UCombatComponent::OnRep_SecondaryWeapon()
 		AttachActorToBackpack(SecondaryWeapon);
 		// PlayEquipWeaponSound(EquippedWeapon);//@TODO
 	}
+	if (Character) Character->RefreshFirstPersonWorldWeapons();
 }
 
 void UCombatComponent::OnRep_Aiming()

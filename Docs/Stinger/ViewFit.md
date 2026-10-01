@@ -2,6 +2,8 @@
 
 当前工作分支为 `ue5.8-20260930`。角色仍直接继承项目的 `ABrokenEdgeCharacter`。
 
+后续发现的双武器低头重影及补充验证见 [WeaponVisibility.md](WeaponVisibility.md)。本页原验证未覆盖“先装备副武器，再低头”的组合。
+
 第一人称使用修正导入的 Idle01、AimIdle_Pose、RelaxIdle、Fire、ChangeClipFull 和
 GetWeapon。第三人称按本轮确认的方案暂用项目原动作的蜂医骨架重定向版本。两套视觉动作共享原有游戏状态和第三人称通知，不能理解为已经补齐源素材中缺失的第三人称步枪动作。
 

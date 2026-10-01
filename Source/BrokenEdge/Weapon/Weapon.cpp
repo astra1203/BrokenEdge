@@ -107,6 +107,59 @@ void AWeapon::BeginPlay()
 void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	RefreshOwnerViewVisibility();
+}
+
+void AWeapon::SetOwner(AActor* NewOwner)
+{
+	Super::SetOwner(NewOwner);
+	RefreshOwnerViewVisibility();
+}
+
+void AWeapon::RefreshOwnerViewVisibility()
+{
+	if (!WeaponMesh) return;
+	auto Character = Cast<ABrokenEdgeCharacter>(GetOwner());
+	const bool bHideForOwner = IsValid(Character) && !Character->IsActorBeingDestroyed()
+		&& Character->IsLocallyControlled() && Character->IsFirstPersonView()
+		&& WeaponType != EWeaponType::EWT_Flag
+		&& (WeaponState == EWeaponState::EWS_Equipped || WeaponState == EWeaponState::EWS_EquippedSecondary);
+	if (!bHideForOwner)
+	{
+		RestoreOwnerViewVisibility();
+		return;
+	}
+	if (!bOwnerViewVisibilityOverridden)
+	{
+		bSavedOwnerNoSee = WeaponMesh->bOwnerNoSee;
+		SavedPrimitiveType = WeaponMesh->FirstPersonPrimitiveType;
+		bOwnerViewVisibilityOverridden = true;
+	}
+	if (VisibilityOwner != Character)
+	{
+		VisibilityOwner = Character;
+		Character->TrackFirstPersonWorldWeapon(this);
+	}
+	if (!WeaponMesh->bOwnerNoSee) WeaponMesh->SetOwnerNoSee(true);
+	if (WeaponMesh->FirstPersonPrimitiveType != EFirstPersonPrimitiveType::WorldSpaceRepresentation)
+		WeaponMesh->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::WorldSpaceRepresentation);
+}
+
+void AWeapon::RestoreOwnerViewVisibility()
+{
+	if (bOwnerViewVisibilityOverridden && WeaponMesh)
+	{
+		WeaponMesh->SetOwnerNoSee(bSavedOwnerNoSee);
+		WeaponMesh->SetFirstPersonPrimitiveType(SavedPrimitiveType);
+	}
+	bOwnerViewVisibilityOverridden = false;
+	VisibilityOwner.Reset();
+}
+
+void AWeapon::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	RestoreOwnerViewVisibility();
+	Super::EndPlay(EndPlayReason);
 }
 
 void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -130,6 +183,7 @@ void AWeapon::OnRep_Owner()
 	// 		GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT("2"));
 	// }
 	Super::OnRep_Owner();
+	RefreshOwnerViewVisibility();
 	if (Owner == nullptr)
 	{
 		BrokenEdgeOwnerCharacter = nullptr;
@@ -250,6 +304,8 @@ void AWeapon::SetWeaponState(EWeaponState State)
  */
 void AWeapon::OnWeaponStateSet()
 {
+	// Drop restores the mesh before physics; equip also handles state/owner replication in either order.
+	RefreshOwnerViewVisibility();
 	switch (WeaponState)
 	{
 	case EWeaponState::EWS_Equipped:

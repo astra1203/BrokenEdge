@@ -23,6 +23,8 @@
 #include "Serialization/JsonSerializer.h"
 #include "Animation/Skeleton.h"
 #include "Misc/App.h"
+#include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/Component/CombatComponent.h"
 
 USkeleton* UStingerAssetLibrary::CreateSourceSkeleton(const FString& PackageName, const TArray<FName>& Names,
                                                       const TArray<int32>& Parents,
@@ -148,6 +150,14 @@ AActor* UStingerAssetLibrary::SpawnValidationWeapon(UWorld* World, TSubclassOf<A
 	FActorSpawnParameters Parameters;
 	Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	return World->SpawnActor<AActor>(Class, Location, FRotator::ZeroRotator, Parameters);
+}
+
+bool UStingerAssetLibrary::DropValidationWeapon(APawn* Pawn)
+{
+	auto Character = Cast<ABrokenEdgeCharacter>(Pawn);
+	if (!Character || !Character->HasAuthority() || !Character->GetCombat()) return false;
+	Character->GetCombat()->Drop();
+	return true;
 }
 
 FString UStingerAssetLibrary::GetMontageDescription(UAnimMontage* Montage)
