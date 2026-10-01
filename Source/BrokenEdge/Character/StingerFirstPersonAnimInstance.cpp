@@ -1,5 +1,6 @@
 #include "StingerFirstPersonAnimInstance.h"
 #include "BrokenEdgeCharacter.h"
+#include "BrokenEdge/Weapon/Weapon.h"
 #include "Animation/AnimInstanceProxy.h"
 #include "Animation/AnimNode_SequencePlayer.h"
 #include "AnimNodes/AnimNode_Slot.h"
@@ -7,6 +8,7 @@
 #include "BoneControllers/AnimNode_TwoBoneIK.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "TwoBoneIK.h"
 
 // 原生动画图负责基础姿势和视觉蒙太奇；AnimBP 资产只配置动画引用。
 struct FStingerFirstPersonProxy : FAnimInstanceProxy
@@ -21,6 +23,10 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 	float BlendAlpha = 1.f;
 	float FrameDelta = 0.f;
 	bool bStartBlend = false;
+	bool bWeaponFit = false;
+	bool bActionMotion = false;
+	FTransform RightTarget, LeftTarget, RightReference, LeftReference;
+	bool bLeftActionMotion = false;
 
 	explicit FStingerFirstPersonProxy(UAnimInstance* Instance) : FAnimInstanceProxy(Instance)
 	{
@@ -57,6 +63,46 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 			bStartBlend = true;
 		}
 		const auto Character = Cast<ABrokenEdgeCharacter>(Instance->TryGetPawnOwner());
+		bWeaponFit = Character && Character->UsesFirstPersonWeaponFit();
+		bActionMotion = Instance->GetCurrentActiveMontage() != nullptr;
+		if (bWeaponFit)
+		{
+			const FTransform& Component = Character->GetFirstPersonMesh()->GetComponentTransform();
+			RightTarget = Character->GetFirstPersonGripTarget(TEXT("Hand_R")).GetRelativeTransform(Component);
+			LeftTarget = Character->GetFirstPersonGripTarget(TEXT("LeftHandSocket")).GetRelativeTransform(Component);
+			RightReference = Character->FirstPersonWeaponFit.SourceRightHand;
+			LeftReference = Character->FirstPersonWeaponFit.SourceLeftHand;
+			bLeftActionMotion = bActionMotion;
+			const float Reload = Character->GetFirstPersonReloadProgress();
+			if (Reload >= 0.f)
+			{
+				const auto& Fit = Character->FirstPersonWeaponFit;
+				const FTransform Gun = Character->GetFirstPersonGripTarget(TEXT("Hand_R"));
+				const FTransform Grip = Character->GetFirstPersonWeaponMesh()->GetSocketTransform(
+					TEXT("Hand_R"), RTS_Component);
+				const FTransform Magazine = (Fit.MagazineGrip * Grip.Inverse() * Gun).GetRelativeTransform(Component);
+				if (Reload < Fit.MagazineOut)
+				{
+					FTransform Goal;
+					Goal.Blend(LeftTarget, Magazine, FMath::Clamp(Reload / Fit.MagazineOut, 0.f, 1.f));
+					LeftTarget = Goal;
+					bLeftActionMotion = false;
+				}
+				else if (Reload <= Fit.MagazineIn)
+				{
+					LeftTarget = Magazine;
+					LeftReference.Blend(Fit.SourceLeftMagazineOut, Fit.SourceLeftMagazineIn,
+					                    (Reload - Fit.MagazineOut) / (Fit.MagazineIn - Fit.MagazineOut));
+				}
+				else
+				{
+					FTransform Goal;
+					Goal.Blend(Magazine, LeftTarget, FMath::Clamp((Reload - Fit.MagazineIn) / .15f, 0.f, 1.f));
+					LeftTarget = Goal;
+					bLeftActionMotion = false;
+				}
+			}
+		}
 		LeftHandIK.Alpha = 0.f;
 		if (Character && Character->GetFirstPersonWeaponMesh() && Character->GetFirstPersonMesh()
 			&& Character->GetFirstPersonWeaponMesh()->DoesSocketExist(TEXT("LeftHandSocket"))
@@ -80,7 +126,8 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 	virtual bool Evaluate(FPoseContext& Output) override
 	{
 		ToLocal.CacheBones_AnyThread(FAnimationCacheBonesContext(this));
-		ToLocal.Evaluate_AnyThread(Output);
+		if (bWeaponFit) Slot.Evaluate_AnyThread(Output);
+		else ToLocal.Evaluate_AnyThread(Output);
 		const int32 BoneCount = Output.Pose.GetNumBones();
 		if (bStartBlend)
 		{
@@ -95,6 +142,83 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 			FTransform& Transform = Output.Pose[FCompactPoseBoneIndex(Index)];
 			if (BlendAlpha < 1.f) Transform.Blend(BlendFromPose[Index], Transform, BlendAlpha);
 			LastPose[Index] = Transform;
+		}
+		if (bWeaponFit)
+		{
+			FCSPose<FCompactPose> Pose;
+			Pose.InitPose(Output.Pose);
+			auto SolveArm = [&](FName UpperName, FName LowerName, FName HandName, const FTransform& Goal,
+			                    const FTransform& Reference, bool bRight)
+			{
+				FBoneReference UpperBone, LowerBone, HandBone;
+				UpperBone.BoneName = UpperName;
+				LowerBone.BoneName = LowerName;
+				HandBone.BoneName = HandName;
+				const FBoneContainer& Bones = GetRequiredBones();
+				UpperBone.Initialize(Bones);
+				LowerBone.Initialize(Bones);
+				HandBone.Initialize(Bones);
+				if (!UpperBone.IsValidToEvaluate(Bones) || !LowerBone.IsValidToEvaluate(Bones) || !HandBone.
+					IsValidToEvaluate(Bones))
+					return;
+				const auto UpperIndex = UpperBone.GetCompactPoseIndex(Bones), LowerIndex = LowerBone.
+					           GetCompactPoseIndex(Bones), HandIndex = HandBone.GetCompactPoseIndex(Bones);
+				FTransform Upper = Pose.GetComponentSpaceTransform(UpperIndex), Lower = Pose.
+					           GetComponentSpaceTransform(LowerIndex), Hand = Pose.
+					           GetComponentSpaceTransform(HandIndex);
+				const FTransform SourceHand = Hand;
+				const bool bMotion = bRight ? bActionMotion : bLeftActionMotion;
+				const FVector Motion = bMotion
+					                       ? SourceHand.GetLocation() - Reference.GetLocation()
+					                       : FVector::ZeroVector;
+				// Protract the clavicle before solving the arm; keep bone lengths intact.
+				FBoneReference Clavicle;
+				Clavicle.BoneName = bRight ? TEXT("RightShoulder") : TEXT("LeftShoulder");
+				Clavicle.Initialize(Bones);
+				if (Clavicle.IsValidToEvaluate(Bones))
+				{
+					const auto Index = Clavicle.GetCompactPoseIndex(Bones);
+					FTransform Shoulder = Pose.GetComponentSpaceTransform(Index);
+					const FVector Original = Upper.GetLocation() - Shoulder.GetLocation();
+					const float ArmLength = FVector::Distance(Upper.GetLocation(), Lower.GetLocation()) +
+						FVector::Distance(Lower.GetLocation(), Hand.GetLocation());
+					const FVector GoalDirection = (Goal.GetLocation() + Motion - Shoulder.GetLocation()).
+						GetSafeNormal();
+					FVector Direction = Original.GetSafeNormal();
+					for (float Alpha = .05f; Alpha <= .65f && FVector::Distance(
+						     Shoulder.GetLocation() + Direction * Original.Size(),
+						     Goal.GetLocation() + Motion) > ArmLength * .9f; Alpha += .05f)
+						Direction = FMath::Lerp(Original.GetSafeNormal(), GoalDirection, Alpha).GetSafeNormal();
+					Shoulder.SetRotation(
+						FQuat::FindBetweenNormals(Original.GetSafeNormal(), Direction) * Shoulder.GetRotation());
+					TArray<FBoneTransform> Change;
+					Change.Emplace(Index, Shoulder);
+					Pose.LocalBlendCSBoneTransforms(Change, 1.f);
+					Upper = Pose.GetComponentSpaceTransform(UpperIndex);
+					Lower = Pose.GetComponentSpaceTransform(LowerIndex);
+					Hand = Pose.GetComponentSpaceTransform(HandIndex);
+				}
+				const FVector Joint = Upper.GetLocation() + FVector(bRight ? -25.f : 25.f, -30.f, -35.f);
+				AnimationCore::SolveTwoBoneIK(Upper, Lower, Hand, Joint, Goal.GetLocation() + Motion, false, 1., 1.);
+				Hand.SetRotation(bMotion
+					                 ? SourceHand.GetRotation() * Reference.GetRotation().Inverse() * Goal.GetRotation()
+					                 : Goal.GetRotation());
+				TArray<FBoneTransform, TInlineAllocator<3>> Changes;
+				Changes.Emplace(UpperIndex, Upper);
+				Changes.Emplace(LowerIndex, Lower);
+				Changes.Emplace(HandIndex, Hand);
+				Changes.Sort(FCompareBoneTransformIndex());
+				Pose.LocalBlendCSBoneTransforms(Changes, 1.f);
+			};
+			SolveArm(TEXT("RightArm"),TEXT("RightForeArm"),TEXT("RightHand"), RightTarget, RightReference, true);
+			FBoneReference RightHandBone;
+			RightHandBone.BoneName = TEXT("RightHand");
+			RightHandBone.Initialize(GetRequiredBones());
+			const FTransform FinalRight = Pose.GetComponentSpaceTransform(
+				RightHandBone.GetCompactPoseIndex(GetRequiredBones()));
+			const FTransform MovingLeftTarget = LeftTarget.GetRelativeTransform(RightTarget) * FinalRight;
+			SolveArm(TEXT("LeftArm"),TEXT("LeftForeArm"),TEXT("LeftHand"), MovingLeftTarget, LeftReference, false);
+			FCSPose<FCompactPose>::ConvertComponentPosesToLocalPoses(MoveTemp(Pose), Output.Pose);
 		}
 		return true;
 	}
@@ -140,4 +264,74 @@ FAnimInstanceProxy* UStingerFirstPersonAnimInstance::CreateAnimInstanceProxy()
 void UStingerFirstPersonAnimInstance::DestroyAnimInstanceProxy(FAnimInstanceProxy* Proxy)
 {
 	delete static_cast<FStingerFirstPersonProxy*>(Proxy);
+}
+
+struct FStingerWeaponProxy : FAnimInstanceProxy
+{
+	TArray<FTransform> MeshReferencePose;
+	FTransform Magazine;
+	FName Bone;
+	bool bMove = false;
+
+	explicit FStingerWeaponProxy(UAnimInstance* Instance) : FAnimInstanceProxy(Instance)
+	{
+	}
+
+	virtual void PreUpdate(UAnimInstance* Instance, float DeltaSeconds) override
+	{
+		FAnimInstanceProxy::PreUpdate(Instance, DeltaSeconds);
+		const auto View = CastChecked<UStingerFirstPersonWeaponAnimInstance>(Instance);
+		if (const auto Mesh = View->GetSkelMeshComponent()->GetSkeletalMeshAsset())
+			MeshReferencePose = Mesh->GetRefSkeleton().GetRefBonePose();
+		bMove = false;
+		const auto Character = Cast<ABrokenEdgeCharacter>(Instance->GetOwningActor());
+		if (!Character || !Character->UsesFirstPersonWeaponFit()) return;
+		// Preserve the gameplay weapon's evaluated rest pose (shared weapon skeletons
+		// can have a different reference pose from this mesh's import bind pose).
+		MeshReferencePose = Character->GetEquippedWeapon()->GetWeaponMesh()->GetBoneSpaceTransforms();
+		const auto& Fit = Character->FirstPersonWeaponFit;
+		Bone = Fit.MagazineBone;
+		const float Progress = Character->GetFirstPersonReloadProgress();
+		if (Progress < Fit.MagazineOut || Progress > Fit.MagazineIn) return;
+		const FTransform Hand = Character->GetFirstPersonMesh()->GetSocketTransform(TEXT("LeftHand"));
+		const FTransform Weapon = View->GetSkelMeshComponent()->GetComponentTransform();
+		const FTransform Detached = (Fit.MagazineReference.GetRelativeTransform(Fit.MagazineGrip) * Hand).
+			GetRelativeTransform(Weapon);
+		const float Weight = FMath::Min(FMath::Clamp((Progress - Fit.MagazineOut) / .035f, 0.f, 1.f),
+		                                FMath::Clamp((Fit.MagazineIn - Progress) / .05f, 0.f, 1.f));
+		Magazine.Blend(Fit.MagazineReference, Detached, Weight);
+		bMove = true;
+	}
+
+	virtual bool Evaluate(FPoseContext& Output) override
+	{
+		Output.ResetToRefPose();
+		for (FCompactPoseBoneIndex Index : Output.Pose.ForEachBoneIndex())
+		{
+			const int32 MeshIndex = GetRequiredBones().MakeMeshPoseIndex(Index).GetInt();
+			if (MeshReferencePose.IsValidIndex(MeshIndex)) Output.Pose[Index] = MeshReferencePose[MeshIndex];
+		}
+		if (!bMove) return true;
+		FBoneReference Reference;
+		Reference.BoneName = Bone;
+		Reference.Initialize(GetRequiredBones());
+		if (!Reference.IsValidToEvaluate(GetRequiredBones())) return true;
+		FCSPose<FCompactPose> Pose;
+		Pose.InitPose(Output.Pose);
+		TArray<FBoneTransform> Changes;
+		Changes.Emplace(Reference.GetCompactPoseIndex(GetRequiredBones()), Magazine);
+		Pose.LocalBlendCSBoneTransforms(Changes, 1.f);
+		FCSPose<FCompactPose>::ConvertComponentPosesToLocalPoses(MoveTemp(Pose), Output.Pose);
+		return true;
+	}
+};
+
+FAnimInstanceProxy* UStingerFirstPersonWeaponAnimInstance::CreateAnimInstanceProxy()
+{
+	return new FStingerWeaponProxy(this);
+}
+
+void UStingerFirstPersonWeaponAnimInstance::DestroyAnimInstanceProxy(FAnimInstanceProxy* Proxy)
+{
+	delete static_cast<FStingerWeaponProxy*>(Proxy);
 }

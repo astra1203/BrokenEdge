@@ -1,0 +1,121 @@
+{
+  "first_person_fire_montage": {
+    "duration": 0.08501666784286499,
+    "notifies": [],
+    "sections": [
+      {
+        "name": "Default",
+        "start": 0,
+        "end": 0.08501666784286499
+      }
+    ]
+  },
+  "first_person_reload_montage": {
+    "duration": 2.899933338165283,
+    "notifies": [],
+    "sections": [
+      {
+        "name": "Default",
+        "start": 0,
+        "end": 2.899933338165283
+      }
+    ]
+  },
+  "first_person_swap_montage": {
+    "duration": 0.9677166938781738,
+    "notifies": [],
+    "sections": [
+      {
+        "name": "Default",
+        "start": 0,
+        "end": 0.9677166938781738
+      }
+    ]
+  },
+  "reload_montage": {
+    "duration": 6.4666666984558105,
+    "notifies": [
+      {
+        "name": "AnimNotify_ReloadFinished",
+        "time": 2.023176431655884
+      },
+      {
+        "name": "AnimNotify_ReloadOnce",
+        "time": 4.335866451263428
+      },
+      {
+        "name": "AnimNotify_ReloadOnce",
+        "time": 4.6690521240234375
+      },
+      {
+        "name": "AnimNotify_ReloadOnce",
+        "time": 5.00686502456665
+      },
+      {
+        "name": "AnimNotify_ReloadOnce",
+        "time": 5.333108901977539
+      },
+      {
+        "name": "AnimNotify_ReloadOnce",
+        "time": 5.671104907989502
+      },
+      {
+        "name": "AnimNotify_ReloadFinished",
+        "time": 6.042942047119141
+      }
+    ],
+    "sections": [
+      {
+        "name": "Rifle",
+        "start": 0,
+        "end": 2.1683905124664307
+      },
+      {
+        "name": "Shotgun",
+        "start": 2.1683905124664307,
+        "end": 5.812082290649414
+      },
+      {
+        "name": "ShotgunEnd",
+        "start": 5.812082290649414,
+        "end": 6.4666666984558105
+      }
+    ]
+  },
+  "swap_montage": {
+    "duration": 1.7333333492279053,
+    "notifies": [
+      {
+        "name": "AnimNotify_SwapAttachWeapons",
+        "time": 0.7541225552558899
+      },
+      {
+        "name": "AnimNotify_SwapFinished",
+        "time": 1.333487629890442
+      }
+    ],
+    "sections": [
+      {
+        "name": "Default",
+        "start": 0,
+        "end": 1.7333333492279053
+      }
+    ]
+  },
+  "fire_weapon_montage": {
+    "duration": 0.46666666865348816,
+    "notifies": [],
+    "sections": [
+      {
+        "name": "RifleHip",
+        "start": 0,
+        "end": 0.23333333432674408
+      },
+      {
+        "name": "RifleAim",
+        "start": 0.23333333432674408,
+        "end": 0.46666666865348816
+      }
+    ]
+  }
+}

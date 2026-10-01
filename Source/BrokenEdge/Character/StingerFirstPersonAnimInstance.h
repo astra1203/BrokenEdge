@@ -33,3 +33,14 @@ protected:
 	virtual FAnimInstanceProxy* CreateAnimInstanceProxy() override;
 	virtual void DestroyAnimInstanceProxy(FAnimInstanceProxy* Proxy) override;
 };
+
+/** Visual magazine only. No ammo or equipment settlement notifies. */
+UCLASS(Transient)
+class BROKENEDGE_API UStingerFirstPersonWeaponAnimInstance : public UAnimInstance
+{
+	GENERATED_BODY()
+
+protected:
+	virtual FAnimInstanceProxy* CreateAnimInstanceProxy() override;
+	virtual void DestroyAnimInstanceProxy(FAnimInstanceProxy* Proxy) override;
+};

@@ -1,0 +1,91 @@
+{
+  "checks": [
+    {
+      "name": "/Game/Characters/Stinger/Maps/UEDPIE_0_L_StingerTest.L_StingerTest/BP_StingerCharacter_C_0",
+      "passed": true,
+      "local": true,
+      "native": {
+        "ammo": 30,
+        "combat_state": "ECS_Unoccuiped",
+        "disabled": false,
+        "health": 80,
+        "body_hand_actor_space": "-10.067585,23.345591,3.839053|21.582507,153.594239,162.709240|0.999998,1.000000,1.000000",
+        "muzzle_actor_space": "X=51.772 Y=19.524 Z=11.199",
+        "fp_hand_camera_space": "X=32.000 Y=14.000 Z=-22.000",
+        "fp_root_camera_space": "X=20.000 Y=0.000 Z=-165.000",
+        "fp_head_camera_space": "X=17.617 Y=-0.786 Z=-7.379",
+        "fp_hand_transform": "32.000006,14.000000,-22.000003|-5.720557,170.221442,-166.974255|0.999998,1.000000,1.000000",
+        "fp_gun_camera_space": "44.007971,7.829384,-20.453191|-8.666047,-72.794530,-76.153070|1.000000,1.000000,1.000000",
+        "right_grip_error": 1.5584907193454603e-05,
+        "left_grip_error": 5.02656400384528e-05,
+        "view_magazine": "0.000000,16.682222,-1.617251|-0.000000,0.000000,89.999990|1.000000,1.000000,1.000000",
+        "has_secondary_weapon": false
+      }
+    },
+    {
+      "name": "/Game/Characters/Stinger/Maps/UEDPIE_0_L_StingerTest.L_StingerTest/BP_StingerCharacter_C_1",
+      "passed": true,
+      "local": false,
+      "native": {
+        "ammo": 30,
+        "combat_state": "ECS_Unoccuiped",
+        "disabled": false,
+        "health": 80,
+        "body_hand_actor_space": "-10.066794,23.346000,3.839355|21.582024,153.593930,162.710016|0.999998,1.000000,1.000000",
+        "muzzle_actor_space": "X=51.772 Y=19.524 Z=11.200",
+        "has_secondary_weapon": false
+      }
+    },
+    {
+      "name": "/Game/Characters/Stinger/Maps/UEDPIE_1_L_StingerTest.L_StingerTest/BP_StingerCharacter_C_0",
+      "passed": true,
+      "local": true,
+      "native": {
+        "ammo": 30,
+        "combat_state": "ECS_Unoccuiped",
+        "disabled": false,
+        "health": 80,
+        "body_hand_actor_space": "-10.086981,23.335498,3.831704|21.594211,153.601879,162.690174|0.999998,1.000000,1.000000",
+        "muzzle_actor_space": "X=51.756 Y=19.531 Z=11.173",
+        "fp_hand_camera_space": "X=32.000 Y=14.000 Z=-22.000",
+        "fp_root_camera_space": "X=20.000 Y=0.000 Z=-165.000",
+        "fp_head_camera_space": "X=17.617 Y=-0.786 Z=-7.379",
+        "fp_hand_transform": "32.000006,14.000000,-22.000003|-5.720557,170.221442,-166.974255|0.999998,1.000000,1.000000",
+        "fp_gun_camera_space": "44.007971,7.829384,-20.453191|-8.666047,-72.794530,-76.153070|1.000000,1.000000,1.000000",
+        "right_grip_error": 1.5584907213188e-05,
+        "left_grip_error": 5.026564020256359e-05,
+        "view_magazine": "0.000000,16.682222,-1.617251|-0.000000,-0.000000,89.999990|1.000000,1.000000,1.000000",
+        "has_secondary_weapon": false
+      }
+    },
+    {
+      "name": "/Game/Characters/Stinger/Maps/UEDPIE_1_L_StingerTest.L_StingerTest/BP_StingerCharacter_C_1",
+      "passed": true,
+      "local": false,
+      "native": {
+        "ammo": 30,
+        "combat_state": "ECS_Unoccuiped",
+        "disabled": false,
+        "health": 80,
+        "body_hand_actor_space": "-10.086981,23.335498,3.831704|21.594211,153.601879,162.690174|0.999998,1.000000,1.000000",
+        "muzzle_actor_space": "X=51.756 Y=19.531 Z=11.173",
+        "has_secondary_weapon": false
+      }
+    }
+  ],
+  "views": [
+    {
+      "pawn": "/Game/Characters/Stinger/Maps/UEDPIE_0_L_StingerTest.L_StingerTest:PersistentLevel.BP_StingerCharacter_C_0",
+      "position": "<Struct 'Vector' (0x000002A0A3EBD820) {x: 0.000000, y: 0.000000, z: 94.149998}>",
+      "rotation": "<Struct 'Rotator' (0x000002A0A3EBD820) {pitch: 0.000000, yaw: 0.000000, roll: 0.000000}>",
+      "screenshot": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\view_2p_0.png"
+    },
+    {
+      "pawn": "/Game/Characters/Stinger/Maps/UEDPIE_1_L_StingerTest.L_StingerTest:PersistentLevel.BP_StingerCharacter_C_0",
+      "position": "<Struct 'Vector' (0x000002A0A3EBD820) {x: 400.000000, y: 0.000000, z: 94.149998}>",
+      "rotation": "<Struct 'Rotator' (0x000002A0A3EBD820) {pitch: 0.000000, yaw: 180.000000, roll: 0.000000}>",
+      "screenshot": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\view_2p_1.png"
+    }
+  ],
+  "result": "passed"
+}

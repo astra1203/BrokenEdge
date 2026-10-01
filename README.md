@@ -1,6 +1,6 @@
 # BrokenEdge
 
-BrokenEdge 是一个使用 **Unreal Engine 5.5.4** 和 C++ 开发的多人第三人称项目，主要用于学习和实践角色移动、武器交互、属性增益、HUD、网络复制以及在线会话等 UE5 系统。
+BrokenEdge 是一个使用 **Unreal Engine 5.8.3** 和 C++ 开发的多人第三人称项目，主要用于学习和实践角色移动、武器交互、属性增益、HUD、网络复制以及在线会话等 UE5 系统。
 
 > 项目仍在开发中。部分玩法、联机回调和表现逻辑可能尚未完成，当前实现请以源码、蓝图和实际运行结果为准。
 
@@ -20,7 +20,7 @@ BrokenEdge 是一个使用 **Unreal Engine 5.5.4** 和 C++ 开发的多人第三
 
 | 项目 | 当前配置 |
 | --- | --- |
-| 引擎 | Unreal Engine 5.5.4 |
+| 引擎 | Unreal Engine 5.8.3 |
 | 语言 | C++ / Blueprint |
 | 平台 | Windows 64 位 |
 | 输入 | Enhanced Input |
@@ -29,7 +29,7 @@ BrokenEdge 是一个使用 **Unreal Engine 5.5.4** 和 C++ 开发的多人第三
 | 特效 | Niagara |
 | 大文件 | Git LFS |
 
-当前 `.uproject` 关联的是本机源码版 UE 5.5.4。其他电脑首次打开时，如果引擎关联失效，请重新选择本机安装的 UE 5.5.4。
+当前 `.uproject` 关联的是本机源码版 UE 5.8.3。其他电脑首次打开时，如果引擎关联失效，请重新选择本机安装的 UE 5.8.3。
 
 ## 获取项目
 
@@ -55,7 +55,7 @@ git lfs ls-files | Select-Object -First 20
 
 ## 打开与编译
 
-1. 安装 Unreal Engine 5.5.4。
+1. 安装 Unreal Engine 5.8.3。
 2. 安装 Visual Studio 2022（包含“使用 C++ 的游戏开发”）或支持 Unreal 的 JetBrains Rider。
 3. 右键 `BrokenEdge.uproject`，选择“生成 Visual Studio 项目文件”。
 4. 使用 IDE 编译 `BrokenEdgeEditor` 的 `Development Editor | Win64` 配置，或直接打开 `BrokenEdge.uproject` 让 Unreal Editor 编译。
@@ -235,3 +235,9 @@ git lfs status
 仓库包含项目代码以及若干 Unreal/Fab 第三方资源。第三方资源仍受其各自许可和账号授权约束，目录名或文件名不能单独证明资源授权。
 
 当前仓库未提供统一的开源许可证，因此未经项目所有者许可，不应公开发布、再分发或用于仓库约定范围之外的用途。资产信息请参考[项目资产来源记录](Docs/asset_source.md)。
+
+## 蜂医角色测试
+
+地图：/Game/Characters/Stinger/Maps/L_StingerTest。角色 BP_StingerCharacter 直接继承 ABrokenEdgeCharacter；第一人称使用修正导入动作和 AK 适配，第三人称暂用原项目重定向动作。操作为 WASD 移动、Shift 冲刺、Space 跳跃、Ctrl 蹲伏、E 装备/切枪、右键瞄准、左键开火、R 换弹、V 切换视角。
+
+[适配说明与验证证据](Docs/Stinger/ViewFit.md)。

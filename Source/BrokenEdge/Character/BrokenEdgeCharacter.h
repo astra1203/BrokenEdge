@@ -17,6 +17,40 @@ enum class ETurningInPlace : uint8;
 class UInputAction;
 class UInputMappingContext;
 enum class EVisibilityBasedAnimTickOption : uint8;
+enum class EFirstPersonPrimitiveType : uint8;
+
+/** Camera-space weapon fit; source poses stay on a continuous, stationary body. */
+USTRUCT(BlueprintType)
+struct FStingerViewWeaponFit
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bEnabled = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FTransform Hip = FTransform(FRotator(0, -90, 0), FVector(45, 12, -20));
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FTransform Aim = FTransform(FRotator(0, -90, 0), FVector(45, 0, -8));
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FTransform SourceRightHand;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FTransform SourceLeftHand;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FTransform SourceLeftMagazineOut;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FTransform SourceLeftMagazineIn;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FTransform MagazineGrip;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FTransform MagazineReference;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FName MagazineBone = TEXT("b_gun_mag");
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0", ClampMax="1"))
+	float MagazineOut = .12f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0", ClampMax="1"))
+	float MagazineIn = .52f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0.01", ClampMax="0.99"))
+	float SwapAttachFraction = .55f;
+};
 
 UCLASS()
 class BROKENEDGE_API ABrokenEdgeCharacter : public ACharacter
@@ -206,6 +240,8 @@ public:
 	TObjectPtr<USkeletalMesh> FirstPersonWeaponSourceMesh;
 	UPROPERTY(EditDefaultsOnly, Category = "FirstPerson")
 	TObjectPtr<USkeletalMesh> FirstPersonWeaponVisualMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera|First Person")
+	FStingerViewWeaponFit FirstPersonWeaponFit;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	FTransform FirstPersonWeaponTransform = FTransform::Identity;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
@@ -232,10 +268,15 @@ public:
 	float FirstPersonAimInterpSpeed = 20.f;
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return DedicatedFirstPersonMesh; }
 	USkeletalMeshComponent* GetFirstPersonWeaponMesh() const { return FirstPersonWeaponMesh; }
+	bool UsesFirstPersonWeaponFit() const;
+	FTransform GetFirstPersonGripTarget(FName Socket) const;
+	float GetFirstPersonReloadProgress() const;
 
 private:
 	void UpdateFirstPersonWeapon();
-	void PlayFirstPersonMontage(UAnimMontage* Montage);
+	void PlayFirstPersonMontage(UAnimMontage* Montage, UAnimMontage* ThirdPersonMontage, FName Section = NAME_None);
+	void SyncFirstPersonAction();
+	void UpdateFirstPersonWeaponPose();
 	void SprintPressed();
 	void SprintReleased();
 	void UpdateSprint();
@@ -251,6 +292,16 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<AWeapon> FirstPersonSourceWeapon = nullptr;
 	bool bOriginalWeaponOwnerNoSee = false;
+	EFirstPersonPrimitiveType OriginalWeaponPrimitiveType;
+	FTransform ViewWeaponTarget = FTransform::Identity;
+	UPROPERTY(Transient)
+	TObjectPtr<UAnimMontage> ViewActionMontage;
+	UPROPERTY(Transient)
+	TObjectPtr<UAnimMontage> ViewActionThirdPersonMontage;
+	float ViewActionSectionStart = 0.f;
+	float ViewActionSectionLength = 1.f;
+	float ViewActionAttachTime = -1.f;
+	FDelegateHandle ViewWeaponPoseDelegateHandle;
 	void ToggleCameraView();
 	void SetFirstPersonView(bool bEnabled);
 	void UpdateFirstPersonCameraLocation();
@@ -262,6 +313,7 @@ private:
 	FTransform ThirdPersonCameraTransform = FTransform::Identity;
 	bool bThirdPersonCameraUsesControlRotation = false;
 	bool bOriginalMeshOwnerNoSee = false;
+	EFirstPersonPrimitiveType OriginalBodyPrimitiveType;
 	bool bOriginalMeshCastHiddenShadow = false;
 	FDelegateHandle FirstPersonPoseDelegateHandle;
 

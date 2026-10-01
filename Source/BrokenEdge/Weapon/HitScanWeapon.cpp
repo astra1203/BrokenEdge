@@ -12,6 +12,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Sound/SoundCue.h"
+#include "HAL/IConsoleManager.h"
+
+static TAutoConsoleVariable<int32> CVarHitScanDebug(TEXT("BrokenEdge.Debug.HitScan"), 0,
+                                                    TEXT("Draw short-lived hit scan impact markers."));
 
 
 void AHitScanWeapon::Fire(const FVector& HitTarget)
@@ -140,7 +144,8 @@ void AHitScanWeapon::WeaponTraceHit(const FVector& TraceStart, const FVector& Hi
 		OutHit.ImpactPoint = End;
 	}
 
-	DrawDebugSphere(GetWorld(), BeamEnd, 16.f, 12, FColor::Orange, true);
+	if (CVarHitScanDebug.GetValueOnGameThread())
+		DrawDebugSphere(GetWorld(), BeamEnd, 16.f, 12, FColor::Orange, false, 1.f);
 
 	if (BeamParticles)
 	{

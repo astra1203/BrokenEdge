@@ -18,9 +18,12 @@ def snapshot(pawn):
     move = pawn.get_editor_property('character_movement')
     native = json.loads(lib.get_validation_state(pawn))
     fp = [m for m in pawn.get_components_by_class(unreal.SkeletalMeshComponent)
-          if m.get_editor_property('only_owner_see') and m.get_anim_instance()]
+          if m.get_editor_property('only_owner_see') and isinstance(m.get_anim_instance(),unreal.StingerFirstPersonAnimInstance)]
     camera = pawn.get_editor_property('follow_camera')
     return {'name':pawn.get_name(),'local':pawn.is_locally_controlled(),
+            'fp_config_mesh':str(pawn.get_editor_property('first_person_mesh_asset')),
+            'fp_config_class':str(pawn.get_editor_property('first_person_anim_class')),
+            'all_meshes':[{'name':m.get_name(),'asset':str(m.get_skeletal_mesh_asset()),'anim':str(m.get_anim_instance())} for m in pawn.get_components_by_class(unreal.SkeletalMeshComponent)],
             'location':str(pawn.get_actor_location()),'speed':pawn.get_velocity().length(),
             'max_speed':move.get_editor_property('max_walk_speed'),
             'crouch_speed':move.get_editor_property('max_walk_speed_crouched'),

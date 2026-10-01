@@ -32,6 +32,12 @@ public:
 	static void InjectValidationInput(APlayerController* Controller, class UInputAction* Action, FVector Value);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static FString GetValidationState(APawn* Pawn);
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static void SetValidationFixedStep(float Seconds);
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static AActor* SpawnValidationWeapon(UWorld* World, TSubclassOf<AActor> Class, FVector Location);
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static FString GetMontageDescription(UAnimMontage* Montage);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Import")
 	static void ResetAnimation(UAnimSequence* Sequence);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Import")

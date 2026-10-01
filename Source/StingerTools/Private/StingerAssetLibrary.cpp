@@ -22,6 +22,7 @@
 #include "Camera/CameraComponent.h"
 #include "Serialization/JsonSerializer.h"
 #include "Animation/Skeleton.h"
+#include "Misc/App.h"
 
 USkeleton* UStingerAssetLibrary::CreateSourceSkeleton(const FString& PackageName, const TArray<FName>& Names,
                                                       const TArray<int32>& Parents,
@@ -109,9 +110,74 @@ FString UStingerAssetLibrary::GetValidationState(APawn* Pawn)
 		State->SetStringField(
 			TEXT("fp_gun_camera_space"),
 			Mesh->GetSocketTransform(TEXT("b_IK_Gun")).GetRelativeTransform(Camera).ToString());
+		if (auto ViewWeapon = Cast<USkeletalMeshComponent>(ObjectField(Pawn,TEXT("FirstPersonWeaponMesh"))))
+		{
+			State->SetNumberField(TEXT("right_grip_error"), FVector::Distance(
+				                      Mesh->GetSocketLocation(TEXT("RightHand")),
+				                      ViewWeapon->GetSocketLocation(TEXT("Hand_R"))));
+			State->SetNumberField(TEXT("left_grip_error"), FVector::Distance(Mesh->GetSocketLocation(TEXT("LeftHand")),
+			                                                                 ViewWeapon->GetSocketLocation(
+				                                                                 TEXT("LeftHandSocket"))));
+			State->SetStringField(
+				TEXT("view_magazine"), ViewWeapon->GetSocketTransform(TEXT("b_gun_mag"), RTS_Component).ToString());
+		}
+		if (auto Anim = Mesh->GetAnimInstance())
+			if (auto Montage = Anim->GetCurrentActiveMontage())
+			{
+				State->SetStringField(TEXT("view_montage"), Montage->GetPathName());
+				State->SetNumberField(
+					TEXT("view_montage_fraction"),
+					Anim->Montage_GetPosition(Montage) / FMath::Max(.01f, Montage->GetPlayLength()));
+			}
 	}
+	State->SetBoolField(TEXT("has_secondary_weapon"), ObjectField(Combat,TEXT("SecondaryWeapon")) != nullptr);
 	FString Result;
 	FJsonSerializer::Serialize(State, TJsonWriterFactory<>::Create(&Result));
+	return Result;
+}
+
+void UStingerAssetLibrary::SetValidationFixedStep(float Seconds)
+{
+	FApp::SetUseFixedTimeStep(Seconds > 0.f);
+	if (Seconds > 0.f) FApp::SetFixedDeltaTime(Seconds);
+}
+
+AActor* UStingerAssetLibrary::SpawnValidationWeapon(UWorld* World, TSubclassOf<AActor> Class, FVector Location)
+{
+	if (!World || !Class) return nullptr;
+	FActorSpawnParameters Parameters;
+	Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	return World->SpawnActor<AActor>(Class, Location, FRotator::ZeroRotator, Parameters);
+}
+
+FString UStingerAssetLibrary::GetMontageDescription(UAnimMontage* Montage)
+{
+	if (!Montage) return TEXT("{}");
+	TSharedRef<FJsonObject> Root = MakeShared<FJsonObject>();
+	Root->SetNumberField(TEXT("duration"), Montage->GetPlayLength());
+	TArray<TSharedPtr<FJsonValue>> Notifies;
+	for (const auto& Notify : Montage->Notifies)
+	{
+		TSharedRef<FJsonObject> Entry = MakeShared<FJsonObject>();
+		Entry->SetStringField(TEXT("name"), Notify.GetNotifyEventName().ToString());
+		Entry->SetNumberField(TEXT("time"), Notify.GetTriggerTime());
+		Notifies.Add(MakeShared<FJsonValueObject>(Entry));
+	}
+	Root->SetArrayField(TEXT("notifies"), Notifies);
+	TArray<TSharedPtr<FJsonValue>> Sections;
+	for (int32 Index = 0; Index < Montage->CompositeSections.Num(); ++Index)
+	{
+		float Start, End;
+		Montage->GetSectionStartAndEndTime(Index, Start, End);
+		TSharedRef<FJsonObject> Entry = MakeShared<FJsonObject>();
+		Entry->SetStringField(TEXT("name"), Montage->CompositeSections[Index].SectionName.ToString());
+		Entry->SetNumberField(TEXT("start"), Start);
+		Entry->SetNumberField(TEXT("end"), End);
+		Sections.Add(MakeShared<FJsonValueObject>(Entry));
+	}
+	Root->SetArrayField(TEXT("sections"), Sections);
+	FString Result;
+	FJsonSerializer::Serialize(Root, TJsonWriterFactory<>::Create(&Result));
 	return Result;
 }
 
@@ -268,6 +334,10 @@ UAnimMontage* UStingerAssetLibrary::CreateVisualMontage(UAnimSequence* Sequence,
 	Segment.AnimPlayRate = 1.f;
 	Segment.LoopingCount = 1;
 	Montage->SetCompositeLength(Sequence->GetPlayLength());
+	Montage->CompositeSections.Reset();
+	Montage->AddAnimCompositeSection(TEXT("Default"), 0.f);
+	Montage->BlendIn.SetBlendTime(FMath::Min(.04f, Sequence->GetPlayLength() * .1f));
+	Montage->BlendOut.SetBlendTime(FMath::Min(.04f, Sequence->GetPlayLength() * .1f));
 	Montage->MarkPackageDirty();
 	return Montage;
 }

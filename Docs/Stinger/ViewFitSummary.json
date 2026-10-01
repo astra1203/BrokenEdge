@@ -1,0 +1,43 @@
+{
+  "branch": "ue5.8-20260930",
+  "engine": "5.8.3",
+  "map": "/Game/Characters/Stinger/Maps/L_StingerTest",
+  "character": "BP_StingerCharacter",
+  "parent": "BrokenEdgeCharacter",
+  "build": "succeeded",
+  "motion_checks": 169,
+  "captured_frames": 126,
+  "capture_fps": 5,
+  "pie_checks": 29,
+  "multiplayer_view_checks": 4,
+  "visual_review": {
+    "method": "all contact-sheet frames reviewed; idle, aim, magazine, swap inspected at full resolution",
+    "scope": "AK47 first-person action capture at 5 fps; local two-player PIE idle views",
+    "reviewed_frames": 126,
+    "limitations": [
+      "5 fps review cannot prove every interpolated frame",
+      "third-person original retargeted actions retained by agreement",
+      "jump source clip remains isolated",
+      "AK47 fitting only"
+    ],
+    "result": "accepted",
+    "frame_directory": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\ViewFitFrames\\20261001-200155",
+    "criteria": [
+      "complete sleeves without visible cut openings",
+      "hands do not obstruct the sight line",
+      "magazine follows hand during removal and returns to bind pose",
+      "actual imported reload and equip montages remain active",
+      "switching view resumes action and restores render flags",
+      "first-person shading no longer alternates with world-body shadow",
+      "both PIE views show the other complete character and local arms only",
+      "AK front post sits in rear sight notch near screen center; stock and hands do not hide it"
+    ]
+  },
+  "third_person": "original project retargeted animations, explicitly retained for this stage",
+  "limitations": [
+    "AK47 fitting only",
+    "zero-scale jump clip remains isolated",
+    "all 307 mapped clips not visually reviewed",
+    "no independent-process network test"
+  ]
+}
