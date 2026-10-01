@@ -6,6 +6,7 @@
 #include "BrokenEdgeCharacter.h"
 #include "BrokenEdge/BrokenEdgeTypes/CombatState.h"
 #include "BrokenEdge/Weapon/Weapon.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -19,15 +20,21 @@ void UBrokenEdgeAnimInstance::NativeInitializeAnimation()
 void UBrokenEdgeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 {
 	Super::NativeUpdateAnimation(DeltaTime);
+	// Do not retain an old weapon's target when ownership, equipment or control changes.
+	LeftHandTransform = FTransform::Identity;
+	bUseFABRIK = false;
+	bUseAimOffsets = false;
+	bTransformRightHand = false;
+	bUseGripReachCorrection = false;
 
 	// ========== 1. 获取角色引用 ==========
 	// 延迟初始化角色指针，确保动画实例持有有效的角色引用
-	if (BrokenEdgeCharacter == nullptr)
+	if (!IsValid(BrokenEdgeCharacter))
 	{
 		BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(TryGetPawnOwner());
 	}
 	// 若无有效角色，直接返回
-	if (BrokenEdgeCharacter == nullptr) return;
+	if (!IsValid(BrokenEdgeCharacter)) return;
 
 	// ========== 2. 收集基础运动状态 ==========
 	// 计算地面移动速度（忽略Z轴，即垂直速度）
@@ -75,24 +82,43 @@ void UBrokenEdgeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	AO_Pitch = BrokenEdgeCharacter->GetAO_Pitch(); // 垂直瞄准偏移
 
 	// ========== 6. 计算手部IK（Inverse Kinematics） ==========
-	if (bWeaponEquipped && EquippedWeapon && EquippedWeapon->GetWeaponMesh() && BrokenEdgeCharacter->GetMesh())
+	if (bWeaponEquipped && IsValid(EquippedWeapon) && EquippedWeapon->GetWeaponMesh() && BrokenEdgeCharacter->GetMesh()
+		&& EquippedWeapon->GetOwner() == BrokenEdgeCharacter
+		&& EquippedWeapon->GetWeaponState() == EWeaponState::EWS_Equipped
+		&& !bDefeated && !BrokenEdgeCharacter->GetDisableGameplay())
 	{
+		const auto WeaponMesh = EquippedWeapon->GetWeaponMesh();
+		const auto Body = BrokenEdgeCharacter->GetMesh();
+		const bool bHasRightHandBone = Body->GetBoneIndex(BrokenEdgeCharacter->RightHandBone) != INDEX_NONE;
+		const bool bHasLeftGrip = WeaponMesh->DoesSocketExist(TEXT("LeftHandSocket"));
+		const bool bHasRightGrip = WeaponMesh->DoesSocketExist(TEXT("Hand_R"));
+		if ((!bHasLeftGrip || !bHasRightGrip || !bHasRightHandBone)
+			&& !ReportedInvalidGripMeshes.Contains(WeaponMesh->GetSkeletalMeshAsset()))
+		{
+			ReportedInvalidGripMeshes.Add(WeaponMesh->GetSkeletalMeshAsset());
+			UE_LOG(LogTemp, Warning,
+			       TEXT(
+				       "Weapon grip target unavailable: mesh=%s LeftHandSocket=%d Hand_R=%d character=%s right bone=%s valid=%d"
+			       ),
+			       *GetPathNameSafe(WeaponMesh->GetSkeletalMeshAsset()), bHasLeftGrip, bHasRightGrip,
+			       *GetNameSafe(BrokenEdgeCharacter), *BrokenEdgeCharacter->RightHandBone.ToString(),
+			       bHasRightHandBone);
+		}
 		// ===== 6.1 左手IK =====
-		// 获取武器上左手Socket的世界坐标
-		LeftHandTransform = EquippedWeapon->GetWeaponMesh()->GetSocketTransform(
-			FName("LeftHandSocket"), ERelativeTransformSpace::RTS_World);
-		FVector OutPosition;
-		FRotator OutRotation;
-		// 将世界坐标转换到角色骨骼空间（右手骨骼作为参考）
-		BrokenEdgeCharacter->GetMesh()->TransformToBoneSpace(BrokenEdgeCharacter->RightHandBone,
-		                                                     LeftHandTransform.GetLocation(), FRotator::ZeroRotator,
-		                                                     OutPosition, OutRotation);
-		LeftHandTransform.SetLocation(OutPosition);
-		LeftHandTransform.SetRotation(FQuat(OutRotation));
+		if (bHasLeftGrip && bHasRightHandBone)
+		{
+			const FTransform Grip = WeaponMesh->GetSocketTransform(TEXT("LeftHandSocket"), RTS_World);
+			FVector OutPosition;
+			FRotator OutRotation;
+			Body->TransformToBoneSpace(BrokenEdgeCharacter->RightHandBone, Grip.GetLocation(), Grip.Rotator(),
+			                           OutPosition, OutRotation);
+			LeftHandTransform.SetLocation(OutPosition);
+			LeftHandTransform.SetRotation(OutRotation.Quaternion());
+		}
 
 		// ===== 6.2 右手LookAt（仅本地玩家） =====
 		// 让右手（持枪）始终指向准星瞄准点
-		if (BrokenEdgeCharacter->IsLocallyControlled())
+		if (BrokenEdgeCharacter->IsLocallyControlled() && bHasRightGrip && bHasRightHandBone)
 		{
 			// bLocallyController = true;
 			// 获取武器上右手Socket的世界坐标
@@ -123,12 +149,15 @@ void UBrokenEdgeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 			// 本地玩家重新加载时禁用FABRIK
 			bUseFABRIK = !BrokenEdgeCharacter->IsLocallyReloading();
 		}
+		bUseFABRIK = bUseFABRIK && bHasLeftGrip && bHasRightHandBone;
+		bUseGripReachCorrection = bUseFABRIK && bHasRightGrip && GripReachCorrectionWeaponMesh
+			&& WeaponMesh->GetSkeletalMeshAsset() == GripReachCorrectionWeaponMesh;
 
 		// 瞄准偏移启用条件：空闲状态且游戏未禁用
 		bUseAimOffsets = BrokenEdgeCharacter->GetCombatState() == ECombatState::ECS_Unoccuiped && !BrokenEdgeCharacter->
 			GetDisableGameplay();
 		// 右手变换启用条件：空闲状态且游戏未禁用
-		bTransformRightHand = BrokenEdgeCharacter->GetCombatState() == ECombatState::ECS_Unoccuiped && !
-			BrokenEdgeCharacter->GetDisableGameplay();
+		bTransformRightHand = BrokenEdgeCharacter->GetCombatState() == ECombatState::ECS_Unoccuiped
+			&& BrokenEdgeCharacter->IsLocallyControlled() && bHasRightGrip && bHasRightHandBone;
 	}
 }

@@ -1,0 +1,59 @@
+{
+  "weapon": "/Game/FPS_Weapon_Bundle/Weapons/Meshes/Ka47/SK_KA47.SK_KA47",
+  "before_sockets": {
+    "Hand_R": true,
+    "LeftHandSocket": true
+  },
+  "characters": [
+    {
+      "character": "BP_StingerCharacter",
+      "body": "/Game/Characters/Stinger/Meshes/Gameplay/Stinger_3P_Textured/SkeletalMeshes/Stinger_3P_Textured.Stinger_3P_Textured",
+      "right_socket_before": "<Struct 'Transform' (0x000001C81D245380) {rotation: {x: -0.563460, y: 0.793956, z: -0.215669, w: 0.075065}, translation: {x: -6.898762, y: 2.176003, z: -3.416445}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+      "right_socket_after": "<Struct 'Transform' (0x000001C81D244B10) {rotation: {x: -0.563460, y: 0.793956, z: -0.215669, w: 0.075065}, translation: {x: -6.898762, y: 2.176003, z: -3.416445}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>"
+    },
+    {
+      "character": "BP_StingerCharacter_Repaired",
+      "body": "/Game/Characters/Stinger/Meshes/Gameplay/Stinger_3P_Textured/SkeletalMeshes/Stinger_3P_Textured.Stinger_3P_Textured",
+      "right_socket_before": "<Struct 'Transform' (0x000001C81D244B10) {rotation: {x: -0.563460, y: 0.793956, z: -0.215669, w: 0.075065}, translation: {x: -6.898762, y: 2.176003, z: -3.416445}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>",
+      "right_socket_after": "<Struct 'Transform' (0x000001C81D245380) {rotation: {x: -0.563460, y: 0.793956, z: -0.215669, w: 0.075065}, translation: {x: -6.898762, y: 2.176003, z: -3.416445}, scale3d: {x: 1.000000, y: 1.000000, z: 1.000000}}>"
+    }
+  ],
+  "ik_before": {
+    "fabrik": [
+      {
+        "root": "LeftArm",
+        "tip": "LeftHand",
+        "effector_bone": "RightHand",
+        "space": 3,
+        "rotation_source": 0,
+        "precision": 0.10000000149011612,
+        "iterations": 24
+      }
+    ]
+  },
+  "ik_after": {
+    "fabrik": [
+      {
+        "root": "LeftArm",
+        "tip": "LeftHand",
+        "effector_bone": "RightHand",
+        "space": 3,
+        "rotation_source": 0,
+        "precision": 0.10000000149011612,
+        "iterations": 24
+      }
+    ]
+  },
+  "grip_component_positions": {
+    "Hand_R": [
+      0.0,
+      -8.0,
+      0.0
+    ],
+    "LeftHandSocket": [
+      0.0,
+      25.0,
+      8.0
+    ]
+  }
+}

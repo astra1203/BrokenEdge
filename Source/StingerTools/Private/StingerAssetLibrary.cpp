@@ -25,6 +25,12 @@
 #include "Misc/App.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
+#include "AnimGraphNode_Fabrik.h"
+#include "AnimGraphNode_WeaponGripReach.h"
+#include "K2Node_VariableGet.h"
+#include "AnimGraphNode_LocalToComponentSpace.h"
+#include "AnimGraphNode_ComponentToLocalSpace.h"
+#include "AnimGraphNode_Root.h"
 
 USkeleton* UStingerAssetLibrary::CreateSourceSkeleton(const FString& PackageName, const TArray<FName>& Names,
                                                       const TArray<int32>& Parents,
@@ -63,7 +69,7 @@ bool UStingerAssetLibrary::AssignMeshSkeleton(USkeletalMesh* Mesh, USkeleton* Sk
 FString UStingerAssetLibrary::GetValidationState(APawn* Pawn)
 {
 	if (!Pawn) return TEXT("{}");
-	// Read reflected state without loading gameplay modules into the import helper.
+	// Read the state used by the real gameplay and animation paths.
 	auto ObjectField = [](UObject* Object, FName Name) -> UObject*
 	{
 		if (!Object) return nullptr;
@@ -84,9 +90,14 @@ FString UStingerAssetLibrary::GetValidationState(APawn* Pawn)
 	if (auto Property = FindFProperty<FFloatProperty>(Pawn->GetClass(), TEXT("Health")))
 		State->SetNumberField(TEXT("health"), Property->GetPropertyValue_InContainer(Pawn));
 	if (auto Body = Cast<USkeletalMeshComponent>(ObjectField(Pawn, TEXT("Mesh"))))
+	{
 		State->SetStringField(
 			TEXT("body_hand_actor_space"),
 			Body->GetSocketTransform(TEXT("RightHand")).GetRelativeTransform(Pawn->GetActorTransform()).ToString());
+		if (auto Anim = Body->GetAnimInstance())
+			if (auto Active = FindFProperty<FBoolProperty>(Anim->GetClass(), TEXT("bUseFABRIK")))
+				State->SetBoolField(TEXT("left_hand_ik_active"), Active->GetPropertyValue_InContainer(Anim));
+	}
 	if (auto WeaponActor = Cast<AActor>(Weapon))
 		if (auto WeaponMesh = WeaponActor->FindComponentByClass<USkeletalMeshComponent>())
 			State->SetStringField(
@@ -136,6 +147,154 @@ FString UStingerAssetLibrary::GetValidationState(APawn* Pawn)
 	FString Result;
 	FJsonSerializer::Serialize(State, TJsonWriterFactory<>::Create(&Result));
 	return Result;
+}
+
+FString UStingerAssetLibrary::DescribeThirdPersonGripIK(UAnimBlueprint* Blueprint)
+{
+	if (!Blueprint) return TEXT("{}");
+	TArray<UEdGraph*> Graphs;
+	Blueprint->GetAllGraphs(Graphs);
+	TSharedRef<FJsonObject> Result = MakeShared<FJsonObject>();
+	TArray<TSharedPtr<FJsonValue>> Nodes;
+	for (auto Graph : Graphs)
+		for (auto GraphNode : Graph->Nodes)
+			if (auto Fabrik = Cast<UAnimGraphNode_Fabrik>(GraphNode))
+			{
+				const auto& Node = Fabrik->Node;
+				TSharedRef<FJsonObject> Entry = MakeShared<FJsonObject>();
+				Entry->SetStringField(TEXT("root"), Node.RootBone.BoneName.ToString());
+				Entry->SetStringField(TEXT("tip"), Node.TipBone.BoneName.ToString());
+				Entry->SetStringField(TEXT("effector_bone"), Node.EffectorTarget.BoneReference.BoneName.ToString());
+				Entry->SetNumberField(TEXT("space"), Node.EffectorTransformSpace);
+				Entry->SetNumberField(TEXT("rotation_source"), Node.EffectorRotationSource);
+				Entry->SetNumberField(TEXT("precision"), Node.Precision);
+				Entry->SetNumberField(TEXT("iterations"), Node.MaxIterations);
+				Nodes.Add(MakeShared<FJsonValueObject>(Entry));
+			}
+	Result->SetArrayField(TEXT("fabrik"), Nodes);
+	FString Text;
+	FJsonSerializer::Serialize(Result, TJsonWriterFactory<>::Create(&Text));
+	return Text;
+}
+
+bool UStingerAssetLibrary::ConfigureThirdPersonGripIK(UAnimBlueprint* Blueprint)
+{
+	if (!Blueprint) return false;
+	TArray<UEdGraph*> Graphs;
+	Blueprint->GetAllGraphs(Graphs);
+	TArray<UAnimGraphNode_Fabrik*> Nodes;
+	for (auto Graph : Graphs)
+		for (auto Node : Graph->Nodes)
+			if (auto Fabrik = Cast<UAnimGraphNode_Fabrik>(Node)) Nodes.Add(Fabrik);
+	// Only the Stinger arm graph is expected here; don't silently edit an unrelated chain.
+	if (Nodes.Num() != 1) return false;
+	UEdGraph* MainGraph = nullptr;
+	UAnimGraphNode_Root* Root = nullptr;
+	for (auto Graph : Graphs)
+		if (Graph->GetFName() == TEXT("AnimGraph"))
+		{
+			MainGraph = Graph;
+			for (auto GraphNode : Graph->Nodes)
+				if (auto Candidate = Cast<UAnimGraphNode_Root>(GraphNode)) Root = Candidate;
+		}
+	if (!MainGraph || !Root) return false;
+	auto Fabrik = Nodes[0];
+	UAnimGraphNode_WeaponGripReach* Reach = nullptr;
+	for (auto GraphNode : Fabrik->GetGraph()->Nodes)
+		if (auto Existing = Cast<UAnimGraphNode_WeaponGripReach>(GraphNode)) Reach = Existing;
+	if (Fabrik->GetGraph() != MainGraph)
+	{
+		// The old cached grip pose precedes WeaponSlot. Fire montages overwrite that result.
+		// Bypass the old controls and solve once on the final animated pose instead.
+		auto Input = (Reach ? Reach : static_cast<UAnimGraphNode_SkeletalControlBase*>(Fabrik))->FindPin(
+			TEXT("ComponentPose"));
+		auto Output = Fabrik->FindPin(TEXT("Pose"), EGPD_Output);
+		if (!Input || Input->LinkedTo.Num() != 1 || !Output || Output->LinkedTo.IsEmpty()) return false;
+		auto Previous = Input->LinkedTo[0];
+		auto Consumers = Output->LinkedTo;
+		for (auto Consumer : Consumers)
+		{
+			Consumer->BreakLinkTo(Output);
+			Previous->MakeLinkTo(Consumer);
+		}
+		FBlueprintEditorUtils::RemoveNode(Blueprint, Fabrik, true);
+		if (Reach) FBlueprintEditorUtils::RemoveNode(Blueprint, Reach, true);
+		Fabrik = nullptr;
+		Reach = nullptr;
+	}
+	if (!Fabrik)
+	{
+		auto Result = Root->FindPinChecked(TEXT("Result"));
+		if (Result->LinkedTo.Num() != 1) return false;
+		auto Previous = Result->LinkedTo[0];
+		FGraphNodeCreator<UAnimGraphNode_LocalToComponentSpace> ToComponentCreator(*MainGraph);
+		auto ToComponent = ToComponentCreator.CreateNode();
+		ToComponentCreator.Finalize();
+		FGraphNodeCreator<UAnimGraphNode_ComponentToLocalSpace> ToLocalCreator(*MainGraph);
+		auto ToLocal = ToLocalCreator.CreateNode();
+		ToLocalCreator.Finalize();
+		FGraphNodeCreator<UAnimGraphNode_WeaponGripReach> ReachCreator(*MainGraph);
+		Reach = ReachCreator.CreateNode();
+		ReachCreator.Finalize();
+		FGraphNodeCreator<UAnimGraphNode_Fabrik> FabrikCreator(*MainGraph);
+		Fabrik = FabrikCreator.CreateNode();
+		Fabrik->Node.AlphaInputType = EAnimAlphaInputType::Bool;
+		Fabrik->Node.AlphaBoolBlend.BlendInTime = .1f;
+		Fabrik->Node.AlphaBoolBlend.BlendOutTime = 0.f;
+		FabrikCreator.Finalize();
+		auto Variable = [&](FName Name, int32 Y)
+		{
+			FGraphNodeCreator<UK2Node_VariableGet> Creator(*MainGraph);
+			auto Getter = Creator.CreateNode();
+			Getter->VariableReference.SetSelfMember(Name);
+			Getter->NodePosX = Root->NodePosX;
+			Getter->NodePosY = Y;
+			Creator.Finalize();
+			return Getter->GetValuePin();
+		};
+		auto Target = Variable(TEXT("LeftHandTransform"), Root->NodePosY + 250);
+		Target->MakeLinkTo(Fabrik->FindPinChecked(TEXT("EffectorTransform")));
+		Target->MakeLinkTo(Reach->FindPinChecked(TEXT("LeftHandTarget")));
+		Variable(TEXT("bUseFABRIK"), Root->NodePosY + 350)->MakeLinkTo(
+			Fabrik->FindPinChecked(TEXT("bAlphaBoolEnabled")));
+		Variable(TEXT("bUseGripReachCorrection"), Root->NodePosY + 450)->MakeLinkTo(
+			Reach->FindPinChecked(TEXT("bEnabled")));
+		Result->BreakLinkTo(Previous);
+		Previous->MakeLinkTo(ToComponent->FindPinChecked(TEXT("LocalPose")));
+		ToComponent->FindPinChecked(TEXT("ComponentPose"), EGPD_Output)->MakeLinkTo(
+			Reach->FindPinChecked(TEXT("ComponentPose")));
+		Reach->FindPinChecked(TEXT("Pose"), EGPD_Output)->MakeLinkTo(Fabrik->FindPinChecked(TEXT("ComponentPose")));
+		Fabrik->FindPinChecked(TEXT("Pose"), EGPD_Output)->MakeLinkTo(ToLocal->FindPinChecked(TEXT("ComponentPose")));
+		ToLocal->FindPinChecked(TEXT("Pose"), EGPD_Output)->MakeLinkTo(Result);
+		int32 X = Root->NodePosX;
+		const TArray<UEdGraphNode*> Controls = {ToComponent, Reach, Fabrik, ToLocal};
+		for (auto GraphNode : Controls)
+		{
+			GraphNode->NodePosX = X;
+			GraphNode->NodePosY = Root->NodePosY;
+			X += 300;
+		}
+		Root->NodePosX = X;
+	}
+	if (!Reach) return false;
+	auto& Node = Fabrik->Node;
+	Node.RootBone.BoneName = TEXT("LeftArm");
+	Node.TipBone.BoneName = TEXT("LeftHand");
+	Node.EffectorTarget.bUseSocket = false;
+	Node.EffectorTarget.BoneReference.BoneName = TEXT("RightHand");
+	Node.EffectorTransformSpace = BCS_BoneSpace;
+	Node.EffectorRotationSource = BRS_CopyFromTarget;
+	Node.Precision = .1f;
+	Node.MaxIterations = 24;
+	Reach->Node.RightArm.BoneName = TEXT("RightArm");
+	Reach->Node.RightForeArm.BoneName = TEXT("RightForeArm");
+	Reach->Node.RightHand.BoneName = TEXT("RightHand");
+	Reach->Node.LeftArm.BoneName = TEXT("LeftArm");
+	Reach->Node.LeftForeArm.BoneName = TEXT("LeftForeArm");
+	Reach->Node.LeftHand.BoneName = TEXT("LeftHand");
+	FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(Blueprint);
+	FKismetEditorUtilities::CompileBlueprint(Blueprint);
+	return Blueprint->Status != BS_Error;
 }
 
 void UStingerAssetLibrary::SetValidationFixedStep(float Seconds)

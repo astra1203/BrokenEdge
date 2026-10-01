@@ -1,0 +1,424 @@
+{
+  "result": "passed",
+  "engine": "5.8.3",
+  "branch": "ue5.8-20260930",
+  "scope": "Stinger third-person AK47 grip; original third-person animation assets retained",
+  "single_player_frames": 897,
+  "two_player_frames": 897,
+  "single_player_checks": [
+    {
+      "name": "stable_frames_have_equipped_weapon",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "world_weapon_grip_sockets_exist",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "stable_left_grip_within_2cm",
+      "passed": true,
+      "detail": 0.09996947459653435
+    },
+    {
+      "name": "stable_right_grip_within_2cm",
+      "passed": true,
+      "detail": 1.140912029999599e-05
+    },
+    {
+      "name": "look_up_actual_aim_pitch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "look_down_actual_aim_pitch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "stable_left_ik_enabled",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "reload_releases_left_ik",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "swap_releases_left_ik",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "drop_releases_left_ik",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "missing_socket_disables_ik",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "first_person_dual_world_weapon_visibility",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "third_person_dual_world_weapon_visibility",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "upper_arm_length_not_stretched",
+      "passed": true,
+      "detail": [
+        26.822712789067527,
+        26.822730375414327
+      ]
+    },
+    {
+      "name": "forearm_length_not_stretched",
+      "passed": true,
+      "detail": [
+        27.868769185451658,
+        27.86879977107178
+      ]
+    },
+    {
+      "name": "right_upper_arm_length_not_stretched",
+      "passed": true,
+      "detail": [
+        26.82251718536091,
+        26.822534771579498
+      ]
+    },
+    {
+      "name": "right_forearm_length_not_stretched",
+      "passed": true,
+      "detail": [
+        27.86878235273601,
+        27.868803116604912
+      ]
+    },
+    {
+      "name": "no_skipped_simulation_frames",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "two_player_checks": [
+    {
+      "name": "stable_frames_have_equipped_weapon",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "world_weapon_grip_sockets_exist",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "stable_left_grip_within_2cm",
+      "passed": true,
+      "detail": 0.09996975437118907
+    },
+    {
+      "name": "stable_right_grip_within_2cm",
+      "passed": true,
+      "detail": 1.1417602052273064e-05
+    },
+    {
+      "name": "stable_left_ik_enabled",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "reload_releases_left_ik",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "swap_releases_left_ik",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "drop_releases_left_ik",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "missing_socket_disables_ik",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "first_person_dual_world_weapon_visibility",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "third_person_dual_world_weapon_visibility",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "upper_arm_length_not_stretched",
+      "passed": true,
+      "detail": [
+        26.822712789067527,
+        26.822731737327256
+      ]
+    },
+    {
+      "name": "forearm_length_not_stretched",
+      "passed": true,
+      "detail": [
+        27.868769185451658,
+        27.868801224542974
+      ]
+    },
+    {
+      "name": "right_upper_arm_length_not_stretched",
+      "passed": true,
+      "detail": [
+        26.82251718536091,
+        26.82253613348244
+      ]
+    },
+    {
+      "name": "right_forearm_length_not_stretched",
+      "passed": true,
+      "detail": [
+        27.86878235273601,
+        27.868804570076186
+      ]
+    },
+    {
+      "name": "no_skipped_simulation_frames",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "two_player_gameplay_camera_checks": [
+    {
+      "name": "stable_frames_have_equipped_weapon",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "world_weapon_grip_sockets_exist",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "stable_left_grip_within_2cm",
+      "passed": true,
+      "detail": 0.09996974792764603
+    },
+    {
+      "name": "stable_right_grip_within_2cm",
+      "passed": true,
+      "detail": 1.140912029999599e-05
+    },
+    {
+      "name": "look_up_actual_aim_pitch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "look_down_actual_aim_pitch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "stable_left_ik_enabled",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "reload_releases_left_ik",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "swap_releases_left_ik",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "drop_releases_left_ik",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "missing_socket_disables_ik",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "first_person_dual_world_weapon_visibility",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "third_person_dual_world_weapon_visibility",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "upper_arm_length_not_stretched",
+      "passed": true,
+      "detail": [
+        26.822712789067527,
+        26.822731737327164
+      ]
+    },
+    {
+      "name": "forearm_length_not_stretched",
+      "passed": true,
+      "detail": [
+        27.868769185451573,
+        27.86880122454301
+      ]
+    },
+    {
+      "name": "right_upper_arm_length_not_stretched",
+      "passed": true,
+      "detail": [
+        26.82251718536091,
+        26.822536133482462
+      ]
+    },
+    {
+      "name": "right_forearm_length_not_stretched",
+      "passed": true,
+      "detail": [
+        27.86878235273601,
+        27.868804570076133
+      ]
+    },
+    {
+      "name": "no_skipped_simulation_frames",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "capture_exit_regression_checks": [
+    {
+      "name": "stable_frames_have_equipped_weapon",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "world_weapon_grip_sockets_exist",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "stable_left_grip_within_2cm",
+      "passed": true,
+      "detail": 0.099917589682267
+    },
+    {
+      "name": "stable_right_grip_within_2cm",
+      "passed": true,
+      "detail": 1.1399214151140123e-05
+    },
+    {
+      "name": "no_skipped_simulation_frames",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "capture_requests_written",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1280,
+        "height": 720,
+        "r_frame_rate": "30/1",
+        "nb_read_frames": "512"
+      }
+    ],
+    "format": {
+      "duration": "17.066667"
+    }
+  },
+  "visual_review": {
+    "result": "accepted",
+    "scope": "Stinger third-person AK left-hand contact and release; not a full animation-quality signoff",
+    "frame_directory": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\ThirdPersonGripFrames\\20261002-031405-final-2p",
+    "local_stills_directory": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\ThirdPersonGripFrames\\20261002-031251-fit-1p",
+    "numerical_frames_measured": 897,
+    "video_frames": 512,
+    "omitted_capture_requests": [
+      "00513.png"
+    ],
+    "manually_reviewed_remote_frames": [
+      "00005.png",
+      "00036.png",
+      "00072.png",
+      "00108.png",
+      "00144.png",
+      "00252.png",
+      "00288.png",
+      "00309.png",
+      "00345.png",
+      "00348.png",
+      "00365.png",
+      "00380.png",
+      "00441.png",
+      "00477.png",
+      "00512.png",
+      "after_pickup.png"
+    ],
+    "manually_reviewed_local_stills": [
+      "idle_left.png",
+      "idle_front.png",
+      "aim.png",
+      "look_up.png",
+      "look_down.png",
+      "crouch.png",
+      "walk.png",
+      "fire.png",
+      "after_reload.png",
+      "first_person.png",
+      "first_person_aim.png"
+    ],
+    "findings": [
+      "Palm contacts foregrip in reviewed stable local and remote poses; no obvious arm stretching",
+      "Fire and return from reload/swap/pickup keep the calibrated grip",
+      "IK intentionally releases in swap; existing remote montage presentation remains outside this grip correction",
+      "First-person and ADS show one held gun; both owned world weapons hidden for the local owner",
+      "All simulation frames measured numerically; visual review samples key poses and transitions, not every video frame",
+      "The final queued capture 00513 was not flushed on exit; the video uses the consecutive existing prefix 00001 through 00512 without synthetic frames"
+    ]
+  },
+  "capture_requests": 513,
+  "encoded_frames": 512,
+  "omitted_capture_requests": [
+    {
+      "file": "00513.png",
+      "phase": "third_person",
+      "time": 1.2
+    }
+  ],
+  "limitations": [
+    "Same-process PIE, not independent-process latency or packet loss",
+    "30 fps video from consecutive fixed simulation steps within each captured phase, not a performance benchmark",
+    "Capture-only fill light; hidden/offscreen meshes forced to refresh bones for measurement",
+    "Actual +55/-65 degree aim is checked with real gameplay cameras in separate 1p and 2p numerical runs; external capture cameras can change the observer pawn aim",
+    "Existing imported third-person animation quality and unsupported weapon fitting remain outside this fix",
+    "Commandlet emits pre-existing GameFeatureData configuration errors; script save/compile and PIE are checked separately"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "debugger": "Rider C++",
+  "session": "BrokenEdge",
+  "location": "Engine/Source/Runtime/AnimationCore/Private/FABRIK.cpp:14",
+  "call_path": [
+    "AnimationCore::SolveFabrik",
+    "FAnimNode_Fabrik::EvaluateSkeletalControl_AnyThread",
+    "FAnimNode_SkeletalControlBase::EvaluateComponentSpace_AnyThread"
+  ],
+  "maximum_reach_cm": 54.691519536324634,
+  "left_root_cs": [
+    11.918583595435345,
+    5.114454265925342,
+    143.52232447935444
+  ],
+  "target_cs": [
+    -23.218165398334147,
+    22.663005889353336,
+    93.80155690043334
+  ],
+  "actual_alpha": 1,
+  "effector_space": "RightHand bone space",
+  "reach_only_stable_max_cm": 73.5949710911079,
+  "reach_only_stable_max_left_error_cm": 18.903451554783327,
+  "agent_breakpoints_removed": true,
+  "user_exception_breakpoints_unchanged": true
+}

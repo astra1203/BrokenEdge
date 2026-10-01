@@ -1,0 +1,50 @@
+{
+  "result": "accepted",
+  "scope": "Stinger third-person AK left-hand contact and release; not a full animation-quality signoff",
+  "frame_directory": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\ThirdPersonGripFrames\\20261002-031405-final-2p",
+  "local_stills_directory": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\ThirdPersonGripFrames\\20261002-031251-fit-1p",
+  "numerical_frames_measured": 897,
+  "video_frames": 512,
+  "omitted_capture_requests": [
+    "00513.png"
+  ],
+  "manually_reviewed_remote_frames": [
+    "00005.png",
+    "00036.png",
+    "00072.png",
+    "00108.png",
+    "00144.png",
+    "00252.png",
+    "00288.png",
+    "00309.png",
+    "00345.png",
+    "00348.png",
+    "00365.png",
+    "00380.png",
+    "00441.png",
+    "00477.png",
+    "00512.png",
+    "after_pickup.png"
+  ],
+  "manually_reviewed_local_stills": [
+    "idle_left.png",
+    "idle_front.png",
+    "aim.png",
+    "look_up.png",
+    "look_down.png",
+    "crouch.png",
+    "walk.png",
+    "fire.png",
+    "after_reload.png",
+    "first_person.png",
+    "first_person_aim.png"
+  ],
+  "findings": [
+    "Palm contacts foregrip in reviewed stable local and remote poses; no obvious arm stretching",
+    "Fire and return from reload/swap/pickup keep the calibrated grip",
+    "IK intentionally releases in swap; existing remote montage presentation remains outside this grip correction",
+    "First-person and ADS show one held gun; both owned world weapons hidden for the local owner",
+    "All simulation frames measured numerically; visual review samples key poses and transitions, not every video frame",
+    "The final queued capture 00513 was not flushed on exit; the video uses the consecutive existing prefix 00001 through 00512 without synthetic frames"
+  ]
+}

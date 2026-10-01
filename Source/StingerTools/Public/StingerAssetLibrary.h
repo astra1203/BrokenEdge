@@ -33,6 +33,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static FString GetValidationState(APawn* Pawn);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static FString DescribeThirdPersonGripIK(UAnimBlueprint* Blueprint);
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Setup")
+	static bool ConfigureThirdPersonGripIK(UAnimBlueprint* Blueprint);
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static void SetValidationFixedStep(float Seconds);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static AActor* SpawnValidationWeapon(UWorld* World, TSubclassOf<AActor> Class, FVector Location);
