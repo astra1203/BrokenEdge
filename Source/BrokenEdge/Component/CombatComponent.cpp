@@ -154,11 +154,10 @@ void UCombatComponent::FinishReloading()
 
 void UCombatComponent::ShotgunReloadOnce()
 {
-	if (Character&&Character->HasAuthority())
+	if (Character && Character->HasAuthority())
 	{
 		UpdateShotgunAmmoValues();
 	}
-
 }
 
 
@@ -246,7 +245,6 @@ void UCombatComponent::FireShotgunWeapon()
 
 	if (!Character->HasAuthority()) ShotgunLocalFire(HitTargets);
 	ServerShotgunFire(HitTargets, EquippedWeapon->FireDelay);
-
 }
 
 /**
@@ -258,16 +256,14 @@ void UCombatComponent::ShotgunLocalFire(const TArray<FVector_NetQuantize>& Trace
 	AShotgun* Shotgun = Cast<AShotgun>(EquippedWeapon);
 	if (Shotgun == nullptr || Character == nullptr) return;
 
-	if (CombatState == ECombatState::ECS_Unoccuiped||CombatState == ECombatState::ECS_Reloading)
+	if (CombatState == ECombatState::ECS_Unoccuiped || CombatState == ECombatState::ECS_Reloading)
 	{
 		bLocallyReloading = false;
 
 		Character->PlayFireMontage(bAiming);
 		Shotgun->FireShotgun(TraceHitTargets);
 		CombatState = ECombatState::ECS_Unoccuiped;
-
 	}
-
 }
 
 
@@ -275,12 +271,10 @@ void UCombatComponent::ServerShotgunFire_Implementation(const TArray<FVector_Net
                                                         float FireDelay)
 {
 	MulticastShotgunFire(TraceHitTargets);
-
 }
 
 bool UCombatComponent::ServerShotgunFire_Validate(const TArray<FVector_NetQuantize>& TraceHitTargets, float FireDelay)
 {
-
 	if (EquippedWeapon)
 	{
 		bool bNearlyEqual = FMath::IsNearlyEqual(EquippedWeapon->FireDelay, FireDelay, 0.001f);
@@ -449,7 +443,6 @@ void UCombatComponent::UpdateShotgunAmmoValues()
 	{
 		JumpToShotgunEnd();
 	}
-
 }
 
 /**
@@ -533,8 +526,6 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		SetHUDCrosshairs(DeltaTime);
 		InterpFOV(DeltaTime);
 	}
-
-
 }
 
 int32 UCombatComponent::PickupAmmo(EWeaponType WeaponType, int32 AmmoAmount)
@@ -845,6 +836,13 @@ void UCombatComponent::OnRep_Aiming()
 void UCombatComponent::InterpFOV(float DeltaTime)
 {
 	if (EquippedWeapon == nullptr) return;
+	if (Character && Character->FirstPersonMeshAsset && Character->IsFirstPersonView())
+	{
+		const float Target = bAiming ? Character->FirstPersonAimFOV : DefaultFOV;
+		CurrentFOV = FMath::FInterpTo(CurrentFOV, Target, DeltaTime, Character->FirstPersonAimInterpSpeed);
+		Character->GetFollowCamera()->SetFieldOfView(CurrentFOV);
+		return;
+	}
 
 	if (bAiming)
 	{

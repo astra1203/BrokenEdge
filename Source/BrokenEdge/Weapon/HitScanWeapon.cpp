@@ -119,12 +119,15 @@ void AHitScanWeapon::WeaponTraceHit(const FVector& TraceStart, const FVector& Hi
 	if (World == nullptr) return;
 
 	FVector End = TraceStart + (HitTarget - TraceStart) * 1.25f;
+	FCollisionQueryParams QueryParams(SCENE_QUERY_STAT(WeaponTrace), false, this);
+	QueryParams.AddIgnoredActor(GetOwner());
 
 	World->LineTraceSingleByChannel(
 		OutHit,
 		TraceStart,
 		End,
-		ECollisionChannel::ECC_Visibility
+		ECollisionChannel::ECC_Visibility,
+		QueryParams
 	);
 
 	FVector BeamEnd = End;

@@ -1,0 +1,101 @@
+{
+  "parent": "<Object '/Script/BrokenEdge.BrokenEdgeCharacter' (0x0000026FB6810500) Class 'Class'>",
+  "mesh": "<Object '/Game/Characters/Stinger/Meshes/Gameplay/Stinger_3P_Textured/SkeletalMeshes/Stinger_3P_Textured.Stinger_3P_Textured' (0x0000026FF8F9F000) Class 'SkeletalMesh'>",
+  "anim_class": "<Object '/Game/Characters/Stinger/Animations/ThirdPerson/ABP_BrokenEdgeAnimInstance_Stinger.ABP_BrokenEdgeAnimInstance_Stinger_C' (0x0000026FF42D7E00) Class 'AnimBlueprintGeneratedClass'>",
+  "properties": {
+    "first_person_mesh_asset": "<Object '/Game/Characters/Stinger/Meshes/FirstPerson/Forearms/Stinger_1P_Forearms/SkeletalMeshes/Stinger_1P_Forearms.Stinger_1P_Forearms' (0x0000026FF8F9E600) Class 'SkeletalMesh'>",
+    "first_person_anim_class": "<Object '/Game/Characters/Stinger/Animations/FirstPerson/ABP_StingerFirstPerson.ABP_StingerFirstPerson_C' (0x0000026FF42D5400) Class 'AnimBlueprintGeneratedClass'>",
+    "start_in_first_person": "True",
+    "enable_sprint": "True",
+    "right_hand_bone": "RightHand",
+    "first_person_head_bone": "head",
+    "sprint_speed": "850.0",
+    "first_person_aim_fov": "65.0",
+    "fire_weapon_montage": "<Object '/Game/Characters/Stinger/Animations/ThirdPerson/AM_FireWeapon_Stinger.AM_FireWeapon_Stinger' (0x0000026FF591D900) Class 'AnimMontage'>",
+    "reload_montage": "<Object '/Game/Characters/Stinger/Animations/ThirdPerson/AM_Reload_Stinger.AM_Reload_Stinger' (0x0000026FF591E000) Class 'AnimMontage'>",
+    "swap_montage": "<Object '/Game/Characters/Stinger/Animations/ThirdPerson/AM_Swap_Stinger.AM_Swap_Stinger' (0x0000026FF591E380) Class 'AnimMontage'>",
+    "default_mapping_context": "<Object '/Game/Characters/Stinger/Blueprints/Input/IMC_Stinger.IMC_Stinger' (0x0000026FF51CF8C0) Class 'InputMappingContext'>",
+    "sprint_action": "<Object '/Game/Characters/Stinger/Blueprints/Input/IA_StingerSprint.IA_StingerSprint' (0x0000026FF52915C0) Class 'InputAction'>"
+  },
+  "hitboxes": {
+    "head": "head",
+    "pelvis": "Hips",
+    "spine_02": "Spine1",
+    "spine_03": "Spine2",
+    "upperarm_l": "LeftArm",
+    "upperarm_r": "RightArm",
+    "lowerarm_l": "LeftForeArm",
+    "lowerarm_r": "RightForeArm",
+    "hand_l": "LeftHand",
+    "hand_r": "RightHand",
+    "blanket": "Spine2",
+    "backpack": "Spine2",
+    "thigh_l": "LeftUpLeg",
+    "thigh_r": "RightUpLeg",
+    "calf_l": "LeftLeg",
+    "calf_r": "RightLeg",
+    "foot_l": "LeftFoot",
+    "foot_r": "RightFoot"
+  },
+  "input": [
+    {
+      "action": "IA_Jump",
+      "key": "SpaceBar"
+    },
+    {
+      "action": "IA_Move",
+      "key": "W"
+    },
+    {
+      "action": "IA_Move",
+      "key": "S"
+    },
+    {
+      "action": "IA_Move",
+      "key": "A"
+    },
+    {
+      "action": "IA_Move",
+      "key": "D"
+    },
+    {
+      "action": "IA_Look",
+      "key": "Mouse2D"
+    },
+    {
+      "action": "IA_Crouch",
+      "key": "LeftControl"
+    },
+    {
+      "action": "IA_Equip",
+      "key": "E"
+    },
+    {
+      "action": "IA_Aim",
+      "key": "RightMouseButton"
+    },
+    {
+      "action": "IA_Reload",
+      "key": "R"
+    },
+    {
+      "action": "IA_Drop",
+      "key": "G"
+    },
+    {
+      "action": "IA_Fire",
+      "key": "LeftMouseButton"
+    },
+    {
+      "action": "IA_ToggleCameraView",
+      "key": "V"
+    },
+    {
+      "action": "IA_StingerSprint",
+      "key": "LeftShift"
+    }
+  ],
+  "game_mode_pawn": "<Object '/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C' (0x0000026FF879AF00) Class 'BlueprintGeneratedClass'>",
+  "imported_psa_files": 443,
+  "result": "passed"
+}

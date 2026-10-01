@@ -54,7 +54,7 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 	Buff->SetIsReplicated(true);
 
 	LagCompensation = CreateDefaultSubobject<ULagCompensationComponent>(TEXT("LagCompensation"));
-	
+
 	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetCollisionObjectType(ECC_SkeletalMesh);
@@ -216,9 +216,17 @@ void ABrokenEdgeCharacter::BeginPlay()
 void ABrokenEdgeCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	UpdateSprint();
+	if (bStartInFirstPerson && IsLocallyControlled() && !bFirstPersonView && !bDefeated && !bDisableGameplay)
+	{
+		// 只在首次获得控制权时应用默认视角，之后允许自由切换。
+		bStartInFirstPerson = false;
+		SetFirstPersonView(true);
+	}
 	if (bFirstPersonView)
 	{
 		UpdateFirstPersonCameraLocation();
+		UpdateFirstPersonWeapon();
 	}
 	//@TODO
 	RotateInPlace(DeltaTime);
@@ -387,10 +395,19 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
+		if (bEnableSprint && SprintAction)
+		{
+			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this,
+			                                   &ABrokenEdgeCharacter::SprintPressed);
+			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this,
+			                                   &ABrokenEdgeCharacter::SprintReleased);
+			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Canceled, this,
+			                                   &ABrokenEdgeCharacter::SprintReleased);
+		}
 		if (ensureMsgf(ToggleCameraViewAction, TEXT("Assign ToggleCameraViewAction in the character Blueprint.")))
 		{
 			EnhancedInputComponent->BindAction(ToggleCameraViewAction, ETriggerEvent::Started,
-				this, &ABrokenEdgeCharacter::ToggleCameraView);
+			                                   this, &ABrokenEdgeCharacter::ToggleCameraView);
 		}
 
 		//跳跃
@@ -471,9 +488,25 @@ void ABrokenEdgeCharacter::SetFirstPersonView(bool bEnabled)
 		GetMesh()->SetCastHiddenShadow(true);
 		// Keep evaluating the original animation, including weapon sockets and reload notifies.
 		GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+		UpdateFirstPersonWeapon();
 	}
 	else
 	{
+		if (FirstPersonSourceWeapon)
+		{
+			FirstPersonSourceWeapon->GetWeaponMesh()->SetOwnerNoSee(bOriginalWeaponOwnerNoSee);
+			FirstPersonSourceWeapon = nullptr;
+		}
+		if (FirstPersonWeaponMesh)
+		{
+			FirstPersonWeaponMesh->DestroyComponent();
+			FirstPersonWeaponMesh = nullptr;
+		}
+		if (DedicatedFirstPersonMesh)
+		{
+			DedicatedFirstPersonMesh->DestroyComponent();
+			DedicatedFirstPersonMesh = nullptr;
+		}
 		FollowCamera->AttachToComponent(CameraBoom, FAttachmentTransformRules::KeepRelativeTransform,
 		                                USpringArmComponent::SocketName);
 		FollowCamera->SetRelativeTransform(ThirdPersonCameraTransform);
@@ -495,10 +528,28 @@ void ABrokenEdgeCharacter::SetFirstPersonView(bool bEnabled)
 
 bool ABrokenEdgeCharacter::CreateFirstPersonBody()
 {
+	if (FirstPersonMeshAsset && FirstPersonAnimClass)
+	{
+		DedicatedFirstPersonMesh = NewObject<USkeletalMeshComponent>(this);
+		DedicatedFirstPersonMesh->SetupAttachment(FollowCamera);
+		DedicatedFirstPersonMesh->SetSkeletalMeshAsset(FirstPersonMeshAsset);
+		DedicatedFirstPersonMesh->SetAnimInstanceClass(FirstPersonAnimClass);
+		DedicatedFirstPersonMesh->SetRelativeTransform(FirstPersonMeshTransform);
+		DedicatedFirstPersonMesh->SetOnlyOwnerSee(true);
+		DedicatedFirstPersonMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		DedicatedFirstPersonMesh->SetGenerateOverlapEvents(false);
+		DedicatedFirstPersonMesh->SetCastShadow(false);
+		DedicatedFirstPersonMesh->SetCanEverAffectNavigation(false);
+		DedicatedFirstPersonMesh->VisibilityBasedAnimTickOption =
+			EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+		DedicatedFirstPersonMesh->RegisterComponent();
+		DedicatedFirstPersonMesh->HideBoneByName(FirstPersonHeadBone, PBO_None);
+		return true;
+	}
 	if (!GetMesh()->GetSkeletalMeshAsset() || GetMesh()->GetBoneIndex(FirstPersonHeadBone) == INDEX_NONE)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cannot enter first person: head bone '%s' is missing on %s."),
-			*FirstPersonHeadBone.ToString(), *GetName());
+		       *FirstPersonHeadBone.ToString(), *GetName());
 		return false;
 	}
 
@@ -521,7 +572,7 @@ bool ABrokenEdgeCharacter::CreateFirstPersonBody()
 	// Copy only after animation/IK finishes, so the visible hands match the weapon sockets.
 	FirstPersonPoseDelegateHandle = GetMesh()->RegisterOnBoneTransformsFinalizedDelegate(
 		FOnBoneTransformsFinalizedMultiCast::FDelegate::CreateUObject(this,
-			&ABrokenEdgeCharacter::UpdateFirstPersonBodyPose));
+		                                                              &ABrokenEdgeCharacter::UpdateFirstPersonBodyPose));
 	UpdateFirstPersonBodyPose();
 	return true;
 }
@@ -540,9 +591,88 @@ void ABrokenEdgeCharacter::UpdateFirstPersonCameraLocation()
 	FollowCamera->SetWorldLocation(GetPawnViewLocation() + ViewYaw.RotateVector(FirstPersonCameraOffset));
 }
 
+void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
+{
+	if (!DedicatedFirstPersonMesh) return;
+	const FVector AimOffset = IsAiming() ? FVector(-20.f, -12.f, 27.f) : FVector::ZeroVector;
+	DedicatedFirstPersonMesh->SetRelativeLocation(FMath::VInterpTo(DedicatedFirstPersonMesh->GetRelativeLocation(),
+	                                                               FirstPersonMeshTransform.GetLocation() + AimOffset,
+	                                                               GetWorld()->GetDeltaSeconds(),
+	                                                               FirstPersonAimInterpSpeed));
+	AWeapon* Weapon = GetEquippedWeapon();
+	if (FirstPersonSourceWeapon != Weapon)
+	{
+		if (FirstPersonSourceWeapon)
+			FirstPersonSourceWeapon->GetWeaponMesh()->SetOwnerNoSee(bOriginalWeaponOwnerNoSee);
+		FirstPersonSourceWeapon = Weapon;
+		if (Weapon)
+		{
+			bOriginalWeaponOwnerNoSee = Weapon->GetWeaponMesh()->bOwnerNoSee;
+			Weapon->GetWeaponMesh()->SetOwnerNoSee(true);
+			if (!FirstPersonWeaponMesh)
+			{
+				FirstPersonWeaponMesh = NewObject<USkeletalMeshComponent>(this);
+				FirstPersonWeaponMesh->SetupAttachment(DedicatedFirstPersonMesh, TEXT("RightHandSocket"));
+				FirstPersonWeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				FirstPersonWeaponMesh->SetGenerateOverlapEvents(false);
+				FirstPersonWeaponMesh->SetOnlyOwnerSee(true);
+				FirstPersonWeaponMesh->SetCastShadow(false);
+				FirstPersonWeaponMesh->SetCanEverAffectNavigation(false);
+				FirstPersonWeaponMesh->RegisterComponent();
+			}
+			FirstPersonWeaponMesh->SetSkeletalMeshAsset(Weapon->GetWeaponMesh()->GetSkeletalMeshAsset());
+			for (int32 Index = 0; Index < Weapon->GetWeaponMesh()->GetNumMaterials(); ++Index)
+				FirstPersonWeaponMesh->SetMaterial(Index, Weapon->GetWeaponMesh()->GetMaterial(Index));
+			FirstPersonWeaponMesh->SetRelativeTransform(FirstPersonWeaponTransform);
+		}
+	}
+	if (FirstPersonWeaponMesh) FirstPersonWeaponMesh->SetVisibility(Weapon && !bDefeated);
+	// The extracted source arms need additional pose retargeting for ADS. Keep the
+	// weapon visible while preventing the forearm from covering the iron sight.
+	DedicatedFirstPersonMesh->SetVisibility(!bDefeated && !IsAiming(), false);
+}
+
+void ABrokenEdgeCharacter::PlayFirstPersonMontage(UAnimMontage* Montage)
+{
+	// 视觉蒙太奇不携带游戏结算 Notify，第三人称实例负责唯一结算。
+	if (DedicatedFirstPersonMesh && Montage)
+		if (UAnimInstance* Anim = DedicatedFirstPersonMesh->GetAnimInstance()) Anim->Montage_Play(Montage);
+}
+
+void ABrokenEdgeCharacter::SprintPressed()
+{
+	if (!bEnableSprint) return;
+	bSprintRequested = true;
+	ServerSetSprintRequested(true);
+}
+
+void ABrokenEdgeCharacter::SprintReleased()
+{
+	bSprintRequested = false;
+	ServerSetSprintRequested(false);
+}
+
+void ABrokenEdgeCharacter::ServerSetSprintRequested_Implementation(bool bRequested)
+{
+	bSprintRequested = bEnableSprint && bRequested;
+}
+
+void ABrokenEdgeCharacter::UpdateSprint()
+{
+	if (!bEnableSprint || (!HasAuthority() && !IsLocallyControlled()) || !Combat) return;
+	const FVector Acceleration = GetCharacterMovement()->GetCurrentAcceleration();
+	bSprinting = bSprintRequested && !bIsCrouched && !IsAiming() && !bDisableGameplay && !bDefeated
+		&& GetCombatState() == ECombatState::ECS_Unoccuiped
+		&& FVector::DotProduct(Acceleration.GetSafeNormal2D(), GetActorForwardVector()) > 0.5f;
+	GetCharacterMovement()->MaxWalkSpeed = bSprinting
+		                                       ? SprintSpeed
+		                                       : (IsAiming() ? Combat->AimWalkSpeed : Combat->BaseWalkSpeed);
+}
+
 void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ABrokenEdgeCharacter, bSprinting);
 
 	DOREPLIFETIME_CONDITION(ABrokenEdgeCharacter, OverlappingWeapon, COND_OwnerOnly);
 	// DOREPLIFETIME(ABrokenEdgeCharacter, OverlappingWeapon);
@@ -572,18 +702,17 @@ void ABrokenEdgeCharacter::PostInitializeComponents()
 	if (LagCompensation)
 	{
 		LagCompensation->Character = this;
-		
+
 		if (Controller)
 		{
 			LagCompensation->Controller = Cast<ABrokenEdgePlayerController>(Controller);
 		}
-		
 	}
-	
 }
 
 void ABrokenEdgeCharacter::PlaySwapMontage()
 {
+	PlayFirstPersonMontage(FirstPersonSwapMontage);
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && SwapMontage)
 	{
@@ -596,7 +725,7 @@ void ABrokenEdgeCharacter::PlaySwapMontage()
  */
 void ABrokenEdgeCharacter::PlayHitReactMontage()
 {
-	if (bDefeated||Combat == nullptr || HitReactMontage == nullptr) return;
+	if (bDefeated || Combat == nullptr || HitReactMontage == nullptr) return;
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance)
@@ -609,6 +738,7 @@ void ABrokenEdgeCharacter::PlayHitReactMontage()
 
 void ABrokenEdgeCharacter::PlayReloadMontage()
 {
+	PlayFirstPersonMontage(FirstPersonReloadMontage);
 	if (Combat == nullptr || Combat->EquippedWeapon == nullptr || ReloadMontage == nullptr) return;
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -653,6 +783,7 @@ void ABrokenEdgeCharacter::PlayReloadMontage()
 
 void ABrokenEdgeCharacter::PlayFireMontage(bool bAiming)
 {
+	PlayFirstPersonMontage(FirstPersonFireMontage);
 	if (Combat == nullptr || Combat->EquippedWeapon == nullptr || FireWeaponMontage == nullptr) return;
 
 	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
@@ -667,12 +798,11 @@ void ABrokenEdgeCharacter::PlayFireMontage(bool bAiming)
 
 void ABrokenEdgeCharacter::PlayDefeatMontage()
 {
-	if (DefeatedMontage==nullptr)return;
+	if (DefeatedMontage == nullptr)return;
 	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
 	{
 		AnimInstance->Montage_Play(DefeatedMontage);
 	}
-
 }
 
 void ABrokenEdgeCharacter::UpdateHUDHealth()
@@ -1120,13 +1250,13 @@ void ABrokenEdgeCharacter::MulticastDefeated_Implementation(bool bPlayerLeftGame
 		&ABrokenEdgeCharacter::RespawnTimerFinished,
 		RespawnDelay
 	);
-
 }
 
 void ABrokenEdgeCharacter::RespawnTimerFinished()
 {
-	BrokenEdgeGameMode = BrokenEdgeGameMode == nullptr ?
-	GetWorld()->GetAuthGameMode<ABrokenEdgeGameMode>() : BrokenEdgeGameMode;
+	BrokenEdgeGameMode = BrokenEdgeGameMode == nullptr
+		                     ? GetWorld()->GetAuthGameMode<ABrokenEdgeGameMode>()
+		                     : BrokenEdgeGameMode;
 
 	if (BrokenEdgeGameMode && !bLeftGame)
 	{
@@ -1145,14 +1275,11 @@ void ABrokenEdgeCharacter::DropWeapons()
 	if (Combat->EquippedWeapon)
 	{
 		Combat->EquippedWeapon->Dropped();
-		Combat->EquippedWeapon=nullptr;
-
+		Combat->EquippedWeapon = nullptr;
 	}
 	if (Combat->SecondaryWeapon)
 	{
 		Combat->SecondaryWeapon->Dropped();
-		Combat->SecondaryWeapon=nullptr;
-
+		Combat->SecondaryWeapon = nullptr;
 	}
-
 }

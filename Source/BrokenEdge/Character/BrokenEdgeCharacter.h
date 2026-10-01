@@ -44,7 +44,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
-	
+
 	/// 组件初始化后调用
 	virtual void PostInitializeComponents() override;
 
@@ -52,7 +52,7 @@ public:
  * @brief 播放武器切换动画
 	 */
 	void PlaySwapMontage();
-	
+
 	void PlayHitReactMontage();
 
 	/**
@@ -68,13 +68,13 @@ public:
 
 	/// 是否完成武器切换
 	bool bFinishedSwapping = false;
-	
+
 	/** 更新HUD生命值显示 */
 	void UpdateHUDHealth();
 	void UpdateHUDShield();
 	void UpdateHUDAmmo();
 
-	/** 命中碰撞盒映射 */  // unordered_map
+	/** 命中碰撞盒映射 */ // unordered_map
 	UPROPERTY()
 	TMap<FName, UBoxComponent*> HitCollisionBoxes;
 
@@ -82,11 +82,10 @@ public:
 	FORCEINLINE TObjectPtr<UCombatComponent> GetCombat() const { return Combat; }
 
 	FORCEINLINE TObjectPtr<class UBuffComponent> GetBuff() const { return Buff; }
-	
-	FORCEINLINE TObjectPtr<class ULagCompensationComponent> GetLagCompensation() const { return LagCompensation; }
-	
-protected:
 
+	FORCEINLINE TObjectPtr<class ULagCompensationComponent> GetLagCompensation() const { return LagCompensation; }
+
+protected:
 	/** 头部碰撞盒 */
 	UPROPERTY(EditAnywhere)
 	UBoxComponent* head = nullptr;
@@ -165,7 +164,7 @@ public:
 	void Look(const FInputActionValue& Value);
 	void CrouchButtonPressed();
 	void EquipButtonPressed();
-	
+
 	/**
  * @brief 瞄准按钮按下
  */
@@ -192,7 +191,60 @@ public:
 	UFUNCTION(BlueprintPure, Category = Camera)
 	bool IsFirstPersonView() const { return bFirstPersonView; }
 
+	// 蜂医等角色可启用专用第一人称表现；旧角色默认使用原有全身视角。
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	TObjectPtr<USkeletalMesh> FirstPersonMeshAsset = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	TSubclassOf<UAnimInstance> FirstPersonAnimClass;
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	bool bStartInFirstPerson = false;
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	FTransform FirstPersonMeshTransform = FTransform(FRotator(0, -90, 0), FVector(-10, 0, -165));
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	FTransform FirstPersonWeaponTransform = FTransform::Identity;
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	TObjectPtr<UAnimMontage> FirstPersonFireMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	TObjectPtr<UAnimMontage> FirstPersonReloadMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	TObjectPtr<UAnimMontage> FirstPersonSwapMontage = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	FName RightHandBone = TEXT("hand_r");
+	UPROPERTY(EditDefaultsOnly, Category = "Movement|Sprint")
+	bool bEnableSprint = false;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement|Sprint")
+	float SprintSpeed = 850.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Movement|Sprint")
+	TObjectPtr<UInputAction> SprintAction = nullptr;
+	UFUNCTION(BlueprintPure, Category = "Movement")
+	bool IsSprinting() const { return bSprinting; }
+
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	float FirstPersonAimFOV = 65.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	float FirstPersonAimInterpSpeed = 20.f;
+	USkeletalMeshComponent* GetFirstPersonMesh() const { return DedicatedFirstPersonMesh; }
+	USkeletalMeshComponent* GetFirstPersonWeaponMesh() const { return FirstPersonWeaponMesh; }
+
 private:
+	void UpdateFirstPersonWeapon();
+	void PlayFirstPersonMontage(UAnimMontage* Montage);
+	void SprintPressed();
+	void SprintReleased();
+	void UpdateSprint();
+	UFUNCTION(Server, Reliable)
+	void ServerSetSprintRequested(bool bRequested);
+	bool bSprintRequested = false;
+	UPROPERTY(Replicated)
+	bool bSprinting = false;
+	UPROPERTY(Transient)
+	TObjectPtr<USkeletalMeshComponent> DedicatedFirstPersonMesh = nullptr;
+	UPROPERTY(Transient)
+	TObjectPtr<USkeletalMeshComponent> FirstPersonWeaponMesh = nullptr;
+	UPROPERTY(Transient)
+	TObjectPtr<AWeapon> FirstPersonSourceWeapon = nullptr;
+	bool bOriginalWeaponOwnerNoSee = false;
 	void ToggleCameraView();
 	void SetFirstPersonView(bool bEnabled);
 	void UpdateFirstPersonCameraLocation();
@@ -250,11 +302,11 @@ private:
 	/** Aim Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AimAction;
-	
+
 	/** Reload Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ReloadAction;
-	
+
 	/** Drop Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* DropAction;
@@ -279,7 +331,7 @@ private:
 	/// 重叠的武器（带复制通知）
 	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
 	AWeapon* OverlappingWeapon;
-	
+
 	/** 游戏模式 */
 	UPROPERTY()
 	class ABrokenEdgeGameMode* BrokenEdgeGameMode = nullptr;
@@ -294,7 +346,7 @@ private:
 	/** 武器切换动画 */
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* SwapMontage = nullptr;
-	
+
 	/** 受击反应动画 */
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* HitReactMontage = nullptr;
@@ -314,7 +366,7 @@ private:
 	/// 服务器处理装备按钮按下
 	UFUNCTION(Server, Reliable)
 	void ServerEquipButtonPressed();
-	
+
 	/** 战斗组件 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UCombatComponent* Combat;
@@ -335,7 +387,7 @@ private:
 
 	/// 原地转向状态  //@TODO
 	ETurningInPlace TurningInPlace = ETurningInPlace::ETIP_NotTurning;
-	
+
 	/** 距离上次移动同步的时间 */
 	float TimeSinceLastMovementReplication = 0.f;
 
@@ -353,20 +405,20 @@ private:
 
 	/** 瞄准偏移偏航值 */
 	float AO_Yaw = 0.f;
-	
+
 	/** 插值后的瞄准偏移偏航值 */
 	float InterpAO_Yaw = 0.f;
-	
+
 	/** 瞄准偏移俯仰值 */
 	float AO_Pitch = 0.f;
-	
+
 	/** 起始瞄准旋转 */
 	FRotator StartingAimRotation = FRotator::ZeroRotator;
 
 	/** 最大生命值 */
 	UPROPERTY(EditAnywhere, Category = "Player States")
 	float MaxHealth = 100.f;
-	
+
 
 	/** 当前生命值 */
 	UPROPERTY(ReplicatedUsing = OnRep_Health, EditAnywhere, Category = "Player States")
@@ -376,29 +428,29 @@ private:
      * @brief 护盾
     */
 	UPROPERTY(EditAnywhere, Category = "Player Stats")
-	float MaxShield = 100.f;       ///< 最大护盾值
+	float MaxShield = 100.f; ///< 最大护盾值
 
 	UPROPERTY(ReplicatedUsing = OnRep_Shield, EditAnywhere, Category = "Player Stats")
-	float Shield = 0.f;            ///< 当前护盾值
-	
+	float Shield = 0.f; ///< 当前护盾值
+
 	/**
 	 * @brief 护盾复制回调
 	 * @param LastShield 上一次护盾值
 	 */
 	UFUNCTION()
 	void OnRep_Shield(float LastShield);
-	
+
 	/**
      * @brief 生命值同步回调
      * @param LastHealth 上一个生命值
     */
 	UFUNCTION()
 	void OnRep_Health(float LastHealth);
-	
+
 	/** 玩家控制器 */
 	UPROPERTY()
 	class ABrokenEdgePlayerController* BrokenEdgePlayerController = nullptr;
-	
+
 	/** 是否被击败 */
 	bool bDefeated = false;
 
@@ -412,37 +464,37 @@ private:
 protected:
 	/// 轮询初始化（等待必要组件加载）
 	void PollInit();
-	
+
 	UFUNCTION()
 	void ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
-		class AController* InstigatorController, AActor* DamageCauser);
-	
+	                   class AController* InstigatorController, AActor* DamageCauser);
+
 public:
 	/**
  * @brief 设置重叠武器
  * @param Weapon 重叠的武器
  */
 	void SetOverlappingWeapon(AWeapon* Weapon);
-	
+
 	/** 获取原地转身状态 */
 	FORCEINLINE ETurningInPlace GetTurningInPlace() const { return TurningInPlace; }
 
-	
-	FORCEINLINE [[nodiscard]] float GetHealth() const{return Health;}
-	FORCEINLINE [[nodiscard]] float GetMaxHealth() const{return MaxHealth;}
+
+	FORCEINLINE [[nodiscard]] float GetHealth() const { return Health; }
+	FORCEINLINE [[nodiscard]] float GetMaxHealth() const { return MaxHealth; }
 
 	/** 设置生命值 */
 	FORCEINLINE void SetHealth(float Amount) { Health = FMath::Clamp(Amount, 0.f, MaxHealth); }
-	
+
 	/// 获取当前护盾值
 	FORCEINLINE [[nodiscard]] float GetShield() const { return Shield; }
 
 	/// 设置护盾值
 	FORCEINLINE void SetShield(float Amount) { Shield = FMath::Clamp(Amount, 0.f, MaxShield); }
-	
+
 	/// 获取最大护盾值
 	FORCEINLINE [[nodiscard]] float GetMaxShield() const { return MaxShield; }
-	
+
 	/** 检查查是否装备了武器 */
 	bool IsWeaponEquipped();
 
@@ -460,8 +512,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowSniperScopeWidget(bool bShowScope);
 
-	
-	/** 是否应该旋转根骨骼 */  //inline
+
+	/** 是否应该旋转根骨骼 */ //inline
 	FORCEINLINE bool ShouldRotateRootBone() const { return bRotateRootBone; }
 
 	/** 是否被淘汰 */
@@ -474,9 +526,8 @@ public:
 	/** 获取是否禁用游戏逻辑 */
 	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }
 
-	
-	
-	AWeapon* GetOverlappingWeapon(){return OverlappingWeapon;}
+
+	AWeapon* GetOverlappingWeapon() { return OverlappingWeapon; }
 
 	/**
  * @brief 同步移动回调

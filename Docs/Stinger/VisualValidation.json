@@ -1,0 +1,836 @@
+{
+  "sessions": [
+    {
+      "players": 1,
+      "worlds": 1,
+      "snapshots": {
+        "initial": [
+          {
+            "name": "BP_StingerCharacter_C_0",
+            "local": true,
+            "location": "<Struct 'Vector' (0x000001F03FCBDAA0) {x: -500.000000, y: 0.000000, z: 94.149998}>",
+            "speed": 0.0,
+            "max_speed": 600.0,
+            "crouch_speed": 300.0,
+            "crouched": false,
+            "falling": false,
+            "sprinting": false,
+            "first_person": true,
+            "fov": 90.0,
+            "ammo": null,
+            "combat_state": "ECS_Unoccuiped",
+            "native": {
+              "ammo": -1,
+              "combat_state": "ECS_Unoccuiped",
+              "disabled": false,
+              "health": 80,
+              "body_hand_actor_space": "12.341726,35.083092,1.943448|73.032936,-172.838315,-98.989762|1.000000,1.000000,1.000000",
+              "fp_hand_camera_space": "X=34.097 Y=11.294 Z=-36.532",
+              "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+              "fp_head_camera_space": "X=58.249 Y=0.410 Z=-18.635",
+              "fp_hand_transform": "34.097050,11.293820,-36.531666|21.912759,2.533480,-148.608341|0.999998,1.000000,1.000000",
+              "fp_gun_camera_space": "31.476034,7.592999,-321.780028|-1.999974,-90.000006,179.999953|1.000000,1.000000,1.000000"
+            },
+            "fp_instances": [
+              "ABP_StingerFirstPerson_C"
+            ],
+            "hand": "<Struct 'Vector' (0x000001F03FCBDAF0) {x: -455.902950, y: 11.293820, z: 121.618332}>",
+            "camera": "<Struct 'Vector' (0x000001F03FCBDAF0) {x: -490.000000, y: 0.000000, z: 158.149998}>",
+            "body_owner_hidden": true
+          }
+        ],
+        "equipped": [
+          {
+            "name": "BP_StingerCharacter_C_0",
+            "local": true,
+            "location": "<Struct 'Vector' (0x000001F03FCD5870) {x: -500.000000, y: 0.000000, z: 94.149998}>",
+            "speed": 0.0,
+            "max_speed": 600.0,
+            "crouch_speed": 300.0,
+            "crouched": false,
+            "falling": false,
+            "sprinting": false,
+            "first_person": true,
+            "fov": 90.0,
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "native": {
+              "ammo": 30,
+              "combat_state": "ECS_Unoccuiped",
+              "disabled": false,
+              "health": 80,
+              "body_hand_actor_space": "-10.314328,23.057387,3.758810|21.813971,152.879052,162.233251|0.999998,1.000000,1.000000",
+              "muzzle_actor_space": "X=51.537 Y=18.690 Z=10.702",
+              "fp_hand_camera_space": "X=34.097 Y=11.294 Z=-36.532",
+              "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+              "fp_head_camera_space": "X=58.249 Y=0.410 Z=-18.635",
+              "fp_hand_transform": "34.097077,11.293819,-36.531671|21.912727,2.533461,-148.608352|0.999998,1.000000,1.000000",
+              "fp_gun_camera_space": "31.475960,7.592999,-321.780016|-1.999975,-90.000007,179.999982|1.000000,1.000000,1.000000"
+            },
+            "fp_instances": [
+              "ABP_StingerFirstPerson_C"
+            ],
+            "hand": "<Struct 'Vector' (0x000001F03FCD5960) {x: -455.902923, y: 11.293819, z: 121.618327}>",
+            "camera": "<Struct 'Vector' (0x000001F03FCD5960) {x: -490.000000, y: 0.000000, z: 158.149998}>",
+            "body_owner_hidden": true
+          }
+        ],
+        "walk": [
+          {
+            "name": "BP_StingerCharacter_C_0",
+            "local": true,
+            "location": "<Struct 'Vector' (0x000001F03FD41C80) {x: 516.811838, y: 0.000000, z: 94.149998}>",
+            "speed": 600.0,
+            "max_speed": 600.0,
+            "crouch_speed": 300.0,
+            "crouched": false,
+            "falling": false,
+            "sprinting": false,
+            "first_person": true,
+            "fov": 90.0,
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "native": {
+              "ammo": 30,
+              "combat_state": "ECS_Unoccuiped",
+              "disabled": false,
+              "health": 80,
+              "body_hand_actor_space": "10.391019,26.065915,-0.338658|22.879393,160.363110,166.061284|0.999998,1.000000,1.000000",
+              "muzzle_actor_space": "X=72.330 Y=27.759 Z=6.981",
+              "fp_hand_camera_space": "X=33.757 Y=11.316 Z=-36.549",
+              "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+              "fp_head_camera_space": "X=57.701 Y=0.411 Z=-18.620",
+              "fp_hand_transform": "33.757343,11.316223,-36.548573|22.387763,2.824030,-148.461237|0.999998,1.000000,1.000000",
+              "fp_gun_camera_space": "32.459385,7.592999,-321.936380|-1.993167,-89.986470,179.610774|1.000000,1.000000,1.000000"
+            },
+            "fp_instances": [
+              "ABP_StingerFirstPerson_C"
+            ],
+            "hand": "<Struct 'Vector' (0x000001F03FD41CD0) {x: 560.569180, y: 11.316223, z: 121.601425}>",
+            "camera": "<Struct 'Vector' (0x000001F03FD41CD0) {x: 526.811838, y: 0.000000, z: 158.149998}>",
+            "body_owner_hidden": true
+          }
+        ],
+        "sprint": [
+          {
+            "name": "BP_StingerCharacter_C_0",
+            "local": true,
+            "location": "<Struct 'Vector' (0x000001F03FD42090) {x: 1770.245308, y: 0.000000, z: 94.149998}>",
+            "speed": 850.0,
+            "max_speed": 850.0,
+            "crouch_speed": 300.0,
+            "crouched": false,
+            "falling": false,
+            "sprinting": true,
+            "first_person": true,
+            "fov": 90.0,
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "native": {
+              "ammo": 30,
+              "combat_state": "ECS_Unoccuiped",
+              "disabled": false,
+              "health": 80,
+              "body_hand_actor_space": "10.738224,24.831820,-0.681766|21.878768,159.183602,163.931348|0.999998,1.000000,1.000000",
+              "muzzle_actor_space": "X=72.654 Y=26.411 Z=6.854",
+              "fp_hand_camera_space": "X=36.433 Y=15.767 Z=-23.657",
+              "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+              "fp_head_camera_space": "X=57.998 Y=0.552 Z=-17.786",
+              "fp_hand_transform": "36.433474,15.766923,-23.656963|-46.160268,16.531480,-75.800173|0.999998,1.000000,1.000000",
+              "fp_gun_camera_space": "33.549180,9.082355,-323.003572|-32.869164,-148.351342,-170.829095|1.000000,1.000000,1.000000"
+            },
+            "fp_instances": [
+              "ABP_StingerFirstPerson_C"
+            ],
+            "hand": "<Struct 'Vector' (0x000001F03FD420E0) {x: 1816.678782, y: 15.766923, z: 134.493035}>",
+            "camera": "<Struct 'Vector' (0x000001F03FD420E0) {x: 1780.245308, y: 0.000000, z: 158.149998}>",
+            "body_owner_hidden": true
+          }
+        ],
+        "crouch": [
+          {
+            "name": "BP_StingerCharacter_C_0",
+            "local": true,
+            "location": "<Struct 'Vector' (0x000001F03FD424A0) {x: 2237.101334, y: 0.000000, z: 42.149998}>",
+            "speed": 300.0,
+            "max_speed": 600.0,
+            "crouch_speed": 300.0,
+            "crouched": true,
+            "falling": false,
+            "sprinting": false,
+            "first_person": true,
+            "fov": 90.0,
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "native": {
+              "ammo": 30,
+              "combat_state": "ECS_Unoccuiped",
+              "disabled": false,
+              "health": 80,
+              "body_hand_actor_space": "-2.457161,18.674206,24.836879|24.070487,158.007055,167.176900|0.999998,1.000000,1.000000",
+              "muzzle_actor_space": "X=59.577 Y=17.170 Z=31.347",
+              "fp_hand_camera_space": "X=34.097 Y=11.294 Z=-36.532",
+              "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+              "fp_head_camera_space": "X=58.249 Y=0.410 Z=-18.635",
+              "fp_hand_transform": "34.097076,11.293819,-36.531671|21.912725,2.533460,-148.608354|0.999998,1.000000,1.000000",
+              "fp_gun_camera_space": "31.475960,7.592999,-321.780016|-1.999975,-90.000007,179.999982|1.000000,1.000000,1.000000"
+            },
+            "fp_instances": [
+              "ABP_StingerFirstPerson_C"
+            ],
+            "hand": "<Struct 'Vector' (0x000001F03FD424F0) {x: 2281.198410, y: 11.293819, z: 37.618327}>",
+            "camera": "<Struct 'Vector' (0x000001F03FD424F0) {x: 2247.101334, y: 0.000000, z: 74.149998}>",
+            "body_owner_hidden": true
+          }
+        ],
+        "jump": [
+          {
+            "name": "BP_StingerCharacter_C_0",
+            "local": true,
+            "location": "<Struct 'Vector' (0x000001F03FD428B0) {x: 2247.581804, y: 0.000000, z: 165.475834}>",
+            "speed": 191.31994128227234,
+            "max_speed": 600.0,
+            "crouch_speed": 300.0,
+            "crouched": false,
+            "falling": true,
+            "sprinting": false,
+            "first_person": true,
+            "fov": 90.0,
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "native": {
+              "ammo": 30,
+              "combat_state": "ECS_Unoccuiped",
+              "disabled": false,
+              "health": 80,
+              "body_hand_actor_space": "28.991082,43.020150,142.777141|-35.125353,-162.131488,-140.493844|0.999998,1.000000,1.000000",
+              "muzzle_actor_space": "X=51.927 Y=39.790 Z=200.712",
+              "fp_hand_camera_space": "X=34.097 Y=11.294 Z=-36.532",
+              "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+              "fp_head_camera_space": "X=58.249 Y=0.410 Z=-18.635",
+              "fp_hand_transform": "34.097077,11.293819,-36.531671|21.912727,2.533461,-148.608354|0.999998,1.000000,1.000000",
+              "fp_gun_camera_space": "31.475960,7.592999,-321.780016|-1.999975,-90.000007,179.999982|1.000000,1.000000,1.000000"
+            },
+            "fp_instances": [
+              "ABP_StingerFirstPerson_C"
+            ],
+            "hand": "<Struct 'Vector' (0x000001F03FD42900) {x: 2291.678881, y: 11.293819, z: 192.944163}>",
+            "camera": "<Struct 'Vector' (0x000001F03FD42900) {x: 2257.581804, y: 0.000000, z: 229.475834}>",
+            "body_owner_hidden": true
+          }
+        ],
+        "aim": [
+          {
+            "name": "BP_StingerCharacter_C_0",
+            "local": true,
+            "location": "<Struct 'Vector' (0x000001F03FD42CC0) {x: 2869.353044, y: 0.000000, z: 94.149999}>",
+            "speed": 450.0,
+            "max_speed": 450.0,
+            "crouch_speed": 300.0,
+            "crouched": false,
+            "falling": false,
+            "sprinting": false,
+            "first_person": true,
+            "fov": 65.0,
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "native": {
+              "ammo": 30,
+              "combat_state": "ECS_Unoccuiped",
+              "disabled": false,
+              "health": 80,
+              "body_hand_actor_space": "45.853224,29.940425,32.177858|22.101331,157.898342,168.176910|0.999998,1.000000,1.000000",
+              "muzzle_actor_space": "X=107.581 Y=27.880 Z=41.029",
+              "fp_hand_camera_space": "X=13.988 Y=-0.699 Z=-9.537",
+              "fp_root_camera_space": "X=35.000 Y=-12.000 Z=-150.000",
+              "fp_head_camera_space": "X=38.073 Y=-11.590 Z=8.370",
+              "fp_hand_transform": "13.987806,-0.698997,-9.536995|22.065639,2.626564,-148.561411|0.999998,1.000000,1.000000",
+              "fp_gun_camera_space": "11.792089,-4.407001,-294.831027|-1.997796,-89.995644,179.874822|1.000000,1.000000,1.000000"
+            },
+            "fp_instances": [
+              "ABP_StingerFirstPerson_C"
+            ],
+            "hand": "<Struct 'Vector' (0x000001F03FD42D10) {x: 2893.340850, y: -0.698997, z: 148.613004}>",
+            "camera": "<Struct 'Vector' (0x000001F03FD42D10) {x: 2879.353044, y: 0.000000, z: 158.149999}>",
+            "body_owner_hidden": true
+          }
+        ],
+        "fire": [
+          {
+            "name": "BP_StingerCharacter_C_0",
+            "local": true,
+            "location": "<Struct 'Vector' (0x000001F03FD430D0) {x: 2882.194549, y: 0.000000, z: 94.149999}>",
+            "speed": 0.0,
+            "max_speed": 600.0,
+            "crouch_speed": 300.0,
+            "crouched": false,
+            "falling": false,
+            "sprinting": false,
+            "first_person": true,
+            "fov": 90.0,
+            "ammo": 25,
+            "combat_state": "ECS_Unoccuiped",
+            "native": {
+              "ammo": 25,
+              "combat_state": "ECS_Unoccuiped",
+              "disabled": false,
+              "health": 80,
+              "body_hand_actor_space": "-9.845876,22.633716,3.644195|20.758955,157.442474,163.904390|0.999998,1.000000,1.000000",
+              "muzzle_actor_space": "X=51.945 Y=22.406 Z=12.288",
+              "fp_hand_camera_space": "X=34.070 Y=11.275 Z=-36.532",
+              "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+              "fp_head_camera_space": "X=58.249 Y=0.410 Z=-18.635",
+              "fp_hand_transform": "34.069795,11.274918,-36.531826|21.987225,2.499022,-148.585887|0.999998,1.000000,1.000000",
+              "fp_gun_camera_space": "31.467718,7.597488,-321.771789|-1.999968,-90.000003,179.999990|1.000000,1.000000,1.000000"
+            },
+            "fp_instances": [
+              "ABP_StingerFirstPerson_C"
+            ],
+            "hand": "<Struct 'Vector' (0x000001F03FD43120) {x: 2926.264344, y: 11.274918, z: 121.618174}>",
+            "camera": "<Struct 'Vector' (0x000001F03FD43120) {x: 2892.194549, y: 0.000000, z: 158.149999}>",
+            "body_owner_hidden": true
+          }
+        ],
+        "reload": [
+          {
+            "name": "BP_StingerCharacter_C_0",
+            "local": true,
+            "location": "<Struct 'Vector' (0x000001F03FD43530) {x: 2882.194549, y: 0.000000, z: 94.149999}>",
+            "speed": 0.0,
+            "max_speed": 600.0,
+            "crouch_speed": 300.0,
+            "crouched": false,
+            "falling": false,
+            "sprinting": false,
+            "first_person": true,
+            "fov": 90.0,
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "native": {
+              "ammo": 30,
+              "combat_state": "ECS_Unoccuiped",
+              "disabled": false,
+              "health": 80,
+              "body_hand_actor_space": "-10.601742,22.752717,3.779177|21.293538,156.633431,162.883841|0.999998,1.000000,1.000000",
+              "muzzle_actor_space": "X=51.309 Y=22.142 Z=11.495",
+              "fp_hand_camera_space": "X=33.998 Y=11.300 Z=-36.537",
+              "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+              "fp_head_camera_space": "X=58.088 Y=0.410 Z=-18.630",
+              "fp_hand_transform": "33.997619,11.300355,-36.536506|22.051911,2.618191,-148.565644|0.999998,1.000000,1.000000",
+              "fp_gun_camera_space": "31.763680,7.592999,-321.826472|-1.997992,-89.996036,179.886068|1.000000,1.000000,1.000000"
+            },
+            "fp_instances": [
+              "ABP_StingerFirstPerson_C"
+            ],
+            "hand": "<Struct 'Vector' (0x000001F03FD43580) {x: 2926.192168, y: 11.300355, z: 121.613493}>",
+            "camera": "<Struct 'Vector' (0x000001F03FD43580) {x: 2892.194549, y: 0.000000, z: 158.149999}>",
+            "body_owner_hidden": true
+          }
+        ],
+        "third_person": [
+          {
+            "name": "BP_StingerCharacter_C_0",
+            "local": true,
+            "location": "<Struct 'Vector' (0x000001F03FD436C0) {x: 2882.194549, y: 0.000000, z: 94.149999}>",
+            "speed": 0.0,
+            "max_speed": 600.0,
+            "crouch_speed": 300.0,
+            "crouched": false,
+            "falling": false,
+            "sprinting": false,
+            "first_person": false,
+            "fov": 90.0,
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "native": {
+              "ammo": 30,
+              "combat_state": "ECS_Unoccuiped",
+              "disabled": false,
+              "health": 80,
+              "body_hand_actor_space": "-10.616599,23.604312,3.875291|21.384524,157.431215,164.175233|0.999998,1.000000,1.000000",
+              "muzzle_actor_space": "X=51.244 Y=23.190 Z=11.998"
+            },
+            "fp_instances": [],
+            "hand": null,
+            "camera": "<Struct 'Vector' (0x000001F03FD436C0) {x: 2562.194549, y: 110.000000, z: 155.149999}>",
+            "body_owner_hidden": false
+          }
+        ]
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "1p_spawn",
+      "passed": true,
+      "detail": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true,
+          "location": "<Struct 'Vector' (0x000001F03FCBDAA0) {x: -500.000000, y: 0.000000, z: 94.149998}>",
+          "speed": 0.0,
+          "max_speed": 600.0,
+          "crouch_speed": 300.0,
+          "crouched": false,
+          "falling": false,
+          "sprinting": false,
+          "first_person": true,
+          "fov": 90.0,
+          "ammo": null,
+          "combat_state": "ECS_Unoccuiped",
+          "native": {
+            "ammo": -1,
+            "combat_state": "ECS_Unoccuiped",
+            "disabled": false,
+            "health": 80,
+            "body_hand_actor_space": "12.341726,35.083092,1.943448|73.032936,-172.838315,-98.989762|1.000000,1.000000,1.000000",
+            "fp_hand_camera_space": "X=34.097 Y=11.294 Z=-36.532",
+            "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+            "fp_head_camera_space": "X=58.249 Y=0.410 Z=-18.635",
+            "fp_hand_transform": "34.097050,11.293820,-36.531666|21.912759,2.533480,-148.608341|0.999998,1.000000,1.000000",
+            "fp_gun_camera_space": "31.476034,7.592999,-321.780028|-1.999974,-90.000006,179.999953|1.000000,1.000000,1.000000"
+          },
+          "fp_instances": [
+            "ABP_StingerFirstPerson_C"
+          ],
+          "hand": "<Struct 'Vector' (0x000001F03FCBDAF0) {x: -455.902950, y: 11.293820, z: 121.618332}>",
+          "camera": "<Struct 'Vector' (0x000001F03FCBDAF0) {x: -490.000000, y: 0.000000, z: 158.149998}>",
+          "body_owner_hidden": true
+        }
+      ]
+    },
+    {
+      "name": "1p_first_person",
+      "passed": true,
+      "detail": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true,
+          "location": "<Struct 'Vector' (0x000001F03FCBDAA0) {x: -500.000000, y: 0.000000, z: 94.149998}>",
+          "speed": 0.0,
+          "max_speed": 600.0,
+          "crouch_speed": 300.0,
+          "crouched": false,
+          "falling": false,
+          "sprinting": false,
+          "first_person": true,
+          "fov": 90.0,
+          "ammo": null,
+          "combat_state": "ECS_Unoccuiped",
+          "native": {
+            "ammo": -1,
+            "combat_state": "ECS_Unoccuiped",
+            "disabled": false,
+            "health": 80,
+            "body_hand_actor_space": "12.341726,35.083092,1.943448|73.032936,-172.838315,-98.989762|1.000000,1.000000,1.000000",
+            "fp_hand_camera_space": "X=34.097 Y=11.294 Z=-36.532",
+            "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+            "fp_head_camera_space": "X=58.249 Y=0.410 Z=-18.635",
+            "fp_hand_transform": "34.097050,11.293820,-36.531666|21.912759,2.533480,-148.608341|0.999998,1.000000,1.000000",
+            "fp_gun_camera_space": "31.476034,7.592999,-321.780028|-1.999974,-90.000006,179.999953|1.000000,1.000000,1.000000"
+          },
+          "fp_instances": [
+            "ABP_StingerFirstPerson_C"
+          ],
+          "hand": "<Struct 'Vector' (0x000001F03FCBDAF0) {x: -455.902950, y: 11.293820, z: 121.618332}>",
+          "camera": "<Struct 'Vector' (0x000001F03FCBDAF0) {x: -490.000000, y: 0.000000, z: 158.149998}>",
+          "body_owner_hidden": true
+        }
+      ]
+    },
+    {
+      "name": "1p_equip",
+      "passed": true,
+      "detail": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true,
+          "location": "<Struct 'Vector' (0x000001F03FCD5870) {x: -500.000000, y: 0.000000, z: 94.149998}>",
+          "speed": 0.0,
+          "max_speed": 600.0,
+          "crouch_speed": 300.0,
+          "crouched": false,
+          "falling": false,
+          "sprinting": false,
+          "first_person": true,
+          "fov": 90.0,
+          "ammo": 30,
+          "combat_state": "ECS_Unoccuiped",
+          "native": {
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "disabled": false,
+            "health": 80,
+            "body_hand_actor_space": "-10.314328,23.057387,3.758810|21.813971,152.879052,162.233251|0.999998,1.000000,1.000000",
+            "muzzle_actor_space": "X=51.537 Y=18.690 Z=10.702",
+            "fp_hand_camera_space": "X=34.097 Y=11.294 Z=-36.532",
+            "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+            "fp_head_camera_space": "X=58.249 Y=0.410 Z=-18.635",
+            "fp_hand_transform": "34.097077,11.293819,-36.531671|21.912727,2.533461,-148.608352|0.999998,1.000000,1.000000",
+            "fp_gun_camera_space": "31.475960,7.592999,-321.780016|-1.999975,-90.000007,179.999982|1.000000,1.000000,1.000000"
+          },
+          "fp_instances": [
+            "ABP_StingerFirstPerson_C"
+          ],
+          "hand": "<Struct 'Vector' (0x000001F03FCD5960) {x: -455.902923, y: 11.293819, z: 121.618327}>",
+          "camera": "<Struct 'Vector' (0x000001F03FCD5960) {x: -490.000000, y: 0.000000, z: 158.149998}>",
+          "body_owner_hidden": true
+        }
+      ]
+    },
+    {
+      "name": "1p_walk",
+      "passed": true,
+      "detail": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true,
+          "location": "<Struct 'Vector' (0x000001F03FD41C80) {x: 516.811838, y: 0.000000, z: 94.149998}>",
+          "speed": 600.0,
+          "max_speed": 600.0,
+          "crouch_speed": 300.0,
+          "crouched": false,
+          "falling": false,
+          "sprinting": false,
+          "first_person": true,
+          "fov": 90.0,
+          "ammo": 30,
+          "combat_state": "ECS_Unoccuiped",
+          "native": {
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "disabled": false,
+            "health": 80,
+            "body_hand_actor_space": "10.391019,26.065915,-0.338658|22.879393,160.363110,166.061284|0.999998,1.000000,1.000000",
+            "muzzle_actor_space": "X=72.330 Y=27.759 Z=6.981",
+            "fp_hand_camera_space": "X=33.757 Y=11.316 Z=-36.549",
+            "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+            "fp_head_camera_space": "X=57.701 Y=0.411 Z=-18.620",
+            "fp_hand_transform": "33.757343,11.316223,-36.548573|22.387763,2.824030,-148.461237|0.999998,1.000000,1.000000",
+            "fp_gun_camera_space": "32.459385,7.592999,-321.936380|-1.993167,-89.986470,179.610774|1.000000,1.000000,1.000000"
+          },
+          "fp_instances": [
+            "ABP_StingerFirstPerson_C"
+          ],
+          "hand": "<Struct 'Vector' (0x000001F03FD41CD0) {x: 560.569180, y: 11.316223, z: 121.601425}>",
+          "camera": "<Struct 'Vector' (0x000001F03FD41CD0) {x: 526.811838, y: 0.000000, z: 158.149998}>",
+          "body_owner_hidden": true
+        }
+      ]
+    },
+    {
+      "name": "1p_sprint",
+      "passed": true,
+      "detail": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true,
+          "location": "<Struct 'Vector' (0x000001F03FD42090) {x: 1770.245308, y: 0.000000, z: 94.149998}>",
+          "speed": 850.0,
+          "max_speed": 850.0,
+          "crouch_speed": 300.0,
+          "crouched": false,
+          "falling": false,
+          "sprinting": true,
+          "first_person": true,
+          "fov": 90.0,
+          "ammo": 30,
+          "combat_state": "ECS_Unoccuiped",
+          "native": {
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "disabled": false,
+            "health": 80,
+            "body_hand_actor_space": "10.738224,24.831820,-0.681766|21.878768,159.183602,163.931348|0.999998,1.000000,1.000000",
+            "muzzle_actor_space": "X=72.654 Y=26.411 Z=6.854",
+            "fp_hand_camera_space": "X=36.433 Y=15.767 Z=-23.657",
+            "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+            "fp_head_camera_space": "X=57.998 Y=0.552 Z=-17.786",
+            "fp_hand_transform": "36.433474,15.766923,-23.656963|-46.160268,16.531480,-75.800173|0.999998,1.000000,1.000000",
+            "fp_gun_camera_space": "33.549180,9.082355,-323.003572|-32.869164,-148.351342,-170.829095|1.000000,1.000000,1.000000"
+          },
+          "fp_instances": [
+            "ABP_StingerFirstPerson_C"
+          ],
+          "hand": "<Struct 'Vector' (0x000001F03FD420E0) {x: 1816.678782, y: 15.766923, z: 134.493035}>",
+          "camera": "<Struct 'Vector' (0x000001F03FD420E0) {x: 1780.245308, y: 0.000000, z: 158.149998}>",
+          "body_owner_hidden": true
+        }
+      ]
+    },
+    {
+      "name": "1p_crouch",
+      "passed": true,
+      "detail": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true,
+          "location": "<Struct 'Vector' (0x000001F03FD424A0) {x: 2237.101334, y: 0.000000, z: 42.149998}>",
+          "speed": 300.0,
+          "max_speed": 600.0,
+          "crouch_speed": 300.0,
+          "crouched": true,
+          "falling": false,
+          "sprinting": false,
+          "first_person": true,
+          "fov": 90.0,
+          "ammo": 30,
+          "combat_state": "ECS_Unoccuiped",
+          "native": {
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "disabled": false,
+            "health": 80,
+            "body_hand_actor_space": "-2.457161,18.674206,24.836879|24.070487,158.007055,167.176900|0.999998,1.000000,1.000000",
+            "muzzle_actor_space": "X=59.577 Y=17.170 Z=31.347",
+            "fp_hand_camera_space": "X=34.097 Y=11.294 Z=-36.532",
+            "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+            "fp_head_camera_space": "X=58.249 Y=0.410 Z=-18.635",
+            "fp_hand_transform": "34.097076,11.293819,-36.531671|21.912725,2.533460,-148.608354|0.999998,1.000000,1.000000",
+            "fp_gun_camera_space": "31.475960,7.592999,-321.780016|-1.999975,-90.000007,179.999982|1.000000,1.000000,1.000000"
+          },
+          "fp_instances": [
+            "ABP_StingerFirstPerson_C"
+          ],
+          "hand": "<Struct 'Vector' (0x000001F03FD424F0) {x: 2281.198410, y: 11.293819, z: 37.618327}>",
+          "camera": "<Struct 'Vector' (0x000001F03FD424F0) {x: 2247.101334, y: 0.000000, z: 74.149998}>",
+          "body_owner_hidden": true
+        }
+      ]
+    },
+    {
+      "name": "1p_jump",
+      "passed": true,
+      "detail": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true,
+          "location": "<Struct 'Vector' (0x000001F03FD428B0) {x: 2247.581804, y: 0.000000, z: 165.475834}>",
+          "speed": 191.31994128227234,
+          "max_speed": 600.0,
+          "crouch_speed": 300.0,
+          "crouched": false,
+          "falling": true,
+          "sprinting": false,
+          "first_person": true,
+          "fov": 90.0,
+          "ammo": 30,
+          "combat_state": "ECS_Unoccuiped",
+          "native": {
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "disabled": false,
+            "health": 80,
+            "body_hand_actor_space": "28.991082,43.020150,142.777141|-35.125353,-162.131488,-140.493844|0.999998,1.000000,1.000000",
+            "muzzle_actor_space": "X=51.927 Y=39.790 Z=200.712",
+            "fp_hand_camera_space": "X=34.097 Y=11.294 Z=-36.532",
+            "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+            "fp_head_camera_space": "X=58.249 Y=0.410 Z=-18.635",
+            "fp_hand_transform": "34.097077,11.293819,-36.531671|21.912727,2.533461,-148.608354|0.999998,1.000000,1.000000",
+            "fp_gun_camera_space": "31.475960,7.592999,-321.780016|-1.999975,-90.000007,179.999982|1.000000,1.000000,1.000000"
+          },
+          "fp_instances": [
+            "ABP_StingerFirstPerson_C"
+          ],
+          "hand": "<Struct 'Vector' (0x000001F03FD42900) {x: 2291.678881, y: 11.293819, z: 192.944163}>",
+          "camera": "<Struct 'Vector' (0x000001F03FD42900) {x: 2257.581804, y: 0.000000, z: 229.475834}>",
+          "body_owner_hidden": true
+        }
+      ]
+    },
+    {
+      "name": "1p_aim",
+      "passed": true,
+      "detail": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true,
+          "location": "<Struct 'Vector' (0x000001F03FD42CC0) {x: 2869.353044, y: 0.000000, z: 94.149999}>",
+          "speed": 450.0,
+          "max_speed": 450.0,
+          "crouch_speed": 300.0,
+          "crouched": false,
+          "falling": false,
+          "sprinting": false,
+          "first_person": true,
+          "fov": 65.0,
+          "ammo": 30,
+          "combat_state": "ECS_Unoccuiped",
+          "native": {
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "disabled": false,
+            "health": 80,
+            "body_hand_actor_space": "45.853224,29.940425,32.177858|22.101331,157.898342,168.176910|0.999998,1.000000,1.000000",
+            "muzzle_actor_space": "X=107.581 Y=27.880 Z=41.029",
+            "fp_hand_camera_space": "X=13.988 Y=-0.699 Z=-9.537",
+            "fp_root_camera_space": "X=35.000 Y=-12.000 Z=-150.000",
+            "fp_head_camera_space": "X=38.073 Y=-11.590 Z=8.370",
+            "fp_hand_transform": "13.987806,-0.698997,-9.536995|22.065639,2.626564,-148.561411|0.999998,1.000000,1.000000",
+            "fp_gun_camera_space": "11.792089,-4.407001,-294.831027|-1.997796,-89.995644,179.874822|1.000000,1.000000,1.000000"
+          },
+          "fp_instances": [
+            "ABP_StingerFirstPerson_C"
+          ],
+          "hand": "<Struct 'Vector' (0x000001F03FD42D10) {x: 2893.340850, y: -0.698997, z: 148.613004}>",
+          "camera": "<Struct 'Vector' (0x000001F03FD42D10) {x: 2879.353044, y: 0.000000, z: 158.149999}>",
+          "body_owner_hidden": true
+        }
+      ]
+    },
+    {
+      "name": "1p_fire",
+      "passed": true,
+      "detail": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true,
+          "location": "<Struct 'Vector' (0x000001F03FD430D0) {x: 2882.194549, y: 0.000000, z: 94.149999}>",
+          "speed": 0.0,
+          "max_speed": 600.0,
+          "crouch_speed": 300.0,
+          "crouched": false,
+          "falling": false,
+          "sprinting": false,
+          "first_person": true,
+          "fov": 90.0,
+          "ammo": 25,
+          "combat_state": "ECS_Unoccuiped",
+          "native": {
+            "ammo": 25,
+            "combat_state": "ECS_Unoccuiped",
+            "disabled": false,
+            "health": 80,
+            "body_hand_actor_space": "-9.845876,22.633716,3.644195|20.758955,157.442474,163.904390|0.999998,1.000000,1.000000",
+            "muzzle_actor_space": "X=51.945 Y=22.406 Z=12.288",
+            "fp_hand_camera_space": "X=34.070 Y=11.275 Z=-36.532",
+            "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+            "fp_head_camera_space": "X=58.249 Y=0.410 Z=-18.635",
+            "fp_hand_transform": "34.069795,11.274918,-36.531826|21.987225,2.499022,-148.585887|0.999998,1.000000,1.000000",
+            "fp_gun_camera_space": "31.467718,7.597488,-321.771789|-1.999968,-90.000003,179.999990|1.000000,1.000000,1.000000"
+          },
+          "fp_instances": [
+            "ABP_StingerFirstPerson_C"
+          ],
+          "hand": "<Struct 'Vector' (0x000001F03FD43120) {x: 2926.264344, y: 11.274918, z: 121.618174}>",
+          "camera": "<Struct 'Vector' (0x000001F03FD43120) {x: 2892.194549, y: 0.000000, z: 158.149999}>",
+          "body_owner_hidden": true
+        }
+      ]
+    },
+    {
+      "name": "1p_no_self_damage",
+      "passed": true,
+      "detail": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true,
+          "location": "<Struct 'Vector' (0x000001F03FD430D0) {x: 2882.194549, y: 0.000000, z: 94.149999}>",
+          "speed": 0.0,
+          "max_speed": 600.0,
+          "crouch_speed": 300.0,
+          "crouched": false,
+          "falling": false,
+          "sprinting": false,
+          "first_person": true,
+          "fov": 90.0,
+          "ammo": 25,
+          "combat_state": "ECS_Unoccuiped",
+          "native": {
+            "ammo": 25,
+            "combat_state": "ECS_Unoccuiped",
+            "disabled": false,
+            "health": 80,
+            "body_hand_actor_space": "-9.845876,22.633716,3.644195|20.758955,157.442474,163.904390|0.999998,1.000000,1.000000",
+            "muzzle_actor_space": "X=51.945 Y=22.406 Z=12.288",
+            "fp_hand_camera_space": "X=34.070 Y=11.275 Z=-36.532",
+            "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+            "fp_head_camera_space": "X=58.249 Y=0.410 Z=-18.635",
+            "fp_hand_transform": "34.069795,11.274918,-36.531826|21.987225,2.499022,-148.585887|0.999998,1.000000,1.000000",
+            "fp_gun_camera_space": "31.467718,7.597488,-321.771789|-1.999968,-90.000003,179.999990|1.000000,1.000000,1.000000"
+          },
+          "fp_instances": [
+            "ABP_StingerFirstPerson_C"
+          ],
+          "hand": "<Struct 'Vector' (0x000001F03FD43120) {x: 2926.264344, y: 11.274918, z: 121.618174}>",
+          "camera": "<Struct 'Vector' (0x000001F03FD43120) {x: 2892.194549, y: 0.000000, z: 158.149999}>",
+          "body_owner_hidden": true
+        }
+      ]
+    },
+    {
+      "name": "1p_reload",
+      "passed": true,
+      "detail": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true,
+          "location": "<Struct 'Vector' (0x000001F03FD43530) {x: 2882.194549, y: 0.000000, z: 94.149999}>",
+          "speed": 0.0,
+          "max_speed": 600.0,
+          "crouch_speed": 300.0,
+          "crouched": false,
+          "falling": false,
+          "sprinting": false,
+          "first_person": true,
+          "fov": 90.0,
+          "ammo": 30,
+          "combat_state": "ECS_Unoccuiped",
+          "native": {
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "disabled": false,
+            "health": 80,
+            "body_hand_actor_space": "-10.601742,22.752717,3.779177|21.293538,156.633431,162.883841|0.999998,1.000000,1.000000",
+            "muzzle_actor_space": "X=51.309 Y=22.142 Z=11.495",
+            "fp_hand_camera_space": "X=33.998 Y=11.300 Z=-36.537",
+            "fp_root_camera_space": "X=55.000 Y=0.000 Z=-177.000",
+            "fp_head_camera_space": "X=58.088 Y=0.410 Z=-18.630",
+            "fp_hand_transform": "33.997619,11.300355,-36.536506|22.051911,2.618191,-148.565644|0.999998,1.000000,1.000000",
+            "fp_gun_camera_space": "31.763680,7.592999,-321.826472|-1.997992,-89.996036,179.886068|1.000000,1.000000,1.000000"
+          },
+          "fp_instances": [
+            "ABP_StingerFirstPerson_C"
+          ],
+          "hand": "<Struct 'Vector' (0x000001F03FD43580) {x: 2926.192168, y: 11.300355, z: 121.613493}>",
+          "camera": "<Struct 'Vector' (0x000001F03FD43580) {x: 2892.194549, y: 0.000000, z: 158.149999}>",
+          "body_owner_hidden": true
+        }
+      ]
+    },
+    {
+      "name": "1p_view_toggle",
+      "passed": true,
+      "detail": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true,
+          "location": "<Struct 'Vector' (0x000001F03FD436C0) {x: 2882.194549, y: 0.000000, z: 94.149999}>",
+          "speed": 0.0,
+          "max_speed": 600.0,
+          "crouch_speed": 300.0,
+          "crouched": false,
+          "falling": false,
+          "sprinting": false,
+          "first_person": false,
+          "fov": 90.0,
+          "ammo": 30,
+          "combat_state": "ECS_Unoccuiped",
+          "native": {
+            "ammo": 30,
+            "combat_state": "ECS_Unoccuiped",
+            "disabled": false,
+            "health": 80,
+            "body_hand_actor_space": "-10.616599,23.604312,3.875291|21.384524,157.431215,164.175233|0.999998,1.000000,1.000000",
+            "muzzle_actor_space": "X=51.244 Y=23.190 Z=11.998"
+          },
+          "fp_instances": [],
+          "hand": null,
+          "camera": "<Struct 'Vector' (0x000001F03FD436C0) {x: 2562.194549, y: 110.000000, z: 155.149999}>",
+          "body_owner_hidden": false
+        }
+      ]
+    }
+  ],
+  "result": "passed"
+}

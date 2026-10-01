@@ -11,5 +11,6 @@ public class BrokenEdgeEditorTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V7;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_8;
 		ExtraModuleNames.Add("BrokenEdge");
+		ExtraModuleNames.Add("StingerTools");
 	}
 }
