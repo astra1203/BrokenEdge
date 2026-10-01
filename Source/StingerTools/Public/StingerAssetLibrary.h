@@ -15,6 +15,9 @@ class STINGERTOOLS_API UStingerAssetLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Import")
+	static class USkeleton* CreateSourceSkeleton(const FString& PackageName, const TArray<FName>& Names,
+	                                             const TArray<int32>& Parents, const TArray<FTransform>& ReferencePose);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Setup")
 	static bool AssignMeshSkeleton(USkeletalMesh* Mesh, class USkeleton* Skeleton);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Setup")
@@ -23,6 +26,8 @@ public:
 	static void BeginValidationPIE(int32 Players);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static TArray<UWorld*> GetValidationWorlds();
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static void IsolateValidationInput(APlayerController* Controller);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static void InjectValidationInput(APlayerController* Controller, class UInputAction* Action, FVector Value);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")

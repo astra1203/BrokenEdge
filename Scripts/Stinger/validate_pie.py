@@ -29,6 +29,9 @@ def snapshot(pawn):
             'fov':camera.get_editor_property('field_of_view'),'ammo':native['ammo'] if native['ammo']>=0 else None,
             'combat_state':native['combat_state'],'native':native,
             'fp_instances':[m.get_anim_instance().get_class().get_name() for m in fp],
+            'fp_visible':fp[0].is_visible() if fp else False,
+            'visual_state':str(fp[0].get_anim_instance().get_editor_property('current_visual_state')) if fp and os.environ.get('STINGER_ISOLATE_INPUT') else None,
+            'animation_source':fp[0].get_anim_instance().get_editor_property('current_animation_name') if fp and os.environ.get('STINGER_ISOLATE_INPUT') else None,
             'hand':str(fp[0].get_socket_location('RightHand')) if fp else None,
             'camera':str(camera.get_world_location()),
             'body_owner_hidden':pawn.get_editor_property('mesh').get_editor_property('owner_no_see')}
@@ -76,12 +79,16 @@ def tick(delta):
             for world in worlds:
                 for pawn in unreal.GameplayStatics.get_all_actors_of_class(world,unreal.BrokenEdgeCharacter):
                     if pawn.is_locally_controlled(): pawns.append(pawn)
+            if os.environ.get('STINGER_ISOLATE_INPUT'):
+                for pawn in pawns: lib.isolate_validation_input(pawn.get_controller())
             if len(pawns) == state['players'] and elapsed > 8:
                 state['pawns']=pawns
                 report['sessions'].append({'players':state['players'],'worlds':len(worlds),'snapshots':{}})
                 initial=capture('initial')
-                check(str(state['players'])+'p_spawn',all(p.get_class().get_name()=='BP_StingerCharacter_C' for p in pawns),initial)
+                check(str(state['players'])+'p_spawn',all(p.get_class().get_name()==os.environ.get('STINGER_CHARACTER_NAME','BP_StingerCharacter_C') for p in pawns),initial)
                 check(str(state['players'])+'p_first_person',all(s['first_person'] and s['fp_instances'] for s in initial),initial)
+                if os.environ.get('STINGER_ISOLATE_INPUT'):
+                    check(str(state['players'])+'p_unarmed_visual',all(not s['fp_visible'] and s['visual_state']=='Unarmed' for s in initial),initial)
                 if state['players']>1:
                     remotes=[snapshot(p) for w in worlds for p in unreal.GameplayStatics.get_all_actors_of_class(w,unreal.BrokenEdgeCharacter) if not p.is_locally_controlled()]
                     report['sessions'][-1]['snapshots']['remote_characters']=remotes
@@ -133,6 +140,8 @@ def tick(delta):
             if elapsed > 1.5:
                 values=capture('aim')
                 check(str(state['players'])+'p_aim',all(abs(s['fov']-65)<.5 and s['max_speed']==450 and not s['sprinting'] for s in values),values)
+                if os.environ.get('STINGER_ISOLATE_INPUT'):
+                    check(str(state['players'])+'p_aim_visual_source',all(s['fp_visible'] and s['visual_state']=='Aim' and '/Corrected/MappedV4/' in s['animation_source'] and s['animation_source'].endswith('AR_M_1P_AimIdle_Pose') for s in values),values)
                 advance('fire')
         elif phase == 'fire':
             inputs('fire_action',(1,0,0))

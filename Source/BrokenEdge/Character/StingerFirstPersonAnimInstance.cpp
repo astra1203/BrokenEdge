@@ -16,6 +16,11 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 	FAnimNode_ConvertLocalToComponentSpace ToComponent;
 	FAnimNode_TwoBoneIK LeftHandIK;
 	FAnimNode_ConvertComponentToLocalSpace ToLocal;
+	TArray<FTransform> LastPose;
+	TArray<FTransform> BlendFromPose;
+	float BlendAlpha = 1.f;
+	float FrameDelta = 0.f;
+	bool bStartBlend = false;
 
 	explicit FStingerFirstPersonProxy(UAnimInstance* Instance) : FAnimInstanceProxy(Instance)
 	{
@@ -43,15 +48,18 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 	virtual void PreUpdate(UAnimInstance* Instance, float DeltaSeconds) override
 	{
 		FAnimInstanceProxy::PreUpdate(Instance, DeltaSeconds);
+		FrameDelta = DeltaSeconds;
 		UAnimSequence* Desired = CastChecked<UStingerFirstPersonAnimInstance>(Instance)->ActiveAnimation;
 		if (Desired && Desired != Player.GetSequence())
 		{
 			Player.SetSequence(Desired);
 			Player.SetAccumulatedTime(0.f);
+			bStartBlend = true;
 		}
 		const auto Character = Cast<ABrokenEdgeCharacter>(Instance->TryGetPawnOwner());
 		LeftHandIK.Alpha = 0.f;
 		if (Character && Character->GetFirstPersonWeaponMesh() && Character->GetFirstPersonMesh()
+			&& Character->GetFirstPersonWeaponMesh()->DoesSocketExist(TEXT("LeftHandSocket"))
 			&& Character->GetCombatState() == ECombatState::ECS_Unoccuiped)
 		{
 			FRotator Rotation;
@@ -73,6 +81,21 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 	{
 		ToLocal.CacheBones_AnyThread(FAnimationCacheBonesContext(this));
 		ToLocal.Evaluate_AnyThread(Output);
+		const int32 BoneCount = Output.Pose.GetNumBones();
+		if (bStartBlend)
+		{
+			BlendFromPose = LastPose;
+			BlendAlpha = BlendFromPose.Num() == BoneCount ? 0.f : 1.f;
+			bStartBlend = false;
+		}
+		BlendAlpha = FMath::Min(1.f, BlendAlpha + FrameDelta / 0.15f);
+		LastPose.SetNum(BoneCount);
+		for (int32 Index = 0; Index < BoneCount; ++Index)
+		{
+			FTransform& Transform = Output.Pose[FCompactPoseBoneIndex(Index)];
+			if (BlendAlpha < 1.f) Transform.Blend(BlendFromPose[Index], Transform, BlendAlpha);
+			LastPose[Index] = Transform;
+		}
 		return true;
 	}
 };
@@ -80,12 +103,33 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 void UStingerFirstPersonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
-	const ABrokenEdgeCharacter* Character = Cast<ABrokenEdgeCharacter>(TryGetPawnOwner());
+	ABrokenEdgeCharacter* Character = Cast<ABrokenEdgeCharacter>(TryGetPawnOwner());
 	ActiveAnimation = IdleAnimation;
+	CurrentVisualState = TEXT("Idle");
+	bMissingStateAnimation = false;
 	if (!Character) return;
-	if (Character->GetCharacterMovement()->IsFalling() && JumpAnimation) ActiveAnimation = JumpAnimation;
-	else if (Character->IsSprinting() && SprintAnimation) ActiveAnimation = SprintAnimation;
-	else if (const_cast<ABrokenEdgeCharacter*>(Character)->IsAiming() && AimAnimation) ActiveAnimation = AimAnimation;
+	if (!Character->GetEquippedWeapon()) CurrentVisualState = TEXT("Unarmed");
+	else if (Character->GetCharacterMovement()->IsFalling())
+	{
+		CurrentVisualState = TEXT("Airborne");
+		bMissingStateAnimation = !JumpAnimation;
+		if (JumpAnimation) ActiveAnimation = JumpAnimation;
+	}
+	else if (Character->IsSprinting())
+	{
+		CurrentVisualState = TEXT("Sprint");
+		bMissingStateAnimation = !SprintAnimation;
+		if (SprintAnimation) ActiveAnimation = SprintAnimation;
+	}
+	else if (const_cast<ABrokenEdgeCharacter*>(Character)->IsAiming())
+	{
+		CurrentVisualState = TEXT("Aim");
+		bMissingStateAnimation = !AimAnimation;
+		if (AimAnimation) ActiveAnimation = AimAnimation;
+	}
+	if (Character->GetCombatState() == ECombatState::ECS_Reloading) CurrentVisualState = TEXT("Reload");
+	else if (Character->GetCombatState() == ECombatState::ECS_SwappingWeapon) CurrentVisualState = TEXT("Equip");
+	CurrentAnimationName = ActiveAnimation ? ActiveAnimation->GetPathName() : FString();
 }
 
 FAnimInstanceProxy* UStingerFirstPersonAnimInstance::CreateAnimInstanceProxy()

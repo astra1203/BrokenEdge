@@ -23,6 +23,31 @@
 #include "Serialization/JsonSerializer.h"
 #include "Animation/Skeleton.h"
 
+USkeleton* UStingerAssetLibrary::CreateSourceSkeleton(const FString& PackageName, const TArray<FName>& Names,
+                                                      const TArray<int32>& Parents,
+                                                      const TArray<FTransform>& ReferencePose)
+{
+	if (Names.IsEmpty() || Names.Num() != Parents.Num() || Names.Num() != ReferencePose.Num()) return nullptr;
+	UPackage* Package = CreatePackage(*PackageName);
+	const FString AssetName = FPackageName::GetLongPackageAssetName(PackageName);
+	if (auto Existing = FindObject<USkeleton>(Package, *AssetName)) return Existing;
+	auto Skeleton = NewObject<USkeleton>(Package, *AssetName, RF_Public | RF_Standalone);
+	auto SourceMesh = NewObject<USkeletalMesh>();
+	{
+		FReferenceSkeletonModifier Modifier(SourceMesh->GetRefSkeleton(), nullptr);
+		for (int32 Index = 0; Index < Names.Num(); ++Index)
+		{
+			const int32 Parent = Index == 0 ? INDEX_NONE : Parents[Index];
+			if (Index > 0 && (Parent < 0 || Parent >= Index)) return nullptr;
+			Modifier.Add(FMeshBoneInfo(Names[Index], Names[Index].ToString(), Parent), ReferencePose[Index]);
+		}
+	}
+	if (!Skeleton->MergeAllBonesToBoneTree(SourceMesh, false)) return nullptr;
+	FAssetRegistryModule::AssetCreated(Skeleton);
+	Skeleton->MarkPackageDirty();
+	return Skeleton;
+}
+
 bool UStingerAssetLibrary::AssignMeshSkeleton(USkeletalMesh* Mesh, USkeleton* Skeleton)
 {
 	if (!Mesh || !Skeleton || !Skeleton->IsCompatibleMesh(Mesh)) return false;
@@ -113,6 +138,14 @@ TArray<UWorld*> UStingerAssetLibrary::GetValidationWorlds()
 	for (const FWorldContext& Context : GEngine->GetWorldContexts())
 		if (Context.WorldType == EWorldType::PIE && Context.World()) Worlds.Add(Context.World());
 	return Worlds;
+}
+
+void UStingerAssetLibrary::IsolateValidationInput(APlayerController* Controller)
+{
+	if (!Controller || !Controller->GetLocalPlayer()) return;
+	if (auto* Subsystem = Controller->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+		Subsystem->ClearAllMappings();
+	Controller->SetControlRotation(FRotator::ZeroRotator);
 }
 
 void UStingerAssetLibrary::InjectValidationInput(APlayerController* Controller, UInputAction* Action, FVector Value)

@@ -200,6 +200,12 @@ public:
 	bool bStartInFirstPerson = false;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	FTransform FirstPersonMeshTransform = FTransform(FRotator(0, -90, 0), FVector(-10, 0, -165));
+	UPROPERTY(EditDefaultsOnly, Category = "FirstPerson")
+	FVector FirstPersonAimMeshOffset = FVector(20.f, 0.f, 14.f);
+	UPROPERTY(EditDefaultsOnly, Category = "FirstPerson")
+	TObjectPtr<USkeletalMesh> FirstPersonWeaponSourceMesh;
+	UPROPERTY(EditDefaultsOnly, Category = "FirstPerson")
+	TObjectPtr<USkeletalMesh> FirstPersonWeaponVisualMesh;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	FTransform FirstPersonWeaponTransform = FTransform::Identity;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")

@@ -1,5 +1,7 @@
 # 蜂医可控角色
 
+**本文记录存在动画适配错误的初版。当前修复入口、原因与未解决项见 [Repair.md](Repair.md)。旧的“检查通过”仅代表功能检查，不代表动画画面合格。**
+
 在内容浏览器打开 `/Game/Characters/Stinger/Maps/L_StingerTest`，运行 PIE。地图使用独立的 `BP_StingerTestGameMode`，玩家角色为 `/Game/Characters/Stinger/Blueprints/BP_StingerCharacter`，直接继承项目 C++ 类 `ABrokenEdgeCharacter`。项目原有默认角色和默认地图没有替换。
 
 | 操作 | 按键 |

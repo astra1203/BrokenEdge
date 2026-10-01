@@ -21,6 +21,12 @@ public:
 	TObjectPtr<UAnimSequence> JumpAnimation;
 	UPROPERTY(Transient)
 	TObjectPtr<UAnimSequence> ActiveAnimation;
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Stinger|Validation")
+	FName CurrentVisualState;
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Stinger|Validation")
+	FString CurrentAnimationName;
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Stinger|Validation")
+	bool bMissingStateAnimation = false;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 protected:

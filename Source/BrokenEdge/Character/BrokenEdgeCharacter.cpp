@@ -594,7 +594,7 @@ void ABrokenEdgeCharacter::UpdateFirstPersonCameraLocation()
 void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 {
 	if (!DedicatedFirstPersonMesh) return;
-	const FVector AimOffset = IsAiming() ? FVector(-20.f, -12.f, 27.f) : FVector::ZeroVector;
+	const FVector AimOffset = IsAiming() ? FirstPersonAimMeshOffset : FVector::ZeroVector;
 	DedicatedFirstPersonMesh->SetRelativeLocation(FMath::VInterpTo(DedicatedFirstPersonMesh->GetRelativeLocation(),
 	                                                               FirstPersonMeshTransform.GetLocation() + AimOffset,
 	                                                               GetWorld()->GetDeltaSeconds(),
@@ -620,16 +620,18 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 				FirstPersonWeaponMesh->SetCanEverAffectNavigation(false);
 				FirstPersonWeaponMesh->RegisterComponent();
 			}
-			FirstPersonWeaponMesh->SetSkeletalMeshAsset(Weapon->GetWeaponMesh()->GetSkeletalMeshAsset());
+			USkeletalMesh* SourceMesh = Weapon->GetWeaponMesh()->GetSkeletalMeshAsset();
+			FirstPersonWeaponMesh->SetSkeletalMeshAsset(
+				FirstPersonWeaponVisualMesh && SourceMesh == FirstPersonWeaponSourceMesh
+					? FirstPersonWeaponVisualMesh.Get()
+					: SourceMesh);
 			for (int32 Index = 0; Index < Weapon->GetWeaponMesh()->GetNumMaterials(); ++Index)
 				FirstPersonWeaponMesh->SetMaterial(Index, Weapon->GetWeaponMesh()->GetMaterial(Index));
 			FirstPersonWeaponMesh->SetRelativeTransform(FirstPersonWeaponTransform);
 		}
 	}
 	if (FirstPersonWeaponMesh) FirstPersonWeaponMesh->SetVisibility(Weapon && !bDefeated);
-	// The extracted source arms need additional pose retargeting for ADS. Keep the
-	// weapon visible while preventing the forearm from covering the iron sight.
-	DedicatedFirstPersonMesh->SetVisibility(!bDefeated && !IsAiming(), false);
+	DedicatedFirstPersonMesh->SetVisibility(Weapon && !bDefeated, false);
 }
 
 void ABrokenEdgeCharacter::PlayFirstPersonMontage(UAnimMontage* Montage)
