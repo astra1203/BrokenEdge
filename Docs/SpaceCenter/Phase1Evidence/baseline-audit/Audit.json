@@ -1,0 +1,597 @@
+{
+  "checks": [
+    {
+      "name": "game_mode_uses_promoted_character",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C"
+    },
+    {
+      "name": "BP_StingerCharacter_cpp_parent",
+      "passed": true,
+      "detail": "/Script/BrokenEdge.BrokenEdgeCharacter"
+    },
+    {
+      "name": "BP_StingerCharacter_fire_weapon_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_FireWeapon_Stinger.AM_FireWeapon_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_reload_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Reload_Stinger.AM_Reload_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_swap_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Swap_Stinger.AM_Swap_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_defeated_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Defeated_Stinger.AM_Defeated_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_Repaired_cpp_parent",
+      "passed": true,
+      "detail": "/Script/BrokenEdge.BrokenEdgeCharacter"
+    },
+    {
+      "name": "BP_StingerCharacter_Repaired_fire_weapon_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_FireWeapon_Stinger.AM_FireWeapon_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_Repaired_reload_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Reload_Stinger.AM_Reload_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_Repaired_swap_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Swap_Stinger.AM_Swap_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_Repaired_defeated_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Defeated_Stinger.AM_Defeated_Stinger"
+    },
+    {
+      "name": "left_wrist_copies_target_rotation",
+      "passed": true,
+      "detail": {
+        "fabrik": [
+          {
+            "root": "LeftArm",
+            "tip": "LeftHand",
+            "effector_bone": "RightHand",
+            "space": 3,
+            "rotation_source": 2,
+            "precision": 0.10000000149011612,
+            "iterations": 24
+          }
+        ]
+      }
+    },
+    {
+      "name": "world_grip_saved_palm_contact_anchor",
+      "passed": true,
+      "detail": {
+        "world": "<Struct 'Vector' (0x0000026D94F48E00) {x: 4.000000, y: 24.999997, z: 5.999999}>",
+        "view": "<Struct 'Vector' (0x0000026D94F490D0) {x: 0.000000, y: 24.999997, z: -2.000000}>"
+      }
+    },
+    {
+      "name": "world_grip_uses_component_space_rotation",
+      "passed": true,
+      "detail": 0.029982081628462397
+    },
+    {
+      "name": "Idle_Rifle_Hip_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Idle_Rifle_Ironsights_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Crouch_Idle_Rifle_Hip_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Crouch_Idle_Rifle_Ironsights_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Crouch_Walk_Fwd_Rifle_Hip_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Crouch_Walk_Fwd_Rifle_Ironsights_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Crouch_Walk_Bwd_Rifle_Hip_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Crouch_Walk_Bwd_Rifle_Ironsights_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Crouch_Walk_Lt_Rifle_Hip_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Crouch_Walk_Lt_Rifle_Ironsights_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Crouch_Walk_Rt_Rifle_Hip_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Crouch_Walk_Rt_Rifle_Ironsights_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Walk_Fwd_Rifle_Ironsights_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Walk_Bwd_Rifle_Ironsights_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Walk_Lt_Rifle_Ironsights_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Walk_Rt_Rifle_Ironsights_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Jog_Fwd_Rifle_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Jog_Bwd_Rifle_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Jog_Lt_Rifle_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Jog_Rt_Rifle_Retargeted_Stinger_saved_finger_pose",
+      "passed": true,
+      "detail": {
+        "LeftHandIndex1": 2.462659727359985e-05,
+        "LeftHandIndex2": 1.8070981951380422e-05,
+        "LeftHandIndex3": 2.020397203172922e-05,
+        "LeftHandMiddle1": 1.3445240826417657e-05,
+        "LeftHandMiddle2": 7.636383641665691e-06,
+        "LeftHandMiddle3": 1.3115919625095422e-05,
+        "LeftHandRing1": 6.613302226726412e-06,
+        "LeftHandRing2": 2.3905662095044672e-05,
+        "LeftHandRing3": 1.707547292503189e-05,
+        "LeftHandPinky1": 2.3783381691638923e-05,
+        "LeftHandPinky2": 1.1326587362040635e-05,
+        "LeftHandPinky3": 0.0,
+        "LeftHandThumb1": 0.0,
+        "LeftHandThumb2": 7.636383641665691e-06,
+        "LeftHandThumb3": 1.3336370687868314e-05,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    }
+  ],
+  "characters": [
+    {
+      "name": "BP_StingerCharacter",
+      "parent": "/Script/BrokenEdge.BrokenEdgeCharacter",
+      "spawn_health": 80.0,
+      "max_health": 100.0,
+      "body": "/Game/Characters/Stinger/Meshes/Gameplay/Stinger_3P_Textured/SkeletalMeshes/Stinger_3P_Textured.Stinger_3P_Textured",
+      "anim_class": "/Game/Characters/Stinger/Animations/ThirdPerson/ABP_BrokenEdgeAnimInstance_Stinger.ABP_BrokenEdgeAnimInstance_Stinger_C",
+      "first_person_mesh": "/Game/Characters/Stinger/Meshes/FirstPerson/CappedView/Stinger_CappedViewArms/SkeletalMeshes/Stinger_CappedViewArms.Stinger_CappedViewArms",
+      "montages": {
+        "fire_weapon_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_FireWeapon_Stinger.AM_FireWeapon_Stinger",
+        "reload_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Reload_Stinger.AM_Reload_Stinger",
+        "swap_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Swap_Stinger.AM_Swap_Stinger",
+        "defeated_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Defeated_Stinger.AM_Defeated_Stinger"
+      }
+    },
+    {
+      "name": "BP_StingerCharacter_Repaired",
+      "parent": "/Script/BrokenEdge.BrokenEdgeCharacter",
+      "spawn_health": 80.0,
+      "max_health": 100.0,
+      "body": "/Game/Characters/Stinger/Meshes/Gameplay/Stinger_3P_Textured/SkeletalMeshes/Stinger_3P_Textured.Stinger_3P_Textured",
+      "anim_class": "/Game/Characters/Stinger/Animations/ThirdPerson/ABP_BrokenEdgeAnimInstance_Stinger.ABP_BrokenEdgeAnimInstance_Stinger_C",
+      "first_person_mesh": "/Game/Characters/Stinger/Meshes/FirstPerson/CappedView/Stinger_CappedViewArms/SkeletalMeshes/Stinger_CappedViewArms.Stinger_CappedViewArms",
+      "montages": {
+        "fire_weapon_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_FireWeapon_Stinger.AM_FireWeapon_Stinger",
+        "reload_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Reload_Stinger.AM_Reload_Stinger",
+        "swap_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Swap_Stinger.AM_Swap_Stinger",
+        "defeated_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Defeated_Stinger.AM_Defeated_Stinger"
+      }
+    }
+  ],
+  "game_mode": "/Game/Characters/Stinger/Blueprints/BP_StingerTestGameMode.BP_StingerTestGameMode_C",
+  "default_pawn": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+  "ik": {
+    "fabrik": [
+      {
+        "root": "LeftArm",
+        "tip": "LeftHand",
+        "effector_bone": "RightHand",
+        "space": 3,
+        "rotation_source": 2,
+        "precision": 0.10000000149011612,
+        "iterations": 24
+      }
+    ]
+  },
+  "result": "passed"
+}

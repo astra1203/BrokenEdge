@@ -1,0 +1,102 @@
+{
+  "reviewed_utc": "2026-10-02T13:23:51.036381+00:00",
+  "method": "Direct visual inspection of the listed full-size PNG files; source transforms and mesh bounds checked separately in the cold audit.",
+  "reviewed_image_count": 16,
+  "archived_image_count": 22,
+  "conclusion": "The limited scene sample has recognizable landmarks and a traversable route, with the explicitly documented approximations and remaining visual differences.",
+  "observations": [
+    "Overview and top images show connected building shells, roof radomes, raised walkways, exterior roads and crates; rectangular sample boundaries and bright rebuilt ground are visible.",
+    "Interior and return images show the circular laboratory, hazard-striped floor ring, central apparatus and fixed-open doorway.",
+    "Door and stair images show the connected staircase, upper railing and lower landing; route reports independently verify ascent and descent using character input.",
+    "North exit and outdoor images show the fixed-open passage and reconstructed forecourt; this is not recovery of the original landscape geometry or interactive door logic.",
+    "Indoor exposure is dark in places; reconstructed ground is visibly bright and several materials lack original layered shading.",
+    "Character equipment is visible in the lower-left first-person frame. Phase 1 reuses the existing Stinger view; further view presentation review belongs to stage 2."
+  ],
+  "limits": [
+    "No original-game screenshots at matching camera positions were available; visual fidelity to the original game is not established.",
+    "Only the listed 16 of 22 archived images were manually reviewed.",
+    "Screenshots are 1280x720; the actual PIE viewport sizes are reported separately in Performance.json."
+  ],
+  "images": [
+    {
+      "path": "capture/overview.png",
+      "source_run": "capture-routes",
+      "sha256": "c4edbe1a8166bdc86c9b62bf1caf05ecc1cd4db03d368e8c28ceb999a6b0cbbb"
+    },
+    {
+      "path": "capture/top.png",
+      "source_run": "capture-routes",
+      "sha256": "16a9ee27ceeeaafe51ca3a6cb31b357445ca2aeca881efe47f43adf2050ad488"
+    },
+    {
+      "path": "capture/interior.png",
+      "source_run": "capture-routes",
+      "sha256": "ef3049470d9307a206c9fa16a277d93a06a0664f28bdb0ce21802abbc2608f85"
+    },
+    {
+      "path": "capture/exterior.png",
+      "source_run": "capture-routes",
+      "sha256": "4922000cfe7a39a9bfb9d7ceadf74c2bf74e3ba5a18ea53e0f2c6d4cd679d436"
+    },
+    {
+      "path": "single/p1_door.png",
+      "source_run": "phase1-final-1p",
+      "sha256": "7ef37c04f8f55117cf2fbbb3c6e28eae9694e6d9a60ff0ac058f42d403aac402"
+    },
+    {
+      "path": "single/p1_stairs_up.png",
+      "source_run": "phase1-final-1p",
+      "sha256": "f25ae9823dea8a59a41599996c796ac38a1a26b072193049f0c7af2728bfab20"
+    },
+    {
+      "path": "single/p1_stairs_down.png",
+      "source_run": "phase1-final-1p",
+      "sha256": "f4c6b590ef6f72bb0e7c73225367f9449f147acfc6d619b9c4fd9478bd05b3c9"
+    },
+    {
+      "path": "single/p1_north_exit.png",
+      "source_run": "phase1-final-1p",
+      "sha256": "a01e04bfba285e75778f9018ac0cb94a422e617f85b7e53dc591d71d4828630e"
+    },
+    {
+      "path": "single/p1_outside.png",
+      "source_run": "phase1-final-1p",
+      "sha256": "369e9b22014a77798f31bdf5d13d7c923cba8b44d7197f2477b9b03b3713b531"
+    },
+    {
+      "path": "single/p1_room_return.png",
+      "source_run": "phase1-final-1p",
+      "sha256": "3e019028b90c5c392bda7d28caebc44248e016bc781f4c457d2d4e4e1fdc45a6"
+    },
+    {
+      "path": "multi/p2_door.png",
+      "source_run": "phase1-final-2p",
+      "sha256": "08fc9d1544164ee38cae872ae450b7e6095a44797234d5d6c37f28100ec0dd7b"
+    },
+    {
+      "path": "multi/p2_stairs_up.png",
+      "source_run": "phase1-final-2p",
+      "sha256": "b0c635d2837fa1e2a00bdabcb06896d39eeef3e1cf14afb0e0ee7e53b624f448"
+    },
+    {
+      "path": "multi/p2_stairs_down.png",
+      "source_run": "phase1-final-2p",
+      "sha256": "85248754c092e9052b2b40127e6d579e604ef9edb7537bb03b2bc52b6b09e7e4"
+    },
+    {
+      "path": "multi/p2_north_exit.png",
+      "source_run": "phase1-final-2p",
+      "sha256": "35d5cb8b82918c163a07bb3e7833a9e1391d2613e1c5df1db4b45a0a9afbc3c8"
+    },
+    {
+      "path": "multi/p2_outside.png",
+      "source_run": "phase1-final-2p",
+      "sha256": "06ea65fd4154d4633d736daf92ace409590df28053570ea820fefb4a462b5299"
+    },
+    {
+      "path": "multi/p2_room_return.png",
+      "source_run": "phase1-final-2p",
+      "sha256": "89ad626d88edc702ff9ca0896b9cc408a15daa1d684afd32380a25ea0f6f5737"
+    }
+  ]
+}

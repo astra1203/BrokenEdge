@@ -1,0 +1,23 @@
+{
+  "suite": "audit",
+  "players": 2,
+  "capture": "0",
+  "started_utc": "2026-10-02T11:46:36.306027+00:00",
+  "head": "f9eff23d672687fd45448b707c8be02866122b02",
+  "worktree": " M .gitattributes\n?? Content/Maps/SpaceCenter/\n?? Docs/SpaceCenter/\n?? Scripts/SpaceCenter/\n",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Stinger\\audit_baseline.py",
+    "-NullRHI",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\Baseline\\spacecenter-audit\\Editor.log"
+  ],
+  "pid": 19208,
+  "exit_code": 0,
+  "finished_utc": "2026-10-02T11:46:48.942932+00:00"
+}

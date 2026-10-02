@@ -1,0 +1,39 @@
+{
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\import_sample.py",
+    "-NullRHI",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Runs\\import-doors\\Editor.log"
+  ],
+  "suite": "import",
+  "players": 1,
+  "script_sha256": {
+    "Scripts\\SpaceCenter\\.gitignore": "302bcaf37431eb2c1a36390d16164a304e65c6578445aae0dce21ee822d8d3b6",
+    "Scripts\\SpaceCenter\\audit_geometry.py": "77fcbfd54e0b13ef32109a157e18306a3eff29a6fe2fe56ed94fb30084dae69f",
+    "Scripts\\SpaceCenter\\audit_sample.py": "9e23dd81eb5a3ee0deb7c78ccdfe5d5ec4269ca10ae2a17acba4a01474203233",
+    "Scripts\\SpaceCenter\\bootstrap.ps1": "9cfc88ba877827cb629d236296ecd8d728ae91e9d1aa94cad8d5d66734a5385c",
+    "Scripts\\SpaceCenter\\import_sample.py": "9f8b1a94049fc1bb331c4d28eb26003269a7b46e9c153ca2d5cfa774afda6e14",
+    "Scripts\\SpaceCenter\\overrides.json": "1fb22caeef9120989eb5605baaadc85d918a63aee49e164e0a6bb9d81da19335",
+    "Scripts\\SpaceCenter\\patch_cue.py": "0abb9b505cc461aa84b26af70aa6a14a5bfd66ba90b25d5277aaa72188ec08ab",
+    "Scripts\\SpaceCenter\\plan_route.py": "8b724dc697ebad80bf8d8c48313e552620a07678c5ec4c44e911b66bcb330d67",
+    "Scripts\\SpaceCenter\\prepare_sample.py": "c87933c8f9e4cf1ddea826d7f5c303112a9149cccbb119613f60c6b071b653d4",
+    "Scripts\\SpaceCenter\\route.json": "82cfd560669a6d6165d06517ee52f9824e0677cd4d4a6fe69777ca19df49cd5f",
+    "Scripts\\SpaceCenter\\run_conversion.py": "e3d7cf41ac0aa6b0d9d900d4a29f99425a6e47631472588103ecaabcc187d044",
+    "Scripts\\SpaceCenter\\run_editor.py": "41e4596983e01d66d5df6c361b3f92227c0afc9d5b9189255eb87d8b535df095",
+    "Scripts\\SpaceCenter\\sample_config.json": "69cc124cc735100f32a4e7dd014f8f6af552320f28d215812d1075ddd2a54a0b",
+    "Scripts\\SpaceCenter\\source_packages.py": "3b68d995ed40705a62de939f259677665ec25dd7c137cb1ffb6c8b9b0fc5e163",
+    "Scripts\\SpaceCenter\\validate_sample.py": "cf08665d9e74058c2ed3d7ee0086f3aec1e1924af2f26e420c661b7294bd3449",
+    "Scripts\\SpaceCenter\\waypoints.json": "3a36a151a893465c69acaacbbda0c8a171ec1f8a04780d1a30cdf451779481c8"
+  },
+  "started_utc": "2026-10-02T11:26:33.107663+00:00",
+  "head": "f9eff23d672687fd45448b707c8be02866122b02",
+  "worktree": "?? Content/Maps/SpaceCenter/\n?? Docs/SpaceCenter/\n?? Scripts/SpaceCenter/\n",
+  "pid": 45128,
+  "exit_code": 0,
+  "finished_utc": "2026-10-02T11:26:52.353274+00:00"
+}

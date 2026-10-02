@@ -1,0 +1,101 @@
+{
+  "scope": "Rendered offscreen editor PIE; high scalability (2), screen percentage 100, VSync off. CSV includes route pauses and screenshot capture costs. Not packaged-game or dedicated-server capacity evidence.",
+  "runs": {
+    "single": {
+      "viewport_sizes": [
+        [
+          1250,
+          522
+        ]
+      ],
+      "statistics": {
+        "FrameTime": {
+          "frames": 8150,
+          "p50": 12.5968,
+          "p95": 20.7925,
+          "maximum": 543.2622
+        },
+        "GameThreadTime": {
+          "frames": 8150,
+          "p50": 12.5824,
+          "p95": 20.6042,
+          "maximum": 174.3843
+        },
+        "RenderThreadTime": {
+          "frames": 8150,
+          "p50": 0.0011,
+          "p95": 0.0018,
+          "maximum": 11.9563
+        },
+        "GPUTime": {
+          "frames": 8150,
+          "p50": 4.9444,
+          "p95": 5.4387,
+          "maximum": 7.445
+        },
+        "PhysicalUsedMB": {
+          "frames": 8150,
+          "p50": 4836.7695,
+          "p95": 4898.7031,
+          "maximum": 4913.1602
+        },
+        "GPUMem/LocalUsedMB": {
+          "frames": 8150,
+          "p50": 3697.5078,
+          "p95": 4240.4453,
+          "maximum": 4970.6953
+        }
+      }
+    },
+    "multi": {
+      "viewport_sizes": [
+        [
+          1250,
+          522
+        ],
+        [
+          640,
+          482
+        ]
+      ],
+      "statistics": {
+        "FrameTime": {
+          "frames": 12226,
+          "p50": 17.1851,
+          "p95": 28.4404,
+          "maximum": 549.6042
+        },
+        "GameThreadTime": {
+          "frames": 12226,
+          "p50": 17.1406,
+          "p95": 28.3428,
+          "maximum": 172.4194
+        },
+        "RenderThreadTime": {
+          "frames": 12226,
+          "p50": 0.0002,
+          "p95": 0.0004,
+          "maximum": 13.4497
+        },
+        "GPUTime": {
+          "frames": 12226,
+          "p50": 8.71,
+          "p95": 9.5146,
+          "maximum": 10.9831
+        },
+        "PhysicalUsedMB": {
+          "frames": 12226,
+          "p50": 4984.4102,
+          "p95": 5039.1523,
+          "maximum": 5059.6016
+        },
+        "GPUMem/LocalUsedMB": {
+          "frames": 12226,
+          "p50": 4764.5352,
+          "p95": 5230.6133,
+          "maximum": 6067.8164
+        }
+      }
+    }
+  }
+}

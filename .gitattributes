@@ -30,3 +30,8 @@ Docs/Stinger/BaselineEvidence/** -text
 Docs/Stinger/BaselineEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 # Runtime logs retain their original whitespace.
 Docs/Stinger/BaselineEvidence/**/*.txt -whitespace
+
+# SpaceCenter conversion and runtime evidence keeps its recorded bytes.
+Docs/SpaceCenter/Phase1Evidence/** -text
+Docs/SpaceCenter/Phase1Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Docs/SpaceCenter/Phase1Evidence/**/*.txt -whitespace

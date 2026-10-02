@@ -1,0 +1,24 @@
+{
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Maps/SpaceCenter/L_SpaceCenterSample",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1280",
+    "-ResY=720",
+    "-ExecCmds=py D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\validate_sample.py",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Runs\\traverse-02\\Editor.log"
+  ],
+  "suite": "traverse",
+  "players": 1,
+  "started_utc": "2026-10-02T11:12:34.051206+00:00",
+  "head": "f9eff23d672687fd45448b707c8be02866122b02",
+  "worktree": "?? Content/Maps/SpaceCenter/\n?? Docs/SpaceCenter/\n?? Scripts/SpaceCenter/\n",
+  "pid": 42676,
+  "exit_code": 0,
+  "finished_utc": "2026-10-02T11:14:54.409680+00:00"
+}

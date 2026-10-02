@@ -1,0 +1,26 @@
+{
+  "suite": "actions",
+  "players": 2,
+  "capture": "0",
+  "started_utc": "2026-10-02T11:57:33.206078+00:00",
+  "head": "f9eff23d672687fd45448b707c8be02866122b02",
+  "worktree": " M .gitattributes\n?? Content/Maps/SpaceCenter/\n?? Docs/SpaceCenter/\n?? Scripts/SpaceCenter/\n",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Characters/Stinger/Maps/L_StingerTest",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1280",
+    "-ResY=720",
+    "-ExecCmds=py D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Stinger\\validate_pie.py",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\Baseline\\spacecenter-actions-02\\Editor.log"
+  ],
+  "pid": 30416,
+  "exit_code": 0,
+  "finished_utc": "2026-10-02T11:58:55.816016+00:00"
+}
