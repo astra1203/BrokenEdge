@@ -1,4 +1,4 @@
-﻿"""Fit the supporting fingers in the two Stinger rifle idle poses."""
+"""Fit supporting fingers across the Stinger rifle locomotion poses."""
 from pathlib import Path
 import json
 import shutil
@@ -6,14 +6,20 @@ import unreal
 
 ROOT = '/Game/Characters/Stinger/Animations/ThirdPerson/'
 SOURCE = '/Game/Characters/Stinger/Animations/Corrected/MappedV4/a72d8004/AR_M_1P_Idle01'
+FINGER_BONES = ['LeftHand' + finger + str(i) for finger in ['Index', 'Middle', 'Ring', 'Pinky', 'Thumb'] for i in [1, 2, 3]] + ['LeftInHandPinky', 'LeftInHandRing']
+TARGET_NAMES = [prefix + 'Rifle_' + stance + '_Retargeted_Stinger'
+                for prefix in ['Idle_', 'Crouch_Idle_'] for stance in ['Hip', 'Ironsights']]
+TARGET_NAMES += ['Crouch_Walk_' + direction + '_Rifle_' + stance + '_Retargeted_Stinger'
+                 for direction in ['Fwd', 'Bwd', 'Lt', 'Rt'] for stance in ['Hip', 'Ironsights']]
+TARGET_NAMES += ['Walk_' + direction + '_Rifle_Ironsights_Retargeted_Stinger' for direction in ['Fwd', 'Bwd', 'Lt', 'Rt']]
+TARGET_NAMES += ['Jog_' + direction + '_Rifle_Retargeted_Stinger' for direction in ['Fwd', 'Bwd', 'Lt', 'Rt']]
 
 def calibrate():
     source = unreal.load_asset(SOURCE)
     assert source
-    bones = ['LeftHand' + finger + str(i) for finger in ['Index', 'Middle', 'Ring', 'Pinky', 'Thumb'] for i in [1, 2, 3]]
-    bones += ['LeftInHandPinky', 'LeftInHandRing']
+    bones = FINGER_BONES
     rotations = {b: unreal.AnimationLibrary.get_bone_pose_for_time(source, b, 0, False).rotation for b in bones}
-    targets = [unreal.load_asset(ROOT + name) for name in ['Idle_Rifle_Hip_Retargeted_Stinger', 'Idle_Rifle_Ironsights_Retargeted_Stinger']]
+    targets = [unreal.load_asset(ROOT + name) for name in TARGET_NAMES]
     assert all(isinstance(asset, unreal.AnimSequence) for asset in targets)
     backup = Path(unreal.Paths.project_saved_dir()) / 'Stinger' / 'SupportHandBackup'
     backup.mkdir(parents=True, exist_ok=True)
@@ -35,7 +41,7 @@ def calibrate():
         unreal.StingerAssetLibrary.finalize_animation(sequence)
         assert unreal.EditorAssetLibrary.save_loaded_asset(sequence)
         written.append(sequence.get_path_name())
-    report = {'source': SOURCE, 'bones': bones, 'assets': written, 'scope': 'supporting finger rotations in two idle poses; wrist/socket fit is configured separately'}
+    report = {'source': SOURCE, 'bones': bones, 'assets': written, 'scope': 'supporting finger rotations in 20 rifle idle/crouch/walk/jog clips; wrist/socket fit is configured separately; action montages and unarmed clips are unchanged'}
     (backup.parent / 'support_hand_calibration.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
     print('SUPPORT_HAND_CALIBRATED', len(written))
     return report

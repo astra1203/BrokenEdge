@@ -9,6 +9,7 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/HorizontalBox.h"
+#include "Engine/Canvas.h"
 
 
 void ABrokenEdgeHUD::BeginPlay()
@@ -21,11 +22,10 @@ void ABrokenEdgeHUD::BeginPlay()
 void ABrokenEdgeHUD::DrawHUD()
 {
 	Super::DrawHUD();
-	FVector2D ViewportSize;
-	if (GEngine)
+	if (Canvas)
 	{
-		GEngine->GameViewport->GetViewportSize(ViewportSize);
-		const FVector2D ViewportCenter(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
+		// Draw in this player's canvas, including resized PIE and high-resolution captures.
+		const FVector2D ViewportCenter(Canvas->SizeX / 2.f, Canvas->SizeY / 2.f);
 
 		float SpreadScaled = CrosshairSpreadMax * HUDPackage.CrosshairSpread;
 
@@ -94,7 +94,8 @@ void ABrokenEdgeHUD::AddDefeatedAnnouncement(FString AttackerName, FString Victi
 					Position.Y - CanvasSlot->GetSize().Y
 				);
 
-				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s  %f, %f"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
+				UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s  %f, %f"), GFrameCounter, TEXT(__FUNCTION__),
+				       __LINE__,
 				       TEXT("NewPosition:"), NewPosition.X, NewPosition.Y);
 
 				CanvasSlot->SetPosition(NewPosition);

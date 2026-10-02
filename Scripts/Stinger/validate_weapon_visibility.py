@@ -6,13 +6,13 @@ players=int(os.environ.get('STINGER_VISIBILITY_PLAYERS','1'))
 capture_mode=os.environ.get('STINGER_VISIBILITY_CAPTURE','1')
 capture=capture_mode!='0'
 weapon_class=unreal.EditorAssetLibrary.load_blueprint_class('/Game/Blueprints/Weapon/BP_AK47')
-out=Path(unreal.Paths.project_saved_dir())/'Stinger'
+out=Path(os.environ.get('STINGER_BASELINE_DIR', str(Path(unreal.Paths.project_saved_dir())/'Stinger')))
 frames=out/'WeaponVisibilityFrames'/(time.strftime('%Y%m%d-%H%M%S')+'-'+str(players)+'p')
 frames.mkdir(parents=True,exist_ok=True)
 report={'players':players,'fps':30,'frame_directory':str(frames),'samples':[], 'checks':[], 'captures':[]}
 phases=[('equip_primary',1.2),('equip_secondary',1.4),('dual_down',.8),('crouch_down',.8),
         ('aim_down',.8),('swap1',1.8),('swap2',1.8),('swap_view',2.),('fire',.7),
-        ('reload_view',2.6),('third_person',.8),('first_person',.8),('drop',1.),('re_pickup',1.4),
+        ('reload_view',2.6),('third_person',.8),('first_person',.8),('drop',2.),('re_pickup',1.4),
         ('unpossess',.6),('repossess',1.2),('death',1.),('respawn',5.),('respawn_equip',1.5),('destroy_weapon',.8)]
 capture_phases={'dual_down','crouch_down','aim_down','swap1','swap2','swap_view'}
 state={'mode':'boot','at':time.monotonic(),'index':0,'step':0,'flags':set(),'capture_index':0}
@@ -22,6 +22,8 @@ locals_=[];server_pawns=[];controllers=[];dropped=[]
 def check(name,ok,detail=None):
     report['checks'].append({'name':name,'passed':bool(ok),'detail':detail})
     print('WEAPON_VISIBILITY_CHECK',name,ok)
+    if not ok and os.environ.get('STINGER_HOLD_FAILURE'):
+        raise AssertionError(name)
 
 def once(key,fn):
     if key not in state['flags']:fn();state['flags'].add(key)
@@ -44,6 +46,17 @@ def place_weapons():
 
 def snapshot(name,t):
     rows=[];views=[];violations=[]
+    if name in ['drop','re_pickup']:
+        for p,w in zip(server_pawns,dropped):
+            sphere=w.get_editor_property('area_sphere')
+            native=json.loads(lib.get_validation_state(p))
+            report.setdefault('pickup_debug',[]).append({'phase':name,'time':t,'pawn':p.get_name(),'weapon':w.get_name(),
+                'overlapping_weapon':native.get('overlapping_weapon'),
+                'sphere_overlaps_pawn':sphere.is_overlapping_actor(p),
+                'overlapping_components':[c.get_name() for c in sphere.get_overlapping_components()],
+                'weapon_position':str(w.get_actor_location()),'sphere_position':str(sphere.get_world_location()),
+                'sphere_radius':sphere.get_scaled_sphere_radius(),
+                'pawn_position':str(p.get_actor_location()),'native':native})
     for wi,world in enumerate(lib.get_validation_worlds()):
         for w in unreal.GameplayStatics.get_all_actors_of_class(world,unreal.Weapon):
             p=w.get_owner();mesh=w.get_editor_property('weapon_mesh');ws=w.get_editor_property('weapon_state')
@@ -72,7 +85,9 @@ def record(name,t):
         report['captures'].append({'file':path.name,'phase':name,'time':t})
     elif t>=phases[state['index']][1]-1/30 and 'still' not in state['flags']:
         state['flags'].add('still');path=frames/(name+'.png')
+        report['captures'].append({'file':path.name,'phase':name,'time':t})
     else:return
+    state['last_capture_path']=path
     unreal.SystemLibrary.execute_console_command(focus,'HighResShot 1280x720 filename='+str(path),focus.get_controller())
 
 def finish(error=None):
@@ -81,11 +96,17 @@ def finish(error=None):
     check('every_simulation_frame_visibility',not violations,{'frames':len(report['samples']),'bad_frames':len(violations)})
     intervals=[b['world_time']-a['world_time'] for a,b in zip(report['samples'],report['samples'][1:])]
     check('no_skipped_simulation_frames',bool(intervals) and max(intervals)<1/30+.001,max(intervals) if intervals else None)
+    if capture:
+        check('capture_requests_written',all((frames/c['file']).is_file() for c in report['captures']) and state.get('last_capture_path',frames).exists())
     report['result']='passed' if not error and all(c['passed'] for c in report['checks']) else 'failed'
     suffix='_stills' if capture_mode=='stills' else ''
     (out/('weapon_visibility_'+str(players)+'p'+suffix+'.json')).write_text(json.dumps(report,indent=2),encoding='utf-8')
     lib.set_validation_fixed_step(0)
     unreal.unregister_slate_post_tick_callback(handle)
+    if error and os.environ.get('STINGER_HOLD_FAILURE'):
+        unreal.GameplayStatics.set_game_paused(server,True)
+        print('VISIBILITY_FAILURE_HELD_FOR_INSPECTION')
+        return
     unreal.get_editor_subsystem(unreal.LevelEditorSubsystem).editor_request_end_play()
     unreal.SystemLibrary.quit_editor()
 
@@ -93,6 +114,13 @@ def tick(delta):
     global server,locals_,server_pawns,controllers,dropped
     try:
         if time.monotonic()-started>600:raise TimeoutError('Visibility validation timed out')
+        if state['mode']=='drain':
+            pending=state.get('last_capture_path')
+            if time.monotonic()-state['at']<.5:return
+            if pending and not pending.is_file():
+                if time.monotonic()-state['at']>15:raise TimeoutError('Final screenshot was not written')
+                return
+            finish();return
         if state['mode']=='boot':
             if time.monotonic()-state['at']>3:
                 lib.begin_validation_pie(players);state.update(mode='spawn',at=time.monotonic())
@@ -100,11 +128,13 @@ def tick(delta):
         if state['mode']=='spawn':
             if time.monotonic()-state['at']<8:return
             worlds=lib.get_validation_worlds()
+            if time.monotonic()-state['at']>30:raise TimeoutError('Unexpected PIE topology or missing players')
             if not worlds:return
             server=next(w for w in worlds if unreal.GameplayStatics.get_game_mode(w))
             server_pawns=unreal.GameplayStatics.get_all_actors_of_class(server,unreal.BrokenEdgeCharacter)
             locals_=local_pawns()
             if len(locals_)!=players or len(server_pawns)!=players:return
+            check('requested_pie_topology',len(worlds)==players,{'worlds':len(worlds),'local_players':len(locals_),'server_players':len(server_pawns)})
             controllers=[p.get_controller() for p in server_pawns]
             for p in locals_:lib.isolate_validation_input(p.get_controller())
             for w in unreal.GameplayStatics.get_all_actors_of_class(server,unreal.Weapon):w.set_actor_location(unreal.Vector(8000,8000,100),False,True)
@@ -122,7 +152,19 @@ def tick(delta):
         if name not in ['unpossess','repossess','death','respawn','respawn_equip']:
             # Fire into the floor so peer damage cannot interrupt this visibility scenario.
             for i,p in enumerate(locals_):p.get_controller().set_control_rotation(unreal.Rotator(pitch=-89 if name in capture_phases else (-60 if name=='fire' else 0),yaw=0 if i==0 else 180))
-        if name=='equip_primary' and t>.4:once('equip',lambda:pulse('equip_action'))
+        if name=='equip_primary':
+            if t>.1 and 'overlap_probe' not in state['flags']:
+                state['overlap_targets']=[json.loads(lib.get_validation_state(p))['overlapping_weapon'] for p in server_pawns]
+                check('initial_pickup_targets_present',all(state['overlap_targets']))
+                state['mesh_overlap_flags']=[p.get_editor_property('mesh').generate_overlap_events for p in server_pawns]
+                for p in server_pawns:p.get_editor_property('mesh').generate_overlap_events=False
+                state['flags'].add('overlap_probe')
+            if t>.2 and 'overlap_restore' not in state['flags']:
+                retained=[json.loads(lib.get_validation_state(p))['overlapping_weapon'] for p in server_pawns]
+                check('capsule_overlap_retains_pickup_target',retained==state['overlap_targets'],retained)
+                for p,enabled in zip(server_pawns,state['mesh_overlap_flags']):p.get_editor_property('mesh').generate_overlap_events=enabled
+                state['flags'].add('overlap_restore')
+            if t>.4:once('equip',lambda:pulse('equip_action'))
         if name=='equip_secondary':
             once('spawn',place_weapons)
             if t>.4:once('equip',lambda:pulse('equip_action'))
@@ -142,9 +184,15 @@ def tick(delta):
             state['flags'].add('drop')
         if name=='re_pickup':
             if 'place' not in state['flags']:
-                for p,w in zip(server_pawns,dropped):w.set_actor_location(p.get_actor_location()+unreal.Vector(20,0,-50),False,True)
+                # Approach the dropped weapon on the floor; do not teleport a
+                # moving physics body into the character and retain its velocity.
+                for p,w in zip(server_pawns,dropped):
+                    location=w.get_editor_property('area_sphere').get_world_location()
+                    p.set_actor_location(unreal.Vector(location.x-50,location.y-50,p.get_actor_location().z),False,True)
                 state['flags'].add('place')
-            if t>.4:once('equip',lambda:pulse('equip_action'))
+            if t>.4 and 'equip' not in state['flags']:
+                check('re_pickup_in_range',all(json.loads(lib.get_validation_state(p))['overlapping_weapon']==w.get_name() for p,w in zip(server_pawns,dropped)))
+                pulse('equip_action');state['flags'].add('equip')
         if name=='unpossess' and 'unpossess' not in state['flags']:
             for c in controllers:c.un_possess()
             state['flags'].add('unpossess')
@@ -187,8 +235,9 @@ def tick(delta):
                 check(name+'_one_local_view_gun',all(v['view_mesh_count']==1 for v in report['samples'][-1]['views'] if v['local']))
             if name in ['third_person','drop','unpossess','death','destroy_weapon']:
                 check(name+'_no_view_gun',all(v['view_mesh_count']==0 for v in report['samples'][-1]['views']))
+            print('WEAPON_VISIBILITY_PHASE_COMPLETE',name,len(report['samples']))
             state.update(index=state['index']+1,step=0,flags=set())
-            if state['index']>=len(phases):finish()
+            if state['index']>=len(phases):state.update(mode='drain',at=time.monotonic())
     except Exception:
         error=traceback.format_exc();unreal.log_error(error);finish(error)
 

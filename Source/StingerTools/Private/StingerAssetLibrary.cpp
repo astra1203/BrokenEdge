@@ -79,6 +79,8 @@ FString UStingerAssetLibrary::GetValidationState(APawn* Pawn)
 	UObject* Combat = ObjectField(Pawn, TEXT("Combat"));
 	UObject* Weapon = ObjectField(Combat, TEXT("EquippedWeapon"));
 	TSharedRef<FJsonObject> State = MakeShared<FJsonObject>();
+	UObject* OverlappingWeapon = ObjectField(Pawn, TEXT("OverlappingWeapon"));
+	State->SetStringField(TEXT("overlapping_weapon"), OverlappingWeapon ? OverlappingWeapon->GetName() : TEXT(""));
 	const auto Ammo = Weapon ? FindFProperty<FIntProperty>(Weapon->GetClass(), TEXT("Ammo")) : nullptr;
 	State->SetNumberField(TEXT("ammo"), Ammo ? Ammo->GetPropertyValue_InContainer(Weapon) : -1);
 	if (auto Property = Combat ? FindFProperty<FEnumProperty>(Combat->GetClass(), TEXT("CombatState")) : nullptr)
@@ -358,6 +360,8 @@ void UStingerAssetLibrary::ReattachComponent(USceneComponent* Component, USceneC
 void UStingerAssetLibrary::BeginValidationPIE(int32 Players)
 {
 	ULevelEditorPlaySettings* Settings = NewObject<ULevelEditorPlaySettings>();
+	// Isolate the requested PIE topology from the user's saved multiplayer settings.
+	Settings->bLaunchSeparateServer = false;
 	Settings->SetPlayNumberOfClients(FMath::Clamp(Players, 1, 2));
 	Settings->SetRunUnderOneProcess(true);
 	Settings->SetPlayNetMode(Players > 1 ? PIE_ListenServer : PIE_Standalone);

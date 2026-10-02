@@ -16,9 +16,13 @@ assert component.does_socket_exist('b_gun_Root')
 root_bone = component.get_socket_transform('b_gun_Root', unreal.RelativeTransformSpace.RTS_COMPONENT)
 report = {'weapon': mesh.get_path_name(), 'before_sockets': {n: component.does_socket_exist(n) for n in ['Hand_R', 'LeftHandSocket']}}
 # Component-space anchors on the actual AK geometry, independent of character pose.
-grips = {'Hand_R': unreal.Vector(0, -8, 0), 'LeftHandSocket': unreal.Vector(4, 20, 9)}
+grips = {'Hand_R': unreal.Vector(0, -8, 0), 'LeftHandSocket': unreal.Vector(4, 25, 6)}
 grip_pose = unreal.load_asset(root + '/Animations/Corrected/MappedV4/a72d8004/AR_M_1P_Idle01')
-left_rotation = unreal.AnimationLibrary.get_bone_pose_for_time(grip_pose, 'LeftHand', 0, False).rotation
+# The local wrist track is relative to the forearm, not to the weapon component.
+# Use the same component-space pose as configure_view_fit.py, with the world grip
+# translated to seat the supporting palm against this mesh's wooden handguard.
+pose = unreal.AnimPoseExtensions.get_anim_pose_at_time(grip_pose, 0, unreal.AnimPoseEvaluationOptions())
+left_rotation = unreal.AnimPoseExtensions.get_bone_pose(pose, 'LeftHand', unreal.AnimPoseSpaces.WORLD).rotation
 for name, location in grips.items():
     local = unreal.Transform(location=root_bone.rotation.inversed().rotate_vector(location - root_bone.translation),
                              rotation=(root_bone.rotation.inversed() * (left_rotation if name == 'LeftHandSocket' else unreal.Quat())).rotator())

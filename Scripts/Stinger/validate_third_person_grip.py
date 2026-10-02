@@ -1,5 +1,6 @@
 """Measure final third-person hand poses and capture actual local/remote AK handling."""
 import json
+import math
 import os
 import time
 import traceback
@@ -10,14 +11,14 @@ lib = unreal.StingerAssetLibrary
 players = int(os.environ.get('STINGER_GRIP_PLAYERS', '1'))
 stage = os.environ.get('STINGER_GRIP_STAGE', 'final')
 capture = os.environ.get('STINGER_GRIP_CAPTURE', 'stills')
-out = Path(unreal.Paths.project_saved_dir()) / 'Stinger'
+out = Path(os.environ.get('STINGER_BASELINE_DIR', str(Path(unreal.Paths.project_saved_dir()) / 'Stinger')))
 frames = out / 'ThirdPersonGripFrames' / (time.strftime('%Y%m%d-%H%M%S') + '-' + stage + '-' + str(players) + 'p')
 frames.mkdir(parents=True, exist_ok=True)
 report = {'stage': stage, 'players': players, 'fps': 30, 'capture': capture, 'frame_directory': str(frames), 'samples': [], 'captures': [], 'checks': []}
 phases = [('equip', 1.4), ('secondary', 1.4), ('idle_left', 1.2), ('idle_front', 1.2),
           ('aim', 1.2), ('look_up', 1.2), ('look_down', 1.2), ('crouch', 1.2),
           ('walk', 1.2), ('strafe', 1.2), ('fire', .7), ('reload', 3.0), ('after_reload', 1.2),
-          ('swap', 2.), ('after_swap', 1.2), ('drop', 1.), ('pickup', 1.6), ('after_pickup', 1.2),
+          ('swap', 2.), ('after_swap', 1.2), ('drop', 2.), ('pickup', 1.6), ('after_pickup', 1.2),
           ('missing_socket', .8), ('restored_socket', 1.2),
           ('first_person', 1.2), ('first_person_aim', 1.2), ('third_person', 1.2)]
 if stage in ['baseline', 'capture_tail']: phases = phases[:4]
@@ -72,7 +73,11 @@ def snapshot(name, t):
                 right = body.get_socket_location('RightHand')
                 target = mesh.get_socket_location('LeftHandSocket') if has_left else mesh.get_world_transform().transform_location(unreal.Vector(0, 25, -2))
                 rtarget = mesh.get_socket_location('Hand_R') if has_right else mesh.get_world_transform().transform_location(unreal.Vector(0, -8, 0))
+                hand_rotation = body.get_socket_transform('LeftHand').rotation
+                target_rotation = mesh.get_socket_transform('LeftHandSocket').rotation
+                dot = sum(getattr(hand_rotation, axis) * getattr(target_rotation, axis) for axis in ('x', 'y', 'z', 'w'))
                 row.update(weapon=primary.get_name(), has_left_socket=has_left, has_right_socket=has_right,
+                           left_rotation_error_degrees=math.degrees(2 * math.acos(min(1.0, abs(dot)))),
                            left_error=(left - target).length(), right_error=(right - rtarget).length(),
                            target_reach=(target - body.get_socket_location('LeftArm')).length(),
                            left_position=[left.x, left.y, left.z], target_position=[target.x, target.y, target.z],
@@ -107,6 +112,7 @@ def record(name, t, duration):
     elif t >= duration - 1 / 30 and 'still' not in state['flags']:
         state['flags'].add('still')
         path = frames / (name + '.png')
+        report['captures'].append({'file': path.name, 'phase': name, 'time': t})
     else: return
     state['last_capture_path'] = path
     unreal.SystemLibrary.execute_console_command(focus, 'HighResShot 1280x720 filename=' + str(path), pc)
@@ -119,6 +125,7 @@ def finish(error=None):
     check('world_weapon_grip_sockets_exist', bool(equipped) and all(r['has_left_socket'] and r['has_right_socket'] for r in equipped))
     check('stable_left_grip_within_2cm', bool(equipped) and all(r['left_error'] <= 2 for r in equipped), max((r['left_error'] for r in equipped), default=None))
     check('stable_right_grip_within_2cm', bool(equipped) and all(r['right_error'] <= 2 for r in equipped), max((r['right_error'] for r in equipped), default=None))
+    check('stable_left_wrist_within_5degrees', bool(equipped) and all(r['left_rotation_error_degrees'] <= 5 for r in equipped), max((r['left_rotation_error_degrees'] for r in equipped), default=None))
     if stage not in ['baseline', 'capture_tail']:
         if capture == '0':
             for phase, pitch in [('look_up', 55), ('look_down', -65)]:
@@ -170,11 +177,14 @@ def tick(delta):
         if state['mode'] == 'spawn':
             if time.monotonic() - state['at'] < 8: return
             worlds = lib.get_validation_worlds()
+            if time.monotonic() - state['at'] > 30:
+                raise TimeoutError('Unexpected PIE topology or missing players: ' + str([(w.get_path_name(), len(unreal.GameplayStatics.get_all_actors_of_class(w, unreal.BrokenEdgeCharacter))) for w in worlds]))
             if not worlds: return
             server = next(w for w in worlds if unreal.GameplayStatics.get_game_mode(w))
             server_pawns = unreal.GameplayStatics.get_all_actors_of_class(server, unreal.BrokenEdgeCharacter)
             local_pawns = [p for w in worlds for p in unreal.GameplayStatics.get_all_actors_of_class(w, unreal.BrokenEdgeCharacter) if p.is_locally_controlled()]
             if len(local_pawns) != players or len(server_pawns) != players: return
+            check('requested_pie_topology', len(worlds) == players, {'worlds': len(worlds), 'local_players': len(local_pawns), 'server_players': len(server_pawns)})
             for p in local_pawns: lib.isolate_validation_input(p.get_controller())
             for w in unreal.GameplayStatics.get_all_actors_of_class(server, unreal.Weapon): w.set_actor_location(unreal.Vector(8000, 8000, 100), False, True)
             for i, p in enumerate(server_pawns):
@@ -221,9 +231,14 @@ def tick(delta):
             state['flags'].add('drop')
         if name == 'pickup':
             if 'place' not in state['flags']:
-                for p, w in zip(server_pawns, dropped): w.set_actor_location(p.get_actor_location() + unreal.Vector(20, 0, -50), False, True)
+                for p, w in zip(server_pawns, dropped):
+                    location = w.get_editor_property('area_sphere').get_world_location()
+                    p.set_actor_location(unreal.Vector(location.x - 50, location.y - 50, p.get_actor_location().z), False, True)
                 state['flags'].add('place')
-            if t > .4: once('equip', lambda: pulse('equip_action'))
+            if t > .4 and 'equip' not in state['flags']:
+                check('pickup_in_range', all(json.loads(lib.get_validation_state(p))['overlapping_weapon'] == w.get_name() for p, w in zip(server_pawns, dropped)))
+                pulse('equip_action')
+                state['flags'].add('equip')
         if name == 'missing_socket' and 'missing' not in state['flags']:
             for w in lib.get_validation_worlds():
                 for p in unreal.GameplayStatics.get_all_actors_of_class(w, unreal.BrokenEdgeCharacter):
@@ -239,6 +254,7 @@ def tick(delta):
         if name in ['first_person', 'third_person']: once('view', lambda: pulse('toggle_camera_view_action'))
         record(name, t, duration)
         if t >= duration:
+            print('THIRD_PERSON_GRIP_PHASE_COMPLETE', name, len(report['samples']))
             state.update(index=state['index'] + 1, step=0, flags=set())
             if state['index'] >= len(phases): state.update(mode='drain', at=time.monotonic())
     except Exception:

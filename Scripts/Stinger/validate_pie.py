@@ -5,7 +5,7 @@
 import unreal, time, json, traceback, os
 from pathlib import Path
 
-OUT = Path(unreal.Paths.project_saved_dir())/'Stinger'/('visual_validation.json' if os.environ.get('STINGER_VISUAL_CAPTURE') else 'pie_validation.json')
+OUT = Path(os.environ.get('STINGER_BASELINE_DIR', str(Path(unreal.Paths.project_saved_dir())/'Stinger')))/('visual_validation.json' if os.environ.get('STINGER_VISUAL_CAPTURE') else 'pie_validation.json')
 lib = unreal.StingerAssetLibrary
 report = {'sessions':[], 'checks':[]}
 state = {'phase':'boot','at':time.monotonic(),'elapsed':0,'players':1,'pawns':[],'pulse':False}

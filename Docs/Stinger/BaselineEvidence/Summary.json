@@ -1,0 +1,648 @@
+{
+  "scope": "UE 5.8.3 phase 0: same-process PIE gameplay and separate-process LAN lobby flow",
+  "suites": [
+    {
+      "name": "audit",
+      "checks": 34,
+      "samples": 0,
+      "report": "audit/Audit.json"
+    },
+    {
+      "name": "combat",
+      "checks": 21,
+      "samples": 0,
+      "report": "combat/Combat.json"
+    },
+    {
+      "name": "actions",
+      "checks": 29,
+      "samples": 0,
+      "report": "actions/pie_validation.json"
+    },
+    {
+      "name": "grip-1p",
+      "checks": 21,
+      "samples": 927,
+      "report": "grip-1p/third_person_grip_p0_1p.json"
+    },
+    {
+      "name": "grip-1p-visual",
+      "checks": 20,
+      "samples": 927,
+      "report": "grip-1p-visual/third_person_grip_p0_1p.json"
+    },
+    {
+      "name": "visibility-1p",
+      "checks": 32,
+      "samples": 870,
+      "report": "visibility-1p/weapon_visibility_1p_stills.json"
+    },
+    {
+      "name": "grip-2p",
+      "checks": 21,
+      "samples": 927,
+      "report": "grip-2p/third_person_grip_p0_2p.json"
+    },
+    {
+      "name": "grip-2p-visual",
+      "checks": 20,
+      "samples": 927,
+      "report": "grip-2p-visual/third_person_grip_p0_2p.json"
+    },
+    {
+      "name": "visibility-2p",
+      "checks": 32,
+      "samples": 870,
+      "report": "visibility-2p/weapon_visibility_2p_stills.json"
+    }
+  ],
+  "lan_tests": [
+    {
+      "name": "Empty",
+      "report": "LAN/Empty.txt",
+      "events": [
+        "[2026.10.02-07.55.30:431][243]LogAutomationController: SESSION_FLOW_OK Role=Empty"
+      ]
+    },
+    {
+      "name": "Server-FreeForAll",
+      "report": "LAN/Server-FreeForAll.txt",
+      "events": [
+        "[2026.10.02-07.57.33:737][ 81]LogAutomationController: SESSION_FLOW_OK Role=Server"
+      ]
+    },
+    {
+      "name": "Client1-FreeForAll",
+      "report": "LAN/Client1-FreeForAll.txt",
+      "events": [
+        "[2026.10.02-07.57.25:571][207]LogAutomationController: MODE_SWITCH_OK From=FreeForAll To=Teams AllUnready=1",
+        "[2026.10.02-07.57.25:571][207]LogAutomationController: SESSION_FLOW_OK Role=Join Mode=FreeForAll"
+      ]
+    },
+    {
+      "name": "Client2-FreeForAll",
+      "report": "LAN/Client2-FreeForAll.txt",
+      "events": [
+        "[2026.10.02-07.57.25:127][270]LogAutomationController: MODE_SWITCH_OK From=FreeForAll To=Teams AllUnready=1",
+        "[2026.10.02-07.57.25:127][270]LogAutomationController: READY_CANCEL_AND_RETRY_OK",
+        "[2026.10.02-07.57.25:127][270]LogAutomationController: SESSION_FLOW_OK Role=Cancel Mode=FreeForAll"
+      ]
+    },
+    {
+      "name": "Server-Teams",
+      "report": "LAN/Server-Teams.txt",
+      "events": [
+        "[2026.10.02-07.59.21:769][522]LogAutomationController: SESSION_FLOW_OK Role=Server"
+      ]
+    },
+    {
+      "name": "Client1-Teams",
+      "report": "LAN/Client1-Teams.txt",
+      "events": [
+        "[2026.10.02-07.59.12:873][512]LogAutomationController: MODE_SWITCH_OK From=Teams To=FreeForAll AllUnready=1",
+        "[2026.10.02-07.59.12:873][512]LogAutomationController: SESSION_FLOW_OK Role=Join Mode=Teams"
+      ]
+    },
+    {
+      "name": "Client2-Teams",
+      "report": "LAN/Client2-Teams.txt",
+      "events": [
+        "[2026.10.02-07.59.12:830][599]LogAutomationController: MODE_SWITCH_OK From=Teams To=FreeForAll AllUnready=1",
+        "[2026.10.02-07.59.12:830][599]LogAutomationController: READY_CANCEL_AND_RETRY_OK",
+        "[2026.10.02-07.59.12:830][599]LogAutomationController: SESSION_FLOW_OK Role=Cancel Mode=Teams"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "actions/Editor.txt",
+      "bytes": 494969,
+      "sha256": "fb8f5f4f30459ebf145c8621da2d0f552e26ea07e7030bed311b2fe30a71fc9a"
+    },
+    {
+      "path": "actions/pie_validation.json",
+      "bytes": 305700,
+      "sha256": "012d51b528cff9f36799ee54d5537b866746fe54517e6d8a386e21c444f5dfc2"
+    },
+    {
+      "path": "actions/Run.json",
+      "bytes": 3990,
+      "sha256": "914ffa3acf624dd346915063fd2c9be85c1c9e4a0b3da82d65488c15c85b759e"
+    },
+    {
+      "path": "audit/Audit.json",
+      "bytes": 24362,
+      "sha256": "9bfc317b2ce5e2a37e6a27813a08fb1c59df19b6c867db00171342042424b052"
+    },
+    {
+      "path": "audit/Editor.txt",
+      "bytes": 311531,
+      "sha256": "50d5b0a2f543a5493392af1cd928c7ec924670b38da0d98a5b9085832be83684"
+    },
+    {
+      "path": "audit/Run.json",
+      "bytes": 3898,
+      "sha256": "b45dbef55faf774241935a201c9a87f1f9d2254d79a076e8dbbf1c98d6067a50"
+    },
+    {
+      "path": "build-pickup.txt",
+      "bytes": 5448,
+      "sha256": "34a54b1aeb04b678fe4cbf39a27a66c289c79e15b241bfb3bbcca85f88bf70ba"
+    },
+    {
+      "path": "Captures/1p-grip-after_pickup.png",
+      "bytes": 1229716,
+      "sha256": "7f8f2fbe62b687337215767eb2800ec7835fc75b4ccb1cec1d4e95f4c360d063"
+    },
+    {
+      "path": "Captures/1p-grip-after_reload.png",
+      "bytes": 1235293,
+      "sha256": "5e9f117196bfb2b1c1b6d702b37e6e967e9a6adebe7daf6e6abc8fdd2d403ab8"
+    },
+    {
+      "path": "Captures/1p-grip-after_swap.png",
+      "bytes": 1243106,
+      "sha256": "f7244b31ad6c651892e4f694e67d6f004009075c84c21f2c206cedc9f7eae34e"
+    },
+    {
+      "path": "Captures/1p-grip-aim.png",
+      "bytes": 1249780,
+      "sha256": "1df30605c73bdf77f6119a1d8a8c007a01b48f1ccab53beca67c96d95756735a"
+    },
+    {
+      "path": "Captures/1p-grip-crouch.png",
+      "bytes": 1216825,
+      "sha256": "986b2166a407a1200127db063a70c4660fe11594ec6a4ae7f95bf42edc0c29f8"
+    },
+    {
+      "path": "Captures/1p-grip-first_person.png",
+      "bytes": 1033157,
+      "sha256": "f1dbfde4bdce3ee55c512670717f0c747bc20527f167674daccc42be0ac1580d"
+    },
+    {
+      "path": "Captures/1p-grip-idle_front.png",
+      "bytes": 1222235,
+      "sha256": "dbf3cf6daef25e0fdc1e8fb4d799ffcbc958b93a49a57ee3d66ffa760eb7597c"
+    },
+    {
+      "path": "Captures/1p-grip-strafe.png",
+      "bytes": 1222304,
+      "sha256": "78fcdff6b5d02fdfd25362b5dc76f4cb51c78f44cef734c8f5c256c2c7c7ca39"
+    },
+    {
+      "path": "Captures/1p-grip-walk.png",
+      "bytes": 1168285,
+      "sha256": "dac1b754d7f3fa5dec404e06836ade998ced145ac177227a7b1fff7f2e0600bd"
+    },
+    {
+      "path": "Captures/1p-visibility-aim_down.png",
+      "bytes": 1338972,
+      "sha256": "d50ba2d7bb0c969fc9b6c748d43fdbe60fdb6828037de712b7e7e0c5916ee7da"
+    },
+    {
+      "path": "Captures/1p-visibility-crouch_down.png",
+      "bytes": 1414523,
+      "sha256": "d81b15c287e76f1bb2e2318228e4e18c635b9c9e58845b58c8ac485d364a966e"
+    },
+    {
+      "path": "Captures/1p-visibility-dual_down.png",
+      "bytes": 1611864,
+      "sha256": "3677eda4dff195716639c0a017ffa7fc6597c2c31af858a6e508fb63cde50fd3"
+    },
+    {
+      "path": "Captures/1p-visibility-re_pickup.png",
+      "bytes": 1140470,
+      "sha256": "b101d6d3f5627bb4cd3baa7fc7cea635d46d5b72fd44c1bdf6404a16f90e5a2a"
+    },
+    {
+      "path": "Captures/2p-grip-after_reload.png",
+      "bytes": 1263808,
+      "sha256": "00f3d7ca170c3826625eb1801b0c900dadc9c28be88b98a466167c7ac7430776"
+    },
+    {
+      "path": "Captures/2p-grip-after_swap.png",
+      "bytes": 1267523,
+      "sha256": "ef3e17f5fd57064585e76269b145970fe99a64904f467cba9c46c3373fbf4a42"
+    },
+    {
+      "path": "Captures/2p-grip-aim.png",
+      "bytes": 1260114,
+      "sha256": "8950794d88292aa233e0da4a04514bbe07d8ca51b3a260a40451dcaca9edc55c"
+    },
+    {
+      "path": "Captures/2p-grip-crouch.png",
+      "bytes": 1236397,
+      "sha256": "8b1e471ffe9bc0a4111480e3399e1fefeed39497bf21ab70722989c9a91440e8"
+    },
+    {
+      "path": "Captures/2p-grip-fire.png",
+      "bytes": 1263325,
+      "sha256": "d562d8e2bb8a36937f8e5f053cb049b3df741ef2a920e1ed0c0f1c6cd3264be7"
+    },
+    {
+      "path": "Captures/2p-grip-first_person_aim.png",
+      "bytes": 930342,
+      "sha256": "9f946f050ec89e6528d709138cdf4a2edb53c44d9b8544dfac14fc8ea63df8ef"
+    },
+    {
+      "path": "Captures/2p-grip-idle_front.png",
+      "bytes": 1217933,
+      "sha256": "d407ec888a581ae948b0f22246174248e5cf9703ae8b0f063785c1aacf4e6886"
+    },
+    {
+      "path": "Captures/2p-grip-strafe.png",
+      "bytes": 1248745,
+      "sha256": "f3a26630b356e1448d13b6d65e37e26692a6dcc5286eb405eea8c33947caad38"
+    },
+    {
+      "path": "Captures/2p-grip-walk.png",
+      "bytes": 1150920,
+      "sha256": "29527e5e58b554e5ae313ea08478a47471f9065ac35fd545326fa5efcaac0e78"
+    },
+    {
+      "path": "Captures/2p-visibility-aim_down.png",
+      "bytes": 1342185,
+      "sha256": "8c373cddb3ec92d9214d005ae5ab36a676da0aee5b800718db21a2e67d7b15d8"
+    },
+    {
+      "path": "Captures/2p-visibility-crouch_down.png",
+      "bytes": 1468416,
+      "sha256": "ca9f87d365d71bd5698e0d2acd508e4de99c2c76b9578e6b1d1204aacef299e8"
+    },
+    {
+      "path": "Captures/2p-visibility-dual_down.png",
+      "bytes": 1632728,
+      "sha256": "1d5de4a9d8659542c2f1e562ff0187e0631e90d7b97d7c6a635f63ca83ff81b2"
+    },
+    {
+      "path": "Captures/2p-visibility-swap_view.png",
+      "bytes": 1450708,
+      "sha256": "684be19771c3058693dd5a97c9f87b5d942c346e7ec5a7132c0a35aa733780d6"
+    },
+    {
+      "path": "Captures/combat-0_damage.png",
+      "bytes": 1228005,
+      "sha256": "e52049add459f073731a1161e2afb87c8fd64b7a32665cff52c4e65831e526b5"
+    },
+    {
+      "path": "Captures/combat-0_death.png",
+      "bytes": 1227487,
+      "sha256": "68b953c86493a6fd33374b3b9795822de604b7b1037e04204e833be518fbecbb"
+    },
+    {
+      "path": "Captures/combat-1_damage.png",
+      "bytes": 1224184,
+      "sha256": "02c8b2391246160ce6b085ca34d2decc2d655ea65ca102b02794dddf799dd942"
+    },
+    {
+      "path": "Captures/LAN-Cancel-FreeForAll-Countdown.png",
+      "bytes": 79250,
+      "sha256": "5553b4ef4665371e6d2edb786f4ecc2a5f5264689c4751205c0b5d59631042db"
+    },
+    {
+      "path": "Captures/LAN-Cancel-Teams-ModeChanged.png",
+      "bytes": 78592,
+      "sha256": "81f515a097de7d436e84d92120578c39b92b2645fdda5e123e143f514e09d674"
+    },
+    {
+      "path": "Captures/LAN-Join-FreeForAll-ModeChanged.png",
+      "bytes": 77442,
+      "sha256": "d3a32bf29c67d91e8306bd6d78b9c62363f3805b9f40a367da55a40eeb4422ea"
+    },
+    {
+      "path": "Captures/LAN-Join-FreeForAll-Rooms.png",
+      "bytes": 71414,
+      "sha256": "3e7c15ef9314bbfcf9a171ffbf3fbf1df3f46022a1dde10ad0ed0b366ceb6323"
+    },
+    {
+      "path": "Captures/LAN-Join-Teams-Rooms.png",
+      "bytes": 71198,
+      "sha256": "a41fdd6cf855d043651023866457d9244d3aaba6074d2e7f17f044b7e3eb40bd"
+    },
+    {
+      "path": "combat/Combat.json",
+      "bytes": 32321,
+      "sha256": "b2fe72ed12c9c3eb93379bb0a76f80453c68fe617ffe824a6b755f75f209b58c"
+    },
+    {
+      "path": "combat/Editor.txt",
+      "bytes": 384390,
+      "sha256": "f0e6b79d09e845c0979efd766db1a81b90bd7e30f03602378920e779a26deb48"
+    },
+    {
+      "path": "combat/Run.json",
+      "bytes": 4000,
+      "sha256": "78773d3f911cf679275905af70022250643ad26c0f2ce2d012876e93986e0637"
+    },
+    {
+      "path": "Diagnostics/InitialAudit.json",
+      "bytes": 6999,
+      "sha256": "7da0867d2a206a1793b7b581188dac44e0df7b65c34f5d9f1feb1f72126c354c"
+    },
+    {
+      "path": "Diagnostics/PickupBeforeFix.json",
+      "bytes": 969242,
+      "sha256": "83d12e426a533f026bb51f7b04dd9583890e5776acd227303e1b4fa38475d960"
+    },
+    {
+      "path": "Diagnostics/PIESetup.json",
+      "bytes": 447,
+      "sha256": "891aeccf9c4b0297bca22977366d5ced4cb3ad518dd314a2e00150228f7b48ca"
+    },
+    {
+      "path": "grip-1p/Editor.txt",
+      "bytes": 349594,
+      "sha256": "40fc18e651f8c05fceeb26dc66164eb7100eea0f2339560917965b95556db6d8"
+    },
+    {
+      "path": "grip-1p/Run.json",
+      "bytes": 4001,
+      "sha256": "8bf543f42156fbd77bf80abaafc55b9162b4e06ffc5123b51792cc1aa4709781"
+    },
+    {
+      "path": "grip-1p/third_person_grip_p0_1p.json",
+      "bytes": 1314784,
+      "sha256": "cee0aecbd732a233c9b423bfb7bd56d5033e2e9cf0e80046fc3820033e0e8456"
+    },
+    {
+      "path": "grip-1p-visual/Editor.txt",
+      "bytes": 358708,
+      "sha256": "b0fbf5a6fc517ce19406e25c747e3c6d521fb66e98f8581ef4569eb90b00d701"
+    },
+    {
+      "path": "grip-1p-visual/Run.json",
+      "bytes": 4013,
+      "sha256": "49cacbe81b1795e95c5120e27a357fd6985007e9f01117947ef360d2f6be2838"
+    },
+    {
+      "path": "grip-1p-visual/third_person_grip_p0_1p.json",
+      "bytes": 1328864,
+      "sha256": "8155076d4992e966b0231f517e497eb02ce5b83a0a4ac5d72971477f1fca37d5"
+    },
+    {
+      "path": "grip-2p/Editor.txt",
+      "bytes": 398362,
+      "sha256": "f0d9ed59cbeb988f365eb471d3546cb190a8ba80b88cd94697ca56dd5e7fb502"
+    },
+    {
+      "path": "grip-2p/Run.json",
+      "bytes": 4001,
+      "sha256": "e8ce16988719094707cfdf3c671306229dff1471e213a0312873aac3c7d6dbd9"
+    },
+    {
+      "path": "grip-2p/third_person_grip_p0_2p.json",
+      "bytes": 4860391,
+      "sha256": "cd2c579ae265ea211a4a22ada163dca45e9c4c53367dd9ca0d4aab635237cf6c"
+    },
+    {
+      "path": "grip-2p-visual/Editor.txt",
+      "bytes": 414854,
+      "sha256": "001dc901b9e731d10b7f14dbb2850365acba512314560ac5fcc59e00f32ec35c"
+    },
+    {
+      "path": "grip-2p-visual/Run.json",
+      "bytes": 4013,
+      "sha256": "47c36813674c2831e94e4bb2ed577e587e4bd4e978fa9f2178a8d578273f66e9"
+    },
+    {
+      "path": "grip-2p-visual/third_person_grip_p0_2p.json",
+      "bytes": 4887213,
+      "sha256": "198fb3322d0d7d622ac7ac73e50f6b5399432d774e8165202e72e8c415bf2422"
+    },
+    {
+      "path": "LAN/Client1-FreeForAll.txt",
+      "bytes": 256310,
+      "sha256": "935ea8da3fb35aa0843c8b5ad05049852fcb0e1ca3dd4e75a10979dab77f9c17"
+    },
+    {
+      "path": "LAN/Client1-Teams.txt",
+      "bytes": 265371,
+      "sha256": "4d6f30f10949c936303516adc43e22914530db1778b2b863da0ae5a6663935e0"
+    },
+    {
+      "path": "LAN/Client2-FreeForAll.txt",
+      "bytes": 276883,
+      "sha256": "eb7eee0ff111aec5a9b28b909bd85460b2d3eb86b4cedf7d941be03cda8fbdaa"
+    },
+    {
+      "path": "LAN/Client2-Teams.txt",
+      "bytes": 265045,
+      "sha256": "1c1adbdae2099d2180262ebed29c87341182d3cc34b5c5d1878e1af4bee07acd"
+    },
+    {
+      "path": "LAN/Empty.txt",
+      "bytes": 219183,
+      "sha256": "e10f34908143a1e84f55397699db5f0b3efc11d1b1a897e51bda7c3c4aa3c6c0"
+    },
+    {
+      "path": "LAN/Other-FreeForAll.txt",
+      "bytes": 212442,
+      "sha256": "5355f0150f32d7e757ae06748f33814283da6b4fe1f7a66e7daaf3ca79876ab0"
+    },
+    {
+      "path": "LAN/Other-Teams.txt",
+      "bytes": 211784,
+      "sha256": "7beea00151a1ffe80fa5014e2f346c79df39e9970a0436d1784401062de824cf"
+    },
+    {
+      "path": "LAN/Server-FreeForAll.txt",
+      "bytes": 229766,
+      "sha256": "120091a1028205b1110674301702091099b5ee48f0d0a98263324eb3e32548f3"
+    },
+    {
+      "path": "LAN/Server-Teams.txt",
+      "bytes": 229219,
+      "sha256": "8c190a0be2dce9f35b501f25a26d3f9d5520299c84fc9c76ce7973e709612009"
+    },
+    {
+      "path": "visibility-1p/Editor.txt",
+      "bytes": 343294,
+      "sha256": "8506ca437c43db59116ab783ec143ec98ecfefdf616f07191147911dad5ff3e9"
+    },
+    {
+      "path": "visibility-1p/Run.json",
+      "bytes": 4018,
+      "sha256": "176f1fe11f815e2348105406385943ad0704f3c96adaee7666fa6640593a569e"
+    },
+    {
+      "path": "visibility-1p/weapon_visibility_1p_stills.json",
+      "bytes": 1552287,
+      "sha256": "200efdba0627fcbf0abdba4a8a7f1fe37ac33c563acc901f362f9c91f40c04c2"
+    },
+    {
+      "path": "visibility-2p/Editor.txt",
+      "bytes": 361316,
+      "sha256": "4e44c007ed2f586cbfbc50216c0f2c058dcd9fd8c7bfb4e34f9e683ee945e8f3"
+    },
+    {
+      "path": "visibility-2p/Run.json",
+      "bytes": 4018,
+      "sha256": "590cf92093a6c2bf2686ab6438dbaf57bf55a97d677563f01054976aa4d8f108"
+    },
+    {
+      "path": "visibility-2p/weapon_visibility_2p_stills.json",
+      "bytes": 4250274,
+      "sha256": "b9f44f9fcc505aa9be6e8fa61c1bc9d4c32eed66fee7dab0c5d60d658e379e0d"
+    },
+    {
+      "path": "VisualReview.json",
+      "bytes": 13190,
+      "sha256": "64333f69b5b3c0404d8b77244a964a6c39548673b4fac3fa3209d03e08ba420d"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "Config/DefaultGame.ini",
+      "sha256": "d2d41cd0bd1feb072903bcf5cbf3b9dc1d6f64238c3d3e63bb12c68cb5f46353"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/ABP_BrokenEdgeAnimInstance_Stinger.uasset",
+      "sha256": "18a61ad3a52f4ff8aba480ffb7ebe68d3c08d4ebc1b9dc2d261a7de0900c7d66"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Idle_Rifle_Hip_Retargeted_Stinger.uasset",
+      "sha256": "260dfd14703535a807942f4a6f546d55a7c3a65360c0b3ac9554279ddad3a3ca"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Idle_Rifle_Ironsights_Retargeted_Stinger.uasset",
+      "sha256": "a0dea46534db4def4cb332e6454b397ee4e42260aab177a65031f7f23c96e12c"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Bwd_Rifle_Hip_Retargeted_Stinger.uasset",
+      "sha256": "37f398baf9df069850d8b3f97d5fd94987902ff9944ae861e84b9d920748ba2d"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Bwd_Rifle_Ironsights_Retargeted_Stinger.uasset",
+      "sha256": "5b3012f16f54428ec8f232f7548707f3ac342d8a528221290e67de42c51fe328"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Fwd_Rifle_Hip_Retargeted_Stinger.uasset",
+      "sha256": "1816d708d0b9063876672f6710021e2c1e240621f5660d056efe328ac8c9f95b"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Fwd_Rifle_Ironsights_Retargeted_Stinger.uasset",
+      "sha256": "8438e707724e5c06e6e16ed32693ba280de17f5d33d775019b4f863d26b02570"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Lt_Rifle_Hip_Retargeted_Stinger.uasset",
+      "sha256": "6d43c79dbe7d3478a9e0ea3031516f57df4c1dae2dea1a7d83f5dc1e9373cc3c"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Lt_Rifle_Ironsights_Retargeted_Stinger.uasset",
+      "sha256": "cfdf17be2e56062a1f6e4bf77c1ea44c6e4f684de82392bd9a41af7cac83e81a"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Rt_Rifle_Hip_Retargeted_Stinger.uasset",
+      "sha256": "f1d0ffd4a9643dec1d146318db97dae63de8b212d93dd5fa1cb2a3dd7183cc09"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Rt_Rifle_Ironsights_Retargeted_Stinger.uasset",
+      "sha256": "bb4440f32413a0a15d98c01a3c4732f9b6232e1afee751cb4ca43cd0350c2914"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Idle_Rifle_Hip_Retargeted_Stinger.uasset",
+      "sha256": "9ed749634fee7549a83d6d954b39b5814e880f3d9def6fa6bf1c445632343d8c"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Idle_Rifle_Ironsights_Retargeted_Stinger.uasset",
+      "sha256": "b810c2ac1250ee7530cf30f0a9aa8c1bf6bd6464aa1d3e8baf95e3af8c7a2bc0"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Jog_Bwd_Rifle_Retargeted_Stinger.uasset",
+      "sha256": "10e6315a524901b95ced52fda4c39c2801f6a1fca0adfcf109d155b1dbf2eed7"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Jog_Fwd_Rifle_Retargeted_Stinger.uasset",
+      "sha256": "610acbc1e7d22104cc748506893946e02de7895a14c0b97ede0af92f9e91b380"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Jog_Lt_Rifle_Retargeted_Stinger.uasset",
+      "sha256": "e7ac212db809787d9989a6da52c29f661c0317c91ebc963ffcbfa495d8d6c1b4"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Jog_Rt_Rifle_Retargeted_Stinger.uasset",
+      "sha256": "5396f220d9cba72673dd596f497879b9703be6c6a2583df9fc36407feea46374"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Walk_Bwd_Rifle_Ironsights_Retargeted_Stinger.uasset",
+      "sha256": "3888f355e7e224669a3ee0c45384b7c6a07fb7b85e9196ef975e6de82b7a4f38"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Walk_Fwd_Rifle_Ironsights_Retargeted_Stinger.uasset",
+      "sha256": "de827cc26f501f9a5e72d7e73c56d1cb0de31b7063feea3f35a2a73cee248439"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Walk_Lt_Rifle_Ironsights_Retargeted_Stinger.uasset",
+      "sha256": "2fde109929fda4259fd2dca1ce9921575ddcbc8953a5d2cd5505095e4c4b683d"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/ThirdPerson/Walk_Rt_Rifle_Ironsights_Retargeted_Stinger.uasset",
+      "sha256": "52915d1bc42d5ef96291735607b4655f0d7728e70c5d1b7e8635212c7d03ed04"
+    },
+    {
+      "path": "Content/FPS_Weapon_Bundle/Weapons/Meshes/Ka47/SK_KA47.uasset",
+      "sha256": "2e662154abf5052410bba78ef73fd52ebf2b643110bbe9069ad8cb22dfcd5cb0"
+    },
+    {
+      "path": "Scripts/Stinger/audit_baseline.py",
+      "sha256": "f7a20e16a4a7b06bc39c7e2cab669fe2d24550f4dec49784f86c21d5ae524a7e"
+    },
+    {
+      "path": "Scripts/Stinger/calibrate_support_hand.py",
+      "sha256": "149918c4c9b8a1fb95a7344cdc1acd04d203e26078683f099b00a1f65d21fa90"
+    },
+    {
+      "path": "Scripts/Stinger/configure_third_person_grip.py",
+      "sha256": "dce08db5a108f1f2577f14241ce8d0d0b91bdcdfb02490268b20d06f2d5c508e"
+    },
+    {
+      "path": "Scripts/Stinger/record_baseline.py",
+      "sha256": "db02638fbf553290a1a75b9e8d9aeb4da07461373c68f26a53f22967e5ec0578"
+    },
+    {
+      "path": "Scripts/Stinger/run_baseline.py",
+      "sha256": "8b0aef71a7dc9bbfc198b6cb9bb57fa2b031f6f950b99b42f8270a8550bf0fe9"
+    },
+    {
+      "path": "Scripts/Stinger/validate_assets.py",
+      "sha256": "e1a418d3226342f91b3c2d11188333f26575f62042ac919986b09db5a31419ea"
+    },
+    {
+      "path": "Scripts/Stinger/validate_baseline_combat.py",
+      "sha256": "e0a57d79eaf262ecbfe56f2952b2726a5517484221b183d0ce6dc376dc978ee8"
+    },
+    {
+      "path": "Scripts/Stinger/validate_multiplayer_view.py",
+      "sha256": "f9fd63d184fec9104c8ba7658e38ec395c14c39c1a6d3756b4486f65b3e635d5"
+    },
+    {
+      "path": "Scripts/Stinger/validate_pie.py",
+      "sha256": "738e24074404d07f760497639a7c47e52b72ca8915077dd8c7dd1fe779daba73"
+    },
+    {
+      "path": "Scripts/Stinger/validate_third_person_grip.py",
+      "sha256": "49bb38e78d3673d9c11aa3478133caa57a2c48b1f5007973e9f5f519b34c0a86"
+    },
+    {
+      "path": "Scripts/Stinger/validate_view_fit.py",
+      "sha256": "ee937120fd89dad14472a2af4d6f700164c1e0ce49bbd0f8fb5bf9297ad2ef8d"
+    },
+    {
+      "path": "Scripts/Stinger/validate_weapon_visibility.py",
+      "sha256": "4ef8270081810bc97c7231450bc2d06c866cc44637b1e56c8e835aaaeaa2cd0f"
+    },
+    {
+      "path": "Source/BrokenEdge/UI/BrokenEdgeHUD.cpp",
+      "sha256": "dc21682590b680d56cf4813b9dfc2b6af4af1a970ec718d903ab71505b9b2807"
+    },
+    {
+      "path": "Source/BrokenEdge/Weapon/Weapon.cpp",
+      "sha256": "5bb9d3d78e0846f7a29e1a917099926759f817b5dc254d347b06fa4310e9922d"
+    },
+    {
+      "path": "Source/StingerTools/Private/StingerAssetLibrary.cpp",
+      "sha256": "581866a29650644872db9bd73dbf518c3d363386b40e33f11751ca165b4f492e"
+    }
+  ],
+  "result": "passed"
+}

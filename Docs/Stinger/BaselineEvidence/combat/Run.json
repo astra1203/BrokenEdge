@@ -1,0 +1,26 @@
+{
+  "suite": "combat",
+  "players": 2,
+  "capture": "0",
+  "started_utc": "2026-10-02T07:48:47.662517+00:00",
+  "head": "09030f3b1e14098294be9dbd56e09710fe517f86",
+  "worktree": " M Config/DefaultGame.ini\n M Content/Characters/Stinger/Animations/ThirdPerson/ABP_BrokenEdgeAnimInstance_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Idle_Rifle_Hip_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Idle_Rifle_Ironsights_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Bwd_Rifle_Hip_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Bwd_Rifle_Ironsights_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Fwd_Rifle_Hip_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Fwd_Rifle_Ironsights_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Lt_Rifle_Hip_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Lt_Rifle_Ironsights_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Rt_Rifle_Hip_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Crouch_Walk_Rt_Rifle_Ironsights_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Idle_Rifle_Hip_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Idle_Rifle_Ironsights_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Jog_Bwd_Rifle_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Jog_Fwd_Rifle_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Jog_Lt_Rifle_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Jog_Rt_Rifle_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Walk_Bwd_Rifle_Ironsights_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Walk_Fwd_Rifle_Ironsights_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Walk_Lt_Rifle_Ironsights_Retargeted_Stinger.uasset\n M Content/Characters/Stinger/Animations/ThirdPerson/Walk_Rt_Rifle_Ironsights_Retargeted_Stinger.uasset\n M Content/FPS_Weapon_Bundle/Weapons/Meshes/Ka47/SK_KA47.uasset\n M Docs/Stinger/ThirdPersonGrip.md\n M Scripts/Stinger/calibrate_support_hand.py\n M Scripts/Stinger/configure_third_person_grip.py\n M Scripts/Stinger/validate_pie.py\n M Scripts/Stinger/validate_third_person_grip.py\n M Scripts/Stinger/validate_weapon_visibility.py\n M Source/BrokenEdge/UI/BrokenEdgeHUD.cpp\n M Source/BrokenEdge/Weapon/Weapon.cpp\n M Source/StingerTools/Private/StingerAssetLibrary.cpp\n?? Docs/Stinger/Baseline.md\n?? \"Docs/\\344\\270\\211\\350\\247\\222\\346\\264\\262\\345\\212\\237\\350\\203\\275\\350\\277\\230\\345\\216\\237\\350\\257\\204\\344\\274\\260\\344\\270\\216\\345\\256\\236\\346\\226\\275\\350\\267\\257\\347\\272\\277.md\"\n?? Scripts/Stinger/audit_baseline.py\n?? Scripts/Stinger/record_baseline.py\n?? Scripts/Stinger/run_baseline.py\n?? Scripts/Stinger/validate_baseline_combat.py\n",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Characters/Stinger/Maps/L_StingerTest",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1280",
+    "-ResY=720",
+    "-ExecCmds=py D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Stinger\\validate_baseline_combat.py",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\Baseline\\phase0-combat\\Editor.log"
+  ],
+  "pid": 23136,
+  "exit_code": 0,
+  "finished_utc": "2026-10-02T07:49:45.486187+00:00"
+}

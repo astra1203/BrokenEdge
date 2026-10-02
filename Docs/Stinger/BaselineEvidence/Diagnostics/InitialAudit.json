@@ -1,0 +1,166 @@
+{
+  "checks": [
+    {
+      "name": "game_mode_uses_repaired_character",
+      "passed": false,
+      "detail": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C"
+    },
+    {
+      "name": "BP_StingerCharacter_cpp_parent",
+      "passed": true,
+      "detail": "/Script/BrokenEdge.BrokenEdgeCharacter"
+    },
+    {
+      "name": "BP_StingerCharacter_fire_weapon_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_FireWeapon_Stinger.AM_FireWeapon_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_reload_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Reload_Stinger.AM_Reload_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_swap_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Swap_Stinger.AM_Swap_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_defeated_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Defeated_Stinger.AM_Defeated_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_Repaired_cpp_parent",
+      "passed": true,
+      "detail": "/Script/BrokenEdge.BrokenEdgeCharacter"
+    },
+    {
+      "name": "BP_StingerCharacter_Repaired_fire_weapon_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_FireWeapon_Stinger.AM_FireWeapon_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_Repaired_reload_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Reload_Stinger.AM_Reload_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_Repaired_swap_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Swap_Stinger.AM_Swap_Stinger"
+    },
+    {
+      "name": "BP_StingerCharacter_Repaired_defeated_montage",
+      "passed": true,
+      "detail": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Defeated_Stinger.AM_Defeated_Stinger"
+    },
+    {
+      "name": "left_wrist_copies_target_rotation",
+      "passed": false,
+      "detail": {
+        "fabrik": [
+          {
+            "root": "LeftArm",
+            "tip": "LeftHand",
+            "effector_bone": "RightHand",
+            "space": 3,
+            "rotation_source": 0,
+            "precision": 0.10000000149011612,
+            "iterations": 24
+          }
+        ]
+      }
+    },
+    {
+      "name": "Idle_Rifle_Hip_Retargeted_Stinger_saved_finger_pose",
+      "passed": false,
+      "detail": {
+        "LeftHandIndex1": 61.627290595800424,
+        "LeftHandIndex2": 33.8186269139445,
+        "LeftHandIndex3": 17.78661005323013,
+        "LeftHandMiddle1": 51.86420410952963,
+        "LeftHandMiddle2": 22.641951108863044,
+        "LeftHandMiddle3": 4.574285399095012,
+        "LeftHandRing1": 75.63148098917274,
+        "LeftHandRing2": 2.9773271916409993,
+        "LeftHandRing3": 15.340560182154464,
+        "LeftHandPinky1": 94.43747752422261,
+        "LeftHandPinky2": 16.37599575066551,
+        "LeftHandPinky3": 37.276785286808675,
+        "LeftHandThumb1": 39.75491819971139,
+        "LeftHandThumb2": 35.596219296140724,
+        "LeftHandThumb3": 30.38129069481863,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    },
+    {
+      "name": "Idle_Rifle_Ironsights_Retargeted_Stinger_saved_finger_pose",
+      "passed": false,
+      "detail": {
+        "LeftHandIndex1": 61.627290595800424,
+        "LeftHandIndex2": 33.818628819010854,
+        "LeftHandIndex3": 17.78659530516939,
+        "LeftHandMiddle1": 51.864212720444264,
+        "LeftHandMiddle2": 22.64193420004871,
+        "LeftHandMiddle3": 4.574283434669516,
+        "LeftHandRing1": 75.63147606750833,
+        "LeftHandRing2": 2.977326693257106,
+        "LeftHandRing3": 15.340557069360482,
+        "LeftHandPinky1": 94.43747225425504,
+        "LeftHandPinky2": 16.375993341883667,
+        "LeftHandPinky3": 37.27678201077358,
+        "LeftHandThumb1": 39.754900326715735,
+        "LeftHandThumb2": 35.596220094357506,
+        "LeftHandThumb3": 30.381287559737288,
+        "LeftInHandPinky": 0.0,
+        "LeftInHandRing": 0.0
+      }
+    }
+  ],
+  "characters": [
+    {
+      "name": "BP_StingerCharacter",
+      "parent": "/Script/BrokenEdge.BrokenEdgeCharacter",
+      "body": "/Game/Characters/Stinger/Meshes/Gameplay/Stinger_3P_Textured/SkeletalMeshes/Stinger_3P_Textured.Stinger_3P_Textured",
+      "anim_class": "/Game/Characters/Stinger/Animations/ThirdPerson/ABP_BrokenEdgeAnimInstance_Stinger.ABP_BrokenEdgeAnimInstance_Stinger_C",
+      "first_person_mesh": "/Game/Characters/Stinger/Meshes/FirstPerson/CappedView/Stinger_CappedViewArms/SkeletalMeshes/Stinger_CappedViewArms.Stinger_CappedViewArms",
+      "montages": {
+        "fire_weapon_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_FireWeapon_Stinger.AM_FireWeapon_Stinger",
+        "reload_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Reload_Stinger.AM_Reload_Stinger",
+        "swap_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Swap_Stinger.AM_Swap_Stinger",
+        "defeated_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Defeated_Stinger.AM_Defeated_Stinger"
+      }
+    },
+    {
+      "name": "BP_StingerCharacter_Repaired",
+      "parent": "/Script/BrokenEdge.BrokenEdgeCharacter",
+      "body": "/Game/Characters/Stinger/Meshes/Gameplay/Stinger_3P_Textured/SkeletalMeshes/Stinger_3P_Textured.Stinger_3P_Textured",
+      "anim_class": "/Game/Characters/Stinger/Animations/ThirdPerson/ABP_BrokenEdgeAnimInstance_Stinger.ABP_BrokenEdgeAnimInstance_Stinger_C",
+      "first_person_mesh": "/Game/Characters/Stinger/Meshes/FirstPerson/CappedView/Stinger_CappedViewArms/SkeletalMeshes/Stinger_CappedViewArms.Stinger_CappedViewArms",
+      "montages": {
+        "fire_weapon_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_FireWeapon_Stinger.AM_FireWeapon_Stinger",
+        "reload_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Reload_Stinger.AM_Reload_Stinger",
+        "swap_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Swap_Stinger.AM_Swap_Stinger",
+        "defeated_montage": "/Game/Characters/Stinger/Animations/ThirdPerson/AM_Defeated_Stinger.AM_Defeated_Stinger"
+      }
+    }
+  ],
+  "game_mode": "/Game/Characters/Stinger/Blueprints/BP_StingerTestGameMode.BP_StingerTestGameMode_C",
+  "default_pawn": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+  "ik": {
+    "fabrik": [
+      {
+        "root": "LeftArm",
+        "tip": "LeftHand",
+        "effector_bone": "RightHand",
+        "space": 3,
+        "rotation_source": 0,
+        "precision": 0.10000000149011612,
+        "iterations": 24
+      }
+    ]
+  },
+  "result": "failed"
+}

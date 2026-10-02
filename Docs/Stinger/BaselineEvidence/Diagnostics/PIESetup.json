@@ -1,0 +1,20 @@
+{
+  "extra_server": true,
+  "worlds": [
+    {
+      "name": "/Game/Characters/Stinger/Maps/UEDPIE_0_L_StingerTest.L_StingerTest",
+      "has_game_mode": true,
+      "pawns": []
+    },
+    {
+      "name": "/Game/Characters/Stinger/Maps/UEDPIE_1_L_StingerTest.L_StingerTest",
+      "has_game_mode": true,
+      "pawns": [
+        {
+          "name": "BP_StingerCharacter_C_0",
+          "local": true
+        }
+      ]
+    }
+  ]
+}

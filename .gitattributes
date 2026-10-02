@@ -23,3 +23,10 @@
 
 # Raw资源文件夹全部LFS
 RawContent/**/* filter=lfs diff=lfs merge=lfs -text
+
+# Preserve archived evidence bytes and the recorded SHA-256 values.
+Docs/Stinger/BaselineEvidence/** -text
+# Treat preserved Windows line endings as line endings in JSON whitespace checks.
+Docs/Stinger/BaselineEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Runtime logs retain their original whitespace.
+Docs/Stinger/BaselineEvidence/**/*.txt -whitespace

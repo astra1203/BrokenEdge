@@ -1,0 +1,211 @@
+{
+  "result": "passed",
+  "reviewed_on": "2026-10-02",
+  "method": "Read original PNG files using view_image; review covers the selected frames only. Numeric and network state evidence is recorded separately.",
+  "images": [
+    {
+      "source": "Saved/Stinger/Baseline/phase0-visibility-1p/WeaponVisibilityFrames/20261002-154631-1p/dual_down.png",
+      "archive_name": "1p-visibility-dual_down.png",
+      "observation": "低头时仅一把视图枪，未看到第二把世界枪露出。",
+      "sha256": "3677eda4dff195716639c0a017ffa7fc6597c2c31af858a6e508fb63cde50fd3"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-visibility-1p/WeaponVisibilityFrames/20261002-154631-1p/crouch_down.png",
+      "archive_name": "1p-visibility-crouch_down.png",
+      "observation": "低头时仅一把视图枪，未看到第二把世界枪露出。",
+      "sha256": "d81b15c287e76f1bb2e2318228e4e18c635b9c9e58845b58c8ac485d364a966e"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-visibility-1p/WeaponVisibilityFrames/20261002-154631-1p/aim_down.png",
+      "archive_name": "1p-visibility-aim_down.png",
+      "observation": "ADS 低头时仅一把视图枪，准星位于画面中心。",
+      "sha256": "d50ba2d7bb0c969fc9b6c748d43fdbe60fdb6828037de712b7e7e0c5916ee7da"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-visibility-1p/WeaponVisibilityFrames/20261002-154631-1p/re_pickup.png",
+      "archive_name": "1p-visibility-re_pickup.png",
+      "observation": "重新拾取后视图枪恢复，仅显示一把枪。",
+      "sha256": "b101d6d3f5627bb4cd3baa7fc7cea635d46d5b72fd44c1bdf6404a16f90e5a2a"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-visibility-2p/WeaponVisibilityFrames/20261002-154754-2p/dual_down.png",
+      "archive_name": "2p-visibility-dual_down.png",
+      "observation": "双人 PIE 客户端画面仅一把视图枪；低头或切枪切视角后无第二把世界枪露出。",
+      "sha256": "1d5de4a9d8659542c2f1e562ff0187e0631e90d7b97d7c6a635f63ca83ff81b2"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-visibility-2p/WeaponVisibilityFrames/20261002-154754-2p/crouch_down.png",
+      "archive_name": "2p-visibility-crouch_down.png",
+      "observation": "双人 PIE 客户端画面仅一把视图枪；低头或切枪切视角后无第二把世界枪露出。",
+      "sha256": "ca9f87d365d71bd5698e0d2acd508e4de99c2c76b9578e6b1d1204aacef299e8"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-visibility-2p/WeaponVisibilityFrames/20261002-154754-2p/aim_down.png",
+      "archive_name": "2p-visibility-aim_down.png",
+      "observation": "双人 PIE 客户端画面仅一把视图枪；低头或切枪切视角后无第二把世界枪露出。",
+      "sha256": "8c373cddb3ec92d9214d005ae5ab36a676da0aee5b800718db21a2e67d7b15d8"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-visibility-2p/WeaponVisibilityFrames/20261002-154754-2p/swap_view.png",
+      "archive_name": "2p-visibility-swap_view.png",
+      "observation": "双人 PIE 客户端画面仅一把视图枪；低头或切枪切视角后无第二把世界枪露出。",
+      "sha256": "684be19771c3058693dd5a97c9f87b5d942c346e7ec5a7132c0a35aa733780d6"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-combat/Captures/0_damage.png",
+      "archive_name": "combat-0_damage.png",
+      "observation": "准星在画面中心并指向另一名角色；伤害数值与复制结果见 Combat.json。",
+      "sha256": "e52049add459f073731a1161e2afb87c8fd64b7a32665cff52c4e65831e526b5"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-combat/Captures/1_damage.png",
+      "archive_name": "combat-1_damage.png",
+      "observation": "准星在画面中心并指向另一名角色；伤害数值与复制结果见 Combat.json。",
+      "sha256": "02c8b2391246160ce6b085ca34d2decc2d655ea65ca102b02794dddf799dd942"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-combat/Captures/0_death.png",
+      "archive_name": "combat-0_death.png",
+      "observation": "目标进入死亡动画并掉落武器；淘汰、复制和后续重生的数值证据见 Combat.json。",
+      "sha256": "68b953c86493a6fd33374b3b9795822de604b7b1037e04204e833be518fbecbb"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-1p-visual/ThirdPersonGripFrames/20261002-155153-p0-1p/idle_front.png",
+      "archive_name": "1p-grip-idle_front.png",
+      "observation": "左手包住木质护木，手掌未悬离；移动与蹲姿中拇指保持弯曲，未出现之前的竖拇指。",
+      "sha256": "dbf3cf6daef25e0fdc1e8fb4d799ffcbc958b93a49a57ee3d66ffa760eb7597c"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-1p-visual/ThirdPersonGripFrames/20261002-155153-p0-1p/aim.png",
+      "archive_name": "1p-grip-aim.png",
+      "observation": "左手包住木质护木，手掌未悬离；移动与蹲姿中拇指保持弯曲，未出现之前的竖拇指。",
+      "sha256": "1df30605c73bdf77f6119a1d8a8c007a01b48f1ccab53beca67c96d95756735a"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-1p-visual/ThirdPersonGripFrames/20261002-155153-p0-1p/crouch.png",
+      "archive_name": "1p-grip-crouch.png",
+      "observation": "左手包住木质护木，手掌未悬离；移动与蹲姿中拇指保持弯曲，未出现之前的竖拇指。",
+      "sha256": "986b2166a407a1200127db063a70c4660fe11594ec6a4ae7f95bf42edc0c29f8"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-1p-visual/ThirdPersonGripFrames/20261002-155153-p0-1p/walk.png",
+      "archive_name": "1p-grip-walk.png",
+      "observation": "左手包住木质护木，手掌未悬离；移动与蹲姿中拇指保持弯曲，未出现之前的竖拇指。",
+      "sha256": "dac1b754d7f3fa5dec404e06836ade998ced145ac177227a7b1fff7f2e0600bd"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-1p-visual/ThirdPersonGripFrames/20261002-155153-p0-1p/strafe.png",
+      "archive_name": "1p-grip-strafe.png",
+      "observation": "左手包住木质护木，手掌未悬离；移动与蹲姿中拇指保持弯曲，未出现之前的竖拇指。",
+      "sha256": "78fcdff6b5d02fdfd25362b5dc76f4cb51c78f44cef734c8f5c256c2c7c7ca39"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-1p-visual/ThirdPersonGripFrames/20261002-155153-p0-1p/after_reload.png",
+      "archive_name": "1p-grip-after_reload.png",
+      "observation": "换弹、切枪或重新拾取结束后，左手恢复护木接触。",
+      "sha256": "5e9f117196bfb2b1c1b6d702b37e6e967e9a6adebe7daf6e6abc8fdd2d403ab8"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-1p-visual/ThirdPersonGripFrames/20261002-155153-p0-1p/after_swap.png",
+      "archive_name": "1p-grip-after_swap.png",
+      "observation": "换弹、切枪或重新拾取结束后，左手恢复护木接触。",
+      "sha256": "f7244b31ad6c651892e4f694e67d6f004009075c84c21f2c206cedc9f7eae34e"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-1p-visual/ThirdPersonGripFrames/20261002-155153-p0-1p/after_pickup.png",
+      "archive_name": "1p-grip-after_pickup.png",
+      "observation": "换弹、切枪或重新拾取结束后，左手恢复护木接触。",
+      "sha256": "7f8f2fbe62b687337215767eb2800ec7835fc75b4ccb1cec1d4e95f4c360d063"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-1p-visual/ThirdPersonGripFrames/20261002-155153-p0-1p/first_person.png",
+      "archive_name": "1p-grip-first_person.png",
+      "observation": "切回第一人称后仅显示一把视图枪。",
+      "sha256": "f1dbfde4bdce3ee55c512670717f0c747bc20527f167674daccc42be0ac1580d"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-2p-visual/ThirdPersonGripFrames/20261002-155246-p0-2p/idle_front.png",
+      "archive_name": "2p-grip-idle_front.png",
+      "observation": "双人 PIE 中左手包住木质护木，手掌未悬离。",
+      "sha256": "d407ec888a581ae948b0f22246174248e5cf9703ae8b0f063785c1aacf4e6886"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-2p-visual/ThirdPersonGripFrames/20261002-155246-p0-2p/aim.png",
+      "archive_name": "2p-grip-aim.png",
+      "observation": "双人 PIE 中左手维持护木接触，蹲伏、行走和侧移没有竖拇指；画面可见另一名角色的对应姿态。",
+      "sha256": "8950794d88292aa233e0da4a04514bbe07d8ca51b3a260a40451dcaca9edc55c"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-2p-visual/ThirdPersonGripFrames/20261002-155246-p0-2p/crouch.png",
+      "archive_name": "2p-grip-crouch.png",
+      "observation": "双人 PIE 中左手维持护木接触，蹲伏、行走和侧移没有竖拇指；画面可见另一名角色的对应姿态。",
+      "sha256": "8b1e471ffe9bc0a4111480e3399e1fefeed39497bf21ab70722989c9a91440e8"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-2p-visual/ThirdPersonGripFrames/20261002-155246-p0-2p/walk.png",
+      "archive_name": "2p-grip-walk.png",
+      "observation": "双人 PIE 中左手维持护木接触，蹲伏、行走和侧移没有竖拇指；画面可见另一名角色的对应姿态。",
+      "sha256": "29527e5e58b554e5ae313ea08478a47471f9065ac35fd545326fa5efcaac0e78"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-2p-visual/ThirdPersonGripFrames/20261002-155246-p0-2p/strafe.png",
+      "archive_name": "2p-grip-strafe.png",
+      "observation": "双人 PIE 中左手维持护木接触，蹲伏、行走和侧移没有竖拇指；画面可见另一名角色的对应姿态。",
+      "sha256": "f3a26630b356e1448d13b6d65e37e26692a6dcc5286eb405eea8c33947caad38"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-2p-visual/ThirdPersonGripFrames/20261002-155246-p0-2p/after_reload.png",
+      "archive_name": "2p-grip-after_reload.png",
+      "observation": "双人画面中，开火或换弹、切枪结束后左手保持护木接触，远端角色也显示相应状态。",
+      "sha256": "00f3d7ca170c3826625eb1801b0c900dadc9c28be88b98a466167c7ac7430776"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-2p-visual/ThirdPersonGripFrames/20261002-155246-p0-2p/after_swap.png",
+      "archive_name": "2p-grip-after_swap.png",
+      "observation": "双人画面中，开火或换弹、切枪结束后左手保持护木接触，远端角色也显示相应状态。",
+      "sha256": "ef3e17f5fd57064585e76269b145970fe99a64904f467cba9c46c3373fbf4a42"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-2p-visual/ThirdPersonGripFrames/20261002-155246-p0-2p/fire.png",
+      "archive_name": "2p-grip-fire.png",
+      "observation": "双人画面中，开火或换弹、切枪结束后左手保持护木接触，远端角色也显示相应状态。",
+      "sha256": "d562d8e2bb8a36937f8e5f053cb049b3df741ef2a920e1ed0c0f1c6cd3264be7"
+    },
+    {
+      "source": "Saved/Stinger/Baseline/phase0-grip-2p-visual/ThirdPersonGripFrames/20261002-155246-p0-2p/first_person_aim.png",
+      "archive_name": "2p-grip-first_person_aim.png",
+      "observation": "客户端切回第一人称瞄准时仅有一把视图枪，瞄具对齐中心准星。",
+      "sha256": "9f946f050ec89e6528d709138cdf4a2edb53c44d9b8544dfac14fc8ea63df8ef"
+    },
+    {
+      "source": "Saved/SessionTests/Dedicated-20261002-155500/Join-FreeForAll-Rooms.png",
+      "archive_name": "LAN-Join-FreeForAll-Rooms.png",
+      "observation": "两种模式的房间同时显示，每行有明确加入按钮。",
+      "sha256": "3e7c15ef9314bbfcf9a171ffbf3fbf1df3f46022a1dde10ad0ed0b366ceb6323"
+    },
+    {
+      "source": "Saved/SessionTests/Dedicated-20261002-155500/Join-FreeForAll-ModeChanged.png",
+      "archive_name": "LAN-Join-FreeForAll-ModeChanged.png",
+      "observation": "模式切换后显示目标模式，两名玩家准备状态均已重置。",
+      "sha256": "d3a32bf29c67d91e8306bd6d78b9c62363f3805b9f40a367da55a40eeb4422ea"
+    },
+    {
+      "source": "Saved/SessionTests/Dedicated-20261002-155500/Cancel-FreeForAll-Countdown.png",
+      "archive_name": "LAN-Cancel-FreeForAll-Countdown.png",
+      "observation": "两名玩家均已准备，显示三秒倒计时及取消准备按钮。",
+      "sha256": "5553b4ef4665371e6d2edb786f4ecc2a5f5264689c4751205c0b5d59631042db"
+    },
+    {
+      "source": "Saved/SessionTests/Dedicated-20261002-155500/Join-Teams-Rooms.png",
+      "archive_name": "LAN-Join-Teams-Rooms.png",
+      "observation": "两种模式的房间同时显示，每行有明确加入按钮。",
+      "sha256": "a41fdd6cf855d043651023866457d9244d3aaba6074d2e7f17f044b7e3eb40bd"
+    },
+    {
+      "source": "Saved/SessionTests/Dedicated-20261002-155500/Cancel-Teams-ModeChanged.png",
+      "archive_name": "LAN-Cancel-Teams-ModeChanged.png",
+      "observation": "模式切换后显示目标模式，两名玩家准备状态均已重置。",
+      "sha256": "81f515a097de7d436e84d92120578c39b92b2645fdda5e123e143f514e09d674"
+    }
+  ]
+}

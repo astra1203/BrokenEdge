@@ -167,7 +167,6 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AWeapon, WeaponState);
 	DOREPLIFETIME_CONDITION(AWeapon, bUseServerSideRewind, COND_OwnerOnly);
-	
 }
 
 void AWeapon::OnRep_Owner()
@@ -233,7 +232,10 @@ void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 {
 	// UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__, TEXT(""));
 	ABrokenEdgeCharacter* BrokenEdgeCharacter = Cast<ABrokenEdgeCharacter>(OtherActor);
-	if (BrokenEdgeCharacter && BrokenEdgeCharacter->GetOverlappingWeapon()==this)
+	// The character mesh and capsule can leave separately. Keep the pickup target
+	// until every component of that character has left the sphere.
+	if (BrokenEdgeCharacter && BrokenEdgeCharacter->GetOverlappingWeapon() == this &&
+		!AreaSphere->IsOverlappingActor(BrokenEdgeCharacter))
 	{
 		//@TODO
 		// if (WeaponType == EWeaponType::EWT_Flag && BrokenEdgeCharacter->GetTeam() == Team) return;
@@ -258,7 +260,7 @@ void AWeapon::Fire(const FVector& HitTarget)
 {
 	if (FireAnimation)
 	{
-		WeaponMesh->PlayAnimation(FireAnimation,false);
+		WeaponMesh->PlayAnimation(FireAnimation, false);
 	}
 
 	//@TODO
@@ -268,7 +270,7 @@ void AWeapon::Fire(const FVector& HitTarget)
 
 void AWeapon::SpendRound()
 {
-	Ammo = FMath::Clamp(Ammo-1,0,MagCapacity);
+	Ammo = FMath::Clamp(Ammo - 1, 0, MagCapacity);
 	SetHUDAmmo();
 
 	//@TODO
@@ -420,6 +422,7 @@ bool AWeapon::IsFull() const
 
 	return Ammo == MagCapacity;
 }
+
 /**
  * @brief 添加弹药
  * @param AmmoToAdd 要添加的弹药数量
@@ -439,19 +442,18 @@ bool AWeapon::IsEmpty()
 FVector AWeapon::TraceEndWithScatter(const FVector& HitTarget)
 {
 	const USkeletalMeshSocket* MuzzleFlashSocket = GetWeaponMesh()->GetSocketByName("MuzzleFlash");
-	if (MuzzleFlashSocket==nullptr)return FVector::ZeroVector;
+	if (MuzzleFlashSocket == nullptr)return FVector::ZeroVector;
 	const FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());
 	const FVector TraceStart = SocketTransform.GetLocation();
 
 	const FVector ToTargetNormalized = (HitTarget - TraceStart).GetSafeNormal();
-	const FVector SphereCenter = TraceStart + ToTargetNormalized*DistanceToSphere;
+	const FVector SphereCenter = TraceStart + ToTargetNormalized * DistanceToSphere;
 	const FVector RandVec = UKismetMathLibrary::RandomUnitVector() * FMath::FRandRange(0.f, SphereRadius);
 	const FVector EndLoc = SphereCenter + RandVec;
 
 	const FVector ToEndLoc = EndLoc - TraceStart;
 
-	return FVector(TraceStart+ToEndLoc * TRACE_LENGTH / ToEndLoc.Size());
-
+	return FVector(TraceStart + ToEndLoc * TRACE_LENGTH / ToEndLoc.Size());
 }
 
 /**
@@ -463,7 +465,9 @@ void AWeapon::ClientAddAmmo_Implementation(int32 AmmoToAdd)
 	if (HasAuthority()) return;
 
 	Ammo = FMath::Clamp(Ammo + AmmoToAdd, 0, MagCapacity);
-	BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr ? Cast<ABrokenEdgeCharacter>(GetOwner()) : BrokenEdgeOwnerCharacter;
+	BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr
+		                           ? Cast<ABrokenEdgeCharacter>(GetOwner())
+		                           : BrokenEdgeOwnerCharacter;
 
 	bool IsShotgunFull = BrokenEdgeOwnerCharacter
 		&& BrokenEdgeOwnerCharacter->GetCombat()
