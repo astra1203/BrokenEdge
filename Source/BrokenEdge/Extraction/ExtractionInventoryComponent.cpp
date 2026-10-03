@@ -21,7 +21,7 @@ void UExtractionInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeP
 ABrokenEdgeCharacter* UExtractionInventoryComponent::Character() const
 {
 	const auto* PS = Cast<AExtractionPlayerState>(GetOwner());
-	return PS ? Cast<ABrokenEdgeCharacter>(PS->GetPawn()) : nullptr;
+	return PS ? Cast<ABrokenEdgeCharacter>(PS->GetPawn()) : Cast<ABrokenEdgeCharacter>(GetOwner());
 }
 
 void UExtractionInventoryComponent::InitializeLoadout()
@@ -42,6 +42,24 @@ void UExtractionInventoryComponent::InitializeLoadout()
 	bDropped = false;
 	Contents = Member->Original;
 	Contents.Id = FGuid::NewGuid();
+	SyncWeapons();
+	Changed();
+}
+
+void UExtractionInventoryComponent::InitializeGuard()
+{
+	auto* C = Character();
+	if (!C || !C->HasAuthority() || !C->bExtractionGuard || bInitialized) return;
+	bInitialized = true;
+	Contents.Id = FGuid::NewGuid();
+	Contents.WeaponSlots = true;
+	auto Gun = ExtractionItems::Make(TEXT("AK"));
+	Gun.Slot = 0;
+	Gun.Magazine = 30;
+	ExtractionItems::SeedOrigins(Gun);
+	Contents.Items.Add(Gun);
+	ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(TEXT("Ammo"), 60));
+	ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(TEXT("Medkit")));
 	SyncWeapons();
 	Changed();
 }

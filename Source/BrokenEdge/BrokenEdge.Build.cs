@@ -7,14 +7,22 @@ public class BrokenEdge : ModuleRules
 	public BrokenEdge(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" , "Niagara", "UMG", "Slate", "SlateCore", "MultiplayerSessions", "OnlineSubsystem" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "OnlineSubsystemUtils", "AnimGraphRuntime", "AnimationCore", "Json", "JsonUtilities" });
+		PublicDependencyModuleNames.AddRange(new string[]
+		{
+			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Niagara", "UMG", "Slate", "SlateCore",
+			"MultiplayerSessions", "OnlineSubsystem"
+		});
+
+		PrivateDependencyModuleNames.AddRange(new string[]
+		{
+			"OnlineSubsystemUtils", "AnimGraphRuntime", "AnimationCore", "Json", "JsonUtilities", "AIModule",
+			"NavigationSystem", "GameplayTasks"
+		});
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
-		
+
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
 

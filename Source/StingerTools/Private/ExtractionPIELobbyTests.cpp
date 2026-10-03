@@ -29,6 +29,7 @@ namespace
 		{
 			Seamless = IConsoleManager::Get().FindConsoleVariable(TEXT("net.AllowPIESeamlessTravel"));
 			InitialSeamless = Seamless->GetInt();
+			FParse::Value(FCommandLine::Get(), TEXT("ExtractionPIEPlayers="), Players);
 			Deadline = FPlatformTime::Seconds() + 120;
 		}
 
@@ -65,7 +66,7 @@ namespace
 				UE_LOG(LogTemp, Display, TEXT("EXTRACTION_PIE_LOBBY_STOPPED Mode=%s Rounds=%d Worlds=0"), *Mode, Round);
 				return true;
 			}
-			if (!Server || Clients.Num() != 2 || Server->IsInSeamlessTravel()) return false;
+			if (!Server || Clients.Num() != Players || Server->IsInSeamlessTravel()) return false;
 			for (auto* Client : Clients) if (Client->IsInSeamlessTravel() || !Client->GetFirstPlayerController()) return
 				false;
 			auto* Lobby = Server->GetGameState<ALobbyGameState>();
@@ -73,7 +74,7 @@ namespace
 
 			if (Stage == 0)
 			{
-				if (!Lobby || Lobby->PlayerArray.Num() != 2 || Lobby->RoomMatchType != Mode) return false;
+				if (!Lobby || Lobby->PlayerArray.Num() != Players || Lobby->RoomMatchType != Mode) return false;
 				for (auto* Client : Clients) if (!ReadyButton(Client)) return false;
 				if (Mode != TEXT("Extraction"))
 				{
@@ -102,6 +103,7 @@ namespace
 						return true;
 					}
 					Weapons.Add(Profile, Item->Id);
+					Squads.FindOrAdd(Profile) = Client->GetFirstPlayerController()->GetPlayerState<ABrokenEdgePlayerState>()->ExtractionSquad;
 					FExtractionStorageRequest Request;
 					Request.Move.Item = Item->Id;
 					Request.Move.Quantity = 1;
@@ -149,7 +151,7 @@ namespace
 				if (Mode != TEXT("Extraction"))
 				{
 					if (!Server->GetPathName().Contains(Mode) || Lobby || !Server->GetGameState()
-						|| Server->GetGameState()->PlayerArray.Num() != 2)
+						|| Server->GetGameState()->PlayerArray.Num() != Players)
 						return false;
 					for (auto* Client : Clients) if (!Client->GetPathName().Contains(Mode)) return false;
 					Test->TestTrue(TEXT("Legacy online session retained"),
@@ -161,7 +163,7 @@ namespace
 					return false;
 				}
 				const auto* Game = Server->GetGameState<AExtractionGameState>();
-				if (!Game || Game->Phase != EExtractionPhase::Active || Game->PlayerArray.Num() != 2) return false;
+				if (!Game || Game->Phase != EExtractionPhase::Active || Game->PlayerArray.Num() != Players) return false;
 				for (auto* Client : Clients)
 				{
 					const auto* PS = Client->GetFirstPlayerController()->GetPlayerState<AExtractionPlayerState>();
@@ -174,6 +176,7 @@ namespace
 					if (!Test->TestNotNull(TEXT("Extraction PlayerState after seamless travel"), PS)) return true;
 					Test->TestTrue(TEXT("Authenticated profile retained"), Weapons.Contains(PS->ExtractionProfile));
 					Test->TestTrue(TEXT("Raid ticket retained"), PS->ExtractionRaid.IsValid());
+					Test->TestEqual(TEXT("Squad survives lobby travel"), PS->ExtractionSquad, Squads.FindRef(PS->ExtractionProfile));
 					if (!Current.IsValid()) Current = PS->ExtractionRaid;
 					Test->TestEqual(TEXT("All players share raid"), PS->ExtractionRaid, Current);
 					const auto* Rifle = PS->Inventory->Contents.InSlot(0);
@@ -185,7 +188,7 @@ namespace
 				}
 				Test->TestTrue(TEXT("New round has a fresh raid"), Current != LastRaid);
 				LastRaid = Current;
-				int32 Offset = -80;
+				int32 Offset = -160;
 				for (auto It = Server->GetPlayerControllerIterator(); It; ++It)
 				{
 					// Scene fixture only: the real exit timer and persistence path perform settlement.
@@ -211,7 +214,7 @@ namespace
 			}
 			if (Stage == 5)
 			{
-				if (!Lobby || Lobby->PlayerArray.Num() != 2) return false;
+				if (!Lobby || Lobby->PlayerArray.Num() != Players) return false;
 				for (auto* Client : Clients)
 				{
 					if (!Client->GetGameState<ALobbyGameState>() || !ReadyButton(Client)) return false;
@@ -266,6 +269,8 @@ namespace
 		int32 InitialSeamless = 0;
 		int32 Stage = 0;
 		int32 Round = 0;
+		int32 Players = 2;
+		TMap<FGuid, uint8> Squads;
 		double Deadline = 0;
 		double Since = 0;
 		int64 BeforeBlocked = 0;
@@ -292,7 +297,9 @@ bool FExtractionPIELobbyTest::RunTest(const FString&)
 	if (!FEditorFileUtils::LoadMap(TEXT("/Game/Maps/Lobby"), false, false)) return false;
 	auto* Settings = NewObject<ULevelEditorPlaySettings>();
 	Settings->bLaunchSeparateServer = false;
-	Settings->SetPlayNumberOfClients(2);
+	int32 Players = 2;
+	FParse::Value(FCommandLine::Get(), TEXT("ExtractionPIEPlayers="), Players);
+	Settings->SetPlayNumberOfClients(FMath::Clamp(Players, 2, 3));
 	Settings->SetRunUnderOneProcess(true);
 	Settings->SetPlayNetMode(PIE_Client);
 	Settings->NewWindowWidth = 640;

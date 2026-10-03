@@ -26,7 +26,7 @@ def read(file):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--plan', type=Path, required=True)
-    parser.add_argument('--phase', type=int, choices=[2, 3, 4], default=2)
+    parser.add_argument('--phase', type=int, choices=[2, 3, 4, 5], default=2)
     parser.add_argument('--suffix', default='', help='Alphanumeric label for a separate repair archive')
     args = parser.parse_args()
     if args.suffix and not args.suffix.isalnum():

@@ -4,6 +4,12 @@
 #include "BrokenEdgeCharacter.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 #include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
+#include "BrokenEdge/Extraction/ExtractionAbilities.h"
+#include "BrokenEdge/Extraction/ExtractionState.h"
+#include "BrokenEdge/Extraction/ExtractionSmoke.h"
+#include "Components/TextRenderComponent.h"
+#include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
+#include "BrokenEdge/Extraction/ExtractionGameMode.h"
 #include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
 #include "BrokenEdge/Extraction/ExtractionPlayerController.h"
 #include "StingerFirstPersonAnimInstance.h"
@@ -56,6 +62,15 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	Combat->SetIsReplicated(true);
 	ExtractionCombat = CreateDefaultSubobject<UExtractionCombatComponent>(TEXT("ExtractionCombat"));
+	ExtractionLabel = CreateDefaultSubobject<UTextRenderComponent>(TEXT("ExtractionLabel"));
+	ExtractionLabel->SetupAttachment(GetRootComponent());
+	ExtractionLabel->SetRelativeLocation(FVector(0, 0, 115));
+	ExtractionLabel->SetHorizontalAlignment(EHTA_Center);
+	ExtractionLabel->SetWorldSize(20);
+	ExtractionLabel->SetVisibility(false);
+	ExtractionLabel->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ExtractionAbilities = CreateDefaultSubobject<UExtractionAbilities>(TEXT("ExtractionAbilities"));
+	GuardInventory = CreateDefaultSubobject<UExtractionInventoryComponent>(TEXT("GuardInventory"));
 	ExtractionInteraction = CreateDefaultSubobject<UExtractionInteractionComponent>(TEXT("ExtractionInteraction"));
 
 	Buff = CreateDefaultSubobject<UBuffComponent>(TEXT("BuffComponent"));
@@ -174,7 +189,13 @@ void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, con
 
 	if (bDefeated || BrokenEdgeGameMode == nullptr)return;
 	Damage = BrokenEdgeGameMode->CalculateDamage(InstigatorController, GetController(), Damage);
-	if (Damage > 0 && ExtractionInteraction->IsEnabled()) ExtractionInteraction->CancelMedical();
+	if (ExtractionInteraction->IsEnabled())
+	{
+		if (Damage <= 0) return;
+		ExtractionInteraction->CancelMedical();
+		ExtractionAbilities->Damaged();
+		if (auto* GM = Cast<AExtractionGameMode>(BrokenEdgeGameMode); GM && GM->DamageDowned(this, Damage)) return;
+	}
 
 	float DamageToHealth = Damage;
 	if (Shield > 0.f)
@@ -199,6 +220,11 @@ void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, con
 
 	if (Health <= 0.f)
 	{
+		if (auto* GM = Cast<AExtractionGameMode>(BrokenEdgeGameMode))
+		{
+			GM->DefeatCombatant(this, InstigatorController);
+			return;
+		}
 		BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr
 			                             ? Cast<ABrokenEdgePlayerController>(Controller)
 			                             : BrokenEdgePlayerController;
@@ -240,7 +266,9 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	UpdateSprint();
-	if (bStartInFirstPerson && IsLocallyControlled() && !bFirstPersonView && !bDefeated && !bDisableGameplay)
+	UpdateExtractionLabel();
+	if (!bExtractionGuard && bStartInFirstPerson && IsLocallyControlled() && !bFirstPersonView && !bDefeated && !
+		bDisableGameplay)
 	{
 		// 只在首次获得控制权时应用默认视角，之后允许自由切换。
 		bStartInFirstPerson = false;
@@ -847,9 +875,65 @@ void ABrokenEdgeCharacter::ServerSetSprintRequested_Implementation(bool bRequest
 	bSprintRequested = bEnableSprint && bRequested;
 }
 
+void ABrokenEdgeCharacter::UpdateExtractionLabel()
+{
+	if (GetNetMode() == NM_DedicatedServer || !ExtractionCombat->IsEnabled()) return;
+	auto* PC = GetWorld()->GetFirstPlayerController();
+	auto* Viewer = PC ? Cast<ABrokenEdgeCharacter>(PC->GetPawn()) : nullptr;
+	const bool Ally = Viewer && Viewer != this && UExtractionAbilities::Friendly(Viewer, this);
+	if ((!Ally && !bExtractionGuard) || !PC || bDefeated)
+	{
+		ExtractionLabel->SetVisibility(false);
+		return;
+	}
+	FVector Eye;
+	FRotator Rotation;
+	PC->GetPlayerViewPoint(Eye, Rotation);
+	const FVector Point = GetActorLocation() + FVector(0, 0, 30);
+	FCollisionQueryParams Q(SCENE_QUERY_STAT(ExtractionLabel), false, this);
+	Q.AddIgnoredActor(Viewer);
+	if (Viewer && Viewer->GetEquippedWeapon()) Q.AddIgnoredActor(Viewer->GetEquippedWeapon());
+	if (GetEquippedWeapon()) Q.AddIgnoredActor(GetEquippedWeapon());
+	FHitResult Hit;
+	const bool Visible = FVector::DistSquared(Eye, Point) < FMath::Square(3000.f)
+		&& !GetWorld()->LineTraceSingleByChannel(Hit, Eye, Point, ECC_Visibility, Q)
+		&& !AExtractionSmoke::Blocks(GetWorld(), Eye, Point);
+	ExtractionLabel->SetVisibility(Visible);
+	if (!Visible) return;
+	const auto* PS = GetPlayerState<AExtractionPlayerState>();
+	ExtractionLabel->SetText(FText::FromString(bExtractionGuard
+		                                           ? TEXT("GUARD")
+		                                           : PS && PS->Life == EExtractionLife::Downed
+		                                           ? TEXT("REVIVE [E]")
+		                                           : TEXT("SQUADMATE")));
+	ExtractionLabel->SetTextRenderColor(bExtractionGuard ? FColor(230, 150, 80) : FColor(80, 220, 180));
+	ExtractionLabel->SetWorldRotation((Eye - ExtractionLabel->GetComponentLocation()).Rotation());
+}
+
 void ABrokenEdgeCharacter::UpdateSprint()
 {
 	if (!bEnableSprint || (!HasAuthority() && !IsLocallyControlled()) || !Combat) return;
+	if (bExtractionGuard)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = 220;
+		return;
+	}
+	if (ExtractionAbilities->IsDowned())
+	{
+		if (!bWasExtractionDowned) ExtractionSavedCrouchSpeed = GetCharacterMovement()->MaxWalkSpeedCrouched;
+		bWasExtractionDowned = true;
+		bSprinting = false;
+		GetCharacterMovement()->MaxWalkSpeed = GetDefault<UExtractionRules>()->CrawlSpeed;
+		GetCharacterMovement()->MaxWalkSpeedCrouched = GetDefault<UExtractionRules>()->CrawlSpeed;
+		Crouch();
+		return;
+	}
+	if (bWasExtractionDowned)
+	{
+		UnCrouch();
+		GetCharacterMovement()->MaxWalkSpeedCrouched = ExtractionSavedCrouchSpeed;
+		bWasExtractionDowned = false;
+	}
 	const FVector Acceleration = GetCharacterMovement()->GetCurrentAcceleration();
 	bSprinting = bSprintRequested && !bIsCrouched && !IsAiming() && !bDisableGameplay && !bDefeated
 		&& GetCombatState() == ECombatState::ECS_Unoccuiped
@@ -863,6 +947,8 @@ void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProp
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ABrokenEdgeCharacter, bSprinting);
+	DOREPLIFETIME(ABrokenEdgeCharacter, bExtractionGuard);
+	DOREPLIFETIME(ABrokenEdgeCharacter, ExtractionGuardId);
 
 	DOREPLIFETIME_CONDITION(ABrokenEdgeCharacter, OverlappingWeapon, COND_OwnerOnly);
 	// DOREPLIFETIME(ABrokenEdgeCharacter, OverlappingWeapon);
@@ -1045,6 +1131,7 @@ void ABrokenEdgeCharacter::UpdateHUDAmmo()
  */
 void ABrokenEdgeCharacter::Jump()
 {
+	if (ExtractionAbilities->IsDowned()) return;
 	if (ExtractionInteraction->IsEnabled())
 		if (auto* PC = Cast<AExtractionPlayerController>(Controller)) PC->ServerCancelMedical();
 	if (Combat && Combat->bHoldingTheFlag) return;

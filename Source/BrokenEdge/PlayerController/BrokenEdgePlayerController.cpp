@@ -211,6 +211,11 @@ void ABrokenEdgePlayerController::ClientDefeatedAnnouncement_Implementation(APla
 	BrokenEdgeHUD->AddDefeatedAnnouncement(Attacker->GetPlayerName(), Victim->GetPlayerName());
 }
 
+void ABrokenEdgePlayerController::ServerSetExtractionSquad_Implementation(uint8 Squad)
+{
+	if (auto* Lobby = GetWorld()->GetAuthGameMode<ALobbyGameMode>()) Lobby->SetExtractionSquad(this, Squad);
+}
+
 void ABrokenEdgePlayerController::ServerSetLobbyReady_Implementation(bool bReady)
 {
 	if (ALobbyGameMode* Lobby = GetWorld()->GetAuthGameMode<ALobbyGameMode>())

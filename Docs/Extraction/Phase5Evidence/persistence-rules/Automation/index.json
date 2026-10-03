@@ -1,0 +1,89 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "6BC7745E4A37789EAF9AD88CAA6C280F",
+			"instanceName": "DESKTOP-M9PA1SF-51264",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "GameViewer Virtual Display Adapter",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.03-19.46.27",
+	"succeeded": 4,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.37116220593452454,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "JournalFailures",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.JournalFailures",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"6BC7745E4A37789EAF9AD88CAA6C280F"
+			],
+			"duration": 0.082808002829551697,
+			"dateTime": "2026.10.03-19.46.26",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PreparedCancellation",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.PreparedCancellation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"6BC7745E4A37789EAF9AD88CAA6C280F"
+			],
+			"duration": 0.063543006777763367,
+			"dateTime": "2026.10.03-19.46.26",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RecoveryProvenance",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.RecoveryProvenance",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"6BC7745E4A37789EAF9AD88CAA6C280F"
+			],
+			"duration": 0.13445129990577698,
+			"dateTime": "2026.10.03-19.46.26",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Transactions",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.Transactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"6BC7745E4A37789EAF9AD88CAA6C280F"
+			],
+			"duration": 0.090359896421432495,
+			"dateTime": "2026.10.03-19.46.27",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

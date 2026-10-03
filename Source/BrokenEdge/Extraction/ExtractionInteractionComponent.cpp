@@ -2,6 +2,7 @@
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionLootActor.h"
 #include "ExtractionState.h"
+#include "ExtractionAbilities.h"
 #include "ExtractionCombatComponent.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
@@ -38,7 +39,7 @@ ABrokenEdgeCharacter* UExtractionInteractionComponent::Character() const
 UExtractionInventoryComponent* UExtractionInteractionComponent::Inventory() const
 {
 	auto* PS = Character() ? Character()->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	return PS ? PS->Inventory.Get() : nullptr;
+	return PS ? PS->Inventory.Get() : Character() && Character()->bExtractionGuard ? Character()->GuardInventory.Get() : nullptr;
 }
 
 bool UExtractionInteractionComponent::IsEnabled() const
@@ -93,6 +94,7 @@ void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootAct
 {
 	if (!GetOwner()->HasAuthority() || NewSession <= Session) return;
 	Session = NewSession;
+	CancelMedical();
 	Close();
 	if (!bOpen || !CanAct()) return;
 	if (Target && !CanReach(Target)) return;
@@ -214,6 +216,7 @@ void UExtractionInteractionComponent::AdvanceSearch(double Now)
 void UExtractionInteractionComponent::CancelMedical()
 {
 	if (!GetOwner()->HasAuthority()) return;
+	Character()->GetExtractionAbilities()->Cancel();
 	MedicalEnd = 0;
 	MedicalItem.Invalidate();
 	GetOwner()->ForceNetUpdate();
@@ -234,7 +237,7 @@ FString UExtractionInteractionComponent::StartMedical(const FGuid& Id)
 	const auto* D = I ? UExtractionItemDefinition::Get(I->Definition) : nullptr;
 	auto* C = Character();
 	if (!D || D->Kind != EExtractionItemKind::Medical) return TEXT("无法使用该物品");
-	if (MedicalEnd > 0 || C->GetCombatState() != ECombatState::ECS_Unoccuiped) return TEXT("当前动作尚未完成");
+	if (C->GetExtractionAbilities()->Action != EExtractionAction::None || MedicalEnd > 0 || C->GetCombatState() != ECombatState::ECS_Unoccuiped) return TEXT("当前动作尚未完成");
 	if (C->GetHealth() >= C->GetMaxHealth()) return TEXT("生命已满");
 	Close();
 	C->GetCombat()->FireButtonPressed(false);
@@ -356,7 +359,7 @@ void UExtractionInteractionComponent::TickComponent(float Delta, ELevelTick Tick
 	if (MedicalEnd > 0)
 	{
 		auto* C = Character();
-		if (C->GetCharacterMovement()->IsFalling() || C->GetVelocity().Size2D() > 620)
+		if (C->GetCharacterMovement()->IsFalling() || C->GetVelocity().Size2D() > 5)
 		{
 			CancelMedical();
 			return;

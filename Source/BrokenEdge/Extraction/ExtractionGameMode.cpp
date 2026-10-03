@@ -6,6 +6,10 @@
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionAccountComponent.h"
 #include "ExtractionExit.h"
+#include "ExtractionAbilities.h"
+#include "ExtractionGuard.h"
+#include "ExtractionSmoke.h"
+#include "EngineUtils.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/UI/BrokenEdgeHUD.h"
@@ -42,7 +46,7 @@ AExtractionGameMode::AExtractionGameMode()
 void AExtractionGameMode::InitGame(const FString& Map, const FString& Options, FString& Error)
 {
 	Super::InitGame(Map, Options, Error);
-	ExpectedPlayers = FMath::Clamp(UGameplayStatics::GetIntOption(Options, TEXT("ExpectedPlayers"), 2), 1, 8);
+	ExpectedPlayers = FMath::Clamp(UGameplayStatics::GetIntOption(Options, TEXT("ExpectedPlayers"), 2), 1, 6);
 	float Duration = 600;
 	FParse::Value(FCommandLine::Get(), TEXT("ExtractionRoundSeconds="), Duration);
 	RoundSeconds = FMath::Clamp(static_cast<double>(Duration), 10.0, 3600.0);
@@ -106,8 +110,13 @@ AActor* AExtractionGameMode::ChoosePlayerStart_Implementation(AController* Playe
 	{
 		return CastChecked<APlayerStart>(&A)->PlayerStartTag.LexicalLess(CastChecked<APlayerStart>(&B)->PlayerStartTag);
 	});
+	const auto* PS = Player ? Player->GetPlayerState<AExtractionPlayerState>() : nullptr;
 	for (AActor* Start : Starts)
 	{
+		const FString Tag = CastChecked<APlayerStart>(Start)->PlayerStartTag.ToString();
+		const int32 Index = FCString::Atoi(*Tag.Right(2));
+		const uint8 Squad = (Index == 0 || Index == 2 || Index == 3) ? 1 : 2;
+		if (PS && PS->ExtractionSquad && PS->ExtractionSquad != Squad) continue;
 		if (Start->ActorHasTag(TEXT("ExtractionSpawn")) && !ClaimedStarts.Contains(Start))
 		{
 			ClaimedStarts.Add(Start);
@@ -129,6 +138,7 @@ void AExtractionGameMode::FreezePlayer(AController* Player, bool bFreeze)
 			Character->GetCombat()->FireButtonPressed(false);
 			Character->GetExtractionCombat()->CancelReload();
 			Character->GetExtractionCombat()->CancelSwap();
+			Character->GetExtractionAbilities()->Damaged();
 			Character->GetExtractionInteraction()->Close();
 			Character->GetExtractionInteraction()->CancelMedical();
 		}
@@ -160,7 +170,7 @@ bool AExtractionGameMode::SettlePlayer(AController* Player, EExtractionOutcome O
 	if (!Persistence || !Persistence->IsAvailable()) return false;
 	auto* PS = Player ? Player->GetPlayerState<AExtractionPlayerState>() : nullptr;
 	if (!PS) return false;
-	if (PS->Life != EExtractionLife::Alive) return true;
+	if (PS->Life != EExtractionLife::Alive && PS->Life != EExtractionLife::Downed) return true;
 	if (!PS->Inventory || !PS->ExtractionRaid.IsValid() || !PS->ExtractionProfile.IsValid()) return false;
 	PS->Inventory->CaptureWeapons();
 	if (!Persistence->Settle(PS->ExtractionRaid, PS->ExtractionProfile, Outcome, PS->Inventory->Contents)) return false;
@@ -212,7 +222,20 @@ void AExtractionGameMode::UpdateExtraction(double Now)
 
 float AExtractionGameMode::CalculateDamage(AController* Attacker, AController* Victim, float Damage)
 {
-	if (!IsCombatActive(Victim) || (Attacker && !IsCombatActive(Attacker)) || !FMath::IsFinite(Damage)) return 0;
+	const auto* GS = GetGameState<AExtractionGameState>();
+	if (!GS || GS->Phase != EExtractionPhase::Active || !Store() || !Store()->IsAvailable() || !FMath::IsFinite(Damage)) return 0;
+	const auto Valid = [](AController* Controller, bool Attacking)
+	{
+		const auto* C = Controller ? Cast<ABrokenEdgeCharacter>(Controller->GetPawn()) : nullptr;
+		if (!C || C->IsDefeated() || C->bDisableGameplay) return false;
+		if (C->bExtractionGuard) return true;
+		const auto* PS = Controller->GetPlayerState<AExtractionPlayerState>();
+		return PS && (PS->Life == EExtractionLife::Alive || (!Attacking && PS->Life == EExtractionLife::Downed));
+	};
+	if (!Valid(Victim, false) || (Attacker && !Valid(Attacker, true))) return 0;
+	const auto* A = Attacker ? Cast<ABrokenEdgeCharacter>(Attacker->GetPawn()) : nullptr;
+	const auto* B = Victim ? Cast<ABrokenEdgeCharacter>(Victim->GetPawn()) : nullptr;
+	if (A && B && (UExtractionAbilities::Friendly(A, B) || (A->bExtractionGuard && B->bExtractionGuard))) return 0;
 	return FMath::Max(0.f, Damage);
 }
 
@@ -222,7 +245,7 @@ void AExtractionGameMode::RefreshAliveCount()
 	if (!GS) return;
 	int32 Count = 0;
 	for (APlayerState* State : GS->PlayerArray)
-		if (const auto* PS = Cast<AExtractionPlayerState>(State); PS && PS->Life == EExtractionLife::Alive && !PS->
+		if (const auto* PS = Cast<AExtractionPlayerState>(State); PS && (PS->Life == EExtractionLife::Alive || PS->Life == EExtractionLife::Downed) && !PS->
 			IsInactive())
 			++Count;
 	GS->AlivePlayers = Count;
@@ -283,6 +306,7 @@ void AExtractionGameMode::Tick(float Delta)
 			GS->Phase = EExtractionPhase::Active;
 			GS->Deadline = Now + RoundSeconds;
 			StartMatch();
+			SpawnGuards();
 			for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It) FreezePlayer(It->Get(), false);
 			UE_LOG(LogTemp, Display, TEXT("EXTRACTION_ACTIVE Players=%d Duration=%.1f"), Ready, RoundSeconds);
 		}
@@ -290,6 +314,8 @@ void AExtractionGameMode::Tick(float Delta)
 	}
 	else if (GS->Phase == EExtractionPhase::Active)
 	{
+		UpdateDowned(Now);
+		RefreshAliveCount();
 		if (GS->AlivePlayers == 0) FinishRound(TEXT("无人存活"));
 		else if (Now >= GS->Deadline) FinishRound(TEXT("本轮时间结束"));
 		else UpdateExtraction(Now);
@@ -320,11 +346,12 @@ void AExtractionGameMode::FinishRound(const FString& Reason)
 		for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 		{
 			auto* PS = It->Get()->GetPlayerState<AExtractionPlayerState>();
-			if (!PS || PS->Life != EExtractionLife::Alive) continue;
+			if (!PS || (PS->Life != EExtractionLife::Alive && PS->Life != EExtractionLife::Downed)) continue;
 			if (!SettlePlayer(It->Get(), EExtractionOutcome::TimedOut)) return;
 			PS->Life = EExtractionLife::TimedOut;
 			PS->Inventory->ClearSettled();
 		}
+	RemoveGuards();
 	GS->Phase = EExtractionPhase::Ended;
 	GS->EndReason = Reason;
 	ReturnAt = GetWorld()->GetTimeSeconds() + 10;
@@ -352,21 +379,81 @@ void AExtractionGameMode::SessionEnded(bool bSuccess)
 void AExtractionGameMode::PlayerDefeated(ABrokenEdgeCharacter* Character, ABrokenEdgePlayerController* Victim,
                                          ABrokenEdgePlayerController* Attacker)
 {
-	auto* PS = Victim ? Victim->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	if (!PS || PS->Life != EExtractionLife::Alive) return;
-	if (!SettlePlayer(Victim, EExtractionOutcome::Dead)) return;
-	PS->Life = EExtractionLife::Dead;
+	DefeatCombatant(Character, Attacker);
+}
+
+bool AExtractionGameMode::HasRescuer(const AExtractionPlayerState* Player) const
+{
+	const auto* GS = GetGameState<AExtractionGameState>();
+	if (!GS || !Player || !Player->ExtractionSquad) return false;
+	for (const APlayerState* State : GS->PlayerArray)
+		if (const auto* PS = Cast<AExtractionPlayerState>(State); PS && PS != Player && PS->ExtractionSquad == Player->ExtractionSquad
+			&& PS->Life == EExtractionLife::Alive && !PS->IsInactive() && PS->GetPawn()) return true;
+	return false;
+}
+
+bool AExtractionGameMode::DamageDowned(ABrokenEdgeCharacter* C, float Damage)
+{
+	auto* PS = C ? C->GetPlayerState<AExtractionPlayerState>() : nullptr;
+	if (!PS || PS->Life != EExtractionLife::Downed) return false;
+	PS->DownHealth = FMath::Max(0.f, PS->DownHealth - Damage);
 	PS->ForceNetUpdate();
-	if (Character) Character->GetExtractionCombat()->CancelReload();
-	Super::PlayerDefeated(Character, Victim, Attacker);
+	if (PS->DownHealth <= 0) DefeatCombatant(C, nullptr, true);
+	return true;
+}
+
+void AExtractionGameMode::DefeatCombatant(ABrokenEdgeCharacter* C, AController* Attacker, bool bFinal)
+{
+	if (!C || C->IsDefeated()) return;
+	C->GetExtractionAbilities()->Damaged();
+	C->GetExtractionCombat()->CancelReload();
+	C->GetExtractionCombat()->CancelSwap();
+	C->GetExtractionInteraction()->Close();
+	C->GetExtractionInteraction()->CancelMedical();
+	C->GetCombat()->FireButtonPressed(false);
+	C->GetExtractionInteraction()->StopCombatInput();
+	if (C->bExtractionGuard)
+	{
+		C->Defeated(false);
+		C->SetLifeSpan(10);
+		return;
+	}
+	auto* PC = Cast<ABrokenEdgePlayerController>(C->GetController());
+	auto* PS = C->GetPlayerState<AExtractionPlayerState>();
+	if (!PS || (PS->Life != EExtractionLife::Alive && PS->Life != EExtractionLife::Downed)) return;
+	if (!bFinal && PS->Life == EExtractionLife::Alive && HasRescuer(PS))
+	{
+		PS->Life = EExtractionLife::Downed;
+		PS->DownHealth = GetDefault<UExtractionRules>()->DownHealth;
+		PS->BleedAt = GetWorld()->GetTimeSeconds() + GetDefault<UExtractionRules>()->BleedSeconds;
+		PS->ExtractAt = 0;
+		PS->ForceNetUpdate();
+		C->Crouch();
+		C->ForceNetUpdate();
+		return;
+	}
+	if (!SettlePlayer(PC, EExtractionOutcome::Dead)) return;
+	PS->Life = EExtractionLife::Dead;
+	PS->BleedAt = 0;
+	PS->DownHealth = 0;
+	PS->ForceNetUpdate();
+	Super::PlayerDefeated(C, PC, Cast<ABrokenEdgePlayerController>(Attacker));
 	RefreshAliveCount();
+}
+
+void AExtractionGameMode::UpdateDowned(double Now)
+{
+	for (APlayerState* State : GetGameState<AExtractionGameState>()->PlayerArray)
+		if (auto* PS = Cast<AExtractionPlayerState>(State); PS && PS->Life == EExtractionLife::Downed
+			&& (Now >= PS->BleedAt || !HasRescuer(PS)))
+			DefeatCombatant(Cast<ABrokenEdgeCharacter>(PS->GetPawn()), nullptr, true);
 }
 
 void AExtractionGameMode::RequestRespawn(ACharacter* Character, AController* Controller)
 {
 	auto* PC = Cast<AExtractionPlayerController>(Controller);
 	const auto* PS = PC ? PC->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	if (!PS || PS->Life == EExtractionLife::Alive) return;
+	if (!PS || PS->Life == EExtractionLife::Alive || PS->Life == EExtractionLife::Downed) return;
 	PC->BeginExtractionSpectating();
 	if (Character) Character->Destroy();
 }
@@ -375,7 +462,7 @@ void AExtractionGameMode::LeavePlayer(AController* Player)
 {
 	if (bEndingPlay || !GetWorld() || GetWorld()->bIsTearingDown) return;
 	auto* PS = Player ? Player->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	if (!PS || PS->Life != EExtractionLife::Alive) return;
+	if (!PS || (PS->Life != EExtractionLife::Alive && PS->Life != EExtractionLife::Downed)) return;
 	const auto* GS = GetGameState<AExtractionGameState>();
 	// Direct-map PIE has no lobby ticket and must never create a settlement.
 	if (!PS->ExtractionRaid.IsValid())
@@ -406,7 +493,7 @@ void AExtractionGameMode::Logout(AController* Player)
 	{
 		const auto* GS = GetGameState<AExtractionGameState>();
 		if (auto* PS = Player ? Player->GetPlayerState<AExtractionPlayerState>() : nullptr;
-			PS && PS->Life == EExtractionLife::Alive && GS && GS->Phase == EExtractionPhase::Active)
+			PS && (PS->Life == EExtractionLife::Alive || PS->Life == EExtractionLife::Downed) && GS && GS->Phase == EExtractionPhase::Active)
 			SettlePlayer(Player, EExtractionOutcome::Disconnected);
 		LeavePlayer(Player);
 	}
@@ -416,6 +503,7 @@ void AExtractionGameMode::Logout(AController* Player)
 void AExtractionGameMode::EndPlay(const EEndPlayReason::Type Reason)
 {
 	bEndingPlay = true;
+	RemoveGuards();
 	if (auto* Instance = GetGameInstance())
 		if (auto* Sessions = Instance->GetSubsystem<UMultiplayerSessionsSubsystem>())
 			Sessions->MultiplayerOnEndSessionComplete.RemoveDynamic(this, &ThisClass::SessionEnded);

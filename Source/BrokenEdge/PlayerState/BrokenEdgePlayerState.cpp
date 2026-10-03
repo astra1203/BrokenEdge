@@ -14,6 +14,7 @@ void ABrokenEdgePlayerState::CopyProperties(APlayerState* Target)
 	{
 		Other->ExtractionProfile = ExtractionProfile;
 		Other->ExtractionRaid = ExtractionRaid;
+		Other->ExtractionSquad = ExtractionSquad;
 	}
 }
 
@@ -22,6 +23,7 @@ void ABrokenEdgePlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ABrokenEdgePlayerState, Team);
+	DOREPLIFETIME(ABrokenEdgePlayerState, ExtractionSquad);
 	DOREPLIFETIME(ABrokenEdgePlayerState, Defeats);
 	DOREPLIFETIME(ABrokenEdgePlayerState, bLobbyReady);
 }

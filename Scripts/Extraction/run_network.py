@@ -24,13 +24,16 @@ parser.add_argument('--packaged', action='store_true')
 parser.add_argument('--lag', action='store_true')
 parser.add_argument('--unacked', action='store_true', help='Recovery test: kill server after durable extraction commit before client acknowledgement')
 parser.add_argument('--debug-hold', action='store_true', help='Wait for Continue.txt before combat and extend assertion timeouts')
-parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity'], default='combat')
+parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'lifecycle'], default='combat')
+parser.add_argument('--players', type=int, choices=[2, 3, 6])
 args = parser.parse_args()
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
 OUT = ROOT / 'Saved/Extraction' / args.tag
 OUT.mkdir(parents=True, exist_ok=False)
 ROLES = ['A', 'B', 'C', 'D'] if args.scenario == 'four' else ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
+if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle']:
+    ROLES = list('ABCDEF')[:args.players or (6 if args.scenario in ['pvpve', 'lifecycle'] else 3)]
 processes, commands, checks = {}, {}, []
 last_states = {}
 finishing = set()
@@ -40,7 +43,7 @@ report['base_commit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cw
 report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(p.read_bytes()).hexdigest()
                          for p in [Path(__file__).resolve(), ROOT / 'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
                                    ROOT / 'Scripts/Extraction/inventory_scenarios.py',
-                                   ROOT / 'Scripts/Extraction/storage_scenarios.py',
+                                   ROOT / 'Scripts/Extraction/storage_scenarios.py', ROOT / 'Scripts/Extraction/phase5_scenarios.py',
                                    ROOT / 'BrokenEdge.uproject', ROOT / 'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap']}
 
 
@@ -112,16 +115,21 @@ def launch(role):
                    '-server' if role == 'Server' else '-game']
     entry = '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction?ExpectedPlayers=3' if role == 'Server' and args.scenario == 'load_timeout' else '/Game/Maps/Lobby'
     command += [entry, '-nosound', '-unattended', '-nosplash', '-NoLoadingScreen',
+                '-ExtractionGuards=' + ('4' if args.scenario == 'pvpve' else '0'),
                 '-MatchType=Extraction', '-NumPublicConnections=' + str(len(ROLES)),
                 '-MinPlayersToStart=' + str(len(ROLES)), '-port=27777',
                 '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '600'),
                 '-ExtractionTestRole=' + role, '-ExtractionTestDir=' + str(OUT),
                 '-ExtractionStore=' + str(OUT / 'Store'), '-ExtractionProfile=' + args.tag + '_' + ('A' if args.scenario == 'identity' and role == 'B' else role),
-                '-ExecCmds=BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
+                '-ExecCmds=' + ('t.MaxFPS 30,sg.ShadowQuality 0,sg.EffectsQuality 1,' if len(ROLES) == 6 else '') + 'BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
                 '-TestExit=Automation Test Queue Empty', '-abslog=' + str(OUT / (role + '.log'))]
     command += ['-nullrhi'] if role == 'Server' else ['-RenderOffscreen', '-windowed', '-ResX=1280', '-ResY=720']
     if role == 'Server' and args.unacked:
         command += ['-ExtractionHoldSettlement=' + str(OUT / 'SettlementCommitted.txt')]
+    if role == 'Server' and args.scenario == 'lifecycle':
+        # Observe transport disconnect while the 30-second downed deadline is
+        # still active. This applies only to this isolated acceptance server.
+        command += ['-ini:Engine:[/Script/OnlineSubsystemUtils.IpNetDriver]:ConnectionTimeout=10.0']
     if args.scenario == 'swap':
         command += ['-LogCmds=LogTemp Verbose']
     env = os.environ.copy()
@@ -149,7 +157,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['settlement', 'recovery', 'four']
+    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'lifecycle']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
@@ -160,9 +168,14 @@ def begin_round():
             revision = account['revision']
             send(role, 'storage', item=item['id'], quantity=item['quantity'], slot=0 if definition == 'AK' else -1)
             wait(lambda r=role, v=revision: state(r)['account']['revision'] > v, 'loadout transfer committed')
+    if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle']:
+        from phase5_scenarios import lobby
+        lobby(globals())
     for role in ROLES:
         send(role, 'ready')
     check('All players loaded in Extraction', lambda: all(state(r).get('phase') == 1 for r in processes), 120)
+    if args.scenario == 'pvpve':
+        send('Server', 'fixture', players=[{'name': 'EX_'+r, 'position': [5700+150*i, 5000, 180], 'health': 100, 'shield': 0} for i,r in enumerate(ROLES)])
     check('Dedicated authority and Stinger pawns', lambda: state('Server').get('net_mode') == 1
           and state('Server').get('local_players') == 0 and state('Server').get('alive') == len(ROLES)
           and all('Stinger' in player('Server', r).get('pawn_class', '') for r in ROLES))
@@ -254,6 +267,9 @@ try:
         check('Duplicate cannot mutate authenticated inventory', lambda: state('A')['account']['revision'] == account['revision'] and state('A')['account']['stash'] == account['stash'])
         check('Duplicate login cannot regrant starter kits', lambda: len(state('Server')['stored_results']) == 1 and sum(i['quantity'] for i in state('A')['account']['stash']['items'] if i['definition'] == 'AK') == 3)
         send('B', 'screenshot', name='duplicate-profile-denied')
+    elif args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle']:
+        from phase5_scenarios import run
+        run(globals())
     elif args.scenario in ['settlement', 'recovery', 'four']:
         from storage_scenarios import run
         run(globals())
@@ -383,6 +399,14 @@ try:
         send('A', 'pulse', action='Reload')
         check('Reload active immediately before lethal shot', lambda: player('Server', 'A')['combat_state'] == 1)
         shot('B', 'A', 20)
+        if args.scenario == 'spectator':
+            check('Lethal hit downs player while their squadmate lives', lambda: player('Server', 'A').get('life') == 5)
+            for _ in range(8):
+                send('B', 'pulse', action='Fire')
+                time.sleep(.4)
+                if player('Server', 'A').get('life') == 1:
+                    break
+            check('Finishing shots finalize downed player', lambda: player('Server', 'A').get('life') == 1)
         check('Death enters spectator without pawn', lambda: state('A').get('spectating') and not state('A').get('has_pawn'), 15)
         send('A', 'restart')
         time.sleep(5)
@@ -391,18 +415,21 @@ try:
         send('B', 'aim', target='', head=False)
         time.sleep(.4)
         send('A', 'screenshot', name='spectator')
-        check('Living player keeps round active', lambda: state('Server').get('phase') == 1 and state('A').get('spectated') in ['EX_B', 'EX_C'])
+        check('Living player keeps round active', lambda: state('Server').get('phase') == 1 and player('Server', 'B').get('life') == 0)
         if args.scenario == 'spectator':
+            check('Dead player spectates only their living squadmate', lambda: state('A').get('spectated') == 'EX_C')
             previous = state('A')['spectated']
             send('A', 'cycle', direction=1)
-            check('Next living spectator target', lambda: state('A')['spectated'] != previous)
+            time.sleep(.5)
+            check('Next target wraps within the one living squadmate', lambda: state('A')['spectated'] == previous)
             send('A', 'cycle', direction=-1)
-            check('Previous living spectator target', lambda: state('A')['spectated'] == previous)
+            time.sleep(.5)
+            check('Previous target cannot select the opposing squad', lambda: state('A')['spectated'] == previous)
             send('Server', 'fixture', players=[{'name': 'EX_C', 'position': [1400, 4200, 500], 'health': 80, 'shield': 0}])
             aim('C', 'B', True)
             shot('C', 'B', 40)
             shot('C', 'B', 40)
-            check('Dead target automatically switches to survivor', lambda: state('A')['spectated'] == 'EX_C')
+            check('Enemy death preserves the friendly spectator target', lambda: state('A')['spectated'] == 'EX_C')
             send('C', 'leave')
             check('Leaving survivor returns to room browser', lambda: state('C').get('map') == '/Game/Maps/Lobby' and not state('C').get('session'))
             check('No survivors ends round and fixes spectator camera', lambda: state('Server').get('phase') == 2 and state('A').get('spectated') == '')
@@ -412,6 +439,7 @@ try:
             begin_round()
             check('Former spectators can play the next round', lambda: all(player('Server', r).get('life') == 0 for r in ROLES))
         else:
+            check('Dead solo squad has no enemy spectator target', lambda: state('A').get('spectated') == '')
             send('A', 'leave')
             check('Leave cleans local session', lambda: state('A').get('map') == '/Game/Maps/Lobby' and not state('A').get('session'))
             check('Other player remains active', lambda: state('B').get('phase') == 1 and state('Server').get('alive') == 1)

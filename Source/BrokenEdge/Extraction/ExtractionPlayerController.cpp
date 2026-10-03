@@ -1,5 +1,7 @@
 #include "ExtractionPlayerController.h"
 #include "ExtractionInteractionComponent.h"
+#include "ExtractionAbilities.h"
+#include "ExtractionSmoke.h"
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionLootActor.h"
 #include "ExtractionInventoryWidget.h"
@@ -32,6 +34,9 @@ void AExtractionPlayerController::SetupInputComponent()
 	InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &ThisClass::ToggleExtractionMenu);
 	InputComponent->BindKey(EKeys::Tab, IE_Pressed, this, &ThisClass::ToggleInventory);
 	InputComponent->BindKey(EKeys::H, IE_Pressed, this, &ThisClass::UseMedical);
+	InputComponent->BindKey(EKeys::Z, IE_Pressed, this, &ThisClass::HealAbility);
+	InputComponent->BindKey(EKeys::X, IE_Pressed, this, &ThisClass::SmokeAbility);
+	InputComponent->BindKey(EKeys::E, IE_Released, this, &ThisClass::ReleaseInteract);
 }
 
 void AExtractionPlayerController::ToggleExtractionMenu()
@@ -84,8 +89,28 @@ void AExtractionPlayerController::ToggleInventory()
 	if (auto* I = Interaction(); I && I->CanAct() && !bMenuOpen) RequestOpenInventory(nullptr, !I->InventoryOpen);
 }
 
+void AExtractionPlayerController::ReleaseInteract()
+{
+	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn())) C->GetExtractionAbilities()->ReleaseRescue();
+}
+void AExtractionPlayerController::HealAbility()
+{
+	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
+		C->GetExtractionAbilities()->Request(EExtractionAction::Heal, C->GetExtractionAbilities()->HealFocus());
+}
+void AExtractionPlayerController::SmokeAbility()
+{
+	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen) C->GetExtractionAbilities()->Request(EExtractionAction::Smoke);
+}
+
 void AExtractionPlayerController::Interact()
 {
+	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
+		if (auto* Other = C->GetExtractionAbilities()->RescueFocus())
+		{
+			C->GetExtractionAbilities()->Request(EExtractionAction::Revive, Other);
+			return;
+		}
 	auto* I = Interaction();
 	auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
 	if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen) return;
@@ -188,10 +213,11 @@ void AExtractionPlayerController::SelectSpectatorTarget(int32 Direction)
 {
 	const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
 	if (!GS) return;
+	const auto* OwnPS = GetPlayerState<AExtractionPlayerState>();
 	TArray<AExtractionPlayerState*> Targets;
 	for (APlayerState* State : GS->PlayerArray)
 		if (auto* PS = Cast<AExtractionPlayerState>(State); PS && PS->Life == EExtractionLife::Alive && PS->GetPawn() &&
-			!PS->IsInactive())
+			!PS->IsInactive() && OwnPS && OwnPS->ExtractionSquad > 0 && PS->ExtractionSquad == OwnPS->ExtractionSquad)
 			Targets.Add(PS);
 	Targets.Sort([](const AExtractionPlayerState& A, const AExtractionPlayerState& B)
 	{
@@ -333,6 +359,12 @@ bool UExtractionWidget::Initialize()
 	if (!Super::Initialize()) return false;
 	auto* Canvas = WidgetTree->ConstructWidget<UCanvasPanel>();
 	WidgetTree->RootWidget = Canvas;
+	SmokeHaze = WidgetTree->ConstructWidget<UBorder>();
+	SmokeHaze->SetBrushColor(FLinearColor(.34f, .34f, .34f, 1.f));
+	SmokeHaze->SetVisibility(ESlateVisibility::Collapsed);
+	auto* HazeSlot = Canvas->AddChildToCanvas(SmokeHaze);
+	HazeSlot->SetAnchors(FAnchors(0, 0, 1, 1));
+	HazeSlot->SetOffsets(FMargin(0));
 	auto* Panel = WidgetTree->ConstructWidget<UBorder>();
 	Panel->SetBrushColor(FLinearColor(0.015f, 0.025f, 0.04f, .85f));
 	Panel->SetPadding(FMargin(14));
@@ -370,6 +402,10 @@ void UExtractionWidget::Refresh()
 	const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
 	const auto* PS = PC ? PC->GetPlayerState<AExtractionPlayerState>() : nullptr;
 	if (!PC || !GS || !PS) return;
+	FVector Eye;
+	FRotator View;
+	PC->GetPlayerViewPoint(Eye, View);
+	SmokeHaze->SetVisibility(AExtractionSmoke::Blocks(GetWorld(), Eye, Eye) ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
 	const int32 Seconds = FMath::Max(0, FMath::CeilToInt(GS->Deadline - GS->GetServerWorldTimeSeconds()));
 	FString Text;
 	if (GS->Phase == EExtractionPhase::Waiting) Text = TEXT("等待其他玩家加载…");
@@ -378,8 +414,8 @@ void UExtractionWidget::Refresh()
 			TEXT("%s\n%d 秒后返回准备大厅"), *GS->EndReason, Seconds);
 	else
 		Text = FString::Printf(
-			TEXT("航天基地 · 战斗测试\n剩余 %02d:%02d · 存活 %d\n%s"), Seconds / 60, Seconds % 60, GS->AlivePlayers,
-			PS->Life == EExtractionLife::Alive ? TEXT("Esc 打开对局菜单") : TEXT("本次行动已结束"));
+			TEXT("航天基地 · 小队行动\n剩余 %02d:%02d · 存活 %d\n%s"), Seconds / 60, Seconds % 60, GS->AlivePlayers,
+			PS->Life == EExtractionLife::Alive ? TEXT("Esc 打开对局菜单") : PS->Life == EExtractionLife::Downed ? TEXT("倒地待救援 · Esc 打开菜单") : TEXT("本次行动已结束"));
 	if (!GS->StorageError.IsEmpty()) Text = GS->StorageError;
 	if (PS->Life == EExtractionLife::Alive && GS->Phase == EExtractionPhase::Active && PC->GetPawn())
 	{
@@ -411,6 +447,30 @@ void UExtractionWidget::Refresh()
 	}
 	if (PC->bExtractionSpectating)
 		Text += PC->SpectatedPlayer ? TEXT("\n正在观战：") + PC->SpectatedPlayer->GetPlayerName() : TEXT("\n暂无存活玩家可供观战");
+	const double Now = GS->GetServerWorldTimeSeconds();
+	Text += FString::Printf(TEXT("\n小队 %d · 队友免伤"), PS->ExtractionSquad);
+	for (APlayerState* State : GS->PlayerArray)
+		if (const auto* Mate = Cast<AExtractionPlayerState>(State); Mate && Mate != PS && Mate->ExtractionSquad == PS->ExtractionSquad)
+		{
+			const TCHAR* Label = Mate->Life == EExtractionLife::Alive ? TEXT("存活") : Mate->Life == EExtractionLife::Downed ? TEXT("倒地")
+				: Mate->Life == EExtractionLife::Extracted ? TEXT("已撤离") : TEXT("已离场");
+			Text += FString::Printf(TEXT("\n%s · %s"), *Mate->GetPlayerName(), Label);
+			if (auto* C = Cast<ABrokenEdgeCharacter>(Mate->GetPawn()); C && Mate->Life == EExtractionLife::Alive) Text += FString::Printf(TEXT(" · %.0f HP"), C->GetHealth());
+		}
+	if (PS->Life == EExtractionLife::Downed)
+		Text += FString::Printf(TEXT("\n你已倒地 · %.0f 生命 · %.1f 秒后阵亡\n缓慢移动至掩体，等待队友救援"), PS->DownHealth, FMath::Max(0.0, PS->BleedAt - Now));
+	if (auto* C = Cast<ABrokenEdgeCharacter>(PC->GetPawn()))
+	{
+		const auto* A = C->GetExtractionAbilities();
+		if (PS->Life == EExtractionLife::Alive)
+		{
+			Text += FString::Printf(TEXT("\nZ 治疗 %.0fs · X 烟雾 %.0fs"), FMath::Max(0.0, A->HealReadyAt - Now), FMath::Max(0.0, A->SmokeReadyAt - Now));
+			if (A->RescueFocus()) Text += TEXT("\n按住 E 救援队友 · 5 秒");
+		}
+		if (A->Action != EExtractionAction::None)
+			Text += FString::Printf(TEXT("\n%s · %.1f 秒"), A->Action == EExtractionAction::Revive ? TEXT("正在救援") : A->Action == EExtractionAction::Heal ? TEXT("正在治疗") : TEXT("投放烟雾"), FMath::Max(0.0, A->ActionEnd - Now));
+		if (A->Rescuer) Text += FString::Printf(TEXT("\n队友正在救援 · %.1f 秒"), FMath::Max(0.0, A->Rescuer->GetExtractionAbilities()->ActionEnd - Now));
+	}
 	Status->SetText(FText::FromString(Text));
 	FString VitalText;
 	if (auto* ControlledCharacter = Cast<ABrokenEdgeCharacter>(PC->GetPawn()))

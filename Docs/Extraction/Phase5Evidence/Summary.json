@@ -1,0 +1,267 @@
+{
+  "created_utc": "2026-10-03T21:09:36.875765+00:00",
+  "base_commit": "4f30da14041fdbf1d0c929c08e3ad5d14b1149da",
+  "engine": "C:/UnrealProjects/UnrealEngine-5.8.3-release",
+  "runs": [
+    {
+      "name": "compilation-editor",
+      "folder": "Saved/Extraction/Phase5Editor12",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "package-server",
+      "folder": "Saved/Extraction/Phase5Server01",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "package-client",
+      "folder": "Saved/Extraction/Phase5Client01",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "navigation-assets",
+      "folder": "Saved/Extraction/Phase5Assets03",
+      "report": "Run.json"
+    },
+    {
+      "name": "inventory-rules",
+      "folder": "Saved/Extraction/Phase5Inventory01",
+      "report": "Run.json"
+    },
+    {
+      "name": "persistence-rules",
+      "folder": "Saved/Extraction/Phase5Persistence01",
+      "report": "Run.json"
+    },
+    {
+      "name": "crash-boundaries",
+      "folder": "Saved/Extraction/Phase5Crash01",
+      "report": "Report.json"
+    },
+    {
+      "name": "pie-lobby",
+      "folder": "Saved/Extraction/Phase5PIELobby01",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-teardown",
+      "folder": "Saved/Extraction/Phase5PIETeardown01",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-legacy/teams",
+      "folder": "Saved/Extraction/Phase5PIETeams01",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-legacy/free-for-all",
+      "folder": "Saved/Extraction/Phase5PIEFFA01",
+      "report": "Run.json"
+    },
+    {
+      "name": "six-squad",
+      "folder": "Saved/Extraction/Phase5PackagedSquad02",
+      "report": "Report.json"
+    },
+    {
+      "name": "six-squad-lag",
+      "folder": "Saved/Extraction/Phase5PackagedSquadLag01",
+      "report": "Report.json"
+    },
+    {
+      "name": "six-ai",
+      "folder": "Saved/Extraction/Phase5PackagedAI01",
+      "report": "Report.json"
+    },
+    {
+      "name": "six-ai-lag",
+      "folder": "Saved/Extraction/Phase5PackagedAILag01",
+      "report": "Report.json"
+    },
+    {
+      "name": "six-lifecycle",
+      "folder": "Saved/Extraction/Phase5PackagedLifecycle01",
+      "report": "Report.json"
+    },
+    {
+      "name": "legacy-lan",
+      "folder": "Saved/Extraction/Phase5Legacy01",
+      "report": "Report.json"
+    },
+    {
+      "name": "inventory-network",
+      "folder": "Saved/Extraction/Phase5PackagedInventory01",
+      "report": "Report.json"
+    },
+    {
+      "name": "combat-network",
+      "folder": "Saved/Extraction/Phase5PackagedCombat02",
+      "report": "Report.json"
+    },
+    {
+      "name": "spectator-network",
+      "folder": "Saved/Extraction/Phase5PackagedSpectator01",
+      "report": "Report.json"
+    },
+    {
+      "name": "four-outcomes",
+      "folder": "Saved/Extraction/Phase5PackagedFour01",
+      "report": "Report.json"
+    },
+    {
+      "name": "settlement-network",
+      "folder": "Saved/Extraction/Phase5PackagedSettlement01",
+      "report": "Report.json"
+    },
+    {
+      "name": "recovery-network",
+      "folder": "Saved/Extraction/Phase5PackagedRecovery01",
+      "report": "Report.json"
+    },
+    {
+      "name": "ai-recovery/first",
+      "folder": "Saved/Extraction/Phase5AIRecovery01",
+      "report": "Run.json"
+    },
+    {
+      "name": "ai-recovery/repeat",
+      "folder": "Saved/Extraction/Phase5AIRecovery02",
+      "report": "Run.json"
+    }
+  ],
+  "implementation_sha256": {
+    ".gitattributes": "fa2fdda4a1fc94817ce8fc65c999f8be10cf0be137596749eb661a6577c21276",
+    "Content/Extraction/Abilities/M_ExtractionSmoke.uasset": "6ed932ddbc7c1c6f643d00be1d83630fa41e4401699d86b63438e9b9c444f9e5",
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "5468617c414fe5446d26171b63abd65b991fbdb15a187e671bec61b17f97fea7",
+    "Plugins/MultiplayerSessions/Source/MultiplayerSessions/Private/MultiplayerSessionsSubsystem.cpp": "ec32c8eddd251bf94896ab68b2730deddc215932b5b68b02dbd89705bd2587f8",
+    "Plugins/MultiplayerSessions/Source/MultiplayerSessions/public/MultiplayerSessionsSubsystem.h": "a1973bdac7de0415930ffc2b11a378d9c69032453d68564b5a1d8295550d0815",
+    "Scripts/Extraction/archive_evidence.py": "440c0540074c91a1e51aa1bd7f767b404cd1c6500513f38d5f734c1904650445",
+    "Scripts/Extraction/phase5_scenarios.py": "0720b49ab6ef01fdbee7207f8a0a03cf336b2ffb13c8fd86b71254a9a0f6ad78",
+    "Scripts/Extraction/prepare_phase5.py": "56d777b981913c25a7a6235416442d7f861564a7782d395cd8bab2c2008e96d3",
+    "Scripts/Extraction/run_editor_task.py": "a2e10c4eacd2aa56821e4e61758ea8099e86c4cb81cb2cdb1eae33044094d7e8",
+    "Scripts/Extraction/run_network.py": "a1649ae45cdb663cad01d4b4a11e0eec3d6f612788f4b2bf879c4b1bc29fe2ee",
+    "Scripts/Extraction/run_pie_lobby.py": "464b7bfa97523a485614856a58dfd6d50c9684404f413678a283a03e27742d39",
+    "Scripts/Extraction/storage_scenarios.py": "ceb2cd257a8ad388a1a48c66738ce3eb6faf13a185d8534d61afa92feb190e5a",
+    "Source/BrokenEdge/BrokenEdge.Build.cs": "9caf0a557dbeeebc38a498adc6dccc08eba746fff99e252fdf300d3851a3e1b7",
+    "Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp": "ed786b02b2839019071fda833c54ae5b3b6809874de3fa865f3b35c9296a5c85",
+    "Source/BrokenEdge/Character/BrokenEdgeCharacter.h": "39e8aac93f11f885d96949842abf51bf3cbb43644052fcf12c2eb6ef10ba7a23",
+    "Source/BrokenEdge/Extraction/ExtractionAbilities.cpp": "e671c6e394ac6ae5ad46e88e9d51dc25780b769ee5e74fb02970effdbac3d0a5",
+    "Source/BrokenEdge/Extraction/ExtractionAbilities.h": "8af8c82818e8f34e2ae7c00777ee0ebbb5e42cb0eebcc86a379ec73c79276d10",
+    "Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp": "f26d19999c1bf4ee8d49ac181b0d293531ac9454657ca6ce99286180c563cff5",
+    "Source/BrokenEdge/Extraction/ExtractionCombatComponent.h": "ba6bc01ce5a15156b3a49dac25099a75ffa0496bbd2f50abe55c5a84b4072880",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp": "890104bc3dfdcfca09787daf494e66c31290f07de2621c7cbfcbc84810b03e36",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.h": "ffb598b977080433342d37288e23f1ca4ded5202fdeb84519df2534b29f1450e",
+    "Source/BrokenEdge/Extraction/ExtractionGuard.cpp": "48d8af908dd33203b14e1ca7af0c5743772eea5b3bf954c2e010c2508f5d0a5c",
+    "Source/BrokenEdge/Extraction/ExtractionGuard.h": "854c2ca0d86caf8b8c5b42eb4d81ff993e05b1bef0e07974502fc5dfbd66a7de",
+    "Source/BrokenEdge/Extraction/ExtractionInteractionComponent.cpp": "3cf08ab483692b25c2b93014733e544803d0311ec70e0d95def3d3345c913222",
+    "Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp": "c5472238b337d7520d92f57e717f9a6195cee7ecbd977f39cb9fbfdd91395992",
+    "Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h": "03df04c27dd617a40095e40229f67d5c61e013b60f42205df39c6d7e686ebb49",
+    "Source/BrokenEdge/Extraction/ExtractionNavigation.cpp": "c923be444e427f9ca6efb019ea4214ed43d83d91c9d68c69a9179ad55f5f197a",
+    "Source/BrokenEdge/Extraction/ExtractionNavigation.h": "0c6485d50a9c16adcd37663d813d02180da3d821c26f8b2f4ec09d312ce5d3c2",
+    "Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp": "d70d015b723d4e0b5753f9e2699e09c67ffc6f7cab21d26b86cde839a0412aad",
+    "Source/BrokenEdge/Extraction/ExtractionPlayerController.h": "8f91d045a11d0ebbc346fb7726e33f74d094a2e96e059e5638b35f8d7be0eab5",
+    "Source/BrokenEdge/Extraction/ExtractionSmoke.cpp": "53cab5669e6ff74887286471478a304693ef97c49b425f23eeaa8f54f47b7b66",
+    "Source/BrokenEdge/Extraction/ExtractionSmoke.h": "9263e36755f4f560f46213cac4a9983ba209bec09fdf545f28fe021a259327a2",
+    "Source/BrokenEdge/Extraction/ExtractionStashWidget.cpp": "888f132b310ca164bd9b04bd417cd8c8da777bc0a0894cdf3494d9cd8ffae200",
+    "Source/BrokenEdge/Extraction/ExtractionState.cpp": "5a3a5f79fddc3805c6dd27cf51eaea7f684f6dfd94deb3086d656c8537ddee77",
+    "Source/BrokenEdge/Extraction/ExtractionState.h": "8e67ce89c54c97c7c7267aa2de63ad4f63e2bfd3dd8be9cdc3d25762d119d5a0",
+    "Source/BrokenEdge/GameMode/LobbyGameMode.cpp": "8e91f59d53355fe487c367efd540ac36764666cdb5aa12cf2be6de8cb00f9994",
+    "Source/BrokenEdge/GameMode/LobbyGameMode.h": "e47548bc4f2de0af933fc68110ddc4c71f6508183fa03d76dfa3ff75792707dc",
+    "Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.cpp": "a20fdab79d0b84a4b703763f6c0adcfb7d45a1cdcc05594c7858ab5733b52cf1",
+    "Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.h": "0252e02370f45f4b092737b08144067492ef7ab6d964bc67c6d390be52761744",
+    "Source/BrokenEdge/PlayerState/BrokenEdgePlayerState.cpp": "8b3242ccfb7d64057def4400dec387ac40b1e038885dea5c662ba0fc34d7e1d0",
+    "Source/BrokenEdge/PlayerState/BrokenEdgePlayerState.h": "6686eab27cafc3f5d0897b57729810e608e61c023bb9cf57e4f293bf81bbe7d8",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "cf92e076f05a8a9c71b158cf4e306fc023fff37db3e322dba9cf5bae16293120",
+    "Source/BrokenEdge/Tests/ExtractionPersistenceTests.cpp": "b2d9ed96634edcf26c3f9c1b563d67ed602ecc2e885c9509c5e9878d72b8dd1f",
+    "Source/BrokenEdge/UI/LobbyWidget.cpp": "6e0245353d51e2f7567d6712931cacf4c652ff95d83943902ca225ca1bd98f4f",
+    "Source/BrokenEdge/UI/LobbyWidget.h": "6b27dbb4097ff4853226edb074f82cda44643418232a53af43d71e6eacaf0ade",
+    "Source/StingerTools/Private/ExtractionPIELobbyTests.cpp": "de8c4c9b6cc495321d8dca8d01c4230442021525d307e2bed6e119b1f0f0c002"
+  },
+  "packages": {
+    "Packaged/Client/Windows/BrokenEdge.exe": {
+      "size": 173568,
+      "sha256": "061bdd6d6c67ab6f19e80c1cc06a9aaa8ad959bb767871d76b5bed6790e52c34"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe": {
+      "size": 337549312,
+      "sha256": "45c6e030caa589f9d711027954a26474bf555a9c2970458e0087b31516bf3bb8"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.pak": {
+      "size": 11605833,
+      "sha256": "c7bd7e6eda77e4a903d720f73a17ce8128fcb0479152f0af7b1c1b0ba9c48d6f"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.ucas": {
+      "size": 701360896,
+      "sha256": "15e1bc854f9ccd185946a2ee456755a37b8698847af3a4d4d5be113a68d5441c"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.utoc": {
+      "size": 915199,
+      "sha256": "6bc32a0ac64efe200dd024212b86bf561658349d3479b7c43d3a81837cd0e32a"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3354000,
+      "sha256": "a4ede909c3937b1c83f995c7673f60002a7792f999062e5ddc8dae8ad2d41150"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "5c3241960006553c6204853c7be277281610c3390f26844c8baa656cc626899c"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdgeServer.exe": {
+      "size": 173568,
+      "sha256": "e9fa4aaa0667e5a6b5d24d86c95d7c126211a48deebb4a9b5b4dee4cac76c631"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe": {
+      "size": 317663232,
+      "sha256": "5cbf44b890578fb4cfad1a82de5f4c8585283c1e87b9032ade991efe38caf9e3"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.pak": {
+      "size": 10577695,
+      "sha256": "e428e14993f09bd6ba92ff5801121931f3aaa30328e593e36ef79d49493b2a2b"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.ucas": {
+      "size": 120707456,
+      "sha256": "ef12cd8061e3165a7bebfa513f9b88dbfb8f2c56d9c2e960d286a1653129a565"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.utoc": {
+      "size": 428660,
+      "sha256": "35cc33102f49de63476ed5efdc2faeb43bdd132c22375df160d008be85806f7a"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3354000,
+      "sha256": "a4ede909c3937b1c83f995c7673f60002a7792f999062e5ddc8dae8ad2d41150"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "5c3241960006553c6204853c7be277281610c3390f26844c8baa656cc626899c"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    }
+  },
+  "review": {
+    "topology": "One Windows host, Development dedicated server and six independent rendered clients; four guards in PVPVE runs. No Internet or capacity acceptance.",
+    "packet_simulation": "PktLag=50 and PktLoss=2 applied to server and all clients after travel in lag runs.",
+    "fixtures": "Development-only fixtures arrange position, health, ammunition and one temporary wall; combat, input, ability channels, inventory, exit and persistence use production code.",
+    "disconnect": "Lifecycle server overrides IpNetDriver ConnectionTimeout to 10 seconds so transport loss settles before the 30-second bleedout deadline. Defaults are unchanged.",
+    "presentation": "Prototype smoke uses an opaque noise sphere and inside-volume haze. Rescue uses crouch movement and HUD countdown; no claim of original-game effects or animations.",
+    "visual_review": "Rendered lobby, downed rescue, smoke outside/inside, Stinger hands, AI loot and extraction screenshots inspected.",
+    "historical_evidence": "Existing Phase2, Phase3 and Phase4 evidence remains byte-for-byte unchanged.",
+    "git": "Implementation remains uncommitted; no push performed."
+  }
+}

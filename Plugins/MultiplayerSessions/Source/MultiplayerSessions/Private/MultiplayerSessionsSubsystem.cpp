@@ -129,6 +129,7 @@ void UMultiplayerSessionsSubsystem::UpdateMatchType(const FString& MatchType)
 	FOnlineSessionSettings Settings = SessionInterface->GetNamedSession(NAME_GameSession)->SessionSettings;
 	Settings.Set(MultiplayerSessionKeys::MatchType, MatchType, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	Settings.bAllowJoinInProgress = MatchType != TEXT("Extraction");
+	Settings.NumPublicConnections = MatchType == TEXT("Extraction") ? 6 : LegacyCapacity;
 	// 自动生成的房名跟随模式；命令行指定的房名保持其自定义含义。
 	if (!FParse::Param(FCommandLine::Get(), TEXT("RoomName")))
 	{
@@ -154,6 +155,7 @@ void UMultiplayerSessionsSubsystem::OnUpdateMatchTypeComplete(FName SessionName,
 	if (bWasSuccessful)
 	{
 		DesiredMatchType = PendingMatchType;
+		DesiredNumPublicConnections = DesiredMatchType == TEXT("Extraction") ? 6 : LegacyCapacity;
 		if (const FNamedOnlineSession* Session = SessionInterface->GetNamedSession(NAME_GameSession))
 			LastSessionSettings = MakeShared<FOnlineSessionSettings>(Session->SessionSettings);
 	}
@@ -174,8 +176,9 @@ void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FS
 		MultiplayerOnCreateSessionComplete.Broadcast(false);
 		return;
 	}
-	DesiredNumPublicConnections = FMath::Clamp(NumPublicConnections, 1, 64);
+	LegacyCapacity = FMath::Clamp(NumPublicConnections, 1, 64);
 	DesiredMatchType = MatchType.TrimStartAndEnd();
+	DesiredNumPublicConnections = DesiredMatchType == TEXT("Extraction") ? 6 : LegacyCapacity;
 	if (HasSession())
 	{
 		bCreateSessionOnDestory = true;

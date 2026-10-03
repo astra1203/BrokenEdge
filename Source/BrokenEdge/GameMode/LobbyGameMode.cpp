@@ -50,7 +50,8 @@ void ALobbyGameMode::PreLogin(const FString& Options, const FString& Address, co
                               FString& ErrorMessage)
 {
 	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
-	if (bTravelRequested) ErrorMessage = TEXT("MATCH_STARTING");
+	if (bTravelRequested || bStartingSession) ErrorMessage = TEXT("MATCH_STARTING");
+	if (Sessions && Sessions->DesiredMatchType == TEXT("Extraction") && GetNumPlayers() >= 6) ErrorMessage = TEXT("ROOM_FULL");
 }
 
 void ALobbyGameMode::BeginPlay()
@@ -91,6 +92,7 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	Super::PostLogin(NewPlayer);
 	if (ABrokenEdgePlayerState* PS = NewPlayer ? NewPlayer->GetPlayerState<ABrokenEdgePlayerState>() : nullptr)
 		PS->SetLobbyReady(false);
+	AssignExtractionSquads();
 	CancelCountdown();
 	if (GameState)
 	{
@@ -104,6 +106,42 @@ void ALobbyGameMode::Logout(AController* Exiting)
 		PS->SetLobbyReady(false);
 	CancelCountdown();
 	Super::Logout(Exiting);
+}
+
+void ALobbyGameMode::AssignExtractionSquads()
+{
+	if (!GameState || !Sessions || Sessions->DesiredMatchType != TEXT("Extraction")) return;
+	int32 Counts[3] = {};
+	TArray<ABrokenEdgePlayerState*> Pending;
+	for (APlayerState* State : GameState->PlayerArray)
+		if (auto* PS = Cast<ABrokenEdgePlayerState>(State); PS && !PS->IsInactive() && !PS->IsOnlyASpectator())
+		{
+			if (PS->ExtractionSquad >= 1 && PS->ExtractionSquad <= 2 && Counts[PS->ExtractionSquad] < 3) ++Counts[PS->ExtractionSquad];
+			else Pending.Add(PS);
+		}
+	Pending.Sort([](const auto& A, const auto& B) { return A.GetPlayerId() < B.GetPlayerId(); });
+	for (auto* PS : Pending)
+	{
+		const uint8 Squad = Counts[1] <= Counts[2] ? 1 : 2;
+		PS->ExtractionSquad = Counts[Squad] < 3 ? Squad : 0;
+		if (PS->ExtractionSquad) ++Counts[Squad];
+		PS->ForceNetUpdate();
+	}
+}
+
+void ALobbyGameMode::SetExtractionSquad(APlayerController* Player, uint8 Squad)
+{
+	auto* GS = GetGameState<ALobbyGameState>();
+	auto* PS = Player ? Player->GetPlayerState<ABrokenEdgePlayerState>() : nullptr;
+	if (!Sessions || Sessions->DesiredMatchType != TEXT("Extraction") || !GS || !PS || Squad < 1 || Squad > 2
+		|| PS->GetOwner() != Player || !GS->PlayerArray.Contains(PS) || PS->IsLobbyReady() || PS->IsInactive()
+		|| PS->IsOnlyASpectator() || bTravelRequested || bStartingSession || GS->bModeUpdating || GS->CountdownEndTime > 0) return;
+	int32 Count = 0;
+	for (APlayerState* State : GS->PlayerArray)
+		if (auto* Other = Cast<ABrokenEdgePlayerState>(State); Other && Other != PS && !Other->IsInactive() && Other->ExtractionSquad == Squad) ++Count;
+	if (Count >= 3) return;
+	PS->ExtractionSquad = Squad;
+	PS->ForceNetUpdate();
 }
 
 void ALobbyGameMode::SetPlayerReady(APlayerController* Player, bool bReady)
@@ -137,6 +175,7 @@ void ALobbyGameMode::SetMatchType(APlayerController* Player, const FString& Matc
 	if (!PS || PS->GetOwner() != Player || !GS->PlayerArray.Contains(PS)
 		|| PS->IsInactive() || PS->IsOnlyASpectator() || PS->IsLobbyReady())
 		return;
+	if (MatchType == TEXT("Extraction") && GetNumPlayers() > 6) return;
 	CancelCountdown();
 	GS->bModeUpdating = true;
 	GS->LobbyStatus = TEXT("正在切换游戏模式…");
@@ -154,6 +193,8 @@ void ALobbyGameMode::OnMatchTypeUpdated(bool bWasSuccessful)
 		GS->RoomMatchType = Sessions->DesiredMatchType;
 		for (APlayerState* State : GS->PlayerArray)
 			if (ABrokenEdgePlayerState* PS = Cast<ABrokenEdgePlayerState>(State)) PS->SetLobbyReady(false);
+		AssignExtractionSquads();
+		if (GameSession) GameSession->MaxPlayers = Sessions->DesiredNumPublicConnections;
 		PendingMap.Reset();
 		GS->LobbyStatus = TEXT("模式已切换，请所有玩家重新准备");
 	}
@@ -165,13 +206,18 @@ bool ALobbyGameMode::AreAllPlayersReady() const
 {
 	if (!GameState || !Sessions) return false;
 	int32 Players = 0;
+	int32 Squads[3] = {};
 	for (const APlayerState* State : GameState->PlayerArray)
 	{
 		if (!IsValid(State) || State->IsInactive() || State->IsOnlyASpectator()) continue;
 		++Players;
 		const ABrokenEdgePlayerState* PS = Cast<ABrokenEdgePlayerState>(State);
 		if (!PS || !PS->IsLobbyReady()) return false;
-		if (Sessions->DesiredMatchType == TEXT("Extraction") && !PS->ExtractionProfile.IsValid()) return false;
+		if (Sessions->DesiredMatchType == TEXT("Extraction"))
+		{
+			if (!PS->ExtractionProfile.IsValid() || PS->ExtractionSquad < 1 || PS->ExtractionSquad > 2) return false;
+			if (++Squads[PS->ExtractionSquad] > 3 || Players > 6) return false;
+		}
 	}
 	return Players >= Sessions->GetMinPlayersToStart();
 }
@@ -207,6 +253,7 @@ void ALobbyGameMode::TryStartGame()
 	if (GetNetMode() != NM_DedicatedServer || !Sessions || !GameState || bTravelRequested) return;
 	ALobbyGameState* GS = GetGameState<ALobbyGameState>();
 	if (!GS) return;
+	AssignExtractionSquads();
 	GS->RoomMatchType = Sessions->DesiredMatchType;
 	GS->MinimumPlayers = Sessions->GetMinPlayersToStart();
 	GS->Capacity = Sessions->DesiredNumPublicConnections;

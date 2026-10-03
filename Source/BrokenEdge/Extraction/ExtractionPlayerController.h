@@ -30,6 +30,9 @@ public:
 	void ToggleExtractionMenu();
 	class UExtractionInteractionComponent* Interaction() const;
 	void Interact();
+	void ReleaseInteract();
+	void HealAbility();
+	void SmokeAbility();
 	void ToggleInventory();
 	void UseMedical();
 	void DropEquippedItem();
@@ -83,6 +86,7 @@ public:
 private:
 	UPROPERTY(Transient)
 	TObjectPtr<class UTextBlock> Status;
+	UPROPERTY(Transient) TObjectPtr<class UBorder> SmokeHaze;
 	UPROPERTY(Transient)
 	TObjectPtr<class UTextBlock> Vitals;
 	UPROPERTY(Transient)

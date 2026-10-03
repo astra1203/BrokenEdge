@@ -63,6 +63,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Multiplayer Sessions")
 	int32 DesiredNumPublicConnections = 8;
+	int32 LegacyCapacity = 8;
 	UPROPERTY(BlueprintReadOnly, Category = "Multiplayer Sessions")
 	FString DesiredMatchType = TEXT("Teams");
 

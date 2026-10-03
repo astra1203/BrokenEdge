@@ -26,6 +26,12 @@ public:
 	virtual void RequestRespawn(ACharacter* Character, AController* Controller) override;
 	virtual float CalculateDamage(AController* Attacker, AController* Victim, float Damage) override;
 	void LeavePlayer(AController* Player);
+	bool DamageDowned(class ABrokenEdgeCharacter* Character, float Damage);
+	void DefeatCombatant(ABrokenEdgeCharacter* Character, AController* Attacker, bool bFinal = false);
+	bool HasRescuer(const class AExtractionPlayerState* Player) const;
+	void UpdateDowned(double Now);
+	void SpawnGuards();
+	void RemoveGuards();
 	void FinishRound(const FString& Reason);
 	bool IsCombatActive(AController* Player) const;
 	bool SettlePlayer(AController* Player, EExtractionOutcome Outcome);

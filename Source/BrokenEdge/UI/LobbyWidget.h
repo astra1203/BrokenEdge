@@ -18,6 +18,10 @@ protected:
 
 private:
 	UFUNCTION() void StashClicked();
+	UFUNCTION() void SquadOneClicked();
+	UFUNCTION() void SquadTwoClicked();
+	UPROPERTY(Transient) TObjectPtr<class UButton> SquadOne;
+	UPROPERTY(Transient) TObjectPtr<class UButton> SquadTwo;
 	UPROPERTY(Transient) TObjectPtr<class UButton> StashButton;
 	UPROPERTY(Transient) TObjectPtr<class UExtractionStashWidget> StashWidget;
 	UFUNCTION()

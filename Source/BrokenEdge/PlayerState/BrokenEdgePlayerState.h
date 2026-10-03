@@ -18,6 +18,8 @@ public:
 	/** Server-only authenticated identity, copied through seamless travel. */
 	UPROPERTY() FGuid ExtractionProfile;
 	UPROPERTY() FGuid ExtractionRaid;
+	/** Extraction only: 0 unassigned, 1 or 2; independent of legacy Teams. */
+	UPROPERTY(Replicated, BlueprintReadOnly) uint8 ExtractionSquad = 0;
 	virtual void CopyProperties(APlayerState* Target) override;
 	bool IsLobbyReady() const { return bLobbyReady; }
 	/** 仅由服务器大厅调用，不从上一场比赛继承准备状态。 */

@@ -191,6 +191,11 @@ def run(g):
         for role, xyz in {'B': [1400, 4200, 500], 'C': [1400, 3900, 500], 'D': [2400, 5000, 500]}.items(): position(role, xyz)
         enter_zone('A'); extracted('A')
         g['aim']('C', 'B', True); g['shot']('C', 'B', 40); g['shot']('C', 'B', 40)
+        check('Second player is downed while fourth player remains alive', lambda: player('Server', 'B')['life'] == 5)
+        for _ in range(8):
+            send('C', 'pulse', action='Fire')
+            time.sleep(.4)
+            if player('Server', 'B').get('life') == 1: break
         check('Second player dies with independent failure result', lambda: account('B')['outcome'] == 2 and player('Server', 'B')['life'] == 1)
         g['finishing'].add('C'); g['report']['processes']['C']['expected_disconnect'] = True
         subprocess.run(['taskkill', '/PID', str(g['processes']['C'].pid), '/T', '/F'], capture_output=True)

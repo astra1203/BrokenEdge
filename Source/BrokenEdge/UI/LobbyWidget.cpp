@@ -38,6 +38,14 @@ bool ULobbyWidget::Initialize()
 	SessionWidgetStyle::Line(Content, Modes);
 	SessionWidgetStyle::Line(Content, SessionWidgetStyle::Text(WidgetTree,
 	                                                           TEXT("未准备的玩家可切换模式 · 切换后所有玩家需要重新准备"), 15));
+	UHorizontalBox* Squads = WidgetTree->ConstructWidget<UHorizontalBox>();
+	SquadOne = SessionWidgetStyle::Button(WidgetTree, TEXT("SquadOne"), TEXT("加入一队 · 最多三人"));
+	SquadTwo = SessionWidgetStyle::Button(WidgetTree, TEXT("SquadTwo"), TEXT("加入二队 · 最多三人"));
+	SquadOne->OnClicked.AddUniqueDynamic(this, &ThisClass::SquadOneClicked);
+	SquadTwo->OnClicked.AddUniqueDynamic(this, &ThisClass::SquadTwoClicked);
+	Squads->AddChildToHorizontalBox(SquadOne)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+	Squads->AddChildToHorizontalBox(SquadTwo)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+	SessionWidgetStyle::Line(Content, Squads);
 	UHorizontalBox* Header = WidgetTree->ConstructWidget<UHorizontalBox>();
 	Header->AddChildToHorizontalBox(SessionWidgetStyle::Text(WidgetTree, TEXT("玩家"), 16))->SetSize(
 		FSlateChildSize(ESlateSizeRule::Fill));
@@ -61,6 +69,9 @@ bool ULobbyWidget::Initialize()
 	SessionWidgetStyle::Line(Content, ReadyButton, 0.f);
 	return true;
 }
+
+void ULobbyWidget::SquadOneClicked() { if (auto* PC = GetOwningPlayer<ABrokenEdgePlayerController>()) PC->ServerSetExtractionSquad(1); }
+void ULobbyWidget::SquadTwoClicked() { if (auto* PC = GetOwningPlayer<ABrokenEdgePlayerController>()) PC->ServerSetExtractionSquad(2); }
 
 void ULobbyWidget::ReadyClicked()
 {
@@ -112,8 +123,8 @@ void ULobbyWidget::Refresh()
 	int32 ReadyCount = 0;
 	for (const ABrokenEdgePlayerState* PS : Players)
 	{
-		Signature += FString::Printf(TEXT("%d:%s:%d:%d;"), PS->GetPlayerId(), *PS->GetPlayerName(), PS->IsLobbyReady(),
-		                             PS == LocalPS);
+		Signature += FString::Printf(TEXT("%d:%s:%d:%d:%d;"), PS->GetPlayerId(), *PS->GetPlayerName(), PS->IsLobbyReady(),
+		                             PS == LocalPS, GS->RoomMatchType == TEXT("Extraction") ? PS->ExtractionSquad : 0);
 		if (PS->IsLobbyReady()) ++ReadyCount;
 	}
 	if (Signature != LastRoster)
@@ -128,7 +139,7 @@ void ULobbyWidget::Refresh()
 			UHorizontalBox* Cells = WidgetTree->ConstructWidget<UHorizontalBox>();
 			Row->AddChild(Cells);
 			UTextBlock* NameLabel = SessionWidgetStyle::Text(WidgetTree,
-			                                                 PS->GetPlayerName() + (PS == LocalPS
+			                                                 (GS->RoomMatchType == TEXT("Extraction") ? FString::Printf(TEXT("[%d队] "), PS->ExtractionSquad) : FString()) + PS->GetPlayerName() + (PS == LocalPS
 				                                                 ? TEXT("（你）")
 				                                                 : TEXT("")), 20);
 			NameLabel->SetTextOverflowPolicy(ETextOverflowPolicy::Ellipsis);
@@ -165,6 +176,13 @@ void ULobbyWidget::Refresh()
 	}
 	const bool bCanChooseMode = LocalPS && !LocalPS->IsLobbyReady() && !LocalPS->IsInactive()
 		&& !LocalPS->IsOnlyASpectator() && !GS->bTravelling && !GS->bModeUpdating && GS->CountdownEndTime <= 0.0;
+	const bool Extraction = GS->RoomMatchType == TEXT("Extraction");
+	int32 SquadCounts[3] = {};
+	for (const auto* P : Players) if (P->ExtractionSquad >= 1 && P->ExtractionSquad <= 2) ++SquadCounts[P->ExtractionSquad];
+	SquadOne->SetVisibility(Extraction ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	SquadTwo->SetVisibility(Extraction ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	SquadOne->SetIsEnabled(Extraction && bCanChooseMode && LocalPS->ExtractionSquad != 1 && SquadCounts[1] < 3);
+	SquadTwo->SetIsEnabled(Extraction && bCanChooseMode && LocalPS->ExtractionSquad != 2 && SquadCounts[2] < 3);
 	const bool bFreeForAll = GS->RoomMatchType == TEXT("FreeForAll");
 	const bool bTeams = GS->RoomMatchType == TEXT("Teams");
 	FreeForAllButton->SetIsEnabled(bCanChooseMode && !bFreeForAll);

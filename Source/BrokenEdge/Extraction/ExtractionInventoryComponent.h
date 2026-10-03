@@ -16,6 +16,7 @@ public:
 	UPROPERTY(ReplicatedUsing=OnRep_Contents)
 	FExtractionContainer Contents;
 	void InitializeLoadout();
+	void InitializeGuard();
 	void Changed();
 	bool SyncWeapons();
 	void CaptureWeapons();

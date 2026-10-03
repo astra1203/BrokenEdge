@@ -9,7 +9,7 @@ UENUM(BlueprintType)
 enum class EExtractionPhase : uint8 { Waiting, Active, Ended };
 
 UENUM(BlueprintType)
-enum class EExtractionLife : uint8 { Alive, Dead, Left, Extracted, TimedOut };
+enum class EExtractionLife : uint8 { Alive, Dead, Left, Extracted, TimedOut, Downed };
 
 UCLASS()
 class BROKENEDGE_API AExtractionGameState : public ABrokenEdgeGameState
@@ -41,6 +41,8 @@ public:
 	EExtractionLife Life = EExtractionLife::Alive;
 	UPROPERTY(Replicated)
 	double ExtractAt = 0;
+	UPROPERTY(Replicated) double BleedAt = 0;
+	UPROPERTY(Replicated) float DownHealth = 0;
 	AExtractionPlayerState();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<class UExtractionInventoryComponent> Inventory;

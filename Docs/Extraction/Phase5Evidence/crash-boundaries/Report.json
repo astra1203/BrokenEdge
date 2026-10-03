@@ -1,0 +1,259 @@
+{
+  "started_utc": "2026-10-03T20:16:41.897657+00:00",
+  "runs": [
+    {
+      "boundary": "prepared",
+      "attempt": 0,
+      "pid": 47968,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\prepared-0.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\prepared",
+        "-ExtractionBoundary=prepared"
+      ],
+      "intentional_crash": true,
+      "exit_code": 1
+    },
+    {
+      "boundary": "prepared",
+      "attempt": 1,
+      "pid": 22744,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\prepared-1.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\prepared",
+        "-ExtractionBoundary=prepared",
+        "-ExtractionVerifyRecovery"
+      ],
+      "exit_code": 0
+    },
+    {
+      "boundary": "prepared",
+      "attempt": 2,
+      "pid": 16572,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\prepared-2.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\prepared",
+        "-ExtractionBoundary=prepared",
+        "-ExtractionVerifyRecovery"
+      ],
+      "exit_code": 0
+    },
+    {
+      "boundary": "active",
+      "attempt": 0,
+      "pid": 37392,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\active-0.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\active",
+        "-ExtractionBoundary=active"
+      ],
+      "intentional_crash": true,
+      "exit_code": 1
+    },
+    {
+      "boundary": "active",
+      "attempt": 1,
+      "pid": 48208,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\active-1.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\active",
+        "-ExtractionBoundary=active",
+        "-ExtractionVerifyRecovery"
+      ],
+      "exit_code": 0
+    },
+    {
+      "boundary": "active",
+      "attempt": 2,
+      "pid": 17020,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\active-2.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\active",
+        "-ExtractionBoundary=active",
+        "-ExtractionVerifyRecovery"
+      ],
+      "exit_code": 0
+    },
+    {
+      "boundary": "success",
+      "attempt": 0,
+      "pid": 39924,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\success-0.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\success",
+        "-ExtractionBoundary=success"
+      ],
+      "intentional_crash": true,
+      "exit_code": 1
+    },
+    {
+      "boundary": "success",
+      "attempt": 1,
+      "pid": 50092,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\success-1.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\success",
+        "-ExtractionBoundary=success",
+        "-ExtractionVerifyRecovery"
+      ],
+      "exit_code": 0
+    },
+    {
+      "boundary": "success",
+      "attempt": 2,
+      "pid": 22468,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\success-2.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\success",
+        "-ExtractionBoundary=success",
+        "-ExtractionVerifyRecovery"
+      ],
+      "exit_code": 0
+    },
+    {
+      "boundary": "death",
+      "attempt": 0,
+      "pid": 46472,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\death-0.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\death",
+        "-ExtractionBoundary=death"
+      ],
+      "intentional_crash": true,
+      "exit_code": 1
+    },
+    {
+      "boundary": "death",
+      "attempt": 1,
+      "pid": 56164,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\death-1.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\death",
+        "-ExtractionBoundary=death",
+        "-ExtractionVerifyRecovery"
+      ],
+      "exit_code": 0
+    },
+    {
+      "boundary": "death",
+      "attempt": 2,
+      "pid": 8040,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\death-2.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase5Crash01\\death",
+        "-ExtractionBoundary=death",
+        "-ExtractionVerifyRecovery"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "result": "passed",
+  "finished_utc": "2026-10-03T20:20:51.979727+00:00"
+}

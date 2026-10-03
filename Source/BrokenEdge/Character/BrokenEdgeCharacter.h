@@ -552,6 +552,20 @@ public:
 
 
 	FORCEINLINE [[nodiscard]] float GetHealth() const { return Health; }
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UExtractionAbilities> ExtractionAbilities;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UExtractionInventoryComponent> GuardInventory;
+	UPROPERTY(Replicated)
+	bool bExtractionGuard = false;
+	UPROPERTY(Replicated)
+	int32 ExtractionGuardId = INDEX_NONE;
+	bool bWasExtractionDowned = false;
+	float ExtractionSavedCrouchSpeed = 300;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UTextRenderComponent> ExtractionLabel;
+	void UpdateExtractionLabel();
+	UExtractionAbilities* GetExtractionAbilities() const { return ExtractionAbilities; }
 	FORCEINLINE [[nodiscard]] float GetMaxHealth() const { return MaxHealth; }
 
 	/** 设置生命值 */

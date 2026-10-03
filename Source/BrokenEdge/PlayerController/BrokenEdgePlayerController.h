@@ -18,6 +18,7 @@ public:
 	UPROPERTY(VisibleAnywhere) TObjectPtr<class UExtractionAccountComponent> ExtractionAccount;
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Lobby")
 	void ServerSetLobbyReady(bool bReady);
+	UFUNCTION(Server, Reliable) void ServerSetExtractionSquad(uint8 Squad);
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Lobby")
 	void ServerSetLobbyMatchType(const FString& MatchType);
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

@@ -1,0 +1,44 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "B6A90CEB44068AFC4E7E6FB3ACD3CD32",
+			"instanceName": "DESKTOP-M9PA1SF-33796",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "NVIDIA GeForce RTX 4060 Ti",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "D3D12_SM6",
+			"rHI": "D3D12 (SM6)",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.03-20.21.16",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 5.9183025360107422,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Lobby",
+			"fullTestPath": "BrokenEdge.Extraction.PIE.Lobby",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B6A90CEB44068AFC4E7E6FB3ACD3CD32"
+			],
+			"duration": 5.9183025360107422,
+			"dateTime": "2026.10.03-20.21.10",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

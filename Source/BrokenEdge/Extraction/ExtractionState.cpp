@@ -21,5 +21,7 @@ void AExtractionPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AExtractionPlayerState, Life);
+	DOREPLIFETIME(AExtractionPlayerState, BleedAt);
+	DOREPLIFETIME(AExtractionPlayerState, DownHealth);
 	DOREPLIFETIME_CONDITION(AExtractionPlayerState, ExtractAt, COND_OwnerOnly);
 }

@@ -13,6 +13,7 @@ ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
 parser.add_argument('--mode', choices=['Extraction', 'Teams', 'FreeForAll'], default='Extraction')
+parser.add_argument('--players', type=int, choices=[2, 3], default=2)
 args = parser.parse_args()
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
@@ -23,7 +24,7 @@ command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe'), str(ROOT / 'B
            '-windowed', '-ResX=1280', '-ResY=720', '-abslog=' + str(out / 'Editor.log'),
            '-ExtractionStore=' + str(out / 'Store'), '-ExtractionProfile=' + args.tag,
            '-MatchType=' + args.mode, '-ExtractionPIEMode=' + args.mode,
-           '-NumPublicConnections=2', '-MinPlayersToStart=2',
+           '-NumPublicConnections=6', '-MinPlayersToStart=' + str(args.players), '-ExtractionPIEPlayers=' + str(args.players), '-ExtractionGuards=0',
            '-ExecCmds=Automation RunTests BrokenEdge.Extraction.PIE.Lobby',
            '-TestExit=Automation Test Queue Empty', '-ReportExportPath=' + str(out / 'Automation')]
 metadata = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'mode': args.mode, 'command': command}

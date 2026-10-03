@@ -1,0 +1,44 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "068DDA834BCD0DCCAD1B1E8BFAC6B402",
+			"instanceName": "DESKTOP-M9PA1SF-36352",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "NVIDIA GeForce RTX 4060 Ti",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.03-20.43.29",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.10643179714679718,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "RecoverExistingStore",
+			"fullTestPath": "BrokenEdge.Extraction.RecoverExistingStore",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"068DDA834BCD0DCCAD1B1E8BFAC6B402"
+			],
+			"duration": 0.10643179714679718,
+			"dateTime": "2026.10.03-20.43.29",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

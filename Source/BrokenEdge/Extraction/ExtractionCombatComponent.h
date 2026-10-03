@@ -19,6 +19,7 @@ public:
 	bool IsEnabled() const;
 	bool CanAct() const;
 	void RequestShot(const FVector& Target);
+	void FireGuard(const FVector& Target);
 	void RequestReload();
 	void BeginServerReload();
 	void CancelReload();

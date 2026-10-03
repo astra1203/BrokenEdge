@@ -17,6 +17,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputAction.h"
 #include "InputActionValue.h"
+#include "InputKeyEventArgs.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/Button.h"
 #include "Components/BoxComponent.h"
@@ -27,6 +28,11 @@
 #include "MultiplayerSessionsSubsystem.h"
 #include "Menu.h"
 #include "BrokenEdge/Extraction/ExtractionGameMode.h"
+#include "BrokenEdge/Extraction/ExtractionAbilities.h"
+#include "BrokenEdge/Extraction/ExtractionGuard.h"
+#include "BrokenEdge/Extraction/ExtractionSmoke.h"
+#include "NavigationSystem.h"
+#include "NavigationPath.h"
 #include "BrokenEdge/Extraction/ExtractionPlayerController.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
@@ -131,6 +137,30 @@ public:
 						}
 					}
 				}
+				else if (Op == TEXT("squad") && PC)
+				{
+					if (auto* LobbyPC = Cast<ABrokenEdgePlayerController>(PC)) LobbyPC->ServerSetExtractionSquad(
+						Command->GetIntegerField(TEXT("value")));
+				}
+				else if (Op == TEXT("ability") && Pawn)
+				{
+					const FString Kind = Command->GetStringField(TEXT("kind"));
+					FString Name;
+					Command->TryGetStringField(TEXT("target"), Name);
+					auto* Target = Name.IsEmpty() ? Pawn : FindPawn(World, Name);
+					auto* A = Pawn->GetExtractionAbilities();
+					if (Kind == TEXT("cancel")) A->ReleaseRescue();
+					else if (Kind == TEXT("duplicate")) A->ServerBegin(0, EExtractionAction::Heal, Target);
+					else A->Request(Kind == TEXT("revive")
+						                ? EExtractionAction::Revive
+						                : Kind == TEXT("heal")
+						                ? EExtractionAction::Heal
+						                : EExtractionAction::Smoke, Target);
+				}
+				else if (Op == TEXT("guard_spawn") && Role == TEXT("Server"))
+				{
+					if (auto* Mode = World->GetAuthGameMode<AExtractionGameMode>()) Mode->SpawnGuards();
+				}
 				else if (Op == TEXT("name") && PC) PC->SetName(TEXT("EX_") + Role);
 				else if (HandleInventoryCommand(Command, PC, World))
 				{
@@ -140,7 +170,11 @@ public:
 					bool bExpectRejection = false;
 					Command->TryGetBoolField(TEXT("expect_rejection"), bExpectRejection);
 					if (bExpectRejection)
-						Test->AddExpectedError(TEXT("MATCH_IN_PROGRESS"), EAutomationExpectedErrorFlags::Contains, 0);
+					{
+						FString Reason = TEXT("MATCH_IN_PROGRESS");
+						Command->TryGetStringField(TEXT("reason"), Reason);
+						Test->AddExpectedError(Reason, EAutomationExpectedErrorFlags::Contains, 0);
+					}
 					PC->ClientTravel(TEXT("127.0.0.1:27777"), TRAVEL_Absolute);
 				}
 				else if (Op == TEXT("ready") && PC)
@@ -185,6 +219,13 @@ public:
 						Character->SetActorLocation(
 							FVector(Position[0]->AsNumber(), Position[1]->AsNumber(), Position[2]->AsNumber()), false,
 							nullptr, ETeleportType::TeleportPhysics);
+						double Yaw = 0;
+						if (Item->TryGetNumberField(TEXT("yaw"), Yaw))
+						{
+							Character->SetActorRotation(FRotator(0, Yaw, 0));
+							if (Character->GetController()) Character->GetController()->SetControlRotation(
+								FRotator(0, Yaw, 0));
+						}
 						Character->SetHealth(Item->GetNumberField(TEXT("health")));
 						Character->SetShield(Item->GetNumberField(TEXT("shield")));
 						Character->ForceNetUpdate();
@@ -557,6 +598,13 @@ private:
 			if (Action == TEXT("up")) FSlateApplication::Get().ProcessMouseButtonUpEvent(Event);
 			LastMouse = P;
 		}
+		else if (Op == TEXT("input_key") && Controller)
+		{
+			const FKey Key(*Command->GetStringField(TEXT("key")));
+			const bool Pressed = Command->GetBoolField(TEXT("pressed"));
+			Controller->InputKey(
+				FInputKeyEventArgs::CreateSimulated(Key, Pressed ? IE_Pressed : IE_Released, Pressed ? 1.f : 0.f));
+		}
 		else if (Op == TEXT("key") && Controller)
 		{
 			const FKey Key(*Command->GetStringField(TEXT("key")));
@@ -572,6 +620,8 @@ private:
 		if (!World->GetGameState()) return nullptr;
 		for (APlayerState* PS : World->GetGameState()->PlayerArray)
 			if (PS->GetPlayerName() == Name) return Cast<ABrokenEdgeCharacter>(PS->GetPawn());
+		for (TActorIterator<ABrokenEdgeCharacter> It(World); It; ++It) if (It->bExtractionGuard && FString::Printf(
+			TEXT("GUARD_%d"), It->ExtractionGuardId) == Name) return *It;
 		return nullptr;
 	}
 
@@ -681,18 +731,30 @@ private:
 						Player->
 							SetObjectField(TEXT("account"), AccountJson(Account));
 				if (const auto* LobbyPS = Cast<ABrokenEdgePlayerState>(PS))
-					Player->SetBoolField(
-						TEXT("ready"), LobbyPS->IsLobbyReady());
+				{
+					Player->SetBoolField(TEXT("ready"), LobbyPS->IsLobbyReady());
+					Player->SetNumberField(TEXT("squad"), LobbyPS->ExtractionSquad);
+				}
 				if (auto* ExtractionPS = Cast<AExtractionPlayerState>(PS))
 				{
 					Player->SetNumberField(
 						TEXT("life"), static_cast<int32>(ExtractionPS->Life));
 					Player->SetObjectField(TEXT("inventory"), InventoryJson(ExtractionPS->Inventory->Contents));
 					Player->SetNumberField(TEXT("extract_at"), ExtractionPS->ExtractAt);
+					Player->SetNumberField(TEXT("down_health"), ExtractionPS->DownHealth);
+					Player->SetNumberField(TEXT("bleed_at"), ExtractionPS->BleedAt);
 				}
 				if (auto* Character = Cast<ABrokenEdgeCharacter>(PS->GetPawn()))
 				{
 					Player->SetNumberField(TEXT("health"), Character->GetHealth());
+					const auto* Ability = Character->GetExtractionAbilities();
+					Player->SetNumberField(TEXT("action"), static_cast<int32>(Ability->Action));
+					Player->SetNumberField(TEXT("action_end"), Ability->ActionEnd);
+					Player->SetNumberField(TEXT("heal_ready"), Ability->HealReadyAt);
+					Player->SetNumberField(TEXT("smoke_ready"), Ability->SmokeReadyAt);
+					Player->SetStringField(TEXT("rescuer"), Ability->Rescuer && Ability->Rescuer->GetPlayerState()
+						                                        ? Ability->Rescuer->GetPlayerState()->GetPlayerName()
+						                                        : TEXT(""));
 					const auto* Interaction = Character->GetExtractionInteraction();
 					TArray<TSharedPtr<FJsonValue>> Reach;
 					for (TActorIterator<AExtractionLootActor> It(World); It; ++It)
@@ -805,6 +867,52 @@ private:
 			LootActors.Add(MakeShared<FJsonValueObject>(Entry));
 		}
 		State->SetArrayField(TEXT("loot"), LootActors);
+		TArray<TSharedPtr<FJsonValue>> Guards, Smokes;
+		for (TActorIterator<ABrokenEdgeCharacter> It(World); It; ++It)
+			if (It->bExtractionGuard)
+			{
+				auto J = MakeShared<FJsonObject>();
+				J->SetStringField(TEXT("name"), FString::Printf(TEXT("GUARD_%d"), It->ExtractionGuardId));
+				J->SetStringField(TEXT("actor"), It->GetName());
+				J->SetArrayField(TEXT("position"), VectorJson(It->GetActorLocation()));
+				J->SetNumberField(TEXT("health"), It->GetHealth());
+				J->SetBoolField(TEXT("dead"), It->IsDefeated());
+				J->SetNumberField(TEXT("shots"), It->GetExtractionCombat()->GetAcceptedShots());
+				if (It->HasAuthority()) J->SetObjectField(
+					TEXT("inventory"), InventoryJson(It->GuardInventory->Contents));
+				if (const auto* AI = Cast<AExtractionGuard>(It->GetController()))
+				{
+					J->SetNumberField(TEXT("state"), static_cast<int32>(AI->State));
+					J->SetNumberField(TEXT("arrivals"), AI->PatrolArrivals);
+					J->SetStringField(TEXT("target"), GetNameSafe(AI->Target));
+				}
+				Guards.Add(MakeShared<FJsonValueObject>(J));
+			}
+		for (TActorIterator<AExtractionSmoke> It(World); It; ++It)
+		{
+			auto J = MakeShared<FJsonObject>();
+			J->SetArrayField(TEXT("position"), VectorJson(It->GetActorLocation()));
+			J->SetNumberField(TEXT("radius"), It->Radius);
+			J->SetNumberField(TEXT("expires"), It->ExpiresAt);
+			Smokes.Add(MakeShared<FJsonValueObject>(J));
+		}
+		TArray<TSharedPtr<FJsonValue>> Paths;
+		if (Role == TEXT("Server"))
+			for (TActorIterator<AExtractionPatrolRoute> It(World); It; ++It)
+				for (int32 I = 0; I < It->Points.Num(); ++I)
+				{
+					auto* Path = UNavigationSystemV1::FindPathToLocationSynchronously(
+						World, It->Points[I], It->Points[(I + 1) % It->Points.Num()]);
+					auto J = MakeShared<FJsonObject>();
+					J->SetBoolField(TEXT("valid"), Path && Path->IsValid() && !Path->IsPartial());
+					J->SetArrayField(TEXT("start"), VectorJson(It->Points[I]));
+					J->SetArrayField(TEXT("end"), VectorJson(It->Points[(I + 1) % It->Points.Num()]));
+					J->SetNumberField(TEXT("length"), Path ? Path->GetPathLength() : 0);
+					Paths.Add(MakeShared<FJsonValueObject>(J));
+				}
+		State->SetArrayField(TEXT("nav_paths"), Paths);
+		State->SetArrayField(TEXT("guards"), Guards);
+		State->SetArrayField(TEXT("smokes"), Smokes);
 		FString Json;
 		FJsonSerializer::Serialize(State, TJsonWriterFactory<>::Create(&Json));
 		const FString File = Folder / (Role + TEXT("-state.json"));
@@ -822,7 +930,8 @@ bool FExtractionProcessDriver::RunTest(const FString& Parameters)
 	FString Role, Folder;
 	FParse::Value(FCommandLine::Get(),TEXT("ExtractionTestRole="), Role);
 	FParse::Value(FCommandLine::Get(),TEXT("ExtractionTestDir="), Folder);
-	if ((Role != TEXT("Server") && Role != TEXT("A") && Role != TEXT("B") && Role != TEXT("C") && Role != TEXT("D")) ||
+	if ((Role != TEXT("Server") && Role != TEXT("A") && Role != TEXT("B") && Role != TEXT("C") && Role != TEXT("D") &&
+			Role != TEXT("E") && Role != TEXT("F") && Role != TEXT("G")) ||
 		Folder.IsEmpty())
 	{
 		AddError(TEXT("Use Scripts/Extraction/run_network.py"));

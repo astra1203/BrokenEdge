@@ -2,7 +2,7 @@
 
 状态：2026-10-03 原版限定范围验收通过；2026-10-04 先修复 PIE 退出崩溃，随后补齐 PIE 大厅往返与遗留出战占用修复。最新版完成 Editor 构建、Development 服务端／客户端打包、真实 PIE 连续两局、旧模式切图、四次启停、持久化规则与原存档恢复，以及五组打包联机回归。各版本证据分别归档；联机范围为同一主机专服与 2～4 个独立客户端，不代表公网服务或更大容量已通过。
 
-实施起点：`7e4afbc11000aa48248f86ef52cd7e3e0ee80225`。引擎：`C:/UnrealProjects/UnrealEngine-5.8.3-release`。本阶段按批准范围保留未提交工作区，不提交或推送 Git。
+实施起点：`7e4afbc11000aa48248f86ef52cd7e3e0ee80225`。引擎：`C:/UnrealProjects/UnrealEngine-5.8.3-release`。本阶段及后续退出、大厅往返修复，已按之后的提交推送指令纳入 `4f30da14041fdbf1d0c929c08e3ad5d14b1149da`。历史验收记录保留各自原始版本。
 
 ## 2026-10-04：PIE 大厅往返与遗留记录修复
 
@@ -25,7 +25,7 @@
 
 五组打包回归共 180 项检查，计数包含实际拾取与重试步骤。恢复后的两个用户档案各保有三把 AK（弹匣合计 90 发）、备用弹药 360 发、医疗包六个；这是恢复前库存加未开始出战带入物资的守恒结果，没有重新发放初始补给。恢复物资进入仓库，空间不足进入待领取区，需要重新配装。原始日志和凭据备份位于本地 `Saved/Extraction/Phase4LobbyBackup`，未放入证据归档；已有 28 份客户端凭据字节保持不变。
 
-正常测试入口是 `Content/Maps/Lobby`，模式选择 Extraction 后配装并准备；直接打开撤离地图不会凭空创建出战记录。新增 [PIE 大厅测试](../../Source/StingerTools/Private/ExtractionPIELobbyTests.cpp)、[运行脚本](../../Scripts/Extraction/run_pie_lobby.py) 和 [存档恢复验证脚本](../../Scripts/Extraction/recover_existing_store.py) 均保留在工作区。
+正常测试入口是 `Content/Maps/Lobby`，模式选择 Extraction 后配装并准备；直接打开撤离地图不会凭空创建出战记录。新增 [PIE 大厅测试](../../Source/StingerTools/Private/ExtractionPIELobbyTests.cpp)、[运行脚本](../../Scripts/Extraction/run_pie_lobby.py) 和 [存档恢复验证脚本](../../Scripts/Extraction/recover_existing_store.py) 均已包含在上述提交。
 
 最新 [Summary.json](Phase4LobbyFixEvidence/Summary.json) 记录 17 组构建／验证、当前源码与新包哈希，[ArchiveIndex.json](Phase4LobbyFixEvidence/ArchiveIndex.json) 校验证据原始字节。此前 `Phase4Evidence` 的 239 个文件及 `Phase4FixEvidence` 的 78 个文件均保持不变，[校验记录](Phase4LobbyFixEvidence/diagnostics/PreviousEvidenceVerification.json) 与 [用户断点记录](Phase4LobbyFixEvidence/diagnostics/Breakpoints.json) 一并归档。Editor 首两次构建遇到新增测试的类型和模块链接问题，修正后第三次通过；失败日志保留。两种包的 Zen 首次读取均曾自动重试后成功，既有编译与资产警告未扩展修复。
 

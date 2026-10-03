@@ -1,0 +1,67 @@
+﻿{
+    "captured_utc":  "2026-10-03T20:41:16.3144171Z",
+    "run":  "Phase5PackagedAI01",
+    "phase":  1,
+    "humans":  6,
+    "guards":  4,
+    "client_settings":  "1280x720 offscreen rendered; 30 fps cap; shadows 0; effects 1",
+    "scope":  "One instantaneous process memory sample; not measured FPS, GPU memory, network throughput or capacity",
+    "processes":  [
+                      {
+                          "role":  "Server",
+                          "pid":  53116,
+                          "working_set_bytes":  377229312,
+                          "peak_working_set_bytes":  380387328,
+                          "private_bytes":  265310208,
+                          "cpu_seconds":  15.15625
+                      },
+                      {
+                          "role":  "A",
+                          "pid":  36440,
+                          "working_set_bytes":  1740288000,
+                          "peak_working_set_bytes":  1798410240,
+                          "private_bytes":  4194349056,
+                          "cpu_seconds":  110
+                      },
+                      {
+                          "role":  "B",
+                          "pid":  22356,
+                          "working_set_bytes":  1704951808,
+                          "peak_working_set_bytes":  1801109504,
+                          "private_bytes":  4052832256,
+                          "cpu_seconds":  102.71875
+                      },
+                      {
+                          "role":  "C",
+                          "pid":  35080,
+                          "working_set_bytes":  1722408960,
+                          "peak_working_set_bytes":  1821413376,
+                          "private_bytes":  4103086080,
+                          "cpu_seconds":  100.046875
+                      },
+                      {
+                          "role":  "D",
+                          "pid":  24980,
+                          "working_set_bytes":  1810325504,
+                          "peak_working_set_bytes":  1870422016,
+                          "private_bytes":  4043079680,
+                          "cpu_seconds":  88.390625
+                      },
+                      {
+                          "role":  "E",
+                          "pid":  21560,
+                          "working_set_bytes":  1725399040,
+                          "peak_working_set_bytes":  1840795648,
+                          "private_bytes":  4097802240,
+                          "cpu_seconds":  77.28125
+                      },
+                      {
+                          "role":  "F",
+                          "pid":  37728,
+                          "working_set_bytes":  1858781184,
+                          "peak_working_set_bytes":  1910284288,
+                          "private_bytes":  4266401792,
+                          "cpu_seconds":  70.6875
+                      }
+                  ]
+}

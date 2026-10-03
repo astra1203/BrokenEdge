@@ -12,7 +12,7 @@ namespace
 	FVector2D Grid(int32 Side) { return Side == 0 ? FVector2D(105, 165) : FVector2D(660, 245); }
 	FVector2D Slot(int32 Index) { return FVector2D(660 + Index * 185, 165); }
 
-	bool Inside(FVector2D P, FVector2D O, FVector2D S)
+	bool InsideStash(FVector2D P, FVector2D O, FVector2D S)
 	{
 		return P.X >= O.X && P.Y >= O.Y && P.X < O.X + S.X && P.Y < O.Y + S.Y;
 	}
@@ -159,7 +159,7 @@ public:
 	virtual FReply OnMouseButtonDown(const FGeometry& G, const FPointerEvent& E) override
 	{
 		Mouse = Position(G, E);
-		if (Inside(Mouse, {1070, 65}, {115, 42}))
+		if (InsideStash(Mouse, {1070, 65}, {115, 42}))
 		{
 			Owner->RemoveFromParent();
 			return FReply::Handled();
@@ -168,7 +168,7 @@ public:
 		if (Menu)
 		{
 			Menu = false;
-			if (!Inside(Mouse, MenuAt, {200, 160})) return FReply::Handled();
+			if (!InsideStash(Mouse, MenuAt, {200, 160})) return FReply::Handled();
 			const int32 Row = FMath::FloorToInt((Mouse.Y - MenuAt.Y) / 31);
 			if (Row == 4 && Quantity > 1)
 			{
@@ -185,7 +185,7 @@ public:
 			return FReply::Handled().SetUserFocus(AsShared());
 		}
 		if (Splitting) return FReply::Handled();
-		if (Inside(Mouse, {660, 453}, {495, 145}))
+		if (InsideStash(Mouse, {660, 453}, {495, 145}))
 		{
 			const int32 N = OverflowOffset + FMath::FloorToInt((Mouse.Y - 453) / 29);
 			if (Account()->Profile.Overflow.IsValidIndex(N))
@@ -229,7 +229,7 @@ public:
 		Mouse = Position(G, E);
 		auto R = Request();
 		R.Move.AutoPlace = false;
-		for (int32 I = 0; I < 2; ++I) if (Inside(Mouse, Slot(I), {172, 58}))
+		for (int32 I = 0; I < 2; ++I) if (InsideStash(Mouse, Slot(I), {172, 58}))
 		{
 			R.To = EExtractionStorageSide::Loadout;
 			R.Move.Slot = I;
@@ -241,7 +241,7 @@ public:
 		for (int32 Side = 0; Side < 2; ++Side)
 		{
 			const auto* C = Container(Side);
-			if (!Inside(Mouse, Grid(Side), FVector2D(C->Width, C->Height) * Cell)) continue;
+			if (!InsideStash(Mouse, Grid(Side), FVector2D(C->Width, C->Height) * Cell)) continue;
 			R.To = static_cast<EExtractionStorageSide>(Side);
 			const auto V = (Mouse - Grid(Side)) / Cell;
 			R.Move.Cell = FIntPoint(FMath::FloorToInt(V.X), FMath::FloorToInt(V.Y));
@@ -331,7 +331,7 @@ private:
 
 	const FExtractionItem* Hit(FVector2D P, int32& Side) const
 	{
-		for (int32 S = 0; S < 2; ++S) if (const auto* C = Container(S)) for (const auto& I : C->Items) if (Inside(
+		for (int32 S = 0; S < 2; ++S) if (const auto* C = Container(S)) for (const auto& I : C->Items) if (InsideStash(
 			P, Origin(I, S), Size(I)))
 		{
 			Side = S;

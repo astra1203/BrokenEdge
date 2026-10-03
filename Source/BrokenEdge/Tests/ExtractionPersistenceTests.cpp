@@ -289,6 +289,22 @@ bool FExtractionRecoverExistingStore::RunTest(const FString&)
 	auto* S = Store(Path);
 	if (!TestTrue(TEXT("Existing store loaded and recovered"), S->IsAvailable())) return false;
 	for (const auto& Raid : S->TestState().Raids) TestTrue(TEXT("No orphaned record remains"), Raid.Closed);
+	FString ProfileText, ItemText;
+	if (FParse::Value(FCommandLine::Get(), TEXT("ExtractionVerifyProfile="), ProfileText))
+	{
+		FGuid Profile, Item;
+		FGuid::Parse(ProfileText, Profile);
+		FParse::Value(FCommandLine::Get(), TEXT("ExtractionVerifyItem="), ItemText);
+		FGuid::Parse(ItemText, Item);
+		const auto* View = S->View(Profile);
+		if (TestNotNull(TEXT("Exporting profile survives process restart"), View))
+		{
+			TestTrue(TEXT("Extracted outcome survives restart"), View->Result.Outcome == EExtractionOutcome::Extracted);
+			int32 Count = 0;
+			for (const auto& I : View->Stash.Items) if (I.Id == Item) ++Count;
+			TestEqual(TEXT("AI weapon instance exists exactly once after restart"), Count, 1);
+		}
+	}
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_EXISTING_STORE_RECOVERED Profiles=%d Raids=%d"),
 	       S->TestState().Profiles.Num(), S->TestState().Raids.Num());
 	return true;

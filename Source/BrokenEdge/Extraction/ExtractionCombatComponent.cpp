@@ -22,8 +22,15 @@ bool UExtractionCombatComponent::CanAct() const
 	const auto* C = Character();
 	const auto* GS = GetWorld() ? GetWorld()->GetGameState<AExtractionGameState>() : nullptr;
 	const auto* PS = C ? C->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	return C && GS && GS->Phase == EExtractionPhase::Active && PS && PS->Life == EExtractionLife::Alive
+	return C && GS && GS->Phase == EExtractionPhase::Active && (C->bExtractionGuard || (PS && PS->Life == EExtractionLife::Alive))
 		&& !C->IsDefeated() && !C->bDisableGameplay;
+}
+
+void UExtractionCombatComponent::FireGuard(const FVector& Target)
+{
+	auto* C = Character();
+	if (!C || !C->HasAuthority() || !C->bExtractionGuard) return;
+	ServerRequestShot_Implementation(++LocalShotId, C->GetEquippedWeapon(), Target);
 }
 
 void UExtractionCombatComponent::RequestShot(const FVector& Target)
@@ -73,7 +80,7 @@ void UExtractionCombatComponent::ServerRequestShot_Implementation(uint32 ShotId,
 	else ++RejectedShots;
 	// Never expose or overwrite an unrelated player's weapon from a forged request.
 	AWeapon* OwnedWeapon = IsValid(Weapon) && Weapon->GetOwner() == C ? Weapon : (C ? C->GetEquippedWeapon() : nullptr);
-	ClientShotResult(LastProcessedShot, OwnedWeapon, OwnedWeapon ? OwnedWeapon->GetAmmo() : 0, Valid);
+	if (!C || !C->bExtractionGuard) ClientShotResult(LastProcessedShot, OwnedWeapon, OwnedWeapon ? OwnedWeapon->GetAmmo() : 0, Valid);
 }
 
 void UExtractionCombatComponent::ClientShotResult_Implementation(uint32 ShotId, AWeapon* Weapon, int32 Ammo,
