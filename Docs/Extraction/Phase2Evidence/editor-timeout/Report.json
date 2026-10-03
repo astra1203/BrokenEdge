@@ -1,0 +1,5500 @@
+{
+  "started_utc": "2026-10-02T15:11:47.253334+00:00",
+  "options": {
+    "tag": "Timeout04",
+    "packaged": false,
+    "lag": false,
+    "debug_hold": false,
+    "scenario": "timeout"
+  },
+  "checks": [
+    {
+      "name": "A joined LAN lobby",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Game/Blueprints/GameMode/BP_LobbyGameMode.BP_LobbyGameMode_C",
+          "capacity": 2,
+          "session": true,
+          "players": [
+            {
+              "name": "DESKTOP-M9PA1SF-5B62",
+              "id": 256,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        },
+        "A": {
+          "role": "A",
+          "command": 1,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "session": true,
+          "has_pawn": false,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "DESKTOP-M9PA1SF-5B62",
+              "id": 256,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        }
+      }
+    },
+    {
+      "name": "A name replicated",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Game/Blueprints/GameMode/BP_LobbyGameMode.BP_LobbyGameMode_C",
+          "capacity": 2,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        },
+        "A": {
+          "role": "A",
+          "command": 2,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "session": true,
+          "has_pawn": false,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        }
+      }
+    },
+    {
+      "name": "B joined LAN lobby",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Game/Blueprints/GameMode/BP_LobbyGameMode.BP_LobbyGameMode_C",
+          "capacity": 2,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false
+            },
+            {
+              "name": "DESKTOP-M9PA1SF-E426",
+              "id": 257,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        },
+        "A": {
+          "role": "A",
+          "command": 2,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "session": true,
+          "has_pawn": false,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        },
+        "B": {
+          "role": "B",
+          "command": 1,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 3,
+          "local_players": 1,
+          "game_mode": "/Game/Blueprints/GameMode/BP_LobbyGameMode.BP_LobbyGameMode_C",
+          "capacity": 16,
+          "session": true,
+          "has_pawn": false,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "DESKTOP-M9PA1SF-E426",
+              "id": 256,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        }
+      }
+    },
+    {
+      "name": "B name replicated",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Game/Blueprints/GameMode/BP_LobbyGameMode.BP_LobbyGameMode_C",
+          "capacity": 2,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        },
+        "A": {
+          "role": "A",
+          "command": 2,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "session": true,
+          "has_pawn": false,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        },
+        "B": {
+          "role": "B",
+          "command": 2,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "session": true,
+          "has_pawn": false,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        }
+      }
+    },
+    {
+      "name": "All players loaded in Extraction",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.50001609325409,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                600
+              ]
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                598.4799927781345
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 3,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.718952897936106,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                595.8410829792074
+              ]
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                584.3923523248527
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 3,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.691379331052303,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                588.5924241948128
+              ]
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                600
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Dedicated authority and Stinger pawns",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.50001609325409,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                600
+              ]
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                598.4799927781345
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 3,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.718952897936106,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                595.8410829792074
+              ]
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                584.3923523248527
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 3,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.691379331052303,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                588.5924241948128
+              ]
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                600
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A real pickup overlap",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.973424088209867,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_2",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.4447639857299
+              ]
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_3",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                456.1500009537437
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 3,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.986375257372856,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_3",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                456.1500009537437
+              ]
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.44
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 3,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.998220160603523,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                456.15000000000003
+              ]
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_2",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.4447658578395
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A equipped AK",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.702846091240644,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_2",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.4447639857299
+              ]
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1500009537437
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 4,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.74766667559743,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1500009537437
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.44
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 3,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.765839021652937,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                456.15000000000003
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_2",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.4447658578395
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "B real pickup overlap",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.702846091240644,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_2",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.4447639857299
+              ]
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1500009537437
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 4,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.74766667559743,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1500009537437
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.44
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 3,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.765839021652937,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                456.15000000000003
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_2",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.4447658578395
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "B equipped AK",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.569703191518784,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                -1500,
+                -300,
+                456.4447639857299
+              ],
+              "weapon": "BP_AK47_C_2",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1500009537437
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 4,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.636927258223295,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1500009537437
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.44
+              ],
+              "weapon": "BP_AK47_C_2",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 4,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.644200921058655,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                456.15000000000003
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                -1500,
+                -300,
+                456.4447658578395
+              ],
+              "weapon": "BP_AK47_C_2",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Round deadline ends with living players",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 2,
+          "alive": 2,
+          "remaining": 10,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": true,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                -1500,
+                -300,
+                456.4447639857299
+              ],
+              "weapon": "BP_AK47_C_2",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": true,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1500009537437
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 5,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 0.16812995821237564,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1500009537437
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.44
+              ],
+              "weapon": "BP_AK47_C_2",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 5,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 2,
+          "alive": 2,
+          "remaining": 10.117555543780327,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": true,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                456.15000000000003
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": true,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                -1500,
+                -300,
+                456.4447658578395
+              ],
+              "weapon": "BP_AK47_C_2",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Returns to ready lobby after status interval",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Game/Blueprints/GameMode/BP_LobbyGameMode.BP_LobbyGameMode_C",
+          "capacity": 2,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        },
+        "A": {
+          "role": "A",
+          "command": 5,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "session": true,
+          "has_pawn": false,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        },
+        "B": {}
+      }
+    },
+    {
+      "name": "Ready flags reset in lobby",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Game/Blueprints/GameMode/BP_LobbyGameMode.BP_LobbyGameMode_C",
+          "capacity": 2,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        },
+        "A": {
+          "role": "A",
+          "command": 5,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "session": true,
+          "has_pawn": false,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        },
+        "B": {
+          "role": "B",
+          "command": 5,
+          "error": "",
+          "map": "/Game/Maps/Lobby",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "session": true,
+          "has_pawn": false,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false
+            }
+          ],
+          "weapons": []
+        }
+      }
+    },
+    {
+      "name": "All players loaded in Extraction",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.527283195406199,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                599.5629630019552
+              ]
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                600
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 6,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.871470361948013,
+          "session": true,
+          "has_pawn": false,
+          "width": 0,
+          "height": 0,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                600
+              ]
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                600
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 6,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.786475822329521,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                593.6400605677427
+              ]
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                599.1254600438398
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Dedicated authority and Stinger pawns",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.427213493734598,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                590.6669108430166
+              ]
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                590.4923323594542
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 6,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.625119864940643,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                586.6291721261509
+              ]
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                587.1744587105512
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 6,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.786475822329521,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                593.6400605677427
+              ]
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                599.1254600438398
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A real pickup overlap",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.08976599574089,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_2",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                490.01101084319725
+              ]
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_3",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                487.553245099503
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 6,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.308845270425081,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_3",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                523.0109069889138
+              ]
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                523.1681292575598
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 6,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.298944067209959,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                525.0059969735146
+              ]
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_2",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                524.6406226220405
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "A equipped AK",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.990112695842981,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_2",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.44476673504244
+              ]
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1499978377579
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 7,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.075965106487274,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1500037939342
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.44
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 6,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.039667040109634,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                456.15000000000003
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_2",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.4447647515425
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "B real pickup overlap",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.990112695842981,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_2",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.44476673504244
+              ]
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1499978377579
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 7,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.075965106487274,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1500037939342
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.44
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 6,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 14.039667040109634,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                456.15000000000003
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "BP_AK47_C_2",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.4447647515425
+              ]
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "B equipped AK",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.65518119558692,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                -1500,
+                -300,
+                456.44476673504244
+              ],
+              "weapon": "BP_AK47_C_2",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1499978377579
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 7,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.726443871855736,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1500037939342
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.44
+              ],
+              "weapon": "BP_AK47_C_2",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 7,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 13.664824023842812,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                456.15000000000003
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                -1500,
+                -300,
+                456.4447647515425
+              ],
+              "weapon": "BP_AK47_C_2",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Same session starts a second round",
+      "states": {
+        "Server": {
+          "role": "Server",
+          "command": 0,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 1,
+          "local_players": 0,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "game_mode": "/Script/BrokenEdge.ExtractionGameMode",
+          "capacity": 2,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 12.589260794222355,
+          "session": true,
+          "players": [
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                -1500,
+                -300,
+                456.44476673504244
+              ],
+              "weapon": "BP_AK47_C_2",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1499978377579
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "A": {
+          "role": "A",
+          "command": 7,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 12.587633516639471,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                1400,
+                4200,
+                456.1500037939342
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                -1500,
+                -300,
+                456.44
+              ],
+              "weapon": "BP_AK47_C_2",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        },
+        "B": {
+          "role": "B",
+          "command": 7,
+          "error": "",
+          "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "net_mode": 3,
+          "local_players": 1,
+          "packet_lag": 0,
+          "packet_loss": 0,
+          "phase": 1,
+          "alive": 2,
+          "remaining": 12.653932102024555,
+          "session": true,
+          "spectating": false,
+          "spectated": "",
+          "has_pawn": true,
+          "width": 1280,
+          "height": 720,
+          "players": [
+            {
+              "name": "EX_A",
+              "id": 256,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": false,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 0,
+              "position": [
+                1400,
+                4200,
+                456.15000000000003
+              ],
+              "weapon": "BP_AK47_C_3",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            },
+            {
+              "name": "EX_B",
+              "id": 257,
+              "ready": false,
+              "life": 0,
+              "health": 80,
+              "shield": 0,
+              "disabled": false,
+              "defeated": false,
+              "first_person": true,
+              "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+              "overlap": "",
+              "accepted": 0,
+              "rejected": 0,
+              "combat_state": 0,
+              "carried_ammo": 480,
+              "position": [
+                -1500,
+                -300,
+                456.4447647515425
+              ],
+              "weapon": "BP_AK47_C_2",
+              "ammo": 30,
+              "damage": 20,
+              "head_damage": 40
+            }
+          ],
+          "weapons": [
+            {
+              "name": "BP_AK47_C_2",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_0"
+            },
+            {
+              "name": "BP_AK47_C_3",
+              "ammo": 30,
+              "state": 1,
+              "owner": "BP_StingerCharacter_C_1"
+            },
+            {
+              "name": "BP_AK47_C_4",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_5",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_6",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_7",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_8",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            },
+            {
+              "name": "BP_AK47_C_9",
+              "ammo": 30,
+              "state": 0,
+              "owner": "None"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "processes": {
+    "Server": {
+      "pid": 18932,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-server",
+        "/Game/Maps/Lobby",
+        "-nosound",
+        "-unattended",
+        "-nosplash",
+        "-NoLoadingScreen",
+        "-MatchType=Extraction",
+        "-NumPublicConnections=2",
+        "-MinPlayersToStart=2",
+        "-port=27777",
+        "-ExtractionRoundSeconds=15",
+        "-ExtractionTestRole=Server",
+        "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Timeout04",
+        "-ExecCmds=BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Timeout04\\Server.log",
+        "-nullrhi"
+      ],
+      "environment_overrides": {
+        "UE_SKIP_UBT_SDK_SETUP": "1"
+      },
+      "exit_code": 0
+    },
+    "A": {
+      "pid": 17480,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-game",
+        "/Game/Maps/Lobby",
+        "-nosound",
+        "-unattended",
+        "-nosplash",
+        "-NoLoadingScreen",
+        "-MatchType=Extraction",
+        "-NumPublicConnections=2",
+        "-MinPlayersToStart=2",
+        "-port=27777",
+        "-ExtractionRoundSeconds=15",
+        "-ExtractionTestRole=A",
+        "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Timeout04",
+        "-ExecCmds=BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Timeout04\\A.log",
+        "-RenderOffscreen",
+        "-windowed",
+        "-ResX=1280",
+        "-ResY=720"
+      ],
+      "environment_overrides": {
+        "UE_SKIP_UBT_SDK_SETUP": "1"
+      },
+      "exit_code": 0
+    },
+    "B": {
+      "pid": 39804,
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-game",
+        "/Game/Maps/Lobby",
+        "-nosound",
+        "-unattended",
+        "-nosplash",
+        "-NoLoadingScreen",
+        "-MatchType=Extraction",
+        "-NumPublicConnections=2",
+        "-MinPlayersToStart=2",
+        "-port=27777",
+        "-ExtractionRoundSeconds=15",
+        "-ExtractionTestRole=B",
+        "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Timeout04",
+        "-ExecCmds=BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Timeout04\\B.log",
+        "-RenderOffscreen",
+        "-windowed",
+        "-ResX=1280",
+        "-ResY=720"
+      ],
+      "environment_overrides": {
+        "UE_SKIP_UBT_SDK_SETUP": "1"
+      },
+      "exit_code": 0
+    }
+  },
+  "result": "passed"
+}

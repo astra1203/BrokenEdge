@@ -7,31 +7,38 @@
 UCLASS()
 class BROKENEDGE_API ULobbyWidget : public UUserWidget
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
+
 public:
-    void Refresh();
+	void Refresh();
+
 protected:
-    virtual bool Initialize() override;
+	virtual bool Initialize() override;
+
 private:
-    UFUNCTION()
-    void ReadyClicked();
-    UFUNCTION()
-    void FreeForAllClicked();
-    UFUNCTION()
-    void TeamsClicked();
-    UPROPERTY(Transient)
-    TObjectPtr<class UButton> FreeForAllButton;
-    UPROPERTY(Transient)
-    TObjectPtr<UButton> TeamsButton;
-    UPROPERTY(Transient)
-    TObjectPtr<class UTextBlock> RoomInfo;
-    UPROPERTY(Transient)
-    TObjectPtr<UTextBlock> Status;
-    UPROPERTY(Transient)
-    TObjectPtr<UTextBlock> ReadyLabel;
-    UPROPERTY(Transient)
-    TObjectPtr<class UButton> ReadyButton;
-    UPROPERTY(Transient)
-    TObjectPtr<class UScrollBox> Roster;
-    FString LastRoster;
+	UFUNCTION()
+	void ReadyClicked();
+	UFUNCTION()
+	void FreeForAllClicked();
+	UFUNCTION()
+	void TeamsClicked();
+	UFUNCTION()
+	void ExtractionClicked();
+	UPROPERTY(Transient)
+	TObjectPtr<class UButton> ExtractionButton;
+	UPROPERTY(Transient)
+	TObjectPtr<class UButton> FreeForAllButton;
+	UPROPERTY(Transient)
+	TObjectPtr<UButton> TeamsButton;
+	UPROPERTY(Transient)
+	TObjectPtr<class UTextBlock> RoomInfo;
+	UPROPERTY(Transient)
+	TObjectPtr<UTextBlock> Status;
+	UPROPERTY(Transient)
+	TObjectPtr<UTextBlock> ReadyLabel;
+	UPROPERTY(Transient)
+	TObjectPtr<class UButton> ReadyButton;
+	UPROPERTY(Transient)
+	TObjectPtr<class UScrollBox> Roster;
+	FString LastRoster;
 };

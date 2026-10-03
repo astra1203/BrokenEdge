@@ -182,7 +182,7 @@ void ABrokenEdgePlayerController::ClientDefeatedAnnouncement_Implementation(APla
 
 	if (Attacker == Self && Victim != Self)
 	{
-		BrokenEdgeHUD->AddDefeatedAnnouncement(TEXT("你"),Victim->GetPlayerName());
+		BrokenEdgeHUD->AddDefeatedAnnouncement(TEXT("你"), Victim->GetPlayerName());
 		return;
 	}
 
@@ -197,14 +197,12 @@ void ABrokenEdgePlayerController::ClientDefeatedAnnouncement_Implementation(APla
 		BrokenEdgeHUD->AddDefeatedAnnouncement(TEXT("你"),TEXT("你自己"));
 		return;
 	}
-	if (Attacker==Victim&&Attacker!=Self)
+	if (Attacker == Victim && Attacker != Self)
 	{
 		BrokenEdgeHUD->AddDefeatedAnnouncement(Attacker->GetPlayerName(),TEXT("他自己"));
 		return;
 	}
-	BrokenEdgeHUD->AddDefeatedAnnouncement(Attacker->GetPlayerName(),Victim->GetPlayerName());
-
-	
+	BrokenEdgeHUD->AddDefeatedAnnouncement(Attacker->GetPlayerName(), Victim->GetPlayerName());
 }
 
 void ABrokenEdgePlayerController::ServerSetLobbyReady_Implementation(bool bReady)
@@ -223,7 +221,8 @@ void ABrokenEdgePlayerController::ServerSetLobbyMatchType_Implementation(const F
 
 void ABrokenEdgePlayerController::UpdateLobbyUI()
 {
-	if (!IsLocalController()) return;
+	// Seamless travel briefly keeps the old local controller after its Player was transferred.
+	if (!IsLocalController() || !GetLocalPlayer()) return;
 	if (GetNetMode() != NM_Standalone && GetWorld()->GetGameState<ALobbyGameState>()
 		&& LobbyTravelWorld.Get() != GetWorld())
 	{
@@ -252,7 +251,8 @@ void ABrokenEdgePlayerController::RemoveLobbyUI()
 	SetShowMouseCursor(false);
 }
 
-void ABrokenEdgePlayerController::PreClientTravel(const FString& PendingURL, ETravelType TravelType, bool bIsSeamlessTravel)
+void ABrokenEdgePlayerController::PreClientTravel(const FString& PendingURL, ETravelType TravelType,
+                                                  bool bIsSeamlessTravel)
 {
 	LobbyTravelWorld = GetWorld();
 	RemoveLobbyUI();

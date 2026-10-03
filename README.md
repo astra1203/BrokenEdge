@@ -83,7 +83,7 @@ git lfs ls-files | Select-Object -First 20
 
 ### 专用服务器会话
 
-当前使用 `OnlineSubsystemNull`。专服在大厅 `BeginPlay` 后自动创建并广播专用会话，失败时每 5 秒重试。客户端的 Host 按钮隐藏，只搜索同项目、同模式、有空位的专服；加入后解析服务器地址并执行 `ClientTravel`。
+当前使用 `OnlineSubsystemNull`。专服在大厅 `BeginPlay` 后自动创建并广播专用会话，失败时每 5 秒重试。客户端的 Host 按钮隐藏，房间列表显示本项目发现的专服及其模式；选择房间后解析服务器地址并执行 `ClientTravel`。
 
 专服从 `Config/DefaultGame.ini` 读取：
 
@@ -95,13 +95,13 @@ MatchType=FreeForAll
 bAutoStartSession=True
 ```
 
-`NumPublicConnections` 是容量；`MinPlayersToStart` 是开局所需的真实客户端数量，专服本身不算玩家。满足人数后启动在线会话，并无缝跳转到所选比赛地图。将 `bAutoStartSession` 设为 False 会停留在大厅。当前支持 `FreeForAll` 和 `Teams`。
+`NumPublicConnections` 是容量；`MinPlayersToStart` 是开局所需的真实客户端数量，专服本身不算玩家。满足人数且全员准备后启动在线会话，并无缝跳转到所选比赛地图。将 `bAutoStartSession` 设为 False 会停留在大厅。当前支持 `FreeForAll`、`Teams` 和 `Extraction`；后者的死亡观战、返回大厅和验收记录见 [阶段 2](Docs/Extraction/Phase2.md)。
 
 启动参数 `-NumPublicConnections=`、`-MinPlayersToStart=`、`-MatchType=` 优先于配置。客户端菜单模式可以由 `BP_LobbyGameMode.MenuMatchType` 或启动参数 `-MatchType=` 指定；旧的 `Menu Num Public Connections` 不再决定服务器容量。
 
 ### 打包与启动
 
-保存并关闭 UE 编辑器后，依次运行仓库根目录的 `PackageServer.bat` 和 `PackageClient.bat`。两个包都包含 Lobby、FreeForAll、Teams，避免大厅跳图后缺少已烘焙地图。
+保存并关闭 UE 编辑器后，依次运行仓库根目录的 `PackageServer.bat` 和 `PackageClient.bat`。两个包都包含 Lobby、FreeForAll、Teams 和 L_SpaceCenterExtraction，避免大厅跳图后缺少已烘焙地图。
 
 也可以在未被编辑器打开的完整工程副本中顺序打包，以保留当前编辑器。脚本只检查目标工程是否打开；环境变量 `BROKENEDGE_PACKAGE_ROOT` 可指定产物根目录，两个脚本分别输出到其 `Server` 和 `Client` 子目录。副本仅包含磁盘上已保存的内容。
 

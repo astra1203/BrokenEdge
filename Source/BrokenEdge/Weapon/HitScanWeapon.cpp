@@ -2,6 +2,7 @@
 
 
 #include "HitScanWeapon.h"
+#include "BrokenEdge/Extraction/ExtractionState.h"
 
 #include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
@@ -60,7 +61,7 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 			);
 		}
 
-		if (!HasAuthority() && bUseServerSideRewind)
+		if (!HasAuthority() && bUseServerSideRewind && !GetWorld()->GetGameState<AExtractionGameState>())
 		{
 			BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr
 				                           ? Cast<ABrokenEdgeCharacter>(OwnerPawn)
@@ -145,7 +146,13 @@ void AHitScanWeapon::WeaponTraceHit(const FVector& TraceStart, const FVector& Hi
 	}
 
 	if (CVarHitScanDebug.GetValueOnGameThread())
+	{
 		DrawDebugSphere(GetWorld(), BeamEnd, 16.f, 12, FColor::Orange, false, 1.f);
+		UE_LOG(LogTemp, Display,
+		       TEXT("HITSCAN_TRACE Authority=%d Start=%s Target=%s Hit=%s Component=%s Bone=%s Impact=%s"),
+		       HasAuthority(), *TraceStart.ToString(), *HitTarget.ToString(), *GetNameSafe(OutHit.GetActor()),
+		       *GetNameSafe(OutHit.GetComponent()), *OutHit.BoneName.ToString(), *OutHit.ImpactPoint.ToString());
+	}
 
 	if (BeamParticles)
 	{

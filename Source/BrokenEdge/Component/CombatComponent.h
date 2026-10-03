@@ -11,14 +11,15 @@
 
 enum class EWeaponType : uint8;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class BROKENEDGE_API UCombatComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 	friend class ABrokenEdgeCharacter;
+	friend class UExtractionCombatComponent;
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UCombatComponent();
 
@@ -33,6 +34,7 @@ public:
 	/// 切换武器（主/副武器）
 	void SwapWeapons();
 	void Reload();
+	int32 GetCarriedAmmo() const { return CarriedAmmo; }
 
 	void Drop();
 	void FireButtonPressed(bool bPressed);
@@ -94,7 +96,7 @@ public:
 	void LocalFire(const FVector_NetQuantize& TraceHitTarget);
 	bool CanFire();
 	void UpdateAmmoValues();
-	
+
 	void UpdateShotgunAmmoValues();
 	void JumpToShotgunEnd();
 
@@ -109,25 +111,25 @@ public:
  */
 	UFUNCTION(BlueprintCallable)
 	void FinishSwap();
-	
+
 	/**
 	 * @brief 完成武器切换并附加武器（蓝图调用）
 	 */
 	UFUNCTION(BlueprintCallable)
 	void FinishSwapAttachWeapons();
 
-	
+
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-
-public:	
+public:
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	/** 是否正在本地换弹 */
 	bool bLocallyReloading = false;
-	
+
 	/**
  * @brief 拾取弹药
  * @param WeaponType 武器类型
@@ -153,14 +155,14 @@ protected:
  */
 	void AttachActorToRightHand(AActor* ActorToAttach);
 
-	
+
 	/**
 	 * @brief 将Actor附加到背包
 	 * @param ActorToAttach 要附加的Actor
 	 */
 	void AttachActorToBackpack(AActor* ActorToAttach);
 
-	
+
 	/**
  * @brief 装备主武器
  * @param WeaponToEquip 要装备的武器
@@ -185,34 +187,35 @@ protected:
  */
 	UFUNCTION(Server, Reliable)
 	void ServerSetAiming(bool bIsAiming);
-	
+
 	/**
  * @brief 准星下的射线检测
  * @param TraceHitResult 输出检测结果
  */
 	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
-	
+
 	/**
  * @brief 更新HUD准星
  * @param DeltaTime 时间增量
  */
 	void SetHUDCrosshairs(float DeltaTime);
-	
+
 	/**
  * @brief 更新携带弹药数量
  */
 	void UpdateCarriedAmmo();
-	
+
 	/**
  * @brief 服务器端换弹
  */
 	UFUNCTION(Server, Reliable)
 	void ServerReload();
-	
+
 	/**
  * @brief 处理换弹逻辑
  */
 	void HandleReload();
+
 private:
 	/// 关联的角色
 	UPROPERTY()
@@ -221,11 +224,11 @@ private:
 	/** 玩家控制器 */
 	UPROPERTY()
 	class ABrokenEdgePlayerController* Controller;
-	
+
 	/** HUD引用 */
 	UPROPERTY()
 	class ABrokenEdgeHUD* HUD;
-	
+
 	/** 当前装备的武器 */
 	UPROPERTY(ReplicatedUsing = OnRep_EquippedWeapon)
 	class AWeapon* EquippedWeapon;
@@ -247,17 +250,17 @@ private:
 	UFUNCTION()
 	void OnRep_SecondaryWeapon();
 
-	
+
 	/** 是否正在瞄准 */
 	UPROPERTY(ReplicatedUsing = OnRep_Aiming)
 	bool bAiming = false;
-	
+
 	UFUNCTION()
 	void OnRep_Aiming();
-	
+
 	/** 瞄准按钮是否按下 */
 	bool bAimButtonPressed = false;
-	
+
 	/** 基础移动速度 */
 	UPROPERTY(EditAnywhere)
 	float BaseWalkSpeed;
@@ -270,41 +273,41 @@ private:
 
 	/** 开火计时器 */
 	FTimerHandle FireTimer;
-	
+
 	/** 瞄准移动速度 */
 	UPROPERTY(EditAnywhere)
 	float AimWalkSpeed;
 
 	/** 命中目标位置 */
 	FVector HitTarget;
-	
+
 	/** 准星速度因子 */
 	float CrosshairVelocityFactor;
-	
+
 	/** 准星空中因子 */
 	float CrosshairInAirFactor;
-	
+
 	/** 准星瞄准因子 */
 	float CrosshairAimFactor;
-	
+
 	/** 准星射击因子 */
 	float CrosshairShootingFactor;
-	
+
 	/** HUD数据包 */
 	FHUDPackage HUDPackage;
-	
+
 	/**
  * @brief 视野插值
  * @param DeltaTime 时间增量
  */
 	void InterpFOV(float DeltaTime);
-	
+
 	/** 默认视野 */
 	float DefaultFOV;
-	
+
 	/** 当前视野 */
 	float CurrentFOV;
-	
+
 	/** 视野插值速度 */
 	UPROPERTY(EditAnywhere, Category = Combat)
 	float ZoomInterpSpeed = 20.f;
@@ -348,7 +351,7 @@ private:
  */
 	UFUNCTION()
 	void OnRep_CarriedAmmo();
-	
+
 	/** 各类型武器的携带弹药映射 */
 	TMap<EWeaponType, int32> CarriedAmmoMap;
 
@@ -388,8 +391,7 @@ private:
 	 * @brief 初始化携带弹药
 	 */
 	void InitializeCarriedAmmo();
-	
-	
+
 public:
 	/**
 	 * @brief 检查是否应该切换武器

@@ -6,10 +6,16 @@
 #include "MultiplayerSessionsSubsystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnCreateSessionComplete, bool, bWasSuccessful);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FMultiplayerOnFindSessionsComplete, const TArray<FOnlineSessionSearchResult>&, bool);
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FMultiplayerOnFindSessionsComplete, const TArray<FOnlineSessionSearchResult>&,
+                                     bool);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMultiplayerOnJoinSessionComplete, EOnJoinSessionCompleteResult::Type);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnDestorySessionComplete, bool, bWasSuccessful);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnStartSessionComplete, bool, bWasSuccessful);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnEndSessionComplete, bool, bWasSuccessful);
+
 DECLARE_MULTICAST_DELEGATE_OneParam(FMultiplayerOnUpdateMatchTypeComplete, bool);
 
 /** 按 GameInstance/World 隔离的异步会话生命周期。保留既有 Destory 拼写以兼容调用方。 */
@@ -31,6 +37,10 @@ public:
 	void DestorySession();
 	UFUNCTION(BlueprintCallable, Category = "Multiplayer Sessions")
 	void StartSession();
+	UFUNCTION(BlueprintCallable, Category = "Multiplayer Sessions")
+	void EndSession();
+	UPROPERTY(BlueprintAssignable, Category = "Multiplayer Sessions")
+	FMultiplayerOnEndSessionComplete MultiplayerOnEndSessionComplete;
 	void UpdateMatchType(const FString& MatchType);
 	FMultiplayerOnUpdateMatchTypeComplete MultiplayerOnUpdateMatchTypeComplete;
 
@@ -66,6 +76,7 @@ private:
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 	void OnDestorySessionComplete(FName SessionName, bool bWasSuccessful);
 	void OnStartSessionComplete(FName SessionName, bool bWasSuccessful);
+	void OnEndSessionComplete(FName SessionName, bool bWasSuccessful);
 	void OnUpdateMatchTypeComplete(FName SessionName, bool bWasSuccessful);
 
 	IOnlineSessionPtr SessionInterface;
@@ -81,6 +92,7 @@ private:
 	FDelegateHandle DestorySessionCompleteDelegateHandle;
 	FOnStartSessionCompleteDelegate StartSessionCompleteDelegate;
 	FDelegateHandle StartSessionCompleteDelegateHandle;
+	FDelegateHandle EndSessionCompleteDelegateHandle;
 	FDelegateHandle UpdateSessionCompleteDelegateHandle;
 	FString PendingMatchType;
 	bool bCreateSessionOnDestory = false;

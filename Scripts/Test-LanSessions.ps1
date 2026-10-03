@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$EngineRoot = 'D:\UnrealEngine-5.5.4-release',
+    [string]$EngineRoot = 'C:\UnrealProjects\UnrealEngine-5.8.3-release',
     [switch]$Packaged,
     [switch]$Render,
     [switch]$SwitchMode,

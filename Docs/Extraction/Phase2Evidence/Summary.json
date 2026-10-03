@@ -1,0 +1,310 @@
+{
+  "created_utc": "2026-10-02T18:25:11.955395+00:00",
+  "base_commit": "d628b5dabc55a01269ce27524e523d007d993eb4",
+  "engine": "C:/UnrealProjects/UnrealEngine-5.8.3-release",
+  "runs": [
+    {
+      "name": "build/BuildEditor13",
+      "folder": "Saved/Extraction/BuildEditor13",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "build/BuildServer03",
+      "folder": "Saved/Extraction/BuildServer03",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "build/PackageServer04",
+      "folder": "Saved/Extraction/PackageServer04",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "build/PackageClient02",
+      "folder": "Saved/Extraction/PackageClient02",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "editor-lag",
+      "folder": "Saved/Extraction/CombatLag03",
+      "report": "Report.json"
+    },
+    {
+      "name": "editor-spectator",
+      "folder": "Saved/Extraction/Spectator05",
+      "report": "Report.json"
+    },
+    {
+      "name": "editor-timeout",
+      "folder": "Saved/Extraction/Timeout04",
+      "report": "Report.json"
+    },
+    {
+      "name": "packaged-combat",
+      "folder": "Saved/Extraction/PackagedCombat02",
+      "report": "Report.json"
+    },
+    {
+      "name": "packaged-lag",
+      "folder": "Saved/Extraction/PackagedLag01",
+      "report": "Report.json"
+    },
+    {
+      "name": "packaged-spectator",
+      "folder": "Saved/Extraction/PackagedSpectator01",
+      "report": "Report.json"
+    },
+    {
+      "name": "packaged-timeout",
+      "folder": "Saved/Extraction/PackagedTimeout01",
+      "report": "Report.json"
+    },
+    {
+      "name": "packaged-load-timeout",
+      "folder": "Saved/Extraction/PackagedLoadTimeout01",
+      "report": "Report.json"
+    },
+    {
+      "name": "packaged-disconnect",
+      "folder": "Saved/Extraction/PackagedDisconnect01",
+      "report": "Report.json"
+    },
+    {
+      "name": "legacy-audit",
+      "folder": "Saved/Stinger/Baseline/Phase2Audit01",
+      "report": "Audit.json",
+      "metadata": "Run.json"
+    },
+    {
+      "name": "legacy-grip",
+      "folder": "Saved/Stinger/Baseline/Phase2Grip01",
+      "report": "third_person_grip_p0_2p.json",
+      "metadata": "Run.json"
+    },
+    {
+      "name": "legacy-actions",
+      "folder": "Saved/Stinger/Baseline/Phase2Actions02",
+      "report": "pie_validation.json",
+      "metadata": "Run.json"
+    },
+    {
+      "name": "legacy-combat",
+      "folder": "Saved/Stinger/Baseline/Phase2Combat02",
+      "report": "Combat.json",
+      "metadata": "Run.json"
+    },
+    {
+      "name": "legacy-visibility",
+      "folder": "Saved/Stinger/Baseline/Phase2Visibility01",
+      "report": "weapon_visibility_2p_stills.json",
+      "metadata": "Run.json"
+    },
+    {
+      "name": "space-audit",
+      "folder": "Saved/SpaceCenter/Runs/Phase2Audit01",
+      "report": "Report.json",
+      "metadata": "Run.json"
+    },
+    {
+      "name": "space-traverse",
+      "folder": "Saved/SpaceCenter/Runs/Phase2Traverse01",
+      "report": "Report.json",
+      "metadata": "Run.json"
+    },
+    {
+      "name": "legacy-lan",
+      "folder": "Saved/SessionTests/Dedicated-20261002-235952",
+      "report": "Report.json"
+    },
+    {
+      "name": "build/BuildEditor14",
+      "folder": "Saved/Extraction/BuildEditor14",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "packaged-server-startup",
+      "folder": "Saved/Extraction/PackagedServerStartup01",
+      "report": "Report.json"
+    },
+    {
+      "name": "build/BuildEditor15",
+      "folder": "Saved/Extraction/BuildEditor15",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "legacy-lan-packaged",
+      "folder": "Saved/SessionTests/Dedicated-20261003-022127",
+      "report": "Report.json"
+    }
+  ],
+  "implementation_sha256": {
+    ".gitattributes": "aa64eafb5561d75bb2f0ae851889fed8dd7c0ff33b7207f0734c481fbea41b38",
+    "BrokenEdge.uproject": "6d5d2fb43db38a1131cfa9a64eff084d82d2a14c8dec8db837cd3111973073cd",
+    "Content/Blueprints/Weapon/BP_AK47.uasset": "0f609a4509c100bb0fa2eee716daec9183f15a1321b909d2a9e7e4278baa9649",
+    "Content/Characters/Stinger/Blueprints/BP_StingerCharacter.uasset": "fcf7a55d690e5c4e4f116d9d330de1765106d5b1ec598030b68d53184e9eef25",
+    "Content/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired.uasset": "305e183389bc49addd13ee9d3b0e04c439b6465f8e66a21a06b3eb91ddfbec26",
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "d0fcdef2987632bf992ccc12b0fb05e45340996ba2167920cb47f71f08193dde",
+    "Content/Maps/SpaceCenter/L_SpaceCenterSample.umap": "7e1d74f14774de827914d57d407cdc1c9ca88cbee63413d1326fbda030685389",
+    "Content/Maps/SpaceCenter/Materials/M_SC_Surface.uasset": "32bda51028fe2fc3394c83583e026f5297a558cd1f06c2df3be9cae05d07f397",
+    "PackageClient.bat": "4d213cdabbebd15f0ce2314b99f425fc4b2e95eb0dbe221ce6e33db55014ed17",
+    "PackageServer.bat": "4cdf1c8955ee8fe1bcb60b63ccf7af9077e7d47dcd657ef879a3d1dedd649003",
+    "Plugins/MultiplayerSessions/Source/MultiplayerSessions/Private/MultiplayerSessionsSubsystem.cpp": "bfb83c860bdfd06fb3d8b86fea81e8866225667b3a9c25998c80c57192b2e7c3",
+    "Plugins/MultiplayerSessions/Source/MultiplayerSessions/public/MultiplayerSessionsSubsystem.h": "0f026f283b2a0167c10a8489350677b49bdcd54a7567ca685f0af09248e6a291",
+    "Plugins/MultiplayerSessions/Source/MultiplayerSessions/public/SessionModes.h": "e6b37497ce60ee7778ecbf1e9e0a3da813318cce87913205fb64d0fc0c18f358",
+    "README.md": "a91504a6b5659c5a4c06a8048348d27be5a7d6584454669ff54826d192784099",
+    "Scripts/Extraction/.gitignore": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+    "Scripts/Extraction/archive_evidence.py": "19424d998e2fdef0ef51fb6739a9d98f5a6f13abd067088445d4ce35d3c34a2c",
+    "Scripts/Extraction/fix_presentation.py": "e9c93781141792574e8c7a4c24df245c89888db15270128ccccfd8db45125a55",
+    "Scripts/Extraction/inspect_assets.py": "4effda450d294d1ae9a50caba1bc798cb5fc862035e0785aac9528a127e912a4",
+    "Scripts/Extraction/prepare_map.py": "ead3a89f878f0820a4da3697025dffaeb76ac252a440650861a9dd142274b567",
+    "Scripts/Extraction/run_build.py": "81e80a157fc4d6fe09ef605ed4b7e311e2599be30fef20fd65ae5fc352878e9a",
+    "Scripts/Extraction/run_network.py": "c5f9fe6d4a87c4c7aba0e8767cf42b95a61887c5a3a8e8d691974c9e1f700506",
+    "Scripts/SpaceCenter/import_sample.py": "c8d46283e6c876ee1916baf1ef262d818f3a0bd16731ece39d740b5686055f2e",
+    "Scripts/Test-LanSessions.ps1": "d5ee9dca3f1f412aba310bc69c5962393d811192ccc7117b68a84c0da2c508d6",
+    "Source/BrokenEdge/BrokenEdge.Build.cs": "902fe2e1fade18295da2fd519a72f9c38548176c8dfd04bfc57660b866edffdd",
+    "Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp": "1101af8c22e96a0de000005b903b9df17210b49a9ca71b98b8777188bf15da5a",
+    "Source/BrokenEdge/Character/BrokenEdgeCharacter.h": "3b19cb4df0950da97a9bc63364480931d0fea5dbb735c04c68fadaf212285725",
+    "Source/BrokenEdge/Character/StingerFirstPersonAnimInstance.cpp": "144f1d15769078cf455866e912f546062973102c0c398ef25744cd4610bc6702",
+    "Source/BrokenEdge/Component/CombatComponent.cpp": "b2e99aac66d775a347f5807ae3fdf60f9472fa96c70e60229bc10744a205fef5",
+    "Source/BrokenEdge/Component/CombatComponent.h": "87f3ca7ef9802fd766bd89139bf353c56a8cdbafb4a3b5af64a30eb02279aad8",
+    "Source/BrokenEdge/Component/LagCompensationComponent.cpp": "2928c9f7a6d027c201889a39c67a0ea1357b52a5ee72c1a42d255b3e79297fdd",
+    "Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp": "8574b165f5d1e3a8ffbe09aa897a1561fc294db282dbce7b9cbba0dd937e732d",
+    "Source/BrokenEdge/Extraction/ExtractionCombatComponent.h": "9f8900f143b2c9a626bc411ac674aabdfd43b81fa68062b9d41658695431706a",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp": "7657e9d752abb843b86efad8172008fecd065720e3d6b6485b00608401276d63",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.h": "657eef24cddcfc5f39be3b7a247c1783aa65c229a71a08916997b6886cec3112",
+    "Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp": "75fc4b80260cb08385e6293abdcd3503b14e251a40979dce3b2e9e87f489957c",
+    "Source/BrokenEdge/Extraction/ExtractionPlayerController.h": "d1d4f0d575f8467584bedea960694566eba4cda91823950dfa2eba9158c50f01",
+    "Source/BrokenEdge/Extraction/ExtractionState.cpp": "d4c3fa078f780195a110b62798d8b2bea831abfdea2e2ed1a1ec1b96809c9b0d",
+    "Source/BrokenEdge/Extraction/ExtractionState.h": "97ca11ea5a4f7072f985e5af9388f212f1cff1f0cb7af99c1616739474c5b3d9",
+    "Source/BrokenEdge/GameMode/LobbyGameMode.cpp": "8dc36d9ab09ee3d51ed566f10043a3e23f07d296fa88b7d0e0786181821e6e39",
+    "Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.cpp": "1c9d59a465b0211dc082a0d506d26d1529e5417270c097da813e8a6aae14034c",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "09dd6adabd0584afa9cdd948300ef0c07d70e383bf9c912974608719fe6abd6b",
+    "Source/BrokenEdge/UI/BrokenEdgeHUD.cpp": "eec99af9113c9c74fc21a76a4f0d965ceab6b13eb789f5b3b0642083c3b0956f",
+    "Source/BrokenEdge/UI/BrokenEdgeHUD.h": "14a3214f0a47ab7da24c327b4c6bbcca8109f36e82753944c889bbfd43ea3ac2",
+    "Source/BrokenEdge/UI/LobbyWidget.cpp": "6a8a21a00e2564b92c12afdabf968d394d2b4b69c7bdd7b309aff660a0460388",
+    "Source/BrokenEdge/UI/LobbyWidget.h": "d31b2dbf91eb7ad393f31302d77d3dc838b2516d71f1d9dead77aff46a6a220f",
+    "Source/BrokenEdge/Weapon/HitScanWeapon.cpp": "eaf4ac2a429d1801cd411e77802e906e3aa3cf5c46297ff0a4b3f1aacb015653",
+    "Source/BrokenEdge/Weapon/Weapon.h": "702a97bc9324cc64c2164d5b71fbf6df758761ee36fecf5dd84e91925efe5112"
+  },
+  "packages": {
+    "Packaged/Client/Windows/BrokenEdge.exe": {
+      "size": 173568,
+      "sha256": "061bdd6d6c67ab6f19e80c1cc06a9aaa8ad959bb767871d76b5bed6790e52c34"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe": {
+      "size": 337160704,
+      "sha256": "2d8bb57fd8d41a36c342d577dc75859db1d2b8d1f571cde6b85cede56306bee8"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.pak": {
+      "size": 11605833,
+      "sha256": "6832578faf1986b213115d6864af6a7ba18dbc4aec70cdb158d00b61fc4c5f01"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.ucas": {
+      "size": 695286048,
+      "sha256": "cdd27c80cb832ca2002c01bff44a94f673a2fbad29ccad076a87bcfbd3e52d34"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.utoc": {
+      "size": 910596,
+      "sha256": "43c2e72b32b9f2c1c66c4c675e02770aae160c23b2d1c6601294654a9f2fdcee"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3348912,
+      "sha256": "19f2a071dbb5c2d96971ad9a87c7a35cdc554edfe7e9e5fab6ff90865bd3bb0d"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "c5391a2bd728a01570d4dc01ed0c2f0baa0a9888ca2f8916169b36e8aaff5859"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdgeServer.exe": {
+      "size": 173568,
+      "sha256": "e9fa4aaa0667e5a6b5d24d86c95d7c126211a48deebb4a9b5b4dee4cac76c631"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe": {
+      "size": 317274112,
+      "sha256": "eadffdb7a71e7b266814a2e249edd6474d3f8ba8edcb8e713b3f52267e71fb70"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.pak": {
+      "size": 10577695,
+      "sha256": "8e2c426e3f8a4525e894c5763f5d5b3302869e1f33699478c9d746d10e8e9366"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.ucas": {
+      "size": 120526800,
+      "sha256": "8fc1b5522a4a33e5e5093e3e2dc6830ff645613e336680dfe93ca29719afa9a0"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.utoc": {
+      "size": 426981,
+      "sha256": "e8889f28d3ab14b805cf733b0f4e04fdcaa33e49def696116f2842e0aefa8517"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3348912,
+      "sha256": "19f2a071dbb5c2d96971ad9a87c7a35cdc554edfe7e9e5fab6ff90865bd3bb0d"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "c5391a2bd728a01570d4dc01ed0c2f0baa0a9888ca2f8916169b36e8aaff5859"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    }
+  },
+  "review": {
+    "status": "passed within documented Stage 2 scope",
+    "phase1_map_sha256": "7e1d74f14774de827914d57d407cdc1c9ca88cbee63413d1326fbda030685389",
+    "scope": "LAN Development dedicated server and two or three independent rendered clients; no eight-player capacity or Internet-service claim",
+    "network_simulation": "50 ms outgoing delay and 2 percent outgoing loss on server and clients, approximately 100 ms RTT",
+    "server_damage": "Current-world server muzzle ray and physics bones; production AK random scatter retained; owner prediction effects can differ from server scatter",
+    "performance": "Legacy regressions ran alongside compilation; this is not a new performance acceptance or comparison",
+    "historical_evidence": "Phase0 and Phase1 archives remain unchanged",
+    "asset_inspection": "AssetInspection.json is the pre-fix inspection. Saved asset hashes and runtime visibility checks describe the final state.",
+    "packaged_scenarios": {
+      "combat": 63,
+      "lag": 70,
+      "spectator": 102,
+      "timeout": 24,
+      "load_timeout": 4,
+      "disconnect": 13
+    },
+    "visual_review": {
+      "resolution": "1280x720",
+      "files": [
+        "packaged-combat/A-spawn.png",
+        "packaged-combat/A-ads.png",
+        "packaged-combat/A-third-person.png",
+        "packaged-combat/A-spectator.png",
+        "packaged-spectator/A-spectator.png",
+        "packaged-spectator/A-no-survivors.png"
+      ],
+      "observations": "Chinese UI legible; visible remote weapon grips contact; owner backpack section hidden, a lower-left uniform edge remains part of the upper-body arms asset; spectator controls and end state visible without texture-preparation overlay."
+    },
+    "first_packaged_network_stall": "PackagedCombat01 remote ammo stayed at 25 while server/owner were 24, with movement/network warnings. Root cause not established. PackagedDebug01 proved the remote burst multicast and ammo update. Formal combat, lag and three-client spectator runs all subsequently passed; this is not evidence of Internet or adapter interoperability reliability.",
+    "disconnect": "Client B is deliberately killed; its exit code 1 is expected. Server and surviving client exit 0 after authority reports one survivor in Active.",
+    "latest_builds": [
+      "BuildEditor15",
+      "PackageServer04",
+      "PackageClient02"
+    ],
+    "final_legacy_regressions": [
+      "Phase2Actions02:29",
+      "Phase2Combat02:21",
+      "Dedicated-20261003-022127 packaged:7"
+    ]
+  }
+}

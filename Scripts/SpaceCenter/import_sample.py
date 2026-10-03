@@ -73,10 +73,16 @@ def master(glass=False):
     name = 'M_SC_Glass' if glass else 'M_SC_Surface'
     path = ROOT + '/Materials/' + name
     if LIB.does_asset_exist(path) and state.get('master_version:' + name) == 2:
-        return LIB.load_asset(path)
+        mat = LIB.load_asset(path)
+        if not glass and not mat.get_editor_property('used_with_nanite'):
+            mat.set_editor_property('used_with_nanite', True)
+            EDIT.recompile_material(mat)
+            LIB.save_loaded_asset(mat)
+        return mat
     mat = LIB.load_asset(path) if LIB.does_asset_exist(path) else TOOLS.create_asset(name, ROOT + '/Materials', unreal.Material, unreal.MaterialFactoryNew())
     EDIT.delete_all_material_expressions(mat)
     mat.set_editor_property('two_sided', True)
+    mat.set_editor_property('used_with_nanite', not glass)
     if glass:
         mat.set_editor_property('blend_mode', unreal.BlendMode.BLEND_TRANSLUCENT)
     uv = expression(mat, unreal.MaterialExpressionTextureCoordinate, -800, -150)

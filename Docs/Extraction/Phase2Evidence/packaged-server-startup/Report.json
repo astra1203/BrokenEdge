@@ -1,0 +1,41 @@
+{
+  "command": [
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Server\\WindowsServer\\BrokenEdge\\Binaries\\Win64\\BrokenEdgeServer.exe",
+    "/Game/Maps/Lobby",
+    "-nullrhi",
+    "-unattended",
+    "-nosound",
+    "-port=27777",
+    "-MatchType=Extraction",
+    "-ExtractionTestRole=Server",
+    "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\PackagedServerStartup01",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+    "-TestExit=Automation Test Queue Empty",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\PackagedServerStartup01\\Server.log"
+  ],
+  "pid": 45984,
+  "result": "passed",
+  "checks": [
+    {
+      "name": "Packaged dedicated server boots lobby, advertises Extraction and has no local player",
+      "passed": true,
+      "state": {
+        "role": "Server",
+        "command": 0,
+        "error": "",
+        "map": "/Game/Maps/Lobby",
+        "net_mode": 1,
+        "local_players": 0,
+        "packet_lag": 0,
+        "packet_loss": 0,
+        "game_mode": "/Game/Blueprints/GameMode/BP_LobbyGameMode.BP_LobbyGameMode_C",
+        "capacity": 8,
+        "session": true,
+        "players": [],
+        "weapons": []
+      }
+    }
+  ],
+  "exit_code": 0,
+  "automation_result": "Success"
+}

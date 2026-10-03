@@ -21,7 +21,7 @@ REM PROJECT_FILE: 要打包的项目文件完整路径
 set "PROJECT_FILE=%PROJECT_ROOT%BrokenEdge.uproject"
 
 REM UE_ROOT: Unreal Engine 引擎安装根目录, 换引擎版本时改这一行
-set "UE_ROOT=D:\UnrealEngine-5.5.4-release"
+set "UE_ROOT=C:\UnrealProjects\UnrealEngine-5.8.3-release"
 
 REM RUN_UAT: 自动化工具入口 RunUAT.bat 的路径
 set "RUN_UAT=%UE_ROOT%\Engine\Build\BatchFiles\RunUAT.bat"
@@ -87,7 +87,7 @@ call "%RUN_UAT%" BuildCookRun ^
 	-archivedirectory="%OUTPUT_DIR%" ^
 	-platform=Win64 ^
 	-clientconfig=Development ^
-	-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams ^
+	-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction ^
 	-prereqs ^
 	-ubtargs="-NoHotReloadFromIDE" ^
 	-utf8output

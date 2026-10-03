@@ -286,9 +286,12 @@ struct FStingerWeaponProxy : FAnimInstanceProxy
 		bMove = false;
 		const auto Character = Cast<ABrokenEdgeCharacter>(Instance->GetOwningActor());
 		if (!Character || !Character->UsesFirstPersonWeaponFit()) return;
+		const auto EquippedWeapon = Character->GetEquippedWeapon();
+		// Replicated drop/death can clear the weapon before the visual mesh's next tick.
+		if (!IsValid(EquippedWeapon) || !IsValid(EquippedWeapon->GetWeaponMesh())) return;
 		// Preserve the gameplay weapon's evaluated rest pose (shared weapon skeletons
 		// can have a different reference pose from this mesh's import bind pose).
-		MeshReferencePose = Character->GetEquippedWeapon()->GetWeaponMesh()->GetBoneSpaceTransforms();
+		MeshReferencePose = EquippedWeapon->GetWeaponMesh()->GetBoneSpaceTransforms();
 		const auto& Fit = Character->FirstPersonWeaponFit;
 		Bone = Fit.MagazineBone;
 		const float Progress = Character->GetFirstPersonReloadProgress();

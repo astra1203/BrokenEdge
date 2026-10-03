@@ -22,7 +22,7 @@ void ABrokenEdgeHUD::BeginPlay()
 void ABrokenEdgeHUD::DrawHUD()
 {
 	Super::DrawHUD();
-	if (Canvas)
+	if (Canvas && IsValid(GetOwningPawn()))
 	{
 		// Draw in this player's canvas, including resized PIE and high-resolution captures.
 		const FVector2D ViewportCenter(Canvas->SizeX / 2.f, Canvas->SizeY / 2.f);
@@ -120,6 +120,7 @@ void ABrokenEdgeHUD::AddDefeatedAnnouncement(FString AttackerName, FString Victi
 void ABrokenEdgeHUD::DrawCrosshair(UTexture2D* Texture, FVector2D ViewportCenter, FVector2D Spread,
                                    FLinearColor CrosshairColor)
 {
+	if (!IsValid(Texture) || !Texture->GetResource()) return;
 	const float TextureWidth = Texture->GetSizeX();
 	const float TextureHeight = Texture->GetSizeY();
 

@@ -1,4 +1,5 @@
 #include "LobbyGameMode.h"
+#include "SessionModes.h"
 
 #include "Menu.h"
 #include "MultiplayerSessionsSubsystem.h"
@@ -43,7 +44,8 @@ void ALobbyGameMode::InitGame(const FString& MapName, const FString& Options, FS
 	Super::InitGame(MapName, Options, ErrorMessage);
 }
 
-void ALobbyGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
+void ALobbyGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId,
+                              FString& ErrorMessage)
 {
 	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
 	if (bTravelRequested) ErrorMessage = TEXT("MATCH_STARTING");
@@ -105,7 +107,8 @@ void ALobbyGameMode::SetPlayerReady(APlayerController* Player, bool bReady)
 	if (const ALobbyGameState* GS = GetGameState<ALobbyGameState>(); GS && GS->bModeUpdating) return;
 	ABrokenEdgePlayerState* PS = Player->GetPlayerState<ABrokenEdgePlayerState>();
 	if (!PS || PS->GetOwner() != Player || !GameState->PlayerArray.Contains(PS)
-		|| PS->IsInactive() || PS->IsOnlyASpectator()) return;
+		|| PS->IsInactive() || PS->IsOnlyASpectator())
+		return;
 	PS->SetLobbyReady(bReady);
 	UE_LOG(LogTemp, Log, TEXT("Lobby ready: Player=%s Ready=%d"), *PS->GetPlayerName(), bReady);
 	if (!bReady) CancelCountdown();
@@ -117,10 +120,12 @@ void ALobbyGameMode::SetMatchType(APlayerController* Player, const FString& Matc
 	if (GetNetMode() != NM_DedicatedServer || !Player || !GS || !Sessions
 		|| bTravelRequested || bStartingSession || GS->bModeUpdating || Sessions->IsBusy()
 		|| !Sessions->HasSession() || MatchType == Sessions->DesiredMatchType
-		|| (MatchType != TEXT("FreeForAll") && MatchType != TEXT("Teams"))) return;
+		|| !SessionModes::IsSupported(MatchType))
+		return;
 	const ABrokenEdgePlayerState* PS = Player->GetPlayerState<ABrokenEdgePlayerState>();
 	if (!PS || PS->GetOwner() != Player || !GS->PlayerArray.Contains(PS)
-		|| PS->IsInactive() || PS->IsOnlyASpectator() || PS->IsLobbyReady()) return;
+		|| PS->IsInactive() || PS->IsOnlyASpectator() || PS->IsLobbyReady())
+		return;
 	CancelCountdown();
 	GS->bModeUpdating = true;
 	GS->LobbyStatus = TEXT("正在切换游戏模式…");
@@ -198,9 +203,8 @@ void ALobbyGameMode::TryStartGame()
 	}
 	if (!AreAllPlayersReady()) return;
 
-	if (Sessions->DesiredMatchType == TEXT("FreeForAll")) PendingMap = TEXT("/Game/Maps/FreeForAll");
-	else if (Sessions->DesiredMatchType == TEXT("Teams")) PendingMap = TEXT("/Game/Maps/Teams");
-	else
+	PendingMap = SessionModes::Map(Sessions->DesiredMatchType);
+	if (PendingMap.IsEmpty())
 	{
 		UE_LOG(LogTemp, Error, TEXT("Lobby: unsupported MatchType '%s'"), *Sessions->DesiredMatchType);
 		GS->LobbyStatus = TEXT("服务器游戏模式无效，请联系房主");
@@ -241,10 +245,12 @@ void ALobbyGameMode::OnStartSession(bool bWasSuccessful)
 	// 异步开始期间可能取消准备或有玩家加入；重新校验，不使用请求时的快照。
 	ALobbyGameState* GS = GetGameState<ALobbyGameState>();
 	if (!GS || !AreAllPlayersReady() || GS->CountdownEndTime <= 0.0
-		|| GS->GetServerWorldTimeSeconds() < GS->CountdownEndTime) return;
+		|| GS->GetServerWorldTimeSeconds() < GS->CountdownEndTime)
+		return;
 	// 将容量传给下一张地图的 GameSession，直接 IP 连接也受人数限制。
-	bTravelRequested = GetWorld()->ServerTravel(FString::Printf(TEXT("%s?MaxPlayers=%d"),
-		*PendingMap, Sessions->DesiredNumPublicConnections));
+	bTravelRequested = GetWorld()->ServerTravel(FString::Printf(TEXT("%s?MaxPlayers=%d?ExpectedPlayers=%d"),
+	                                                            *PendingMap, Sessions->DesiredNumPublicConnections,
+	                                                            GameState->PlayerArray.Num()));
 	GS->bTravelling = bTravelRequested;
 	GS->ForceNetUpdate();
 	if (!bTravelRequested)
@@ -253,7 +259,7 @@ void ALobbyGameMode::OnStartSession(bool bWasSuccessful)
 		GS->LobbyStatus = TEXT("地图跳转失败，正在重试");
 	}
 	UE_LOG(LogTemp, Log, TEXT("Lobby travel: Map=%s Players=%d Accepted=%d"),
-		*PendingMap, GameState->PlayerArray.Num(), bTravelRequested);
+	       *PendingMap, GameState->PlayerArray.Num(), bTravelRequested);
 	if (bTravelRequested) GetWorldTimerManager().ClearTimer(ReadyCheckTimer);
 }
 

@@ -2,6 +2,7 @@
 
 
 #include "LagCompensationComponent.h"
+#include "BrokenEdge/Extraction/ExtractionState.h"
 
 #include "MovieSceneSequencePlayer.h"
 #include "ScreenPass.h"
@@ -90,6 +91,7 @@ void ULagCompensationComponent::ProjectileServerScoreRequest_Implementation(ABro
                                                                             const FVector_NetQuantize100&
                                                                             InitialVelocity, float HitTime)
 {
+	if (GetWorld()->GetGameState<AExtractionGameState>()) return;
 	FServerSideRewindResult Confirm = ProjectileServerSideRewind(HitCharacter, TraceStart, InitialVelocity, HitTime);
 
 	if (Character && HitCharacter && Confirm.bHitConfirmed && Character->GetEquippedWeapon())
@@ -377,6 +379,7 @@ void ULagCompensationComponent::HitScanServerScoreRequest_Implementation(ABroken
                                                                          const FVector_NetQuantize& HitLocation,
                                                                          float HitTime)
 {
+	if (GetWorld()->GetGameState<AExtractionGameState>()) return;
 	FServerSideRewindResult Confirm = HitScanServerSideRewind(HitCharacter, TraceStart, HitLocation, HitTime);
 
 	if (Character && HitCharacter && Character->GetEquippedWeapon() && Confirm.bHitConfirmed)
@@ -479,6 +482,7 @@ void ULagCompensationComponent::ShotgunServerScoreRequest_Implementation(
 	const TArray<ABrokenEdgeCharacter*>& HitCharacters, const FVector& TraceStart,
 	const TArray<FVector_NetQuantize>& HitLocations, float HitTime)
 {
+	if (GetWorld()->GetGameState<AExtractionGameState>()) return;
 	FShotgunServerSideRewindResult Confirm = ShotgunServerSideRewind(HitCharacters, TraceStart, HitLocations, HitTime);
 
 	for (auto& HitCharacter : HitCharacters)
@@ -586,9 +590,8 @@ FShotgunServerSideRewindResult ULagCompensationComponent::ShotgunConfirmHit(cons
 					}
 					else
 					{
-						ShotgunResult.HeadShots.Emplace(HitCharacter,1);
+						ShotgunResult.HeadShots.Emplace(HitCharacter, 1);
 					}
-
 				}
 				else
 				{
@@ -599,7 +602,7 @@ FShotgunServerSideRewindResult ULagCompensationComponent::ShotgunConfirmHit(cons
 					}
 					else
 					{
-						ShotgunResult.BodyShots.Emplace(HitCharacter,1);
+						ShotgunResult.BodyShots.Emplace(HitCharacter, 1);
 					}
 				}
 			}

@@ -1,0 +1,44 @@
+{
+  "result": "passed",
+  "checks": [
+    {
+      "name": "Empty",
+      "passed": true,
+      "log": "Empty.log"
+    },
+    {
+      "name": "Client1-FreeForAll",
+      "passed": true,
+      "log": "Client1-FreeForAll.log"
+    },
+    {
+      "name": "Client2-FreeForAll",
+      "passed": true,
+      "log": "Client2-FreeForAll.log"
+    },
+    {
+      "name": "Server-FreeForAll",
+      "passed": true,
+      "log": "Server-FreeForAll.log"
+    },
+    {
+      "name": "Client1-Teams",
+      "passed": true,
+      "log": "Client1-Teams.log"
+    },
+    {
+      "name": "Client2-Teams",
+      "passed": true,
+      "log": "Client2-Teams.log"
+    },
+    {
+      "name": "Server-Teams",
+      "passed": true,
+      "log": "Server-Teams.log"
+    }
+  ],
+  "command": "powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/Test-LanSessions.ps1",
+  "environment_overrides": {
+    "UE_SKIP_UBT_SDK_SETUP": "1"
+  }
+}

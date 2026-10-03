@@ -143,6 +143,14 @@ public:
 	virtual void Fire(const FVector& HitTarget);
 	void SpendRound();
 
+	void SetExtractionAmmo(int32 Value)
+	{
+		Ammo = FMath::Clamp(Value, 0, MagCapacity);
+		SetHUDAmmo();
+	}
+
+	void UseImmediateServerHitScan() { if (HasAuthority()) bUseServerSideRewind = false; }
+
 	/**
  * @brief 武器掉落时调用
  */

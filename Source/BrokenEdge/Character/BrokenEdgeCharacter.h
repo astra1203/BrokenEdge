@@ -115,6 +115,9 @@ public:
 
 	/** 获取战斗组件 */
 	FORCEINLINE TObjectPtr<UCombatComponent> GetCombat() const { return Combat; }
+	class UExtractionCombatComponent* GetExtractionCombat() const { return ExtractionCombat; }
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UExtractionCombatComponent> ExtractionCombat;
 
 	FORCEINLINE TObjectPtr<class UBuffComponent> GetBuff() const { return Buff; }
 
@@ -326,6 +329,10 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	FName FirstPersonHeadBone = TEXT("head");
+
+	// Hide accessory sections on the local view mesh without changing the world body.
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	TArray<FName> FirstPersonHiddenMaterialSlots;
 
 	// Offset from BaseEyeHeight, aligned with view yaw (centimeters).
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")

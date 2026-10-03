@@ -1,0 +1,41 @@
+{
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\audit_sample.py",
+    "-NullRHI",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Runs\\Phase2Audit01\\Editor.log"
+  ],
+  "suite": "audit",
+  "players": 1,
+  "script_sha256": {
+    "Scripts\\SpaceCenter\\.gitignore": "302bcaf37431eb2c1a36390d16164a304e65c6578445aae0dce21ee822d8d3b6",
+    "Scripts\\SpaceCenter\\archive_evidence.py": "537ce8bb33fe3b926d939e1480422d097514324466da9dec6299546998d41d88",
+    "Scripts\\SpaceCenter\\audit_geometry.py": "77fcbfd54e0b13ef32109a157e18306a3eff29a6fe2fe56ed94fb30084dae69f",
+    "Scripts\\SpaceCenter\\audit_sample.py": "9e23dd81eb5a3ee0deb7c78ccdfe5d5ec4269ca10ae2a17acba4a01474203233",
+    "Scripts\\SpaceCenter\\bootstrap.ps1": "e62ebd7b74ff7be5b01efd7e78aac86bad6acb3d4267a62f5018ebe029b31f8c",
+    "Scripts\\SpaceCenter\\import_sample.py": "c8d46283e6c876ee1916baf1ef262d818f3a0bd16731ece39d740b5686055f2e",
+    "Scripts\\SpaceCenter\\overrides.json": "1fb22caeef9120989eb5605baaadc85d918a63aee49e164e0a6bb9d81da19335",
+    "Scripts\\SpaceCenter\\patch_cue.py": "0abb9b505cc461aa84b26af70aa6a14a5bfd66ba90b25d5277aaa72188ec08ab",
+    "Scripts\\SpaceCenter\\plan_route.py": "67c1b3a99c317111b77a9b77f0e25194715dbe12f182399dd08eade25632d9fa",
+    "Scripts\\SpaceCenter\\prepare_sample.py": "8947353f93cfb6965ba0f9cbea1655f94c3baee26ffcd87ec5734df776efe51d",
+    "Scripts\\SpaceCenter\\README.md": "3d9363074a56e8293b3461938f5d2d67df3f227a3bb75b1a1d2a49d40d7716f9",
+    "Scripts\\SpaceCenter\\route.json": "ea51685ea6904efb0d8547ae4d0768b529cb3be6e12396483b1f4996c356d8c9",
+    "Scripts\\SpaceCenter\\run_conversion.py": "e3d7cf41ac0aa6b0d9d900d4a29f99425a6e47631472588103ecaabcc187d044",
+    "Scripts\\SpaceCenter\\run_editor.py": "41e4596983e01d66d5df6c361b3f92227c0afc9d5b9189255eb87d8b535df095",
+    "Scripts\\SpaceCenter\\sample_config.json": "69cc124cc735100f32a4e7dd014f8f6af552320f28d215812d1075ddd2a54a0b",
+    "Scripts\\SpaceCenter\\source_packages.py": "3b68d995ed40705a62de939f259677665ec25dd7c137cb1ffb6c8b9b0fc5e163",
+    "Scripts\\SpaceCenter\\validate_sample.py": "9ce102f00ab5741bd4a5345deaa15e8d3ccdc870a7c45cd8c110f28f4eae308b",
+    "Scripts\\SpaceCenter\\waypoints.json": "92ab85b74d8b20407456c0ff89b2f049e6b6b5286ce2e8f017b6db1f3c9559a3"
+  },
+  "started_utc": "2026-10-02T15:54:38.266881+00:00",
+  "head": "d628b5dabc55a01269ce27524e523d007d993eb4",
+  "worktree": " M .gitattributes\n M BrokenEdge.uproject\n M Content/Characters/Stinger/Blueprints/BP_StingerCharacter.uasset\n M Content/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired.uasset\n M Content/Maps/SpaceCenter/Materials/M_SC_Surface.uasset\n M PackageClient.bat\n M PackageServer.bat\n M Plugins/MultiplayerSessions/Source/MultiplayerSessions/Private/MultiplayerSessionsSubsystem.cpp\n M Plugins/MultiplayerSessions/Source/MultiplayerSessions/public/MultiplayerSessionsSubsystem.h\n M Scripts/SpaceCenter/import_sample.py\n M Scripts/Test-LanSessions.ps1\n M Source/BrokenEdge/BrokenEdge.Build.cs\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.h\n M Source/BrokenEdge/Component/CombatComponent.cpp\n M Source/BrokenEdge/Component/CombatComponent.h\n M Source/BrokenEdge/Component/LagCompensationComponent.cpp\n M Source/BrokenEdge/GameMode/LobbyGameMode.cpp\n M Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.cpp\n M Source/BrokenEdge/UI/BrokenEdgeHUD.cpp\n M Source/BrokenEdge/UI/BrokenEdgeHUD.h\n M Source/BrokenEdge/UI/LobbyWidget.cpp\n M Source/BrokenEdge/UI/LobbyWidget.h\n M Source/BrokenEdge/Weapon/HitScanWeapon.cpp\n M Source/BrokenEdge/Weapon/Weapon.h\n?? Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap\n?? Docs/Extraction/\n?? Plugins/MultiplayerSessions/Source/MultiplayerSessions/public/SessionModes.h\n?? Scripts/Extraction/\n?? Source/BrokenEdge/Extraction/\n?? Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\n",
+  "pid": 35476,
+  "exit_code": 0,
+  "finished_utc": "2026-10-02T15:54:51.287980+00:00"
+}

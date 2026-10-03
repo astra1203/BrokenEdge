@@ -1,0 +1,61 @@
+{
+  "issues": [
+    {
+      "issue": "Uncooked standalone animation graph node missing",
+      "before_log": "Saved/Extraction/Spectator04/A.log",
+      "before_left_grip_cm": 52.31,
+      "fix": "StingerTools module UncookedOnly at Default loading phase",
+      "after_report": "Saved/Extraction/CombatLag03/Report.json",
+      "after_visible_left_grip_cm_approx": 0.08
+    },
+    {
+      "issue": "Seamless travel HUD uninitialized texture",
+      "before_log": "Saved/Extraction/Timeout02/A.log",
+      "fix": "Initialize reflected HUD texture references and validate texture resource and owning pawn",
+      "after_report": "Saved/Extraction/Timeout04/Report.json"
+    },
+    {
+      "issue": "Old controller creates widget without local player after seamless travel",
+      "before_log": "Saved/Extraction/Timeout03/A.log",
+      "fix": "Require GetLocalPlayer before UI creation",
+      "after_report": "Saved/Extraction/Timeout04/Report.json"
+    },
+    {
+      "issue": "Overhead name widget intercepts head ray",
+      "before_log": "Saved/Extraction/Combat03/Server.log",
+      "fix": "Disable overhead widget collision and visibility in Extraction",
+      "after_report": "Saved/Extraction/CombatLag03/Report.json"
+    },
+    {
+      "issue": "Early module loading before property access compiler initialization",
+      "before_log": "Saved/Extraction/CombatLag01/Server.log",
+      "fix": "Keep UncookedOnly module at Default phase",
+      "after_report": "Saved/Extraction/CombatLag03/Report.json"
+    },
+    {
+      "issue": "First-person weapon animation uses cleared equipped weapon after drop",
+      "before_log": "Saved/Extraction/PackagedDebug01/A.log",
+      "location": "StingerFirstPersonAnimInstance.cpp:291",
+      "error": "EXCEPTION_ACCESS_VIOLATION reading address 0x308",
+      "fix": "Validate the equipped weapon and its mesh before copying its pose; keep the view reference pose after drop or death",
+      "after_report": "Saved/Extraction/PackagedCombat02/Report.json"
+    },
+    {
+      "issue": "First packaged combat run remote client stopped receiving updates",
+      "before_log": "Saved/Extraction/PackagedCombat01/B.log",
+      "observed_ammo": {
+        "server": 24,
+        "owner": 24,
+        "remote": 25
+      },
+      "followup": "PackagedDebug01 breakpoint reached remote burst multicast and confirmed weapon ammo 23 matched the RPC. Earlier stall cause not established; formal non-debug rerun required.",
+      "debugger_evidence": "Saved/Extraction/PackagedDebug01/Debugger.json",
+      "formal_followup": [
+        "PackagedCombat02 passed 63 checks",
+        "PackagedLag01 passed 70 checks",
+        "PackagedSpectator01 passed 102 checks"
+      ]
+    }
+  ],
+  "note": "Failed diagnostic runs remain under Saved; only passing reviewed runs are acceptance evidence."
+}

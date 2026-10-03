@@ -2,6 +2,7 @@
 
 
 #include "BrokenEdgeCharacter.h"
+#include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 #include "StingerFirstPersonAnimInstance.h"
 #include "Animation/AnimMontage.h"
 
@@ -51,6 +52,7 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 
 	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	Combat->SetIsReplicated(true);
+	ExtractionCombat = CreateDefaultSubobject<UExtractionCombatComponent>(TEXT("ExtractionCombat"));
 
 	Buff = CreateDefaultSubobject<UBuffComponent>(TEXT("BuffComponent"));
 	Buff->SetIsReplicated(true);
@@ -207,6 +209,12 @@ void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, con
 void ABrokenEdgeCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	if (ExtractionCombat->IsEnabled() && OverheadWidget)
+	{
+		// A name plate must not intercept the aiming ray or reveal enemies through cover.
+		OverheadWidget->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		OverheadWidget->SetVisibility(false);
+	}
 
 	if (HasAuthority())
 	{
@@ -580,6 +588,13 @@ bool ABrokenEdgeCharacter::CreateFirstPersonBody()
 			EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 		DedicatedFirstPersonMesh->RegisterComponent();
 		DedicatedFirstPersonMesh->HideBoneByName(FirstPersonHeadBone, PBO_None);
+		for (const FName Slot : FirstPersonHiddenMaterialSlots)
+		{
+			const int32 MaterialIndex = DedicatedFirstPersonMesh->GetMaterialIndex(Slot);
+			if (MaterialIndex != INDEX_NONE)
+				for (int32 LOD = 0; LOD < DedicatedFirstPersonMesh->GetNumLODs(); ++LOD)
+					DedicatedFirstPersonMesh->ShowMaterialSection(MaterialIndex, INDEX_NONE, false, LOD);
+		}
 		ViewWeaponPoseDelegateHandle = DedicatedFirstPersonMesh->RegisterOnBoneTransformsFinalizedDelegate(
 			FOnBoneTransformsFinalizedMultiCast::FDelegate::CreateUObject(
 				this, &ABrokenEdgeCharacter::UpdateFirstPersonWeaponPose));
@@ -1383,6 +1398,8 @@ void ABrokenEdgeCharacter::SimProxiesTurn()
 
 void ABrokenEdgeCharacter::Defeated(bool bPlayerLeftGame)
 {
+	if (bDefeated) return;
+	if (ExtractionCombat->IsEnabled()) ExtractionCombat->CancelReload();
 	DropWeapons();
 	MulticastDefeated(bPlayerLeftGame);
 }

@@ -1,0 +1,24 @@
+{
+  "first_person_mesh": "/Game/Characters/Stinger/Meshes/FirstPerson/CappedView/Stinger_CappedViewArms/SkeletalMeshes/Stinger_CappedViewArms.Stinger_CappedViewArms",
+  "slots": [
+    {
+      "slot": "M_Roy_016_BP_LOD",
+      "material": "/Game/Characters/Stinger/Meshes/FirstPerson/CappedView/Stinger_CappedViewArms/Materials/M_Roy_016_BP_LOD.M_Roy_016_BP_LOD"
+    },
+    {
+      "slot": "M_Roy_016_Upper_lod0",
+      "material": "/Game/Characters/Stinger/Meshes/FirstPerson/CappedView/Stinger_CappedViewArms/Materials/M_Roy_016_Upper_lod0.M_Roy_016_Upper_lod0"
+    }
+  ],
+  "materials": {
+    "M_SC_Surface": {
+      "blend": "<BlendMode.BLEND_OPAQUE: 0>",
+      "nanite": false
+    },
+    "M_SC_Glass": {
+      "blend": "<BlendMode.BLEND_TRANSLUCENT: 2>",
+      "nanite": false
+    }
+  },
+  "result": "passed"
+}

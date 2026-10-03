@@ -1,0 +1,58 @@
+{
+  "result": "passed",
+  "packaged": true,
+  "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts/Test-LanSessions.ps1 -Packaged",
+  "script_exit_code": 0,
+  "checks": [
+    {
+      "name": "Empty",
+      "passed": true,
+      "automation_result": "Success",
+      "request_exit_status": 0,
+      "log": "Empty.log"
+    },
+    {
+      "name": "Server-FreeForAll",
+      "passed": true,
+      "automation_result": "Success",
+      "request_exit_status": 0,
+      "log": "Server-FreeForAll.log"
+    },
+    {
+      "name": "Client1-FreeForAll",
+      "passed": true,
+      "automation_result": "Success",
+      "request_exit_status": 0,
+      "log": "Client1-FreeForAll.log"
+    },
+    {
+      "name": "Client2-FreeForAll",
+      "passed": true,
+      "automation_result": "Success",
+      "request_exit_status": 0,
+      "log": "Client2-FreeForAll.log"
+    },
+    {
+      "name": "Server-Teams",
+      "passed": true,
+      "automation_result": "Success",
+      "request_exit_status": 0,
+      "log": "Server-Teams.log"
+    },
+    {
+      "name": "Client1-Teams",
+      "passed": true,
+      "automation_result": "Success",
+      "request_exit_status": 0,
+      "log": "Client1-Teams.log"
+    },
+    {
+      "name": "Client2-Teams",
+      "passed": true,
+      "automation_result": "Success",
+      "request_exit_status": 0,
+      "log": "Client2-Teams.log"
+    }
+  ],
+  "note": "Advertise-only processes are intentionally stopped by the test script; seven automation roles complete normally."
+}

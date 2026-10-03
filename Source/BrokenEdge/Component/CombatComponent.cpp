@@ -2,6 +2,7 @@
 
 
 #include "CombatComponent.h"
+#include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 
 #include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/BrokenEdgeTypes/WeaponType.h"
@@ -51,6 +52,8 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty
  */
 void UCombatComponent::EquipWeapon(class AWeapon* WeaponToEquip)
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled() && !Character->GetExtractionCombat()->CanAct())
+		return;
 	if (Character == nullptr || WeaponToEquip == nullptr) return;
 	if (CombatState != ECombatState::ECS_Unoccuiped) return;
 	WeaponToEquip->MulticastAmmo(WeaponToEquip->GetAmmo());
@@ -83,6 +86,8 @@ void UCombatComponent::EquipWeapon(class AWeapon* WeaponToEquip)
 
 void UCombatComponent::SwapWeapons()
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled() && !Character->GetExtractionCombat()->CanAct())
+		return;
 	if (CombatState != ECombatState::ECS_Unoccuiped || Character == nullptr || !Character->HasAuthority()) return;
 
 	Character->PlaySwapMontage();
@@ -106,7 +111,11 @@ void UCombatComponent::FinishSwap()
 
 void UCombatComponent::FinishSwapAttachWeapons()
 {
+	if (!EquippedWeapon || !SecondaryWeapon) return;
 	if (Character == nullptr || !Character->HasAuthority()) return;
+	if (Character->GetExtractionCombat()->IsEnabled() &&
+		(!Character->GetExtractionCombat()->CanAct() || CombatState != ECombatState::ECS_SwappingWeapon))
+		return;
 	// PlayEquipWeaponSound(SecondaryWeapon);//@TODO
 	AWeapon* TempWeapon = EquippedWeapon;
 	EquippedWeapon = SecondaryWeapon;
@@ -128,6 +137,11 @@ void UCombatComponent::FinishSwapAttachWeapons()
  */
 void UCombatComponent::Reload()
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled())
+	{
+		Character->GetExtractionCombat()->RequestReload();
+		return;
+	}
 	if (CarriedAmmo > 0 && CombatState == ECombatState::ECS_Unoccuiped && EquippedWeapon &&
 		!EquippedWeapon->IsFull() && !bLocallyReloading)
 	{
@@ -139,6 +153,7 @@ void UCombatComponent::Reload()
 
 void UCombatComponent::FinishReloading()
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled()) return; // The server timer owns the transfer.
 	if (Character == nullptr) return;
 	bLocallyReloading = false;
 	if (Character->HasAuthority())
@@ -155,6 +170,7 @@ void UCombatComponent::FinishReloading()
 
 void UCombatComponent::ShotgunReloadOnce()
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled()) return;
 	if (Character && Character->HasAuthority())
 	{
 		UpdateShotgunAmmoValues();
@@ -164,6 +180,16 @@ void UCombatComponent::ShotgunReloadOnce()
 
 void UCombatComponent::Drop()
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled())
+	{
+		if (!Character->GetExtractionCombat()->CanAct()) return;
+		if (!Character->HasAuthority())
+		{
+			Character->GetExtractionCombat()->ServerDropWeapon();
+			return;
+		}
+		Character->GetExtractionCombat()->CancelReload();
+	}
 	//@TODO 有bug
 	if (EquippedWeapon)
 	{
@@ -217,6 +243,7 @@ void UCombatComponent::Fire()
 
 void UCombatComponent::FireProjectileWeapon()
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled()) return;
 	if (EquippedWeapon == nullptr || Character == nullptr) return;
 
 	HitTarget = EquippedWeapon->bUseScatter ? EquippedWeapon->TraceEndWithScatter(HitTarget) : HitTarget;
@@ -228,6 +255,11 @@ void UCombatComponent::FireProjectileWeapon()
 
 void UCombatComponent::FireHitScanWeapon()
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled())
+	{
+		Character->GetExtractionCombat()->RequestShot(HitTarget);
+		return;
+	}
 	if (EquippedWeapon == nullptr || Character == nullptr) return;
 
 	HitTarget = EquippedWeapon->bUseScatter ? EquippedWeapon->TraceEndWithScatter(HitTarget) : HitTarget;
@@ -238,6 +270,7 @@ void UCombatComponent::FireHitScanWeapon()
 
 void UCombatComponent::FireShotgunWeapon()
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled()) return;
 	AShotgun* Shotgun = Cast<AShotgun>(EquippedWeapon);
 	if (Shotgun == nullptr || Character == nullptr)return;
 
@@ -271,6 +304,7 @@ void UCombatComponent::ShotgunLocalFire(const TArray<FVector_NetQuantize>& Trace
 void UCombatComponent::ServerShotgunFire_Implementation(const TArray<FVector_NetQuantize>& TraceHitTargets,
                                                         float FireDelay)
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled()) return;
 	MulticastShotgunFire(TraceHitTargets);
 }
 
@@ -298,6 +332,7 @@ void UCombatComponent::MulticastShotgunFire_Implementation(const TArray<FVector_
  */
 void UCombatComponent::ServerFire_Implementation(const FVector_NetQuantize& TraceHitTarget, float FireDelay)
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled()) return;
 	MulticastFire(TraceHitTarget);
 }
 
@@ -345,6 +380,8 @@ void UCombatComponent::LocalFire(const FVector_NetQuantize& TraceHitTarget)
  */
 bool UCombatComponent::CanFire()
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled() && !Character->GetExtractionCombat()->CanAct())
+		return false;
 	// if (EquippedWeapon == nullptr || bLocallyReloading)return false;
 	if (EquippedWeapon == nullptr)return false;
 
@@ -478,6 +515,11 @@ int32 UCombatComponent::AmountToReload()
 
 void UCombatComponent::ServerReload_Implementation()
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled())
+	{
+		Character->GetExtractionCombat()->BeginServerReload();
+		return;
+	}
 	if (Character == nullptr || EquippedWeapon == nullptr)return;
 
 	CombatState = ECombatState::ECS_Reloading;
@@ -635,18 +677,19 @@ void UCombatComponent::SetAiming(bool bIsAiming)
 
 void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
 {
-	FVector2D ViewportSize;
-	if (GEngine && GEngine->GameViewport)
-	{
-		GEngine->GameViewport->GetViewportSize(ViewportSize);
-	}
+	const auto* OwningController = Character ? Cast<APlayerController>(Character->GetController()) : nullptr;
+	if (!OwningController || !OwningController->IsLocalController()) return;
+	int32 Width = 0, Height = 0;
+	OwningController->GetViewportSize(Width, Height);
+	if (Width <= 0 || Height <= 0) return;
+	const FVector2D ViewportSize(Width, Height);
 
 	FVector2D CrosshairLocation(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
 
 	FVector CrosshairWorldPosition;
 	FVector CrosshairWorldDirection;
 	bool bScreenToWorld = UGameplayStatics::DeprojectScreenToWorld(
-		UGameplayStatics::GetPlayerController(this, 0),
+		OwningController,
 		CrosshairLocation,
 		CrosshairWorldPosition,
 		CrosshairWorldDirection
