@@ -22,6 +22,8 @@ public:
 	void RequestReload();
 	void BeginServerReload();
 	void CancelReload();
+	void BeginServerSwap();
+	void CancelSwap();
 	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
 	UFUNCTION(Server, Reliable)
 	void ServerRequestShot(uint32 ShotId, AWeapon* Weapon, FVector_NetQuantize Target);
@@ -41,7 +43,13 @@ private:
 	TMap<uint32, TWeakObjectPtr<AWeapon>> PendingShots;
 	TWeakObjectPtr<AWeapon> ReloadWeapon;
 	FTimerHandle ReloadTimer;
+	FTimerHandle SwapAttachTimer, SwapFinishTimer;
+	TWeakObjectPtr<AWeapon> SwapPrimary, SwapSecondary;
+	void CommitServerSwap();
+	void FinishServerSwap();
 	void FinishServerReload();
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastSwapStarted();
 	UFUNCTION(Client, Reliable)
 	void ClientShotResult(uint32 ShotId, AWeapon* Weapon, int32 Ammo, bool bAccepted);
 	UFUNCTION(NetMulticast, Reliable)

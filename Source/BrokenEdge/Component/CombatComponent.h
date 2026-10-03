@@ -18,6 +18,9 @@ class BROKENEDGE_API UCombatComponent : public UActorComponent
 
 	friend class ABrokenEdgeCharacter;
 	friend class UExtractionCombatComponent;
+	friend class UExtractionInventoryComponent;
+	friend class UExtractionInteractionComponent;
+	void AttachSwappedWeapons();
 
 public:
 	// Sets default values for this component's properties

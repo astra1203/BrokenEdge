@@ -23,7 +23,7 @@ parser.add_argument('--tag', required=True)
 parser.add_argument('--packaged', action='store_true')
 parser.add_argument('--lag', action='store_true')
 parser.add_argument('--debug-hold', action='store_true', help='Wait for Continue.txt before combat and extend assertion timeouts')
-parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke'], default='combat')
+parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap'], default='combat')
 args = parser.parse_args()
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
@@ -38,6 +38,7 @@ report = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(
 report['base_commit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
 report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(p.read_bytes()).hexdigest()
                          for p in [Path(__file__).resolve(), ROOT / 'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
+                                   ROOT / 'Scripts/Extraction/inventory_scenarios.py',
                                    ROOT / 'BrokenEdge.uproject', ROOT / 'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap']}
 
 
@@ -116,6 +117,8 @@ def launch(role):
                 '-ExecCmds=BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
                 '-TestExit=Automation Test Queue Empty', '-abslog=' + str(OUT / (role + '.log'))]
     command += ['-nullrhi'] if role == 'Server' else ['-RenderOffscreen', '-windowed', '-ResX=1280', '-ResY=720']
+    if args.scenario == 'swap':
+        command += ['-LogCmds=LogTemp Verbose']
     env = os.environ.copy()
     # The SDK was verified by the recorded build; prevent editor startup from
     # waiting on the build mutex just to repeat platform SDK discovery.
@@ -148,7 +151,10 @@ def begin_round():
           and state('Server').get('local_players') == 0 and state('Server').get('alive') == len(ROLES)
           and all('Stinger' in player('Server', r).get('pawn_class', '') for r in ROLES))
     for role in ROLES:
-        check(role + ' real pickup overlap', lambda r=role: bool(player(r, r).get('overlap')))
+        # Clear the previous round's test aim lock before selecting a spawn pickup.
+        send(role, 'aim', target='', head=False)
+        time.sleep(.2)
+        check(role + ' visible reachable pickup focus', lambda r=role: player(r, r).get('focus', 'None') != 'None')
         send(role, 'pulse', action='Equip')
         check(role + ' equipped AK', lambda r=role: 'AK47' in player('Server', r).get('weapon', ''))
     time.sleep(1)
@@ -230,16 +236,44 @@ try:
         check('120 second loading timeout aborts', lambda: state('Server').get('phase') == 2, 130)
         check('Aborted load returns clients to lobby', lambda: all(state(r).get('map') == '/Game/Maps/Lobby' for r in processes), 35)
     elif args.scenario == 'disconnect':
+        disconnected_items = {i['id']: i for i in player('Server', 'B')['inventory']['items']}
         finishing.add('B')
         report['processes']['B']['expected_disconnect'] = True
         subprocess.run(['taskkill', '/PID', str(processes['B'].pid), '/T', '/F'], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         check('Abrupt disconnection leaves survivor active', lambda: state('Server').get('alive') == 1 and state('A').get('phase') == 1, 130)
+        check('Abrupt disconnect transfers every possession to exactly one container', lambda: len([box for box in state('Server')['loot'] if {i['id'] for i in box['contents']['items']} == set(disconnected_items)]) == 1)
+        check('Disconnect preserves quantities and weapon magazine', lambda: all(i['quantity'] == disconnected_items[i['id']]['quantity'] and i['magazine'] == disconnected_items[i['id']]['magazine'] for box in state('Server')['loot'] for i in box['contents']['items'] if i['id'] in disconnected_items))
     elif args.scenario == 'timeout':
         check('Round deadline ends with living players', lambda: state('Server').get('phase') == 2 and state('Server').get('alive') == 2, 25)
         check('Returns to ready lobby after status interval', lambda: all(state(r).get('map') == '/Game/Maps/Lobby' for r in processes), 35)
         check('Ready flags reset in lobby', lambda: all(not p.get('ready') for p in state('Server')['players']))
         begin_round()
         check('Same session starts a second round', lambda: state('Server').get('phase') == 1)
+    elif args.scenario == 'swap':
+        fixture()
+        send('Server', 'inventory_fixture', target='EX_A', clear=False, items=[{'definition': 'AK', 'slot': 1}])
+        wait(lambda: player('A', 'A')['inventory'] == player('Server', 'A')['inventory'], 'secondary replicated')
+        original = player('Server', 'A')['weapon_item']
+        secondary = next(i['id'] for i in player('Server', 'A')['inventory']['items'] if i['slot'] == 1)
+        if args.debug_hold:
+            print('WAITING_FOR_DEBUGGER', OUT / 'Continue.txt', flush=True)
+            wait(lambda: (OUT / 'Continue.txt').exists(), 'debugger continue marker')
+        for index in range(6):
+            expected = secondary if index % 2 == 0 else original
+            send('A', 'swap')
+            check('Swap ' + str(index + 1) + ' commits expected weapon', lambda: all(player(r, 'A').get('weapon_item') == expected for r in processes))
+            wait(lambda: player('Server', 'A')['combat_state'] == 0, 'swap complete')
+        possessions = {i['id'] for i in player('Server', 'A')['inventory']['items']}
+        owner = next(w['owner'] for w in state('Server')['weapons'] if w['name'] == player('Server', 'A')['weapon'])
+        remaining_weapons = {w['name'] for w in state('Server')['weapons'] if w['owner'] != owner}
+        send('A', 'swap')
+        send('A', 'leave')
+        check('Leaving during swap preserves all possessions once', lambda: len([box for box in state('Server')['loot'] if {i['id'] for i in box['contents']['items']} == possessions]) == 1)
+        time.sleep(2)
+        check('Cancelled swap cannot recreate equipment after leaving', lambda: {w['name'] for w in state('Server')['weapons']} == remaining_weapons)
+    elif args.scenario == 'inventory':
+        from inventory_scenarios import run_inventory_suite
+        run_inventory_suite(globals())
     elif args.scenario != 'smoke':
         if args.debug_hold:
             print('WAITING_FOR_DEBUGGER', OUT / 'Continue.txt', flush=True)
@@ -296,25 +330,25 @@ try:
         check('Owner reserve matches authority', lambda: player('A', 'A')['carried_ammo'] == carried - 30)
         send('Server', 'ammo', target='EX_A', value=10)
         wait(lambda: player('A', 'A').get('ammo') == 10, 'partial ammo fixture')
-        weapon = player('Server', 'A')['weapon']
+        weapon = player('Server', 'A')['weapon_item']
         send('A', 'pulse', action='Reload')
         check('Partial reload started before drop', lambda: player('Server', 'A')['combat_state'] == 1)
         send('A', 'pulse', action='Drop')
         check('Drop is authoritative', lambda: not player('Server', 'A').get('weapon'))
         time.sleep(4)
-        check('Drop cancels unfinished reload', lambda: any(w['name'] == weapon and w['ammo'] == 10 and w['owner'] == 'None' for w in state('Server')['weapons']))
-        dropped = next(w for w in state('Server')['weapons'] if w['name'] == weapon)
+        check('Drop cancels unfinished reload and preserves weapon identity', lambda: any(i['id'] == weapon and i['magazine'] == 10 for w in state('Server')['loot'] for i in w['contents']['items']))
+        dropped = next(w for w in state('Server')['loot'] if any(i['id'] == weapon for i in w['contents']['items']))
         position = dropped['position'].copy()
         position[2] = player('Server', 'A')['position'][2] + 20
         send('Server', 'fixture', players=[{'name': 'EX_A', 'position': position, 'health': 80, 'shield': 0}])
-        check('Dropped weapon can be picked up', lambda: bool(player('A', 'A').get('overlap')))
+        check('Dropped weapon can be picked up', lambda: player('A', 'A').get('focus', 'None') != 'None')
         send('A', 'pulse', action='Equip')
         check('Re-equipped after interrupted reload', lambda: bool(player('Server', 'A').get('weapon')))
         aim('B', 'A', True)
         shot('B', 'A', 40)
         send('Server', 'fixture', players=[{'name': 'EX_A', 'position': player('Server', 'A')['position'], 'health': 20, 'shield': 0}])
         aim('B', 'A')
-        death_weapon = player('Server', 'A')['weapon']
+        death_weapon = player('Server', 'A')['weapon_item']
         send('A', 'pulse', action='Reload')
         check('Reload active immediately before lethal shot', lambda: player('Server', 'A')['combat_state'] == 1)
         shot('B', 'A', 20)
@@ -322,7 +356,7 @@ try:
         send('A', 'restart')
         time.sleep(5)
         check('Restart cannot respawn the dead player', lambda: not state('A').get('has_pawn') and player('Server', 'A').get('life') == 1)
-        check('Death drops weapon and cancels its reload', lambda: any(w['name'] == death_weapon and w['ammo'] == 10 and w['owner'] == 'None' for w in state('Server')['weapons']))
+        check('Death container preserves weapon and cancels its reload', lambda: any(i['id'] == death_weapon and i['magazine'] == 10 for w in state('Server')['loot'] for i in w['contents']['items']))
         send('B', 'aim', target='', head=False)
         time.sleep(.4)
         send('A', 'screenshot', name='spectator')

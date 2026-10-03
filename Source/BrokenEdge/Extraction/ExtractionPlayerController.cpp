@@ -1,4 +1,8 @@
 #include "ExtractionPlayerController.h"
+#include "ExtractionInteractionComponent.h"
+#include "ExtractionInventoryComponent.h"
+#include "ExtractionLootActor.h"
+#include "ExtractionInventoryWidget.h"
 #include "ExtractionState.h"
 #include "ExtractionGameMode.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
@@ -23,9 +27,147 @@ void AExtractionPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &ThisClass::ToggleExtractionMenu);
+	InputComponent->BindKey(EKeys::Tab, IE_Pressed, this, &ThisClass::ToggleInventory);
+	InputComponent->BindKey(EKeys::H, IE_Pressed, this, &ThisClass::UseMedical);
 }
 
-void AExtractionPlayerController::ToggleExtractionMenu() { bMenuOpen = !bMenuOpen; }
+void AExtractionPlayerController::ToggleExtractionMenu()
+{
+	if (InventoryWidget && InventoryWidget->CancelDrag()) return;
+	if (auto* I = Interaction())
+	{
+		if (I->InventoryOpen)
+		{
+			RequestOpenInventory(nullptr, false);
+			return;
+		}
+		if (I->MedicalEnd > 0)
+		{
+			ServerCancelMedical();
+			return;
+		}
+	}
+	bMenuOpen = !bMenuOpen;
+}
+
+UExtractionInteractionComponent* AExtractionPlayerController::Interaction() const
+{
+	const auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
+	return C ? C->GetExtractionInteraction() : nullptr;
+}
+
+void AExtractionPlayerController::RequestOpenInventory(AExtractionLootActor* Target, bool bOpen)
+{
+	auto* I = Interaction();
+	if (!I) return;
+	LocalInventorySession = FMath::Max(LocalInventorySession, I->Session) + 1;
+	if (bOpen) I->StopCombatInput();
+	ServerOpenInventory(LocalInventorySession, Target, bOpen);
+}
+
+void AExtractionPlayerController::ServerOpenInventory_Implementation(uint32 Session, AExtractionLootActor* Target,
+                                                                     bool bOpen)
+{
+	if (auto* I = Interaction())
+	{
+		I->Message.Reset();
+		I->Open(Session, Target, bOpen);
+		ClientItemResult(0, I->Message);
+	}
+}
+
+void AExtractionPlayerController::ToggleInventory()
+{
+	if (auto* I = Interaction(); I && I->CanAct() && !bMenuOpen) RequestOpenInventory(nullptr, !I->InventoryOpen);
+}
+
+void AExtractionPlayerController::Interact()
+{
+	auto* I = Interaction();
+	auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
+	if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen) return;
+	if (I->Focus) RequestOpenInventory(I->Focus, true);
+	else if (C) ServerSwapExtractionWeapons();
+}
+
+void AExtractionPlayerController::RequestItem(FExtractionItemRequest Request)
+{
+	auto* I = Interaction();
+	if (!I || !I->Inventory()) return;
+	Request.Sequence = ++LocalItemSequence;
+	if (Request.Op == EExtractionItemOp::Use) I->StopCombatInput();
+	Request.Session = I->Session;
+	Request.InventoryRevision = I->Inventory()->Contents.Revision;
+	Request.LootRevision = I->LootView.Revision;
+	ServerItemOperation(Request);
+}
+
+void AExtractionPlayerController::ServerItemOperation_Implementation(FExtractionItemRequest Request)
+{
+	if (auto* I = Interaction()) ClientItemResult(Request.Sequence, I->Execute(Request));
+}
+
+void AExtractionPlayerController::ClientItemResult_Implementation(uint32 Sequence, const FString& Error)
+{
+	ItemMessage = Error;
+	ItemResultSequence = FMath::Max(ItemResultSequence, Sequence);
+	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_ITEM_RESULT Sequence=%u Error=%s"), Sequence, *Error);
+}
+
+void AExtractionPlayerController::ServerCancelMedical_Implementation()
+{
+	if (auto* I = Interaction()) I->CancelMedical();
+}
+
+void AExtractionPlayerController::ServerSwapExtractionWeapons_Implementation()
+{
+	if (auto* I = Interaction(); I && I->CanAct() && !I->InventoryOpen)
+	{
+		I->CancelMedical();
+		auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
+		if (C->GetCombat()->ShouldSwapWeapons()) C->GetCombat()->SwapWeapons();
+	}
+}
+
+void AExtractionPlayerController::UseMedical()
+{
+	auto* I = Interaction();
+	if (!I || !I->CanAct()) return;
+	if (I->MedicalEnd > 0)
+	{
+		ServerCancelMedical();
+		return;
+	}
+	for (const auto& Item : I->Inventory()->Contents.Items)
+		if (Item.Definition == TEXT("Medkit"))
+		{
+			FExtractionItemRequest R;
+			R.Item = Item.Id;
+			R.Op = EExtractionItemOp::Use;
+			RequestItem(R);
+			return;
+		}
+	ItemMessage = TEXT("没有医疗包");
+}
+
+void AExtractionPlayerController::DropEquippedItem()
+{
+	auto* I = Interaction();
+	if (!I || !I->CanAct()) return;
+	if (const auto* Item = I->Inventory()->Contents.InSlot(0))
+	{
+		FExtractionItemRequest R;
+		R.Item = Item->Id;
+		R.Op = EExtractionItemOp::Drop;
+		RequestItem(R);
+	}
+}
+
+void AExtractionPlayerController::Destroyed()
+{
+	if (HasAuthority()) if (auto* I = Interaction()) I->DropOnExit();
+	Super::Destroyed();
+}
 
 void AExtractionPlayerController::BeginExtractionSpectating()
 {
@@ -80,6 +222,11 @@ void AExtractionPlayerController::Tick(float Delta)
 		ExtractionWidget = CreateWidget<UExtractionWidget>(this);
 		ExtractionWidget->AddToViewport(50);
 	}
+	if (!InventoryWidget)
+	{
+		InventoryWidget = CreateWidget<UExtractionInventoryWidget>(this);
+		InventoryWidget->AddToViewport(60);
+	}
 	if (auto* ControlledCharacter = Cast<ABrokenEdgeCharacter>(GetPawn()))
 	{
 		// The owning client also stops prediction while waiting for all players to load.
@@ -88,7 +235,8 @@ void AExtractionPlayerController::Tick(float Delta)
 		else if (ControlledCharacter->GetCharacterMovement()->MovementMode == MOVE_None)
 			ControlledCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 	}
-	const bool ShowMenu = bMenuOpen || bExtractionSpectating || GS->Phase == EExtractionPhase::Ended;
+	const bool ShowMenu = bMenuOpen || bExtractionSpectating || GS->Phase == EExtractionPhase::Ended
+		|| (Interaction() && Interaction()->InventoryOpen);
 	if (ShowMenu != bShowMouseCursor)
 	{
 		SetShowMouseCursor(ShowMenu);
@@ -96,6 +244,7 @@ void AExtractionPlayerController::Tick(float Delta)
 		else SetInputMode(FInputModeGameOnly());
 	}
 	ExtractionWidget->Refresh();
+	InventoryWidget->Refresh();
 	if (!bExtractionSpectating)
 	{
 		GetPlayerViewPoint(LastSpectatorLocation, LastSpectatorRotation);
@@ -169,6 +318,7 @@ void AExtractionPlayerController::EndPlay(const EEndPlayReason::Type Reason)
 {
 	GetWorldTimerManager().ClearTimer(LeaveRetryTimer);
 	if (ExtractionWidget) ExtractionWidget->RemoveFromParent();
+	if (InventoryWidget) InventoryWidget->RemoveFromParent();
 	if (SpectatorCamera) SpectatorCamera->Destroy();
 	if (auto* Sessions = GetGameInstance()->GetSubsystem<UMultiplayerSessionsSubsystem>())
 		Sessions->MultiplayerOnDestorySessionComplete.RemoveDynamic(this, &ThisClass::LocalSessionDestroyed);

@@ -1,0 +1,20 @@
+{
+  "presentation_fix": "Ground traces ignore loot interaction bounds, pawns and equipped weapons; visible mesh bottom is aligned twenty cm below the interaction root.",
+  "superseded_passes": {
+    "Phase3PackagedInventory01": 88,
+    "Phase3PackagedInventoryLag01": 89,
+    "Phase3PackagedSwapLag01": 21
+  },
+  "operator_aborted": {
+    "Phase3PackagedCombat01": "Queue stopped by the agent to rebuild after visual review; not a gameplay regression."
+  },
+  "debugger": {
+    "attach_confirmed": true,
+    "source_breakpoints_bound": false,
+    "project_stack_symbols_available": false,
+    "agent_breakpoints_removed": true,
+    "user_breakpoints_unchanged": 8,
+    "enabled_user_breakpoints": 5
+  },
+  "phase1_map_sha256": "7e1d74f14774de827914d57d407cdc1c9ca88cbee63413d1326fbda030685389"
+}

@@ -2,6 +2,8 @@
 #include "ExtractionState.h"
 #include "ExtractionPlayerController.h"
 #include "ExtractionCombatComponent.h"
+#include "ExtractionInteractionComponent.h"
+#include "ExtractionInventoryComponent.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/UI/BrokenEdgeHUD.h"
@@ -26,6 +28,9 @@ AExtractionGameMode::AExtractionGameMode()
 		Pawn(TEXT("/Game/Characters/Stinger/Blueprints/BP_StingerCharacter"));
 	if (Pawn.Succeeded()) DefaultPawnClass = Pawn.Class;
 	HUDClass = ABrokenEdgeHUD::StaticClass();
+	for (FName Id : UExtractionItemDefinition::Ids())
+		if (const auto* Definition = UExtractionItemDefinition::Get(Id))
+			ItemDefinitions.Add(const_cast<UExtractionItemDefinition*>(Definition));
 }
 
 void AExtractionGameMode::InitGame(const FString& Map, const FString& Options, FString& Error)
@@ -64,6 +69,7 @@ void AExtractionGameMode::HandleStartingNewPlayer_Implementation(APlayerControll
 		PS->SetTeam(ETeam::ET_NoTeam);
 	}
 	if (!Player->GetPawn()) RestartPlayer(Player);
+	if (auto* PS = Player->GetPlayerState<AExtractionPlayerState>()) PS->Inventory->InitializeLoadout();
 	FreezePlayer(Player, true);
 	if (auto* Character = Cast<ABrokenEdgeCharacter>(Player->GetPawn()))
 		Character->GetMesh()->VisibilityBasedAnimTickOption =
@@ -108,6 +114,9 @@ void AExtractionGameMode::FreezePlayer(AController* Player, bool bFreeze)
 			Character->GetCharacterMovement()->DisableMovement();
 			Character->GetCombat()->FireButtonPressed(false);
 			Character->GetExtractionCombat()->CancelReload();
+			Character->GetExtractionCombat()->CancelSwap();
+			Character->GetExtractionInteraction()->Close();
+			Character->GetExtractionInteraction()->CancelMedical();
 		}
 		else Character->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 		Character->ForceNetUpdate();

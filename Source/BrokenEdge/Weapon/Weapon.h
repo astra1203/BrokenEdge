@@ -46,6 +46,13 @@ class BROKENEDGE_API AWeapon : public AActor
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(Replicated)
+	FGuid ExtractionItemId;
+	/** Initial actor state travels with the spawn, before any predicted shots. */
+	UPROPERTY(ReplicatedUsing=OnRep_ExtractionInitialAmmo)
+	int32 ExtractionInitialAmmo = -1;
+	UFUNCTION()
+	void OnRep_ExtractionInitialAmmo();
 	// Sets default values for this actor's properties
 	AWeapon();
 

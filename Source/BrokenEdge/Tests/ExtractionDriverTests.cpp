@@ -19,6 +19,7 @@
 #include "InputActionValue.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/Button.h"
+#include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameSession.h"
@@ -29,6 +30,11 @@
 #include "BrokenEdge/Extraction/ExtractionPlayerController.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
+#include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
+#include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
+#include "BrokenEdge/Extraction/ExtractionLootActor.h"
+#include "Framework/Application/SlateApplication.h"
+#include "Widgets/SViewport.h"
 #include "BrokenEdge/GameState/LobbyGameState.h"
 #include "BrokenEdge/UI/LobbyWidget.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
@@ -124,6 +130,9 @@ public:
 					}
 				}
 				else if (Op == TEXT("name") && PC) PC->SetName(TEXT("EX_") + Role);
+				else if (HandleInventoryCommand(Command, PC, World))
+				{
+				}
 				else if (Op == TEXT("direct_join") && PC)
 				{
 					bool bExpectRejection = false;
@@ -183,8 +192,11 @@ public:
 				{
 					auto* Character = FindPawn(World, Command->GetStringField(TEXT("target")));
 					if (Character && Character->GetEquippedWeapon())
+					{
 						Character->GetEquippedWeapon()->MulticastAmmo(
 							Command->GetIntegerField(TEXT("value")));
+						if (auto* Inv = Character->GetExtractionInteraction()->Inventory()) Inv->CaptureWeapons();
+					}
 				}
 				else if (Op == TEXT("burst") && Pawn)
 				{
@@ -272,6 +284,193 @@ private:
 	double Started, LastWrite = 0, PulseEnd = 0;
 	int32 LastCommand = 0;
 	bool bHeadAim = false;
+	FExtractionItemRequest LastItemRequest;
+	FVector2D LastMouse = FVector2D::ZeroVector;
+	TSet<FKey> PressedMouse;
+	TWeakObjectPtr<AActor> TestOccluder;
+
+	static TSharedPtr<FJsonObject> InventoryJson(const FExtractionContainer& C)
+	{
+		auto Json = MakeShared<FJsonObject>();
+		Json->SetStringField(TEXT("id"), C.Id.ToString());
+		Json->SetNumberField(TEXT("revision"), C.Revision);
+		TArray<TSharedPtr<FJsonValue>> Entries;
+		for (const auto& I : C.Items)
+		{
+			auto Entry = MakeShared<FJsonObject>();
+			Entry->SetStringField(TEXT("id"), I.Id.ToString());
+			Entry->SetStringField(TEXT("definition"), I.Definition.ToString());
+			Entry->SetNumberField(TEXT("quantity"), I.Quantity);
+			Entry->SetNumberField(TEXT("x"), I.Cell.X);
+			Entry->SetNumberField(TEXT("y"), I.Cell.Y);
+			Entry->SetNumberField(TEXT("slot"), I.Slot);
+			Entry->SetNumberField(TEXT("magazine"), I.Magazine);
+			Entry->SetBoolField(TEXT("rotated"), I.Rotated);
+			Entries.Add(MakeShared<FJsonValueObject>(Entry));
+		}
+		Json->SetArrayField(TEXT("items"), Entries);
+		return Json;
+	}
+
+	bool HandleInventoryCommand(const TSharedPtr<FJsonObject>& Command, APlayerController* Controller, UWorld* World)
+	{
+		const FString Op = Command->GetStringField(TEXT("op"));
+		auto* PC = Cast<AExtractionPlayerController>(Controller);
+		auto* Interaction = PC ? PC->Interaction() : nullptr;
+		if (Op == TEXT("inventory") && PC)
+			PC->RequestOpenInventory(nullptr, Command->GetBoolField(TEXT("open")));
+		else if (Op == TEXT("open_loot") && PC)
+		{
+			const FString Target = Command->GetStringField(TEXT("target"));
+			for (TActorIterator<AExtractionLootActor> It(World); It; ++It)
+				if (It->ContainerId.ToString() == Target || It->GetName() == Target)
+				{
+					PC->RequestOpenInventory(*It, true);
+					return true;
+				}
+			Error = TEXT("Loot actor not visible to client");
+		}
+		else if (Op == TEXT("medical") && PC) PC->UseMedical();
+		else if (Op == TEXT("cancel_medical") && PC) PC->ServerCancelMedical();
+		else if (Op == TEXT("swap") && PC) PC->ServerSwapExtractionWeapons();
+		else if (Op == TEXT("occluder") && Role == TEXT("Server"))
+		{
+			if (TestOccluder.IsValid()) TestOccluder->Destroy();
+			if (Command->GetBoolField(TEXT("enabled")))
+			{
+				auto* Wall = World->SpawnActor<AActor>();
+				auto* Box = NewObject<UBoxComponent>(Wall);
+				Wall->SetRootComponent(Box);
+				Box->SetBoxExtent(FVector(5, 60, 130));
+				Box->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+				Box->SetCollisionResponseToAllChannels(ECR_Block);
+				Box->RegisterComponent();
+				Wall->SetActorLocation(FVector(1450, 4200, 490));
+				TestOccluder = Wall;
+			}
+		}
+		else if (Op == TEXT("item") && Interaction && Interaction->Inventory())
+		{
+			bool Duplicate = false;
+			Command->TryGetBoolField(TEXT("duplicate"), Duplicate);
+			if (Duplicate)
+			{
+				PC->ServerItemOperation(LastItemRequest);
+				return true;
+			}
+			FExtractionItemRequest R;
+			R.Sequence = ++PC->LocalItemSequence;
+			R.Session = Interaction->Session;
+			R.InventoryRevision = Interaction->Inventory()->Contents.Revision;
+			R.LootRevision = Interaction->LootView.Revision;
+			FGuid::Parse(Command->GetStringField(TEXT("item")), R.Item);
+			FString Kind;
+			Command->TryGetStringField(TEXT("kind"), Kind);
+			R.Op = Kind == TEXT("drop")
+				       ? EExtractionItemOp::Drop
+				       : Kind == TEXT("use")
+				       ? EExtractionItemOp::Use
+				       : EExtractionItemOp::Transfer;
+			Command->TryGetBoolField(TEXT("from_loot"), R.FromLoot);
+			Command->TryGetBoolField(TEXT("to_loot"), R.ToLoot);
+			Command->TryGetBoolField(TEXT("auto"), R.AutoPlace);
+			Command->TryGetBoolField(TEXT("rotated"), R.Rotated);
+			Command->TryGetNumberField(TEXT("quantity"), R.Quantity);
+			Command->TryGetNumberField(TEXT("slot"), R.Slot);
+			Command->TryGetNumberField(TEXT("x"), R.Cell.X);
+			Command->TryGetNumberField(TEXT("y"), R.Cell.Y);
+			Command->TryGetNumberField(TEXT("inventory_revision"), R.InventoryRevision);
+			Command->TryGetNumberField(TEXT("loot_revision"), R.LootRevision);
+			FString Merge;
+			if (Command->TryGetStringField(TEXT("merge"), Merge)) FGuid::Parse(Merge, R.MergeInto);
+			LastItemRequest = R;
+			PC->ServerItemOperation(R);
+		}
+		else if (Op == TEXT("spawn_loot") && Role == TEXT("Server"))
+		{
+			const auto& P = Command->GetArrayField(TEXT("position"));
+			bool Loose = false;
+			Command->TryGetBoolField(TEXT("loose"), Loose);
+			const FName Def(*Command->GetStringField(TEXT("definition")));
+			auto* Loot = AExtractionLootActor::SpawnContainer(
+				World, FVector(P[0]->AsNumber(), P[1]->AsNumber(), P[2]->AsNumber()), Loose, Def);
+			if (!Loot)
+			{
+				Error = TEXT("Cannot create loot fixture");
+				return true;
+			}
+			Loot->Label = Command->GetStringField(TEXT("label"));
+			FExtractionContainer Items;
+			Items.Id = FGuid::NewGuid();
+			int32 Count = 1, Quantity = 1;
+			Command->TryGetNumberField(TEXT("count"), Count);
+			Command->TryGetNumberField(TEXT("quantity"), Quantity);
+			for (int32 Index = 0; Index < Count; ++Index)
+				ExtractionItems::AutoPlace(
+					Items, ExtractionItems::Make(Def, Quantity));
+			Loot->SetContents(Items);
+		}
+		else if (Op == TEXT("inventory_fixture") && Role == TEXT("Server"))
+		{
+			auto* Pawn = FindPawn(World, Command->GetStringField(TEXT("target")));
+			auto* Inv = Pawn ? Pawn->GetExtractionInteraction()->Inventory() : nullptr;
+			if (!Inv)
+			{
+				Error = TEXT("No fixture inventory");
+				return true;
+			}
+			bool Clear = false;
+			Command->TryGetBoolField(TEXT("clear"), Clear);
+			if (Clear) Inv->Contents.Items.Reset();
+			for (const auto& Value : Command->GetArrayField(TEXT("items")))
+			{
+				const auto Entry = Value->AsObject();
+				int32 Count = 1, Quantity = 1, Slot = -1;
+				Entry->TryGetNumberField(TEXT("count"), Count);
+				Entry->TryGetNumberField(TEXT("quantity"), Quantity);
+				Entry->TryGetNumberField(TEXT("slot"), Slot);
+				for (int32 Index = 0; Index < Count; ++Index)
+				{
+					auto Item = ExtractionItems::Make(FName(*Entry->GetStringField(TEXT("definition"))), Quantity);
+					Item.Slot = Slot;
+					if (Slot >= 0) Inv->Contents.Items.Add(Item);
+					else if (!ExtractionItems::AutoPlace(Inv->Contents, Item)) Error = TEXT("Fixture has no space");
+				}
+			}
+			++Inv->Contents.Revision;
+			Inv->SyncWeapons();
+			Inv->Changed();
+		}
+		else if (Op == TEXT("mouse") && PC && World->GetGameViewport())
+		{
+			const auto Viewport = World->GetGameViewport()->GetGameViewportWidget();
+			if (!Viewport.IsValid()) return true;
+			const FGeometry Geometry = Viewport->GetCachedGeometry();
+			const FVector2D P = Geometry.LocalToAbsolute(FVector2D(
+				Command->GetNumberField(TEXT("x")) / 1280 * Geometry.GetLocalSize().X,
+				Command->GetNumberField(TEXT("y")) / 720 * Geometry.GetLocalSize().Y));
+			FString Action, Button;
+			Command->TryGetStringField(TEXT("action"), Action);
+			Command->TryGetStringField(TEXT("button"), Button);
+			const FKey Key = Button == TEXT("right") ? EKeys::RightMouseButton : EKeys::LeftMouseButton;
+			if (Action == TEXT("down")) PressedMouse.Add(Key);
+			if (Action == TEXT("up")) PressedMouse.Remove(Key);
+			FPointerEvent Event(0, P, LastMouse, PressedMouse, Key, 0, FModifierKeysState());
+			FSlateApplication::Get().SetCursorPos(P);
+			FSlateApplication::Get().ProcessMouseMoveEvent(Event, false);
+			if (Action == TEXT("down")) FSlateApplication::Get().ProcessMouseButtonDownEvent(nullptr, Event);
+			if (Action == TEXT("up")) FSlateApplication::Get().ProcessMouseButtonUpEvent(Event);
+			LastMouse = P;
+		}
+		else if (Op == TEXT("key") && PC)
+		{
+			const FKey Key(*Command->GetStringField(TEXT("key")));
+			FSlateApplication::Get().ProcessKeyDownEvent(FKeyEvent(Key, FModifierKeysState(), 0, false, 0, 0));
+			FSlateApplication::Get().ProcessKeyUpEvent(FKeyEvent(Key, FModifierKeysState(), 0, false, 0, 0));
+		}
+		else return false;
+		return true;
+	}
 
 	static ABrokenEdgeCharacter* FindPawn(UWorld* World, const FString& Name)
 	{
@@ -286,8 +485,10 @@ private:
 		auto* Input = PC->GetLocalPlayer()
 			              ? PC->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>()
 			              : nullptr;
-		auto* Action = LoadObject<UInputAction>(
-			nullptr, *(TEXT("/Game/Input/Actions/IA_") + Name + TEXT(".IA_") + Name));
+		const FString Path = Name == TEXT("Sprint")
+			                     ? TEXT("/Game/Characters/Stinger/Blueprints/Input/IA_StingerSprint.IA_StingerSprint")
+			                     : TEXT("/Game/Input/Actions/IA_") + Name + TEXT(".IA_") + Name;
+		auto* Action = LoadObject<UInputAction>(nullptr, *Path);
 		if (Input && Action) Input->InjectInputForAction(Action, FInputActionValue(Pressed), {}, {});
 	}
 
@@ -334,6 +535,11 @@ private:
 			State->SetNumberField(TEXT("height"), Height);
 		}
 		TArray<TSharedPtr<FJsonValue>> Players;
+		if (const auto* ExtractionPC = Cast<AExtractionPlayerController>(PC))
+		{
+			State->SetStringField(TEXT("item_message"), ExtractionPC->ItemMessage);
+			State->SetNumberField(TEXT("item_sequence"), ExtractionPC->ItemResultSequence);
+		}
 		if (World->GetGameState())
 			for (APlayerState* PS : World->GetGameState()->PlayerArray)
 			{
@@ -344,11 +550,24 @@ private:
 					Player->SetBoolField(
 						TEXT("ready"), LobbyPS->IsLobbyReady());
 				if (auto* ExtractionPS = Cast<AExtractionPlayerState>(PS))
+				{
 					Player->SetNumberField(
 						TEXT("life"), static_cast<int32>(ExtractionPS->Life));
+					Player->SetObjectField(TEXT("inventory"), InventoryJson(ExtractionPS->Inventory->Contents));
+				}
 				if (auto* Character = Cast<ABrokenEdgeCharacter>(PS->GetPawn()))
 				{
 					Player->SetNumberField(TEXT("health"), Character->GetHealth());
+					const auto* Interaction = Character->GetExtractionInteraction();
+					Player->SetBoolField(TEXT("inventory_open"), Interaction->InventoryOpen);
+					Player->SetStringField(TEXT("focus"), GetNameSafe(Interaction->Focus));
+					Player->SetStringField(TEXT("loot_target"), GetNameSafe(Interaction->Loot));
+					Player->SetStringField(
+						TEXT("loot_id"), Interaction->Loot ? Interaction->Loot->ContainerId.ToString() : TEXT(""));
+					Player->SetObjectField(TEXT("loot_view"), InventoryJson(Interaction->LootView));
+					Player->SetNumberField(TEXT("session"), Interaction->Session);
+					Player->SetNumberField(TEXT("medical_end"), Interaction->MedicalEnd);
+					Player->SetNumberField(TEXT("search_end"), Interaction->SearchEnd);
 					Player->SetNumberField(TEXT("shield"), Character->GetShield());
 					Player->SetBoolField(TEXT("disabled"), Character->bDisableGameplay);
 					Player->SetBoolField(TEXT("defeated"), Character->IsDefeated());
@@ -385,6 +604,7 @@ private:
 							FVector::Dist(Character->GetMesh()->GetSocketLocation(TEXT("RightHand")),
 							              Weapon->GetWeaponMesh()->GetSocketLocation(TEXT("Hand_R"))));
 						Player->SetStringField(TEXT("weapon"), Weapon->GetName());
+						Player->SetStringField(TEXT("weapon_item"), Weapon->ExtractionItemId.ToString());
 						Player->SetNumberField(TEXT("ammo"), Weapon->GetAmmo());
 						Player->SetNumberField(TEXT("damage"), Weapon->GetDamage());
 						Player->SetNumberField(TEXT("head_damage"), Weapon->GetHeadShotDamage());
@@ -409,6 +629,25 @@ private:
 			Weapons.Add(MakeShared<FJsonValueObject>(Weapon));
 		}
 		State->SetArrayField(TEXT("weapons"), Weapons);
+		TArray<TSharedPtr<FJsonValue>> LootActors;
+		for (TActorIterator<AExtractionLootActor> It(World); It; ++It)
+		{
+			auto Entry = MakeShared<FJsonObject>();
+			Entry->SetStringField(TEXT("name"), It->GetName());
+			Entry->SetStringField(TEXT("label"), It->Label);
+			Entry->SetStringField(TEXT("id"), It->ContainerId.ToString());
+			Entry->SetBoolField(TEXT("loose"), It->Loose);
+			Entry->SetBoolField(TEXT("empty"), It->Empty);
+			Entry->SetStringField(TEXT("definition"), It->LooseDefinition.ToString());
+			const FVector P = It->GetActorLocation();
+			Entry->SetArrayField(TEXT("position"), {
+				                     MakeShared<FJsonValueNumber>(P.X), MakeShared<FJsonValueNumber>(P.Y),
+				                     MakeShared<FJsonValueNumber>(P.Z)
+			                     });
+			Entry->SetObjectField(TEXT("contents"), InventoryJson(It->Contents));
+			LootActors.Add(MakeShared<FJsonValueObject>(Entry));
+		}
+		State->SetArrayField(TEXT("loot"), LootActors);
 		FString Json;
 		FJsonSerializer::Serialize(State, TJsonWriterFactory<>::Create(&Json));
 		const FString File = Folder / (Role + TEXT("-state.json"));

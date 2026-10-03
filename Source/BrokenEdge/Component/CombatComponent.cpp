@@ -3,6 +3,9 @@
 
 #include "CombatComponent.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
+#include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
+#include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
+#include "BrokenEdge/Extraction/ExtractionPlayerController.h"
 
 #include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/BrokenEdgeTypes/WeaponType.h"
@@ -52,8 +55,8 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty
  */
 void UCombatComponent::EquipWeapon(class AWeapon* WeaponToEquip)
 {
-	if (Character && Character->GetExtractionCombat()->IsEnabled() && !Character->GetExtractionCombat()->CanAct())
-		return;
+	// Extraction equipment is created only from authoritative item instances.
+	if (Character && Character->GetExtractionCombat()->IsEnabled()) return;
 	if (Character == nullptr || WeaponToEquip == nullptr) return;
 	if (CombatState != ECombatState::ECS_Unoccuiped) return;
 	WeaponToEquip->MulticastAmmo(WeaponToEquip->GetAmmo());
@@ -86,8 +89,13 @@ void UCombatComponent::EquipWeapon(class AWeapon* WeaponToEquip)
 
 void UCombatComponent::SwapWeapons()
 {
-	if (Character && Character->GetExtractionCombat()->IsEnabled() && !Character->GetExtractionCombat()->CanAct())
+	UE_LOG(LogTemp, Verbose, TEXT("EXTRACTION_SWAP Request Owner=%s State=%d"), *GetNameSafe(Character),
+	       static_cast<int32>(CombatState));
+	if (Character && Character->GetExtractionCombat()->IsEnabled())
+	{
+		Character->GetExtractionCombat()->BeginServerSwap();
 		return;
+	}
 	if (CombatState != ECombatState::ECS_Unoccuiped || Character == nullptr || !Character->HasAuthority()) return;
 
 	Character->PlaySwapMontage();
@@ -99,6 +107,9 @@ void UCombatComponent::SwapWeapons()
 
 void UCombatComponent::FinishSwap()
 {
+	UE_LOG(LogTemp, Verbose, TEXT("EXTRACTION_SWAP Finish Owner=%s State=%d"), *GetNameSafe(Character),
+	       static_cast<int32>(CombatState));
+	if (Character && Character->GetExtractionCombat()->IsEnabled()) return;
 	if (Character && Character->HasAuthority())
 	{
 		CombatState = ECombatState::ECS_Unoccuiped;
@@ -110,6 +121,14 @@ void UCombatComponent::FinishSwap()
 }
 
 void UCombatComponent::FinishSwapAttachWeapons()
+{
+	UE_LOG(LogTemp, Verbose, TEXT("EXTRACTION_SWAP Attach Owner=%s State=%d"), *GetNameSafe(Character),
+	       static_cast<int32>(CombatState));
+	if (Character && Character->GetExtractionCombat()->IsEnabled()) return;
+	AttachSwappedWeapons();
+}
+
+void UCombatComponent::AttachSwappedWeapons()
 {
 	if (!EquippedWeapon || !SecondaryWeapon) return;
 	if (Character == nullptr || !Character->HasAuthority()) return;
@@ -129,6 +148,8 @@ void UCombatComponent::FinishSwapAttachWeapons()
 	SecondaryWeapon->SetWeaponState(EWeaponState::EWS_EquippedSecondary);
 	AttachActorToBackpack(SecondaryWeapon);
 	Character->RefreshFirstPersonWorldWeapons();
+	if (Character->GetExtractionInteraction()->IsEnabled())
+		if (auto* Inv = Character->GetExtractionInteraction()->Inventory()) Inv->CaptureWeapons();
 }
 
 
@@ -182,13 +203,8 @@ void UCombatComponent::Drop()
 {
 	if (Character && Character->GetExtractionCombat()->IsEnabled())
 	{
-		if (!Character->GetExtractionCombat()->CanAct()) return;
-		if (!Character->HasAuthority())
-		{
-			Character->GetExtractionCombat()->ServerDropWeapon();
-			return;
-		}
-		Character->GetExtractionCombat()->CancelReload();
+		if (auto* PC = Cast<AExtractionPlayerController>(Character->GetController())) PC->DropEquippedItem();
+		return;
 	}
 	//@TODO 有bug
 	if (EquippedWeapon)
@@ -573,6 +589,7 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 int32 UCombatComponent::PickupAmmo(EWeaponType WeaponType, int32 AmmoAmount)
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled()) return AmmoAmount;
 	int32 remaining = 0;
 	if (CarriedAmmoMap.Contains(WeaponType))
 	{
@@ -923,6 +940,7 @@ void UCombatComponent::OnRep_CombatState()
 		if (Character && !Character->IsLocallyControlled()) HandleReload();
 		break;
 	case ECombatState::ECS_Unoccuiped:
+		if (Character && Character->GetExtractionCombat()->IsEnabled()) Character->bFinishedSwapping = true;
 		// if (bFireButtonPressed)
 		// {
 		// 	Fire();
@@ -937,6 +955,7 @@ void UCombatComponent::OnRep_CombatState()
 		// }
 		break;
 	case ECombatState::ECS_SwappingWeapon:
+		if (Character && Character->GetExtractionCombat()->IsEnabled()) Character->bFinishedSwapping = false;
 		// if (Character && !Character->IsLocallyControlled())
 		// {
 		// 	Character->PlaySwapMontage();

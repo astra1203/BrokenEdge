@@ -1,4 +1,4 @@
-"""Archive reviewed phase-2 runs without changing earlier acceptance evidence."""
+"""Archive reviewed Extraction runs without changing earlier acceptance evidence."""
 import argparse
 import datetime
 import gzip
@@ -26,9 +26,10 @@ def read(file):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--plan', type=Path, required=True)
+    parser.add_argument('--phase', type=int, choices=[2, 3], default=2)
     args = parser.parse_args()
     plan = read(args.plan)
-    out = ROOT / 'Docs/Extraction/Phase2Evidence'
+    out = ROOT / 'Docs/Extraction' / f'Phase{args.phase}Evidence'
     # Validate every entry before creating the immutable evidence directory.
     for entry in plan['runs']:
         folder = ROOT / entry['folder']
@@ -65,8 +66,8 @@ def main():
         destination = out / 'diagnostics' / (source.parent.name + '-' + source.name + '.gz')
         destination.parent.mkdir(exist_ok=True)
         destination.write_bytes(gzip.compress(source.read_bytes(), mtime=0))
-    paths = set(subprocess.check_output(['git', 'diff', '--name-only'], cwd=ROOT, text=True).splitlines())
-    paths.update(subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard'], cwd=ROOT, text=True).splitlines())
+    paths = set(subprocess.check_output(['git', '-c', 'core.quotePath=false', 'diff', '--name-only'], cwd=ROOT).decode('utf-8').splitlines())
+    paths.update(subprocess.check_output(['git', '-c', 'core.quotePath=false', 'ls-files', '--others', '--exclude-standard'], cwd=ROOT).decode('utf-8').splitlines())
     paths.update(plan.get('asset_paths', []))
     implementation = {p: sha(ROOT / p) for p in sorted(paths) if (ROOT / p).is_file()
                       and not p.startswith(('Docs/', 'Saved/', 'Packaged/'))}

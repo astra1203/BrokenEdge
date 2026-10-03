@@ -42,3 +42,8 @@ out = root / 'Saved/Extraction/Map.json'
 out.parent.mkdir(parents=True, exist_ok=True)
 out.write_text(json.dumps({'result': 'passed', 'source': source, 'map': target, 'game_mode': mode.get_path_name(), 'starts': starts}, indent=2) + '\n', encoding='utf-8')
 print('EXTRACTION_MAP_PREPARED')
+# Once phase 3 is installed, regeneration must not reintroduce legacy world
+# weapons that bypass item identity and inventory ownership.
+if lib.does_asset_exist('/Game/Extraction/Items/DA_Item_AK'):
+    exec(compile((root / 'Scripts/Extraction/prepare_items.py').read_text(encoding='utf-8'),
+                 str(root / 'Scripts/Extraction/prepare_items.py'), 'exec'))

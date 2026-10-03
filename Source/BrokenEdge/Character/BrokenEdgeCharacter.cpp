@@ -3,6 +3,9 @@
 
 #include "BrokenEdgeCharacter.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
+#include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
+#include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
+#include "BrokenEdge/Extraction/ExtractionPlayerController.h"
 #include "StingerFirstPersonAnimInstance.h"
 #include "Animation/AnimMontage.h"
 
@@ -53,6 +56,7 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	Combat->SetIsReplicated(true);
 	ExtractionCombat = CreateDefaultSubobject<UExtractionCombatComponent>(TEXT("ExtractionCombat"));
+	ExtractionInteraction = CreateDefaultSubobject<UExtractionInteractionComponent>(TEXT("ExtractionInteraction"));
 
 	Buff = CreateDefaultSubobject<UBuffComponent>(TEXT("BuffComponent"));
 	Buff->SetIsReplicated(true);
@@ -170,6 +174,7 @@ void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, con
 
 	if (bDefeated || BrokenEdgeGameMode == nullptr)return;
 	Damage = BrokenEdgeGameMode->CalculateDamage(InstigatorController, GetController(), Damage);
+	if (Damage > 0 && ExtractionInteraction->IsEnabled()) ExtractionInteraction->CancelMedical();
 
 	float DamageToHealth = Damage;
 	if (Shield > 0.f)
@@ -838,6 +843,7 @@ void ABrokenEdgeCharacter::SprintReleased()
 
 void ABrokenEdgeCharacter::ServerSetSprintRequested_Implementation(bool bRequested)
 {
+	if (bRequested && ExtractionInteraction->IsEnabled()) ExtractionInteraction->CancelMedical();
 	bSprintRequested = bEnableSprint && bRequested;
 }
 
@@ -1039,6 +1045,8 @@ void ABrokenEdgeCharacter::UpdateHUDAmmo()
  */
 void ABrokenEdgeCharacter::Jump()
 {
+	if (ExtractionInteraction->IsEnabled())
+		if (auto* PC = Cast<AExtractionPlayerController>(Controller)) PC->ServerCancelMedical();
 	if (Combat && Combat->bHoldingTheFlag) return;
 	if (Combat == nullptr) return;
 	if (bDisableGameplay) return;
@@ -1107,6 +1115,11 @@ void ABrokenEdgeCharacter::CrouchButtonPressed()
 
 void ABrokenEdgeCharacter::EquipButtonPressed()
 {
+	if (ExtractionInteraction->IsEnabled())
+	{
+		if (auto* PC = Cast<AExtractionPlayerController>(Controller)) PC->Interact();
+		return;
+	}
 	if (bDisableGameplay) return;
 	if (Combat == nullptr) return;
 
@@ -1129,6 +1142,7 @@ void ABrokenEdgeCharacter::EquipButtonPressed()
 
 void ABrokenEdgeCharacter::AimButtonPressed()
 {
+	if (ExtractionInteraction->IsEnabled() && ExtractionInteraction->InventoryOpen) return;
 	if (Combat && Combat->bHoldingTheFlag) return;
 	if (bDisableGameplay) return;
 	if (Combat)
@@ -1176,6 +1190,7 @@ void ABrokenEdgeCharacter::DropButtonPressed()
  */
 void ABrokenEdgeCharacter::FireButtonPressed()
 {
+	if (ExtractionInteraction->IsEnabled() && ExtractionInteraction->InventoryOpen) return;
 	if (Combat && Combat->bHoldingTheFlag) return;
 	if (bDisableGameplay) return;
 	if (Combat)
@@ -1215,6 +1230,15 @@ void ABrokenEdgeCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
  */
 void ABrokenEdgeCharacter::ServerEquipButtonPressed_Implementation()
 {
+	if (ExtractionInteraction->IsEnabled())
+	{
+		if (ExtractionCombat->CanAct() && !ExtractionInteraction->InventoryOpen && Combat->ShouldSwapWeapons())
+		{
+			ExtractionInteraction->CancelMedical();
+			Combat->SwapWeapons();
+		}
+		return;
+	}
 	if (Combat)
 	{
 		if (OverlappingWeapon)
@@ -1456,6 +1480,11 @@ void ABrokenEdgeCharacter::RespawnTimerFinished()
 
 void ABrokenEdgeCharacter::DropWeapons()
 {
+	if (ExtractionInteraction->IsEnabled())
+	{
+		ExtractionInteraction->DropOnExit();
+		return;
+	}
 	if (Combat == nullptr) return;
 
 	if (Combat->EquippedWeapon)

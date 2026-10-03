@@ -1,0 +1,1243 @@
+{
+  "checks": [
+    {
+      "name": "0_all_peers_equipped",
+      "passed": true,
+      "detail": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 50.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1EEAB30) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1ED6680) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1EEAEF0) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 50.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1ED7300) {x: 2700.000000, y: 0.000000, z: 94.150000}>"
+        }
+      ]
+    },
+    {
+      "name": "0_real_shot_damages_other_player",
+      "passed": true,
+      "detail": 20.0
+    },
+    {
+      "name": "0_damage_replicated",
+      "passed": true,
+      "detail": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 30.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1EEAEF0) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 30.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1ED5230) {x: 2700.000000, y: 0.000000, z: 94.150000}>"
+        }
+      ]
+    },
+    {
+      "name": "0_one_round_consumed_world_0",
+      "passed": true,
+      "detail": [
+        30,
+        29
+      ]
+    },
+    {
+      "name": "0_no_self_damage_world_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "0_one_round_consumed_world_1",
+      "passed": true,
+      "detail": [
+        30,
+        29
+      ]
+    },
+    {
+      "name": "0_no_self_damage_world_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "0_death_replicated",
+      "passed": true,
+      "detail": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 0.0,
+          "shield": 0.0,
+          "disabled": true,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1EEA0E0) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 0.0,
+          "shield": 0.0,
+          "disabled": true,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1ED5140) {x: 2700.000000, y: 0.000000, z: 94.150000}>"
+        }
+      ]
+    },
+    {
+      "name": "0_death_weapon_dropped_on_all_peers",
+      "passed": true,
+      "detail": [
+        "BP_AK47_C_3",
+        "BP_AK47_C_2"
+      ]
+    },
+    {
+      "name": "0_respawn_restores_both_peers",
+      "passed": true,
+      "detail": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1EEAB30) {x: -500.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1EE8D80) {x: -500.000000, y: 0.000000, z: 94.150000}>"
+        }
+      ]
+    },
+    {
+      "name": "1_all_peers_equipped",
+      "passed": true,
+      "detail": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 50.0,
+          "disabled": false,
+          "ammo": 24,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1F51550) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_4",
+          "location": "<Struct 'Vector' (0x00000144A1EE8E20) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 50.0,
+          "disabled": false,
+          "ammo": 24,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1F510A0) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_4",
+          "location": "<Struct 'Vector' (0x00000144A1EE8E20) {x: 2000.000000, y: 0.000000, z: 94.150000}>"
+        }
+      ]
+    },
+    {
+      "name": "1_real_shot_damages_other_player",
+      "passed": true,
+      "detail": 20.0
+    },
+    {
+      "name": "1_damage_replicated",
+      "passed": true,
+      "detail": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 30.0,
+          "disabled": false,
+          "ammo": 24,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1F51780) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 30.0,
+          "disabled": false,
+          "ammo": 24,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1F51370) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        }
+      ]
+    },
+    {
+      "name": "1_one_round_consumed_world_0",
+      "passed": true,
+      "detail": [
+        30,
+        29
+      ]
+    },
+    {
+      "name": "1_no_self_damage_world_0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "1_one_round_consumed_world_1",
+      "passed": true,
+      "detail": [
+        30,
+        29
+      ]
+    },
+    {
+      "name": "1_no_self_damage_world_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "1_death_replicated",
+      "passed": true,
+      "detail": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 0.0,
+          "shield": 0.0,
+          "disabled": true,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1F51550) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 0.0,
+          "shield": 0.0,
+          "disabled": true,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1F51640) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        }
+      ]
+    },
+    {
+      "name": "1_death_weapon_dropped_on_all_peers",
+      "passed": true,
+      "detail": [
+        "BP_AK47_C_2",
+        "BP_AK47_C_3"
+      ]
+    },
+    {
+      "name": "1_respawn_restores_both_peers",
+      "passed": true,
+      "detail": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_3",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1F514B0) {x: -500.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_3",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1F51280) {x: -500.000000, y: 0.000000, z: 94.100000}>"
+        }
+      ]
+    },
+    {
+      "name": "1_captures_written",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "snapshots": [
+    {
+      "round": 0,
+      "phase": "equipped",
+      "pawns": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 50.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1EEAB30) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1ED6680) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1EEAEF0) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 50.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1ED7300) {x: 2700.000000, y: 0.000000, z: 94.150000}>"
+        }
+      ]
+    },
+    {
+      "round": 0,
+      "phase": "single_shot",
+      "pawns": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 30.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1EEAEF0) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 29,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1EEA180) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 29,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1EE8DD0) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 30.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1ED5230) {x: 2700.000000, y: 0.000000, z: 94.150000}>"
+        }
+      ]
+    },
+    {
+      "round": 0,
+      "phase": "death",
+      "pawns": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 0.0,
+          "shield": 0.0,
+          "disabled": true,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1EEA0E0) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 24,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1ED4B00) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 24,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1EEAB30) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 0.0,
+          "shield": 0.0,
+          "disabled": true,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1ED5140) {x: 2700.000000, y: 0.000000, z: 94.150000}>"
+        }
+      ]
+    },
+    {
+      "round": 0,
+      "phase": "respawn",
+      "pawns": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 24,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1F51190) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1EEAB30) {x: -500.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 24,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1F50F10) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1EE8D80) {x: -500.000000, y: 0.000000, z: 94.150000}>"
+        }
+      ]
+    },
+    {
+      "round": 1,
+      "phase": "equipped",
+      "pawns": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 50.0,
+          "disabled": false,
+          "ammo": 24,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1F51550) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_4",
+          "location": "<Struct 'Vector' (0x00000144A1EE8E20) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 50.0,
+          "disabled": false,
+          "ammo": 24,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1F510A0) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 30,
+          "weapon": "BP_AK47_C_4",
+          "location": "<Struct 'Vector' (0x00000144A1EE8E20) {x: 2000.000000, y: 0.000000, z: 94.150000}>"
+        }
+      ]
+    },
+    {
+      "round": 1,
+      "phase": "single_shot",
+      "pawns": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 80.0,
+          "shield": 30.0,
+          "disabled": false,
+          "ammo": 24,
+          "weapon": "BP_AK47_C_2",
+          "location": "<Struct 'Vector' (0x00000144A1F51780) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 29,
+          "weapon": "BP_AK47_C_4",
+          "location": "<Struct 'Vector' (0x00000144A1F51050) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 80.0,
+          "shield": 30.0,
+          "disabled": false,
+          "ammo": 24,
+          "weapon": "BP_AK47_C_3",
+          "location": "<Struct 'Vector' (0x00000144A1F51370) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 29,
+          "weapon": "BP_AK47_C_4",
+          "location": "<Struct 'Vector' (0x00000144A1F51910) {x: 2000.000000, y: 0.000000, z: 94.150000}>"
+        }
+      ]
+    },
+    {
+      "round": 1,
+      "phase": "death",
+      "pawns": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_1",
+          "local": false,
+          "health": 0.0,
+          "shield": 0.0,
+          "disabled": true,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1F51550) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 23,
+          "weapon": "BP_AK47_C_4",
+          "location": "<Struct 'Vector' (0x00000144A1F518C0) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_0",
+          "local": true,
+          "health": 0.0,
+          "shield": 0.0,
+          "disabled": true,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1F51640) {x: 2700.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 23,
+          "weapon": "BP_AK47_C_4",
+          "location": "<Struct 'Vector' (0x00000144A1F51370) {x: 2000.000000, y: 0.000000, z: 94.150000}>"
+        }
+      ]
+    },
+    {
+      "round": 1,
+      "phase": "respawn",
+      "pawns": [
+        {
+          "world": 0,
+          "server": true,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 23,
+          "weapon": "BP_AK47_C_4",
+          "location": "<Struct 'Vector' (0x00000144A1F51730) {x: 2000.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 0,
+          "server": true,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_3",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1F514B0) {x: -500.000000, y: 0.000000, z: 94.149998}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 256,
+          "pawn": "BP_StingerCharacter_C_2",
+          "local": false,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": 23,
+          "weapon": "BP_AK47_C_4",
+          "location": "<Struct 'Vector' (0x00000144A1F519B0) {x: 2000.000000, y: 0.000000, z: 94.150000}>"
+        },
+        {
+          "world": 1,
+          "server": false,
+          "id": 257,
+          "pawn": "BP_StingerCharacter_C_3",
+          "local": true,
+          "health": 80.0,
+          "shield": 0.0,
+          "disabled": false,
+          "ammo": -1,
+          "weapon": null,
+          "location": "<Struct 'Vector' (0x00000144A1F51280) {x: -500.000000, y: 0.000000, z: 94.100000}>"
+        }
+      ]
+    }
+  ],
+  "input": [
+    {
+      "round": 0,
+      "phase": "single_shot",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 0,
+      "phase": "lethal_fire",
+      "id": 257
+    },
+    {
+      "round": 1,
+      "phase": "single_shot",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    },
+    {
+      "round": 1,
+      "phase": "lethal_fire",
+      "id": 256
+    }
+  ],
+  "rounds": [
+    {
+      "shooter": 257,
+      "victim": 256,
+      "shooter_is_host": false
+    },
+    {
+      "shooter": 256,
+      "victim": 257,
+      "shooter_is_host": true
+    }
+  ],
+  "configured_spawn_health": 80.0,
+  "game_mode": "/Game/Characters/Stinger/Blueprints/BP_StingerTestGameMode.BP_StingerTestGameMode_C",
+  "result": "passed"
+}

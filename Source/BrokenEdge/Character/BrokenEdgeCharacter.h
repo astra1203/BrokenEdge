@@ -58,6 +58,9 @@ class BROKENEDGE_API ABrokenEdgeCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+	class UExtractionInteractionComponent* GetExtractionInteraction() const { return ExtractionInteraction; }
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UExtractionInteractionComponent> ExtractionInteraction;
 	// Sets default values for this character's properties
 	ABrokenEdgeCharacter();
 
@@ -97,6 +100,7 @@ public:
 
 	/** 获取换弹动画 */
 	FORCEINLINE UAnimMontage* GetReloadMontage() const { return ReloadMontage; }
+	UAnimMontage* GetSwapMontage() const { return SwapMontage; }
 
 	void PlayFireMontage(bool bAiming);
 	void PlayDefeatMontage();

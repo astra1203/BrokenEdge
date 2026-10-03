@@ -1,0 +1,243 @@
+{
+  "created_utc": "2026-10-03T09:02:35.189264+00:00",
+  "base_commit": "8f01a60095772ee0e967fe9949335eb6a9f77548",
+  "engine": "C:/UnrealProjects/UnrealEngine-5.8.3-release",
+  "runs": [
+    {
+      "name": "compilation-editor",
+      "folder": "Saved/Extraction/Phase3Editor12",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "package-server",
+      "folder": "Saved/Extraction/Phase3PackageServer02",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "package-client",
+      "folder": "Saved/Extraction/Phase3PackageClient02",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "assets",
+      "folder": "Saved/Extraction/Phase3Assets01",
+      "report": "Run.json"
+    },
+    {
+      "name": "rules",
+      "folder": "Saved/Extraction/Phase3Rules03",
+      "report": "Run.json"
+    },
+    {
+      "name": "network/inventory",
+      "folder": "Saved/Extraction/Phase3PackagedInventory02",
+      "report": "Report.json"
+    },
+    {
+      "name": "network/inventory-lag",
+      "folder": "Saved/Extraction/Phase3PackagedInventoryLag02",
+      "report": "Report.json"
+    },
+    {
+      "name": "network/swap-lag",
+      "folder": "Saved/Extraction/Phase3PackagedSwapLag02",
+      "report": "Report.json"
+    },
+    {
+      "name": "network/combat",
+      "folder": "Saved/Extraction/Phase3PackagedCombat02",
+      "report": "Report.json"
+    },
+    {
+      "name": "network/combat-lag",
+      "folder": "Saved/Extraction/Phase3PackagedCombatLag02",
+      "report": "Report.json"
+    },
+    {
+      "name": "network/spectator",
+      "folder": "Saved/Extraction/Phase3PackagedSpectator02",
+      "report": "Report.json"
+    },
+    {
+      "name": "network/timeout",
+      "folder": "Saved/Extraction/Phase3PackagedTimeout02",
+      "report": "Report.json"
+    },
+    {
+      "name": "network/load-timeout",
+      "folder": "Saved/Extraction/Phase3PackagedLoadTimeout02",
+      "report": "Report.json"
+    },
+    {
+      "name": "network/disconnect",
+      "folder": "Saved/Extraction/Phase3PackagedDisconnect02",
+      "report": "Report.json"
+    },
+    {
+      "name": "regression/actions",
+      "folder": "Saved/Stinger/Baseline/Phase3Actions01",
+      "report": "pie_validation.json",
+      "metadata": "Run.json"
+    },
+    {
+      "name": "regression/combat",
+      "folder": "Saved/Stinger/Baseline/Phase3Combat01",
+      "report": "Combat.json",
+      "metadata": "Run.json"
+    },
+    {
+      "name": "regression/visibility",
+      "folder": "Saved/Stinger/Baseline/Phase3Visibility01",
+      "report": "weapon_visibility_2p_stills.json",
+      "metadata": "Run.json"
+    },
+    {
+      "name": "regression/legacy-lan",
+      "folder": "Saved/Extraction/Phase3LegacyLAN01",
+      "report": "Report.json"
+    }
+  ],
+  "implementation_sha256": {
+    ".gitattributes": "7d6b6eff6c4c9ca1b4b6c8c877a69ea8f6c85c132892fcc14c98c8ac27ffd770",
+    "Binaries/Win64/UnrealEditor-BrokenEdge.dll": "a99cd027bcf3f1f6fdbd827ab61f3fc316b68e3223000dca99acb53008135ee1",
+    "BrokenEdge.uproject": "6d5d2fb43db38a1131cfa9a64eff084d82d2a14c8dec8db837cd3111973073cd",
+    "Content/Blueprints/Weapon/BP_AK47.uasset": "0f609a4509c100bb0fa2eee716daec9183f15a1321b909d2a9e7e4278baa9649",
+    "Content/Characters/Stinger/Blueprints/BP_StingerCharacter.uasset": "fcf7a55d690e5c4e4f116d9d330de1765106d5b1ec598030b68d53184e9eef25",
+    "Content/Extraction/Items/DA_Item_AK.uasset": "fd01a2fb27f83b741079c68cd7962f720aad111d7af4df8e119a0f8f7f5aeaae",
+    "Content/Extraction/Items/DA_Item_Ammo.uasset": "30ad891591edeafd11926f4e0c5bebcee82b3564b748643777fc06a185a6d5c3",
+    "Content/Extraction/Items/DA_Item_Electronics.uasset": "d02926e64bc829f67f3dfd5a6c45125f4f1f864bfa2d98420fb93baa55aba785",
+    "Content/Extraction/Items/DA_Item_Medkit.uasset": "d0c523ab7b0f7cd2228672b3750c4b9e238e271b0b46aa92d8b5831e253202d2",
+    "Content/Extraction/Items/DA_Item_Tools.uasset": "87c8ec6c538efe365bb3d7c80cd1e3f5b7bcf21eba6c00fc58a07e11f3e04027",
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "8d2e4861129af88f514f218282f794f407eb1dec00e0bf6ffdefb941b66c618a",
+    "Content/Maps/SpaceCenter/L_SpaceCenterSample.umap": "7e1d74f14774de827914d57d407cdc1c9ca88cbee63413d1326fbda030685389",
+    "Scripts/Extraction/archive_evidence.py": "70ffde35ce382ab0282c3fcfcd89c42741c9fde332b2ccfd8ca73d53f7914d30",
+    "Scripts/Extraction/inventory_scenarios.py": "7b5240d609ee67bf79af9f8889340316daf521c09b605782371ff5c69a054d62",
+    "Scripts/Extraction/prepare_items.py": "89e03b68bbcb57f0fbff72e7916e081b7c69182027e234e96b3fad672c2a9896",
+    "Scripts/Extraction/prepare_map.py": "b64d5df2de86150cdfe9b2cc49518a4954e124aac54d8a158759fe19f8fa28e9",
+    "Scripts/Extraction/run_editor_task.py": "bbd24fd1f8ee51221c12ca8cd7c0863e9c45e44200febb8de86e62d1f6c1d139",
+    "Scripts/Extraction/run_network.py": "35c90af7d4bd7beeea8238be4bdc75b330cc2548356cd585df31aca2591b7bde",
+    "Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp": "b707e422f2b8f2e4b9f047168a30a4b7a43b283783cffe327cf65f900b9c793c",
+    "Source/BrokenEdge/Character/BrokenEdgeCharacter.h": "e9821109f28a00bfcea53ad84c8bc06f10a4d17db2e53b74bfec61ee2ba08f99",
+    "Source/BrokenEdge/Component/CombatComponent.cpp": "637a1d74a93e1d2d9452cef6eef64c3cea64ee322e9004195c0844fbc23985cf",
+    "Source/BrokenEdge/Component/CombatComponent.h": "28025c74f724d2657ec8ddd0245409cfb74704379e620d29869e936f3d7c4e96",
+    "Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp": "d10a0747bcbeb6944f1d3d6349788f443fef935642398dd80fc1d1c4675a4cfa",
+    "Source/BrokenEdge/Extraction/ExtractionCombatComponent.h": "6e8f9aefbe46465f422a4c6e5037bab2c68d0632a4a886ec686862f14112f169",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp": "bad29f6041a56ef144ad0272683c4b69635b58332166858ece46540b57e7678c",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.h": "4758fc5abdfd05c7f2bfecd6a6d7da9632d35b74019de79301bd255b2d455a07",
+    "Source/BrokenEdge/Extraction/ExtractionInteractionComponent.cpp": "2e52d6d05898f398e49072ecddee3ec42d36056ed348dc9eaca5a15333b1197a",
+    "Source/BrokenEdge/Extraction/ExtractionInteractionComponent.h": "cc3ed71af3ed0e21f8234468820ae4d5abcc10cd874b6774e1aa2138e8d33057",
+    "Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp": "d62f851385cb02126462ee2d340c91afb99b8ae56d6d11fca27d90fb2f37d1be",
+    "Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h": "dea65b7d8c02d4338a20acb22907f6cfe4798dc397c4070d28aedeb3953e96c7",
+    "Source/BrokenEdge/Extraction/ExtractionInventoryWidget.cpp": "083c410960d633b4a945c4dbd3526707bf52c6364455e4ce2df91f141823216c",
+    "Source/BrokenEdge/Extraction/ExtractionInventoryWidget.h": "d29180b0e755bc6421367792d9b704cbfa92d121ebf62ae3a8c70ccf96ff0e57",
+    "Source/BrokenEdge/Extraction/ExtractionItems.cpp": "75d14475eec0e108a40618685136f312dde71e4b3f6ab698b9f4658a0d1777cb",
+    "Source/BrokenEdge/Extraction/ExtractionItems.h": "b6bb62687c846f059691dabccaa1c321309694b5f59e2c0a1ce230cb5b6b2d90",
+    "Source/BrokenEdge/Extraction/ExtractionLootActor.cpp": "d4084f34fa3d1f1653429bcad8d45c39864eec005f1daa89a3d4c552b9f21464",
+    "Source/BrokenEdge/Extraction/ExtractionLootActor.h": "d611faa64dc590f67fc9f3161ad57c85e0bfe9ea8c7d218f2cf6dda01bd71962",
+    "Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp": "1391a123aca7a33d36d07e3a33118239c7922f02cc65193df4020a8b3e4fbeb3",
+    "Source/BrokenEdge/Extraction/ExtractionPlayerController.h": "eb4af98a088823ab2ac652319732cba62efca8357c7439387a2ea21370682b1f",
+    "Source/BrokenEdge/Extraction/ExtractionState.cpp": "64d038dc3a20ea83db535c15ab6204ed84919c9b1eb776e7e2881c7249718824",
+    "Source/BrokenEdge/Extraction/ExtractionState.h": "d889022e78567b9dfc21695b9f7e112b35ee5c956e5d3c1e354040125e9f8858",
+    "Source/BrokenEdge/Pickups/HealthPickup.cpp": "cf4b45d4fe5bc454a079dc97d470d3531b1b7de5f444331a58fdb7e1dde6fac0",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "69248e2ebe68d5de6127365c34ebf3596ca37b5f33bfe78a36554089dfc3cfc8",
+    "Source/BrokenEdge/Tests/ExtractionInventoryTests.cpp": "b9e94e74c285dd40fdff16ace6103ff7221e1f6e9ed7bf3d376076db8eafa940",
+    "Source/BrokenEdge/Weapon/Weapon.cpp": "9ec02bd12abfd75d45b6e74ace34718016dd657ec86b80f940bba99bba3d0409",
+    "Source/BrokenEdge/Weapon/Weapon.h": "98dc0a69a07a5ebc99c6f8fe4c32307b435c5c64683762cb33c1d1e221af6294"
+  },
+  "packages": {
+    "Packaged/Client/Windows/BrokenEdge.exe": {
+      "size": 173568,
+      "sha256": "061bdd6d6c67ab6f19e80c1cc06a9aaa8ad959bb767871d76b5bed6790e52c34"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe": {
+      "size": 337305600,
+      "sha256": "0dfa3fa664a0efb351f42408e1d69409a310bc484293b9dbf3b246b215db9c22"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.pak": {
+      "size": 11605833,
+      "sha256": "00f3d3319fad84d118ad3b34a92540745047d7a5f8fe5173def8992938cbe5c7"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.ucas": {
+      "size": 701268656,
+      "sha256": "f6127859ed43c526cd9f28245c6a8df41d656c98efee8bf147ddc48df240718e"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.utoc": {
+      "size": 914688,
+      "sha256": "8e70cf94b14935bf890da77128a47afc084822b7ba879bb2cc4b6b3a887ed6bb"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3350736,
+      "sha256": "b35686f2080fa9ef092ddf988afa9193be98d833438e360b80b78120dd152fb6"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "a9a411587fb8250ad8463221dde0dc0f8ff83139a9b400f6dafbc6a764bcb322"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdgeServer.exe": {
+      "size": 173568,
+      "sha256": "e9fa4aaa0667e5a6b5d24d86c95d7c126211a48deebb4a9b5b4dee4cac76c631"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe": {
+      "size": 317420032,
+      "sha256": "1ca0269dbe4826c8d4b9512f79b42a5015b0fdc817ce348794e57c1d3db7a6aa"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.pak": {
+      "size": 10577695,
+      "sha256": "dd3ab6b8d9f40510b4da70f4477043ec91945108abd6782d921c31c4b8a281bd"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.ucas": {
+      "size": 120670544,
+      "sha256": "69ea8e802eaf4adb5818b7802c5f90d57c5af60f0b36cb58a4d5348cd455b3f4"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.utoc": {
+      "size": 428401,
+      "sha256": "9f4fb1ace6d0ca3ac491050a4399c31289e13e026a99fdf558167fe2bf6e50b5"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3350736,
+      "sha256": "b35686f2080fa9ef092ddf988afa9193be98d833438e360b80b78120dd152fb6"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "a9a411587fb8250ad8463221dde0dc0f8ff83139a9b400f6dafbc6a764bcb322"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    }
+  },
+  "review": {
+    "scope": "Development dedicated server and independent local clients on one Windows host using OnlineSubsystemNull; no Internet or capacity acceptance.",
+    "screenshots_reviewed": [
+      "network/inventory-lag/A-medical-progress.png",
+      "network/inventory-lag/A-inventory-context-menu.png",
+      "network/spectator/A-third-person.png",
+      "network/inventory/A-inventory-drag-rotated.png",
+      "network/inventory/A-inventory-split-quantity.png",
+      "network/inventory/B-death-container.png",
+      "regression/visibility/WeaponVisibilityFrames/20261003-165649-2p/first_person.png",
+      "regression/visibility/WeaponVisibilityFrames/20261003-165649-2p/third_person.png",
+      "regression/visibility/WeaponVisibilityFrames/20261003-165649-2p/swap_view.png"
+    ],
+    "ground_placement": "Visible AK magazine/base now contacts the floor; models remain static pickups without throwing physics.",
+    "phase1_original_map_unchanged": true,
+    "result": "passed",
+    "visual_review": "Readable Chinese inventory, rotation and split dialog, death loot, medical progress, floor contact and first/third person weapon visibility reviewed. Reused pickup meshes, text item labels, fixed pickup poses and medical HUD bar are deliberate approximations.",
+    "network_conditions": "Two or three independent clients plus dedicated server; lag suites verify 50 ms sending lag and 2 percent loss on each process."
+  }
+}

@@ -63,6 +63,11 @@ void AWeapon::MulticastAmmo_Implementation(int32 UpdateAmmo)
 	Ammo = UpdateAmmo;
 }
 
+void AWeapon::OnRep_ExtractionInitialAmmo()
+{
+	if (ExtractionInitialAmmo >= 0) SetExtractionAmmo(ExtractionInitialAmmo);
+}
+
 void AWeapon::SetHUDAmmo()
 {
 	BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr
@@ -167,6 +172,8 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AWeapon, WeaponState);
 	DOREPLIFETIME_CONDITION(AWeapon, bUseServerSideRewind, COND_OwnerOnly);
+	DOREPLIFETIME(AWeapon, ExtractionItemId);
+	DOREPLIFETIME_CONDITION(AWeapon, ExtractionInitialAmmo, COND_InitialOnly);
 }
 
 void AWeapon::OnRep_Owner()

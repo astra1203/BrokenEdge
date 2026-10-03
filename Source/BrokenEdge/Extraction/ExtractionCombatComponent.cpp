@@ -1,5 +1,8 @@
 #include "ExtractionCombatComponent.h"
 #include "ExtractionState.h"
+#include "ExtractionInteractionComponent.h"
+#include "ExtractionInventoryComponent.h"
+#include "ExtractionPlayerController.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/Weapon/HitScanWeapon.h"
@@ -28,6 +31,7 @@ void UExtractionCombatComponent::RequestShot(const FVector& Target)
 	auto* C = Character();
 	auto* W = C ? C->GetEquippedWeapon() : nullptr;
 	if (!CanAct() || !Cast<AHitScanWeapon>(W)) return;
+	if (C->GetExtractionInteraction()->InventoryOpen) return;
 	const uint32 Id = ++LocalShotId;
 	if (!C->HasAuthority())
 	{
@@ -47,6 +51,7 @@ void UExtractionCombatComponent::ServerRequestShot_Implementation(uint32 ShotId,
 	const bool Fresh = ShotId > LastProcessedShot;
 	if (Fresh) LastProcessedShot = ShotId;
 	const bool Valid = IsEnabled() && Fresh && CanAct() && Combat && IsValid(Weapon)
+		&& !C->GetExtractionInteraction()->InventoryOpen
 		&& Weapon == C->GetEquippedWeapon() && Weapon->GetOwner() == C && Cast<AHitScanWeapon>(Weapon)
 		&& Weapon->FireType == EFireType::EFT_HitScan && !Weapon->IsEmpty()
 		&& Combat->CombatState == ECombatState::ECS_Unoccuiped && !ReloadTimer.IsValid()
@@ -55,11 +60,13 @@ void UExtractionCombatComponent::ServerRequestShot_Implementation(uint32 ShotId,
 		&& FVector::DistSquared(Target, C->GetActorLocation()) <= FMath::Square(120000.0);
 	if (Valid)
 	{
+		C->GetExtractionInteraction()->CancelMedical();
 		NextShotTime = FMath::Max(Now, NextShotTime) + Weapon->FireDelay;
 		Weapon->UseImmediateServerHitScan();
 		const FVector End = Weapon->bUseScatter ? Weapon->TraceEndWithScatter(Target) : FVector(Target);
 		C->PlayFireMontage(Combat->bAiming);
 		Weapon->Fire(End);
+		if (auto* Inventory = C->GetExtractionInteraction()->Inventory()) Inventory->RecordShot(Weapon);
 		++AcceptedShots;
 		MulticastShotEffects(Weapon, End, Weapon->GetAmmo());
 	}
@@ -93,7 +100,9 @@ void UExtractionCombatComponent::MulticastShotEffects_Implementation(AWeapon* We
 
 void UExtractionCombatComponent::ServerDropWeapon_Implementation()
 {
-	if (CanAct()) Character()->GetCombat()->Drop();
+	// Legacy endpoint must still enter the inventory transaction path.
+	if (CanAct())
+		if (auto* PC = Cast<AExtractionPlayerController>(Character()->GetController())) PC->DropEquippedItem();
 }
 
 void UExtractionCombatComponent::RequestReload()
@@ -102,6 +111,7 @@ void UExtractionCombatComponent::RequestReload()
 	UCombatComponent* Combat = C ? C->GetCombat().Get() : nullptr;
 	auto* W = C ? C->GetEquippedWeapon() : nullptr;
 	if (!CanAct() || !W || W->IsFull() || Combat->CarriedAmmo <= 0 || Combat->bLocallyReloading
+		|| C->GetExtractionInteraction()->InventoryOpen
 		|| Combat->CombatState != ECombatState::ECS_Unoccuiped)
 		return;
 	Combat->bLocallyReloading = true;
@@ -115,12 +125,14 @@ void UExtractionCombatComponent::BeginServerReload()
 	UCombatComponent* Combat = C ? C->GetCombat().Get() : nullptr;
 	auto* W = C ? C->GetEquippedWeapon() : nullptr;
 	if (!CanAct() || !W || W->GetOwner() != C || !Cast<AHitScanWeapon>(W) || W->IsFull()
+		|| C->GetExtractionInteraction()->InventoryOpen
 		|| Combat->CarriedAmmo <= 0 || Combat->CombatState != ECombatState::ECS_Unoccuiped || ReloadTimer.IsValid())
 	{
 		ClientReloadRejected();
 		return;
 	}
 	ReloadWeapon = W;
+	C->GetExtractionInteraction()->CancelMedical();
 	Combat->CombatState = ECombatState::ECS_Reloading;
 	if (!C->IsLocallyControlled()) Combat->HandleReload();
 	float Duration = 2.f;
@@ -143,10 +155,7 @@ void UExtractionCombatComponent::FinishServerReload()
 	if (CanAct() && W && W == C->GetEquippedWeapon() && W->GetOwner() == C && Combat->CombatState ==
 		ECombatState::ECS_Reloading)
 	{
-		const int32 Amount = Combat->AmountToReload();
-		Combat->CarriedAmmoMap.FindOrAdd(W->GetWeaponType()) -= Amount;
-		Combat->CarriedAmmo = Combat->CarriedAmmoMap[W->GetWeaponType()];
-		W->SetExtractionAmmo(W->GetAmmo() + Amount);
+		if (auto* Inventory = C->GetExtractionInteraction()->Inventory()) Inventory->Reload(W);
 		// Keep reload and shot snapshots on this actor's reliable channel so an old
 		// shot cannot arrive after a newer refill and restore a stale ammo count.
 		MulticastReloadAmmo(W, W->GetAmmo());
@@ -179,8 +188,90 @@ void UExtractionCombatComponent::ClientReloadRejected_Implementation()
 	if (auto* C = Character()) C->GetCombat()->bLocallyReloading = false;
 }
 
+void UExtractionCombatComponent::BeginServerSwap()
+{
+	auto* C = Character();
+	if (!C || !C->HasAuthority() || !CanAct() || C->GetExtractionInteraction()->InventoryOpen) return;
+	auto* Combat = C->GetCombat().Get();
+	if (Combat->CombatState != ECombatState::ECS_Unoccuiped || !Combat->ShouldSwapWeapons()) return;
+	CancelSwap();
+	C->GetExtractionInteraction()->CancelMedical();
+	SwapPrimary = Combat->EquippedWeapon;
+	SwapSecondary = Combat->SecondaryWeapon;
+	float AttachTime = .75f, FinishTime = 1.35f;
+	if (const auto* Montage = C->GetSwapMontage())
+		for (const FAnimNotifyEvent& Notify : Montage->Notifies)
+		{
+			const FString Name = Notify.GetNotifyEventName().ToString();
+			if (Name.Contains(TEXT("AttachWeapons"))) AttachTime = Notify.GetTriggerTime();
+			if (Name.Contains(TEXT("SwapFinished"))) FinishTime = Notify.GetTriggerTime();
+		}
+	AttachTime = FMath::Max(.05f, AttachTime);
+	FinishTime = FMath::Max(AttachTime + .05f, FinishTime);
+	Combat->CombatState = ECombatState::ECS_SwappingWeapon;
+	C->bFinishedSwapping = false;
+	Combat->SecondaryWeapon->EnableCustomDepth(false);
+	MulticastSwapStarted();
+	C->ForceNetUpdate();
+	// Authority does not depend on a rendered montage firing every notify.
+	GetWorld()->GetTimerManager().SetTimer(SwapAttachTimer, this, &ThisClass::CommitServerSwap, AttachTime);
+	GetWorld()->GetTimerManager().SetTimer(SwapFinishTimer, this, &ThisClass::FinishServerSwap, FinishTime);
+	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_SWAP_SCHEDULE Attach=%.3f Finish=%.3f"), AttachTime, FinishTime);
+}
+
+void UExtractionCombatComponent::MulticastSwapStarted_Implementation()
+{
+	if (auto* C = Character()) C->PlaySwapMontage();
+}
+
+void UExtractionCombatComponent::CommitServerSwap()
+{
+	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_SWAP_COMMIT"));
+	SwapAttachTimer.Invalidate();
+	auto* C = Character();
+	if (!C || !CanAct())
+	{
+		CancelSwap();
+		return;
+	}
+	auto* Combat = C->GetCombat().Get();
+	if (Combat->CombatState != ECombatState::ECS_SwappingWeapon || !SwapPrimary.IsValid()
+		|| !SwapSecondary.IsValid() || Combat->EquippedWeapon != SwapPrimary.Get()
+		|| Combat->SecondaryWeapon != SwapSecondary.Get())
+	{
+		CancelSwap();
+		return;
+	}
+	Combat->AttachSwappedWeapons();
+	SwapPrimary.Reset();
+	SwapSecondary.Reset();
+	C->ForceNetUpdate();
+}
+
+void UExtractionCombatComponent::FinishServerSwap() { CancelSwap(); }
+
+void UExtractionCombatComponent::CancelSwap()
+{
+	if (GetWorld())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(SwapAttachTimer);
+		GetWorld()->GetTimerManager().ClearTimer(SwapFinishTimer);
+	}
+	SwapPrimary.Reset();
+	SwapSecondary.Reset();
+	if (auto* C = Character())
+	{
+		auto* Combat = C->GetCombat().Get();
+		if (Combat->CombatState == ECombatState::ECS_SwappingWeapon) Combat->CombatState = ECombatState::ECS_Unoccuiped;
+		C->bFinishedSwapping = true;
+		if (Combat->SecondaryWeapon) Combat->SecondaryWeapon->EnableCustomDepth(true);
+		C->ForceNetUpdate();
+	}
+}
+
 void UExtractionCombatComponent::EndPlay(const EEndPlayReason::Type Reason)
 {
+	CancelSwap();
 	if (GetWorld()) GetWorld()->GetTimerManager().ClearTimer(ReloadTimer);
 	Super::EndPlay(Reason);
 }

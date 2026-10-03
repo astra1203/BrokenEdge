@@ -37,4 +37,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out) const override;
 	UPROPERTY(Replicated, BlueprintReadOnly)
 	EExtractionLife Life = EExtractionLife::Alive;
+	AExtractionPlayerState();
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<class UExtractionInventoryComponent> Inventory;
 };

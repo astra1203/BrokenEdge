@@ -3,12 +3,14 @@
 #include "CoreMinimal.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "Blueprint/UserWidget.h"
+#include "ExtractionItems.h"
 #include "ExtractionPlayerController.generated.h"
 
 UCLASS()
 class BROKENEDGE_API AExtractionPlayerController : public ABrokenEdgePlayerController
 {
 	GENERATED_BODY()
+	friend class FExtractionDriver;
 
 public:
 	virtual void Tick(float Delta) override;
@@ -26,10 +28,34 @@ public:
 	bool bExtractionSpectating = false;
 	bool IsMenuOpen() const { return bMenuOpen; }
 	void ToggleExtractionMenu();
+	class UExtractionInteractionComponent* Interaction() const;
+	void Interact();
+	void ToggleInventory();
+	void UseMedical();
+	void DropEquippedItem();
+	void RequestOpenInventory(class AExtractionLootActor* Target, bool bOpen);
+	void RequestItem(FExtractionItemRequest Request);
+	UFUNCTION(Server, Reliable)
+	void ServerOpenInventory(uint32 Session, class AExtractionLootActor* Target, bool bOpen);
+	UFUNCTION(Server, Reliable)
+	void ServerItemOperation(FExtractionItemRequest Request);
+	UFUNCTION(Server, Reliable)
+	void ServerCancelMedical();
+	UFUNCTION(Server, Reliable)
+	void ServerSwapExtractionWeapons();
+	UFUNCTION(Client, Reliable)
+	void ClientItemResult(uint32 Sequence, const FString& Error);
+	virtual void Destroyed() override;
+	FString ItemMessage;
+	uint32 ItemResultSequence = 0;
 
 private:
 	bool bMenuOpen = false;
 	bool bLeaving = false;
+	uint32 LocalItemSequence = 0;
+	uint32 LocalInventorySession = 0;
+	UPROPERTY(Transient)
+	TObjectPtr<class UExtractionInventoryWidget> InventoryWidget;
 	FTimerHandle LeaveRetryTimer;
 	void DestroyLocalSession();
 	UPROPERTY(Transient)

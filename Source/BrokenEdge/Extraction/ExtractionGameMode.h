@@ -29,6 +29,8 @@ public:
 	bool IsCombatActive(AController* Player) const;
 
 private:
+	UPROPERTY()
+	TArray<TObjectPtr<class UExtractionItemDefinition>> ItemDefinitions;
 	double LoadedAt = 0;
 	double RoundSeconds = 600;
 	double ReturnAt = 0;

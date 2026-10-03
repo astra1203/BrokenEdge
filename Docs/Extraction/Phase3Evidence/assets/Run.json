@@ -1,0 +1,20 @@
+{
+  "task": "assets",
+  "started_utc": "2026-10-03T07:24:48.845320+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase3Assets01\\Editor.log",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\prepare_items.py"
+  ],
+  "pid": 49756,
+  "exit_code": 0,
+  "result": "passed",
+  "finished_utc": "2026-10-03T07:25:10.634168+00:00"
+}

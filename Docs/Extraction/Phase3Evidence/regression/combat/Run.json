@@ -1,0 +1,26 @@
+{
+  "suite": "combat",
+  "players": 2,
+  "capture": "0",
+  "started_utc": "2026-10-03T08:55:41.399788+00:00",
+  "head": "8f01a60095772ee0e967fe9949335eb6a9f77548",
+  "worktree": " M .gitattributes\n M Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap\n M \"Docs/\\344\\270\\211\\350\\247\\222\\346\\264\\262\\345\\212\\237\\350\\203\\275\\350\\277\\230\\345\\216\\237\\350\\257\\204\\344\\274\\260\\344\\270\\216\\345\\256\\236\\346\\226\\275\\350\\267\\257\\347\\272\\277.md\"\n M Scripts/Extraction/archive_evidence.py\n M Scripts/Extraction/prepare_map.py\n M Scripts/Extraction/run_network.py\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.h\n M Source/BrokenEdge/Component/CombatComponent.cpp\n M Source/BrokenEdge/Component/CombatComponent.h\n M Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionCombatComponent.h\n M Source/BrokenEdge/Extraction/ExtractionGameMode.cpp\n M Source/BrokenEdge/Extraction/ExtractionGameMode.h\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.h\n M Source/BrokenEdge/Extraction/ExtractionState.cpp\n M Source/BrokenEdge/Extraction/ExtractionState.h\n M Source/BrokenEdge/Pickups/HealthPickup.cpp\n M Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\n M Source/BrokenEdge/Weapon/Weapon.cpp\n M Source/BrokenEdge/Weapon/Weapon.h\n?? Content/Extraction/\n?? Docs/Extraction/Phase3.md\n?? Scripts/Extraction/inventory_scenarios.py\n?? Scripts/Extraction/prepare_items.py\n?? Scripts/Extraction/run_editor_task.py\n?? Source/BrokenEdge/Extraction/ExtractionInteractionComponent.cpp\n?? Source/BrokenEdge/Extraction/ExtractionInteractionComponent.h\n?? Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp\n?? Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h\n?? Source/BrokenEdge/Extraction/ExtractionInventoryWidget.cpp\n?? Source/BrokenEdge/Extraction/ExtractionInventoryWidget.h\n?? Source/BrokenEdge/Extraction/ExtractionItems.cpp\n?? Source/BrokenEdge/Extraction/ExtractionItems.h\n?? Source/BrokenEdge/Extraction/ExtractionLootActor.cpp\n?? Source/BrokenEdge/Extraction/ExtractionLootActor.h\n?? Source/BrokenEdge/Tests/ExtractionInventoryTests.cpp\n",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Characters/Stinger/Maps/L_StingerTest",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1280",
+    "-ResY=720",
+    "-ExecCmds=py D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Stinger\\validate_baseline_combat.py",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\Baseline\\Phase3Combat01\\Editor.log"
+  ],
+  "pid": 53840,
+  "exit_code": 0,
+  "finished_utc": "2026-10-03T08:56:34.149491+00:00"
+}

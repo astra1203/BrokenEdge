@@ -1,0 +1,156 @@
+{
+  "result": "passed",
+  "definitions": [
+    "AK",
+    "Ammo",
+    "Medkit",
+    "Electronics",
+    "Tools"
+  ],
+  "placements": [
+    {
+      "label": "ExtractionAK_00",
+      "position": [
+        -1655.0,
+        -300.0,
+        425
+      ],
+      "item": "AK",
+      "quantity": 1
+    },
+    {
+      "label": "ExtractionAK_01",
+      "position": [
+        -1455.0,
+        -300.0,
+        425
+      ],
+      "item": "AK",
+      "quantity": 1
+    },
+    {
+      "label": "ExtractionAK_02",
+      "position": [
+        -1455.0,
+        0.0,
+        425
+      ],
+      "item": "AK",
+      "quantity": 1
+    },
+    {
+      "label": "ExtractionAK_03",
+      "position": [
+        1445.0,
+        3800.0,
+        425
+      ],
+      "item": "AK",
+      "quantity": 1
+    },
+    {
+      "label": "ExtractionAK_04",
+      "position": [
+        1445.0,
+        4200.0,
+        425
+      ],
+      "item": "AK",
+      "quantity": 1
+    },
+    {
+      "label": "ExtractionAK_05",
+      "position": [
+        1845.0,
+        4200.0,
+        425
+      ],
+      "item": "AK",
+      "quantity": 1
+    },
+    {
+      "label": "ExtractionAK_06",
+      "position": [
+        2245.0,
+        3800.0,
+        425
+      ],
+      "item": "AK",
+      "quantity": 1
+    },
+    {
+      "label": "ExtractionAK_07",
+      "position": [
+        2245.0,
+        4200.0,
+        425
+      ],
+      "item": "AK",
+      "quantity": 1
+    },
+    {
+      "label": "室外补给箱",
+      "position": [
+        1570,
+        4370,
+        425
+      ],
+      "item": null,
+      "quantity": 1
+    },
+    {
+      "label": "室内工具箱",
+      "position": [
+        -1320,
+        -170,
+        425
+      ],
+      "item": null,
+      "quantity": 1
+    },
+    {
+      "label": "步枪弹药",
+      "position": [
+        1550,
+        4110,
+        425
+      ],
+      "item": "Ammo",
+      "quantity": 30
+    },
+    {
+      "label": "医疗补给",
+      "position": [
+        -1380,
+        -420,
+        425
+      ],
+      "item": "Medkit",
+      "quantity": 1
+    },
+    {
+      "label": "电子元件",
+      "position": [
+        1570,
+        4470,
+        425
+      ],
+      "item": "Electronics",
+      "quantity": 2
+    },
+    {
+      "label": "工具组件",
+      "position": [
+        -1330,
+        -120,
+        425
+      ],
+      "item": "Tools",
+      "quantity": 1
+    }
+  ],
+  "approximations": [
+    "Electronics uses a small cube; no original item icon or medical hand animation is claimed.",
+    "Supply crates and death containers reuse the imported tools-box mesh."
+  ]
+}
