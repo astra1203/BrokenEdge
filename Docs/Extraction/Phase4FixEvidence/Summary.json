@@ -1,0 +1,177 @@
+{
+  "created_utc": "2026-10-03T16:16:39.084089+00:00",
+  "base_commit": "7e4afbc11000aa48248f86ef52cd7e3e0ee80225",
+  "engine": "C:/UnrealProjects/UnrealEngine-5.8.3-release",
+  "runs": [
+    {
+      "name": "compilation-editor",
+      "folder": "Saved/Extraction/Phase4TeardownEditor01",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "pie-teardown",
+      "folder": "Saved/Extraction/Phase4TeardownPIE01",
+      "report": "Run.json"
+    },
+    {
+      "name": "package-server",
+      "folder": "Saved/Extraction/Phase4TeardownServer01",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "package-client",
+      "folder": "Saved/Extraction/Phase4TeardownClient01",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "network/settlement",
+      "folder": "Saved/Extraction/Phase4TeardownSettlement01",
+      "report": "Report.json"
+    },
+    {
+      "name": "network/settlement-lag",
+      "folder": "Saved/Extraction/Phase4TeardownSettlementLag01",
+      "report": "Report.json"
+    },
+    {
+      "name": "network/disconnect",
+      "folder": "Saved/Extraction/Phase4TeardownDisconnect01",
+      "report": "Report.json"
+    },
+    {
+      "name": "network/four",
+      "folder": "Saved/Extraction/Phase4TeardownFour01",
+      "report": "Report.json"
+    },
+    {
+      "name": "network/recovery-unacked",
+      "folder": "Saved/Extraction/Phase4TeardownRecovery01",
+      "report": "Report.json"
+    }
+  ],
+  "implementation_sha256": {
+    ".gitattributes": "22f6d50b740d84eec422b7b68840ca6de3fdcd22292496a3dab5d80e43af76f0",
+    "Content/Extraction/Materials/M_ExtractionExit.uasset": "53012a05ec716197fab8b0c671c457c83ab48bc14c18b2d7547c17dde7286374",
+    "Scripts/Extraction/archive_evidence.py": "c88f25e09fe9feb307685179326fbde19e1c432d30e2476ceabef7f943dc92ca",
+    "Scripts/Extraction/prepare_exit.py": "42d0d4aafff332592d6ac3f442e3b16674f6b6cbb08e162d939627ffd8ad0f02",
+    "Scripts/Extraction/run_editor_task.py": "4825330ad42cb7b4a9d06ca4b9ab0cb1126bf6a6c2c54b6ba951ab20aa2de5f9",
+    "Scripts/Extraction/run_legacy_lan.py": "ecf08ce640c977ed899d7d727a1fd2bbf419d352a2c5209f9329ff90744353d5",
+    "Scripts/Extraction/run_network.py": "131f1fda5d320a4d1c0342b3fdb3f434835a3b6af4bb3aee05fc66a6485e23ce",
+    "Scripts/Extraction/run_pie_teardown.py": "6dd7be801bda27977c9b45c53cb1a27d96ff417399bde1cfcfd2eac22973dca0",
+    "Scripts/Extraction/run_storage_restarts.py": "c4ac0aefd2da48d81d209e9dbc7308d86548961b2dcf163fc7b786a3f70bf48c",
+    "Scripts/Extraction/storage_scenarios.py": "544efc97f9d7884c7b4025dbd1069b39250dc6b0c13725a689677e121b52f4c5",
+    "Source/BrokenEdge/BrokenEdge.Build.cs": "afb274c5ff41928168a1d87883568f347d6507fc7eb281e99101bcb14b879b9e",
+    "Source/BrokenEdge/Extraction/ExtractionAccountComponent.cpp": "a4670115eadbb35fb1c7ae34a243c722c4d63d96d0d7a6a0b611ce2a3cdb5b6f",
+    "Source/BrokenEdge/Extraction/ExtractionAccountComponent.h": "87d8b4039761b0e8beaf8d2eb1e84720458a7f021fb8552f3916ac5474ede06b",
+    "Source/BrokenEdge/Extraction/ExtractionExit.cpp": "9ac9e0e5a419b6b77556b15943ebb67b560108a8b251ebe24102c5aa07e3613e",
+    "Source/BrokenEdge/Extraction/ExtractionExit.h": "28402a8af96d498ae17648bb3f068b369c9045791dcab26c93d8b63ed480ec43",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp": "bf0c908b3aabe3865147513c237c4255b2bd817fa1099eb14f8e17a798566bba",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.h": "70c40698d07ec1400f87c1ab3f13e5dd4a728cd598375080c7fd9facffed5077",
+    "Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp": "0e9c4c089bdd643c2ff08b825c9338a95a3592681335c3a6f4719e24b82f1bd3",
+    "Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h": "fb39cca326bdf160788e135d778397c3685d46334fbb09d343373a53dad6ba63",
+    "Source/BrokenEdge/Extraction/ExtractionItems.cpp": "aba6f273dc47101b0796bf01c32d59af6d241c801e285cd4709b8b6514057249",
+    "Source/BrokenEdge/Extraction/ExtractionItems.h": "20c2f686d697ef180950c1556060f664473e3a13b8c90697012888205ae51e66",
+    "Source/BrokenEdge/Extraction/ExtractionPersistence.cpp": "0310ea40593b3c6bc219cf5488831adde24de06a1c07b4860b01291a58a41e5c",
+    "Source/BrokenEdge/Extraction/ExtractionPersistence.h": "3a37759a036011e5f0e6792abd457c2d69a620d9e0c325657f25edbab4ae0fa8",
+    "Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp": "6b174f1963c65a8f44fa582f86b4caa2f6abdd73558cb45f63301b42796ccc77",
+    "Source/BrokenEdge/Extraction/ExtractionStashWidget.cpp": "0e0bbb949269386017b266682f66daaf16d967a94309e5619ed6e620e7c49e08",
+    "Source/BrokenEdge/Extraction/ExtractionStashWidget.h": "17db1751ad67fcd964f54220d46cced70638a8a7e1dcca852bff8611fb46f3aa",
+    "Source/BrokenEdge/Extraction/ExtractionState.cpp": "2be539ee69448aeeb6e833efe073f95a35090cec55e6d9fa10615e182a644885",
+    "Source/BrokenEdge/Extraction/ExtractionState.h": "0b73fadef9fad799b6720888e0c30d25e1d4962c42a7ef4094de1f08be5436ee",
+    "Source/BrokenEdge/GameMode/LobbyGameMode.cpp": "eb03fc66ef431290b8c4a78292e5e7bd8c5f1798573e1084e04330fbc97fa035",
+    "Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.cpp": "db9f005ac85a1904967354384576e2bf19fde9ef26ecf13b24d7489a6ec5cda1",
+    "Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.h": "7d97b77d7413634a84dccd8cf03878f08752a09231b7299e6195dae10c0aad92",
+    "Source/BrokenEdge/PlayerState/BrokenEdgePlayerState.cpp": "5259ba961df6884e708f46ef27208797149dae69768f012fd5a17b48c7379dd4",
+    "Source/BrokenEdge/PlayerState/BrokenEdgePlayerState.h": "77a63da5acc8a7b73e83000a4d952de41db82c08107520151a0e75a9fd023428",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "b1869b7eafee26b4c92dc071efeb36bd823fd7dcc31f23d42c0015616c5755de",
+    "Source/BrokenEdge/Tests/ExtractionPersistenceTests.cpp": "88388063290ad3eae0ea6c0815d7fba4b635e2ff0c8d1a4152a903a8a4978e66",
+    "Source/BrokenEdge/UI/LobbyWidget.cpp": "b8a49c77a31493dc76345d89a63fbec2f3d0966cbaf695f05698efd780eaa1a7",
+    "Source/BrokenEdge/UI/LobbyWidget.h": "bf2b9638beb1e7d6f43147b5456da9d2c81ec1ca70d85d1237c1d71e0158ea0b",
+    "Source/StingerTools/Private/ExtractionPIETeardownTests.cpp": "14ccc4ed11b73ea323129737ca399d79ca0c22fb1984aae29eb45401fab794ef"
+  },
+  "packages": {
+    "Packaged/Client/Windows/BrokenEdge.exe": {
+      "size": 173568,
+      "sha256": "061bdd6d6c67ab6f19e80c1cc06a9aaa8ad959bb767871d76b5bed6790e52c34"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe": {
+      "size": 337453056,
+      "sha256": "d9a10cb8e4bc02a67ed68437a8c74d4424f28aaab91eac98b63619e57a48eb22"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.pak": {
+      "size": 11605833,
+      "sha256": "4999fcb4563fd811748e38aaa361f721d8a38760bbb5a122616c18e76eb29c8b"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.ucas": {
+      "size": 701297376,
+      "sha256": "a1684c178f2298df30c4dc01a8771ccd569af99c32c52d836483676bc29e8874"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.utoc": {
+      "size": 914922,
+      "sha256": "d31d7c1d607dbc8f186eca4a4995df9e384461dce7cfff8e5f7c7acf99442a93"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3352432,
+      "sha256": "b1b8319b6dc49e42b8e3f28b694ff43e8724af57a0ce54ee53e5352072105ff2"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "98ecccab37358d02780c5c05f91cdbe8a78dfae2c1312baeeb626ffb3c96f842"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdgeServer.exe": {
+      "size": 173568,
+      "sha256": "e9fa4aaa0667e5a6b5d24d86c95d7c126211a48deebb4a9b5b4dee4cac76c631"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe": {
+      "size": 317568000,
+      "sha256": "ff8876930bf95eca374524108046bba02f17650dbca86420f64edf40b3880bb1"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.pak": {
+      "size": 10577695,
+      "sha256": "ecc87be88f18110370c0b525dfb193fb4d894da4060e2e9f6a20ddafeb68c851"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.ucas": {
+      "size": 120674672,
+      "sha256": "3259a703b6379f13a1c4fd4c86039afab987eceb99094dbf213af92358e9e651"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.utoc": {
+      "size": 428519,
+      "sha256": "427d060af5fe56985e002fea8eea4c1acbd85dbf39c71719c89d6e2e9a06cf64"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3352432,
+      "sha256": "b1b8319b6dc49e42b8e3f28b694ff43e8724af57a0ce54ee53e5352072105ff2"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "98ecccab37358d02780c5c05f91cdbe8a78dfae2c1312baeeb626ffb3c96f842"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    }
+  },
+  "review": {
+    "reason": "PIE net-driver shutdown called Logout after GameInstance subsystems had been deinitialized; UExtractionPersistence::EnsureLoaded received null this.",
+    "repair": "Guard GameMode EndPlay/teardown, tolerate missing subsystem, reject invalid settlement identity before inventory capture, preserve superclass Logout cleanup.",
+    "pie": "Real editor listen server plus one client twice, dedicated server plus two clients twice; await zero PIE worlds after each stop and subsequent editor ticks before restarting or reporting success.",
+    "scope": "UE 5.8.3 Win64 Development; packaged network regressions use OnlineSubsystemNull with 2-4 independent clients on one host.",
+    "original_evidence": "Phase4Evidence remains immutable and describes the earlier revision. Current source/package hashes are in this repair Summary.",
+    "limits": "No Internet, cross-host, Shipping, long-run, or production identity/service acceptance. Existing asset warnings and the historical remote-ammo stall are not claimed fixed."
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "suite": "actions",
+  "players": 2,
+  "capture": "0",
+  "started_utc": "2026-10-03T10:59:35.149301+00:00",
+  "head": "7e4afbc11000aa48248f86ef52cd7e3e0ee80225",
+  "worktree": " M .gitattributes\n M Scripts/Extraction/archive_evidence.py\n M Scripts/Extraction/run_editor_task.py\n M Scripts/Extraction/run_network.py\n M Source/BrokenEdge/BrokenEdge.Build.cs\n M Source/BrokenEdge/Extraction/ExtractionGameMode.cpp\n M Source/BrokenEdge/Extraction/ExtractionGameMode.h\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h\n M Source/BrokenEdge/Extraction/ExtractionItems.cpp\n M Source/BrokenEdge/Extraction/ExtractionItems.h\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp\n M Source/BrokenEdge/Extraction/ExtractionState.cpp\n M Source/BrokenEdge/Extraction/ExtractionState.h\n M Source/BrokenEdge/GameMode/LobbyGameMode.cpp\n M Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.cpp\n M Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.h\n M Source/BrokenEdge/PlayerState/BrokenEdgePlayerState.cpp\n M Source/BrokenEdge/PlayerState/BrokenEdgePlayerState.h\n M Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\n M Source/BrokenEdge/UI/LobbyWidget.cpp\n M Source/BrokenEdge/UI/LobbyWidget.h\n?? Content/Extraction/Materials/\n?? Docs/Extraction/Phase4.md\n?? Scripts/Extraction/prepare_exit.py\n?? Scripts/Extraction/run_legacy_lan.py\n?? Scripts/Extraction/run_storage_restarts.py\n?? Scripts/Extraction/storage_scenarios.py\n?? Source/BrokenEdge/Extraction/ExtractionAccountComponent.cpp\n?? Source/BrokenEdge/Extraction/ExtractionAccountComponent.h\n?? Source/BrokenEdge/Extraction/ExtractionExit.cpp\n?? Source/BrokenEdge/Extraction/ExtractionExit.h\n?? Source/BrokenEdge/Extraction/ExtractionPersistence.cpp\n?? Source/BrokenEdge/Extraction/ExtractionPersistence.h\n?? Source/BrokenEdge/Extraction/ExtractionStashWidget.cpp\n?? Source/BrokenEdge/Extraction/ExtractionStashWidget.h\n?? Source/BrokenEdge/Tests/ExtractionPersistenceTests.cpp\n",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Characters/Stinger/Maps/L_StingerTest",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1280",
+    "-ResY=720",
+    "-ExecCmds=py D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Stinger\\validate_pie.py",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\Baseline\\Phase4Actions01\\Editor.log"
+  ],
+  "pid": 53292,
+  "exit_code": 0,
+  "finished_utc": "2026-10-03T11:01:00.977446+00:00"
+}

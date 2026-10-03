@@ -11,11 +11,13 @@
 #include "Misc/PackageName.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
+#include "HAL/IConsoleManager.h"
 #include "TimerManager.h"
 #include "UObject/ConstructorHelpers.h"
 #include "BrokenEdge/GameState/LobbyGameState.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "BrokenEdge/PlayerState/BrokenEdgePlayerState.h"
+#include "BrokenEdge/Extraction/ExtractionAccountComponent.h"
 
 ALobbyGameMode::ALobbyGameMode()
 {
@@ -74,6 +76,9 @@ void ALobbyGameMode::BeginPlay()
 	}
 	if (GetNetMode() == NM_DedicatedServer)
 	{
+		// Only the authoritative server may recover this store, never an offline client browser.
+		auto* Store = GetGameInstance()->GetSubsystem<UExtractionPersistence>();
+		bPreparedRaidsCleared = Store && Store->AbortPreparedRaids();
 		Sessions->InitializeDedicatedServer();
 		if (GameSession) GameSession->MaxPlayers = Sessions->DesiredNumPublicConnections;
 		NextSessionRetryTime = GetWorld()->GetTimeSeconds() + 5.0;
@@ -109,6 +114,12 @@ void ALobbyGameMode::SetPlayerReady(APlayerController* Player, bool bReady)
 	if (!PS || PS->GetOwner() != Player || !GameState->PlayerArray.Contains(PS)
 		|| PS->IsInactive() || PS->IsOnlyASpectator())
 		return;
+	if (bReady && Sessions && Sessions->DesiredMatchType == TEXT("Extraction"))
+	{
+		auto* Account = Player->FindComponentByClass<UExtractionAccountComponent>();
+		if (!bPreparedRaidsCleared || !Account || !Account->Bound || !Account->Store()
+			|| !Account->Store()->IsAvailable()) return;
+	}
 	PS->SetLobbyReady(bReady);
 	UE_LOG(LogTemp, Log, TEXT("Lobby ready: Player=%s Ready=%d"), *PS->GetPlayerName(), bReady);
 	if (!bReady) CancelCountdown();
@@ -160,6 +171,7 @@ bool ALobbyGameMode::AreAllPlayersReady() const
 		++Players;
 		const ABrokenEdgePlayerState* PS = Cast<ABrokenEdgePlayerState>(State);
 		if (!PS || !PS->IsLobbyReady()) return false;
+		if (Sessions->DesiredMatchType == TEXT("Extraction") && !PS->ExtractionProfile.IsValid()) return false;
 	}
 	return Players >= Sessions->GetMinPlayersToStart();
 }
@@ -175,6 +187,21 @@ void ALobbyGameMode::CancelCountdown()
 	}
 }
 
+FString ALobbyGameMode::ExtractionStartError() const
+{
+	if (!Sessions || Sessions->DesiredMatchType != TEXT("Extraction")) return {};
+	const auto* Store = GetGameInstance()->GetSubsystem<UExtractionPersistence>();
+	if (!bPreparedRaidsCleared || !Store || !Store->IsAvailable())
+		return Store && !Store->Error.IsEmpty() ? Store->Error : TEXT("仓库恢复未完成，暂时无法开局");
+#if WITH_EDITOR
+	const auto* Seamless = IConsoleManager::Get().FindConsoleVariable(TEXT("net.AllowPIESeamlessTravel"));
+	if (GetWorld()->WorldType == EWorldType::PIE && !FParse::Param(FCommandLine::Get(), TEXT("MultiprocessOSS"))
+		&& (!Seamless || Seamless->GetInt() == 0))
+		return TEXT("PIE 未启用无缝切图，无法开始撤离对局");
+#endif
+	return {};
+}
+
 void ALobbyGameMode::TryStartGame()
 {
 	if (GetNetMode() != NM_DedicatedServer || !Sessions || !GameState || bTravelRequested) return;
@@ -183,6 +210,13 @@ void ALobbyGameMode::TryStartGame()
 	GS->RoomMatchType = Sessions->DesiredMatchType;
 	GS->MinimumPlayers = Sessions->GetMinPlayersToStart();
 	GS->Capacity = Sessions->DesiredNumPublicConnections;
+	const FString StartError = ExtractionStartError();
+	if (!StartError.IsEmpty())
+	{
+		CancelCountdown();
+		GS->LobbyStatus = StartError;
+		return;
+	}
 	if (!AreAllPlayersReady()) CancelCountdown();
 	if (Sessions->IsBusy() || bStartingSession) return;
 	if (!Sessions->HasSession())
@@ -247,7 +281,31 @@ void ALobbyGameMode::OnStartSession(bool bWasSuccessful)
 	if (!GS || !AreAllPlayersReady() || GS->CountdownEndTime <= 0.0
 		|| GS->GetServerWorldTimeSeconds() < GS->CountdownEndTime)
 		return;
+	const FString StartError = ExtractionStartError();
+	if (!StartError.IsEmpty())
+	{
+		GS->LobbyStatus = StartError;
+		CancelCountdown();
+		return;
+	}
 	// 将容量传给下一张地图的 GameSession，直接 IP 连接也受人数限制。
+	FGuid Raid;
+	UExtractionPersistence* Store = nullptr;
+	if (Sessions->DesiredMatchType == TEXT("Extraction"))
+	{
+		Store = GetGameInstance()->GetSubsystem<UExtractionPersistence>();
+		TArray<FGuid> Profiles;
+		for (APlayerState* State : GS->PlayerArray) if (auto* PS = Cast<ABrokenEdgePlayerState>(State)) Profiles.Add(
+			PS->ExtractionProfile);
+		if (!Store->BeginRaid(Profiles, Raid))
+		{
+			GS->LobbyStatus = Store->Error;
+			CancelCountdown();
+			return;
+		}
+		for (APlayerState* State : GS->PlayerArray) if (auto* PS = Cast<ABrokenEdgePlayerState>(State)) PS->ExtractionRaid =
+			Raid;
+	}
 	bTravelRequested = GetWorld()->ServerTravel(FString::Printf(TEXT("%s?MaxPlayers=%d?ExpectedPlayers=%d"),
 	                                                            *PendingMap, Sessions->DesiredNumPublicConnections,
 	                                                            GameState->PlayerArray.Num()));
@@ -256,7 +314,14 @@ void ALobbyGameMode::OnStartSession(bool bWasSuccessful)
 	if (!bTravelRequested)
 	{
 		CancelCountdown();
-		GS->LobbyStatus = TEXT("地图跳转失败，正在重试");
+		const bool Refunded = !Store || Store->AbortRaid(Raid);
+		GS->LobbyStatus = Refunded ? TEXT("地图跳转失败，出战已取消，请重新准备") : Store->Error;
+		for (APlayerState* State : GS->PlayerArray)
+			if (auto* PS = Cast<ABrokenEdgePlayerState>(State))
+			{
+				PS->SetLobbyReady(false);
+				if (Refunded) PS->ExtractionRaid.Invalidate();
+			}
 	}
 	UE_LOG(LogTemp, Log, TEXT("Lobby travel: Map=%s Players=%d Accepted=%d"),
 	       *PendingMap, GameState->PlayerArray.Num(), bTravelRequested);

@@ -3,6 +3,9 @@
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionLootActor.h"
 #include "ExtractionInventoryWidget.h"
+#include "ExtractionAccountComponent.h"
+#include "ExtractionExit.h"
+#include "EngineUtils.h"
 #include "ExtractionState.h"
 #include "ExtractionGameMode.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
@@ -204,7 +207,7 @@ void AExtractionPlayerController::SelectSpectatorTarget(int32 Direction)
 void AExtractionPlayerController::ServerCycleSpectator_Implementation(int32 Direction)
 {
 	const auto* PS = GetPlayerState<AExtractionPlayerState>();
-	if (bExtractionSpectating && PS && PS->Life == EExtractionLife::Dead && (Direction == 1 || Direction == -1))
+	if (bExtractionSpectating && PS && PS->Life != EExtractionLife::Alive && (Direction == 1 || Direction == -1))
 		SelectSpectatorTarget(Direction);
 }
 
@@ -230,7 +233,7 @@ void AExtractionPlayerController::Tick(float Delta)
 	if (auto* ControlledCharacter = Cast<ABrokenEdgeCharacter>(GetPawn()))
 	{
 		// The owning client also stops prediction while waiting for all players to load.
-		if (GS->Phase != EExtractionPhase::Active || ControlledCharacter->IsDefeated())
+		if (GS->Phase != EExtractionPhase::Active || !GS->StorageError.IsEmpty() || ControlledCharacter->IsDefeated())
 			ControlledCharacter->GetCharacterMovement()->DisableMovement();
 		else if (ControlledCharacter->GetCharacterMovement()->MovementMode == MOVE_None)
 			ControlledCharacter->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
@@ -335,11 +338,13 @@ bool UExtractionWidget::Initialize()
 	Panel->SetPadding(FMargin(14));
 	auto* PanelSlot = Canvas->AddChildToCanvas(Panel);
 	PanelSlot->SetPosition(FVector2D(18, 18));
-	PanelSlot->SetSize(FVector2D(360, 220));
+	PanelSlot->SetAutoSize(true);
 	auto* Box = WidgetTree->ConstructWidget<UVerticalBox>();
 	Panel->AddChild(Box);
 	Status = SessionWidgetStyle::Text(WidgetTree, TEXT("正在加载航天基地…"), 16);
 	Status->SetAutoWrapText(true);
+	Status->SetWrapTextAt(400);
+	Status->SetMinDesiredWidth(400);
 	SessionWidgetStyle::Line(Box, Status, 8);
 	Previous = SessionWidgetStyle::Button(WidgetTree, TEXT("PreviousSpectator"), TEXT("上一位"));
 	Next = SessionWidgetStyle::Button(WidgetTree, TEXT("NextSpectator"), TEXT("下一位"));
@@ -374,7 +379,36 @@ void UExtractionWidget::Refresh()
 	else
 		Text = FString::Printf(
 			TEXT("航天基地 · 战斗测试\n剩余 %02d:%02d · 存活 %d\n%s"), Seconds / 60, Seconds % 60, GS->AlivePlayers,
-			PS->Life == EExtractionLife::Alive ? TEXT("Esc 打开对局菜单") : TEXT("已阵亡 · 本局不会重生"));
+			PS->Life == EExtractionLife::Alive ? TEXT("Esc 打开对局菜单") : TEXT("本次行动已结束"));
+	if (!GS->StorageError.IsEmpty()) Text = GS->StorageError;
+	if (PS->Life == EExtractionLife::Alive && GS->Phase == EExtractionPhase::Active && PC->GetPawn())
+	{
+		for (TActorIterator<AExtractionExit> It(GetWorld()); It; ++It)
+		{
+			Text += FString::Printf(
+				TEXT("\n北侧撤离点 · %.0f 米"),
+				FVector::Dist2D(PC->GetPawn()->GetActorLocation(), It->GetActorLocation()) / 100);
+			break;
+		}
+		if (PS->ExtractAt > 0)
+			Text += FString::Printf(
+				TEXT("\n撤离倒计时 %.1f 秒 · 离开重置"), FMath::Max(0.0, PS->ExtractAt - GS->GetServerWorldTimeSeconds()));
+	}
+	if (PC->ExtractionAccount && PC->ExtractionAccount->Profile.Result.Outcome != EExtractionOutcome::None)
+	{
+		const auto& Result = PC->ExtractionAccount->Profile.Result;
+		Text += TEXT("\n") + UExtractionPersistence::OutcomeLabel(Result.Outcome);
+		Text += Result.Outcome == EExtractionOutcome::Extracted ? TEXT("\n已带出：") : TEXT("\n本次物资：");
+		for (FName Id : UExtractionItemDefinition::Ids())
+		{
+			int32 Count = 0;
+			for (const auto& I : Result.Items) if (I.Definition == Id) Count += I.Quantity;
+			if (Count)
+				Text += FString::Printf(TEXT("\n%s × %d"), *UExtractionItemDefinition::Get(Id)->Label.ToString(),
+				                        Count);
+		}
+		Text += FString::Printf(TEXT("\n领取区：%d 件"), Result.OverflowCount);
+	}
 	if (PC->bExtractionSpectating)
 		Text += PC->SpectatedPlayer ? TEXT("\n正在观战：") + PC->SpectatedPlayer->GetPlayerName() : TEXT("\n暂无存活玩家可供观战");
 	Status->SetText(FText::FromString(Text));

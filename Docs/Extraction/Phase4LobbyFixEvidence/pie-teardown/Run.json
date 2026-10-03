@@ -1,0 +1,53 @@
+{
+  "started_utc": "2026-10-03T16:58:08.954229+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1280",
+    "-ResY=720",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase4LobbyTeardown01\\Editor.log",
+    "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase4LobbyTeardown01\\Store",
+    "-ExtractionProfile=Phase4LobbyTeardown01",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.PIE.Teardown",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase4LobbyTeardown01\\Automation"
+  ],
+  "pid": 47368,
+  "exit_code": 0,
+  "ready_cycles": [
+    [
+      "1",
+      "2",
+      "2"
+    ],
+    [
+      "2",
+      "2",
+      "2"
+    ],
+    [
+      "3",
+      "3",
+      "2"
+    ],
+    [
+      "4",
+      "3",
+      "2"
+    ]
+  ],
+  "stopped_cycles": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "result": "passed",
+  "finished_utc": "2026-10-03T16:58:45.410456+00:00"
+}

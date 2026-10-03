@@ -33,6 +33,8 @@
 #include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
 #include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
 #include "BrokenEdge/Extraction/ExtractionLootActor.h"
+#include "BrokenEdge/Extraction/ExtractionAccountComponent.h"
+#include "BrokenEdge/Extraction/ExtractionExit.h"
 #include "Framework/Application/SlateApplication.h"
 #include "Widgets/SViewport.h"
 #include "BrokenEdge/GameState/LobbyGameState.h"
@@ -195,7 +197,17 @@ public:
 					{
 						Character->GetEquippedWeapon()->MulticastAmmo(
 							Command->GetIntegerField(TEXT("value")));
-						if (auto* Inv = Character->GetExtractionInteraction()->Inventory()) Inv->CaptureWeapons();
+						if (auto* Inv = Character->GetExtractionInteraction()->Inventory())
+						{
+							Inv->CaptureWeapons();
+							for (auto& Item : Inv->Contents.Items)
+								if (Item.Id == Character->GetEquippedWeapon()->ExtractionItemId)
+								{
+									Item.MagazineOrigins.Empty();
+									if (Item.Magazine > 0) Item.MagazineOrigins.Add({FGuid::NewGuid(), Item.Magazine});
+								}
+							Inv->Changed();
+						}
 					}
 				}
 				else if (Op == TEXT("burst") && Pawn)
@@ -285,6 +297,7 @@ private:
 	int32 LastCommand = 0;
 	bool bHeadAim = false;
 	FExtractionItemRequest LastItemRequest;
+	FExtractionStorageRequest LastStorageRequest;
 	FVector2D LastMouse = FVector2D::ZeroVector;
 	TSet<FKey> PressedMouse;
 	TWeakObjectPtr<AActor> TestOccluder;
@@ -312,12 +325,94 @@ private:
 		return Json;
 	}
 
+	static TSharedPtr<FJsonObject> AccountJson(const UExtractionAccountComponent* A)
+	{
+		auto J = MakeShared<FJsonObject>();
+		J->SetBoolField(TEXT("bound"), A->Bound);
+		J->SetBoolField(TEXT("locked"), A->Locked);
+		J->SetStringField(TEXT("profile"), A->Profile.Profile.ToString());
+		J->SetStringField(TEXT("message"), A->Message);
+		J->SetNumberField(TEXT("revision"), A->Profile.Revision);
+		J->SetNumberField(TEXT("outcome"), static_cast<int32>(A->Profile.Result.Outcome));
+		J->SetObjectField(TEXT("stash"), InventoryJson(A->Profile.Stash));
+		J->SetObjectField(TEXT("loadout"), InventoryJson(A->Profile.Loadout));
+		FExtractionContainer Overflow;
+		Overflow.Items = A->Profile.Overflow;
+		J->SetObjectField(TEXT("overflow"), InventoryJson(Overflow));
+		return J;
+	}
+
 	bool HandleInventoryCommand(const TSharedPtr<FJsonObject>& Command, APlayerController* Controller, UWorld* World)
 	{
 		const FString Op = Command->GetStringField(TEXT("op"));
 		auto* PC = Cast<AExtractionPlayerController>(Controller);
 		auto* Interaction = PC ? PC->Interaction() : nullptr;
-		if (Op == TEXT("inventory") && PC)
+		auto* Account = Controller ? Controller->FindComponentByClass<UExtractionAccountComponent>() : nullptr;
+		if (Op == TEXT("deadline_tie") && Role == TEXT("Server"))
+		{
+			if (auto* GS = World->GetGameState<AExtractionGameState>())
+				for (APlayerState* State : GS->PlayerArray)
+					if (auto* PS = Cast<AExtractionPlayerState>(State); PS && PS->GetPlayerName() == Command->
+						GetStringField(TEXT("target")))
+						GS->Deadline = PS->ExtractAt;
+		}
+		else if (Op == TEXT("stash_fill") && Role == TEXT("Server"))
+		{
+			auto* Store = World->GetGameInstance()->GetSubsystem<UExtractionPersistence>();
+			FGuid Id;
+			FGuid::Parse(Command->GetStringField(TEXT("profile")), Id);
+			auto Candidate = Store->State;
+			if (auto* P = Candidate.Profiles.FindByPredicate([&](const auto& V) { return V.View.Profile == Id; }))
+			{
+				for (int32 N = 0; N < 120; ++N)
+					if (!ExtractionItems::AutoPlace(
+						P->View.Stash, ExtractionItems::Make(TEXT("Ammo"), 60)))
+						break;
+				++P->View.Revision;
+				++P->View.Stash.Revision;
+				if (!Store->Commit(Candidate)) Error = Store->Error;
+			}
+		}
+		else if (Op == TEXT("stash_ui") && Controller)
+		{
+			TArray<UUserWidget*> Widgets;
+			UWidgetBlueprintLibrary::GetAllWidgetsOfClass(World, Widgets, ULobbyWidget::StaticClass(), true);
+			if (Widgets.Num() == 1)
+				if (auto* Button = Cast<
+					UButton>(Widgets[0]->GetWidgetFromName(TEXT("StashButton"))))
+					Button->OnClicked.Broadcast();
+		}
+		else if (Op == TEXT("storage") && Account)
+		{
+			bool Duplicate = false;
+			Command->TryGetBoolField(TEXT("duplicate"), Duplicate);
+			if (Duplicate)
+			{
+				Account->ServerMove(LastStorageRequest);
+				return true;
+			}
+			FExtractionStorageRequest R;
+			R.Operation = FGuid::NewGuid();
+			R.Revision = Account->Profile.Revision;
+			int32 From = 0, To = 1;
+			Command->TryGetNumberField(TEXT("from"), From);
+			Command->TryGetNumberField(TEXT("to"), To);
+			R.From = static_cast<EExtractionStorageSide>(From);
+			R.To = static_cast<EExtractionStorageSide>(To);
+			FGuid::Parse(Command->GetStringField(TEXT("item")), R.Move.Item);
+			Command->TryGetNumberField(TEXT("quantity"), R.Move.Quantity);
+			Command->TryGetNumberField(TEXT("slot"), R.Move.Slot);
+			Command->TryGetNumberField(TEXT("revision"), R.Revision);
+			Command->TryGetNumberField(TEXT("x"), R.Move.Cell.X);
+			Command->TryGetNumberField(TEXT("y"), R.Move.Cell.Y);
+			Command->TryGetBoolField(TEXT("auto"), R.Move.AutoPlace);
+			Command->TryGetBoolField(TEXT("rotated"), R.Move.Rotated);
+			FString Merge;
+			if (Command->TryGetStringField(TEXT("merge"), Merge)) FGuid::Parse(Merge, R.Move.MergeInto);
+			LastStorageRequest = R;
+			Account->ServerMove(R);
+		}
+		else if (Op == TEXT("inventory") && PC)
 			PC->RequestOpenInventory(nullptr, Command->GetBoolField(TEXT("open")));
 		else if (Op == TEXT("open_loot") && PC)
 		{
@@ -441,7 +536,7 @@ private:
 			Inv->SyncWeapons();
 			Inv->Changed();
 		}
-		else if (Op == TEXT("mouse") && PC && World->GetGameViewport())
+		else if (Op == TEXT("mouse") && Controller && World->GetGameViewport())
 		{
 			const auto Viewport = World->GetGameViewport()->GetGameViewportWidget();
 			if (!Viewport.IsValid()) return true;
@@ -462,7 +557,7 @@ private:
 			if (Action == TEXT("up")) FSlateApplication::Get().ProcessMouseButtonUpEvent(Event);
 			LastMouse = P;
 		}
-		else if (Op == TEXT("key") && PC)
+		else if (Op == TEXT("key") && Controller)
 		{
 			const FKey Key(*Command->GetStringField(TEXT("key")));
 			FSlateApplication::Get().ProcessKeyDownEvent(FKeyEvent(Key, FModifierKeysState(), 0, false, 0, 0));
@@ -492,6 +587,13 @@ private:
 		if (Input && Action) Input->InjectInputForAction(Action, FInputActionValue(Pressed), {}, {});
 	}
 
+	static TArray<TSharedPtr<FJsonValue>> VectorJson(const FVector& P)
+	{
+		return {
+			MakeShared<FJsonValueNumber>(P.X), MakeShared<FJsonValueNumber>(P.Y), MakeShared<FJsonValueNumber>(P.Z)
+		};
+	}
+
 	void WriteState(UWorld* World, APlayerController* PC)
 	{
 		auto State = MakeShared<FJsonObject>();
@@ -513,12 +615,37 @@ private:
 		}
 		if (auto* GS = World->GetGameState<AExtractionGameState>())
 		{
+			State->SetStringField(TEXT("storage_error"), GS->StorageError);
+			for (TActorIterator<AExtractionExit> It(World); It; ++It)
+			{
+				State->SetArrayField(TEXT("exit_position"), VectorJson(It->GetActorLocation()));
+				FHitResult Floor;
+				if (World->LineTraceSingleByChannel(Floor, FVector(1400, 2900, 650), FVector(1400, 2900, -1000),
+				                                    ECC_Visibility))
+				{
+					State->SetArrayField(TEXT("exit_trace"), VectorJson(Floor.ImpactPoint));
+					State->SetStringField(TEXT("exit_surface"), GetNameSafe(Floor.GetActor()));
+				}
+			}
 			State->SetNumberField(TEXT("phase"), static_cast<int32>(GS->Phase));
 			State->SetNumberField(TEXT("alive"), GS->AlivePlayers);
 			State->SetNumberField(TEXT("remaining"), GS->Deadline - GS->GetServerWorldTimeSeconds());
 		}
 		if (auto* Sessions = World->GetGameInstance()->GetSubsystem<UMultiplayerSessionsSubsystem>())
 			State->SetBoolField(TEXT("session"), Sessions->HasSession());
+		if (Role == TEXT("Server"))
+		{
+			TArray<TSharedPtr<FJsonValue>> Results;
+			for (const auto& Stored : World->GetGameInstance()->GetSubsystem<UExtractionPersistence>()->TestState().
+			                                 Profiles)
+			{
+				auto Result = MakeShared<FJsonObject>();
+				Result->SetStringField(TEXT("profile"), Stored.View.Profile.ToString());
+				Result->SetNumberField(TEXT("outcome"), static_cast<int32>(Stored.View.Result.Outcome));
+				Results.Add(MakeShared<FJsonValueObject>(Result));
+			}
+			State->SetArrayField(TEXT("stored_results"), Results);
+		}
 		if (auto* ExtractPC = Cast<AExtractionPlayerController>(PC))
 		{
 			State->SetBoolField(TEXT("spectating"), ExtractPC->bExtractionSpectating);
@@ -528,6 +655,9 @@ private:
 		}
 		if (PC)
 		{
+			if (const auto* Account = PC->FindComponentByClass<UExtractionAccountComponent>())
+				State->SetObjectField(
+					TEXT("account"), AccountJson(Account));
 			State->SetBoolField(TEXT("has_pawn"), PC->GetPawn() != nullptr);
 			int32 Width, Height;
 			PC->GetViewportSize(Width, Height);
@@ -546,6 +676,10 @@ private:
 				auto Player = MakeShared<FJsonObject>();
 				Player->SetStringField(TEXT("name"), PS->GetPlayerName());
 				Player->SetNumberField(TEXT("id"), PS->GetPlayerId());
+				if (const auto* OwnerPC = Cast<APlayerController>(PS->GetOwner()))
+					if (const auto* Account = OwnerPC->FindComponentByClass<UExtractionAccountComponent>())
+						Player->
+							SetObjectField(TEXT("account"), AccountJson(Account));
 				if (const auto* LobbyPS = Cast<ABrokenEdgePlayerState>(PS))
 					Player->SetBoolField(
 						TEXT("ready"), LobbyPS->IsLobbyReady());
@@ -554,11 +688,34 @@ private:
 					Player->SetNumberField(
 						TEXT("life"), static_cast<int32>(ExtractionPS->Life));
 					Player->SetObjectField(TEXT("inventory"), InventoryJson(ExtractionPS->Inventory->Contents));
+					Player->SetNumberField(TEXT("extract_at"), ExtractionPS->ExtractAt);
 				}
 				if (auto* Character = Cast<ABrokenEdgeCharacter>(PS->GetPawn()))
 				{
 					Player->SetNumberField(TEXT("health"), Character->GetHealth());
 					const auto* Interaction = Character->GetExtractionInteraction();
+					TArray<TSharedPtr<FJsonValue>> Reach;
+					for (TActorIterator<AExtractionLootActor> It(World); It; ++It)
+					{
+						const float Distance = FVector::Dist(Character->GetActorLocation(), It->InteractionPoint());
+						if (Distance > 220 || It->Empty) continue;
+						FVector Eye;
+						FRotator Rotation;
+						Character->GetActorEyesViewPoint(Eye, Rotation);
+						FCollisionQueryParams Query(SCENE_QUERY_STAT(ExtractionTestReach), false, Character);
+						if (Character->GetEquippedWeapon()) Query.AddIgnoredActor(Character->GetEquippedWeapon());
+						FHitResult Hit;
+						World->LineTraceSingleByChannel(Hit, Eye, It->InteractionPoint(), ECC_Visibility, Query);
+						auto Entry = MakeShared<FJsonObject>();
+						Entry->SetStringField(TEXT("target"), It->ContainerId.ToString());
+						Entry->SetStringField(TEXT("hit"), GetNameSafe(Hit.GetActor()));
+						Entry->SetStringField(TEXT("name"), It->GetName());
+						Entry->SetNumberField(TEXT("distance"), Distance);
+						Entry->SetBoolField(TEXT("clear"), !Hit.bBlockingHit || Hit.GetActor() == *It);
+						Entry->SetArrayField(TEXT("eye"), VectorJson(Eye));
+						Reach.Add(MakeShared<FJsonValueObject>(Entry));
+					}
+					Player->SetArrayField(TEXT("reach"), Reach);
 					Player->SetBoolField(TEXT("inventory_open"), Interaction->InventoryOpen);
 					Player->SetStringField(TEXT("focus"), GetNameSafe(Interaction->Focus));
 					Player->SetStringField(TEXT("loot_target"), GetNameSafe(Interaction->Loot));
@@ -665,7 +822,8 @@ bool FExtractionProcessDriver::RunTest(const FString& Parameters)
 	FString Role, Folder;
 	FParse::Value(FCommandLine::Get(),TEXT("ExtractionTestRole="), Role);
 	FParse::Value(FCommandLine::Get(),TEXT("ExtractionTestDir="), Folder);
-	if ((Role != TEXT("Server") && Role != TEXT("A") && Role != TEXT("B") && Role != TEXT("C")) || Folder.IsEmpty())
+	if ((Role != TEXT("Server") && Role != TEXT("A") && Role != TEXT("B") && Role != TEXT("C") && Role != TEXT("D")) ||
+		Folder.IsEmpty())
 	{
 		AddError(TEXT("Use Scripts/Extraction/run_network.py"));
 		return false;

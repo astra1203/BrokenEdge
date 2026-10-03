@@ -10,7 +10,7 @@ public class BrokenEdge : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" , "Niagara", "UMG", "Slate", "SlateCore", "MultiplayerSessions", "OnlineSubsystem" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "OnlineSubsystemUtils", "AnimGraphRuntime", "AnimationCore", "Json" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "OnlineSubsystemUtils", "AnimGraphRuntime", "AnimationCore", "Json", "JsonUtilities" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

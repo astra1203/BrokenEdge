@@ -7,6 +7,16 @@
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "Net/UnrealNetwork.h"
 
+void ABrokenEdgePlayerState::CopyProperties(APlayerState* Target)
+{
+	Super::CopyProperties(Target);
+	if (auto* Other = Cast<ABrokenEdgePlayerState>(Target))
+	{
+		Other->ExtractionProfile = ExtractionProfile;
+		Other->ExtractionRaid = ExtractionRaid;
+	}
+}
+
 
 void ABrokenEdgePlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

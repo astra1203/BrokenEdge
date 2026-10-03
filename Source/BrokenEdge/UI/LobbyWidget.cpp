@@ -8,6 +8,8 @@
 #include "Components/HorizontalBox.h"
 #include "Components/HorizontalBoxSlot.h"
 #include "SessionWidgetStyle.h"
+#include "BrokenEdge/Extraction/ExtractionAccountComponent.h"
+#include "BrokenEdge/Extraction/ExtractionStashWidget.h"
 
 bool ULobbyWidget::Initialize()
 {
@@ -49,6 +51,9 @@ bool ULobbyWidget::Initialize()
 	Status = SessionWidgetStyle::Text(WidgetTree, TEXT("等待玩家准备"));
 	Status->SetAutoWrapText(true);
 	SessionWidgetStyle::Line(Content, Status);
+	StashButton = SessionWidgetStyle::Button(WidgetTree, TEXT("StashButton"), TEXT("仓库 / 出战配装"));
+	StashButton->OnClicked.AddUniqueDynamic(this, &ThisClass::StashClicked);
+	SessionWidgetStyle::Line(Content, StashButton);
 	UTextBlock* Label = nullptr;
 	ReadyButton = SessionWidgetStyle::Button(WidgetTree, TEXT("ReadyButton"), TEXT("准备"), &Label);
 	ReadyLabel = Label;
@@ -87,6 +92,10 @@ void ULobbyWidget::Refresh()
 	const APlayerController* PC = GetOwningPlayer();
 	const ABrokenEdgePlayerState* LocalPS = PC ? PC->GetPlayerState<ABrokenEdgePlayerState>() : nullptr;
 	if (!GS) return;
+	const auto* Account = PC ? PC->FindComponentByClass<UExtractionAccountComponent>() : nullptr;
+	StashButton->SetVisibility(GS->RoomMatchType == TEXT("Extraction") ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	StashButton->SetIsEnabled(Account && Account->Bound && !GS->bTravelling);
+	if (StashWidget && (GS->bTravelling || GS->RoomMatchType != TEXT("Extraction"))) StashWidget->RemoveFromParent();
 	TArray<ABrokenEdgePlayerState*> Players;
 	for (APlayerState* State : GS->PlayerArray)
 	{
@@ -147,6 +156,13 @@ void ULobbyWidget::Refresh()
 			                                3));
 	else if (StatusMessage.IsEmpty()) StatusMessage = FString::Printf(TEXT("至少 %d 人，所有玩家准备后自动开始"), GS->MinimumPlayers);
 	Status->SetText(FText::FromString(StatusMessage));
+	if (GS->RoomMatchType == TEXT("Extraction") && Account)
+	{
+		if (!Account->Message.IsEmpty()) Status->SetText(FText::FromString(Account->Message));
+		else if (!Account->Bound) Status->SetText(FText::FromString(TEXT("正在连接测试档案…")));
+		else if (Account->Profile.Result.Outcome != EExtractionOutcome::None)
+			Status->SetText(FText::FromString(UExtractionPersistence::OutcomeLabel(Account->Profile.Result.Outcome) + TEXT(" · 可打开仓库查看")));
+	}
 	const bool bCanChooseMode = LocalPS && !LocalPS->IsLobbyReady() && !LocalPS->IsInactive()
 		&& !LocalPS->IsOnlyASpectator() && !GS->bTravelling && !GS->bModeUpdating && GS->CountdownEndTime <= 0.0;
 	const bool bFreeForAll = GS->RoomMatchType == TEXT("FreeForAll");
@@ -160,5 +176,22 @@ void ULobbyWidget::Refresh()
 	TeamsButton->SetBackgroundColor(bTeams ? Selected : Unselected);
 	ExtractionButton->SetBackgroundColor(GS->RoomMatchType == TEXT("Extraction") ? Selected : Unselected);
 	ReadyButton->SetIsEnabled(LocalPS && !GS->bTravelling && !GS->bModeUpdating);
+	if (GS->RoomMatchType == TEXT("Extraction") && (!Account || !Account->Bound)) ReadyButton->SetIsEnabled(false);
 	ReadyLabel->SetText(FText::FromString(LocalPS && LocalPS->IsLobbyReady() ? TEXT("取消准备") : TEXT("准备")));
+}
+
+void ULobbyWidget::StashClicked()
+{
+	if (!StashWidget) StashWidget = CreateWidget<UExtractionStashWidget>(GetOwningPlayer());
+	if (StashWidget)
+	{
+		StashWidget->AddToViewport(150);
+		StashWidget->SetKeyboardFocus();
+	}
+}
+
+void ULobbyWidget::NativeDestruct()
+{
+	if (StashWidget) StashWidget->RemoveFromParent();
+	Super::NativeDestruct();
 }

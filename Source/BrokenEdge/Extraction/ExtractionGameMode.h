@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "BrokenEdge/GameMode/BrokenEdgeGameMode.h"
+#include "ExtractionPersistence.h"
 #include "ExtractionGameMode.generated.h"
 
 UCLASS()
@@ -27,6 +28,8 @@ public:
 	void LeavePlayer(AController* Player);
 	void FinishRound(const FString& Reason);
 	bool IsCombatActive(AController* Player) const;
+	bool SettlePlayer(AController* Player, EExtractionOutcome Outcome);
+	class UExtractionPersistence* Store() const;
 
 private:
 	UPROPERTY()
@@ -37,6 +40,10 @@ private:
 	int32 ExpectedPlayers = 2;
 	bool bTravelRequested = false;
 	bool bEndRequested = false;
+	bool bEndingPlay = false;
+	UPROPERTY()
+	TObjectPtr<class AExtractionExit> Exit;
+	void UpdateExtraction(double Now);
 	TSet<TWeakObjectPtr<AActor>> ClaimedStarts;
 	void FreezePlayer(AController* Player, bool bFreeze);
 	void RefreshAliveCount();

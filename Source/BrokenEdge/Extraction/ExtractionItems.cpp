@@ -45,7 +45,39 @@ FExtractionItem ExtractionItems::Make(FName Definition, int32 Quantity)
 	Item.Quantity = Quantity;
 	if (const auto* D = UExtractionItemDefinition::Get(Definition)) Item.Size = D->Size;
 	Item.Magazine = Definition == TEXT("AK") ? 30 : 0;
+	SeedOrigins(Item);
 	return Item;
+}
+
+void ExtractionItems::SeedOrigins(FExtractionItem& Item)
+{
+	Item.Origins = {{FGuid::NewGuid(), Item.Quantity}};
+	Item.MagazineOrigins.Reset();
+	if (Item.Magazine) Item.MagazineOrigins.Add({FGuid::NewGuid(), Item.Magazine});
+}
+
+TArray<FExtractionOrigin> ExtractionItems::TakeOrigins(TArray<FExtractionOrigin>& Source, int32 Quantity)
+{
+	TArray<FExtractionOrigin> Result;
+	for (auto& Part : Source)
+	{
+		const int32 Taken = FMath::Min(Part.Quantity, Quantity);
+		if (Taken > 0) Result.Add({Part.Lot, Taken});
+		Part.Quantity -= Taken;
+		Quantity -= Taken;
+	}
+	Source.RemoveAll([](const FExtractionOrigin& P) { return P.Quantity == 0; });
+	return Result;
+}
+
+void ExtractionItems::MergeOrigins(TArray<FExtractionOrigin>& Target, const TArray<FExtractionOrigin>& Source)
+{
+	for (const auto& Part : Source)
+	{
+		auto* Existing = Target.FindByPredicate([&](const FExtractionOrigin& P) { return P.Lot == Part.Lot; });
+		if (Existing) Existing->Quantity += Part.Quantity;
+		else Target.Add(Part);
+	}
 }
 
 bool ExtractionItems::Fits(const FExtractionContainer& Container, const FExtractionItem& Item)
@@ -82,6 +114,7 @@ bool ExtractionItems::AutoPlace(FExtractionContainer& Container, FExtractionItem
 		{
 			if (Other.Definition != Item.Definition || Other.Quantity >= D->MaxStack) continue;
 			const int32 Count = FMath::Min(D->MaxStack - Other.Quantity, Item.Quantity);
+			MergeOrigins(Other.Origins, TakeOrigins(Item.Origins, Count));
 			Other.Quantity += Count;
 			Item.Quantity -= Count;
 			if (!Item.Quantity)
@@ -157,13 +190,15 @@ bool ExtractionItems::Transfer(FExtractionContainer& Source, FExtractionContaine
 	FExtractionContainer& Target = Same ? From : To;
 	FExtractionItem Moving = *Original;
 	Moving.Quantity = Request.Quantity;
-	if (Moving.Quantity == Original->Quantity) From.Items.RemoveAll([&](const FExtractionItem& I)
-	{
-		return I.Id == Request.Item;
-	});
+	if (Moving.Quantity == Original->Quantity)
+		From.Items.RemoveAll([&](const FExtractionItem& I)
+		{
+			return I.Id == Request.Item;
+		});
 	else
 	{
 		From.Find(Request.Item)->Quantity -= Moving.Quantity;
+		Moving.Origins = TakeOrigins(From.Find(Request.Item)->Origins, Moving.Quantity);
 		Moving.Id = FGuid::NewGuid();
 	}
 	Moving.Cell = Request.Cell;
@@ -177,6 +212,7 @@ bool ExtractionItems::Transfer(FExtractionContainer& Source, FExtractionContaine
 			&& Merge->Quantity <= D->MaxStack - Moving.Quantity)
 		{
 			Merge->Quantity += Moving.Quantity;
+			MergeOrigins(Merge->Origins, Moving.Origins);
 			Placed = true;
 		}
 	}

@@ -14,10 +14,12 @@ void AExtractionGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(AExtractionGameState, Deadline);
 	DOREPLIFETIME(AExtractionGameState, AlivePlayers);
 	DOREPLIFETIME(AExtractionGameState, EndReason);
+	DOREPLIFETIME(AExtractionGameState, StorageError);
 }
 
 void AExtractionPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AExtractionPlayerState, Life);
+	DOREPLIFETIME_CONDITION(AExtractionPlayerState, ExtractAt, COND_OwnerOnly);
 }

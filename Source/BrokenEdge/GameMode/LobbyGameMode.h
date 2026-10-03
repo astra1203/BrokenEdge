@@ -33,6 +33,7 @@ protected:
 private:
 	void TryStartGame();
 	bool AreAllPlayersReady() const;
+	FString ExtractionStartError() const;
 	void CancelCountdown();
 	void OnMatchTypeUpdated(bool bWasSuccessful);
 	UFUNCTION()
@@ -43,5 +44,6 @@ private:
 	FString PendingMap;
 	bool bStartingSession = false;
 	bool bTravelRequested = false;
+	bool bPreparedRaidsCleared = false;
 	double NextSessionRetryTime = 0.0;
 };

@@ -15,6 +15,12 @@
 #include "BrokenEdge/GameMode/LobbyGameMode.h"
 #include "BrokenEdge/GameState/LobbyGameState.h"
 #include "BrokenEdge/UI/LobbyWidget.h"
+#include "BrokenEdge/Extraction/ExtractionAccountComponent.h"
+
+ABrokenEdgePlayerController::ABrokenEdgePlayerController()
+{
+	ExtractionAccount = CreateDefaultSubobject<UExtractionAccountComponent>(TEXT("ExtractionAccount"));
+}
 
 
 void ABrokenEdgePlayerController::BeginPlay()

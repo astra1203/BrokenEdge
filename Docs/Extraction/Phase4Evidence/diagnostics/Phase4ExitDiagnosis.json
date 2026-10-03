@@ -1,0 +1,32 @@
+﻿{
+    "run":  "Phase4ExitDiagnostic01",
+    "debugger":  {
+                     "session":  "UnrealEditor (38668)",
+                     "breakpoint":  "Source/BrokenEdge/Extraction/ExtractionExit.cpp:23",
+                     "result":  "No executable code associated with source line",
+                     "pause":  "UEngine::UpdateTimeAndHandleMaxTickRate UnrealEngine.cpp:3096",
+                     "frame_values":  {
+                                          "bUseFixedFrameRate":  0,
+                                          "bTimeWasManipulated":  false,
+                                          "FixedFrameRate":  30
+                                      },
+                     "cleanup":  "Agent line breakpoint removed; session stopped; 8 user exception breakpoints retained, 5 enabled"
+                 },
+    "runtime":  {
+                    "exit":  [
+                                 1400,
+                                 2900,
+                                 1054.5955113163279
+                             ],
+                    "trace_z":  1051.5955113163279,
+                    "hit":  "StaticMeshActor_910",
+                    "player_z":  456.15000152587891,
+                    "delta_z":  -598.445509790449,
+                    "allowed_z":  [
+                                      -15,
+                                      250
+                                  ]
+                },
+    "fix":  "Trace begins at Z650 below overhead mesh; independent root for marker and label",
+    "verification":  "Phase4Settlement02 passed 39 checks"
+}

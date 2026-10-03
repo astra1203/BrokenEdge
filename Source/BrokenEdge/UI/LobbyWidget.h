@@ -14,8 +14,12 @@ public:
 
 protected:
 	virtual bool Initialize() override;
+	virtual void NativeDestruct() override;
 
 private:
+	UFUNCTION() void StashClicked();
+	UPROPERTY(Transient) TObjectPtr<class UButton> StashButton;
+	UPROPERTY(Transient) TObjectPtr<class UExtractionStashWidget> StashWidget;
 	UFUNCTION()
 	void ReadyClicked();
 	UFUNCTION()

@@ -1,0 +1,23 @@
+{
+  "task": "recover-existing",
+  "started_utc": "2026-10-03T16:59:06.466164+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase4LobbyUserRecovery01Copy\\Editor.log",
+    "-ExtractionRecoveryStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase4LobbyUserRecovery01\\CopyStore",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.RecoverExistingStore",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase4LobbyUserRecovery01Copy\\Automation"
+  ],
+  "pid": 40212,
+  "exit_code": 0,
+  "successful_tests": 1,
+  "result": "passed",
+  "finished_utc": "2026-10-03T16:59:24.789004+00:00"
+}

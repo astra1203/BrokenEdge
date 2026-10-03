@@ -1,0 +1,43 @@
+{
+  "started_utc": "2026-10-03T16:54:22.410837+00:00",
+  "mode": "Extraction",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Maps/Lobby",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1280",
+    "-ResY=720",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase4LobbyPIE01\\Editor.log",
+    "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase4LobbyPIE01\\Store",
+    "-ExtractionProfile=Phase4LobbyPIE01",
+    "-MatchType=Extraction",
+    "-ExtractionPIEMode=Extraction",
+    "-NumPublicConnections=2",
+    "-MinPlayersToStart=2",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.PIE.Lobby",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase4LobbyPIE01\\Automation"
+  ],
+  "pid": 53632,
+  "exit_code": 0,
+  "active_rounds": [
+    "1",
+    "2"
+  ],
+  "settled_rounds": [
+    "1",
+    "2"
+  ],
+  "returned_rounds": [
+    "1",
+    "2"
+  ],
+  "result": "passed",
+  "finished_utc": "2026-10-03T16:55:52.679935+00:00"
+}

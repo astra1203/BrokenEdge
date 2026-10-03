@@ -1,0 +1,30 @@
+{
+  "result": "passed",
+  "backup_sha256": "f981e97d0666b1314eb5763cbdca71df111c2da7b090f54fb00a52613943894a",
+  "original_before_sha256": "f981e97d0666b1314eb5763cbdca71df111c2da7b090f54fb00a52613943894a",
+  "original_after_sha256": "9dab7280cb427c2da5354e01c91ac2896627596317160a323874098a2661a1af",
+  "pending_records_before": 1,
+  "pending_records_after": 0,
+  "profiles": 2,
+  "quantities_after": [
+    {
+      "Medkit": 6,
+      "AK": 3,
+      "AK.magazine": 90,
+      "Ammo": 360
+    },
+    {
+      "AK": 3,
+      "AK.magazine": 90,
+      "Medkit": 6,
+      "Ammo": 360
+    }
+  ],
+  "identity_and_rifle_ids_preserved": true,
+  "repeat_load_byte_identical": true,
+  "runs": [
+    "Saved/Extraction/Phase4LobbyUserRecovery01Copy",
+    "Saved/Extraction/Phase4LobbyUserRecovery01Original",
+    "Saved/Extraction/Phase4LobbyUserRecovery01Repeat"
+  ]
+}

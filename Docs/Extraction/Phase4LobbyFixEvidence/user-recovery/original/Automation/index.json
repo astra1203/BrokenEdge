@@ -1,0 +1,44 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "B8ADF38547D87FA92C9606B3A4037E66",
+			"instanceName": "DESKTOP-M9PA1SF-51984",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "GameViewer Virtual Display Adapter",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.03-16.59.41",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.018886800855398178,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "RecoverExistingStore",
+			"fullTestPath": "BrokenEdge.Extraction.RecoverExistingStore",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B8ADF38547D87FA92C9606B3A4037E66"
+			],
+			"duration": 0.018886800855398178,
+			"dateTime": "2026.10.03-16.59.41",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

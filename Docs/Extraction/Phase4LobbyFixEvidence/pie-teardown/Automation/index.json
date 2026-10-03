@@ -1,0 +1,44 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "6755E22D41A93A5DA9DC9EAD9EF67514",
+			"instanceName": "DESKTOP-M9PA1SF-47368",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "GameViewer Virtual Display Adapter",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "D3D12_SM6",
+			"rHI": "D3D12 (SM6)",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.03-16.58.44",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 10.203749656677246,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Teardown",
+			"fullTestPath": "BrokenEdge.Extraction.PIE.Teardown",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"6755E22D41A93A5DA9DC9EAD9EF67514"
+			],
+			"duration": 10.203749656677246,
+			"dateTime": "2026.10.03-16.58.34",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

@@ -22,14 +22,15 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
 parser.add_argument('--packaged', action='store_true')
 parser.add_argument('--lag', action='store_true')
+parser.add_argument('--unacked', action='store_true', help='Recovery test: kill server after durable extraction commit before client acknowledgement')
 parser.add_argument('--debug-hold', action='store_true', help='Wait for Continue.txt before combat and extend assertion timeouts')
-parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap'], default='combat')
+parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity'], default='combat')
 args = parser.parse_args()
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
 OUT = ROOT / 'Saved/Extraction' / args.tag
 OUT.mkdir(parents=True, exist_ok=False)
-ROLES = ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
+ROLES = ['A', 'B', 'C', 'D'] if args.scenario == 'four' else ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
 processes, commands, checks = {}, {}, []
 last_states = {}
 finishing = set()
@@ -39,6 +40,7 @@ report['base_commit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cw
 report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(p.read_bytes()).hexdigest()
                          for p in [Path(__file__).resolve(), ROOT / 'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
                                    ROOT / 'Scripts/Extraction/inventory_scenarios.py',
+                                   ROOT / 'Scripts/Extraction/storage_scenarios.py',
                                    ROOT / 'BrokenEdge.uproject', ROOT / 'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap']}
 
 
@@ -114,9 +116,12 @@ def launch(role):
                 '-MinPlayersToStart=' + str(len(ROLES)), '-port=27777',
                 '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '600'),
                 '-ExtractionTestRole=' + role, '-ExtractionTestDir=' + str(OUT),
+                '-ExtractionStore=' + str(OUT / 'Store'), '-ExtractionProfile=' + args.tag + '_' + ('A' if args.scenario == 'identity' and role == 'B' else role),
                 '-ExecCmds=BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
                 '-TestExit=Automation Test Queue Empty', '-abslog=' + str(OUT / (role + '.log'))]
     command += ['-nullrhi'] if role == 'Server' else ['-RenderOffscreen', '-windowed', '-ResX=1280', '-ResY=720']
+    if role == 'Server' and args.unacked:
+        command += ['-ExtractionHoldSettlement=' + str(OUT / 'SettlementCommitted.txt')]
     if args.scenario == 'swap':
         command += ['-LogCmds=LogTemp Verbose']
     env = os.environ.copy()
@@ -144,6 +149,17 @@ def join(role):
 
 
 def begin_round():
+    phase4 = args.scenario in ['settlement', 'recovery', 'four']
+    for role in ROLES:
+        check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
+        for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
+            account = state(role)['account']
+            item = next((i for i in account['stash']['items'] if i['definition'] == definition), None)
+            if item is None:
+                raise AssertionError(role + ' missing stored loadout ' + definition)
+            revision = account['revision']
+            send(role, 'storage', item=item['id'], quantity=item['quantity'], slot=0 if definition == 'AK' else -1)
+            wait(lambda r=role, v=revision: state(r)['account']['revision'] > v, 'loadout transfer committed')
     for role in ROLES:
         send(role, 'ready')
     check('All players loaded in Extraction', lambda: all(state(r).get('phase') == 1 for r in processes), 120)
@@ -154,8 +170,9 @@ def begin_round():
         # Clear the previous round's test aim lock before selecting a spawn pickup.
         send(role, 'aim', target='', head=False)
         time.sleep(.2)
-        check(role + ' visible reachable pickup focus', lambda r=role: player(r, r).get('focus', 'None') != 'None')
-        send(role, 'pulse', action='Equip')
+        if not phase4:
+            check(role + ' visible reachable pickup focus', lambda r=role: player(r, r).get('focus', 'None') != 'None')
+            send(role, 'pulse', action='Equip')
         check(role + ' equipped AK', lambda r=role: 'AK47' in player('Server', r).get('weapon', ''))
     time.sleep(1)
     check('First-person backpack section hidden on each owner', lambda: all(player(r, r).get('fp_gear_visible') is False for r in ROLES))
@@ -217,7 +234,9 @@ try:
             wait(lambda r=role: bool(player('Server', r)), 'waiting player name')
         else:
             join(role)
-    if args.scenario != 'load_timeout':
+            if args.scenario == 'identity' and role == 'A':
+                check('First profile authenticated before duplicate connection', lambda: state('A').get('account', {}).get('bound'))
+    if args.scenario not in ['load_timeout', 'identity']:
         begin_round()
     if args.lag:
         for role in processes:
@@ -226,7 +245,19 @@ try:
         check('Packet simulation applied: 50ms each direction and 2 percent loss', lambda: all(state(r).get('packet_lag') == 50 and state(r).get('packet_loss') == 2 for r in processes))
     for role in ROLES:
         send(role, 'screenshot', name='spawn')
-    if args.scenario == 'load_timeout':
+    if args.scenario == 'identity':
+        check('Same credential cannot bind two simultaneous clients', lambda: not state('B').get('account', {}).get('bound') and bool(state('B').get('account', {}).get('message')))
+        send('B', 'ready')
+        check('Unbound duplicate cannot become ready', lambda: not player('Server', 'B')['ready'])
+        account = state('A')['account']
+        send('B', 'storage', item=account['stash']['items'][0]['id'], quantity=1)
+        check('Duplicate cannot mutate authenticated inventory', lambda: state('A')['account']['revision'] == account['revision'] and state('A')['account']['stash'] == account['stash'])
+        check('Duplicate login cannot regrant starter kits', lambda: len(state('Server')['stored_results']) == 1 and sum(i['quantity'] for i in state('A')['account']['stash']['items'] if i['definition'] == 'AK') == 3)
+        send('B', 'screenshot', name='duplicate-profile-denied')
+    elif args.scenario in ['settlement', 'recovery', 'four']:
+        from storage_scenarios import run
+        run(globals())
+    elif args.scenario == 'load_timeout':
         check('Missing third participant keeps the round waiting', lambda: all(state(r).get('phase') == 0 for r in processes))
         positions = {r: player('Server', r)['position'] for r in ROLES}
         send('A', 'pulse', action='Move', duration=1)
@@ -244,7 +275,7 @@ try:
         check('Abrupt disconnect transfers every possession to exactly one container', lambda: len([box for box in state('Server')['loot'] if {i['id'] for i in box['contents']['items']} == set(disconnected_items)]) == 1)
         check('Disconnect preserves quantities and weapon magazine', lambda: all(i['quantity'] == disconnected_items[i['id']]['quantity'] and i['magazine'] == disconnected_items[i['id']]['magazine'] for box in state('Server')['loot'] for i in box['contents']['items'] if i['id'] in disconnected_items))
     elif args.scenario == 'timeout':
-        check('Round deadline ends with living players', lambda: state('Server').get('phase') == 2 and state('Server').get('alive') == 2, 25)
+        check('Round deadline settles surviving players as timed out', lambda: state('Server').get('phase') == 2 and all(player('Server', r).get('life') == 4 for r in ROLES), 25)
         check('Returns to ready lobby after status interval', lambda: all(state(r).get('map') == '/Game/Maps/Lobby' for r in processes), 35)
         check('Ready flags reset in lobby', lambda: all(not p.get('ready') for p in state('Server')['players']))
         begin_round()

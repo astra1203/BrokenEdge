@@ -43,3 +43,11 @@ Docs/Extraction/Phase2Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,sp
 # Phase-3 inventory, looting and packaged acceptance evidence.
 Docs/Extraction/Phase3Evidence/** -text
 Docs/Extraction/Phase3Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Phase-4 extraction, persistence and crash recovery evidence.
+Docs/Extraction/Phase4Evidence/** -text
+Docs/Extraction/Phase4Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Docs/Extraction/Phase4FixEvidence/** -text
+Docs/Extraction/Phase4FixEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Docs/Extraction/Phase4LobbyFixEvidence/** -text
+Docs/Extraction/Phase4LobbyFixEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

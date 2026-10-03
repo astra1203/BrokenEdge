@@ -1,0 +1,48 @@
+﻿{
+    "run":  "Phase4Recovery03",
+    "player":  [
+                   1400,
+                   4200,
+                   456.14999771118164
+               ],
+    "reach":  [
+                  {
+                      "target":  "E857C5FD4F1052DA5CA5FCA3DC196315",
+                      "hit":  "ExtractionLootActor_4",
+                      "name":  "ExtractionLootActor_4",
+                      "distance":  86.73651123046875,
+                      "clear":  true,
+                      "eye":  [
+                                  1400,
+                                  4200,
+                                  520.14999771118164
+                              ]
+                  },
+                  {
+                      "target":  "3188FE9742082FC17FC9DEBFC6BB1F0C",
+                      "hit":  "ExtractionLootActor_10",
+                      "name":  "ExtractionLootActor_10",
+                      "distance":  189.99531555175781,
+                      "clear":  true,
+                      "eye":  [
+                                  1400,
+                                  4200,
+                                  520.14999771118164
+                              ]
+                  },
+                  {
+                      "target":  "AAAB9F1F4612ACEA904C4CB51DFB1A7E",
+                      "hit":  "ExtractionLootActor_4",
+                      "name":  "ExtractionLootActor_14",
+                      "distance":  101.97167205810547,
+                      "clear":  false,
+                      "eye":  [
+                                  1400,
+                                  4200,
+                                  520.14999771118164
+                              ]
+                  }
+              ],
+    "diagnosis":  "Dropped test rifle overlapped an existing map pickup; trace hit ExtractionLootActor_4 first. Stage3 tests removed that spawn rifle by picking it up; Stage4 loads a stored rifle so it remains.",
+    "fix":  "Move fixture to XY1900,4600, away from map pickup locations."
+}

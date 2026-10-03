@@ -1,6 +1,7 @@
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionState.h"
 #include "ExtractionLootActor.h"
+#include "ExtractionPersistence.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/Weapon/Weapon.h"
@@ -26,17 +27,32 @@ ABrokenEdgeCharacter* UExtractionInventoryComponent::Character() const
 void UExtractionInventoryComponent::InitializeLoadout()
 {
 	if (!GetOwner()->HasAuthority() || (bInitialized && InitializedWorld == GetWorld())) return;
+	const auto* PS = Cast<AExtractionPlayerState>(GetOwner());
+	const auto* Store = GetWorld()->GetGameInstance()->GetSubsystem<UExtractionPersistence>();
+	const auto* Raid = PS ? Store->FindRaid(PS->ExtractionRaid) : nullptr;
+	const auto* Member = Raid
+		                     ? Raid->Players.FindByPredicate([&](const auto& P)
+		                     {
+			                     return P.Profile == PS->ExtractionProfile;
+		                     })
+		                     : nullptr;
+	if (!Member || Member->Outcome != EExtractionOutcome::None) return;
 	bInitialized = true;
 	InitializedWorld = GetWorld();
 	bDropped = false;
-	Contents = FExtractionContainer();
+	Contents = Member->Original;
 	Contents.Id = FGuid::NewGuid();
-	Contents.WeaponSlots = true;
-	for (int32 I = 0; I < 2; ++I)
-	{
-		ensure(ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(TEXT("Ammo"), 60)));
-		ensure(ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(TEXT("Medkit"))));
-	}
+	SyncWeapons();
+	Changed();
+}
+
+void UExtractionInventoryComponent::ClearSettled()
+{
+	if (!GetOwner()->HasAuthority()) return;
+	bDropped = true;
+	Contents.Items.Reset();
+	++Contents.Revision;
+	SyncWeapons();
 	Changed();
 }
 
@@ -153,6 +169,7 @@ void UExtractionInventoryComponent::RecordShot(AWeapon* Weapon)
 	if (auto* I = Contents.Find(Weapon->ExtractionItemId))
 	{
 		I->Magazine = Weapon->GetAmmo();
+		ExtractionItems::TakeOrigins(I->MagazineOrigins, 1);
 		Weapon->ExtractionInitialAmmo = Weapon->GetAmmo();
 		++Contents.Revision;
 		GetOwner()->ForceNetUpdate();
@@ -164,10 +181,12 @@ int32 UExtractionInventoryComponent::Reload(AWeapon* Weapon)
 	if (!GetOwner()->HasAuthority() || !Weapon || !Contents.Find(Weapon->ExtractionItemId)) return 0;
 	int32 Amount = FMath::Min(Weapon->GetMagCapacity() - Weapon->GetAmmo(), Contents.Count(TEXT("Ammo")));
 	int32 Remaining = Amount;
+	auto* GunItem = Contents.Find(Weapon->ExtractionItemId);
 	for (auto& I : Contents.Items)
 		if (I.Definition == TEXT("Ammo"))
 		{
 			const int32 Take = FMath::Min(Remaining, I.Quantity);
+			ExtractionItems::MergeOrigins(GunItem->MagazineOrigins, ExtractionItems::TakeOrigins(I.Origins, Take));
 			I.Quantity -= Take;
 			Remaining -= Take;
 		}

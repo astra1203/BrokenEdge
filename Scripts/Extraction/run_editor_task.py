@@ -11,18 +11,24 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
-parser.add_argument('task', choices=['assets', 'inventory'])
+parser.add_argument('task', choices=['assets', 'exit', 'inventory', 'persistence', 'recover-existing'])
 parser.add_argument('--tag', required=True)
+parser.add_argument('--store', type=Path, help='Existing store directory; only for recover-existing')
 args = parser.parse_args()
 assert args.tag and all(c.isalnum() or c in '-_' for c in args.tag)
 out = ROOT / 'Saved/Extraction' / args.tag
 out.mkdir(parents=True, exist_ok=False)
 command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor-Cmd.exe'), str(ROOT / 'BrokenEdge.uproject'),
            '-unattended', '-nosplash', '-nosound', '-NoLoadingScreen', '-NullRHI', '-abslog=' + str(out / 'Editor.log')]
-if args.task == 'assets':
-    command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/prepare_items.py')]
+if args.task in ['assets', 'exit']:
+    command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction' / ('prepare_exit.py' if args.task == 'exit' else 'prepare_items.py'))]
 else:
-    command += ['-ExecCmds=Automation RunTests BrokenEdge.Extraction.Inventory',
+    test = {'persistence': 'Persistence', 'inventory': 'Inventory', 'recover-existing': 'RecoverExistingStore'}[args.task]
+    if args.task == 'recover-existing':
+        if not args.store or not (args.store / 'Store.journal').is_file():
+            raise ValueError('An explicit existing journal is required')
+        command += ['-ExtractionRecoveryStore=' + str(args.store.resolve())]
+    command += ['-ExecCmds=Automation RunTests BrokenEdge.Extraction.' + test,
                 '-TestExit=Automation Test Queue Empty', '-ReportExportPath=' + str(out / 'Automation')]
 metadata = {'task': args.task, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'command': command}
 environment = os.environ.copy()
@@ -41,12 +47,13 @@ with (out / 'Process.log').open('wb') as log:
         metadata['error'] = 'Editor task timed out'
 text = (out / 'Editor.log').read_text(encoding='utf-8', errors='replace')
 passed = metadata['exit_code'] == 0 and 'Fatal error:' not in text and 'Traceback (most recent call last)' not in text
-if args.task == 'assets':
-    passed = passed and 'EXTRACTION_PHASE3_ASSETS_PREPARED' in text
+if args.task in ['assets', 'exit']:
+    passed = passed and ('EXTRACTION_PHASE4_EXIT_PREPARED' if args.task == 'exit' else 'EXTRACTION_PHASE3_ASSETS_PREPARED') in text
 else:
     successes = re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text)
     metadata['successful_tests'] = len(successes)
-    passed = passed and len(successes) == 3 and not re.search(r'Test Completed\. Result=\{(?:Fail|Failure|\u5931\u8d25)', text)
+    expected = {'persistence': 4, 'inventory': 3, 'recover-existing': 1}[args.task]
+    passed = passed and len(successes) == expected and not re.search(r'Test Completed\. Result=\{(?:Fail|Failure|\u5931\u8d25)', text)
 metadata['result'] = 'passed' if passed else 'failed'
 metadata['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
 (out / 'Run.json').write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8')

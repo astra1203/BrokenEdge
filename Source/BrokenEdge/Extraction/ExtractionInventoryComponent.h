@@ -23,6 +23,7 @@ public:
 	int32 Reload(class AWeapon* Weapon);
 	void RecordShot(class AWeapon* Weapon);
 	void DropAll(const FVector& Position);
+	void ClearSettled();
 	class ABrokenEdgeCharacter* Character() const;
 	bool WasDropped() const { return bDropped; }
 

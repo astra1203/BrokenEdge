@@ -14,6 +14,8 @@ class BROKENEDGE_API ABrokenEdgePlayerController : public APlayerController
 {
 	GENERATED_BODY()
 public:
+	ABrokenEdgePlayerController();
+	UPROPERTY(VisibleAnywhere) TObjectPtr<class UExtractionAccountComponent> ExtractionAccount;
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Lobby")
 	void ServerSetLobbyReady(bool bReady);
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Lobby")
