@@ -1,7 +1,7 @@
 # 阶段 5：PVPVE、小队与蜂医能力
 
 状态：2026-10-04 通过下述限定范围验收。实施基线为 `4f30da14041fdbf1d0c929c08e3ad5d14b1149da`，使用
-`C:\UnrealProjects\UnrealEngine-5.8.3-release` 的 UE 5.8.3。阶段 5 改动尚未提交或推送。
+`C:\UnrealProjects\UnrealEngine-5.8.3-release` 的 UE 5.8.3。阶段 5 已提交为 `9c5d035`，文档整理提交为 `c2ea495`；2026-10-04 重新核对远端 `ue5.8-20260930` 指向 `c2ea4952c6d5ba6f1c0f67862ebeb74cfa12fd25`。以下历史验收证据保持原样。
 
 ## 本阶段范围
 

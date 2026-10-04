@@ -70,7 +70,12 @@ void UExtractionCombatComponent::ServerRequestShot_Implementation(uint32 ShotId,
 		C->GetExtractionInteraction()->CancelMedical();
 		NextShotTime = FMath::Max(Now, NextShotTime) + Weapon->FireDelay;
 		Weapon->UseImmediateServerHitScan();
+		float SavedScatter = Weapon->SphereRadius;
+		if (const auto* Inventory = C->GetExtractionInteraction()->Inventory())
+			if (const auto* Item = Inventory->Contents.Find(Weapon->ExtractionItemId))
+				Weapon->SphereRadius *= ExtractionItems::ScatterScale(*Item);
 		const FVector End = Weapon->bUseScatter ? Weapon->TraceEndWithScatter(Target) : FVector(Target);
+		Weapon->SphereRadius = SavedScatter;
 		C->PlayFireMontage(Combat->bAiming);
 		Weapon->Fire(End);
 		if (auto* Inventory = C->GetExtractionInteraction()->Inventory()) Inventory->RecordShot(Weapon);
@@ -175,6 +180,15 @@ void UExtractionCombatComponent::FinishServerReload()
 void UExtractionCombatComponent::MulticastReloadAmmo_Implementation(AWeapon* Weapon, int32 Ammo)
 {
 	if (!GetOwner()->HasAuthority() && IsValid(Weapon)) Weapon->SetExtractionAmmo(Ammo);
+}
+
+void UExtractionCombatComponent::EquipmentAmmo(AWeapon* Weapon, int32 Ammo)
+{
+	if (!GetOwner()->HasAuthority() || !Weapon) return;
+	Weapon->SetExtractionAmmo(Ammo);
+	Weapon->ExtractionInitialAmmo = Ammo;
+	MulticastReloadAmmo(Weapon, Ammo);
+	ClientShotResult(LastProcessedShot, Weapon, Ammo, true);
 }
 
 void UExtractionCombatComponent::CancelReload()

@@ -10,7 +10,7 @@ namespace
 {
 	constexpr float Cell = 38;
 	FVector2D Grid(int32 Side) { return Side == 0 ? FVector2D(105, 165) : FVector2D(660, 245); }
-	FVector2D Slot(int32 Index) { return FVector2D(660 + Index * 185, 165); }
+	FVector2D Slot(int32 Index) { return Index < 2 ? FVector2D(660 + Index * 185, 165) : FVector2D(1040, 165 + (Index - 2) * 80); }
 
 	bool InsideStash(FVector2D P, FVector2D O, FVector2D S)
 	{
@@ -81,10 +81,10 @@ public:
 			for (int32 Y = 0; Y < C->Height; ++Y)
 				for (int32 X = 0; X < C->Width; ++X)
 					Box(Grid(Side) + FVector2D(X, Y) * Cell, {Cell - 2, Cell - 2}, FLinearColor(.085, .12, .15));
-			if (Side) for (int32 I = 0; I < 2; ++I)
+			if (Side) for (int32 I = 0; I < 4; ++I)
 			{
 				Box(Slot(I), {172, 58}, FLinearColor(.09, .15, .18));
-				Text(Slot(I) + FVector2D(5, 15), I ? TEXT("背负武器") : TEXT("手持武器"));
+				Text(Slot(I) + FVector2D(5, 15), I == 0 ? TEXT("手持武器") : I == 1 ? TEXT("背负武器") : I == 2 ? TEXT("头盔") : TEXT("胸甲"));
 			}
 			for (const auto& I : C->Items)
 			{
@@ -97,10 +97,7 @@ public:
 				Text(P + FVector2D(4, 4),
 				     S.X < 75 ? (I.Definition == TEXT("Ammo") ? TEXT("弹药") : Label.Left(2)) : Label,
 				     S.X < 75 ? 11 : 13);
-				Text(P + FVector2D(4, 21),
-				     I.Definition == TEXT("AK")
-					     ? FString::Printf(TEXT("%d / 30"), I.Magazine)
-					     : FString::Printf(TEXT("× %d"), I.Quantity), 12);
+				Text(P + FVector2D(4, 21), ExtractionItems::Details(I), 11);
 			}
 		}
 		Text({660, 425}, FString::Printf(TEXT("溢出领取区 · %d 件（点击领取到仓库，滚轮翻页）"), A->Profile.Overflow.Num()), 14);
@@ -129,9 +126,11 @@ public:
 		}
 		if (Menu)
 		{
-			Box(MenuAt, {200, 160}, FLinearColor(.06, .1, .14), 5);
+			Box(MenuAt, {250, MenuHeight()}, FLinearColor(.06, .1, .14), 5);
 			const TCHAR* Labels[] = {TEXT("快捷转移"), TEXT("装备到手持槽"), TEXT("装备到背负槽"), TEXT("卸下到背包"), TEXT("拆分数量")};
 			for (int32 I = 0; I < 5; ++I) Text(MenuAt + FVector2D(10, 5 + I * 31), Labels[I], 15, 6);
+			const auto Actions = EquipmentActions();
+			for (int32 I = 0; I < Actions.Num(); ++I) Text(MenuAt + FVector2D(10, 5 + (I + 5) * 31), Actions[I].Label, 14, 6);
 		}
 		if (Splitting)
 		{
@@ -168,8 +167,17 @@ public:
 		if (Menu)
 		{
 			Menu = false;
-			if (!InsideStash(Mouse, MenuAt, {200, 160})) return FReply::Handled();
+			if (!InsideStash(Mouse, MenuAt, {250, MenuHeight()})) return FReply::Handled();
 			const int32 Row = FMath::FloorToInt((Mouse.Y - MenuAt.Y) / 31);
+			if (Row >= 5)
+			{
+				const auto Actions = EquipmentActions();
+				if (Actions.IsValidIndex(Row - 5))
+				{
+					auto R = Request(); R.To = R.From; R.Move = Actions[Row - 5].Request; Send(R);
+				}
+				return FReply::Handled();
+			}
 			if (Row == 4 && Quantity > 1)
 			{
 				SplitText = FString::FromInt(Quantity / 2);
@@ -206,7 +214,7 @@ public:
 		Rotated = I->Rotated;
 		if (E.GetEffectingButton() == EKeys::RightMouseButton)
 		{
-			MenuAt = {FMath::Min(Mouse.X, 1020.f), FMath::Min(Mouse.Y, 460.f)};
+			MenuAt = {FMath::Min(Mouse.X, 960.f), FMath::Min(Mouse.Y, 690.f - MenuHeight())};
 			Menu = true;
 		}
 		else if (E.IsShiftDown())
@@ -229,7 +237,7 @@ public:
 		Mouse = Position(G, E);
 		auto R = Request();
 		R.Move.AutoPlace = false;
-		for (int32 I = 0; I < 2; ++I) if (InsideStash(Mouse, Slot(I), {172, 58}))
+		for (int32 I = 0; I < 4; ++I) if (InsideStash(Mouse, Slot(I), {172, 58}))
 		{
 			R.To = EExtractionStorageSide::Loadout;
 			R.Move.Slot = I;
@@ -289,6 +297,12 @@ public:
 	}
 
 private:
+	TArray<ExtractionItems::FEquipmentAction> EquipmentActions() const
+	{
+		const auto* C = Container(SelectedSide);
+		return C ? ExtractionItems::EquipmentActions(*C, Selected) : TArray<ExtractionItems::FEquipmentAction>();
+	}
+	float MenuHeight() const { return 5.f + 31.f * (5 + EquipmentActions().Num()); }
 	TWeakObjectPtr<UExtractionStashWidget> Owner;
 	FGuid Selected;
 	int32 SelectedSide = 0, Quantity = 1, OverflowOffset = 0;

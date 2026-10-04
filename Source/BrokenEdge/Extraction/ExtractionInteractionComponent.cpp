@@ -1,4 +1,5 @@
 #include "ExtractionInteractionComponent.h"
+#include "ExtractionHealth.h"
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionLootActor.h"
 #include "ExtractionState.h"
@@ -39,7 +40,11 @@ ABrokenEdgeCharacter* UExtractionInteractionComponent::Character() const
 UExtractionInventoryComponent* UExtractionInteractionComponent::Inventory() const
 {
 	auto* PS = Character() ? Character()->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	return PS ? PS->Inventory.Get() : Character() && Character()->bExtractionGuard ? Character()->GuardInventory.Get() : nullptr;
+	return PS
+		       ? PS->Inventory.Get()
+		       : Character() && Character()->bExtractionGuard
+		       ? Character()->GuardInventory.Get()
+		       : nullptr;
 }
 
 bool UExtractionInteractionComponent::IsEnabled() const
@@ -173,6 +178,9 @@ void UExtractionInteractionComponent::RefreshLootView()
 			I.Definition = NAME_None;
 			I.Quantity = 0;
 			I.Magazine = 0;
+			I.MagazineAmmo = NAME_None;
+			I.Durability = 0;
+			I.Attachments.Reset();
 		}
 	SeenRevision = Loot->Contents.Revision;
 	GetOwner()->ForceNetUpdate();
@@ -237,8 +245,10 @@ FString UExtractionInteractionComponent::StartMedical(const FGuid& Id)
 	const auto* D = I ? UExtractionItemDefinition::Get(I->Definition) : nullptr;
 	auto* C = Character();
 	if (!D || D->Kind != EExtractionItemKind::Medical) return TEXT("无法使用该物品");
-	if (C->GetExtractionAbilities()->Action != EExtractionAction::None || MedicalEnd > 0 || C->GetCombatState() != ECombatState::ECS_Unoccuiped) return TEXT("当前动作尚未完成");
-	if (C->GetHealth() >= C->GetMaxHealth()) return TEXT("生命已满");
+	if (C->GetExtractionAbilities()->Action != EExtractionAction::None || MedicalEnd > 0 || C->GetCombatState() !=
+		ECombatState::ECS_Unoccuiped)
+		return TEXT("当前动作尚未完成");
+	if (!C->GetExtractionHealth()->Needs(D->MedicalEffect)) return TEXT("当前无需使用该医疗物品");
 	Close();
 	C->GetCombat()->FireButtonPressed(false);
 	C->GetCombat()->SetAiming(false);
@@ -290,13 +300,19 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 	if (R.Op == EExtractionItemOp::Use)
 		return R.FromLoot ? TEXT("请先拾取医疗包") : StartMedical(R.Item);
 	auto* C = Character();
+	if (MedicalEnd > 0 || C->GetExtractionAbilities()->Action != EExtractionAction::None) return TEXT("当前动作尚未完成");
 	if (R.Op == EExtractionItemOp::Drop) C->GetExtractionCombat()->CancelReload();
 	if (C->GetCombatState() != ECombatState::ECS_Unoccuiped) return TEXT("当前动作尚未完成");
 	FExtractionContainer BeforeInventory = Inv->Contents;
 	FExtractionContainer BeforeLoot = Loot ? Loot->Contents : FExtractionContainer();
 	FString Error;
 	AExtractionLootActor* Dropped = nullptr;
-	if (R.Op == EExtractionItemOp::Drop)
+	if (R.Op == EExtractionItemOp::Attach || R.Op == EExtractionItemOp::Detach || R.Op == EExtractionItemOp::Unload || R
+		.Op == EExtractionItemOp::SelectAmmo)
+	{
+		if (!ExtractionItems::Configure(Inv->Contents, R, Error)) return Error;
+	}
+	else if (R.Op == EExtractionItemOp::Drop)
 	{
 		if (R.FromLoot || R.ToLoot) return TEXT("请先将物品放入背包");
 		Dropped = AExtractionLootActor::SpawnContainer(GetWorld(), DropPosition(), true, Item->Definition);
@@ -369,9 +385,8 @@ void UExtractionInteractionComponent::TickComponent(float Delta, ELevelTick Tick
 			auto* Inv = Inventory();
 			auto* I = Inv->Contents.Find(MedicalItem);
 			const auto* D = I ? UExtractionItemDefinition::Get(I->Definition) : nullptr;
-			if (D && C->GetHealth() < C->GetMaxHealth())
+			if (D && C->GetExtractionHealth()->Treat(D))
 			{
-				C->SetHealth(C->GetHealth() + D->HealAmount);
 				Inv->Contents.Items.RemoveAll([&](const FExtractionItem& Entry) { return Entry.Id == MedicalItem; });
 				++Inv->Contents.Revision;
 				Inv->Changed();

@@ -29,6 +29,7 @@
 #include "Menu.h"
 #include "BrokenEdge/Extraction/ExtractionGameMode.h"
 #include "BrokenEdge/Extraction/ExtractionAbilities.h"
+#include "BrokenEdge/Extraction/ExtractionHealth.h"
 #include "BrokenEdge/Extraction/ExtractionGuard.h"
 #include "BrokenEdge/Extraction/ExtractionSmoke.h"
 #include "NavigationSystem.h"
@@ -85,6 +86,7 @@ public:
 				FVector Point = bHeadAim
 					                ? Target->GetMesh()->GetBoneLocation(TEXT("head")) + FVector(0, 0, 8)
 					                : Target->GetActorLocation() + FVector(0, 0, 10);
+				if (!AimBone.IsNone()) Point = Target->GetMesh()->GetBoneLocation(AimBone);
 				PC->SetControlRotation((Point - Camera).Rotation());
 			}
 		}
@@ -139,8 +141,9 @@ public:
 				}
 				else if (Op == TEXT("squad") && PC)
 				{
-					if (auto* LobbyPC = Cast<ABrokenEdgePlayerController>(PC)) LobbyPC->ServerSetExtractionSquad(
-						Command->GetIntegerField(TEXT("value")));
+					if (auto* LobbyPC = Cast<ABrokenEdgePlayerController>(PC))
+						LobbyPC->ServerSetExtractionSquad(
+							Command->GetIntegerField(TEXT("value")));
 				}
 				else if (Op == TEXT("ability") && Pawn)
 				{
@@ -151,11 +154,12 @@ public:
 					auto* A = Pawn->GetExtractionAbilities();
 					if (Kind == TEXT("cancel")) A->ReleaseRescue();
 					else if (Kind == TEXT("duplicate")) A->ServerBegin(0, EExtractionAction::Heal, Target);
-					else A->Request(Kind == TEXT("revive")
-						                ? EExtractionAction::Revive
-						                : Kind == TEXT("heal")
-						                ? EExtractionAction::Heal
-						                : EExtractionAction::Smoke, Target);
+					else
+						A->Request(Kind == TEXT("revive")
+							           ? EExtractionAction::Revive
+							           : Kind == TEXT("heal")
+							           ? EExtractionAction::Heal
+							           : EExtractionAction::Smoke, Target);
 				}
 				else if (Op == TEXT("guard_spawn") && Role == TEXT("Server"))
 				{
@@ -201,6 +205,9 @@ public:
 				{
 					AimTarget = Command->GetStringField(TEXT("target"));
 					bHeadAim = Command->GetBoolField(TEXT("head"));
+					FString Bone;
+					Command->TryGetStringField(TEXT("bone"), Bone);
+					AimBone = FName(*Bone);
 					if (AimTarget.IsEmpty() && PC) PC->SetControlRotation(FRotator::ZeroRotator);
 				}
 				else if (Op == TEXT("fixture") && Role == TEXT("Server"))
@@ -223,11 +230,19 @@ public:
 						if (Item->TryGetNumberField(TEXT("yaw"), Yaw))
 						{
 							Character->SetActorRotation(FRotator(0, Yaw, 0));
-							if (Character->GetController()) Character->GetController()->SetControlRotation(
-								FRotator(0, Yaw, 0));
+							if (Character->GetController())
+								Character->GetController()->SetControlRotation(
+									FRotator(0, Yaw, 0));
 						}
 						Character->SetHealth(Item->GetNumberField(TEXT("health")));
 						Character->SetShield(Item->GetNumberField(TEXT("shield")));
+						bool ClearTrauma = false;
+						if (Item->TryGetBoolField(TEXT("clear_trauma"), ClearTrauma) && ClearTrauma)
+						{
+							// Baseline precondition only; equipment acceptance uses medicine/rescue.
+							Character->GetExtractionHealth()->Bleeding = false;
+							Character->GetExtractionHealth()->LegFracture = false;
+						}
 						Character->ForceNetUpdate();
 					}
 				}
@@ -337,11 +352,34 @@ private:
 	double Started, LastWrite = 0, PulseEnd = 0;
 	int32 LastCommand = 0;
 	bool bHeadAim = false;
+	FName AimBone;
 	FExtractionItemRequest LastItemRequest;
 	FExtractionStorageRequest LastStorageRequest;
 	FVector2D LastMouse = FVector2D::ZeroVector;
 	TSet<FKey> PressedMouse;
 	TWeakObjectPtr<AActor> TestOccluder;
+
+	static void EquipmentRequest(const TSharedPtr<FJsonObject>& Command, FExtractionItemRequest& R)
+	{
+		FString Kind, Weapon, Ammo, Slot;
+		Command->TryGetStringField(TEXT("kind"), Kind);
+		if (Kind == TEXT("drop")) R.Op = EExtractionItemOp::Drop;
+		else if (Kind == TEXT("use")) R.Op = EExtractionItemOp::Use;
+		else if (Kind == TEXT("attach")) R.Op = EExtractionItemOp::Attach;
+		else if (Kind == TEXT("detach")) R.Op = EExtractionItemOp::Detach;
+		else if (Kind == TEXT("unload")) R.Op = EExtractionItemOp::Unload;
+		else if (Kind == TEXT("select_ammo")) R.Op = EExtractionItemOp::SelectAmmo;
+		if (Command->TryGetStringField(TEXT("weapon"), Weapon)) FGuid::Parse(Weapon, R.Weapon);
+		if (Command->TryGetStringField(TEXT("ammo_type"), Ammo)) R.AmmoDefinition = FName(*Ammo);
+		Command->TryGetStringField(TEXT("attachment_slot"), Slot);
+		R.AttachmentSlot = Slot == TEXT("optic")
+			                   ? EExtractionAttachmentSlot::Optic
+			                   : Slot == TEXT("grip")
+			                   ? EExtractionAttachmentSlot::Grip
+			                   : Slot == TEXT("muzzle")
+			                   ? EExtractionAttachmentSlot::Muzzle
+			                   : EExtractionAttachmentSlot::None;
+	}
 
 	static TSharedPtr<FJsonObject> InventoryJson(const FExtractionContainer& C)
 	{
@@ -359,6 +397,18 @@ private:
 			Entry->SetNumberField(TEXT("y"), I.Cell.Y);
 			Entry->SetNumberField(TEXT("slot"), I.Slot);
 			Entry->SetNumberField(TEXT("magazine"), I.Magazine);
+			Entry->SetStringField(TEXT("ammo_type"), I.MagazineAmmo.ToString());
+			Entry->SetNumberField(TEXT("durability"), I.Durability);
+			Entry->SetNumberField(TEXT("scatter_scale"), ExtractionItems::ScatterScale(I));
+			TArray<TSharedPtr<FJsonValue>> Parts;
+			for (const auto& Part : I.Attachments)
+			{
+				auto J = MakeShared<FJsonObject>();
+				J->SetStringField(TEXT("id"), Part.Id.ToString());
+				J->SetStringField(TEXT("definition"), Part.Definition.ToString());
+				Parts.Add(MakeShared<FJsonValueObject>(J));
+			}
+			Entry->SetArrayField(TEXT("attachments"), Parts);
 			Entry->SetBoolField(TEXT("rotated"), I.Rotated);
 			Entries.Add(MakeShared<FJsonValueObject>(Entry));
 		}
@@ -450,6 +500,7 @@ private:
 			Command->TryGetBoolField(TEXT("rotated"), R.Move.Rotated);
 			FString Merge;
 			if (Command->TryGetStringField(TEXT("merge"), Merge)) FGuid::Parse(Merge, R.Move.MergeInto);
+			EquipmentRequest(Command, R.Move);
 			LastStorageRequest = R;
 			Account->ServerMove(R);
 		}
@@ -519,6 +570,7 @@ private:
 			Command->TryGetNumberField(TEXT("loot_revision"), R.LootRevision);
 			FString Merge;
 			if (Command->TryGetStringField(TEXT("merge"), Merge)) FGuid::Parse(Merge, R.MergeInto);
+			EquipmentRequest(Command, R);
 			LastItemRequest = R;
 			PC->ServerItemOperation(R);
 		}
@@ -620,8 +672,10 @@ private:
 		if (!World->GetGameState()) return nullptr;
 		for (APlayerState* PS : World->GetGameState()->PlayerArray)
 			if (PS->GetPlayerName() == Name) return Cast<ABrokenEdgeCharacter>(PS->GetPawn());
-		for (TActorIterator<ABrokenEdgeCharacter> It(World); It; ++It) if (It->bExtractionGuard && FString::Printf(
-			TEXT("GUARD_%d"), It->ExtractionGuardId) == Name) return *It;
+		for (TActorIterator<ABrokenEdgeCharacter> It(World); It; ++It)
+			if (It->bExtractionGuard && FString::Printf(
+				TEXT("GUARD_%d"), It->ExtractionGuardId) == Name)
+				return *It;
 		return nullptr;
 	}
 
@@ -747,6 +801,15 @@ private:
 				if (auto* Character = Cast<ABrokenEdgeCharacter>(PS->GetPawn()))
 				{
 					Player->SetNumberField(TEXT("health"), Character->GetHealth());
+					Player->SetBoolField(TEXT("bleeding"), Character->GetExtractionHealth()->Bleeding);
+					Player->SetBoolField(TEXT("fracture"), Character->GetExtractionHealth()->LegFracture);
+					Player->SetNumberField(
+						TEXT("bullet_sequence"), Character->GetExtractionHealth()->TestBulletSequence);
+					Player->SetStringField(TEXT("hit_bone"), Character->GetExtractionHealth()->TestHitBone.ToString());
+					Player->SetNumberField(TEXT("hit_loss"), Character->GetExtractionHealth()->TestHealthLoss);
+					Player->SetNumberField(TEXT("walk_speed"), Character->GetCharacterMovement()->MaxWalkSpeed);
+					Player->SetNumberField(
+						TEXT("crouch_speed"), Character->GetCharacterMovement()->MaxWalkSpeedCrouched);
 					const auto* Ability = Character->GetExtractionAbilities();
 					Player->SetNumberField(TEXT("action"), static_cast<int32>(Ability->Action));
 					Player->SetNumberField(TEXT("action_end"), Ability->ActionEnd);
@@ -817,7 +880,8 @@ private:
 						Player->SetNumberField(
 							TEXT("left_grip_distance"),
 							FVector::Dist(Character->GetMesh()->GetSocketLocation(TEXT("LeftHand")),
-							              Weapon->GetWeaponMesh()->GetSocketLocation(TEXT("LeftHandSocket"))));
+							              (Weapon->EquipmentGrip(false) * Weapon->GetWeaponMesh()->
+								              GetComponentTransform()).GetLocation()));
 						Player->SetNumberField(
 							TEXT("right_grip_distance"),
 							FVector::Dist(Character->GetMesh()->GetSocketLocation(TEXT("RightHand")),
@@ -825,6 +889,12 @@ private:
 						Player->SetStringField(TEXT("weapon"), Weapon->GetName());
 						Player->SetStringField(TEXT("weapon_item"), Weapon->ExtractionItemId.ToString());
 						Player->SetNumberField(TEXT("ammo"), Weapon->GetAmmo());
+						Player->SetStringField(TEXT("ammo_type"), Weapon->ExtractionAmmoType.ToString());
+						TArray<TSharedPtr<FJsonValue>> Parts;
+						for (FName Part : Weapon->ExtractionParts)
+							Parts.Add(
+								MakeShared<FJsonValueString>(Part.ToString()));
+						Player->SetArrayField(TEXT("weapon_parts"), Parts);
 						Player->SetNumberField(TEXT("damage"), Weapon->GetDamage());
 						Player->SetNumberField(TEXT("head_damage"), Weapon->GetHeadShotDamage());
 					}
@@ -878,8 +948,9 @@ private:
 				J->SetNumberField(TEXT("health"), It->GetHealth());
 				J->SetBoolField(TEXT("dead"), It->IsDefeated());
 				J->SetNumberField(TEXT("shots"), It->GetExtractionCombat()->GetAcceptedShots());
-				if (It->HasAuthority()) J->SetObjectField(
-					TEXT("inventory"), InventoryJson(It->GuardInventory->Contents));
+				if (It->HasAuthority())
+					J->SetObjectField(
+						TEXT("inventory"), InventoryJson(It->GuardInventory->Contents));
 				if (const auto* AI = Cast<AExtractionGuard>(It->GetController()))
 				{
 					J->SetNumberField(TEXT("state"), static_cast<int32>(AI->State));

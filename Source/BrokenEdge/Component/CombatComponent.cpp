@@ -770,7 +770,9 @@ void UCombatComponent::SetHUDCrosshairs(float DeltaTime)
 	HUD = HUD == nullptr ? Cast<ABrokenEdgeHUD>(Controller->GetHUD()) : HUD;
 	if (HUD == nullptr)return;
 
-	if (EquippedWeapon)
+	const bool OpticalSight = EquippedWeapon && Character->GetExtractionCombat()->IsEnabled()
+		&& Character->IsFirstPersonView() && bAiming && EquippedWeapon->ExtractionParts.Contains(TEXT("RedDot"));
+	if (EquippedWeapon && !OpticalSight)
 	{
 		HUDPackage.CrosshairsCenter = EquippedWeapon->CrosshairsCenter;
 		HUDPackage.CrosshairsLeft = EquippedWeapon->CrosshairsLeft;

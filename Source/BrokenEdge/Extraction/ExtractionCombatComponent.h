@@ -25,6 +25,7 @@ public:
 	void CancelReload();
 	void BeginServerSwap();
 	void CancelSwap();
+	void EquipmentAmmo(AWeapon* Weapon, int32 Ammo);
 	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
 	UFUNCTION(Server, Reliable)
 	void ServerRequestShot(uint32 ShotId, AWeapon* Weapon, FVector_NetQuantize Target);

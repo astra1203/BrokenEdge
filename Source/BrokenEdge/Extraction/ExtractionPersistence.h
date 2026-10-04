@@ -87,7 +87,7 @@ struct FExtractionStoreState
 {
 	GENERATED_BODY()
 	UPROPERTY()
-	int32 Version = 1;
+	int32 Version = 2;
 	UPROPERTY()
 	int64 Sequence = 0;
 	UPROPERTY()

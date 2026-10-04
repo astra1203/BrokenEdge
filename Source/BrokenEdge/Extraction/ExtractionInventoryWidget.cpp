@@ -14,7 +14,7 @@ namespace
 {
 	constexpr float CellSize = 58;
 	FVector2D GridOrigin(bool Loot) { return FVector2D(Loot ? 670 : 140, 240); }
-	FVector2D SlotOrigin(bool Loot, int32 Slot) { return FVector2D((Loot ? 670 : 140) + Slot * 182, 165); }
+	FVector2D SlotOrigin(bool Loot, int32 Slot) { return FVector2D((Loot ? 670 : 140) + (Slot % 2) * 182, Slot < 2 ? 165 : 490); }
 
 	bool Inside(FVector2D P, FVector2D Origin, FVector2D Size)
 	{
@@ -138,11 +138,11 @@ public:
 			const auto* C = Container(Loot);
 			if (!C) continue;
 			if (C->WeaponSlots)
-				for (int32 Slot = 0; Slot < 2; ++Slot)
+				for (int32 Slot = 0; Slot < 4; ++Slot)
 				{
 					Box(SlotOrigin(Loot, Slot), FVector2D(166, 56), FLinearColor(.08f, .13f, .16f));
 					if (!C->InSlot(Slot)) Text(SlotOrigin(Loot, Slot) + FVector2D(8, 18),
-					                           Slot == 0 ? TEXT("手持武器") : TEXT("背负武器"), 14,
+					                           Slot == 0 ? TEXT("手持武器") : Slot == 1 ? TEXT("背负武器") : Slot == 2 ? TEXT("头盔") : TEXT("胸甲"), 14,
 					                           FLinearColor(.45f, .55f, .6f));
 				}
 			for (int32 Y = 0; Y < C->Height; ++Y)
@@ -164,14 +164,12 @@ public:
 				FString Label = D ? D->Label.ToString() : TEXT("?");
 				Text(P + FVector2D(5, 5), Label, Item.Extent().X == 1 && Item.Slot < 0 ? 9 : 14);
 				if (D)
-					Text(P + FVector2D(5, 29), D->Kind == EExtractionItemKind::Weapon
-						                           ? FString::Printf(TEXT("%d / 30"), Item.Magazine)
-						                           : FString::Printf(TEXT("× %d"), Item.Quantity), 13,
+					Text(P + FVector2D(5, 29), ExtractionItems::Details(Item), 12,
 					     FLinearColor(.8f, .9f, .95f));
 			}
 		}
 		if (I->SearchEnd > 0)
-			Text(FVector2D(670, 490), FString::Printf(TEXT("搜索中… %.1f 秒"), FMath::Max(0.0, I->SearchEnd - Now)), 16,
+			Text(FVector2D(670, 552), FString::Printf(TEXT("搜索中… %.1f 秒"), FMath::Max(0.0, I->SearchEnd - Now)), 16,
 			     FLinearColor(.2f, .9f, .75f));
 		Text(FVector2D(100, 548), PC()->ItemMessage, 16, FLinearColor(1, .65f, .3f));
 		Text(FVector2D(100, 589), TEXT("拖动放置 · R 旋转 · Shift 点击快捷转移 · 右键操作"), 15, FLinearColor(.68f, .78f, .82f));
@@ -192,10 +190,12 @@ public:
 		}
 		if (MenuOpen)
 		{
-			Box(MenuPosition, FVector2D(200, 174), FLinearColor(.045f, .065f, .09f), 5);
+			Box(MenuPosition, FVector2D(250, MenuHeight()), FLinearColor(.045f, .065f, .09f), 5);
 			const TCHAR* Labels[] = {TEXT("快捷转移"), TEXT("装备 / 卸下"), TEXT("使用"), TEXT("拆分数量…"), TEXT("丢弃")};
 			for (int32 Row = 0; Row < 5; ++Row) Text(MenuPosition + FVector2D(12, 10 + Row * 32), Labels[Row], 15,
 			                                         FLinearColor::White, 6);
+			const auto Actions = EquipmentActions();
+			for (int32 N = 0; N < Actions.Num(); ++N) Text(MenuPosition + FVector2D(12, 10 + (N + 5) * 32), Actions[N].Label, 14, FLinearColor::White, 6);
 		}
 		if (Splitting)
 		{
@@ -223,7 +223,7 @@ public:
 		{
 			const int32 Row = FMath::FloorToInt((Mouse.Y - MenuPosition.Y - 5) / 32);
 			MenuOpen = false;
-			if (Inside(Mouse, MenuPosition, FVector2D(200, 174)) && Row >= 0 && Row < 5) MenuAction(Row);
+			if (Inside(Mouse, MenuPosition, FVector2D(250, MenuHeight())) && Row >= 0 && Row < 5 + EquipmentActions().Num()) MenuAction(Row);
 			return FReply::Handled().SetUserFocus(AsShared());
 		}
 		if (Dragging)
@@ -244,7 +244,7 @@ public:
 		Rotated = Item->Rotated;
 		if (E.GetEffectingButton() == EKeys::RightMouseButton)
 		{
-			MenuPosition = FVector2D(FMath::Min(Mouse.X, 1000.f), FMath::Min(Mouse.Y, 450.f));
+			MenuPosition = FVector2D(FMath::Min(Mouse.X, 960.f), FMath::Min(Mouse.Y, 690.f - MenuHeight()));
 			MenuOpen = true;
 			return FReply::Handled().SetUserFocus(AsShared());
 		}
@@ -327,6 +327,12 @@ public:
 	}
 
 private:
+	TArray<ExtractionItems::FEquipmentAction> EquipmentActions() const
+	{
+		const auto* C = Container(false);
+		return SelectedLoot || !C ? TArray<ExtractionItems::FEquipmentAction>() : ExtractionItems::EquipmentActions(*C, Selected);
+	}
+	float MenuHeight() const { return 14.f + 32.f * (5 + EquipmentActions().Num()); }
 	TWeakObjectPtr<UExtractionInventoryWidget> Owner;
 	FGuid Selected;
 	bool SelectedLoot = false, Dragging = false, Rotated = false, MenuOpen = false, Splitting = false;
@@ -410,6 +416,12 @@ private:
 
 	void MenuAction(int32 Row)
 	{
+		if (Row >= 5)
+		{
+			const auto Actions = EquipmentActions();
+			if (Actions.IsValidIndex(Row - 5)) PC()->RequestItem(Actions[Row - 5].Request);
+			Cancel(); return;
+		}
 		if (Row == 0)
 		{
 			QuickTransfer();
@@ -450,7 +462,7 @@ private:
 			if (!C) continue;
 			R.ToLoot = Side != 0;
 			if (C->WeaponSlots)
-				for (int32 Slot = 0; Slot < 2; ++Slot)
+				for (int32 Slot = 0; Slot < 4; ++Slot)
 					if (Inside(P, SlotOrigin(Side != 0, Slot), FVector2D(166, 56)))
 					{
 						R.Slot = Slot;

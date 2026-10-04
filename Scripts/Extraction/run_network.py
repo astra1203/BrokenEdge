@@ -24,7 +24,7 @@ parser.add_argument('--packaged', action='store_true')
 parser.add_argument('--lag', action='store_true')
 parser.add_argument('--unacked', action='store_true', help='Recovery test: kill server after durable extraction commit before client acknowledgement')
 parser.add_argument('--debug-hold', action='store_true', help='Wait for Continue.txt before combat and extend assertion timeouts')
-parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'lifecycle'], default='combat')
+parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment'], default='combat')
 parser.add_argument('--players', type=int, choices=[2, 3, 6])
 args = parser.parse_args()
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
@@ -32,7 +32,7 @@ if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
 OUT = ROOT / 'Saved/Extraction' / args.tag
 OUT.mkdir(parents=True, exist_ok=False)
 ROLES = ['A', 'B', 'C', 'D'] if args.scenario == 'four' else ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
-if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle']:
+if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment']:
     ROLES = list('ABCDEF')[:args.players or (6 if args.scenario in ['pvpve', 'lifecycle'] else 3)]
 processes, commands, checks = {}, {}, []
 last_states = {}
@@ -44,6 +44,7 @@ report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.s
                          for p in [Path(__file__).resolve(), ROOT / 'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
                                    ROOT / 'Scripts/Extraction/inventory_scenarios.py',
                                    ROOT / 'Scripts/Extraction/storage_scenarios.py', ROOT / 'Scripts/Extraction/phase5_scenarios.py',
+                                   ROOT / 'Scripts/Extraction/equipment_scenarios.py',
                                    ROOT / 'BrokenEdge.uproject', ROOT / 'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap']}
 
 
@@ -115,7 +116,7 @@ def launch(role):
                    '-server' if role == 'Server' else '-game']
     entry = '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction?ExpectedPlayers=3' if role == 'Server' and args.scenario == 'load_timeout' else '/Game/Maps/Lobby'
     command += [entry, '-nosound', '-unattended', '-nosplash', '-NoLoadingScreen',
-                '-ExtractionGuards=' + ('4' if args.scenario == 'pvpve' else '0'),
+                '-ExtractionGuards=' + ('4' if args.scenario == 'pvpve' or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
                 '-MatchType=Extraction', '-NumPublicConnections=' + str(len(ROLES)),
                 '-MinPlayersToStart=' + str(len(ROLES)), '-port=27777',
                 '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '600'),
@@ -157,7 +158,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'lifecycle']
+    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
@@ -168,13 +169,13 @@ def begin_round():
             revision = account['revision']
             send(role, 'storage', item=item['id'], quantity=item['quantity'], slot=0 if definition == 'AK' else -1)
             wait(lambda r=role, v=revision: state(r)['account']['revision'] > v, 'loadout transfer committed')
-    if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle']:
+    if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment']:
         from phase5_scenarios import lobby
         lobby(globals())
     for role in ROLES:
         send(role, 'ready')
     check('All players loaded in Extraction', lambda: all(state(r).get('phase') == 1 for r in processes), 120)
-    if args.scenario == 'pvpve':
+    if args.scenario in ['pvpve', 'equipment']:
         send('Server', 'fixture', players=[{'name': 'EX_'+r, 'position': [5700+150*i, 5000, 180], 'health': 100, 'shield': 0} for i,r in enumerate(ROLES)])
     check('Dedicated authority and Stinger pawns', lambda: state('Server').get('net_mode') == 1
           and state('Server').get('local_players') == 0 and state('Server').get('alive') == len(ROLES)
@@ -196,7 +197,7 @@ def begin_round():
 
 def fixture(shields=0, cover=False):
     positions = {'A': [1400, 4200, 500], 'B': [2400, 4200, 500] if cover else [1400, 3900, 500], 'C': [1400, 4600, 500]}
-    send('Server', 'fixture', players=[{'name': 'EX_' + r, 'position': positions[r], 'health': 80, 'shield': shields} for r in ROLES])
+    send('Server', 'fixture', players=[{'name': 'EX_' + r, 'position': positions[r], 'health': 80, 'shield': shields, 'clear_trauma': True} for r in ROLES])
     time.sleep(1)
 
 
@@ -205,7 +206,7 @@ def aim(shooter, target, head=False):
     time.sleep(.8)
 
 
-def shot(shooter, target, damage, shield=False):
+def shot(shooter, target, damage):
     # Production AK scatter is retained. Every attempt must consume exactly one
     # round on every peer. An unintended body hit/miss is recorded, and the target
     # fixture is restored before retrying the requested damage classification.
@@ -216,21 +217,21 @@ def shot(shooter, target, damage, shield=False):
         check(shooter + ' one authoritative shot', lambda: player('Server', shooter).get('accepted') == old['accepted'] + 1)
         check(shooter + ' ammo agreement', lambda: all(player(r, shooter).get('ammo') == old['ammo'] - 1 for r in processes))
         time.sleep(.35)
-        key = 'shield' if shield else 'health'
         current = player('Server', target)
-        loss = victim['health'] + victim['shield'] - current.get('health', 0) - current.get('shield', 0)
-        if loss not in [0, min(20, victim['health'] + victim['shield']), min(40, victim['health'] + victim['shield'])]:
+        hit = current.get('bullet_sequence', 0) > victim.get('bullet_sequence', 0)
+        loss = current.get('hit_loss', 0) if hit else 0
+        if loss not in [0, min(20, victim['health']), min(40, victim['health'])]:
             raise AssertionError(f'Invalid shot damage: {loss}')
-        if current.get(key) == victim[key] - damage:
-            check(target + ' ' + key + ' damage ' + str(damage), lambda: True)
-            check(target + ' damage replication', lambda: all(player(r, target).get(key) == victim[key] - damage for r in processes))
+        if hit and loss == damage:
+            check(target + ' direct bullet health damage ' + str(damage), lambda: True)
+            check(target + ' damage replication', lambda: all(abs(player(r, target).get('health', 0) - player('Server', target).get('health', 0)) <= 1 for r in processes))
             return
         checks.append({'name': 'Scatter attempt', 'shooter': shooter, 'target': target, 'loss': loss,
                        'before': victim, 'after': current, 'attempt': attempt})
         if current.get('life') != 0:
             raise AssertionError('Scatter killed target before requested classification')
         send('Server', 'fixture', players=[{'name': 'EX_' + target, 'position': victim['position'],
-                                           'health': victim['health'], 'shield': victim['shield']}])
+                                           'health': victim['health'], 'shield': victim['shield'], 'clear_trauma': True}])
         wait(lambda: all(player(r, target).get('health') == victim['health'] and player(r, target).get('shield') == victim['shield'] for r in processes), 'fixture restored')
         time.sleep(.4)
     raise AssertionError('No requested hit after 12 scatter attempts')
@@ -267,6 +268,9 @@ try:
         check('Duplicate cannot mutate authenticated inventory', lambda: state('A')['account']['revision'] == account['revision'] and state('A')['account']['stash'] == account['stash'])
         check('Duplicate login cannot regrant starter kits', lambda: len(state('Server')['stored_results']) == 1 and sum(i['quantity'] for i in state('A')['account']['stash']['items'] if i['definition'] == 'AK') == 3)
         send('B', 'screenshot', name='duplicate-profile-denied')
+    elif args.scenario == 'equipment':
+        from equipment_scenarios import run
+        run(globals())
     elif args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle']:
         from phase5_scenarios import run
         run(globals())
@@ -330,7 +334,7 @@ try:
         old_ammo = player('Server', 'A')['ammo']
         send('A', 'pulse', action='Fire')
         time.sleep(1)
-        check('Scene cover blocks damage while consuming the shot', lambda: player('Server', 'A')['ammo'] == old_ammo - 1 and player('Server', 'B')['shield'] == 40)
+        check('Scene cover blocks damage while consuming the shot', lambda: player('Server', 'A')['ammo'] == old_ammo - 1 and player('Server', 'B')['health'] == 80)
         fixture(40)
         aim('A', 'B')
         check('Visible remote character keeps both weapon grips', lambda: player('A', 'B').get('left_grip_distance', 999) <= 2 and player('A', 'B').get('right_grip_distance', 999) <= 2)
@@ -344,9 +348,8 @@ try:
         send('A', 'pulse', action='ToggleCameraView')
         check('First-person view restored', lambda: player('A', 'A').get('first_person'))
         aim('A', 'B')
-        shot('A', 'B', 20, shield=True)
-        shot('A', 'B', 20, shield=True)
         shot('A', 'B', 20)
+        check('Extraction bullet damage bypasses legacy shield', lambda: player('Server', 'B')['shield'] == 40)
         aim('A', 'B', True)
         shot('A', 'B', 40)
         fixture()

@@ -51,6 +51,14 @@ public:
 	/** Initial actor state travels with the spawn, before any predicted shots. */
 	UPROPERTY(ReplicatedUsing=OnRep_ExtractionInitialAmmo)
 	int32 ExtractionInitialAmmo = -1;
+	UPROPERTY(Replicated)
+	FName ExtractionAmmoType = TEXT("Ammo");
+	UPROPERTY(Replicated)
+	TArray<FName> ExtractionParts;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UExtractionWeaponVisuals> ExtractionVisuals;
+	FTransform EquipmentGrip(bool FirstPerson) const;
+	FVector EquipmentAimOffset() const;
 	UFUNCTION()
 	void OnRep_ExtractionInitialAmmo();
 	// Sets default values for this actor's properties

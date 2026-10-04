@@ -3,6 +3,7 @@
 
 #include "HitScanWeapon.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
+#include "BrokenEdge/Extraction/ExtractionHealth.h"
 
 #include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
@@ -43,7 +44,10 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 		bool bCauseAuthDamage = !bUseServerSideRewind || OwnerPawn->IsLocallyControlled();
 		if (HasAuthority() && bCauseAuthDamage) //服务端开火
 		{
-			const float DamageToCause = FireHit.BoneName.ToString() == FString("head") ? HeadShotDamage : Damage;
+			const bool Head = GetWorld()->GetGameState<AExtractionGameState>()
+				                  ? FireHit.BoneName == FName(TEXT("head"))
+				                  : FireHit.BoneName.ToString() == FString("head");
+			const float DamageToCause = Head ? HeadShotDamage : Damage;
 
 			UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s Damage:%.2f"), GFrameCounter, TEXT(__FUNCTION__),
 			       __LINE__,
@@ -52,13 +56,17 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 			PrintCollisionPresetSettings(HitCharacter->GetCapsuleComponent());
 			PrintCollisionPresetSettings(HitCharacter->GetMesh());
 
-			UGameplayStatics::ApplyDamage(
-				HitCharacter,
-				DamageToCause,
-				InstigatorController,
-				this,
-				UDamageType::StaticClass()
-			);
+			if (GetWorld()->GetGameState<AExtractionGameState>())
+				HitCharacter->GetExtractionHealth()->Bullet(DamageToCause, FireHit.BoneName, ExtractionAmmoType,
+				                                            InstigatorController, this);
+			else
+				UGameplayStatics::ApplyDamage(
+					HitCharacter,
+					DamageToCause,
+					InstigatorController,
+					this,
+					UDamageType::StaticClass()
+				);
 		}
 
 		if (!HasAuthority() && bUseServerSideRewind && !GetWorld()->GetGameState<AExtractionGameState>())

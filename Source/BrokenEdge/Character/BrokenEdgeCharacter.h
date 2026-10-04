@@ -59,6 +59,10 @@ class BROKENEDGE_API ABrokenEdgeCharacter : public ACharacter
 
 public:
 	class UExtractionInteractionComponent* GetExtractionInteraction() const { return ExtractionInteraction; }
+	friend class UExtractionHealth;
+	class UExtractionHealth* GetExtractionHealth() const { return ExtractionHealth; }
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<class UExtractionHealth> ExtractionHealth;
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UExtractionInteractionComponent> ExtractionInteraction;
 	// Sets default values for this character's properties
@@ -562,6 +566,8 @@ public:
 	int32 ExtractionGuardId = INDEX_NONE;
 	bool bWasExtractionDowned = false;
 	float ExtractionSavedCrouchSpeed = 300;
+	float ExtractionFractureCrouchSpeed = 300;
+	bool bExtractionFractureSpeedApplied = false;
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UTextRenderComponent> ExtractionLabel;
 	void UpdateExtractionLabel();

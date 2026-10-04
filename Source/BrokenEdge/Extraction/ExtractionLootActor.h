@@ -38,6 +38,9 @@ public:
 	FExtractionContainer Contents;
 	UPROPERTY(EditAnywhere)
 	bool SeedContents = true;
+	/** Bounded equipment supply fixtures; zero keeps the existing loot recipe. */
+	UPROPERTY(EditAnywhere)
+	int32 EquipmentTier = 0;
 	void Changed();
 	void SetContents(const FExtractionContainer& NewContents);
 	FVector InteractionPoint() const;

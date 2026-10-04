@@ -5,6 +5,7 @@
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 #include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
 #include "BrokenEdge/Extraction/ExtractionAbilities.h"
+#include "BrokenEdge/Extraction/ExtractionHealth.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
 #include "BrokenEdge/Extraction/ExtractionSmoke.h"
 #include "Components/TextRenderComponent.h"
@@ -70,6 +71,7 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 	ExtractionLabel->SetVisibility(false);
 	ExtractionLabel->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ExtractionAbilities = CreateDefaultSubobject<UExtractionAbilities>(TEXT("ExtractionAbilities"));
+	ExtractionHealth = CreateDefaultSubobject<UExtractionHealth>(TEXT("ExtractionHealth"));
 	GuardInventory = CreateDefaultSubobject<UExtractionInventoryComponent>(TEXT("GuardInventory"));
 	ExtractionInteraction = CreateDefaultSubobject<UExtractionInteractionComponent>(TEXT("ExtractionInteraction"));
 
@@ -198,7 +200,7 @@ void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, con
 	}
 
 	float DamageToHealth = Damage;
-	if (Shield > 0.f)
+	if (Shield > 0.f && !ExtractionCombat->IsEnabled())
 	{
 		if (Shield >= Damage)
 		{
@@ -739,7 +741,8 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 	}
 	if (UsesFirstPersonWeaponFit())
 	{
-		const FTransform& Target = IsAiming() ? FirstPersonWeaponFit.Aim : FirstPersonWeaponFit.Hip;
+		FTransform Target = IsAiming() ? FirstPersonWeaponFit.Aim : FirstPersonWeaponFit.Hip;
+		if (IsAiming() && Weapon) Target.AddToTranslation(Weapon->EquipmentAimOffset());
 		ViewWeaponTarget.SetLocation(FMath::VInterpTo(ViewWeaponTarget.GetLocation(), Target.GetLocation(),
 		                                              GetWorld()->GetDeltaSeconds(), FirstPersonAimInterpSpeed));
 		ViewWeaponTarget.SetRotation(FMath::QInterpTo(ViewWeaponTarget.GetRotation(), Target.GetRotation(),
@@ -759,6 +762,8 @@ bool ABrokenEdgeCharacter::UsesFirstPersonWeaponFit() const
 FTransform ABrokenEdgeCharacter::GetFirstPersonGripTarget(FName Socket) const
 {
 	if (!UsesFirstPersonWeaponFit() || !FirstPersonWeaponMesh->DoesSocketExist(Socket)) return FTransform::Identity;
+	if (Socket == TEXT("LeftHandSocket") && IsValid(FirstPersonSourceWeapon))
+		return FirstPersonSourceWeapon->EquipmentGrip(true) * ViewWeaponTarget * FollowCamera->GetComponentTransform();
 	return FirstPersonWeaponMesh->GetSocketTransform(Socket, RTS_Component) * ViewWeaponTarget * FollowCamera->
 		GetComponentTransform();
 }
@@ -913,11 +918,6 @@ void ABrokenEdgeCharacter::UpdateExtractionLabel()
 void ABrokenEdgeCharacter::UpdateSprint()
 {
 	if (!bEnableSprint || (!HasAuthority() && !IsLocallyControlled()) || !Combat) return;
-	if (bExtractionGuard)
-	{
-		GetCharacterMovement()->MaxWalkSpeed = 220;
-		return;
-	}
 	if (ExtractionAbilities->IsDowned())
 	{
 		if (!bWasExtractionDowned) ExtractionSavedCrouchSpeed = GetCharacterMovement()->MaxWalkSpeedCrouched;
@@ -934,13 +934,33 @@ void ABrokenEdgeCharacter::UpdateSprint()
 		GetCharacterMovement()->MaxWalkSpeedCrouched = ExtractionSavedCrouchSpeed;
 		bWasExtractionDowned = false;
 	}
+	const float FractureScale = ExtractionHealth->LegFracture
+		                            ? GetDefault<UExtractionEquipmentRules>()->FractureSpeedScale
+		                            : 1.f;
+	if (bExtractionFractureSpeedApplied != ExtractionHealth->LegFracture)
+	{
+		if (ExtractionHealth->LegFracture)
+		{
+			ExtractionFractureCrouchSpeed = GetCharacterMovement()->MaxWalkSpeedCrouched;
+			GetCharacterMovement()->MaxWalkSpeedCrouched *= FractureScale;
+		}
+		else GetCharacterMovement()->MaxWalkSpeedCrouched = ExtractionFractureCrouchSpeed;
+		bExtractionFractureSpeedApplied = ExtractionHealth->LegFracture;
+	}
+	if (bExtractionGuard)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = 220 * FractureScale;
+		return;
+	}
 	const FVector Acceleration = GetCharacterMovement()->GetCurrentAcceleration();
-	bSprinting = bSprintRequested && !bIsCrouched && !IsAiming() && !bDisableGameplay && !bDefeated
+	bSprinting = bSprintRequested && !ExtractionHealth->LegFracture && !bIsCrouched && !IsAiming() && !bDisableGameplay
+		&& !bDefeated
 		&& GetCombatState() == ECombatState::ECS_Unoccuiped
 		&& FVector::DotProduct(Acceleration.GetSafeNormal2D(), GetActorForwardVector()) > 0.5f;
 	GetCharacterMovement()->MaxWalkSpeed = bSprinting
 		                                       ? SprintSpeed
 		                                       : (IsAiming() ? Combat->AimWalkSpeed : Combat->BaseWalkSpeed);
+	GetCharacterMovement()->MaxWalkSpeed *= FractureScale;
 }
 
 void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const

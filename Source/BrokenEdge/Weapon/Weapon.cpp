@@ -2,6 +2,8 @@
 
 
 #include "Weapon.h"
+#include "BrokenEdge/Extraction/ExtractionWeaponVisuals.h"
+#include "BrokenEdge/Extraction/ExtractionItems.h"
 
 #include "VectorTypes.h"
 #include "BrokenEdge/BrokenEdge.h"
@@ -22,6 +24,7 @@ AWeapon::AWeapon()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	ExtractionVisuals = CreateDefaultSubobject<UExtractionWeaponVisuals>(TEXT("ExtractionVisuals"));
 	bReplicates = true;
 	SetReplicateMovement(true);
 
@@ -174,6 +177,8 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 	DOREPLIFETIME_CONDITION(AWeapon, bUseServerSideRewind, COND_OwnerOnly);
 	DOREPLIFETIME(AWeapon, ExtractionItemId);
 	DOREPLIFETIME_CONDITION(AWeapon, ExtractionInitialAmmo, COND_InitialOnly);
+	DOREPLIFETIME(AWeapon, ExtractionAmmoType);
+	DOREPLIFETIME(AWeapon, ExtractionParts);
 }
 
 void AWeapon::OnRep_Owner()

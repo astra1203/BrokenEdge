@@ -1,4 +1,5 @@
 #include "ExtractionInventoryComponent.h"
+#include "ExtractionCombatComponent.h"
 #include "ExtractionState.h"
 #include "ExtractionLootActor.h"
 #include "ExtractionPersistence.h"
@@ -79,7 +80,8 @@ void UExtractionInventoryComponent::SyncReserve()
 	if (auto* C = Character())
 	{
 		auto* Combat = C->GetCombat().Get();
-		Combat->CarriedAmmo = Contents.Count(TEXT("Ammo"));
+		const auto* Gun = Contents.InSlot(0);
+		Combat->CarriedAmmo = Contents.Count(Gun ? Gun->MagazineAmmo : FName(TEXT("Ammo")));
 		Combat->CarriedAmmoMap.FindOrAdd(EWeaponType::EWT_AssaultRifle) = Combat->CarriedAmmo;
 		Combat->UpdateCarriedAmmo();
 	}
@@ -137,11 +139,12 @@ bool UExtractionInventoryComponent::SyncWeapons()
 	for (int32 Slot = 0; Slot < 2; ++Slot)
 	{
 		if (!Desired[Slot]) continue;
-		if (Created.Contains(Desired[Slot]))
-		{
-			Desired[Slot]->ExtractionInitialAmmo = Contents.InSlot(Slot)->Magazine;
-			Desired[Slot]->SetExtractionAmmo(Contents.InSlot(Slot)->Magazine);
-		}
+		const auto* State = Contents.InSlot(Slot);
+		Desired[Slot]->ExtractionAmmoType = State->MagazineAmmo;
+		Desired[Slot]->ExtractionParts.Reset();
+		for (const auto& Part : State->Attachments) Desired[Slot]->ExtractionParts.Add(Part.Definition);
+		if (Created.Contains(Desired[Slot]) || Desired[Slot]->GetAmmo() != State->Magazine)
+			C->GetExtractionCombat()->EquipmentAmmo(Desired[Slot], State->Magazine);
 		Desired[Slot]->SetWeaponState(Slot == 0 ? EWeaponState::EWS_Equipped : EWeaponState::EWS_EquippedSecondary);
 		if (Slot == 0) Combat->AttachActorToRightHand(Desired[Slot]);
 		else Combat->AttachActorToBackpack(Desired[Slot]);
@@ -197,11 +200,12 @@ void UExtractionInventoryComponent::RecordShot(AWeapon* Weapon)
 int32 UExtractionInventoryComponent::Reload(AWeapon* Weapon)
 {
 	if (!GetOwner()->HasAuthority() || !Weapon || !Contents.Find(Weapon->ExtractionItemId)) return 0;
-	int32 Amount = FMath::Min(Weapon->GetMagCapacity() - Weapon->GetAmmo(), Contents.Count(TEXT("Ammo")));
+	const FName AmmoType = Contents.Find(Weapon->ExtractionItemId)->MagazineAmmo;
+	int32 Amount = FMath::Min(Weapon->GetMagCapacity() - Weapon->GetAmmo(), Contents.Count(AmmoType));
 	int32 Remaining = Amount;
 	auto* GunItem = Contents.Find(Weapon->ExtractionItemId);
 	for (auto& I : Contents.Items)
-		if (I.Definition == TEXT("Ammo"))
+		if (I.Definition == AmmoType)
 		{
 			const int32 Take = FMath::Min(Remaining, I.Quantity);
 			ExtractionItems::MergeOrigins(GunItem->MagazineOrigins, ExtractionItems::TakeOrigins(I.Origins, Take));

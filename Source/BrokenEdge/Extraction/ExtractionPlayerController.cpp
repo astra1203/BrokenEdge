@@ -1,4 +1,5 @@
 #include "ExtractionPlayerController.h"
+#include "ExtractionHealth.h"
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionSmoke.h"
@@ -475,12 +476,24 @@ void UExtractionWidget::Refresh()
 	FString VitalText;
 	if (auto* ControlledCharacter = Cast<ABrokenEdgeCharacter>(PC->GetPawn()))
 	{
-		VitalText = FString::Printf(TEXT("生命 %d / %d   护盾 %d\n"),
+		VitalText = FString::Printf(TEXT("生命 %d / %d\n"),
 		                            FMath::CeilToInt(ControlledCharacter->GetHealth()),
-		                            FMath::CeilToInt(ControlledCharacter->GetMaxHealth()),
-		                            FMath::CeilToInt(ControlledCharacter->GetShield()));
+		                            FMath::CeilToInt(ControlledCharacter->GetMaxHealth()));
+		if (const auto* Inv = ControlledCharacter->GetExtractionInteraction()->Inventory())
+		{
+			for (int32 ArmorSlot = 2; ArmorSlot <= 3; ++ArmorSlot)
+			{
+				const auto* Armor = Inv->Contents.InSlot(ArmorSlot);
+				VitalText += (ArmorSlot == 2 ? TEXT("头盔 ") : TEXT("  胸甲 ")) + (Armor ? ExtractionItems::Details(*Armor) : FString(TEXT("无")));
+			}
+			VitalText += TEXT("\n");
+		}
+		const auto* Trauma = ControlledCharacter->GetExtractionHealth();
+		if (Trauma->Bleeding) VitalText += TEXT("流血 · 需绷带  ");
+		if (Trauma->LegFracture) VitalText += TEXT("腿部骨折 · 需夹板");
+		if (Trauma->Bleeding || Trauma->LegFracture) VitalText += TEXT("\n");
 		if (auto* Weapon = ControlledCharacter->GetEquippedWeapon())
-			VitalText += FString::Printf(TEXT("AK · %d / %d"), Weapon->GetAmmo(),
+			VitalText += FString::Printf(TEXT("AK · %s · %d / %d"), Weapon->ExtractionAmmoType == TEXT("AmmoAP") ? TEXT("穿甲弹") : TEXT("普通弹"), Weapon->GetAmmo(),
 			                             ControlledCharacter->GetCombat()->GetCarriedAmmo());
 		else VitalText += TEXT("未持枪 · 靠近武器按 E 拾取");
 	}

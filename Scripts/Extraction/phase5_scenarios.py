@@ -54,7 +54,7 @@ def run(env):
         return
 
     def place(values):
-        send('Server', 'fixture', players=[{'name': 'EX_'+r, 'position': p, 'health': h, 'shield': 0}
+        send('Server', 'fixture', players=[{'name': 'EX_'+r, 'position': p, 'health': h, 'shield': 0, 'clear_trauma': True}
                                          for r, (p, h) in values.items()])
         time.sleep(.7)
 
@@ -200,7 +200,7 @@ def pvpve(g):
     peers = ['Server'] + g['ROLES']
 
     def place(name, position, health=100, shield=0, yaw=None):
-        entry = {'name': name, 'position': position, 'health': health, 'shield': shield}
+        entry = {'name': name, 'position': position, 'health': health, 'shield': shield, 'clear_trauma': True}
         if yaw is not None:
             entry['yaw'] = yaw
         send('Server', 'fixture', players=[entry])
@@ -233,7 +233,7 @@ def pvpve(g):
     send('Server', 'occluder', enabled=False)
     place('EX_A', [1400, 4500, 500], shield=100)
     place(target, [1400, 3900, 500], yaw=90)
-    check('Guard perceives and shoots a human', lambda: guard(target).get('shots', 0) > 0 and player('Server', 'A').get('shield', 100) < 100, 12)
+    check('Guard perceives and shoots a human', lambda: guard(target).get('shots', 0) > 0 and player('Server', 'A').get('health', 100) < 100, 12)
     send('Server', 'ammo', target=target, value=0)
     aim_at('A', target)
     send('A', 'ability', kind='smoke')
@@ -308,7 +308,7 @@ def lifecycles(g):
                  'D': [2200, 4000, 500], 'E': [1800, 4600, 500], 'F': [2400, 4600, 500]}
 
     def place(role, health=100, point=None):
-        send('Server', 'fixture', players=[{'name': 'EX_'+role, 'position': point or positions[role], 'health': health, 'shield': 0}])
+        send('Server', 'fixture', players=[{'name': 'EX_'+role, 'position': point or positions[role], 'health': health, 'shield': 0, 'clear_trauma': True}])
         time.sleep(.3)
 
     def down(role):

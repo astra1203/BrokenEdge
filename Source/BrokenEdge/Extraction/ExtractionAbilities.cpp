@@ -1,4 +1,5 @@
 #include "ExtractionAbilities.h"
+#include "ExtractionHealth.h"
 #include "ExtractionState.h"
 #include "ExtractionCombatComponent.h"
 #include "ExtractionInteractionComponent.h"
@@ -213,6 +214,7 @@ void UExtractionAbilities::Complete()
 		PS->ForceNetUpdate();
 		Target->SetHealth(R->ReviveHealth);
 		Target->SetShield(0);
+		Target->GetExtractionHealth()->Revived();
 		Target->UnCrouch();
 		Target->UpdateHUDHealth();
 		Target->ForceNetUpdate();

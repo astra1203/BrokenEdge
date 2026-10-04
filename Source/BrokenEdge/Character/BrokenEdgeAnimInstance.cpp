@@ -107,7 +107,7 @@ void UBrokenEdgeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		// ===== 6.1 左手IK =====
 		if (bHasLeftGrip && bHasRightHandBone)
 		{
-			const FTransform Grip = WeaponMesh->GetSocketTransform(TEXT("LeftHandSocket"), RTS_World);
+			const FTransform Grip = EquippedWeapon->EquipmentGrip(false) * WeaponMesh->GetComponentTransform();
 			FVector OutPosition;
 			FRotator OutRotation;
 			Body->TransformToBoneSpace(BrokenEdgeCharacter->RightHandBone, Grip.GetLocation(), Grip.Rotator(),

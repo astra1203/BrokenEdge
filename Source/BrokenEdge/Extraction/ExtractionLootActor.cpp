@@ -50,6 +50,17 @@ void AExtractionLootActor::BeginPlay()
 	if (SeedContents && Contents.Items.IsEmpty())
 	{
 		if (Loose) ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(LooseDefinition, LooseQuantity));
+		else if (EquipmentTier == 2 || EquipmentTier == 3)
+		{
+			for (const FName Id : {
+				     FName(EquipmentTier == 2 ? TEXT("Helmet2") : TEXT("Helmet3")),
+				     FName(EquipmentTier == 2 ? TEXT("Vest2") : TEXT("Vest3")), FName(TEXT("Bandage")),
+				     FName(TEXT("Splint")),
+				     FName(TEXT("RedDot")), FName(TEXT("VerticalGrip")), FName(TEXT("Compensator"))
+			     })
+				ensure(ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(Id)));
+			ensure(ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(TEXT("AmmoAP"), 30)));
+		}
 		else
 		{
 			ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(TEXT("Ammo"), 60));

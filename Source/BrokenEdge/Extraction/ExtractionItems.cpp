@@ -2,7 +2,11 @@
 
 const TArray<FName>& UExtractionItemDefinition::Ids()
 {
-	static const TArray<FName> Names = {TEXT("AK"), TEXT("Ammo"), TEXT("Medkit"), TEXT("Electronics"), TEXT("Tools")};
+	static const TArray<FName> Names = {
+		TEXT("AK"), TEXT("Ammo"), TEXT("Medkit"), TEXT("Electronics"), TEXT("Tools"),
+		TEXT("AmmoAP"), TEXT("Helmet2"), TEXT("Helmet3"), TEXT("Vest2"), TEXT("Vest3"), TEXT("Bandage"), TEXT("Splint"),
+		TEXT("RedDot"), TEXT("VerticalGrip"), TEXT("Compensator")
+	};
 	return Names;
 }
 
@@ -43,7 +47,11 @@ FExtractionItem ExtractionItems::Make(FName Definition, int32 Quantity)
 	Item.Id = FGuid::NewGuid();
 	Item.Definition = Definition;
 	Item.Quantity = Quantity;
-	if (const auto* D = UExtractionItemDefinition::Get(Definition)) Item.Size = D->Size;
+	if (const auto* D = UExtractionItemDefinition::Get(Definition))
+	{
+		Item.Size = D->Size;
+		Item.Durability = D->MaxDurability;
+	}
 	Item.Magazine = Definition == TEXT("AK") ? 30 : 0;
 	SeedOrigins(Item);
 	return Item;
@@ -54,6 +62,7 @@ void ExtractionItems::SeedOrigins(FExtractionItem& Item)
 	Item.Origins = {{FGuid::NewGuid(), Item.Quantity}};
 	Item.MagazineOrigins.Reset();
 	if (Item.Magazine) Item.MagazineOrigins.Add({FGuid::NewGuid(), Item.Magazine});
+	for (auto& Part : Item.Attachments) Part.Origins = {{FGuid::NewGuid(), 1}};
 }
 
 TArray<FExtractionOrigin> ExtractionItems::TakeOrigins(TArray<FExtractionOrigin>& Source, int32 Quantity)
@@ -85,7 +94,9 @@ bool ExtractionItems::Fits(const FExtractionContainer& Container, const FExtract
 	if (Item.Slot >= 0)
 	{
 		const auto* D = UExtractionItemDefinition::Get(Item.Definition);
-		return Container.WeaponSlots && Item.Slot < 2 && D && D->Kind == EExtractionItemKind::Weapon
+		return Container.WeaponSlots && D && ((Item.Slot < 2 && D->Kind == EExtractionItemKind::Weapon)
+				|| (Item.Slot >= 2 && Item.Slot <= 3 && D->Kind == EExtractionItemKind::Armor && D->ArmorSlot == Item.
+					Slot))
 			&& !Container.InSlot(Item.Slot);
 	}
 	if (Item.Slot != -1) return false;
@@ -154,17 +165,21 @@ bool ExtractionItems::Validate(const FExtractionContainer& Container, FString& E
 	TSet<FGuid> Ids;
 	for (const auto& I : Container.Items)
 	{
-		const auto* D = UExtractionItemDefinition::Get(I.Definition);
-		if (!I.Id.IsValid() || Ids.Contains(I.Id) || !D || I.Size != D->Size || I.Quantity <= 0
-			|| I.Quantity > D->MaxStack || I.Magazine < 0 || I.Magazine > (D->Kind == EExtractionItemKind::Weapon
-				                                                               ? 30
-				                                                               : 0)
-			|| !Fits(Occupied, I))
+		if (Ids.Contains(I.Id) || !ValidateItem(I, false, Error) || !Fits(Occupied, I))
 		{
 			Error = TEXT("物品或占格无效");
 			return false;
 		}
 		Ids.Add(I.Id);
+		for (const auto& Part : I.Attachments)
+		{
+			if (Ids.Contains(Part.Id))
+			{
+				Error = TEXT("附件身份冲突");
+				return false;
+			}
+			Ids.Add(Part.Id);
+		}
 		Occupied.Items.Add(I);
 	}
 	return true;
@@ -180,7 +195,7 @@ bool ExtractionItems::Transfer(FExtractionContainer& Source, FExtractionContaine
 		return false;
 	}
 	const auto* D = UExtractionItemDefinition::Get(Original->Definition);
-	if (!D || Request.Slot < -1 || Request.Slot > 1)
+	if (!D || Request.Slot < -1 || Request.Slot > 3)
 	{
 		Error = TEXT("目标位置无效");
 		return false;
@@ -229,12 +244,24 @@ bool ExtractionItems::Transfer(FExtractionContainer& Source, FExtractionContaine
 	}
 	if (!Validate(From, Error) || (!Same && !Validate(To, Error))) return false;
 	if (!Same)
+	{
+		TSet<FGuid> DestinationIds;
+		for (const auto& I : To.Items)
+		{
+			DestinationIds.Add(I.Id);
+			for (const auto& Part : I.Attachments) DestinationIds.Add(Part.Id);
+		}
 		for (const auto& I : From.Items)
-			if (To.Find(I.Id))
+		{
+			bool Conflict = DestinationIds.Contains(I.Id);
+			for (const auto& Part : I.Attachments) Conflict |= DestinationIds.Contains(Part.Id);
+			if (Conflict)
 			{
 				Error = TEXT("物品身份冲突");
 				return false;
 			}
+		}
+	}
 	++From.Revision;
 	Source = MoveTemp(From);
 	if (!Same)
