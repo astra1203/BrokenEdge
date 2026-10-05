@@ -51,10 +51,16 @@ edit = unreal.MaterialEditingLibrary
 def material(name, lens=False, reticle=False):
     path = destination + '/Materials/' + name
     asset = unreal.load_asset(path) if lib.does_asset_exist(path) else tools.create_asset(name, destination + '/Materials', unreal.Material, unreal.MaterialFactoryNew())
-    edit.delete_all_material_expressions(asset)
+    # Reuse authored nodes on repeat runs. Deleting expressions loaded/rooted by
+    # a commandlet trips UObject::MarkAsGarbage; deterministic positions also
+    # keep the material graph stable across calibration runs.
+    existing = list(edit.get_material_expressions(asset))
 
     def node(cls, x, y, **props):
-        value = edit.create_material_expression(asset, cls, x, y)
+        matches = [n for n in existing if isinstance(n, cls)
+                   and tuple(edit.get_material_expression_node_position(n)) == (x, y)]
+        assert len(matches) <= 1, (name, cls, x, y)
+        value = matches[0] if matches else edit.create_material_expression(asset, cls, x, y)
         for key, content in props.items():
             value.set_editor_property(key, content)
         return value
@@ -74,7 +80,7 @@ def material(name, lens=False, reticle=False):
                 transform = node(unreal.MaterialExpressionTransformPosition, -800, index * 200,
                                  transform_source_type=unreal.MaterialPositionTransformSource.TRANSFORMPOSSOURCE_WORLD,
                                  transform_type=unreal.MaterialPositionTransformSource.TRANSFORMPOSSOURCE_LOCAL)
-                edit.connect_material_expressions(source, '', transform, 'Input')
+                assert edit.connect_material_expressions(source, '', transform, '')
                 local.append(transform)
             inputs = []
             for input_name in ['P', 'Eye']:
@@ -83,7 +89,7 @@ def material(name, lens=False, reticle=False):
                 inputs.append(parameter)
             dot = node(unreal.MaterialExpressionCustom, -550, 0, inputs=inputs,
                        output_type=unreal.CustomMaterialOutputType.CMOT_FLOAT1,
-                       code='float3 ray=P-Eye; float angular=length(ray.yz)/max(abs(ray.x),0.001); return 1-smoothstep(0.00035,0.00065,angular);')
+                       code='float3 ray=P-Eye; float angular=length(ray.xz)/max(abs(ray.y),0.001); return 1-smoothstep(0.0010,0.0018,angular);')
             edit.connect_material_expressions(local[0], '', dot, 'P')
             edit.connect_material_expressions(local[1], '', dot, 'Eye')
             red = node(unreal.MaterialExpressionConstant3Vector, -550, -200, constant=unreal.LinearColor(12, .015, .005, 1))
@@ -101,7 +107,8 @@ def material(name, lens=False, reticle=False):
         edit.connect_material_property(tint, '', unreal.MaterialProperty.MP_BASE_COLOR)
         roughness = node(unreal.MaterialExpressionConstant, -100, 100, r=.65)
         edit.connect_material_property(roughness, '', unreal.MaterialProperty.MP_ROUGHNESS)
-    edit.recompile_material(asset)
+    errors = edit.recompile_material(asset)
+    assert not errors, (name, list(errors))
     assert lib.save_loaded_asset(asset)
     return asset
 
@@ -125,13 +132,13 @@ factory = unreal.DataAssetFactory()
 factory.set_editor_property('data_asset_class', definition_class)
 medical_mesh = unreal.load_asset('/Game/sA_PickupSet_1/Models/SM_Pickup_Health')
 ammo_base = unreal.load_asset('/Game/Extraction/Items/DA_Item_Ammo')
-ammo_base.set_editor_property('label', '普通步枪弹')
+ammo_base.set_editor_property('label', '普通弹')
 ammo_base.set_editor_property('penetration', 1)
 ammo_base.set_editor_property('damage_scale', 1.0)
 assert lib.save_loaded_asset(ammo_base)
 cube = unreal.load_asset('/Engine/BasicShapes/Cube')
 definitions = [
-    ('AmmoAP', '穿甲步枪弹', unreal.ExtractionItemKind.AMMO, (1, 1), 60,
+    ('AmmoAP', '穿甲弹', unreal.ExtractionItemKind.AMMO, (1, 1), 60,
      {'penetration': 3, 'damage_scale': .85, 'world_mesh': ammo_base.get_editor_property('world_mesh')}),
     ('Helmet2', '二级头盔', unreal.ExtractionItemKind.ARMOR, (2, 2), 1,
      {'armor_slot': 2, 'armor_level': 2, 'max_durability': 60.0, 'world_mesh': cube}),
@@ -146,22 +153,35 @@ definitions = [
     ('Splint', '夹板', unreal.ExtractionItemKind.MEDICAL, (1, 1), 1,
      {'use_seconds': 5.0, 'heal_amount': 0.0, 'medical_effect': unreal.ExtractionMedicalEffect.SPLINT, 'world_mesh': medical_mesh}),
 ]
-mounts = {'RedDot': (0, 12, 11), 'VerticalGrip': (0, 34, 2), 'Compensator': (0, 62, 8.2)}
+mounts = {'RedDot': (0, 12, 11), 'VerticalGrip': (0, 34, 5.5), 'Compensator': (0, 62, 8.2)}
+# Imported attachment meshes use +Y forward and +Z up, matching the AK mesh.
+# Counter the existing iron-sight pitch only on the owner optic, then place its
+# actual lens center on the camera's forward ray instead of drawing a HUD dot.
+character_bp = lib.load_blueprint_class('/Game/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired')
+character_defaults = unreal.get_default_object(character_bp)
+aim_fit = character_defaults.get_editor_property('first_person_weapon_fit').get_editor_property('aim')
+optic_view_rotation = aim_fit.rotation.inversed() * unreal.Rotator(yaw=-90).quaternion()
+optic_view_mount = unreal.Transform(location=unreal.Vector(*mounts['RedDot']), rotation=optic_view_rotation.rotator())
+# Center of the original transparent lens POSITION bounds, converted from GLB meters.
+optic_lens_center = unreal.Vector(0, 2.147347, 1.53972)
+optic_camera_center = aim_fit.transform_location(optic_view_mount.transform_location(optic_lens_center))
+optic_offset = unreal.Vector(0, -optic_camera_center.y, -optic_camera_center.z)
 for ident, label, slot, scatter in [
     ('RedDot', '原作红点瞄具', unreal.ExtractionAttachmentSlot.OPTIC, 1.0),
     ('VerticalGrip', '原作垂直握把', unreal.ExtractionAttachmentSlot.GRIP, .8),
     ('Compensator', '原作枪口补偿器', unreal.ExtractionAttachmentSlot.MUZZLE, .85),
 ]:
-    mount = unreal.Transform(location=unreal.Vector(*mounts[ident]), rotation=unreal.Rotator(0, 90, 0))
+    mount = unreal.Transform(location=unreal.Vector(*mounts[ident]))
     definitions.append((ident, label, unreal.ExtractionItemKind.ATTACHMENT, (1, 1), 1,
                         {'attachment_slot': slot, 'scatter_scale': scatter,
                          'world_mesh': meshes[ident + '_3P'], 'first_person_mesh': meshes[ident + '_1P'],
-                         'mount': mount, 'first_person_mount': mount,
+                         'mount': mount, 'first_person_mount': optic_view_mount if ident == 'RedDot' else mount,
                          'adapter_mesh': adapter if ident != 'Compensator' else None,
-                         'adapter_mount': unreal.Transform(location=unreal.Vector(0, 12, 10.5) if ident == 'RedDot' else unreal.Vector(0, 34, 3),
+                         'adapter_mount': unreal.Transform(location=unreal.Vector(0, 12, 10.5) if ident == 'RedDot' else unreal.Vector(0, 34, 6),
                                                            scale=unreal.Vector(.03, .06, .01) if ident == 'RedDot' else unreal.Vector(.026, .09, .012)),
-                         'support_grip': unreal.Transform(location=unreal.Vector(4, 34, -3), rotation=unreal.Rotator(0, 0, 90)),
-                         'optic_aim_offset': unreal.Vector(0, 0, -2.5) if ident == 'RedDot' else unreal.Vector()}))
+                         # Target is the wrist: the closed palm center sits about 9.5 cm forward.
+                         'support_grip': unreal.Transform(location=unreal.Vector(2, 24.5, -.3), rotation=unreal.Rotator(yaw=90)),
+                         'optic_aim_offset': optic_offset if ident == 'RedDot' else unreal.Vector()}))
 for ident, label, kind, size, stack, extra in definitions:
     name = 'DA_Item_' + ident
     path = '/Game/Extraction/Items/' + name
@@ -186,6 +206,7 @@ for tier, position in [(2, (1490, 4660, 425)), (3, (-1140, -420, 425))]:
     crate.set_editor_property('label', f'装备补给箱 · {tier}级')
 assert levels.save_current_level()
 report = {'result': 'prepared', 'definitions': [r[0] for r in definitions],
+          'mounts': mounts, 'optic_view_mount': str(optic_view_mount), 'optic_aim_offset': str(optic_offset),
           'meshes': {k: {'asset': v.get_path_name(), 'bounds': str(v.get_bounding_box())} for k, v in meshes.items()},
           'sources': manifest,
           'visual_status': 'Mounts require runtime visual acceptance; no acceptance implied by import.'}

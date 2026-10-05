@@ -1,0 +1,141 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "A328C56E411C07AE10EC799A6A3C9FB1",
+			"instanceName": "DESKTOP-M9PA1SF-60608",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "GameViewer Virtual Display Adapter",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "D3D12_SM6",
+			"rHI": "D3D12 (SM6)",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.04-17.20.59",
+	"succeeded": 0,
+	"succeededWithWarnings": 1,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 62.747714996337891,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Lobby",
+			"fullTestPath": "BrokenEdge.Extraction.PIE.Lobby",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"A328C56E411C07AE10EC799A6A3C9FB1"
+			],
+			"duration": 62.747714996337891,
+			"dateTime": "2026.10.04-17.19.57",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogMaterial: Material /Game/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/Materials/MI_H_FutureTech_Tools_Box_01B_HD.MI_H_FutureTech_Tools_Box_01B_HD missing usage flag Nanite! Default Material will be used in game.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.04-17.20.09"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogMaterial:      The material instance will recompile every editor launch until resaved.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.04-17.20.09"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogMaterial: Material /Game/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/Materials/MI_H_FutureTech_Tools_Box_01_HD.MI_H_FutureTech_Tools_Box_01_HD missing usage flag Nanite! Default Material will be used in game.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.04-17.20.09"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogMaterial:      The material instance will recompile every editor launch until resaved.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.04-17.20.09"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogMaterial: Material /Game/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/Materials/MI_H_Building_FutureTech_AutomaticWorkshop_02_Decal_HD.MI_H_Building_FutureTech_AutomaticWorkshop_02_Decal_HD missing usage flag Nanite! Default Material will be used in game.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.04-17.20.09"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogMaterial:      The material instance will recompile every editor launch until resaved.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.04-17.20.09"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.04-17.20.30"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.04-17.20.57"
+				}
+			],
+			"warnings": 8,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

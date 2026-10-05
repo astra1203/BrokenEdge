@@ -1,0 +1,148 @@
+{
+  "started_utc": "2026-10-04T17:08:32.166478+00:00",
+  "result": "passed",
+  "stages": [
+    {
+      "name": "Spectator",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "spectator",
+        "--tag",
+        "Phase6ASpectator02"
+      ],
+      "started_utc": "2026-10-04T17:08:32.166478+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T17:11:05.679012+00:00"
+    },
+    {
+      "name": "Four",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "four",
+        "--tag",
+        "Phase6AFour01"
+      ],
+      "started_utc": "2026-10-04T17:11:05.680014+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T17:12:34.608412+00:00"
+    },
+    {
+      "name": "Settlement",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "settlement",
+        "--tag",
+        "Phase6ASettlement01"
+      ],
+      "started_utc": "2026-10-04T17:12:34.609413+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T17:13:53.372571+00:00"
+    },
+    {
+      "name": "Recovery",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "recovery",
+        "--unacked",
+        "--tag",
+        "Phase6ARecovery01"
+      ],
+      "started_utc": "2026-10-04T17:13:53.372571+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T17:15:42.796064+00:00"
+    },
+    {
+      "name": "crash-boundaries",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_storage_restarts.py",
+        "--tag",
+        "Phase6ACrash01"
+      ],
+      "started_utc": "2026-10-04T17:15:42.796575+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T17:19:29.666586+00:00"
+    },
+    {
+      "name": "pie-extraction",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_pie_lobby.py",
+        "--mode",
+        "Extraction",
+        "--players",
+        "3",
+        "--tag",
+        "Phase6APIE01"
+      ],
+      "started_utc": "2026-10-04T17:19:29.667586+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T17:21:00.483066+00:00"
+    },
+    {
+      "name": "pie-teardown",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_pie_teardown.py",
+        "--tag",
+        "Phase6ATeardown01"
+      ],
+      "started_utc": "2026-10-04T17:21:00.484066+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T17:21:37.148733+00:00"
+    },
+    {
+      "name": "pie-teams",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_pie_lobby.py",
+        "--mode",
+        "Teams",
+        "--tag",
+        "Phase6APIETeams01"
+      ],
+      "started_utc": "2026-10-04T17:21:37.149734+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T17:22:08.431863+00:00"
+    },
+    {
+      "name": "pie-ffa",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_pie_lobby.py",
+        "--mode",
+        "FreeForAll",
+        "--tag",
+        "Phase6APIEFFA01"
+      ],
+      "started_utc": "2026-10-04T17:22:08.432864+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T17:22:43.093450+00:00"
+    },
+    {
+      "name": "legacy-lan",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_legacy_lan.py",
+        "--tag",
+        "Phase6ALegacy01"
+      ],
+      "started_utc": "2026-10-04T17:22:43.094450+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T17:24:03.818507+00:00"
+    }
+  ],
+  "finished_utc": "2026-10-04T17:24:03.819507+00:00"
+}

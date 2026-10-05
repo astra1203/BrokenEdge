@@ -8,6 +8,7 @@
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
 #include "Engine/Engine.h"
+#include "Engine/StaticMesh.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/GameInstance.h"
 #include "Engine/GameViewportClient.h"
@@ -22,6 +23,9 @@
 #include "Components/Button.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Camera/CameraActor.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameSession.h"
 #include "Kismet/GameplayStatics.h"
@@ -87,6 +91,8 @@ public:
 					                ? Target->GetMesh()->GetBoneLocation(TEXT("head")) + FVector(0, 0, 8)
 					                : Target->GetActorLocation() + FVector(0, 0, 10);
 				if (!AimBone.IsNone()) Point = Target->GetMesh()->GetBoneLocation(AimBone);
+				if (bBodyCenterAim && Target->GetMesh()->GetBodyInstance(AimBone))
+					Point = Target->GetMesh()->GetCenterOfMass(AimBone);
 				PC->SetControlRotation((Point - Camera).Rotation());
 			}
 		}
@@ -208,6 +214,8 @@ public:
 					FString Bone;
 					Command->TryGetStringField(TEXT("bone"), Bone);
 					AimBone = FName(*Bone);
+					bBodyCenterAim = false;
+					Command->TryGetBoolField(TEXT("body_center"), bBodyCenterAim);
 					if (AimTarget.IsEmpty() && PC) PC->SetControlRotation(FRotator::ZeroRotator);
 				}
 				else if (Op == TEXT("fixture") && Role == TEXT("Server"))
@@ -327,6 +335,127 @@ public:
 						Mode->FinishRound(
 							TEXT("Automation fixture end"));
 				}
+				else if (Op == TEXT("visual_tune") && FParse::Param(FCommandLine::Get(),
+				                                                    TEXT("ExtractionVisualCalibration")))
+				{
+					// Isolated visual calibration only; never persists assets or modifies item outcomes.
+					auto* Definition = const_cast<UExtractionItemDefinition*>(UExtractionItemDefinition::Get(
+						TEXT("VerticalGrip")));
+					if (Definition)
+					{
+						const FTransform OldAdapter = Definition->AdapterMount;
+						auto ReadVector = [&](const TCHAR* Field)
+						{
+							const auto& Values = Command->GetArrayField(Field);
+							return FVector(Values[0]->AsNumber(), Values[1]->AsNumber(), Values[2]->AsNumber());
+						};
+						if (Command->HasField(TEXT("grip")))
+							Definition->SupportGrip.SetLocation(
+								ReadVector(TEXT("grip")));
+						if (Command->HasField(TEXT("rotation")))
+						{
+							const FVector Angles = ReadVector(TEXT("rotation"));
+							Definition->SupportGrip.SetRotation(FRotator(Angles.X, Angles.Y, Angles.Z).Quaternion());
+						}
+						if (Command->HasField(TEXT("mount")))
+						{
+							Definition->Mount.SetLocation(ReadVector(TEXT("mount")));
+							Definition->FirstPersonMount = Definition->Mount;
+						}
+						if (Command->HasField(TEXT("adapter")))
+							Definition->AdapterMount.SetLocation(
+								ReadVector(TEXT("adapter")));
+						for (TActorIterator<AWeapon> It(World); It; ++It)
+						{
+							TInlineComponentArray<UStaticMeshComponent*> Components(*It);
+							for (auto* Part : Components)
+							{
+								if (Part->GetStaticMesh() == Definition->WorldMesh)
+									Part->SetRelativeTransform(
+										Definition->Mount);
+								else if (Part->GetStaticMesh() == Definition->FirstPersonMesh)
+									Part->
+										SetRelativeTransform(Definition->FirstPersonMount);
+								else if (Part->GetStaticMesh() == Definition->AdapterMesh && Part->
+									GetRelativeTransform().Equals(OldAdapter))
+									Part->SetRelativeTransform(Definition->AdapterMount);
+							}
+						}
+					}
+				}
+				else if (Op == TEXT("pose"))
+				{
+					if (auto* Target = FindPawn(World, Command->GetStringField(TEXT("target"))); Target && Target->
+						GetEquippedWeapon())
+					{
+						auto Probe = MakeShared<FJsonObject>();
+						Probe->SetBoolField(TEXT("crouched"), Target->bIsCrouched);
+						auto WriteMesh = [&](const TCHAR* Name, USkeletalMeshComponent* Body,
+						                     USkeletalMeshComponent* WeaponMesh)
+						{
+							if (!Body || !WeaponMesh) return;
+							auto Bones = MakeShared<FJsonObject>();
+							for (int32 Index = 0; Index < Body->GetNumBones(); ++Index)
+							{
+								const FName Bone = Body->GetBoneName(Index);
+								if (!Bone.ToString().Contains(TEXT("LeftHand")) && Bone != TEXT("Head") && Bone != TEXT(
+										"Neck")
+									&& Bone != TEXT("RightShoulder") && Bone != TEXT("LeftShoulder") && Bone != TEXT(
+										"Spine2"))
+									continue;
+								const FTransform Local = Body->GetSocketTransform(Bone).GetRelativeTransform(
+									WeaponMesh->GetComponentTransform());
+								auto Value = MakeShared<FJsonObject>();
+								const FVector Position = Local.GetLocation();
+								Value->SetArrayField(TEXT("position"), {
+									                     MakeShared<FJsonValueNumber>(Position.X),
+									                     MakeShared<FJsonValueNumber>(Position.Y),
+									                     MakeShared<FJsonValueNumber>(Position.Z)
+								                     });
+								Value->SetStringField(TEXT("rotation"), Local.Rotator().ToString());
+								Value->SetStringField(TEXT("world_position"), Body->GetBoneLocation(Bone).ToString());
+								if (Body->GetBodyInstance(Bone)) Value->SetStringField(
+									TEXT("collision_center"), Body->GetCenterOfMass(Bone).ToString());
+								Bones->SetObjectField(Bone.ToString(), Value);
+							}
+							Probe->SetObjectField(Name, Bones);
+						};
+						WriteMesh(TEXT("world"), Target->GetMesh(), Target->GetEquippedWeapon()->GetWeaponMesh());
+						if (Target->IsLocallyControlled())
+							WriteMesh(
+								TEXT("first_person"), Target->GetFirstPersonMesh(), Target->GetFirstPersonWeaponMesh());
+						FString Output;
+						FJsonSerializer::Serialize(Probe, TJsonWriterFactory<>::Create(&Output));
+						FFileHelper::SaveStringToFile(
+							Output,
+							*(Folder / (Role + TEXT("-") + Command->GetStringField(TEXT("name")) + TEXT(
+								"-pose.json"))));
+					}
+				}
+				else if (Op == TEXT("camera") && PC)
+				{
+					const FString TargetName = Command->GetStringField(TEXT("target"));
+					if (TargetName.IsEmpty())
+					{
+						PC->SetViewTarget(PC->GetPawn());
+						if (TestCamera.IsValid()) TestCamera->Destroy();
+						TestCamera.Reset();
+					}
+					else if (auto* Target = FindPawn(World, TargetName); Target && Target->GetEquippedWeapon())
+					{
+						if (!TestCamera.IsValid()) TestCamera = World->SpawnActor<ACameraActor>();
+						const FTransform Transform = Target->GetEquippedWeapon()->GetWeaponMesh()->
+						                                     GetComponentTransform();
+						const auto& Offset = Command->GetArrayField(TEXT("offset"));
+						const FVector Center = Transform.TransformPosition(FVector(0, 25, 2));
+						const FVector Location = Center + Transform.TransformVectorNoScale(FVector(
+							Offset[0]->AsNumber(), Offset[1]->AsNumber(), Offset[2]->AsNumber()));
+						TestCamera->SetActorLocationAndRotation(Location, (Center - Location).Rotation());
+						TestCamera->GetCameraComponent()->SetFieldOfView(45.f);
+						PC->SetViewTarget(TestCamera.Get());
+					}
+					else Error = TEXT("Camera target has no equipped weapon");
+				}
 				else if (Op == TEXT("screenshot") && PC)
 					FScreenshotRequest::RequestScreenshot(
 						Folder / (Role + TEXT("-") + Command->GetStringField(TEXT("name")) + TEXT(".png")), true,
@@ -352,12 +481,14 @@ private:
 	double Started, LastWrite = 0, PulseEnd = 0;
 	int32 LastCommand = 0;
 	bool bHeadAim = false;
+	bool bBodyCenterAim = false;
 	FName AimBone;
 	FExtractionItemRequest LastItemRequest;
 	FExtractionStorageRequest LastStorageRequest;
 	FVector2D LastMouse = FVector2D::ZeroVector;
 	TSet<FKey> PressedMouse;
 	TWeakObjectPtr<AActor> TestOccluder;
+	TWeakObjectPtr<ACameraActor> TestCamera;
 
 	static void EquipmentRequest(const TSharedPtr<FJsonObject>& Command, FExtractionItemRequest& R)
 	{
@@ -888,6 +1019,24 @@ private:
 							              Weapon->GetWeaponMesh()->GetSocketLocation(TEXT("Hand_R"))));
 						Player->SetStringField(TEXT("weapon"), Weapon->GetName());
 						Player->SetStringField(TEXT("weapon_item"), Weapon->ExtractionItemId.ToString());
+						if (Character->IsLocallyControlled() && Character->GetFirstPersonMesh())
+							Player->SetNumberField(TEXT("fp_left_grip_distance"), FVector::Dist(
+								                       Character->GetFirstPersonMesh()->GetSocketLocation(
+									                       TEXT("LeftHand")),
+								                       Character->GetFirstPersonGripTarget(TEXT("LeftHandSocket")).
+								                                  GetLocation()));
+						TArray<TSharedPtr<FJsonValue>> Visuals;
+						TInlineComponentArray<UStaticMeshComponent*> MeshParts(Weapon);
+						for (const auto* Part : MeshParts)
+						{
+							auto Visual = MakeShared<FJsonObject>();
+							Visual->SetStringField(TEXT("mesh"), GetPathNameSafe(Part->GetStaticMesh()));
+							Visual->SetBoolField(TEXT("visible"), Part->IsVisible());
+							Visual->SetBoolField(TEXT("owner_only"), Part->bOnlyOwnerSee);
+							Visual->SetBoolField(TEXT("owner_hidden"), Part->bOwnerNoSee);
+							Visuals.Add(MakeShared<FJsonValueObject>(Visual));
+						}
+						Player->SetArrayField(TEXT("equipment_visuals"), Visuals);
 						Player->SetNumberField(TEXT("ammo"), Weapon->GetAmmo());
 						Player->SetStringField(TEXT("ammo_type"), Weapon->ExtractionAmmoType.ToString());
 						TArray<TSharedPtr<FJsonValue>> Parts;

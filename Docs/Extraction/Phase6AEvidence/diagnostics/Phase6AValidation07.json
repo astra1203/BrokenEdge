@@ -1,0 +1,36 @@
+{
+  "started_utc": "2026-10-04T16:48:49.735768+00:00",
+  "result": "failed",
+  "stages": [
+    {
+      "name": "InventoryNet",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "inventory",
+        "--tag",
+        "Phase6AInventoryNet02"
+      ],
+      "started_utc": "2026-10-04T16:48:49.735768+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T16:51:21.266067+00:00"
+    },
+    {
+      "name": "Combat",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "combat",
+        "--tag",
+        "Phase6ACombat01"
+      ],
+      "started_utc": "2026-10-04T16:51:21.267063+00:00",
+      "exit_code": 1,
+      "finished_utc": "2026-10-04T16:52:33.174312+00:00"
+    }
+  ]
+}

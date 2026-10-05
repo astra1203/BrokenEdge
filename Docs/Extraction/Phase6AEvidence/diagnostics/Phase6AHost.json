@@ -1,0 +1,42 @@
+﻿{
+    "CapturedUtc":  "2026-10-04T15:36:38.0673244Z",
+    "CPU":  {
+                "Name":  "AMD Ryzen 5 7500F 6-Core Processor             ",
+                "NumberOfCores":  6,
+                "NumberOfLogicalProcessors":  12
+            },
+    "RAMBytes":  33946230784,
+    "GPU":  [
+                {
+                    "Name":  "GameViewer Virtual Display Adapter",
+                    "DriverVersion":  "15.6.5.199"
+                },
+                {
+                    "Name":  "OrayIddDriver Device",
+                    "DriverVersion":  "17.50.19.949"
+                },
+                {
+                    "Name":  "NVIDIA GeForce RTX 4060 Ti",
+                    "DriverVersion":  "32.0.16.1692"
+                }
+            ],
+    "EditorBuild":  {
+                        "command":  [
+                                        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Build\\BatchFiles\\Build.bat",
+                                        "BrokenEdgeEditor",
+                                        "Win64",
+                                        "Development",
+                                        "-Project=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+                                        "-WaitMutex",
+                                        "-NoHotReloadFromIDE"
+                                    ],
+                        "head":  "7d29e41965e1f602d8f5e275754875b59dfef447",
+                        "started_utc":  "2026-10-04T15:21:54.176618+00:00",
+                        "pid":  4728,
+                        "exit_code":  0,
+                        "elapsed_seconds":  29.29700000002049
+                    },
+    "BuildRecovery":  "Saved/Extraction/Phase6ABuildRecovery01/Manifest.json",
+    "MaterialFilesChecked":  19,
+    "MaterialFilesChanged":  0
+}

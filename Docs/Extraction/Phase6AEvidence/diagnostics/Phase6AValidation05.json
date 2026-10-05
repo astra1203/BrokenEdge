@@ -1,0 +1,76 @@
+{
+  "started_utc": "2026-10-04T16:09:51.565718+00:00",
+  "result": "failed",
+  "stages": [
+    {
+      "name": "SixLag",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "equipment",
+        "--players",
+        "6",
+        "--lag",
+        "--tag",
+        "Phase6ASixLag02"
+      ],
+      "started_utc": "2026-10-04T16:09:51.565718+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T16:17:03.126442+00:00"
+    },
+    {
+      "name": "Squad",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "squad",
+        "--players",
+        "6",
+        "--tag",
+        "Phase6ASquad01"
+      ],
+      "started_utc": "2026-10-04T16:17:03.126442+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T16:20:15.329119+00:00"
+    },
+    {
+      "name": "SquadLag",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "squad",
+        "--players",
+        "6",
+        "--lag",
+        "--tag",
+        "Phase6ASquadLag01"
+      ],
+      "started_utc": "2026-10-04T16:20:15.330119+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T16:23:36.892726+00:00"
+    },
+    {
+      "name": "AI",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "pvpve",
+        "--players",
+        "6",
+        "--tag",
+        "Phase6AAI01"
+      ],
+      "started_utc": "2026-10-04T16:23:36.893726+00:00",
+      "exit_code": 1,
+      "finished_utc": "2026-10-04T16:26:44.623331+00:00"
+    }
+  ]
+}

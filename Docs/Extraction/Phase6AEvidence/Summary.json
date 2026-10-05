@@ -1,0 +1,387 @@
+{
+  "created_utc": "2026-10-04T17:25:37.436319+00:00",
+  "base_commit": "7d29e41965e1f602d8f5e275754875b59dfef447",
+  "engine": "C:/UnrealProjects/UnrealEngine-5.8.3-release",
+  "runs": [
+    {
+      "name": "compilation-editor",
+      "folder": "Saved/Extraction/Phase6AEditor08",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "package-server",
+      "folder": "Saved/Extraction/Phase6AServer02",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "package-client",
+      "folder": "Saved/Extraction/Phase6AClient02",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "equipment-assets",
+      "folder": "Saved/Extraction/Phase6AAssets05",
+      "report": "Run.json"
+    },
+    {
+      "name": "equipment-rules",
+      "folder": "Saved/Extraction/Phase6AEquipment02",
+      "report": "Run.json"
+    },
+    {
+      "name": "inventory-rules",
+      "folder": "Saved/Extraction/Phase6AInventory02",
+      "report": "Run.json"
+    },
+    {
+      "name": "persistence-rules",
+      "folder": "Saved/Extraction/Phase6APersistence02",
+      "report": "Run.json"
+    },
+    {
+      "name": "equipment-editor-two",
+      "folder": "Saved/Extraction/Phase6AEquipmentNet08",
+      "report": "Report.json"
+    },
+    {
+      "name": "equipment-six",
+      "folder": "Saved/Extraction/Phase6ASix04",
+      "report": "Report.json"
+    },
+    {
+      "name": "equipment-six-lag",
+      "folder": "Saved/Extraction/Phase6ASixLag02",
+      "report": "Report.json"
+    },
+    {
+      "name": "six-squad",
+      "folder": "Saved/Extraction/Phase6ASquad01",
+      "report": "Report.json"
+    },
+    {
+      "name": "six-squad-lag",
+      "folder": "Saved/Extraction/Phase6ASquadLag01",
+      "report": "Report.json"
+    },
+    {
+      "name": "six-ai",
+      "folder": "Saved/Extraction/Phase6AAI02",
+      "report": "Report.json"
+    },
+    {
+      "name": "six-ai-lag",
+      "folder": "Saved/Extraction/Phase6AAILag01",
+      "report": "Report.json"
+    },
+    {
+      "name": "six-lifecycle",
+      "folder": "Saved/Extraction/Phase6ALifecycle01",
+      "report": "Report.json"
+    },
+    {
+      "name": "inventory-network",
+      "folder": "Saved/Extraction/Phase6AInventoryNet02",
+      "report": "Report.json"
+    },
+    {
+      "name": "combat-network",
+      "folder": "Saved/Extraction/Phase6ACombat02",
+      "report": "Report.json"
+    },
+    {
+      "name": "spectator-network",
+      "folder": "Saved/Extraction/Phase6ASpectator02",
+      "report": "Report.json"
+    },
+    {
+      "name": "four-outcomes",
+      "folder": "Saved/Extraction/Phase6AFour01",
+      "report": "Report.json"
+    },
+    {
+      "name": "settlement-network",
+      "folder": "Saved/Extraction/Phase6ASettlement01",
+      "report": "Report.json"
+    },
+    {
+      "name": "recovery-network",
+      "folder": "Saved/Extraction/Phase6ARecovery01",
+      "report": "Report.json"
+    },
+    {
+      "name": "crash-boundaries",
+      "folder": "Saved/Extraction/Phase6ACrash01",
+      "report": "Report.json"
+    },
+    {
+      "name": "pie-extraction",
+      "folder": "Saved/Extraction/Phase6APIE01",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-teardown",
+      "folder": "Saved/Extraction/Phase6ATeardown01",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-teams",
+      "folder": "Saved/Extraction/Phase6APIETeams01",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-free-for-all",
+      "folder": "Saved/Extraction/Phase6APIEFFA01",
+      "report": "Run.json"
+    },
+    {
+      "name": "legacy-lan",
+      "folder": "Saved/Extraction/Phase6ALegacy01",
+      "report": "Report.json"
+    }
+  ],
+  "implementation_sha256": {
+    "Content/Extraction/Equipment/Compensator_1P/Muz_M-C_ARCompensator_081_1P_Rigid/Materials/Muz_M-C_ARCompensator_081.uasset": "d72555e62ab377b92f7be960f886b45c038d5070cdd1696808fa3be1a47cd539",
+    "Content/Extraction/Equipment/Compensator_1P/Muz_M-C_ARCompensator_081_1P_Rigid/StaticMeshes/Muz_M-C_ARCompensator_081_1P_Rigid.uasset": "5798d309d339c436afa53fa116ebe7c2aa9bd15e6041f72ca31b88597c6acb95",
+    "Content/Extraction/Equipment/Compensator_1P/Muz_M-C_ARCompensator_081_1P_Rigid/Textures/T_VMGen_BaseColorMap_2edb9fd94149d5917204142b06be0afd.uasset": "5eb408b5942224d0b5002d526171f7bd0e43e0aa8a169f472522b7b5be8d3075",
+    "Content/Extraction/Equipment/Compensator_3P/Muz_M-C_ARCompensator_081_3P_Rigid/Materials/Muz_M-C_ARCompensator_081.uasset": "4afc212d82acc67817c9b0724aee38d7614db79ae5fd2e5c4cc9dec7ca61b36a",
+    "Content/Extraction/Equipment/Compensator_3P/Muz_M-C_ARCompensator_081_3P_Rigid/StaticMeshes/Muz_M-C_ARCompensator_081_3P_Rigid.uasset": "f5cf657d9661e59e1d8ac55996ad216cc0211d3431ece259fe4f025de5d9245b",
+    "Content/Extraction/Equipment/Compensator_3P/Muz_M-C_ARCompensator_081_3P_Rigid/Textures/T_VMGen_BaseColorMap_2edb9fd94149d5917204142b06be0afd.uasset": "d51b6a45af7198588cbbbebdac37b3625b57d873c7b654cee66fd4204dbc6885",
+    "Content/Extraction/Equipment/Materials/M_AKAdapter.uasset": "87884dc57f56e18a00056b7600b24793c5a994b66bbee72bfdf7fb9d6b0787ce",
+    "Content/Extraction/Equipment/Materials/M_OpticGlass.uasset": "33f165e0be11dd374c2bf861f4ad729660aae41e98ece73aedfe29aca3bf92d7",
+    "Content/Extraction/Equipment/Materials/M_OpticReticle.uasset": "22e059298c3bc3caea7b743c0f6e986be58013dc07ec85d17ee8558067b408b1",
+    "Content/Extraction/Equipment/RedDot_1P/Sco_Re_Reddot_035_1P_Rigid/Materials/Sco_Re_Reddot_035.uasset": "c3151d3cb46e5908e2c4846f2fca5971a068bd3c312a534e71bde0afe15eb17a",
+    "Content/Extraction/Equipment/RedDot_1P/Sco_Re_Reddot_035_1P_Rigid/Materials/Sco_Re_Reddot_035_glass.uasset": "54b4be05be5ec8f6185169e4d6efd8a839f2a68bbbb244f175f7105668ca67af",
+    "Content/Extraction/Equipment/RedDot_1P/Sco_Re_Reddot_035_1P_Rigid/Materials/Sco_Re_Reddot_035_glass_Stained.uasset": "cf99db6b74fafb6125460b0c9a0a173f84020317bd02be06b5b2aec5ccc5c92e",
+    "Content/Extraction/Equipment/RedDot_1P/Sco_Re_Reddot_035_1P_Rigid/StaticMeshes/Sco_Re_Reddot_035_1P_Rigid.uasset": "92970c430e7ceb1122684afa4071b9556dc6b0e2bde2c3cb268c066529adad52",
+    "Content/Extraction/Equipment/RedDot_1P/Sco_Re_Reddot_035_1P_Rigid/Textures/T_VMGen_BaseColorMap_2b045ad1ce9fc408d7808326e09fada4.uasset": "59b598506cde6e89fb1e47c5ceb80b510880b3c4af4d8e084967870f947f9576",
+    "Content/Extraction/Equipment/RedDot_3P/Sco_Re_Reddot_035_3P_Rigid/Materials/Sco_Re_Reddot_035.uasset": "72d2bb955fa9a59cf190de1eb9768e808d0db0773d183c1a430e1a59fca7e9d5",
+    "Content/Extraction/Equipment/RedDot_3P/Sco_Re_Reddot_035_3P_Rigid/StaticMeshes/Sco_Re_Reddot_035_3P_Rigid.uasset": "9e8144c594c9a20c54a2327111f2657d009ce5bb41ebb37487c153443370dab2",
+    "Content/Extraction/Equipment/RedDot_3P/Sco_Re_Reddot_035_3P_Rigid/Textures/T_VMGen_BaseColorMap_2b045ad1ce9fc408d7808326e09fada4.uasset": "47bd6c0ba69f78a4cf4580f40207017423013b18d98d83058e3546b362f19ba6",
+    "Content/Extraction/Equipment/SM_AKAdapter.uasset": "452cc45bbf7346052ba38005322a2b381440c58c78f90c974122de7db0b4dfe5",
+    "Content/Extraction/Equipment/VerticalGrip_1P/FroG_Pic_Rvg_020_1P_Rigid/Materials/FroG_Pic_Rvg_020.uasset": "24e49e449df16ce5dcb4f7ab83143423463ed75f2fbe8332c9cafd913c0616c3",
+    "Content/Extraction/Equipment/VerticalGrip_1P/FroG_Pic_Rvg_020_1P_Rigid/StaticMeshes/FroG_Pic_Rvg_020_1P_Rigid.uasset": "352c07093ea6fcd37bc088c6ca23988ae47f31361d46bbe6d2291475468cb369",
+    "Content/Extraction/Equipment/VerticalGrip_1P/FroG_Pic_Rvg_020_1P_Rigid/Textures/T_VMGen_BaseColorMap_a3d582245263df0b29f0b21881eeb2f1.uasset": "ff1cf473bd7892a369d8d7a78f9fb636c91cb0e37c1540727fcd4661d386b5da",
+    "Content/Extraction/Equipment/VerticalGrip_3P/FroG_Pic_Rvg_020_3P_Rigid/Materials/FroG_Pic_Rvg_020.uasset": "9c682a8d92899fc047d4cc5c2b43a94697f0f497212bf94307720b6d2aa423b2",
+    "Content/Extraction/Equipment/VerticalGrip_3P/FroG_Pic_Rvg_020_3P_Rigid/StaticMeshes/FroG_Pic_Rvg_020_3P_Rigid.uasset": "4964d67dd21b90a93f529d69a70c1792476a066572d88d049369f69df78eaf39",
+    "Content/Extraction/Equipment/VerticalGrip_3P/FroG_Pic_Rvg_020_3P_Rigid/Textures/T_VMGen_BaseColorMap_a3d582245263df0b29f0b21881eeb2f1.uasset": "aaa3d83b3ea6040b54b52a01485dee73c459c6948a806c304df1f68bcc616457",
+    "Content/Extraction/Items/DA_Item_Ammo.uasset": "250b835c89da46dd7332f3383b91849b7d7ef68bdbead0fbd9f2be70cce4d65c",
+    "Content/Extraction/Items/DA_Item_AmmoAP.uasset": "23089cfc0ba2790707f573ecf3e4f2b09135930331cb6b564e535949f9cd9d3e",
+    "Content/Extraction/Items/DA_Item_Bandage.uasset": "6afd90e12905f5e63dfa5f2bc127bdde775b43484c34b3f5dac2af06740c5175",
+    "Content/Extraction/Items/DA_Item_Compensator.uasset": "c514197c1b39b6b7f80cf3cb1bf050aed98c136d8dddec00dda48e23c16c594b",
+    "Content/Extraction/Items/DA_Item_Helmet2.uasset": "d9acba78657d7a8bff22a9c751c92f021aa3670ebd05f864851aff2073216e31",
+    "Content/Extraction/Items/DA_Item_Helmet3.uasset": "96c9ab08f1e917e879c2eccc9ef0e4f590f86fca1325a13e9c0d01fad7bf147e",
+    "Content/Extraction/Items/DA_Item_RedDot.uasset": "43fe7e2b04883eb67da1198871b759f9dbb8727fae3632d45f8c3462ad6cfd15",
+    "Content/Extraction/Items/DA_Item_Splint.uasset": "19594e91c1aabcfb09ba204ac97f289faa7939816beb52bc84892b55cd123c9c",
+    "Content/Extraction/Items/DA_Item_VerticalGrip.uasset": "48f78dcc3f80837844e6d02e2acc6f060160670e6d1839ed395bf93313375002",
+    "Content/Extraction/Items/DA_Item_Vest2.uasset": "c8bcd16bde613cd667f0c7f116f8fbda5789e97c085e2f57d4bcde034c82cd7e",
+    "Content/Extraction/Items/DA_Item_Vest3.uasset": "8562c3c97f8f1ebc2d057fddcb8a532bae8153a0a69e42443fe155976627ea8f",
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "84bb6090b74be663bf417ed47e91d527840700c517b41813a5f09965ecae015d",
+    "Scripts/Extraction/archive_evidence.py": "7b92625120449a1d7987bfd9960b357cf15bef664e20a1e1f4b9397fe51322b0",
+    "Scripts/Extraction/equipment_scenarios.py": "f7979af3983ba206cc1a4afb7e3ed2ca6ce90ca55c12f0713d9c4fd0858c6efa",
+    "Scripts/Extraction/inventory_scenarios.py": "84207ac2067686608f18b592117782685bafc66cfb651000cc76429c735eee34",
+    "Scripts/Extraction/phase5_scenarios.py": "7a61c9ef773b46ac522b710ab2282372d50eae40a334a9353ac2534c9b6d1487",
+    "Scripts/Extraction/prepare_phase6a.py": "816793b367c3fbb22d9edddd5a044efe463597e7c735d04422040b17828c5c33",
+    "Scripts/Extraction/run_network.py": "0cebde0068500751dd25959bf15c699248f1602be4af8b51ba0e8c88197b1786",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "91dce7130bbbbed42fea74d4162a0a1c26c553d67b5c266e75b1cd08228885a9"
+  },
+  "packages": {
+    "Packaged/Client/Windows/BrokenEdge.exe": {
+      "size": 173568,
+      "sha256": "061bdd6d6c67ab6f19e80c1cc06a9aaa8ad959bb767871d76b5bed6790e52c34"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe": {
+      "size": 337644544,
+      "sha256": "21981b4267869947c540bafb07d45c073557c00d971c7ccb36ba220fe88d8e3b"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.pak": {
+      "size": 11607881,
+      "sha256": "8e641e60fe91a0d78cc228e5dc8db533319dae9d9aef7033c85da736ec4175b0"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.ucas": {
+      "size": 702879664,
+      "sha256": "0cb5cb36ca9a57e6bc51e193ba6050ae448cbf1950a4885b7d97851e6c1f5079"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.utoc": {
+      "size": 922036,
+      "sha256": "878ea2fd8ebc4c1523230333b3487cb8124f9b433936b6468885159129223076"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3354784,
+      "sha256": "4074366c6ed1561f1935756c575bfa38f8ef5f92cda01567587d5b5ef503dda7"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "e833547e7c776e32fd39b6247374e7ec7cf43b0ea7cd4a604c6680ce83a39c42"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdgeServer.exe": {
+      "size": 173568,
+      "sha256": "e9fa4aaa0667e5a6b5d24d86c95d7c126211a48deebb4a9b5b4dee4cac76c631"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe": {
+      "size": 317756928,
+      "sha256": "c7a279bf0918357cc01628425f65f723b74cd6866e611727f72b4e4ca5d91130"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.pak": {
+      "size": 10579743,
+      "sha256": "651484b05563c806f7be77b848a21b47ecbc3e70e5b5b01a0273ee1e1e3e5944"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.ucas": {
+      "size": 120853920,
+      "sha256": "ece4d198f309ebf6d44f7988d5c6f3409b84d7855fce20a316bc1f55642fdadf"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.utoc": {
+      "size": 432696,
+      "sha256": "c1bc310cb0daf312dd41214c9c4b7cacddbcb8a79bd736ced563eca1f52ac74c"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3354784,
+      "sha256": "4074366c6ed1561f1935756c575bfa38f8ef5f92cda01567587d5b5ef503dda7"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "e833547e7c776e32fd39b6247374e7ec7cf43b0ea7cd4a604c6680ce83a39c42"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    }
+  },
+  "review": {
+    "scope": "UE 5.8.3 Development, OnlineSubsystemNull, same host; no Shipping, Internet or capacity acceptance.",
+    "network": [
+      {
+        "name": "equipment-six",
+        "tag": "Phase6ASix04",
+        "checks": 131
+      },
+      {
+        "name": "equipment-six-lag",
+        "tag": "Phase6ASixLag02",
+        "checks": 133
+      },
+      {
+        "name": "six-squad",
+        "tag": "Phase6ASquad01",
+        "checks": 72
+      },
+      {
+        "name": "six-squad-lag",
+        "tag": "Phase6ASquadLag01",
+        "checks": 73
+      },
+      {
+        "name": "six-ai",
+        "tag": "Phase6AAI02",
+        "checks": 57
+      },
+      {
+        "name": "six-ai-lag",
+        "tag": "Phase6AAILag01",
+        "checks": 58
+      },
+      {
+        "name": "six-lifecycle",
+        "tag": "Phase6ALifecycle01",
+        "checks": 108
+      },
+      {
+        "name": "inventory-network",
+        "tag": "Phase6AInventoryNet02",
+        "checks": 93
+      },
+      {
+        "name": "combat-network",
+        "tag": "Phase6ACombat02",
+        "checks": 62
+      },
+      {
+        "name": "spectator-network",
+        "tag": "Phase6ASpectator02",
+        "checks": 98
+      },
+      {
+        "name": "four-outcomes",
+        "tag": "Phase6AFour01",
+        "checks": 38
+      },
+      {
+        "name": "settlement-network",
+        "tag": "Phase6ASettlement01",
+        "checks": 39
+      },
+      {
+        "name": "recovery-network",
+        "tag": "Phase6ARecovery01",
+        "checks": 38
+      }
+    ],
+    "equipment_fixture": "Six humans and four live AI, patrol arrival proved before moving guards away for isolated equipment damage comparison. Separate PVPVE runs cover AI combat.",
+    "bullet_fixture": "Real input and server bullet traces. Crouched helmet target uses physical head body center; expected 16 HP remains unchanged. No assigned armor damage or trauma result.",
+    "medical_interrupt_fixture": "SixLag01 fired after the three-second bandage completed. Prepare shooter aim before using bandage, preserve its actual active snapshot, fire immediately, and serialize the snapshot with the post-shot checks. Duration and consumption rules unchanged.",
+    "ai_fixture": "Phase6A bullets bypass the old shield, so the old PVPVE driver allowed lethal bursts while serializing observation snapshots. Record the actual first hit and reacquisition in memory, end the burst through ordinary position/ammo fixtures, and serialize afterward. Isolate the separate real-bullet death/loot sample by approaching the guard from behind.",
+    "inventory_fixture": "The old fixed 40 HP expectation after waiting three seconds ignored new bleeding. Verify real hit cancellation and unchanged medical count first, then ongoing bleeding without healing. Reset trauma only when arranging the next independent input-interruption baseline.",
+    "combat_fixture": "The independent 20 HP lethal reload-interruption baseline clears trauma left by the preceding headshot sample, preventing an unrelated bleed tick from changing the required 20 HP bullet result.",
+    "headshot_assertion": "When bleeding leaves less than 40 HP, a headshot health loss is capped by the observed remaining HP. Require actual Head bone classification in addition to the capped amount; a low-health body hit cannot satisfy a headshot assertion.",
+    "visual": {
+      "result": "passed",
+      "run": "Phase6ASix04",
+      "method": "Direct visual inspection of captured 1280x720 Development client frames, combined with runtime component ownership and visibility assertions. Static samples do not claim exhaustive animation-frame coverage.",
+      "reviewed_images": {
+        "B-equipment-hip.png": "Owner rifle and mounted optic visible; no separate floating owner/world duplicates in the sample.",
+        "B-equipment-ads.png": "Red point visible inside the optic at viewport center; actual input shots separately verify server bullet outcomes.",
+        "A-equipment-remote-front.png": "Fingers surround the vertical grip; support adapter contacts the fore-end; muzzle attachment remains on barrel.",
+        "A-equipment-remote-left.png": "Wrist, palm and curled fingers follow the support grip; adapter contacts the underside of the fore-end.",
+        "B-equipment-reload.png": "Reload animation sample retains mounted attachments and moves the support hand; normal action motion blur is present.",
+        "B-equipment-swap-back.png": "Swap action sampled with rifle returning into view; no detached attachment ghost visible. Peer inventory assertions verify final assembled identity.",
+        "B-equipment-dropped.png": "Owner weapon and attachments disappear together; unarmed HUD and pickup prompt are visible.",
+        "B-equipment-inventory.png": "Ordinary/AP labels fit single cells; armor durability and three attachments are readable.",
+        "B-equipment-stash.png": "Extracted AP rifle shows remaining ammunition and two attached parts after the original optic is detached in stash. Grid and equipment slots remain legible. Single-cell stash labels use the existing compact display."
+      },
+      "calibration": {
+        "support_wrist_cm": [
+          2,
+          24.5,
+          -0.3
+        ],
+        "grip_mount_cm": [
+          0,
+          34,
+          5.5
+        ],
+        "grip_adapter_cm": [
+          0,
+          34,
+          6
+        ],
+        "evidence": "Development pose snapshots established that the palm center is about 9.5 cm forward of the wrist. Head collision center is about 10 cm above the Head bone origin in the sampled crouch pose; aiming now uses the physical center."
+      },
+      "limits": "Original rigid mesh geometry and available base-color maps only. Full original PBR and finished helmet/vest pickup art are outside this phase.",
+      "weak_network_review": {
+        "images": [
+          "B-equipment-ads.png",
+          "A-equipment-remote-front.png"
+        ],
+        "run": "Phase6ASixLag02",
+        "observation": "Same centered optic point and grip contact confirmed in packet-simulation captures; runtime ownership checks passed."
+      }
+    },
+    "previous_failures": "Six01: AI interrupted crate acquisition; isolate equipment comparison after patrol proof. Six02: aiming at head bone origin hit shoulder; native pose snapshots and actual collision center corrected aim. Six03: AI wounded the second-round spawn while the driver waited for every client snapshot; arrange player positions immediately when authority starts each round and require explicitly present healthy pawn fields. Editor04: C disk full; generated engine test intermediates reversibly moved to Saved/Extraction/Phase6ABuildRecovery01 with manifest.",
+    "limitations": "Original meshes and base-color textures; complete original PBR not claimed. Helmet and vest world pickup meshes remain approved prototypes.",
+    "git": "No commit or push in this continuation."
+  }
+}

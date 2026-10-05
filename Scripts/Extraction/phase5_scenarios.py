@@ -233,10 +233,16 @@ def pvpve(g):
     send('Server', 'occluder', enabled=False)
     place('EX_A', [1400, 4500, 500], shield=100)
     place(target, [1400, 3900, 500], yaw=90)
-    check('Guard perceives and shoots a human', lambda: guard(target).get('shots', 0) > 0 and player('Server', 'A').get('health', 100) < 100, 12)
+    wait(lambda: guard(target).get('shots', 0) > 0 and player('Server', 'A').get('health', 100) < 100,
+         'guard lands a real hit', 12)
+    first_hit = player('Server', 'A').copy()
+    g['report']['ai_first_hit'] = first_hit
+    # Phase 6A bullets bypass the legacy shield. End the burst before writing
+    # the full report so its serialization cannot down the test participant.
     send('Server', 'ammo', target=target, value=0)
     aim_at('A', target)
     send('A', 'ability', kind='smoke')
+    check('Guard perceives and shoots a human', lambda: first_hit['health'] < 100 and first_hit['life'] == 0)
     check('Smoke deployment under AI combat succeeds', lambda: len(state('Server').get('smokes', [])) == 1, 5)
     centre = state('Server')['smokes'][0]['position']
     # Stay inside the actual cloud while the guard searches and moves.
@@ -260,11 +266,17 @@ def pvpve(g):
     shots = guard(target)['shots']
     place('EX_A', [1400, 4500, 500], shield=100)
     place(target, [1400, 3900, 500], yaw=90)
-    check('AI reacquires after smoke expires', lambda: guard(target)['shots'] > shots, 12)
+    wait(lambda: guard(target)['shots'] > shots, 'AI reacquires after smoke expires', 12)
+    reacquired = guard(target).copy()
+    g['report']['ai_reacquisition'] = reacquired
+    place('EX_A', [5700, 5000, 180])
+    check('AI reacquires after smoke expires', lambda: reacquired['shots'] > shots)
     check('Guard reload consumes its own reserve ammunition', lambda: sum(i['quantity'] for i in guard(target)['inventory']['items'] if i['definition'] == 'Ammo') < 60)
     send('Server', 'ammo', target=target, value=0)
-    place(target, [1400, 4100, 500], health=20, yaw=90)
-    place('EX_A', [1400, 4500, 500], shield=100)
+    # The separate death/loot sample approaches from behind. Perception and
+    # return fire were already observed above; health damage is still a bullet.
+    place(target, [1400, 4200, 500], health=20, yaw=90)
+    place('EX_A', [1400, 3900, 500], shield=100)
     aim_at('A', target)
     gun = next(i for i in guard(target)['inventory']['items'] if i['definition'] == 'AK')
     for _ in range(10):

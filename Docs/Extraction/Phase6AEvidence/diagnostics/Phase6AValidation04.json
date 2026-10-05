@@ -1,0 +1,41 @@
+{
+  "started_utc": "2026-10-04T15:48:56.693046+00:00",
+  "result": "failed",
+  "stages": [
+    {
+      "name": "Six",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "equipment",
+        "--players",
+        "6",
+        "--tag",
+        "Phase6ASix04"
+      ],
+      "started_utc": "2026-10-04T15:48:56.693046+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T15:55:53.735850+00:00"
+    },
+    {
+      "name": "SixLag",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "equipment",
+        "--players",
+        "6",
+        "--lag",
+        "--tag",
+        "Phase6ASixLag01"
+      ],
+      "started_utc": "2026-10-04T15:55:53.736852+00:00",
+      "exit_code": 1,
+      "finished_utc": "2026-10-04T16:01:16.997329+00:00"
+    }
+  ]
+}

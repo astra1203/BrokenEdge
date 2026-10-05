@@ -1,0 +1,73 @@
+{
+  "started_utc": "2026-10-04T16:29:07.735372+00:00",
+  "result": "failed",
+  "stages": [
+    {
+      "name": "AI",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "pvpve",
+        "--players",
+        "6",
+        "--tag",
+        "Phase6AAI02"
+      ],
+      "started_utc": "2026-10-04T16:29:07.735372+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T16:31:54.130528+00:00"
+    },
+    {
+      "name": "AILag",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "pvpve",
+        "--players",
+        "6",
+        "--lag",
+        "--tag",
+        "Phase6AAILag01"
+      ],
+      "started_utc": "2026-10-04T16:31:54.130528+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T16:34:44.099857+00:00"
+    },
+    {
+      "name": "Lifecycle",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "lifecycle",
+        "--players",
+        "6",
+        "--tag",
+        "Phase6ALifecycle01"
+      ],
+      "started_utc": "2026-10-04T16:34:44.100854+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T16:40:25.002119+00:00"
+    },
+    {
+      "name": "InventoryNet",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "inventory",
+        "--tag",
+        "Phase6AInventoryNet01"
+      ],
+      "started_utc": "2026-10-04T16:40:25.002119+00:00",
+      "exit_code": 1,
+      "finished_utc": "2026-10-04T16:42:32.642582+00:00"
+    }
+  ]
+}

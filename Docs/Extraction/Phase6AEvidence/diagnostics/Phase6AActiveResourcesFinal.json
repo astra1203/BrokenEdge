@@ -1,0 +1,44 @@
+﻿{
+    "CapturedUtc":  "2026-10-04T16:00:15.3941800Z",
+    "Run":  "Phase6ASixLag01",
+    "Boundary":  "six packaged clients active in equipment raid with packet simulation",
+    "FreePhysicalMemoryKB":  6332596,
+    "Processes":  [
+                      {
+                          "ProcessId":  3064,
+                          "Name":  "BrokenEdgeServer.exe",
+                          "CommandLine":  "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Server\\WindowsServer\\BrokenEdge\\Binaries\\Win64\\BrokenEdgeServer.exe /Game/Maps/Lobby -nosound -unattended -nosplash -NoLoadingScreen -ExtractionGuards=4 -MatchType=Extraction -NumPublicConnections=6 -MinPlayersToStart=6 -port=27777 -ExtractionRoundSeconds=600 -ExtractionTestRole=Server -ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01 -ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\Store -ExtractionProfile=Phase6ASixLag01_Server \"-ExecCmds=t.MaxFPS 30,sg.ShadowQuality 0,sg.EffectsQuality 1,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver\" \"-TestExit=Automation Test Queue Empty\" -abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\Server.log -nullrhi"
+                      },
+                      {
+                          "ProcessId":  48844,
+                          "Name":  "BrokenEdge.exe",
+                          "CommandLine":  "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe /Game/Maps/Lobby -nosound -unattended -nosplash -NoLoadingScreen -ExtractionGuards=4 -MatchType=Extraction -NumPublicConnections=6 -MinPlayersToStart=6 -port=27777 -ExtractionRoundSeconds=600 -ExtractionTestRole=A -ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01 -ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\Store -ExtractionProfile=Phase6ASixLag01_A \"-ExecCmds=t.MaxFPS 30,sg.ShadowQuality 0,sg.EffectsQuality 1,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver\" \"-TestExit=Automation Test Queue Empty\" -abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\A.log -RenderOffscreen -windowed -ResX=1280 -ResY=720"
+                      },
+                      {
+                          "ProcessId":  53808,
+                          "Name":  "BrokenEdge.exe",
+                          "CommandLine":  "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe /Game/Maps/Lobby -nosound -unattended -nosplash -NoLoadingScreen -ExtractionGuards=4 -MatchType=Extraction -NumPublicConnections=6 -MinPlayersToStart=6 -port=27777 -ExtractionRoundSeconds=600 -ExtractionTestRole=B -ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01 -ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\Store -ExtractionProfile=Phase6ASixLag01_B \"-ExecCmds=t.MaxFPS 30,sg.ShadowQuality 0,sg.EffectsQuality 1,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver\" \"-TestExit=Automation Test Queue Empty\" -abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\B.log -RenderOffscreen -windowed -ResX=1280 -ResY=720"
+                      },
+                      {
+                          "ProcessId":  52104,
+                          "Name":  "BrokenEdge.exe",
+                          "CommandLine":  "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe /Game/Maps/Lobby -nosound -unattended -nosplash -NoLoadingScreen -ExtractionGuards=4 -MatchType=Extraction -NumPublicConnections=6 -MinPlayersToStart=6 -port=27777 -ExtractionRoundSeconds=600 -ExtractionTestRole=C -ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01 -ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\Store -ExtractionProfile=Phase6ASixLag01_C \"-ExecCmds=t.MaxFPS 30,sg.ShadowQuality 0,sg.EffectsQuality 1,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver\" \"-TestExit=Automation Test Queue Empty\" -abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\C.log -RenderOffscreen -windowed -ResX=1280 -ResY=720"
+                      },
+                      {
+                          "ProcessId":  29676,
+                          "Name":  "BrokenEdge.exe",
+                          "CommandLine":  "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe /Game/Maps/Lobby -nosound -unattended -nosplash -NoLoadingScreen -ExtractionGuards=4 -MatchType=Extraction -NumPublicConnections=6 -MinPlayersToStart=6 -port=27777 -ExtractionRoundSeconds=600 -ExtractionTestRole=D -ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01 -ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\Store -ExtractionProfile=Phase6ASixLag01_D \"-ExecCmds=t.MaxFPS 30,sg.ShadowQuality 0,sg.EffectsQuality 1,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver\" \"-TestExit=Automation Test Queue Empty\" -abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\D.log -RenderOffscreen -windowed -ResX=1280 -ResY=720"
+                      },
+                      {
+                          "ProcessId":  9836,
+                          "Name":  "BrokenEdge.exe",
+                          "CommandLine":  "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe /Game/Maps/Lobby -nosound -unattended -nosplash -NoLoadingScreen -ExtractionGuards=4 -MatchType=Extraction -NumPublicConnections=6 -MinPlayersToStart=6 -port=27777 -ExtractionRoundSeconds=600 -ExtractionTestRole=E -ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01 -ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\Store -ExtractionProfile=Phase6ASixLag01_E \"-ExecCmds=t.MaxFPS 30,sg.ShadowQuality 0,sg.EffectsQuality 1,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver\" \"-TestExit=Automation Test Queue Empty\" -abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\E.log -RenderOffscreen -windowed -ResX=1280 -ResY=720"
+                      },
+                      {
+                          "ProcessId":  56400,
+                          "Name":  "BrokenEdge.exe",
+                          "CommandLine":  "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe /Game/Maps/Lobby -nosound -unattended -nosplash -NoLoadingScreen -ExtractionGuards=4 -MatchType=Extraction -NumPublicConnections=6 -MinPlayersToStart=6 -port=27777 -ExtractionRoundSeconds=600 -ExtractionTestRole=F -ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01 -ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\Store -ExtractionProfile=Phase6ASixLag01_F \"-ExecCmds=t.MaxFPS 30,sg.ShadowQuality 0,sg.EffectsQuality 1,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver\" \"-TestExit=Automation Test Queue Empty\" -abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASixLag01\\F.log -RenderOffscreen -windowed -ResX=1280 -ResY=720"
+                      }
+                  ],
+    "Note":  "Single startup snapshot, not a capacity or performance benchmark"
+}

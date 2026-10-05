@@ -1,0 +1,43 @@
+﻿{
+    "result":  "passed",
+    "run":  "Phase6ASix04",
+    "method":  "Direct visual inspection of captured 1280x720 Development client frames, combined with runtime component ownership and visibility assertions. Static samples do not claim exhaustive animation-frame coverage.",
+    "reviewed_images":  {
+                            "B-equipment-hip.png":  "Owner rifle and mounted optic visible; no separate floating owner/world duplicates in the sample.",
+                            "B-equipment-ads.png":  "Red point visible inside the optic at viewport center; actual input shots separately verify server bullet outcomes.",
+                            "A-equipment-remote-front.png":  "Fingers surround the vertical grip; support adapter contacts the fore-end; muzzle attachment remains on barrel.",
+                            "A-equipment-remote-left.png":  "Wrist, palm and curled fingers follow the support grip; adapter contacts the underside of the fore-end.",
+                            "B-equipment-reload.png":  "Reload animation sample retains mounted attachments and moves the support hand; normal action motion blur is present.",
+                            "B-equipment-swap-back.png":  "Swap action sampled with rifle returning into view; no detached attachment ghost visible. Peer inventory assertions verify final assembled identity.",
+                            "B-equipment-dropped.png":  "Owner weapon and attachments disappear together; unarmed HUD and pickup prompt are visible.",
+                            "B-equipment-inventory.png":  "Ordinary/AP labels fit single cells; armor durability and three attachments are readable.",
+                            "B-equipment-stash.png":  "Extracted AP rifle shows remaining ammunition and two attached parts after the original optic is detached in stash. Grid and equipment slots remain legible. Single-cell stash labels use the existing compact display."
+                        },
+    "calibration":  {
+                        "support_wrist_cm":  [
+                                                 2,
+                                                 24.5,
+                                                 -0.3
+                                             ],
+                        "grip_mount_cm":  [
+                                              0,
+                                              34,
+                                              5.5
+                                          ],
+                        "grip_adapter_cm":  [
+                                                0,
+                                                34,
+                                                6
+                                            ],
+                        "evidence":  "Development pose snapshots established that the palm center is about 9.5 cm forward of the wrist. Head collision center is about 10 cm above the Head bone origin in the sampled crouch pose; aiming now uses the physical center."
+                    },
+    "limits":  "Original rigid mesh geometry and available base-color maps only. Full original PBR and finished helmet/vest pickup art are outside this phase.",
+    "weak_network_review":  {
+                                "images":  [
+                                               "B-equipment-ads.png",
+                                               "A-equipment-remote-front.png"
+                                           ],
+                                "run":  "Phase6ASixLag02",
+                                "observation":  "Same centered optic point and grip contact confirmed in packet-simulation captures; runtime ownership checks passed."
+                            }
+}

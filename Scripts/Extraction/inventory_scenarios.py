@@ -33,7 +33,8 @@ def run_inventory_suite(api):
         wait(lambda: not player(role, role).get('inventory_open'), role + ' closes inventory')
 
     def place(players):
-        send('Server', 'fixture', players=[{'name': 'EX_' + role, 'position': pos, 'health': hp, 'shield': shield}
+        send('Server', 'fixture', players=[{'name': 'EX_' + role, 'position': pos, 'health': hp, 'shield': shield,
+                                           'clear_trauma': True}
                                           for role, pos, hp, shield in players])
         time.sleep(.35)
 
@@ -249,8 +250,14 @@ def run_inventory_suite(api):
     wait(lambda: player('Server', 'A')['medical_end'] > 0, 'damage interruption started')
     api['aim']('B', 'A')
     api['shot']('B', 'A', 20)
+    check('Real hit cancels healing with no consumption', lambda: player('Server', 'A')['medical_end'] == 0 and total('Medkit') == before_meds)
+    wounded_health = player('Server', 'A')['health']
     time.sleep(3.2)
-    check('Real hit cancels healing with no consumption', lambda: player('Server', 'A')['medical_end'] == 0 and player('Server', 'A')['health'] == 40 and total('Medkit') == before_meds)
+    check('Cancelled healing stays cancelled while the new wound bleeds', lambda:
+          player('Server', 'A')['medical_end'] == 0 and total('Medkit') == before_meds
+          and player('Server', 'A')['bleeding'] and 0 < player('Server', 'A')['health'] < wounded_health)
+    # Each remaining input-interruption case starts from an independent baseline.
+    place([('A', [1400, 4200, 500], 40, 0)])
     send('A', 'medical')
     wait(lambda: player('Server', 'A')['medical_end'] > 0, 'fire interruption started')
     send('A', 'aim', target='', head=False)

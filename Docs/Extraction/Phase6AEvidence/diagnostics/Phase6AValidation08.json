@@ -1,0 +1,36 @@
+{
+  "started_utc": "2026-10-04T16:54:57.410774+00:00",
+  "result": "failed",
+  "stages": [
+    {
+      "name": "Combat",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "combat",
+        "--tag",
+        "Phase6ACombat02"
+      ],
+      "started_utc": "2026-10-04T16:54:57.410774+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-04T16:56:27.843884+00:00"
+    },
+    {
+      "name": "Spectator",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--packaged",
+        "--scenario",
+        "spectator",
+        "--tag",
+        "Phase6ASpectator01"
+      ],
+      "started_utc": "2026-10-04T16:56:27.844884+00:00",
+      "exit_code": 1,
+      "finished_utc": "2026-10-04T16:58:19.184717+00:00"
+    }
+  ]
+}

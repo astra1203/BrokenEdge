@@ -1,0 +1,22 @@
+{
+  "task": "inventory",
+  "started_utc": "2026-10-04T15:07:36.050904+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6AInventory02\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Inventory",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6AInventory02\\Automation"
+  ],
+  "pid": 26240,
+  "exit_code": 0,
+  "successful_tests": 3,
+  "result": "passed",
+  "finished_utc": "2026-10-04T15:07:56.244760+00:00"
+}

@@ -119,12 +119,14 @@ def launch(role):
                 '-ExtractionGuards=' + ('4' if args.scenario == 'pvpve' or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
                 '-MatchType=Extraction', '-NumPublicConnections=' + str(len(ROLES)),
                 '-MinPlayersToStart=' + str(len(ROLES)), '-port=27777',
-                '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '600'),
+                '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '1200' if args.debug_hold else '600'),
                 '-ExtractionTestRole=' + role, '-ExtractionTestDir=' + str(OUT),
                 '-ExtractionStore=' + str(OUT / 'Store'), '-ExtractionProfile=' + args.tag + '_' + ('A' if args.scenario == 'identity' and role == 'B' else role),
-                '-ExecCmds=' + ('t.MaxFPS 30,sg.ShadowQuality 0,sg.EffectsQuality 1,' if len(ROLES) == 6 else '') + 'BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
+                '-ExecCmds=t.MaxFPS 30,' + ('sg.ShadowQuality 0,sg.EffectsQuality 1,' if len(ROLES) == 6 else '') + 'BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
                 '-TestExit=Automation Test Queue Empty', '-abslog=' + str(OUT / (role + '.log'))]
     command += ['-nullrhi'] if role == 'Server' else ['-RenderOffscreen', '-windowed', '-ResX=1280', '-ResY=720']
+    if args.debug_hold and args.scenario == 'equipment':
+        command += ['-ExtractionVisualCalibration']
     if role == 'Server' and args.unacked:
         command += ['-ExtractionHoldSettlement=' + str(OUT / 'SettlementCommitted.txt')]
     if role == 'Server' and args.scenario == 'lifecycle':
@@ -174,8 +176,17 @@ def begin_round():
         lobby(globals())
     for role in ROLES:
         send(role, 'ready')
+    if args.scenario == 'equipment':
+        # Arrange the comparison as soon as authority starts the round. Waiting
+        # for all rendered clients first lets live AI wound a fresh spawn before
+        # the test's position fixture, especially on the second travel.
+        wait(lambda: state('Server').get('phase') == 1 and all(
+            'Stinger' in player('Server', r).get('pawn_class', '') for r in ROLES),
+             'equipment authority pawns ready', 120)
+        send('Server', 'fixture', players=[{'name': 'EX_'+r, 'position': [5700+150*i, 5000, 180],
+                                           'health': 100, 'shield': 0} for i,r in enumerate(ROLES)])
     check('All players loaded in Extraction', lambda: all(state(r).get('phase') == 1 for r in processes), 120)
-    if args.scenario in ['pvpve', 'equipment']:
+    if args.scenario == 'pvpve':
         send('Server', 'fixture', players=[{'name': 'EX_'+r, 'position': [5700+150*i, 5000, 180], 'health': 100, 'shield': 0} for i,r in enumerate(ROLES)])
     check('Dedicated authority and Stinger pawns', lambda: state('Server').get('net_mode') == 1
           and state('Server').get('local_players') == 0 and state('Server').get('alive') == len(ROLES)
@@ -222,8 +233,14 @@ def shot(shooter, target, damage):
         loss = current.get('hit_loss', 0) if hit else 0
         if loss not in [0, min(20, victim['health']), min(40, victim['health'])]:
             raise AssertionError(f'Invalid shot damage: {loss}')
-        if hit and loss == damage:
-            check(target + ' direct bullet health damage ' + str(damage), lambda: True)
+        expected_loss = min(damage, victim['health'])
+        # Bleeding can leave less health than the requested headshot damage.
+        # Health loss is capped by remaining HP, but still require a real head
+        # hit so a low-health body hit cannot satisfy the headshot sample.
+        classification = damage != 40 or current.get('hit_bone', '').lower() == 'head'
+        if hit and loss == expected_loss and classification:
+            label = str(damage) if expected_loss == damage else str(expected_loss) + ' capped from ' + str(damage)
+            check(target + ' direct bullet health damage ' + label, lambda: True)
             check(target + ' damage replication', lambda: all(abs(player(r, target).get('health', 0) - player('Server', target).get('health', 0)) <= 1 for r in processes))
             return
         checks.append({'name': 'Scatter attempt', 'shooter': shooter, 'target': target, 'loss': loss,
@@ -396,7 +413,8 @@ try:
         check('Re-equipped after interrupted reload', lambda: bool(player('Server', 'A').get('weapon')))
         aim('B', 'A', True)
         shot('B', 'A', 40)
-        send('Server', 'fixture', players=[{'name': 'EX_A', 'position': player('Server', 'A')['position'], 'health': 20, 'shield': 0}])
+        send('Server', 'fixture', players=[{'name': 'EX_A', 'position': player('Server', 'A')['position'],
+                                           'health': 20, 'shield': 0, 'clear_trauma': True}])
         aim('B', 'A')
         death_weapon = player('Server', 'A')['weapon_item']
         send('A', 'pulse', action='Reload')
