@@ -1,0 +1,76 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts\\Extraction\\analyze_phase7a_performance.py",
+    "--tag",
+    "Phase7APerformance03",
+    "--combat-tag",
+    "Phase7ACombatFinal02-north-combat",
+    "--combat-tag",
+    "Phase7ACombatFinal02-north-combat-lag",
+    "--network-tag",
+    "Phase7ANetwork01"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T07:38:01.111147+00:00",
+      "c_free_gib": 66.33250045776367,
+      "d_free_gib": 230.8045768737793,
+      "ram_free_gib": 13.783920288085938,
+      "commit_used_gib": 27.59072494506836,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T07:38:01.115146+00:00",
+      "c_free_gib": 66.33250045776367,
+      "d_free_gib": 230.80457305908203,
+      "ram_free_gib": 13.78359603881836,
+      "commit_used_gib": 27.59072494506836,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T07:38:06.120984+00:00",
+      "c_free_gib": 66.33248519897461,
+      "d_free_gib": 230.80457305908203,
+      "ram_free_gib": 13.679847717285156,
+      "commit_used_gib": 27.701519012451172,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T07:38:11.129846+00:00",
+      "c_free_gib": 66.33245468139648,
+      "d_free_gib": 230.80457305908203,
+      "ram_free_gib": 13.257991790771484,
+      "commit_used_gib": 28.12152099609375,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T07:38:16.137451+00:00",
+      "c_free_gib": 66.3285140991211,
+      "d_free_gib": 230.80457305908203,
+      "ram_free_gib": 13.328849792480469,
+      "commit_used_gib": 28.053279876708984,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T07:38:19.433230+00:00",
+      "c_free_gib": 66.32848739624023,
+      "d_free_gib": 230.80455017089844,
+      "ram_free_gib": 13.773807525634766,
+      "commit_used_gib": 27.594913482666016,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 10496,
+  "exit_code": 0
+}

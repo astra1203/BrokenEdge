@@ -1,4 +1,5 @@
 #include "ExtractionPlayerController.h"
+#include "ExtractionRegionStream.h"
 #include "ExtractionHealth.h"
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionKeyRoom.h"
@@ -295,6 +296,7 @@ void AExtractionPlayerController::Tick(float Delta)
 	}
 	if (const APawn* Target = SpectatedPlayer ? SpectatedPlayer->GetPawn() : nullptr)
 	{
+		if (const auto* Region = AExtractionRegionStream::Find(GetWorld()); Region && !Region->IsViewReady(Target->GetActorLocation())) return;
 		const FVector Focus = Target->GetActorLocation() + FVector(0, 0, 65);
 		const FVector Desired = Focus - Target->GetActorForwardVector() * 350 + FVector(0, 0, 110);
 		FHitResult Hit;
@@ -468,6 +470,8 @@ void UExtractionWidget::Refresh()
 		}
 		Text += FString::Printf(TEXT("\n领取区：%d 件"), Result.OverflowCount);
 	}
+	if (const auto* Region = AExtractionRegionStream::Find(PC->GetWorld()); Region && !Region->GetStatus().IsEmpty())
+		Text += TEXT("\n") + Region->GetStatus();
 	if (PC->bExtractionSpectating)
 		Text += PC->SpectatedPlayer ? TEXT("\n正在观战：") + PC->SpectatedPlayer->GetPlayerName() : TEXT("\n暂无存活玩家可供观战");
 	const double Now = GS->GetServerWorldTimeSeconds();

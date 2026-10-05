@@ -2,14 +2,15 @@
 import argparse
 import collections
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
 import sys
-from source_packages import PROJECT, WORK, extract, index_archives, write_json
+from source_packages import PROJECT, WORK, BASE_WORK, extract, index_archives, write_json
 from prepare_sample import canonical, prepare
 
-CONFIG = json.loads((Path(__file__).parent / 'sample_config.json').read_text(encoding='utf-8'))
+CONFIG = json.loads(Path(os.environ.get('SPACECENTER_CONFIG', str(Path(__file__).parent / 'sample_config.json'))).read_text(encoding='utf-8'))
 
 
 def run(tag):
@@ -17,7 +18,7 @@ def run(tag):
         raise ValueError('Tag must be a directory name')
     archive = WORK / 'ConversionRuns' / tag
     archive.mkdir(parents=True, exist_ok=False)
-    dotnet = WORK / 'Tools/dotnet/dotnet.exe'
+    dotnet = BASE_WORK / 'Tools/dotnet/dotnet.exe'
     converter = Path(__file__).parent / 'Converter/bin/Release/net10.0/SpaceCenter.Converter.dll'
     if not dotnet.is_file() or not converter.is_file():
         raise RuntimeError('Run bootstrap.ps1 first')
@@ -30,7 +31,7 @@ def run(tag):
         write_json(archive / 'SourceExtractions.json', extractions)
 
     def convert(mode, packages, folder, recovery=(), allow_partial=False):
-        request = {'mode': mode, 'source': str(WORK / 'Source/DeltaForce'), 'packages': packages,
+        request = {'mode': mode, 'source': str(BASE_WORK / 'Source/DeltaForce'), 'packages': packages,
                    'output': str(WORK / folder), 'geometry_recovery': list(recovery)}
         request_path = archive / (folder + '-request.json')
         write_json(request_path, request)
@@ -46,7 +47,15 @@ def run(tag):
             raise RuntimeError('Conversion failed: ' + folder + '; inspect ' + str(archive))
         return json.loads((WORK / folder / 'Packages.json').read_text(encoding='utf-8'))
 
-    index_archives(Path(CONFIG['source']))
+    if WORK == BASE_WORK:
+        index_archives(Path(CONFIG['source']))
+    else:
+        catalog = json.loads((BASE_WORK / 'ArchiveIndex.json').read_text(encoding='utf-8'))
+        for entry in catalog['archives']:
+            actual = (Path(CONFIG['source']) / entry['archive']).stat()
+            if actual.st_size != entry['size'] or actual.st_mtime_ns != entry['mtime_ns']:
+                raise RuntimeError('Source archive changed; rebuild its index before conversion')
+        write_json(WORK / 'ArchiveIndex.json', catalog)
     extract_recorded(CONFIG['packages'])
     layout = convert('layout', CONFIG['packages'], 'Layout01')
     selected, excluded = [], collections.Counter()
@@ -58,6 +67,9 @@ def run(tag):
                 excluded['no_resolved_mesh'] += 1
                 continue
             if not all(CONFIG['min_xy'][i] <= point[k] <= CONFIG['max_xy'][i] for i, k in enumerate(['X', 'Y'])):
+                excluded['outside_region'] += 1
+                continue
+            if CONFIG.get('exclusive_min_y') and point['Y'] == CONFIG['min_xy'][1]:
                 excluded['outside_region'] += 1
                 continue
             if '/GenDecalDir/' in mesh['ObjectPath']:

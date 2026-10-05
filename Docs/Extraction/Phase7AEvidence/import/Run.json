@@ -1,0 +1,20 @@
+{
+  "task": "north-import",
+  "started_utc": "2026-10-05T07:25:38.574138+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase7ARepro02-import\\Editor.log",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\import_sample.py"
+  ],
+  "pid": 39332,
+  "exit_code": 0,
+  "result": "passed",
+  "finished_utc": "2026-10-05T07:25:48.590799+00:00"
+}

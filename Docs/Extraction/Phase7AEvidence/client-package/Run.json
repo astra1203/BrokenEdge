@@ -1,0 +1,29 @@
+{
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Build\\BatchFiles\\RunUAT.bat",
+    "BuildCookRun",
+    "-project=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-nop4",
+    "-build",
+    "-cook",
+    "-stage",
+    "-pak",
+    "-iostore",
+    "-archive",
+    "-archivedirectory=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Client",
+    "-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+    "-prereqs",
+    "-ubtargs=-NoHotReloadFromIDE -WaitMutex -MaxParallelActions=4",
+    "-utf8output",
+    "-platform=Win64",
+    "-clientconfig=Development"
+  ],
+  "head": "84680996aa16a810979ef01af0878e3bda2a5c9b",
+  "started_utc": "2026-10-05T05:07:36.901437+00:00",
+  "environment_overrides": {
+    "UE_SKIP_UBT_SDK_SETUP": "1"
+  },
+  "pid": 2616,
+  "exit_code": 0,
+  "elapsed_seconds": 154.98399999999674
+}

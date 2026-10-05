@@ -1,0 +1,66 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts\\Extraction\\analyze_phase7a_performance.py",
+    "--tag",
+    "Phase7APerformance03",
+    "--combat-tag",
+    "Phase7ACombatFinal02-north-combat",
+    "--combat-tag",
+    "Phase7ACombatFinal02-north-combat-lag"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T06:47:13.063504+00:00",
+      "c_free_gib": 66.07500839233398,
+      "d_free_gib": 232.3505973815918,
+      "ram_free_gib": 13.979381561279297,
+      "commit_used_gib": 30.053604125976562,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T06:47:13.071504+00:00",
+      "c_free_gib": 66.07500839233398,
+      "d_free_gib": 232.35059356689453,
+      "ram_free_gib": 13.978992462158203,
+      "commit_used_gib": 30.053604125976562,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T06:47:18.084638+00:00",
+      "c_free_gib": 66.07497787475586,
+      "d_free_gib": 232.35059356689453,
+      "ram_free_gib": 13.759506225585938,
+      "commit_used_gib": 30.29015350341797,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T06:47:23.091139+00:00",
+      "c_free_gib": 66.0749626159668,
+      "d_free_gib": 232.35059356689453,
+      "ram_free_gib": 13.647769927978516,
+      "commit_used_gib": 30.399009704589844,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T06:47:26.452486+00:00",
+      "c_free_gib": 66.07494354248047,
+      "d_free_gib": 232.35052490234375,
+      "ram_free_gib": 14.078926086425781,
+      "commit_used_gib": 29.96149444580078,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 44820,
+  "exit_code": 0
+}

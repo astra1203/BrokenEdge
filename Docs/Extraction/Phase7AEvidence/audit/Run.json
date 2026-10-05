@@ -1,0 +1,20 @@
+{
+  "task": "phase7a-audit",
+  "started_utc": "2026-10-05T07:25:50.157810+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase7ARepro02-audit\\Editor.log",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\audit_phase7a.py"
+  ],
+  "pid": 28396,
+  "exit_code": 0,
+  "result": "passed",
+  "finished_utc": "2026-10-05T07:26:01.931755+00:00"
+}

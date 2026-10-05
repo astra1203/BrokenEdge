@@ -1,0 +1,70 @@
+{
+  "result": "passed",
+  "config": {
+    "version": 1,
+    "region": "North",
+    "cue_commit": "34f1a223e942b67e381329983fb7713f62f9ef9d",
+    "sdk_version": "10.0.401",
+    "source": "D:/司晨/源代码和素材/三角洲解包资产/原始资源ZIP",
+    "engine": "C:/UnrealProjects/UnrealEngine-5.8.3-release",
+    "origin": [
+      664000,
+      -451000,
+      -22400
+    ],
+    "min_xy": [
+      659000,
+      -445000
+    ],
+    "max_xy": [
+      671000,
+      -439000
+    ],
+    "exclusive_min_y": true,
+    "packages": [
+      "/Game/Maps/BuildMaps_HD/SpaceCenter_Ma1/Runtime/Room/RoomBuilder_SpaceCenterH1",
+      "/Game/Maps/BuildMaps_HD/SpaceCenter_Ma1/Runtime/BigMeshGroup/BigMeshGroup_51_-35",
+      "/Game/Maps/BuildMaps_HD/SpaceCenter_Ma1/Runtime/BigMeshGroup/BigMeshGroup_51_-36",
+      "/Game/Maps/BuildMaps_HD/SpaceCenter_Ma1/Runtime/BigMeshGroup/BigMeshGroup_52_-35",
+      "/Game/Maps/BuildMaps_HD/SpaceCenter_Ma1/Runtime/BigMeshGroup/BigMeshGroup_52_-36",
+      "/Game/Maps/BuildMaps_HD/SpaceCenter_Ma1/Runtime/Landmark/Landmark_26_-18"
+    ],
+    "geometry_recovery": [
+      "/Game/Environment/Props/HAAVK/FutureTech/SM_H_FutureTech_Furniture_BaseStation_01",
+      "/Game/Environment/Vehicle/00_Mesh/SM_FutureTech_Vehicle_ConceptCar_01/SM_FutureTech_Vehicle_ConceptCar_01_B"
+    ]
+  },
+  "stages": [
+    {
+      "mode": "layout",
+      "folder": "Layout01",
+      "exit_code": 0,
+      "partial_allowed": false
+    },
+    {
+      "mode": "export",
+      "folder": "Converted01",
+      "exit_code": 1,
+      "partial_allowed": true
+    },
+    {
+      "mode": "export",
+      "folder": "Recovered01",
+      "exit_code": 0,
+      "partial_allowed": false
+    },
+    {
+      "mode": "inspect",
+      "folder": "Materials01",
+      "exit_code": 0,
+      "partial_allowed": false
+    },
+    {
+      "mode": "export",
+      "folder": "Textures01",
+      "exit_code": 1,
+      "partial_allowed": true
+    }
+  ],
+  "boundary": "Conversion and geometry audit only; UE import and runtime acceptance are separate"
+}

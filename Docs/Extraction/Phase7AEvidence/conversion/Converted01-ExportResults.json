@@ -1,0 +1,550 @@
+[
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/Branding/LocationSign/SM_Branding_LocationSign_02I.SM_Branding_LocationSign_02I",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\Branding\\LocationSign\\SM_Branding_LocationSign_02I.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/Branding/LocationSign/SM_Branding_LocationSign_FutureTech_02_C.SM_Branding_LocationSign_FutureTech_02_C",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\Branding\\LocationSign\\SM_Branding_LocationSign_FutureTech_02_C.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/Branding/LocationSign/SM_Branding_LocationSign_FutureTech_02_D.SM_Branding_LocationSign_FutureTech_02_D",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\Branding\\LocationSign\\SM_Branding_LocationSign_FutureTech_02_D.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": false,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/FutureTech/SM_H_FutureTech_Furniture_BaseStation_01.SM_H_FutureTech_Furniture_BaseStation_01",
+    "DiskFilePaths": null,
+    "error": "System.ArgumentNullException: Value cannot be null. (Parameter 'Mesh has no LOD data')\r\n   at System.ArgumentNullException.Throw(String paramName)\r\n   at System.ArgumentNullException.ThrowIfNull(Object argument, String paramName)\r\n   at CUE4Parse_Conversion.Dto.StaticMeshDto..ctor(UStaticMesh mesh, EMeshQuality quality, ENaniteMeshFormat naniteFormat, USplineMeshComponent spline) in D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Tools\\CUE4Parse\\CUE4Parse-Conversion\\Dto\\MeshDto.cs:line 217\r\n   at CUE4Parse_Conversion.Exporters.StaticMeshExporter.BuildFiles(UStaticMesh originalMesh, IMeshExportFormat format) in D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Tools\\CUE4Parse\\CUE4Parse-Conversion\\Exporters\\StaticMeshExporter.cs:line 14\r\n   at CUE4Parse_Conversion.Exporters.MeshExporter`1.BuildExportFiles(CancellationToken ct) in D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Tools\\CUE4Parse\\CUE4Parse-Conversion\\Exporters\\MeshExporter.cs:line 17\r\n   at CUE4Parse_Conversion.Exporters.ExporterBase.ExportAsync(CancellationToken ct) in D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Tools\\CUE4Parse\\CUE4Parse-Conversion\\Exporters\\ExporterBase.cs:line 71"
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/Branding/LocationSign/SM_Branding_LocationSign_FutureTech_03.SM_Branding_LocationSign_FutureTech_03",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\Branding\\LocationSign\\SM_Branding_LocationSign_FutureTech_03.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/FutureTech/SM_H_FutureTech_Furniture_Radar_01.SM_H_FutureTech_Furniture_Radar_01",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\FutureTech\\SM_H_FutureTech_Furniture_Radar_01.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/FutureTech/SM_H_FutureTech_Tools_Box_01.SM_H_FutureTech_Tools_Box_01",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\FutureTech\\SM_H_FutureTech_Tools_Box_01.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/FutureTech/SM_H_FutureTech_Furniture_Utility_Dustbin_01_B.SM_H_FutureTech_Furniture_Utility_Dustbin_01_B",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\FutureTech\\SM_H_FutureTech_Furniture_Utility_Dustbin_01_B.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/FutureTech/SM_H_Update_Container_PlasticBox_02.SM_H_Update_Container_PlasticBox_02",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\FutureTech\\SM_H_Update_Container_PlasticBox_02.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/Government/Office/SM_H_Government_Office_Cable_02.SM_H_Government_Office_Cable_02",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\Government\\Office\\SM_H_Government_Office_Cable_02.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/Government/Office/SM_H_Government_Office_ServerComponents_06.SM_H_Government_Office_ServerComponents_06",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\Government\\Office\\SM_H_Government_Office_ServerComponents_06.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/Industrial/Container/SM_H_Industrial_Container_02.SM_H_Industrial_Container_02",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\Industrial\\Container\\SM_H_Industrial_Container_02.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/Industrial/Container/SM_H_Industrial_Container_PackingBox_01B.SM_H_Industrial_Container_PackingBox_01B",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\Industrial\\Container\\SM_H_Industrial_Container_PackingBox_01B.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/Industrial/Container/SM_H_Industrial_Container_SupplyBox_01.SM_H_Industrial_Container_SupplyBox_01",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\Industrial\\Container\\SM_H_Industrial_Container_SupplyBox_01.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/Industrial/Container/SM_H_Industrial_Container_SupplyBox_02.SM_H_Industrial_Container_SupplyBox_02",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\Industrial\\Container\\SM_H_Industrial_Container_SupplyBox_02.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/Transport/Utility/SM_H_Transport_Utility_FlowerBed_03A.SM_H_Transport_Utility_FlowerBed_03A",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\Transport\\Utility\\SM_H_Transport_Utility_FlowerBed_03A.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/Industrial/Container/SM_H_Industrial_Container_SupplyBox_02B.SM_H_Industrial_Container_SupplyBox_02B",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\Industrial\\Container\\SM_H_Industrial_Container_SupplyBox_02B.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/Transport/Utility/SM_H_Transport_Utility_Guardrail_02.SM_H_Transport_Utility_Guardrail_02",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\Transport\\Utility\\SM_H_Transport_Utility_Guardrail_02.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/Transport/Utility/SM_H_Transport_Utility_Trademark_01.SM_H_Transport_Utility_Trademark_01",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\Transport\\Utility\\SM_H_Transport_Utility_Trademark_01.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/Transport/Utility/SM_H_Transport_Utility_Trademark_02.SM_H_Transport_Utility_Trademark_02",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\Transport\\Utility\\SM_H_Transport_Utility_Trademark_02.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/HAAVK/Transport/Utility/SM_H_Transport_Utility_TrafficLight_01.SM_H_Transport_Utility_TrafficLight_01",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\HAAVK\\Transport\\Utility\\SM_H_Transport_Utility_TrafficLight_01.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Props/Morocco/Government/Office/SM_M_Government_Office_Blinds_03.SM_M_Government_Office_Blinds_03",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Props\\Morocco\\Government\\Office\\SM_M_Government_Office_Blinds_03.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech/SM_H_Building_FutureTech_PipeHouse_01_ExterWall_01F.SM_H_Building_FutureTech_PipeHouse_01_ExterWall_01F",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech\\SM_H_Building_FutureTech_PipeHouse_01_ExterWall_01F.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech/SM_H_Building_FutureTech_PipeHouse_01_ExterWall_01G.SM_H_Building_FutureTech_PipeHouse_01_ExterWall_01G",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech\\SM_H_Building_FutureTech_PipeHouse_01_ExterWall_01G.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06_05.SM_H_Building_FutureTech_Dock_06_05",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06_05.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06_06.SM_H_Building_FutureTech_Dock_06_06",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06_06.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06_InterWall_Glass_10.SM_H_Building_FutureTech_Dock_06_InterWall_Glass_10",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06_InterWall_Glass_10.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass.SM_H_Building_FutureTech_Dock_06a_Glass",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_01.SM_H_Building_FutureTech_Dock_06a_Glass_01",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_01.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_02.SM_H_Building_FutureTech_Dock_06a_Glass_02",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_02.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/Building/Generic/SM_Building_Generic_Pillar_256x1024_01.SM_Building_Generic_Pillar_256x1024_01",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\Building\\Generic\\SM_Building_Generic_Pillar_256x1024_01.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_03.SM_H_Building_FutureTech_Dock_06a_Glass_03",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_03.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_05.SM_H_Building_FutureTech_Dock_06a_Glass_05",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_05.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_04.SM_H_Building_FutureTech_Dock_06a_Glass_04",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_04.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_07.SM_H_Building_FutureTech_Dock_06a_Glass_07",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_07.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_10.SM_H_Building_FutureTech_Dock_06a_Glass_10",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_10.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_06.SM_H_Building_FutureTech_Dock_06a_Glass_06",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_06.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_11.SM_H_Building_FutureTech_Dock_06a_Glass_11",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_11.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_12.SM_H_Building_FutureTech_Dock_06a_Glass_12",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_12.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_14.SM_H_Building_FutureTech_Dock_06a_Glass_14",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_14.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_13.SM_H_Building_FutureTech_Dock_06a_Glass_13",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_13.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_16.SM_H_Building_FutureTech_Dock_06a_Glass_16",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_16.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_15.SM_H_Building_FutureTech_Dock_06a_Glass_15",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_15.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_17.SM_H_Building_FutureTech_Dock_06a_Glass_17",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_17.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_Glass_18.SM_H_Building_FutureTech_Dock_06a_Glass_18",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_Glass_18.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_InterWall_01a.SM_H_Building_FutureTech_Dock_06a_InterWall_01a",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_InterWall_01a.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_InterWall_01.SM_H_Building_FutureTech_Dock_06a_InterWall_01",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_InterWall_01.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_InterWall_01c.SM_H_Building_FutureTech_Dock_06a_InterWall_01c",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_InterWall_01c.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_InterWall_01b.SM_H_Building_FutureTech_Dock_06a_InterWall_01b",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_InterWall_01b.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_InterWall_01f.SM_H_Building_FutureTech_Dock_06a_InterWall_01f",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_InterWall_01f.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_InterWall_Glass_03.SM_H_Building_FutureTech_Dock_06a_InterWall_Glass_03",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_InterWall_Glass_03.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_06a_InterWall_Glass_02.SM_H_Building_FutureTech_Dock_06a_InterWall_Glass_02",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_06a_InterWall_Glass_02.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_07_Glass_b.SM_H_Building_FutureTech_Dock_07_Glass_b",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_07_Glass_b.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_07_Glass.SM_H_Building_FutureTech_Dock_07_Glass",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_07_Glass.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_Glass_02.SM_H_Building_FutureTech_Dock_Glass_02",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_Glass_02.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Dock_Glass_02a.SM_H_Building_FutureTech_Dock_Glass_02a",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Building\\FutureTech_Ma1\\SM_H_Building_FutureTech_Dock_Glass_02a.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Door/Medium/SM_H_Medium_Door_02_Frame.SM_H_Medium_Door_02_Frame",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Door\\Medium\\SM_H_Medium_Door_02_Frame.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/HAAVK/Door/Small/SM_H_Small_Door_11.SM_H_Small_Door_11",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\HAAVK\\Door\\Small\\SM_H_Small_Door_11.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/SM_I_RoadFacility_Ground_H_01B.SM_I_RoadFacility_Ground_H_01B",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\IRIS\\RoadFacility\\Ground\\SpaceCenter\\SM_I_RoadFacility_Ground_H_01B.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/SM_I_RoadFacility_Ground_H_05.SM_I_RoadFacility_Ground_H_05",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\IRIS\\RoadFacility\\Ground\\SpaceCenter\\SM_I_RoadFacility_Ground_H_05.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/SM_I_Terrain_Road_Desert_Decal_Sand_02.SM_I_Terrain_Road_Desert_Decal_Sand_02",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\IRIS\\RoadFacility\\Ground\\SpaceCenter\\SM_I_Terrain_Road_Desert_Decal_Sand_02.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/SM_I_Terrain_Road_Desert_Decal_Sand_06.SM_I_Terrain_Road_Desert_Decal_Sand_06",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\IRIS\\RoadFacility\\Ground\\SpaceCenter\\SM_I_Terrain_Road_Desert_Decal_Sand_06.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/RoadFacility/Road/SM_RoadFacility_Road_AsphaltRoad_512_01.SM_RoadFacility_Road_AsphaltRoad_512_01",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\RoadFacility\\Road\\SM_RoadFacility_Road_AsphaltRoad_512_01.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": false,
+    "ObjectPath": "DeltaForce/Content/Environment/Vehicle/00_Mesh/SM_FutureTech_Vehicle_ConceptCar_01/SM_FutureTech_Vehicle_ConceptCar_01_B.SM_FutureTech_Vehicle_ConceptCar_01_B",
+    "DiskFilePaths": null,
+    "error": "System.ArgumentNullException: Value cannot be null. (Parameter 'Mesh has no LOD data')\r\n   at System.ArgumentNullException.Throw(String paramName)\r\n   at System.ArgumentNullException.ThrowIfNull(Object argument, String paramName)\r\n   at CUE4Parse_Conversion.Dto.StaticMeshDto..ctor(UStaticMesh mesh, EMeshQuality quality, ENaniteMeshFormat naniteFormat, USplineMeshComponent spline) in D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Tools\\CUE4Parse\\CUE4Parse-Conversion\\Dto\\MeshDto.cs:line 217\r\n   at CUE4Parse_Conversion.Exporters.StaticMeshExporter.BuildFiles(UStaticMesh originalMesh, IMeshExportFormat format) in D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Tools\\CUE4Parse\\CUE4Parse-Conversion\\Exporters\\StaticMeshExporter.cs:line 14\r\n   at CUE4Parse_Conversion.Exporters.MeshExporter`1.BuildExportFiles(CancellationToken ct) in D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Tools\\CUE4Parse\\CUE4Parse-Conversion\\Exporters\\MeshExporter.cs:line 17\r\n   at CUE4Parse_Conversion.Exporters.ExporterBase.ExportAsync(CancellationToken ct) in D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Tools\\CUE4Parse\\CUE4Parse-Conversion\\Exporters\\ExporterBase.cs:line 71"
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Vehicle/00_Mesh/SM_H_FutureTech_Vehicle_DriverlessVans_01/SM_H_FutureTech_Vehicle_DriverlessVans_01.SM_H_FutureTech_Vehicle_DriverlessVans_01",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Vehicle\\00_Mesh\\SM_H_FutureTech_Vehicle_DriverlessVans_01\\SM_H_FutureTech_Vehicle_DriverlessVans_01.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/SM_I_RoadFacility_Ground_H_01.SM_I_RoadFacility_Ground_H_01",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Structures\\IRIS\\RoadFacility\\Ground\\SpaceCenter\\SM_I_RoadFacility_Ground_H_01.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Vehicle/00_Mesh/SM_H_FutureTech_Vehicle_DriverlessVans_01/SM_H_FutureTech_Vehicle_DriverlessVans_03.SM_H_FutureTech_Vehicle_DriverlessVans_03",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Vehicle\\00_Mesh\\SM_H_FutureTech_Vehicle_DriverlessVans_01\\SM_H_FutureTech_Vehicle_DriverlessVans_03.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Vehicle/00_Mesh/SM_H_FutureTech_Vehicle_DriverlessVans_01/SM_H_FutureTech_Vehicle_DriverlessVans_02.SM_H_FutureTech_Vehicle_DriverlessVans_02",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Vehicle\\00_Mesh\\SM_H_FutureTech_Vehicle_DriverlessVans_01\\SM_H_FutureTech_Vehicle_DriverlessVans_02.glb"
+    ],
+    "error": null
+  },
+  {
+    "Success": true,
+    "ObjectPath": "DeltaForce/Content/Environment/Vehicle/00_Mesh/SM_H_FutureTech_Vehicle_DriverlessVans_01/SM_H_FutureTech_Vehicle_DriverlessVans_04.SM_H_FutureTech_Vehicle_DriverlessVans_04",
+    "DiskFilePaths": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7A\\Converted01\\DeltaForce\\Content\\Environment\\Vehicle\\00_Mesh\\SM_H_FutureTech_Vehicle_DriverlessVans_01\\SM_H_FutureTech_Vehicle_DriverlessVans_04.glb"
+    ],
+    "error": null
+  }
+]

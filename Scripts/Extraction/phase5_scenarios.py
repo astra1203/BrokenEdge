@@ -215,7 +215,7 @@ def pvpve(g):
     check(str(len(g['ROLES']))+' humans and four independent AI replicate', lambda: len(state('Server')['players']) == len(g['ROLES'])
           and all(len(state(r).get('guards', [])) == 4 for r in peers))
     check('AI creates no human persistent profiles', lambda: len(state('Server')['stored_results']) == len(g['ROLES']))
-    check('Every patrol leg has a complete cooked navigation path', lambda: len(state('Server').get('nav_paths', [])) == 6
+    check('Every patrol leg has a complete cooked navigation path', lambda: len(state('Server').get('nav_paths', [])) == 10
           and all(p['valid'] for p in state('Server')['nav_paths']))
     check('All four guards actually reach patrol points', lambda: all(a.get('arrivals', 0) >= 2 for a in state('Server')['guards']), 100)
     guards = [a['name'] for a in state('Server')['guards']]

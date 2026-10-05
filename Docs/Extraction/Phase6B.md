@@ -1,7 +1,7 @@
 # 阶段 6B：钥匙房、任务、商店与成长
 
 状态：2026-10-05 已完成同机 Development／Null 验收。起点提交为 `1932b71`，引擎为
-`C:/UnrealProjects/UnrealEngine-5.8.3-release`。本阶段改动未提交、未推送 Git；不扩展为阶段 7 或 8。
+`C:/UnrealProjects/UnrealEngine-5.8.3-release`。本阶段后来已提交为 `84680996aa16a810979ef01af0878e3bda2a5c9b`；以下历史验收记录保留原始构建批次。后续扩区实施见 [阶段 7A](Phase7A.md)。
 
 ## 玩家流程
 

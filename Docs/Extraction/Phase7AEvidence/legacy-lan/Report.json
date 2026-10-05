@@ -1,0 +1,47 @@
+{
+  "command": [
+    "powershell.exe",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Test-LanSessions.ps1",
+    "-Packaged"
+  ],
+  "started_utc": "2026-10-05T07:36:39.376808+00:00",
+  "result": "passed",
+  "checks": [
+    {
+      "name": "Client1-FreeForAll",
+      "passed": true
+    },
+    {
+      "name": "Client1-Teams",
+      "passed": true
+    },
+    {
+      "name": "Client2-FreeForAll",
+      "passed": true
+    },
+    {
+      "name": "Client2-Teams",
+      "passed": true
+    },
+    {
+      "name": "Empty",
+      "passed": true
+    },
+    {
+      "name": "Server-FreeForAll",
+      "passed": true
+    },
+    {
+      "name": "Server-Teams",
+      "passed": true
+    }
+  ],
+  "pid": 23040,
+  "exit_code": 0,
+  "original_logs": "Saved\\SessionTests\\Dedicated-20261005-153639",
+  "finished_utc": "2026-10-05T07:38:00.985348+00:00"
+}

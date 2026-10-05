@@ -26,7 +26,7 @@ def read(file):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--plan', type=Path, required=True)
-    parser.add_argument('--phase', type=int, choices=[2, 3, 4, 5, 6], default=2)
+    parser.add_argument('--phase', type=int, choices=[2, 3, 4, 5, 6, 7], default=2)
     parser.add_argument('--suffix', default='', help='Alphanumeric label for a separate repair archive')
     args = parser.parse_args()
     if args.suffix and not args.suffix.isalnum():
@@ -48,20 +48,24 @@ def main():
         folder = ROOT / entry['folder']
         target = out / entry['name']
         for source in folder.rglob('*'):
-            if not source.is_file() or source.suffix.lower() not in ['.json', '.log', '.png', '.csv']:
+            if not source.is_file() or source.suffix.lower() not in ['.json', '.jsonl', '.log', '.png', '.csv']:
                 continue
             # Commands and temporary snapshots are included in the full report.
             if source.name.endswith(('-command.json', '-state.json')):
                 continue
             destination = target / source.relative_to(folder)
             destination.parent.mkdir(parents=True, exist_ok=True)
-            if source.suffix.lower() in ['.log', '.csv']:
+            if source.suffix.lower() in ['.log', '.csv', '.jsonl'] or (
+                    plan.get('compress_large_json') and source.suffix.lower() == '.json' and source.stat().st_size > 1024 * 1024):
                 destination.with_suffix(destination.suffix + '.gz').write_bytes(gzip.compress(source.read_bytes(), mtime=0))
             else:
                 shutil.copyfile(source, destination)
     for item in plan.get('extra_files', []):
-        source = ROOT / item
-        destination = out / 'diagnostics' / source.name
+        source = ROOT / (item['source'] if isinstance(item, dict) else item)
+        name = item.get('name', source.name) if isinstance(item, dict) else source.name
+        if Path(name).name != name:
+            raise ValueError('Extra evidence name must be a filename')
+        destination = out / 'diagnostics' / name
         destination.parent.mkdir(exist_ok=True)
         shutil.copyfile(source, destination)
     for item in plan.get('diagnostic_logs', []):
@@ -80,8 +84,10 @@ def main():
             if file.is_file() and file.suffix in ['.exe', '.pak', '.ucas', '.utoc']:
                 packages[str(file.relative_to(ROOT)).replace('\\', '/')] = {'size': file.stat().st_size, 'sha256': sha(file)}
     summary = {'created_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+               'large_json_compression': 'gzip above 1 MiB; original bytes retained' if plan.get('compress_large_json') else 'none',
                'base_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
                'engine': 'C:/UnrealProjects/UnrealEngine-5.8.3-release', 'runs': plan['runs'],
+               'extra_files': plan.get('extra_files', []),
                'implementation_sha256': implementation, 'packages': packages,
                'review': plan['review']}
     (out / 'Summary.json').write_text(json.dumps(summary, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')

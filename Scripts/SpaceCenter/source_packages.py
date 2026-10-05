@@ -7,13 +7,17 @@ import argparse
 from collections import deque
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import sqlite3
 import struct
 import zipfile
 
 PROJECT = Path(__file__).resolve().parents[2]
-WORK = PROJECT / 'Saved/SpaceCenter'
+BASE_WORK = PROJECT / 'Saved/SpaceCenter'
+WORK = Path(os.environ.get('SPACECENTER_WORK', str(BASE_WORK))).resolve()
+if not WORK.is_relative_to(BASE_WORK.resolve()):
+    raise ValueError('Conversion work directory must stay inside Saved/SpaceCenter')
 SOURCE = Path('D:/司晨/源代码和素材/三角洲解包资产/原始资源ZIP')
 PAYLOADS = {'.uasset', '.umap', '.uexp', '.ubulk', '.uptnl'}
 
@@ -86,9 +90,12 @@ def read_names(data):
 
 
 def extract(packages, recursive=False, limit_gib=15):
-    db = sqlite3.connect(WORK / 'catalog.sqlite')
+    catalog = WORK / 'catalog.sqlite'
+    if not catalog.exists():
+        catalog = BASE_WORK / 'catalog.sqlite'
+    db = sqlite3.connect(catalog.resolve().as_uri() + '?mode=ro', uri=True)
     db.row_factory = sqlite3.Row
-    out = WORK / 'Source'
+    out = BASE_WORK / 'Source'
     pending, seen, missing, entries = deque(packages), set(), [], []
     total, limit = 0, limit_gib * 1024**3
     handles = {}

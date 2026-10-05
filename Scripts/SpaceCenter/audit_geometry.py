@@ -33,7 +33,7 @@ def accessor(doc, binary, index):
 def audit():
     manifest = json.loads((WORK / 'ImportManifest.json').read_text(encoding='utf-8'))
     checks = []
-    for path, entry in manifest['meshes'].items():
+    for path, entry in sorted(manifest['meshes'].items()):
         try:
             doc, binary = glb(entry['file'])
             points, triangles = [], 0

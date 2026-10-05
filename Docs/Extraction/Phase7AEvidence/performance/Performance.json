@@ -1,0 +1,2861 @@
+{
+  "runs": [
+    {
+      "route": "old",
+      "captures": [
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-old\\A-first-route.csv",
+          "elapsed_seconds": 37.84731159999997,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1920",
+            "systemresolution.resy": "1080",
+            "rhiname": "D3D12",
+            "rhifeaturelevel": "SM6",
+            "gpu": "NVIDIA GeForce RTX 4060 Ti",
+            "gpudriver": "616.92",
+            "starttimestamp": "1791181375",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791181413",
+            "captureduration": "37.841861"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 4643,
+              "min": 2.9049,
+              "mean": 8.151477837604997,
+              "p50": 7.7423,
+              "p95": 11.89,
+              "p99": 14.1811,
+              "max": 17.7708
+            },
+            "GameThreadTime": {
+              "count": 4643,
+              "min": 2.0651,
+              "mean": 4.667413396510876,
+              "p50": 3.9529,
+              "p95": 9.2985,
+              "p99": 14.418,
+              "max": 18.9889
+            },
+            "RenderThreadTime": {
+              "count": 4643,
+              "min": 5.1932,
+              "mean": 8.148938983415894,
+              "p50": 7.7813,
+              "p95": 11.135,
+              "p99": 12.3665,
+              "max": 17.1475
+            },
+            "GPUTime": {
+              "count": 4643,
+              "min": 4.651,
+              "mean": 6.121842860219686,
+              "p50": 6.2593,
+              "p95": 6.7974,
+              "p99": 7.0826,
+              "max": 8.3208
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 4643,
+              "min": 0.0107,
+              "mean": 0.039579539091104884,
+              "p50": 0.0248,
+              "p95": 0.1057,
+              "p99": 0.1775,
+              "max": 0.3437
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 4643,
+              "min": 0.0235,
+              "mean": 0.056163450355373686,
+              "p50": 0.0426,
+              "p95": 0.1215,
+              "p99": 0.1753,
+              "max": 0.8515
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 4643,
+              "min": 0.1306,
+              "mean": 0.29474221408572043,
+              "p50": 0.2724,
+              "p95": 0.4769,
+              "p99": 0.5925,
+              "max": 1.4885
+            },
+            "GPUMem/LocalUsedMB": {
+              "count": 4643,
+              "min": 2469.4102,
+              "mean": 2527.1739303467584,
+              "p50": 2536.4727,
+              "p95": 2540.4102,
+              "p99": 2542.7852,
+              "max": 2600.4727
+            },
+            "GPUMem/LocalBudgetMB": {
+              "count": 4643,
+              "min": 15339.0,
+              "mean": 15339.0,
+              "p50": 15339.0,
+              "p95": 15339.0,
+              "p99": 15339.0,
+              "max": 15339.0
+            },
+            "GPUMem/SystemUsedMB": {
+              "count": 4643,
+              "min": 932.9023,
+              "mean": 933.0539261038122,
+              "p50": 932.9023,
+              "p95": 932.9023,
+              "p99": 932.9023,
+              "max": 964.9023
+            }
+          },
+          "stream_events": [
+            {
+              "seconds": 21.974650599999908,
+              "event": "NorthRequested=1##21.967973"
+            },
+            {
+              "seconds": 21.992788499999907,
+              "event": "NorthLoaded=1 Visible=0##21.987809"
+            },
+            {
+              "seconds": 22.00641019999991,
+              "event": "NorthLoaded=1 Visible=1##22.000278"
+            },
+            {
+              "seconds": 35.19922489999997,
+              "event": "NorthRequested=0##35.192256"
+            },
+            {
+              "seconds": 35.23648269999997,
+              "event": "NorthLoaded=0 Visible=0##35.229556;GC##35.232375"
+            }
+          ],
+          "frames_over_100ms": [],
+          "stream_window_frames_over_100ms": []
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-old\\A-performance-old-1.csv",
+          "elapsed_seconds": 186.4944957999992,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1920",
+            "systemresolution.resy": "1080",
+            "rhiname": "D3D12",
+            "rhifeaturelevel": "SM6",
+            "gpu": "NVIDIA GeForce RTX 4060 Ti",
+            "gpudriver": "616.92",
+            "starttimestamp": "1791181414",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791181600",
+            "captureduration": "186.489303"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 24824,
+              "min": 2.5972,
+              "mean": 7.512669021914276,
+              "p50": 7.3053,
+              "p95": 10.1221,
+              "p99": 12.039,
+              "max": 31.6759
+            },
+            "GameThreadTime": {
+              "count": 24824,
+              "min": 1.8575,
+              "mean": 4.010455885433451,
+              "p50": 3.6034,
+              "p95": 6.4034,
+              "p99": 9.6905,
+              "max": 27.0052
+            },
+            "RenderThreadTime": {
+              "count": 24824,
+              "min": 4.9161,
+              "mean": 7.510391874798581,
+              "p50": 7.308,
+              "p95": 10.0678,
+              "p99": 11.7772,
+              "max": 22.6101
+            },
+            "GPUTime": {
+              "count": 24824,
+              "min": 4.578,
+              "mean": 6.064189280534967,
+              "p50": 6.2172,
+              "p95": 6.7628,
+              "p99": 7.063,
+              "max": 7.8148
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 24824,
+              "min": 0.0099,
+              "mean": 0.036116991621011924,
+              "p50": 0.024,
+              "p95": 0.0875,
+              "p99": 0.1516,
+              "max": 0.3638
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 24824,
+              "min": 0.0218,
+              "mean": 0.04936775298098615,
+              "p50": 0.04,
+              "p95": 0.103,
+              "p99": 0.155,
+              "max": 14.1673
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 24824,
+              "min": 0.1126,
+              "mean": 0.26674372381566225,
+              "p50": 0.2401,
+              "p95": 0.4329,
+              "p99": 0.5329,
+              "max": 10.5394
+            },
+            "GPUMem/LocalUsedMB": {
+              "count": 24824,
+              "min": 0.0,
+              "mean": 2536.661543828553,
+              "p50": 2536.9727,
+              "p95": 2536.9727,
+              "p99": 2539.3477,
+              "max": 2600.9727
+            },
+            "GPUMem/LocalBudgetMB": {
+              "count": 24824,
+              "min": 0.0,
+              "mean": 15336.52835965195,
+              "p50": 15339.0,
+              "p95": 15339.0,
+              "p99": 15339.0,
+              "max": 15339.0
+            },
+            "GPUMem/SystemUsedMB": {
+              "count": 24824,
+              "min": 0.0,
+              "mean": 932.8372476635514,
+              "p50": 932.9648,
+              "p95": 932.9648,
+              "p99": 932.9648,
+              "max": 964.9648
+            }
+          },
+          "stream_events": [
+            {
+              "seconds": 21.47705720000003,
+              "event": "NorthRequested=1##21.470228"
+            },
+            {
+              "seconds": 21.49029870000003,
+              "event": "NorthLoaded=1 Visible=0##21.485732"
+            },
+            {
+              "seconds": 21.49811500000003,
+              "event": "NorthLoaded=1 Visible=1##21.491387"
+            },
+            {
+              "seconds": 34.67028269999989,
+              "event": "NorthRequested=0##34.663479"
+            },
+            {
+              "seconds": 34.715361899999884,
+              "event": "NorthLoaded=0 Visible=0##34.708839;GC##34.711987"
+            },
+            {
+              "seconds": 58.64569400000004,
+              "event": "NorthRequested=1##58.639971"
+            },
+            {
+              "seconds": 58.673273100000046,
+              "event": "NorthLoaded=1 Visible=0##58.668566"
+            },
+            {
+              "seconds": 58.68886010000004,
+              "event": "NorthLoaded=1 Visible=1##58.682525"
+            },
+            {
+              "seconds": 71.97790220000022,
+              "event": "NorthRequested=0##71.972160"
+            },
+            {
+              "seconds": 72.03004870000021,
+              "event": "NorthLoaded=0 Visible=0##72.023330;GC##72.027031"
+            },
+            {
+              "seconds": 96.0002742,
+              "event": "NorthRequested=1##95.993506"
+            },
+            {
+              "seconds": 96.0133713,
+              "event": "NorthLoaded=1 Visible=0##96.008512"
+            },
+            {
+              "seconds": 96.021246,
+              "event": "NorthLoaded=1 Visible=1##96.014450"
+            },
+            {
+              "seconds": 109.18182619999999,
+              "event": "NorthRequested=0##109.175156"
+            },
+            {
+              "seconds": 109.22077889999997,
+              "event": "NorthLoaded=0 Visible=0##109.214113;GC##109.217822"
+            },
+            {
+              "seconds": 133.04682259999967,
+              "event": "NorthRequested=1##133.040092"
+            },
+            {
+              "seconds": 133.05772679999967,
+              "event": "NorthLoaded=1 Visible=0##133.053143"
+            },
+            {
+              "seconds": 133.06550529999967,
+              "event": "NorthLoaded=1 Visible=1##133.058686"
+            },
+            {
+              "seconds": 146.23822079999928,
+              "event": "NorthRequested=0##146.232499"
+            },
+            {
+              "seconds": 146.2862024999993,
+              "event": "NorthLoaded=0 Visible=0##146.280022;GC##146.287977"
+            },
+            {
+              "seconds": 170.67103009999937,
+              "event": "NorthRequested=1##170.664146"
+            },
+            {
+              "seconds": 170.68646839999937,
+              "event": "NorthLoaded=1 Visible=0##170.681405"
+            },
+            {
+              "seconds": 170.69372119999937,
+              "event": "NorthLoaded=1 Visible=1##170.686838"
+            },
+            {
+              "seconds": 183.86787409999934,
+              "event": "NorthRequested=0##183.861084"
+            },
+            {
+              "seconds": 183.89948279999933,
+              "event": "NorthLoaded=0 Visible=0##183.892888;GC##183.896750"
+            }
+          ],
+          "frames_over_100ms": [],
+          "stream_window_frames_over_100ms": [],
+          "target_passed": true
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-old\\A-performance-old-2.csv",
+          "elapsed_seconds": 186.36674880000044,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1920",
+            "systemresolution.resy": "1080",
+            "rhiname": "D3D12",
+            "rhifeaturelevel": "SM6",
+            "gpu": "NVIDIA GeForce RTX 4060 Ti",
+            "gpudriver": "616.92",
+            "starttimestamp": "1791181601",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791181788",
+            "captureduration": "186.361549"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 24710,
+              "min": 2.3844,
+              "mean": 7.54215899635775,
+              "p50": 7.3318,
+              "p95": 10.0733,
+              "p99": 11.9308,
+              "max": 64.3239
+            },
+            "GameThreadTime": {
+              "count": 24710,
+              "min": 1.8191,
+              "mean": 3.9979248360987456,
+              "p50": 3.5949,
+              "p95": 6.3669,
+              "p99": 9.9176,
+              "max": 55.9025
+            },
+            "RenderThreadTime": {
+              "count": 24710,
+              "min": 5.1137,
+              "mean": 7.5380093322541475,
+              "p50": 7.3312,
+              "p95": 10.0059,
+              "p99": 11.694,
+              "max": 64.3169
+            },
+            "GPUTime": {
+              "count": 24710,
+              "min": 4.5901,
+              "mean": 6.0679994941319295,
+              "p50": 6.2205,
+              "p95": 6.7539,
+              "p99": 7.0506,
+              "max": 8.0297
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 24710,
+              "min": 0.0102,
+              "mean": 0.03558392958316471,
+              "p50": 0.0237,
+              "p95": 0.0851,
+              "p99": 0.1472,
+              "max": 0.6658
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 24710,
+              "min": 0.0213,
+              "mean": 0.048719283690813436,
+              "p50": 0.0398,
+              "p95": 0.1024,
+              "p99": 0.1552,
+              "max": 0.8032
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 24710,
+              "min": 0.1146,
+              "mean": 0.2662616673411574,
+              "p50": 0.2402,
+              "p95": 0.4288,
+              "p99": 0.5271,
+              "max": 1.1739
+            },
+            "GPUMem/LocalUsedMB": {
+              "count": 24710,
+              "min": 0.0,
+              "mean": 2542.039468101983,
+              "p50": 2537.1602,
+              "p95": 2601.2852,
+              "p99": 2601.2852,
+              "max": 2603.6602
+            },
+            "GPUMem/LocalBudgetMB": {
+              "count": 24710,
+              "min": 0.0,
+              "mean": 15338.379239174423,
+              "p50": 15339.0,
+              "p95": 15339.0,
+              "p99": 15339.0,
+              "max": 15339.0
+            },
+            "GPUMem/SystemUsedMB": {
+              "count": 24710,
+              "min": 0.0,
+              "mean": 932.9581239660057,
+              "p50": 932.9648,
+              "p95": 932.9648,
+              "p99": 932.9648,
+              "max": 964.9648
+            }
+          },
+          "stream_events": [
+            {
+              "seconds": 21.466184299999988,
+              "event": "NorthRequested=1##21.459774"
+            },
+            {
+              "seconds": 21.47913119999999,
+              "event": "NorthLoaded=1 Visible=0##21.474234"
+            },
+            {
+              "seconds": 21.48623249999999,
+              "event": "NorthLoaded=1 Visible=1##21.479636"
+            },
+            {
+              "seconds": 34.65402170000002,
+              "event": "NorthRequested=0##34.647698"
+            },
+            {
+              "seconds": 34.70074700000002,
+              "event": "NorthLoaded=0 Visible=0##34.694908;GC##34.698282"
+            },
+            {
+              "seconds": 58.756463600000004,
+              "event": "NorthRequested=1##58.751046"
+            },
+            {
+              "seconds": 58.775482100000005,
+              "event": "NorthLoaded=1 Visible=0##58.772868"
+            },
+            {
+              "seconds": 58.791544200000004,
+              "event": "NorthLoaded=1 Visible=1##58.785748"
+            },
+            {
+              "seconds": 72.06238900000012,
+              "event": "NorthRequested=0##72.055752"
+            },
+            {
+              "seconds": 72.11729100000014,
+              "event": "NorthLoaded=0 Visible=0##72.110880;GC##72.114232"
+            },
+            {
+              "seconds": 95.94089880000047,
+              "event": "NorthRequested=1##95.934291"
+            },
+            {
+              "seconds": 95.96906360000047,
+              "event": "NorthLoaded=1 Visible=0##95.966025"
+            },
+            {
+              "seconds": 95.97905870000046,
+              "event": "NorthLoaded=1 Visible=1##95.972994"
+            },
+            {
+              "seconds": 109.12429080000013,
+              "event": "NorthRequested=0##109.117998"
+            },
+            {
+              "seconds": 109.18491940000013,
+              "event": "NorthLoaded=0 Visible=0##109.178293;GC##109.181814"
+            },
+            {
+              "seconds": 132.9914331000001,
+              "event": "NorthRequested=1##132.984958"
+            },
+            {
+              "seconds": 133.0057436000001,
+              "event": "NorthLoaded=1 Visible=0##133.001122"
+            },
+            {
+              "seconds": 133.0170060000001,
+              "event": "NorthLoaded=1 Visible=1##133.010532"
+            },
+            {
+              "seconds": 146.28534390000016,
+              "event": "NorthRequested=0##146.278924"
+            },
+            {
+              "seconds": 146.34855530000016,
+              "event": "NorthLoaded=0 Visible=0##146.342108;GC##146.349196"
+            },
+            {
+              "seconds": 170.62926230000068,
+              "event": "NorthRequested=1##170.623257"
+            },
+            {
+              "seconds": 170.64204840000068,
+              "event": "NorthLoaded=1 Visible=0##170.637944"
+            },
+            {
+              "seconds": 170.65023910000068,
+              "event": "NorthLoaded=1 Visible=1##170.643754"
+            },
+            {
+              "seconds": 183.81940400000065,
+              "event": "NorthRequested=0##183.812975"
+            },
+            {
+              "seconds": 183.85787290000064,
+              "event": "NorthLoaded=0 Visible=0##183.851506;GC##183.854622"
+            }
+          ],
+          "frames_over_100ms": [],
+          "stream_window_frames_over_100ms": [],
+          "target_passed": true
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-old\\A-performance-old-3.csv",
+          "elapsed_seconds": 186.7093937000009,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1920",
+            "systemresolution.resy": "1080",
+            "rhiname": "D3D12",
+            "rhifeaturelevel": "SM6",
+            "gpu": "NVIDIA GeForce RTX 4060 Ti",
+            "gpudriver": "616.92",
+            "starttimestamp": "1791181788",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791181975",
+            "captureduration": "186.704093"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 24769,
+              "min": 2.4384,
+              "mean": 7.538027118575639,
+              "p50": 7.3431,
+              "p95": 10.1106,
+              "p99": 11.8762,
+              "max": 36.6155
+            },
+            "GameThreadTime": {
+              "count": 24769,
+              "min": 2.0307,
+              "mean": 3.9780435181073117,
+              "p50": 3.5896,
+              "p95": 6.3886,
+              "p99": 9.423,
+              "max": 21.5381
+            },
+            "RenderThreadTime": {
+              "count": 24769,
+              "min": 5.05,
+              "mean": 7.535841515604183,
+              "p50": 7.3435,
+              "p95": 10.048,
+              "p99": 11.6739,
+              "max": 37.4302
+            },
+            "GPUTime": {
+              "count": 24769,
+              "min": 4.5547,
+              "mean": 6.070742646049497,
+              "p50": 6.221,
+              "p95": 6.7455,
+              "p99": 7.0715,
+              "max": 8.4078
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 24769,
+              "min": 0.01,
+              "mean": 0.03556903791029109,
+              "p50": 0.0238,
+              "p95": 0.0849,
+              "p99": 0.1454,
+              "max": 0.4664
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 24769,
+              "min": 0.0208,
+              "mean": 0.04860003229843757,
+              "p50": 0.0399,
+              "p95": 0.1036,
+              "p99": 0.1536,
+              "max": 0.7047
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 24769,
+              "min": 0.1172,
+              "mean": 0.2670368969276111,
+              "p50": 0.2413,
+              "p95": 0.4303,
+              "p99": 0.5284,
+              "max": 3.3978
+            },
+            "GPUMem/LocalUsedMB": {
+              "count": 24769,
+              "min": 0.0,
+              "mean": 2537.633284896443,
+              "p50": 2537.5352,
+              "p95": 2537.5352,
+              "p99": 2539.9102,
+              "max": 2601.5352
+            },
+            "GPUMem/LocalBudgetMB": {
+              "count": 24769,
+              "min": 0.0,
+              "mean": 15338.380717832775,
+              "p50": 15339.0,
+              "p95": 15339.0,
+              "p99": 15339.0,
+              "max": 15339.0
+            },
+            "GPUMem/SystemUsedMB": {
+              "count": 24769,
+              "min": 0.0,
+              "mean": 933.0449999555897,
+              "p50": 933.0273,
+              "p95": 933.0273,
+              "p99": 933.0273,
+              "max": 965.0273
+            }
+          },
+          "stream_events": [
+            {
+              "seconds": 21.53158119999998,
+              "event": "NorthRequested=1##21.525160"
+            },
+            {
+              "seconds": 21.54431279999998,
+              "event": "NorthLoaded=1 Visible=0##21.539874"
+            },
+            {
+              "seconds": 21.55195389999998,
+              "event": "NorthLoaded=1 Visible=1##21.545274"
+            },
+            {
+              "seconds": 34.72034200000003,
+              "event": "NorthRequested=0##34.713971"
+            },
+            {
+              "seconds": 34.75156300000003,
+              "event": "NorthLoaded=0 Visible=0##34.745239;GC##34.748264"
+            },
+            {
+              "seconds": 59.04255830000002,
+              "event": "NorthRequested=1##59.036963"
+            },
+            {
+              "seconds": 59.06938390000002,
+              "event": "NorthLoaded=1 Visible=0##59.065743"
+            },
+            {
+              "seconds": 59.08309940000002,
+              "event": "NorthLoaded=1 Visible=1##59.077786"
+            },
+            {
+              "seconds": 72.32302450000032,
+              "event": "NorthRequested=0##72.316577"
+            },
+            {
+              "seconds": 72.36932110000032,
+              "event": "NorthLoaded=0 Visible=0##72.362916;GC##72.366144"
+            },
+            {
+              "seconds": 96.26338110000023,
+              "event": "NorthRequested=1##96.257366"
+            },
+            {
+              "seconds": 96.27590730000023,
+              "event": "NorthLoaded=1 Visible=0##96.271560"
+            },
+            {
+              "seconds": 96.28421760000023,
+              "event": "NorthLoaded=1 Visible=1##96.277620"
+            },
+            {
+              "seconds": 109.45965090000037,
+              "event": "NorthRequested=0##109.453709"
+            },
+            {
+              "seconds": 109.50917950000037,
+              "event": "NorthLoaded=0 Visible=0##109.502950;GC##109.508217"
+            },
+            {
+              "seconds": 133.4254249000011,
+              "event": "NorthRequested=1##133.419161"
+            },
+            {
+              "seconds": 133.44235420000112,
+              "event": "NorthLoaded=1 Visible=0##133.438181"
+            },
+            {
+              "seconds": 133.45235200000113,
+              "event": "NorthLoaded=1 Visible=1##133.445835"
+            },
+            {
+              "seconds": 146.7535007000009,
+              "event": "NorthRequested=0##146.747087"
+            },
+            {
+              "seconds": 146.81202500000086,
+              "event": "NorthLoaded=0 Visible=0##146.806331;GC##146.812067"
+            },
+            {
+              "seconds": 170.88581480000136,
+              "event": "NorthRequested=1##170.879214"
+            },
+            {
+              "seconds": 170.89911330000135,
+              "event": "NorthLoaded=1 Visible=0##170.894448"
+            },
+            {
+              "seconds": 170.90693000000135,
+              "event": "NorthLoaded=1 Visible=1##170.900875"
+            },
+            {
+              "seconds": 184.067567800001,
+              "event": "NorthRequested=0##184.060906"
+            },
+            {
+              "seconds": 184.106023800001,
+              "event": "NorthLoaded=0 Visible=0##184.099546;GC##184.102648"
+            }
+          ],
+          "frames_over_100ms": [],
+          "stream_window_frames_over_100ms": [],
+          "target_passed": true
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-old\\Server-first-route.csv",
+          "elapsed_seconds": 38.878760900000024,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1280",
+            "systemresolution.resy": "720",
+            "rhiname": "Null",
+            "rhifeaturelevel": "SM6",
+            "gpu": "",
+            "gpudriver": "",
+            "starttimestamp": "1791181375",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791181413",
+            "captureduration": "38.151429"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 1145,
+              "min": 32.484,
+              "mean": 33.95524969432314,
+              "p50": 33.2493,
+              "p95": 34.0332,
+              "p99": 34.2648,
+              "max": 720.0
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 1144,
+              "min": 0.0643,
+              "mean": 0.21095367132867132,
+              "p50": 0.1884,
+              "p95": 0.3774,
+              "p99": 0.4749,
+              "max": 0.8748
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 1145,
+              "min": 0.0,
+              "mean": 0.06514655021834061,
+              "p50": 0.0532,
+              "p95": 0.1276,
+              "p99": 0.1697,
+              "max": 0.2235
+            },
+            "Exclusive/GameThread/ServerReplicateActors": {
+              "count": 1144,
+              "min": 0.1253,
+              "mean": 0.3530938811188811,
+              "p50": 0.3057,
+              "p95": 0.6816,
+              "p99": 0.8254,
+              "max": 0.9983
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 1144,
+              "min": 0.0989,
+              "mean": 0.25791486013986015,
+              "p50": 0.2403,
+              "p95": 0.4525,
+              "p99": 0.5566,
+              "max": 1.3472
+            }
+          },
+          "stream_events": [],
+          "frames_over_100ms": [
+            {
+              "seconds": 38.878760900000024,
+              "frame_ms": 720.0
+            }
+          ],
+          "stream_window_frames_over_100ms": []
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-old\\Server-performance-old-1.csv",
+          "elapsed_seconds": 187.51693680000028,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1280",
+            "systemresolution.resy": "720",
+            "rhiname": "Null",
+            "rhifeaturelevel": "SM6",
+            "gpu": "",
+            "gpudriver": "",
+            "starttimestamp": "1791181414",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791181600",
+            "captureduration": "186.796994"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 5603,
+              "min": 32.0257,
+              "mean": 33.467238407995715,
+              "p50": 33.2479,
+              "p95": 34.0271,
+              "p99": 34.2604,
+              "max": 720.0
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 5602,
+              "min": 0.0499,
+              "mean": 0.16682845412352731,
+              "p50": 0.1375,
+              "p95": 0.3277,
+              "p99": 0.4373,
+              "max": 1.8106
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 5603,
+              "min": 0.0,
+              "mean": 0.0532216134213814,
+              "p50": 0.0435,
+              "p95": 0.1035,
+              "p99": 0.149,
+              "max": 1.821
+            },
+            "Exclusive/GameThread/ServerReplicateActors": {
+              "count": 5602,
+              "min": 0.1064,
+              "mean": 0.2880799714387719,
+              "p50": 0.2484,
+              "p95": 0.5479,
+              "p99": 0.7461,
+              "max": 1.2314
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 5602,
+              "min": 0.0942,
+              "mean": 0.22935762227775794,
+              "p50": 0.198,
+              "p95": 0.4361,
+              "p99": 0.5931,
+              "max": 1.4548
+            }
+          },
+          "stream_events": [],
+          "frames_over_100ms": [
+            {
+              "seconds": 187.51693680000028,
+              "frame_ms": 720.0
+            }
+          ],
+          "stream_window_frames_over_100ms": []
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-old\\Server-performance-old-2.csv",
+          "elapsed_seconds": 187.41569689999923,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1280",
+            "systemresolution.resy": "720",
+            "rhiname": "Null",
+            "rhifeaturelevel": "SM6",
+            "gpu": "",
+            "gpudriver": "",
+            "starttimestamp": "1791181601",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791181788",
+            "captureduration": "186.695417"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 5599,
+              "min": 31.2861,
+              "mean": 33.47306606536882,
+              "p50": 33.2183,
+              "p95": 34.0284,
+              "p99": 34.2356,
+              "max": 720.0
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 5598,
+              "min": 0.0724,
+              "mean": 0.16808801357627723,
+              "p50": 0.1391,
+              "p95": 0.3237,
+              "p99": 0.4395,
+              "max": 2.7746
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 5599,
+              "min": 0.0,
+              "mean": 0.05270437578138953,
+              "p50": 0.0436,
+              "p95": 0.1013,
+              "p99": 0.1412,
+              "max": 0.329
+            },
+            "Exclusive/GameThread/ServerReplicateActors": {
+              "count": 5598,
+              "min": 0.1062,
+              "mean": 0.2869464808860307,
+              "p50": 0.2496,
+              "p95": 0.5305,
+              "p99": 0.7279,
+              "max": 1.7995
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 5598,
+              "min": 0.096,
+              "mean": 0.23039056806002145,
+              "p50": 0.2004,
+              "p95": 0.43,
+              "p99": 0.6005,
+              "max": 1.3884
+            }
+          },
+          "stream_events": [],
+          "frames_over_100ms": [
+            {
+              "seconds": 187.41569689999923,
+              "frame_ms": 720.0
+            }
+          ],
+          "stream_window_frames_over_100ms": []
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-old\\Server-performance-old-3.csv",
+          "elapsed_seconds": 187.76640190000032,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1280",
+            "systemresolution.resy": "720",
+            "rhiname": "Null",
+            "rhifeaturelevel": "SM6",
+            "gpu": "",
+            "gpudriver": "",
+            "starttimestamp": "1791181788",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791181975",
+            "captureduration": "187.045493"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 5610,
+              "min": 32.3969,
+              "mean": 33.4699468627451,
+              "p50": 33.2383,
+              "p95": 34.0299,
+              "p99": 34.2659,
+              "max": 720.0
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 5609,
+              "min": 0.0704,
+              "mean": 0.16792512034230703,
+              "p50": 0.139,
+              "p95": 0.3282,
+              "p99": 0.4361,
+              "max": 1.3723
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 5610,
+              "min": 0.0,
+              "mean": 0.0520917468805704,
+              "p50": 0.0432,
+              "p95": 0.0995,
+              "p99": 0.1426,
+              "max": 0.342
+            },
+            "Exclusive/GameThread/ServerReplicateActors": {
+              "count": 5609,
+              "min": 0.0969,
+              "mean": 0.28515434123729716,
+              "p50": 0.2477,
+              "p95": 0.5378,
+              "p99": 0.7243,
+              "max": 2.8531
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 5609,
+              "min": 0.0991,
+              "mean": 0.23062627919415224,
+              "p50": 0.199,
+              "p95": 0.4356,
+              "p99": 0.6064,
+              "max": 2.1046
+            }
+          },
+          "stream_events": [],
+          "frames_over_100ms": [
+            {
+              "seconds": 187.76640190000032,
+              "frame_ms": 720.0
+            }
+          ],
+          "stream_window_frames_over_100ms": []
+        }
+      ],
+      "peer_metrics": {
+        "A": {
+          "physical_mib": {
+            "count": 557,
+            "min": 2668.62890625,
+            "mean": 2687.938748316876,
+            "p50": 2684.4296875,
+            "p95": 2717.1796875,
+            "p99": 2744.5078125,
+            "max": 2797.9609375
+          },
+          "net_in_bytes_per_second": null,
+          "net_out_bytes_per_second": null
+        },
+        "B": {
+          "physical_mib": {
+            "count": 557,
+            "min": 416.98828125,
+            "mean": 418.83452788375223,
+            "p50": 417.92578125,
+            "p95": 422.34765625,
+            "p99": 422.74609375,
+            "max": 422.82421875
+          },
+          "net_in_bytes_per_second": null,
+          "net_out_bytes_per_second": null
+        },
+        "Server": {
+          "physical_mib": {
+            "count": 557,
+            "min": 356.3125,
+            "mean": 360.8695649124776,
+            "p50": 360.71875,
+            "p95": 365.62890625,
+            "p99": 367.41796875,
+            "max": 368.09375
+          },
+          "net_in_bytes_per_second": null,
+          "net_out_bytes_per_second": null
+        }
+      },
+      "network_note": "Disabled UE byte-rate counters are unavailable, not zero traffic. See the separate network profile."
+    },
+    {
+      "route": "north",
+      "captures": [
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-north\\A-first-route.csv",
+          "elapsed_seconds": 57.6935903000002,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1920",
+            "systemresolution.resy": "1080",
+            "rhiname": "D3D12",
+            "rhifeaturelevel": "SM6",
+            "gpu": "NVIDIA GeForce RTX 4060 Ti",
+            "gpudriver": "616.92",
+            "starttimestamp": "1791182007",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791182065",
+            "captureduration": "57.688035"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 7677,
+              "min": 2.3947,
+              "mean": 7.515121831444575,
+              "p50": 7.032,
+              "p95": 11.7782,
+              "p99": 16.3409,
+              "max": 41.4953
+            },
+            "GameThreadTime": {
+              "count": 7677,
+              "min": 1.8791,
+              "mean": 4.453040927445617,
+              "p50": 3.6507,
+              "p95": 9.2139,
+              "p99": 16.134,
+              "max": 41.1483
+            },
+            "RenderThreadTime": {
+              "count": 7677,
+              "min": 4.3619,
+              "mean": 7.42486447831184,
+              "p50": 7.0524,
+              "p95": 10.5634,
+              "p99": 12.2884,
+              "max": 31.7532
+            },
+            "GPUTime": {
+              "count": 7677,
+              "min": 4.538,
+              "mean": 5.821570079458122,
+              "p50": 5.8892,
+              "p95": 6.7372,
+              "p99": 6.9817,
+              "max": 7.7719
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 7677,
+              "min": 0.0068,
+              "mean": 0.03838328774260779,
+              "p50": 0.0237,
+              "p95": 0.1011,
+              "p99": 0.1815,
+              "max": 0.3658
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 7677,
+              "min": 0.0173,
+              "mean": 0.05156060961313013,
+              "p50": 0.0417,
+              "p95": 0.1073,
+              "p99": 0.162,
+              "max": 0.4045
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 7677,
+              "min": 0.1012,
+              "mean": 0.26308676566367073,
+              "p50": 0.2347,
+              "p95": 0.4391,
+              "p99": 0.5536,
+              "max": 0.8513
+            },
+            "GPUMem/LocalUsedMB": {
+              "count": 7677,
+              "min": 0.0,
+              "mean": 2581.348476970171,
+              "p50": 2608.4102,
+              "p95": 2608.7227,
+              "p99": 2608.7852,
+              "max": 2611.0977
+            },
+            "GPUMem/LocalBudgetMB": {
+              "count": 7677,
+              "min": 0.0,
+              "mean": 15337.001953888237,
+              "p50": 15339.0,
+              "p95": 15339.0,
+              "p99": 15339.0,
+              "max": 15339.0
+            },
+            "GPUMem/SystemUsedMB": {
+              "count": 7677,
+              "min": 0.0,
+              "mean": 944.7383829360427,
+              "p50": 944.7383,
+              "p95": 944.8008,
+              "p99": 945.1133,
+              "max": 976.7383
+            }
+          },
+          "stream_events": [
+            {
+              "seconds": 21.976793999999977,
+              "event": "NorthRequested=1##21.970337"
+            },
+            {
+              "seconds": 21.994148599999978,
+              "event": "NorthLoaded=1 Visible=0##21.990882"
+            },
+            {
+              "seconds": 22.004056599999977,
+              "event": "NorthLoaded=1 Visible=1##21.997051"
+            },
+            {
+              "seconds": 55.154457200000174,
+              "event": "NorthRequested=0##55.147312"
+            },
+            {
+              "seconds": 55.184299100000175,
+              "event": "NorthLoaded=0 Visible=0##55.177536;GC##55.180520"
+            }
+          ],
+          "frames_over_100ms": [],
+          "stream_window_frames_over_100ms": []
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-north\\A-performance-north-1.csv",
+          "elapsed_seconds": 229.68071469999987,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1920",
+            "systemresolution.resy": "1080",
+            "rhiname": "D3D12",
+            "rhifeaturelevel": "SM6",
+            "gpu": "NVIDIA GeForce RTX 4060 Ti",
+            "gpudriver": "616.92",
+            "starttimestamp": "1791182065",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791182295",
+            "captureduration": "229.675359"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 31001,
+              "min": 2.4442,
+              "mean": 7.408816318828425,
+              "p50": 7.1581,
+              "p95": 10.4042,
+              "p99": 12.7749,
+              "max": 436.349
+            },
+            "GameThreadTime": {
+              "count": 31001,
+              "min": 1.9963,
+              "mean": 4.194942905067578,
+              "p50": 3.6326,
+              "p95": 7.9628,
+              "p99": 12.0015,
+              "max": 436.0607
+            },
+            "RenderThreadTime": {
+              "count": 31001,
+              "min": 4.5267,
+              "mean": 7.370625973355699,
+              "p50": 7.165,
+              "p95": 10.1119,
+              "p99": 11.8654,
+              "max": 38.2874
+            },
+            "GPUTime": {
+              "count": 31001,
+              "min": 4.4599,
+              "mean": 5.831346959775491,
+              "p50": 5.9465,
+              "p95": 6.6884,
+              "p99": 6.9958,
+              "max": 8.0149
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 31001,
+              "min": 0.0076,
+              "mean": 0.03718026192703461,
+              "p50": 0.0239,
+              "p95": 0.0922,
+              "p99": 0.1619,
+              "max": 0.4134
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 31001,
+              "min": 0.0192,
+              "mean": 0.050232937647172675,
+              "p50": 0.0412,
+              "p95": 0.1046,
+              "p99": 0.1554,
+              "max": 0.6001
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 31001,
+              "min": 0.1122,
+              "mean": 0.26068522628302315,
+              "p50": 0.2341,
+              "p95": 0.4245,
+              "p99": 0.5322,
+              "max": 7.0093
+            },
+            "GPUMem/LocalUsedMB": {
+              "count": 31001,
+              "min": 0.0,
+              "mean": 2608.8613341311566,
+              "p50": 2608.9102,
+              "p95": 2609.8477,
+              "p99": 2611.1602,
+              "max": 2612.2227
+            },
+            "GPUMem/LocalBudgetMB": {
+              "count": 31001,
+              "min": 0.0,
+              "mean": 15337.020838037482,
+              "p50": 15339.0,
+              "p95": 15339.0,
+              "p99": 15339.0,
+              "max": 15339.0
+            },
+            "GPUMem/SystemUsedMB": {
+              "count": 31001,
+              "min": 0.0,
+              "mean": 945.12182946034,
+              "p50": 945.1758,
+              "p95": 945.3008,
+              "p99": 945.3008,
+              "max": 977.3008
+            }
+          },
+          "stream_events": [
+            {
+              "seconds": 21.958216800000002,
+              "event": "NorthRequested=1##21.951978"
+            },
+            {
+              "seconds": 21.971199200000004,
+              "event": "NorthLoaded=1 Visible=0##21.966837"
+            },
+            {
+              "seconds": 21.987143800000005,
+              "event": "NorthLoaded=1 Visible=1##21.980403"
+            },
+            {
+              "seconds": 55.292792699999914,
+              "event": "NorthRequested=0##55.286122"
+            },
+            {
+              "seconds": 55.33164109999991,
+              "event": "NorthLoaded=0 Visible=0##55.324910;GC##55.327849"
+            },
+            {
+              "seconds": 79.21620209999975,
+              "event": "NorthRequested=1##79.209365"
+            },
+            {
+              "seconds": 79.22911749999975,
+              "event": "NorthLoaded=1 Visible=0##79.223989"
+            },
+            {
+              "seconds": 79.23653259999975,
+              "event": "NorthLoaded=1 Visible=1##79.229689"
+            },
+            {
+              "seconds": 112.38178709999977,
+              "event": "NorthRequested=0##112.374967"
+            },
+            {
+              "seconds": 112.42715059999979,
+              "event": "NorthLoaded=0 Visible=0##112.420405;GC##112.423464"
+            },
+            {
+              "seconds": 136.57332399999945,
+              "event": "NorthRequested=1##136.566856"
+            },
+            {
+              "seconds": 136.58931689999943,
+              "event": "NorthLoaded=1 Visible=0##136.585526"
+            },
+            {
+              "seconds": 136.59959099999944,
+              "event": "NorthLoaded=1 Visible=1##136.593230"
+            },
+            {
+              "seconds": 169.7697723,
+              "event": "NorthRequested=0##169.763033"
+            },
+            {
+              "seconds": 169.8227477,
+              "event": "NorthLoaded=0 Visible=0##169.815821;GC##169.819148"
+            },
+            {
+              "seconds": 193.62876070000007,
+              "event": "NorthRequested=1##193.621971"
+            },
+            {
+              "seconds": 193.64234340000007,
+              "event": "NorthLoaded=1 Visible=0##193.638211"
+            },
+            {
+              "seconds": 193.65056000000007,
+              "event": "NorthLoaded=1 Visible=1##193.643620"
+            },
+            {
+              "seconds": 226.91349299999976,
+              "event": "NorthRequested=0##226.907064"
+            },
+            {
+              "seconds": 226.9717037999998,
+              "event": "NorthLoaded=0 Visible=0##226.965297;GC##226.971738"
+            }
+          ],
+          "frames_over_100ms": [
+            {
+              "seconds": 13.465262899999999,
+              "frame_ms": 155.8369
+            },
+            {
+              "seconds": 14.740952899999996,
+              "frame_ms": 436.349
+            },
+            {
+              "seconds": 18.053099099999987,
+              "frame_ms": 102.8053
+            }
+          ],
+          "stream_window_frames_over_100ms": [],
+          "target_passed": true
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-north\\A-performance-north-2.csv",
+          "elapsed_seconds": 228.92967420000076,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1920",
+            "systemresolution.resy": "1080",
+            "rhiname": "D3D12",
+            "rhifeaturelevel": "SM6",
+            "gpu": "NVIDIA GeForce RTX 4060 Ti",
+            "gpudriver": "616.92",
+            "starttimestamp": "1791182296",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791182525",
+            "captureduration": "228.920158"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 31655,
+              "min": 3.3331,
+              "mean": 7.2320225619965255,
+              "p50": 7.0601,
+              "p95": 9.7762,
+              "p99": 11.7188,
+              "max": 27.8924
+            },
+            "GameThreadTime": {
+              "count": 31655,
+              "min": 2.2814,
+              "mean": 3.9537849376085927,
+              "p50": 3.5725,
+              "p95": 6.3388,
+              "p99": 9.4311,
+              "max": 26.3237
+            },
+            "RenderThreadTime": {
+              "count": 31655,
+              "min": 4.9541,
+              "mean": 7.230027385879008,
+              "p50": 7.0607,
+              "p95": 9.6995,
+              "p99": 11.4995,
+              "max": 20.0415
+            },
+            "GPUTime": {
+              "count": 31655,
+              "min": 4.5113,
+              "mean": 5.819132269783605,
+              "p50": 5.9048,
+              "p95": 6.6981,
+              "p99": 7.0008,
+              "max": 7.9993
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 31655,
+              "min": 0.0093,
+              "mean": 0.03592092244511136,
+              "p50": 0.0236,
+              "p95": 0.0862,
+              "p99": 0.1527,
+              "max": 0.3099
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 31655,
+              "min": 0.0225,
+              "mean": 0.049173940925604176,
+              "p50": 0.0408,
+              "p95": 0.1015,
+              "p99": 0.1553,
+              "max": 0.5265
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 31655,
+              "min": 0.1178,
+              "mean": 0.25611170115305637,
+              "p50": 0.2307,
+              "p95": 0.4192,
+              "p99": 0.524,
+              "max": 2.6623
+            },
+            "GPUMem/LocalUsedMB": {
+              "count": 31655,
+              "min": 0.0,
+              "mean": 2609.904724706997,
+              "p50": 2609.9727,
+              "p95": 2610.5352,
+              "p99": 2612.2227,
+              "max": 2612.9102
+            },
+            "GPUMem/LocalBudgetMB": {
+              "count": 31655,
+              "min": 0.0,
+              "mean": 15338.030864002527,
+              "p50": 15339.0,
+              "p95": 15339.0,
+              "p99": 15339.0,
+              "max": 15339.0
+            },
+            "GPUMem/SystemUsedMB": {
+              "count": 31655,
+              "min": 0.0,
+              "mean": 945.2738835855315,
+              "p50": 945.3008,
+              "p95": 945.3633,
+              "p99": 945.3633,
+              "max": 977.3008
+            }
+          },
+          "stream_events": [
+            {
+              "seconds": 21.594296400000026,
+              "event": "NorthRequested=1##21.583456"
+            },
+            {
+              "seconds": 21.606379200000028,
+              "event": "NorthLoaded=1 Visible=0##21.597157"
+            },
+            {
+              "seconds": 21.614326900000027,
+              "event": "NorthLoaded=1 Visible=1##21.603015"
+            },
+            {
+              "seconds": 54.7527647999999,
+              "event": "NorthRequested=0##54.741333"
+            },
+            {
+              "seconds": 54.775500999999906,
+              "event": "NorthLoaded=0 Visible=0##54.764267;GC##54.767137"
+            },
+            {
+              "seconds": 78.70301300000003,
+              "event": "NorthRequested=1##78.692035"
+            },
+            {
+              "seconds": 78.72037890000003,
+              "event": "NorthLoaded=1 Visible=0##78.710642"
+            },
+            {
+              "seconds": 78.72902700000003,
+              "event": "NorthLoaded=1 Visible=1##78.717583"
+            },
+            {
+              "seconds": 111.90503069999976,
+              "event": "NorthRequested=0##111.893773"
+            },
+            {
+              "seconds": 111.95335319999975,
+              "event": "NorthLoaded=0 Visible=0##111.942221;GC##111.948400"
+            },
+            {
+              "seconds": 135.82431949999997,
+              "event": "NorthRequested=1##135.813240"
+            },
+            {
+              "seconds": 135.83685899999995,
+              "event": "NorthLoaded=1 Visible=0##135.826952"
+            },
+            {
+              "seconds": 135.84362029999994,
+              "event": "NorthLoaded=1 Visible=1##135.832229"
+            },
+            {
+              "seconds": 169.02184150000005,
+              "event": "NorthRequested=0##169.011008"
+            },
+            {
+              "seconds": 169.06562020000004,
+              "event": "NorthLoaded=0 Visible=0##169.054783;GC##169.062577"
+            },
+            {
+              "seconds": 193.29604019999982,
+              "event": "NorthRequested=1##193.284689"
+            },
+            {
+              "seconds": 193.30873059999982,
+              "event": "NorthLoaded=1 Visible=0##193.299212"
+            },
+            {
+              "seconds": 193.3192628999998,
+              "event": "NorthLoaded=1 Visible=1##193.307818"
+            },
+            {
+              "seconds": 226.45748760000077,
+              "event": "NorthRequested=0##226.446171"
+            },
+            {
+              "seconds": 226.48014350000076,
+              "event": "NorthLoaded=0 Visible=0##226.469079;GC##226.472393"
+            }
+          ],
+          "frames_over_100ms": [],
+          "stream_window_frames_over_100ms": [],
+          "target_passed": true
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-north\\A-performance-north-3.csv",
+          "elapsed_seconds": 229.28318959999902,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1920",
+            "systemresolution.resy": "1080",
+            "rhiname": "D3D12",
+            "rhifeaturelevel": "SM6",
+            "gpu": "NVIDIA GeForce RTX 4060 Ti",
+            "gpudriver": "616.92",
+            "starttimestamp": "1791182526",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791182755",
+            "captureduration": "229.277799"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 30988,
+              "min": 2.4163,
+              "mean": 7.399096088808571,
+              "p50": 7.1939,
+              "p95": 10.2196,
+              "p99": 12.0723,
+              "max": 49.4513
+            },
+            "GameThreadTime": {
+              "count": 30988,
+              "min": 1.8768,
+              "mean": 4.064606944623725,
+              "p50": 3.6393,
+              "p95": 6.5046,
+              "p99": 9.964,
+              "max": 32.9594
+            },
+            "RenderThreadTime": {
+              "count": 30988,
+              "min": 4.6643,
+              "mean": 7.395071476055247,
+              "p50": 7.1942,
+              "p95": 10.1224,
+              "p99": 11.8362,
+              "max": 46.9086
+            },
+            "GPUTime": {
+              "count": 30988,
+              "min": 4.4351,
+              "mean": 5.835844575319478,
+              "p50": 5.9511,
+              "p95": 6.6958,
+              "p99": 6.9986,
+              "max": 8.5586
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 30988,
+              "min": 0.0086,
+              "mean": 0.03761379566283723,
+              "p50": 0.0237,
+              "p95": 0.0939,
+              "p99": 0.1668,
+              "max": 0.3908
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 30988,
+              "min": 0.0221,
+              "mean": 0.05096288563314832,
+              "p50": 0.0413,
+              "p95": 0.1075,
+              "p99": 0.1605,
+              "max": 0.4987
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 30988,
+              "min": 0.1112,
+              "mean": 0.26321814250677683,
+              "p50": 0.2374,
+              "p95": 0.4267,
+              "p99": 0.5312,
+              "max": 3.0271
+            },
+            "GPUMem/LocalUsedMB": {
+              "count": 30988,
+              "min": 0.0,
+              "mean": 2610.1887356105585,
+              "p50": 2610.5977,
+              "p95": 2610.5977,
+              "p99": 2612.9102,
+              "max": 2612.9727
+            },
+            "GPUMem/LocalBudgetMB": {
+              "count": 30988,
+              "min": 0.0,
+              "mean": 15336.525009681167,
+              "p50": 15339.0,
+              "p95": 15339.0,
+              "p99": 15339.0,
+              "max": 15339.0
+            },
+            "GPUMem/SystemUsedMB": {
+              "count": 30988,
+              "min": 0.0,
+              "mean": 945.5036767910159,
+              "p50": 945.6758,
+              "p95": 945.6758,
+              "p99": 945.6758,
+              "max": 977.6758
+            }
+          },
+          "stream_events": [
+            {
+              "seconds": 21.5077838,
+              "event": "NorthRequested=1##21.501219"
+            },
+            {
+              "seconds": 21.5213166,
+              "event": "NorthLoaded=1 Visible=0##21.516610"
+            },
+            {
+              "seconds": 21.529228,
+              "event": "NorthLoaded=1 Visible=1##21.522581"
+            },
+            {
+              "seconds": 54.74920390000003,
+              "event": "NorthRequested=0##54.742692"
+            },
+            {
+              "seconds": 54.79518640000003,
+              "event": "NorthLoaded=0 Visible=0##54.788622;GC##54.791624"
+            },
+            {
+              "seconds": 78.6388494999998,
+              "event": "NorthRequested=1##78.632630"
+            },
+            {
+              "seconds": 78.6512010999998,
+              "event": "NorthLoaded=1 Visible=0##78.646623"
+            },
+            {
+              "seconds": 78.6587418999998,
+              "event": "NorthLoaded=1 Visible=1##78.652324"
+            },
+            {
+              "seconds": 111.8265760999993,
+              "event": "NorthRequested=0##111.819844"
+            },
+            {
+              "seconds": 111.8572159999993,
+              "event": "NorthLoaded=0 Visible=0##111.850565;GC##111.854595"
+            },
+            {
+              "seconds": 136.1850845999992,
+              "event": "NorthRequested=1##136.179017"
+            },
+            {
+              "seconds": 136.19733419999918,
+              "event": "NorthLoaded=1 Visible=0##136.192462"
+            },
+            {
+              "seconds": 136.20488209999917,
+              "event": "NorthLoaded=1 Visible=1##136.198172"
+            },
+            {
+              "seconds": 169.3396580999989,
+              "event": "NorthRequested=0##169.333062"
+            },
+            {
+              "seconds": 169.3936367999989,
+              "event": "NorthLoaded=0 Visible=0##169.387054;GC##169.390014"
+            },
+            {
+              "seconds": 193.32494379999946,
+              "event": "NorthRequested=1##193.318681"
+            },
+            {
+              "seconds": 193.33733859999944,
+              "event": "NorthLoaded=1 Visible=0##193.332893"
+            },
+            {
+              "seconds": 193.34526339999945,
+              "event": "NorthLoaded=1 Visible=1##193.338475"
+            },
+            {
+              "seconds": 226.64264879999897,
+              "event": "NorthRequested=0##226.635775"
+            },
+            {
+              "seconds": 226.69757219999897,
+              "event": "NorthLoaded=0 Visible=0##226.691055;GC##226.694450"
+            }
+          ],
+          "frames_over_100ms": [],
+          "stream_window_frames_over_100ms": [],
+          "target_passed": true
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-north\\Server-first-route.csv",
+          "elapsed_seconds": 58.743779200000034,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1280",
+            "systemresolution.resy": "720",
+            "rhiname": "Null",
+            "rhifeaturelevel": "SM6",
+            "gpu": "",
+            "gpudriver": "",
+            "starttimestamp": "1791182007",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791182065",
+            "captureduration": "58.009056"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 1740,
+              "min": 32.3682,
+              "mean": 33.76079264367816,
+              "p50": 33.2778,
+              "p95": 34.0287,
+              "p99": 34.2885,
+              "max": 720.0
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 1739,
+              "min": 0.0546,
+              "mean": 0.17820396779758482,
+              "p50": 0.1418,
+              "p95": 0.3457,
+              "p99": 0.4444,
+              "max": 1.1903
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 1740,
+              "min": 0.0,
+              "mean": 0.05753873563218391,
+              "p50": 0.045,
+              "p95": 0.116,
+              "p99": 0.1667,
+              "max": 0.3993
+            },
+            "Exclusive/GameThread/ServerReplicateActors": {
+              "count": 1739,
+              "min": 0.0957,
+              "mean": 0.30914399079930993,
+              "p50": 0.2578,
+              "p95": 0.6014,
+              "p99": 0.7639,
+              "max": 1.0654
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 1739,
+              "min": 0.0971,
+              "mean": 0.21017395054629098,
+              "p50": 0.1753,
+              "p95": 0.3949,
+              "p99": 0.5322,
+              "max": 0.8376
+            }
+          },
+          "stream_events": [],
+          "frames_over_100ms": [
+            {
+              "seconds": 58.743779200000034,
+              "frame_ms": 720.0
+            }
+          ],
+          "stream_window_frames_over_100ms": []
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-north\\Server-performance-north-1.csv",
+          "elapsed_seconds": 230.01484530000042,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1280",
+            "systemresolution.resy": "720",
+            "rhiname": "Null",
+            "rhifeaturelevel": "SM6",
+            "gpu": "",
+            "gpudriver": "",
+            "starttimestamp": "1791182065",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791182295",
+            "captureduration": "229.994435"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 6870,
+              "min": 32.2824,
+              "mean": 33.48105462882096,
+              "p50": 33.3212,
+              "p95": 34.0312,
+              "p99": 34.2575,
+              "max": 423.1542
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 6870,
+              "min": 0.0136,
+              "mean": 0.17088819505094613,
+              "p50": 0.139,
+              "p95": 0.333,
+              "p99": 0.4314,
+              "max": 2.8257
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 6870,
+              "min": 0.027,
+              "mean": 0.05419962154294032,
+              "p50": 0.0442,
+              "p95": 0.1035,
+              "p99": 0.1504,
+              "max": 0.5082
+            },
+            "Exclusive/GameThread/ServerReplicateActors": {
+              "count": 6870,
+              "min": 0.1051,
+              "mean": 0.29609289665211064,
+              "p50": 0.2544,
+              "p95": 0.5656,
+              "p99": 0.7624,
+              "max": 3.2366
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 6870,
+              "min": 0.0913,
+              "mean": 0.22941906841339155,
+              "p50": 0.196,
+              "p95": 0.456,
+              "p99": 0.6201,
+              "max": 1.5623
+            }
+          },
+          "stream_events": [],
+          "frames_over_100ms": [
+            {
+              "seconds": 13.619848599999997,
+              "frame_ms": 153.3412
+            },
+            {
+              "seconds": 14.862980699999994,
+              "frame_ms": 423.1542
+            }
+          ],
+          "stream_window_frames_over_100ms": []
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-north\\Server-performance-north-2.csv",
+          "elapsed_seconds": 229.24437289999963,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1280",
+            "systemresolution.resy": "720",
+            "rhiname": "Null",
+            "rhifeaturelevel": "SM6",
+            "gpu": "",
+            "gpudriver": "",
+            "starttimestamp": "1791182296",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791182525",
+            "captureduration": "229.240372"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 6871,
+              "min": 32.3628,
+              "mean": 33.36404786785038,
+              "p50": 33.348,
+              "p95": 34.0302,
+              "p99": 34.2074,
+              "max": 44.5148
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 6871,
+              "min": 0.0528,
+              "mean": 0.16368716344054723,
+              "p50": 0.1354,
+              "p95": 0.3188,
+              "p99": 0.4335,
+              "max": 1.473
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 6871,
+              "min": 0.0301,
+              "mean": 0.05211173046135934,
+              "p50": 0.0431,
+              "p95": 0.0985,
+              "p99": 0.1414,
+              "max": 0.7939
+            },
+            "Exclusive/GameThread/ServerReplicateActors": {
+              "count": 6871,
+              "min": 0.1059,
+              "mean": 0.28396664241012953,
+              "p50": 0.2465,
+              "p95": 0.5403,
+              "p99": 0.7321,
+              "max": 1.2979
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 6871,
+              "min": 0.095,
+              "mean": 0.21901586377528742,
+              "p50": 0.1898,
+              "p95": 0.421,
+              "p99": 0.5707,
+              "max": 1.0415
+            }
+          },
+          "stream_events": [],
+          "frames_over_100ms": [],
+          "stream_window_frames_over_100ms": []
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7APerformance03-north\\Server-performance-north-3.csv",
+          "elapsed_seconds": 229.60249970000044,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1280",
+            "systemresolution.resy": "720",
+            "rhiname": "Null",
+            "rhifeaturelevel": "SM6",
+            "gpu": "",
+            "gpudriver": "",
+            "starttimestamp": "1791182525",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791182755",
+            "captureduration": "229.600656"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 6873,
+              "min": 1.0,
+              "mean": 33.40644546777244,
+              "p50": 33.311,
+              "p95": 34.0407,
+              "p99": 34.3071,
+              "max": 97.5383
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 6872,
+              "min": 0.0567,
+              "mean": 0.17272447613504074,
+              "p50": 0.1414,
+              "p95": 0.338,
+              "p99": 0.4437,
+              "max": 0.9654
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 6872,
+              "min": 0.0291,
+              "mean": 0.054984313154831196,
+              "p50": 0.0441,
+              "p95": 0.1096,
+              "p99": 0.1515,
+              "max": 0.8057
+            },
+            "Exclusive/GameThread/ServerReplicateActors": {
+              "count": 6872,
+              "min": 0.097,
+              "mean": 0.2973321012805588,
+              "p50": 0.253,
+              "p95": 0.5665,
+              "p99": 0.7531,
+              "max": 1.6566
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 6872,
+              "min": 0.0976,
+              "mean": 0.2272346332945285,
+              "p50": 0.1904,
+              "p95": 0.4464,
+              "p99": 0.6016,
+              "max": 0.9417
+            }
+          },
+          "stream_events": [],
+          "frames_over_100ms": [],
+          "stream_window_frames_over_100ms": []
+        }
+      ],
+      "peer_metrics": {
+        "A": {
+          "physical_mib": {
+            "count": 694,
+            "min": 2740.8046875,
+            "mean": 2758.640343569885,
+            "p50": 2756.9609375,
+            "p95": 2778.18359375,
+            "p99": 2798.05078125,
+            "max": 2829.95703125
+          },
+          "net_in_bytes_per_second": null,
+          "net_out_bytes_per_second": null
+        },
+        "B": {
+          "physical_mib": {
+            "count": 694,
+            "min": 415.53125,
+            "mean": 417.27861581412105,
+            "p50": 416.96484375,
+            "p95": 420.7890625,
+            "p99": 421.42578125,
+            "max": 421.70703125
+          },
+          "net_in_bytes_per_second": null,
+          "net_out_bytes_per_second": null
+        },
+        "Server": {
+          "physical_mib": {
+            "count": 694,
+            "min": 356.70703125,
+            "mean": 361.2579926152738,
+            "p50": 361.1796875,
+            "p95": 365.140625,
+            "p99": 366.875,
+            "max": 367.6796875
+          },
+          "net_in_bytes_per_second": null,
+          "net_out_bytes_per_second": null
+        }
+      },
+      "network_note": "Disabled UE byte-rate counters are unavailable, not zero traffic. See the separate network profile."
+    }
+  ],
+  "boundary": "Same-host Development/Null, one 1080p medium rendered client, NullRHI peer and dedicated server. Environment routes have zero AI. First visit is separate; no OS cache purge.",
+  "target_passed": true,
+  "result": "passed",
+  "ai_stress": [
+    {
+      "tag": "Phase7ACombatFinal02-north-combat",
+      "boundary": "Functional six-player/four-AI stress sample with 30 fps cap; separate from uncapped 1080p medium environment acceptance.",
+      "captures": [
+        {
+          "file": "Saved\\Extraction\\Phase7ACombatFinal02-north-combat\\A-north-combat.csv",
+          "elapsed_seconds": 57.30030180000003,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1280",
+            "systemresolution.resy": "720",
+            "rhiname": "D3D12",
+            "rhifeaturelevel": "SM6",
+            "gpu": "NVIDIA GeForce RTX 4060 Ti",
+            "gpudriver": "616.92",
+            "starttimestamp": "1791180840",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791180897",
+            "captureduration": "57.289083"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 1705,
+              "min": 33.2986,
+              "mean": 33.60721513196481,
+              "p50": 33.3334,
+              "p95": 33.3479,
+              "p99": 33.4091,
+              "max": 206.4146
+            },
+            "GameThreadTime": {
+              "count": 1705,
+              "min": 2.3525,
+              "mean": 6.419588680351906,
+              "p50": 4.4735,
+              "p95": 14.2024,
+              "p99": 17.9125,
+              "max": 206.8896
+            },
+            "RenderThreadTime": {
+              "count": 1705,
+              "min": 1.2306,
+              "mean": 5.85672275659824,
+              "p50": 4.8261,
+              "p95": 10.1926,
+              "p99": 11.7395,
+              "max": 42.3512
+            },
+            "GPUTime": {
+              "count": 1705,
+              "min": 5.4599,
+              "mean": 10.8274957771261,
+              "p50": 11.1838,
+              "p95": 12.5188,
+              "p99": 19.4753,
+              "max": 23.5427
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 1705,
+              "min": 0.0136,
+              "mean": 0.08596475073313782,
+              "p50": 0.0683,
+              "p95": 0.1859,
+              "p99": 0.248,
+              "max": 0.52
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 1705,
+              "min": 0.0188,
+              "mean": 0.03696111436950147,
+              "p50": 0.0259,
+              "p95": 0.099,
+              "p99": 0.1121,
+              "max": 0.1335
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 1705,
+              "min": 0.1445,
+              "mean": 0.4012211143695015,
+              "p50": 0.3125,
+              "p95": 0.9359,
+              "p99": 1.1431,
+              "max": 1.3792
+            },
+            "GPUMem/LocalUsedMB": {
+              "count": 1705,
+              "min": 0.0,
+              "mean": 2469.7257438709676,
+              "p50": 2523.6211,
+              "p95": 2587.6211,
+              "p99": 2587.6211,
+              "max": 2587.6211
+            },
+            "GPUMem/LocalBudgetMB": {
+              "count": 1705,
+              "min": 0.0,
+              "mean": 15276.024633431085,
+              "p50": 15339.0,
+              "p95": 15339.0,
+              "p99": 15339.0,
+              "max": 15339.0
+            },
+            "GPUMem/SystemUsedMB": {
+              "count": 1705,
+              "min": 0.0,
+              "mean": 187.90605589442816,
+              "p50": 187.75,
+              "p95": 192.0195,
+              "p99": 223.75,
+              "max": 223.75
+            }
+          },
+          "stream_events": [
+            {
+              "seconds": 31.30658310000003,
+              "event": "NorthRequested=0##31.293884"
+            },
+            {
+              "seconds": 31.406583300000026,
+              "event": "NorthLoaded=0 Visible=0##31.393926;GC##31.397044"
+            },
+            {
+              "seconds": 31.874034700000024,
+              "event": "NorthRequested=1##31.861884"
+            },
+            {
+              "seconds": 31.907367900000025,
+              "event": "NorthLoaded=1 Visible=0##31.897569"
+            },
+            {
+              "seconds": 31.940702700000024,
+              "event": "NorthLoaded=1 Visible=1##31.927979"
+            },
+            {
+              "seconds": 55.56696290000001,
+              "event": "NorthRequested=0##55.553755"
+            },
+            {
+              "seconds": 55.66696370000001,
+              "event": "NorthLoaded=0 Visible=0##55.653834;GC##55.656808"
+            }
+          ],
+          "frames_over_100ms": [
+            {
+              "seconds": 24.21837010000002,
+              "frame_ms": 206.4146
+            },
+            {
+              "seconds": 24.958849100000016,
+              "frame_ms": 119.6941
+            },
+            {
+              "seconds": 50.50027139999997,
+              "frame_ms": 126.0676
+            }
+          ],
+          "stream_window_frames_over_100ms": []
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7ACombatFinal02-north-combat\\Server-north-combat.csv",
+          "elapsed_seconds": 58.345705600000045,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1280",
+            "systemresolution.resy": "720",
+            "rhiname": "Null",
+            "rhifeaturelevel": "SM6",
+            "gpu": "",
+            "gpudriver": "",
+            "starttimestamp": "1791180840",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791180897",
+            "captureduration": "57.619414"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 1701,
+              "min": 32.441,
+              "mean": 34.30082633744856,
+              "p50": 33.2573,
+              "p95": 34.0336,
+              "p99": 34.4771,
+              "max": 720.0
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 1700,
+              "min": 0.0769,
+              "mean": 0.1882849411764706,
+              "p50": 0.1472,
+              "p95": 0.3941,
+              "p99": 0.4856,
+              "max": 1.2146
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 1701,
+              "min": 0.0,
+              "mean": 0.05962151675485009,
+              "p50": 0.044,
+              "p95": 0.145,
+              "p99": 0.1691,
+              "max": 0.3242
+            },
+            "Exclusive/GameThread/ServerReplicateActors": {
+              "count": 1700,
+              "min": 0.3385,
+              "mean": 0.920065588235294,
+              "p50": 0.7185,
+              "p95": 1.9708,
+              "p99": 2.5505,
+              "max": 10.1316
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 1700,
+              "min": 0.1738,
+              "mean": 0.4479117647058824,
+              "p50": 0.3332,
+              "p95": 1.0444,
+              "p99": 1.2723,
+              "max": 5.9471
+            }
+          },
+          "stream_events": [],
+          "frames_over_100ms": [
+            {
+              "seconds": 4.1453866999999995,
+              "frame_ms": 523.721
+            },
+            {
+              "seconds": 24.432331099999995,
+              "frame_ms": 215.4353
+            },
+            {
+              "seconds": 58.345705600000045,
+              "frame_ms": 720.0
+            }
+          ],
+          "stream_window_frames_over_100ms": []
+        }
+      ]
+    },
+    {
+      "tag": "Phase7ACombatFinal02-north-combat-lag",
+      "boundary": "Functional six-player/four-AI stress sample with 30 fps cap; separate from uncapped 1080p medium environment acceptance.",
+      "captures": [
+        {
+          "file": "Saved\\Extraction\\Phase7ACombatFinal02-north-combat-lag\\A-north-combat.csv",
+          "elapsed_seconds": 57.38309530000009,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1280",
+            "systemresolution.resy": "720",
+            "rhiname": "D3D12",
+            "rhifeaturelevel": "SM6",
+            "gpu": "NVIDIA GeForce RTX 4060 Ti",
+            "gpudriver": "616.92",
+            "starttimestamp": "1791180983",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791181041",
+            "captureduration": "57.381758"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 1689,
+              "min": 33.3087,
+              "mean": 33.974597572528126,
+              "p50": 33.3335,
+              "p95": 33.3455,
+              "p99": 33.3957,
+              "max": 516.6347
+            },
+            "GameThreadTime": {
+              "count": 1689,
+              "min": 2.4096,
+              "mean": 5.7382851391355825,
+              "p50": 4.8477,
+              "p95": 11.6247,
+              "p99": 14.673,
+              "max": 107.4342
+            },
+            "RenderThreadTime": {
+              "count": 1689,
+              "min": 1.7883,
+              "mean": 6.0549137951450565,
+              "p50": 4.9393,
+              "p95": 10.5829,
+              "p99": 11.9865,
+              "max": 14.0273
+            },
+            "GPUTime": {
+              "count": 1689,
+              "min": 5.473,
+              "mean": 10.907737181764357,
+              "p50": 11.2858,
+              "p95": 12.8234,
+              "p99": 19.66,
+              "max": 22.664
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 1689,
+              "min": 0.0154,
+              "mean": 0.0946068087625814,
+              "p50": 0.0769,
+              "p95": 0.2006,
+              "p99": 0.2637,
+              "max": 0.4345
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 1689,
+              "min": 0.0255,
+              "mean": 0.10195748963883955,
+              "p50": 0.0765,
+              "p95": 0.2155,
+              "p99": 0.2944,
+              "max": 0.3518
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 1689,
+              "min": 0.1328,
+              "mean": 0.40193806986382474,
+              "p50": 0.3385,
+              "p95": 0.7954,
+              "p99": 1.0252,
+              "max": 1.3364
+            },
+            "GPUMem/LocalUsedMB": {
+              "count": 1689,
+              "min": 0.0,
+              "mean": 2473.6938860864416,
+              "p50": 2530.6211,
+              "p95": 2530.6211,
+              "p99": 2530.6211,
+              "max": 2530.6211
+            },
+            "GPUMem/LocalBudgetMB": {
+              "count": 1689,
+              "min": 0.0,
+              "mean": 15302.673179396092,
+              "p50": 15339.0,
+              "p95": 15339.0,
+              "p99": 15339.0,
+              "max": 15339.0
+            },
+            "GPUMem/SystemUsedMB": {
+              "count": 1689,
+              "min": 0.0,
+              "mean": 209.86184251036116,
+              "p50": 210.1367,
+              "p95": 214.1992,
+              "p99": 242.1367,
+              "max": 246.1367
+            }
+          },
+          "stream_events": [
+            {
+              "seconds": 28.843939300000038,
+              "event": "NorthRequested=0##28.841451"
+            },
+            {
+              "seconds": 29.077283900000037,
+              "event": "NorthLoaded=0 Visible=0##29.075254;GC##29.079238"
+            },
+            {
+              "seconds": 29.710612100000034,
+              "event": "NorthRequested=1##29.708113"
+            },
+            {
+              "seconds": 29.743957100000035,
+              "event": "NorthLoaded=1 Visible=0##29.744146"
+            },
+            {
+              "seconds": 29.777278600000034,
+              "event": "NorthLoaded=1 Visible=1##29.775052"
+            },
+            {
+              "seconds": 55.049474100000076,
+              "event": "NorthRequested=0##55.045743"
+            },
+            {
+              "seconds": 55.31615080000008,
+              "event": "NorthLoaded=0 Visible=0##55.313384;GC##55.319676"
+            }
+          ],
+          "frames_over_100ms": [
+            {
+              "seconds": 26.677269100000032,
+              "frame_ms": 510.2959
+            },
+            {
+              "seconds": 43.72828780000004,
+              "frame_ms": 516.6347
+            },
+            {
+              "seconds": 49.733554900000065,
+              "frame_ms": 138.3316
+            }
+          ],
+          "stream_window_frames_over_100ms": []
+        },
+        {
+          "file": "Saved\\Extraction\\Phase7ACombatFinal02-north-combat-lag\\Server-north-combat.csv",
+          "elapsed_seconds": 57.720583199999986,
+          "metadata": {
+            "platform": "Windows",
+            "config": "Development",
+            "engineversion": "5.8.3-0+UE5",
+            "os": "Windows 10 (22H2) [10.0.19045.6466] ",
+            "cpu": "AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor",
+            "systemresolution.resx": "1280",
+            "systemresolution.resy": "720",
+            "rhiname": "Null",
+            "rhifeaturelevel": "SM6",
+            "gpu": "",
+            "gpudriver": "",
+            "starttimestamp": "1791180983",
+            "vsyncenabled": "0",
+            "endtimestamp": "1791181041",
+            "captureduration": "57.719067"
+          },
+          "metrics": {
+            "FrameTime": {
+              "count": 1730,
+              "min": 32.4236,
+              "mean": 33.36449895953757,
+              "p50": 33.2982,
+              "p95": 34.0326,
+              "p99": 34.1418,
+              "max": 40.7826
+            },
+            "Exclusive/GameThread/NetworkIncoming": {
+              "count": 1730,
+              "min": 0.0881,
+              "mean": 0.20665040462427745,
+              "p50": 0.1731,
+              "p95": 0.4079,
+              "p99": 0.4786,
+              "max": 0.8326
+            },
+            "Exclusive/GameThread/NetworkOutgoing": {
+              "count": 1730,
+              "min": 0.1032,
+              "mean": 0.2202292485549133,
+              "p50": 0.1774,
+              "p95": 0.4399,
+              "p99": 0.536,
+              "max": 0.6229
+            },
+            "Exclusive/GameThread/ServerReplicateActors": {
+              "count": 1730,
+              "min": 0.372,
+              "mean": 0.9570800578034682,
+              "p50": 0.8049,
+              "p95": 1.9216,
+              "p99": 2.384,
+              "max": 2.8256
+            },
+            "Exclusive/GameThread/TickActors": {
+              "count": 1730,
+              "min": 0.1851,
+              "mean": 0.48924832369942195,
+              "p50": 0.4041,
+              "p95": 0.9694,
+              "p99": 1.2307,
+              "max": 11.2279
+            }
+          },
+          "stream_events": [],
+          "frames_over_100ms": [],
+          "stream_window_frames_over_100ms": []
+        }
+      ]
+    }
+  ],
+  "network_profiles": [
+    {
+      "route": "old",
+      "folder": "Saved\\Extraction\\Phase7ANetwork01-old",
+      "boundary": "Separate >=60 s route sample plus first visit, same map/binaries/1080p medium, net.EnableNetStats=1. Not substituted for the three long frame-time samples.",
+      "samples": 105,
+      "peer_metrics": {
+        "A": {
+          "net_in_bytes_per_second": {
+            "count": 105,
+            "min": 1243,
+            "mean": 1421.5523809523809,
+            "p50": 1419,
+            "p95": 1462,
+            "p99": 1496,
+            "max": 1586
+          },
+          "net_out_bytes_per_second": {
+            "count": 105,
+            "min": 2673,
+            "mean": 5432.638095238095,
+            "p50": 5363,
+            "p95": 6267,
+            "p99": 6385,
+            "max": 6466
+          }
+        },
+        "B": {
+          "net_in_bytes_per_second": {
+            "count": 105,
+            "min": 1562,
+            "mean": 1923.8666666666666,
+            "p50": 1932,
+            "p95": 2003,
+            "p99": 2012,
+            "max": 2122
+          },
+          "net_out_bytes_per_second": {
+            "count": 105,
+            "min": 1874,
+            "mean": 1899.1714285714286,
+            "p50": 1901,
+            "p95": 1915,
+            "p99": 1934,
+            "max": 2014
+          }
+        },
+        "Server": {
+          "net_in_bytes_per_second": {
+            "count": 105,
+            "min": 4656,
+            "mean": 7316.771428571428,
+            "p50": 7254,
+            "p95": 8151,
+            "p99": 8309,
+            "max": 8338
+          },
+          "net_out_bytes_per_second": {
+            "count": 105,
+            "min": 2818,
+            "mean": 3343.809523809524,
+            "p50": 3351,
+            "p95": 3449,
+            "p99": 3517,
+            "max": 3529
+          }
+        }
+      }
+    },
+    {
+      "route": "north",
+      "folder": "Saved\\Extraction\\Phase7ANetwork01-north",
+      "boundary": "Separate >=60 s route sample plus first visit, same map/binaries/1080p medium, net.EnableNetStats=1. Not substituted for the three long frame-time samples.",
+      "samples": 161,
+      "peer_metrics": {
+        "A": {
+          "net_in_bytes_per_second": {
+            "count": 161,
+            "min": 1121,
+            "mean": 1416.3664596273293,
+            "p50": 1417,
+            "p95": 1461,
+            "p99": 1531,
+            "max": 1601
+          },
+          "net_out_bytes_per_second": {
+            "count": 161,
+            "min": 2397,
+            "mean": 5156.142857142857,
+            "p50": 5198,
+            "p95": 5839,
+            "p99": 6114,
+            "max": 6292
+          }
+        },
+        "B": {
+          "net_in_bytes_per_second": {
+            "count": 161,
+            "min": 1279,
+            "mean": 1934.5652173913043,
+            "p50": 1942,
+            "p95": 2051,
+            "p99": 2124,
+            "max": 2127
+          },
+          "net_out_bytes_per_second": {
+            "count": 161,
+            "min": 1139,
+            "mean": 1890.0807453416148,
+            "p50": 1900,
+            "p95": 1915,
+            "p99": 1920,
+            "max": 2008
+          }
+        },
+        "Server": {
+          "net_in_bytes_per_second": {
+            "count": 161,
+            "min": 4067,
+            "mean": 7060.186335403727,
+            "p50": 7083,
+            "p95": 7781,
+            "p99": 8261,
+            "max": 8262
+          },
+          "net_out_bytes_per_second": {
+            "count": 161,
+            "min": 2233,
+            "mean": 3349.7639751552797,
+            "p50": 3354,
+            "p95": 3477,
+            "p99": 3598,
+            "max": 3637
+          }
+        }
+      }
+    }
+  ]
+}

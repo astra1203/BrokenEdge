@@ -25,6 +25,11 @@ def prepare():
         for package in read(WORK / folder / 'Packages.json'):
             for obj in package.get('objects', []):
                 if obj['class'] == 'StaticMesh':
+                    # CUE4Parse emits resolved package names or raw import paths
+                    # depending on which dependency was loaded first.
+                    for slot in obj.get('materials', []):
+                        if slot.get('MaterialInterface'):
+                            slot['MaterialInterface']['ObjectPath'] = canonical(slot['MaterialInterface']['ObjectPath'])
                     mesh_meta[canonical(obj['object_path'])] = obj
         for result in read(WORK / folder / 'ExportResults.json'):
             if result['Success']:
@@ -101,8 +106,9 @@ def prepare():
         used_materials.update(s for s in slots if s)
     used_textures = set(v['texture'] for p, m in materials.items() if p in used_materials for v in m['channels'].values() if v)
     manifest = {'version': 1, 'origin': selection['origin'], 'actors': actors,
-                'meshes': meshes, 'materials': {p: m for p, m in materials.items() if p in used_materials},
-                'textures': {p: t for p, t in textures.items() if p in used_textures},
+                'meshes': dict(sorted(meshes.items())),
+                'materials': {p: materials[p] for p in sorted(materials) if p in used_materials},
+                'textures': {p: textures[p] for p in sorted(textures) if p in used_textures},
                 'excluded': excluded, 'missing_materials': sorted(used_materials - set(materials))}
     if manifest['missing_materials']:
         raise RuntimeError('Selected material slots were not resolved: ' + str(manifest['missing_materials']))

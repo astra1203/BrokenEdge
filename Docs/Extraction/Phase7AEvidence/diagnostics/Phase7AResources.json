@@ -1,0 +1,112 @@
+{
+  "current": {
+    "utc": "2026-10-05T07:53:48.232568+00:00",
+    "c_free_gib": 66.28533554077148,
+    "d_free_gib": 230.81290817260742,
+    "ram_free_gib": 13.861160278320312,
+    "commit_used_gib": 27.454376220703125,
+    "commit_limit_gib": 51.32893753051758
+  },
+  "first_sample": {
+    "utc": "2026-10-05T04:27:15.680516+00:00",
+    "c_free_gib": 69.78230285644531,
+    "d_free_gib": 233.65799713134766,
+    "ram_free_gib": 13.969551086425781,
+    "commit_used_gib": 28.791046142578125,
+    "commit_limit_gib": 51.32893753051758
+  },
+  "minimum": {
+    "c_free_gib": 65.85789489746094,
+    "d_free_gib": 230.58667373657227,
+    "ram_free_gib": 0.611846923828125
+  },
+  "maximum_commit_used_gib": 48.56265640258789,
+  "sample_count": 1973,
+  "failed_tasks": [
+    {
+      "tag": "Phase7AAssets01-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 1
+    },
+    {
+      "tag": "Phase7ACombatFinal01-north-combat-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 1
+    },
+    {
+      "tag": "Phase7AConvert01-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 1
+    },
+    {
+      "tag": "Phase7ADebug01-resources",
+      "result": "failed",
+      "error": "RuntimeError(\"Resource limit reached: {'utc': '2026-10-05T04:51:47.218271+00:00', 'c_free_gib': 68.12010192871094, 'd_free_gib': 233.19000625610352, 'ram_free_gib': 2.336750030517578, 'commit_used_gib': 46.156883239746094, 'commit_limit_gib': 52.34722900390625}\")",
+      "exit_code": null
+    },
+    {
+      "tag": "Phase7AEditor01-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 6
+    },
+    {
+      "tag": "Phase7ANorthDebug01-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 1
+    },
+    {
+      "tag": "Phase7ANorthDebug02-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 1
+    },
+    {
+      "tag": "Phase7APerformance01-old-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 1
+    },
+    {
+      "tag": "Phase7APerformance02-old-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 1
+    },
+    {
+      "tag": "Phase7APerformanceSummary01-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 1
+    },
+    {
+      "tag": "Phase7ARegression01-equipment-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 1
+    },
+    {
+      "tag": "Phase7ARepro01-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 1
+    },
+    {
+      "tag": "Phase7AStreaming01-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 1
+    },
+    {
+      "tag": "Phase7AStreamingFinal01-north-combat-resources",
+      "result": "failed",
+      "error": null,
+      "exit_code": 1
+    }
+  ],
+  "boundary": "Whole-machine samples, includes other shared applications; no claim that all consumption belongs to this task. Final owned game/editor process query returned none."
+}

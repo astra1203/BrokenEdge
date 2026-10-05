@@ -1,0 +1,62 @@
+{
+  "group": "performance",
+  "result": "passed",
+  "steps": [
+    {
+      "name": "old",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7APerformance03-old",
+        "--timeout",
+        "2400",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--tag",
+        "Phase7APerformance03-old",
+        "--scenario",
+        "performance",
+        "--performance-route",
+        "old",
+        "--players",
+        "2",
+        "--rendered-clients",
+        "1",
+        "--packaged"
+      ],
+      "pid": 26360,
+      "exit_code": 0
+    },
+    {
+      "name": "north",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7APerformance03-north",
+        "--timeout",
+        "2400",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--tag",
+        "Phase7APerformance03-north",
+        "--scenario",
+        "performance",
+        "--performance-route",
+        "north",
+        "--players",
+        "2",
+        "--rendered-clients",
+        "1",
+        "--packaged"
+      ],
+      "pid": 57664,
+      "exit_code": 0
+    }
+  ],
+  "started_utc": "2026-10-05T06:22:24.876412+00:00",
+  "finished_utc": "2026-10-05T06:45:56.890729+00:00"
+}

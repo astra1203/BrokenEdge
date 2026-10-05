@@ -11,7 +11,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
-parser.add_argument('task', choices=['assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'equipment', 'phase6b-assets', 'progression'])
+parser.add_argument('task', choices=['assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
 parser.add_argument('--tag', required=True)
 parser.add_argument('--store', type=Path, help='Existing store directory; only for recover-existing')
 parser.add_argument('--verify-profile')
@@ -22,7 +22,10 @@ out = ROOT / 'Saved/Extraction' / args.tag
 out.mkdir(parents=True, exist_ok=False)
 command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor-Cmd.exe'), str(ROOT / 'BrokenEdge.uproject'),
            '-unattended', '-nosplash', '-nosound', '-NoLoadingScreen', '-NullRHI', '-abslog=' + str(out / 'Editor.log')]
-if args.task == 'phase6b-assets':
+if args.task in ['north-import', 'phase7a-assets', 'phase7a-audit']:
+    script = {'north-import': 'Scripts/SpaceCenter/import_sample.py', 'phase7a-assets': 'Scripts/Extraction/prepare_phase7a.py', 'phase7a-audit': 'Scripts/Extraction/audit_phase7a.py'}[args.task]
+    command += ['-run=pythonscript', '-script=' + str(ROOT / script)]
+elif args.task == 'phase6b-assets':
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/prepare_phase6b.py')]
 elif args.task == 'phase6a-assets':
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/prepare_phase6a.py')]
@@ -42,6 +45,9 @@ else:
 metadata = {'task': args.task, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'command': command}
 environment = os.environ.copy()
 environment['UE_SKIP_UBT_SDK_SETUP'] = '1'
+environment['EXTRACTION_RUN_DIR'] = str(out)
+if args.task == 'north-import':
+    environment.update(SPACECENTER_WORK=str(ROOT / 'Saved/SpaceCenter/Phase7A'), SPACECENTER_ASSETS_ONLY='1')
 with (out / 'Process.log').open('wb') as log:
     proc = subprocess.Popen(command, cwd=ROOT, env=environment, stdout=log, stderr=subprocess.STDOUT,
                             creationflags=subprocess.CREATE_NO_WINDOW)
@@ -56,7 +62,10 @@ with (out / 'Process.log').open('wb') as log:
         metadata['error'] = 'Editor task timed out'
 text = (out / 'Editor.log').read_text(encoding='utf-8', errors='replace')
 passed = metadata['exit_code'] == 0 and 'Fatal error:' not in text and 'Traceback (most recent call last)' not in text
-if args.task == 'phase6b-assets':
+if args.task in ['north-import', 'phase7a-assets', 'phase7a-audit']:
+    marker = {'north-import': 'SPACE_REGION_ASSETS_COMPLETE', 'phase7a-assets': 'EXTRACTION_PHASE7A_ASSETS_PREPARED', 'phase7a-audit': 'EXTRACTION_PHASE7A_AUDIT_PASSED'}[args.task]
+    passed = passed and marker in text
+elif args.task == 'phase6b-assets':
     passed = passed and 'EXTRACTION_PHASE6B_ASSETS_PREPARED' in text
 elif args.task == 'phase6a-assets':
     passed = passed and 'EXTRACTION_PHASE6A_ASSETS_PREPARED' in text

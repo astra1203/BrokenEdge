@@ -12,7 +12,10 @@ from pathlib import Path
 import traceback
 import unreal
 
-WORK = Path(unreal.Paths.project_saved_dir()) / 'SpaceCenter'
+BASE_WORK = Path(unreal.Paths.project_saved_dir()) / 'SpaceCenter'
+WORK = Path(os.environ.get('SPACECENTER_WORK', str(BASE_WORK))).resolve()
+if not WORK.is_relative_to(BASE_WORK.resolve()):
+    raise ValueError('Import work directory must stay inside Saved/SpaceCenter')
 ROOT = '/Game/Maps/SpaceCenter'
 MAP = ROOT + '/L_SpaceCenterSample'
 MANIFEST = json.loads((WORK / 'ImportManifest.json').read_text(encoding='utf-8'))
@@ -20,7 +23,8 @@ LIB = unreal.EditorAssetLibrary
 TOOLS = unreal.AssetToolsHelpers.get_asset_tools()
 EDIT = unreal.MaterialEditingLibrary
 STATE_FILE = WORK / 'ImportedAssets.json'
-state = json.loads(STATE_FILE.read_text(encoding='utf-8')) if STATE_FILE.exists() else {}
+state = json.loads(STATE_FILE.read_text(encoding='utf-8')) if STATE_FILE.exists() else (
+    json.loads((BASE_WORK / 'ImportedAssets.json').read_text(encoding='utf-8')) if WORK != BASE_WORK else {})
 report = {'assets': [], 'actors': [], 'errors': []}
 
 
@@ -139,6 +143,27 @@ def constant_texture(name, rgb, normal=False):
     return texture
 
 
+def material_matches(mi, info, textures):
+    if mi.get_editor_property('parent') != master(info['glass']):
+        return False
+    for key, value in [('UVScale', info['uv_scale']), ('Roughness', info['roughness']), ('Metallic', info['metallic'])]:
+        if abs(EDIT.get_material_instance_scalar_parameter_value(mi, key) - float(value)) > .00001:
+            return False
+    color = EDIT.get_material_instance_vector_parameter_value(mi, 'Tint')
+    desired = (info['tint'] if info['channels']['base'] else [.55, .55, .55]) + [1]
+    if any(abs(getattr(color, channel) - value) > .00001 for channel, value in zip('rgba', desired)):
+        return False
+    defaults = {'base': '/Engine/EngineResources/WhiteSquareTexture',
+                'normal': state['texture:generated:NeutralNormal']['asset'],
+                'emissive': state['texture:generated:Black']['asset']}
+    for channel, parameter in [('base', 'BaseTex'), ('normal', 'NormalTex'), ('emissive', 'EmissionTex')]:
+        choice = info['channels'][channel]
+        wanted = textures[choice['texture']] if choice else LIB.load_asset(defaults[channel])
+        if EDIT.get_material_instance_texture_parameter_value(mi, parameter) != wanted:
+            return False
+    return True
+
+
 def run():
     meshes = {p: import_file(e, 'mesh') for p, e in MANIFEST['meshes'].items()}
     for mesh in meshes.values():
@@ -150,11 +175,17 @@ def run():
     master(False)
     master(True)
     mats = {}
+    shared_materials = json.loads((BASE_WORK / 'ImportManifest.json').read_text(encoding='utf-8'))['materials'] if WORK != BASE_WORK else {}
     for p, info in MANIFEST['materials'].items():
         path = ROOT + '/Materials/MI_' + info['id']
+        if p in shared_materials and LIB.does_asset_exist(path):
+            mats[p] = LIB.load_asset(path)
+            continue
         if LIB.does_asset_exist(path):
             mats[p] = LIB.load_asset(path)
             mi = mats[p]
+            if WORK != BASE_WORK and material_matches(mi, info, textures):
+                continue
         else:
             mi = TOOLS.create_asset('MI_' + info['id'], ROOT + '/Materials', unreal.MaterialInstanceConstant, unreal.MaterialInstanceConstantFactoryNew())
         EDIT.set_material_instance_parent(mi, master(info['glass']))
@@ -163,9 +194,10 @@ def run():
             if choice:
                 texture = textures[choice['texture']]
                 if channel == 'normal':
-                    texture.set_editor_property('srgb', False)
-                    texture.set_editor_property('compression_settings', unreal.TextureCompressionSettings.TC_NORMALMAP)
-                    LIB.save_loaded_asset(texture)
+                    if texture.get_editor_property('srgb') or texture.get_editor_property('compression_settings') != unreal.TextureCompressionSettings.TC_NORMALMAP:
+                        texture.set_editor_property('srgb', False)
+                        texture.set_editor_property('compression_settings', unreal.TextureCompressionSettings.TC_NORMALMAP)
+                        LIB.save_loaded_asset(texture)
                 EDIT.set_material_instance_texture_parameter_value(mi, parameter, texture)
         color = info['tint'] if info['channels']['base'] else [.55, .55, .55]
         EDIT.set_material_instance_vector_parameter_value(mi, 'Tint', unreal.LinearColor(*color, 1))
@@ -174,6 +206,13 @@ def run():
         EDIT.update_material_instance(mi)
         LIB.save_loaded_asset(mi)
         mats[p] = mi
+    if os.environ.get('SPACECENTER_ASSETS_ONLY') == '1':
+        report['result'] = 'passed'
+        report['mode'] = 'assets_only'
+        save_json(STATE_FILE, state)
+        save_json(WORK / 'ImportReport.json', report)
+        print('SPACE_REGION_ASSETS_COMPLETE', len(meshes), flush=True)
+        return
     editor = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
     actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
     if LIB.does_asset_exist(MAP):

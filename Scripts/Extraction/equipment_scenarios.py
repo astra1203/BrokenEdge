@@ -113,7 +113,7 @@ def run(g):
 
     if len(roles) == 6:
         check('Six humans and four AI coexist with equipment', lambda: len(state('Server')['players']) == 6 and all(len(state(p)['guards']) == 4 for p in peers))
-        check('Equipment map retains complete patrol navigation', lambda: len(state('Server')['nav_paths']) == 6 and all(p['valid'] for p in state('Server')['nav_paths']))
+        check('Equipment map retains complete patrol navigation', lambda: len(state('Server')['nav_paths']) == 10 and all(p['valid'] for p in state('Server')['nav_paths']))
         check('Equipment map guards reach patrol points', lambda: all(a['arrivals'] >= 1 for a in state('Server')['guards']), 80)
         # After proving live navigation, isolate the supply/armor comparison
         # from unrelated AI bullets. AI stays alive; PVPVE covers its combat.

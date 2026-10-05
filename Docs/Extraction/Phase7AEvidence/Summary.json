@@ -1,0 +1,777 @@
+{
+  "created_utc": "2026-10-05T07:59:21.248313+00:00",
+  "large_json_compression": "gzip above 1 MiB; original bytes retained",
+  "base_commit": "84680996aa16a810979ef01af0878e3bda2a5c9b",
+  "engine": "C:/UnrealProjects/UnrealEngine-5.8.3-release",
+  "runs": [
+    {
+      "name": "editor",
+      "folder": "Saved/Extraction/Phase7AEditor04",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "server-package",
+      "folder": "Saved/Extraction/Phase7APackages01-server",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "client-package",
+      "folder": "Saved/Extraction/Phase7APackages01-client",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "conversion",
+      "folder": "Saved/SpaceCenter/Phase7A/ConversionRuns/Phase7ARepro02",
+      "report": "Run.json"
+    },
+    {
+      "name": "assembly",
+      "folder": "Saved/Extraction/Phase7AAssets03",
+      "report": "Run.json"
+    },
+    {
+      "name": "repeat-import",
+      "folder": "Saved/Extraction/Phase7ARepro02",
+      "report": "Report.json"
+    },
+    {
+      "name": "import",
+      "folder": "Saved/Extraction/Phase7ARepro02-import",
+      "report": "Run.json"
+    },
+    {
+      "name": "audit",
+      "folder": "Saved/Extraction/Phase7ARepro02-audit",
+      "report": "Report.json",
+      "metadata": "Run.json"
+    },
+    {
+      "name": "streaming-two",
+      "folder": "Saved/Extraction/Phase7AStreamingFinal01-two-rendered",
+      "report": "Report.json"
+    },
+    {
+      "name": "streaming-six",
+      "folder": "Saved/Extraction/Phase7AStreamingFinal01-six",
+      "report": "Report.json"
+    },
+    {
+      "name": "streaming-six-lag",
+      "folder": "Saved/Extraction/Phase7AStreamingFinal01-six-lag",
+      "report": "Report.json"
+    },
+    {
+      "name": "north-combat",
+      "folder": "Saved/Extraction/Phase7ACombatFinal02-north-combat",
+      "report": "Report.json"
+    },
+    {
+      "name": "north-combat-lag",
+      "folder": "Saved/Extraction/Phase7ACombatFinal02-north-combat-lag",
+      "report": "Report.json"
+    },
+    {
+      "name": "performance",
+      "folder": "Saved/Extraction/Phase7APerformance03",
+      "report": "Performance.json"
+    },
+    {
+      "name": "performance-old",
+      "folder": "Saved/Extraction/Phase7APerformance03-old",
+      "report": "Report.json"
+    },
+    {
+      "name": "performance-north",
+      "folder": "Saved/Extraction/Phase7APerformance03-north",
+      "report": "Report.json"
+    },
+    {
+      "name": "network-old",
+      "folder": "Saved/Extraction/Phase7ANetwork01-old",
+      "report": "Report.json"
+    },
+    {
+      "name": "network-north",
+      "folder": "Saved/Extraction/Phase7ANetwork01-north",
+      "report": "Report.json"
+    },
+    {
+      "name": "regression-progression",
+      "folder": "Saved/Extraction/Phase7ARegression01-progression",
+      "report": "Report.json"
+    },
+    {
+      "name": "regression-equipment",
+      "folder": "Saved/Extraction/Phase7ARegression02-equipment",
+      "report": "Report.json"
+    },
+    {
+      "name": "regression-squad",
+      "folder": "Saved/Extraction/Phase7ARegression02-squad",
+      "report": "Report.json"
+    },
+    {
+      "name": "regression-pvpve",
+      "folder": "Saved/Extraction/Phase7ARegression02-pvpve",
+      "report": "Report.json"
+    },
+    {
+      "name": "regression-lifecycle",
+      "folder": "Saved/Extraction/Phase7ARegression02-lifecycle",
+      "report": "Report.json"
+    },
+    {
+      "name": "regression-inventory",
+      "folder": "Saved/Extraction/Phase7ARegression02-inventory",
+      "report": "Report.json"
+    },
+    {
+      "name": "regression-settlement",
+      "folder": "Saved/Extraction/Phase7ARegression02-settlement",
+      "report": "Report.json"
+    },
+    {
+      "name": "regression-disconnect",
+      "folder": "Saved/Extraction/Phase7ARegression02-disconnect",
+      "report": "Report.json"
+    },
+    {
+      "name": "rules-inventory",
+      "folder": "Saved/Extraction/Phase7ARules01-inventory",
+      "report": "Run.json"
+    },
+    {
+      "name": "rules-persistence",
+      "folder": "Saved/Extraction/Phase7ARules01-persistence",
+      "report": "Run.json"
+    },
+    {
+      "name": "rules-equipment",
+      "folder": "Saved/Extraction/Phase7ARules01-equipment",
+      "report": "Run.json"
+    },
+    {
+      "name": "rules-progression",
+      "folder": "Saved/Extraction/Phase7ARules01-progression",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-extraction",
+      "folder": "Saved/Extraction/Phase7ALegacy01-extraction",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-teams",
+      "folder": "Saved/Extraction/Phase7ALegacy01-teams",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-freeforall",
+      "folder": "Saved/Extraction/Phase7ALegacy01-freeforall",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-teardown",
+      "folder": "Saved/Extraction/Phase7ALegacy01-teardown",
+      "report": "Run.json"
+    },
+    {
+      "name": "legacy-lan",
+      "folder": "Saved/Extraction/Phase7ALegacy01-lan",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AAssets02-resources",
+      "folder": "Saved/Extraction/Phase7AAssets02-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AAssets03-resources",
+      "folder": "Saved/Extraction/Phase7AAssets03-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AAudit01-resources",
+      "folder": "Saved/Extraction/Phase7AAudit01-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ACombatFinal02-north-combat-lag-resources",
+      "folder": "Saved/Extraction/Phase7ACombatFinal02-north-combat-lag-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ACombatFinal02-north-combat-resources",
+      "folder": "Saved/Extraction/Phase7ACombatFinal02-north-combat-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AConvert02-resources",
+      "folder": "Saved/Extraction/Phase7AConvert02-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AEditor02-resources",
+      "folder": "Saved/Extraction/Phase7AEditor02-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AEditor03-resources",
+      "folder": "Saved/Extraction/Phase7AEditor03-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AEditor04-resources",
+      "folder": "Saved/Extraction/Phase7AEditor04-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AImport01-resources",
+      "folder": "Saved/Extraction/Phase7AImport01-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ALegacy01-extraction-resources",
+      "folder": "Saved/Extraction/Phase7ALegacy01-extraction-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ALegacy01-freeforall-resources",
+      "folder": "Saved/Extraction/Phase7ALegacy01-freeforall-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ALegacy01-lan-resources",
+      "folder": "Saved/Extraction/Phase7ALegacy01-lan-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ALegacy01-teams-resources",
+      "folder": "Saved/Extraction/Phase7ALegacy01-teams-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ALegacy01-teardown-resources",
+      "folder": "Saved/Extraction/Phase7ALegacy01-teardown-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ANetwork01-north-resources",
+      "folder": "Saved/Extraction/Phase7ANetwork01-north-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ANetwork01-old-resources",
+      "folder": "Saved/Extraction/Phase7ANetwork01-old-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7APackages01-client-resources",
+      "folder": "Saved/Extraction/Phase7APackages01-client-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7APackages01-server-resources",
+      "folder": "Saved/Extraction/Phase7APackages01-server-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7APerformance03-north-resources",
+      "folder": "Saved/Extraction/Phase7APerformance03-north-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7APerformance03-old-resources",
+      "folder": "Saved/Extraction/Phase7APerformance03-old-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7APerformanceSummary02-resources",
+      "folder": "Saved/Extraction/Phase7APerformanceSummary02-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7APerformanceSummary03-resources",
+      "folder": "Saved/Extraction/Phase7APerformanceSummary03-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARegression01-progression-resources",
+      "folder": "Saved/Extraction/Phase7ARegression01-progression-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARegression02-disconnect-resources",
+      "folder": "Saved/Extraction/Phase7ARegression02-disconnect-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARegression02-equipment-resources",
+      "folder": "Saved/Extraction/Phase7ARegression02-equipment-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARegression02-inventory-resources",
+      "folder": "Saved/Extraction/Phase7ARegression02-inventory-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARegression02-lifecycle-resources",
+      "folder": "Saved/Extraction/Phase7ARegression02-lifecycle-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARegression02-pvpve-resources",
+      "folder": "Saved/Extraction/Phase7ARegression02-pvpve-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARegression02-settlement-resources",
+      "folder": "Saved/Extraction/Phase7ARegression02-settlement-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARegression02-squad-resources",
+      "folder": "Saved/Extraction/Phase7ARegression02-squad-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARepro02-resources",
+      "folder": "Saved/Extraction/Phase7ARepro02-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARules01-equipment-resources",
+      "folder": "Saved/Extraction/Phase7ARules01-equipment-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARules01-inventory-resources",
+      "folder": "Saved/Extraction/Phase7ARules01-inventory-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARules01-persistence-resources",
+      "folder": "Saved/Extraction/Phase7ARules01-persistence-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7ARules01-progression-resources",
+      "folder": "Saved/Extraction/Phase7ARules01-progression-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AStreaming02-resources",
+      "folder": "Saved/Extraction/Phase7AStreaming02-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AStreaming03-resources",
+      "folder": "Saved/Extraction/Phase7AStreaming03-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AStreamingFinal01-six-lag-resources",
+      "folder": "Saved/Extraction/Phase7AStreamingFinal01-six-lag-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AStreamingFinal01-six-resources",
+      "folder": "Saved/Extraction/Phase7AStreamingFinal01-six-resources",
+      "report": "Report.json"
+    },
+    {
+      "name": "resources/Phase7AStreamingFinal01-two-rendered-resources",
+      "folder": "Saved/Extraction/Phase7AStreamingFinal01-two-rendered-resources",
+      "report": "Report.json"
+    }
+  ],
+  "extra_files": [
+    "Saved/Extraction/Phase7AAssets.json",
+    "Saved/Extraction/Phase7AResources.json",
+    "Saved/Extraction/Phase7ACleanup.json",
+    "Saved/Extraction/Phase7AVisualReview.json",
+    "Saved/SpaceCenter/Phase7A/ImportedAssets.json",
+    "Scripts/SpaceCenter/north_route.json",
+    {
+      "source": "Saved/Extraction/Phase7ADebug01/DebuggerEvidence.json",
+      "name": "Phase7ADebug01-DebuggerEvidence.json"
+    },
+    {
+      "source": "Saved/Extraction/Phase7ANorthDebug02/DebuggerEvidence.json",
+      "name": "Phase7ANorthDebug02-DebuggerEvidence.json"
+    },
+    "Saved/Extraction/Phase7APerformance02-old/SamplingInterference.json"
+  ],
+  "implementation_sha256": {
+    ".gitattributes": "7281627657105ca1fc909b908436625b19e206d91a16c73c9618490d2508f39c",
+    "Content/Maps/SpaceCenter/Assets/019b26d94bb7650a/T_Default_White_SRGB.uasset": "656c86a32a6cfa55fc0f2d442de9d76169908baf14eca098de617b7e37785387",
+    "Content/Maps/SpaceCenter/Assets/03580f833a41596d/T_H_Transport_Utility_TrafficLight_01_CA.uasset": "d64f07f3a7a495b3bd0e1e463096b50fb034b00194004803e064586ac7db29ca",
+    "Content/Maps/SpaceCenter/Assets/07132f87d8fad41d/T_H_Building_FutureTech_HBlack_RoomPlatform_01_C_HD.uasset": "ec581c7b0bab18b93759668404518168e1adf12257499b8705b846eaa3a69e31",
+    "Content/Maps/SpaceCenter/Assets/0860672000e39f8f/SM_H_Government_Office_Cable_02/Materials/MI_H_FutureTech_Machinery_Cabinet_03_HD.uasset": "08d19f64c2cd8541f274c517902038f9649027ee5ca96b52cf9d32a3f75ef214",
+    "Content/Maps/SpaceCenter/Assets/0860672000e39f8f/SM_H_Government_Office_Cable_02/StaticMeshes/SM_H_Government_Office_Cable_02.uasset": "166519221b4454ce3882604c2c976702186bac3c9828ebe0eada6e88f5fc4fa9",
+    "Content/Maps/SpaceCenter/Assets/09015238345d9fe4/T_GEN_Metal_Pattern_01_C_HD.uasset": "f4d2376e50c4e7f361e96a3868cb320ad3471f95b409ea4054f13d2565184bb5",
+    "Content/Maps/SpaceCenter/Assets/0f77e01c25878f35/SM_Branding_LocationSign_02I/Materials/MI_GEN_Metal_Base_01_HD.uasset": "ecdf2d015663a6f19dc71855653c8c392daf274c2d9ae1685400e21e875f0ad4",
+    "Content/Maps/SpaceCenter/Assets/0f77e01c25878f35/SM_Branding_LocationSign_02I/StaticMeshes/SM_Branding_LocationSign_02I.uasset": "7681135c1c12b3f72fdae84206377d57d67891b9a6df6e182166b75e6fc0e45f",
+    "Content/Maps/SpaceCenter/Assets/16453f2ad65caaa0/SM_H_Building_FutureTech_Dock_06_05/Materials/MI_GEN_Metal_Base_01_HD.uasset": "70b19f6ca52aa717d752b5c81576f3b871f1f85c38ed569da838525852a0e65a",
+    "Content/Maps/SpaceCenter/Assets/16453f2ad65caaa0/SM_H_Building_FutureTech_Dock_06_05/Materials/MI_H_Building_FutureTech_HOrange_01_ExterWall_01_01A_HD.uasset": "c533067595240bd0f1d553cb257b6fcf4d5f379f6f81dd486b578a51db279c41",
+    "Content/Maps/SpaceCenter/Assets/16453f2ad65caaa0/SM_H_Building_FutureTech_Dock_06_05/Materials/MI_SpaceCenter_Trim_05_HD.uasset": "fd07b877652daceeea346b335c9246662a3d66114985f6401ca92b7914401419",
+    "Content/Maps/SpaceCenter/Assets/16453f2ad65caaa0/SM_H_Building_FutureTech_Dock_06_05/StaticMeshes/SM_H_Building_FutureTech_Dock_06_05.uasset": "8b7f2f6513908dac1b8b4cd4e1b5336fc1f13cb7eceaa81e891694123e1970b0",
+    "Content/Maps/SpaceCenter/Assets/1c24ce5eb97f2d21/SM_H_Building_FutureTech_Dock_06a_Glass_15/Materials/MI_Window_Glass_02_HD.uasset": "1c32732e57f2c271c672a5bbf9eaf9bc13ed6bcb26293db330a4865b6cd8df75",
+    "Content/Maps/SpaceCenter/Assets/1c24ce5eb97f2d21/SM_H_Building_FutureTech_Dock_06a_Glass_15/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_15.uasset": "32180e87c6340398008afe3b37f1562214e7a33ee666bd89ac154a63e5525597",
+    "Content/Maps/SpaceCenter/Assets/1cc171244d413e71/T_FutureTech_Vehicle_ConceptCar_01_B_CA.uasset": "a1d877730bdf2e876955e298b5d184aae0eebaa29fe27447c589406f5ff8bd4c",
+    "Content/Maps/SpaceCenter/Assets/20e06d3ec4f41a8c/T_H_Transport_Utility_Trademark_02A_N_HD.uasset": "2c08fa06c581ac34496ae9ba28eded726aed0c658c29652a7d2b1c546509b9fb",
+    "Content/Maps/SpaceCenter/Assets/2226a9675b786597/T_I_Dirt_Decal_03b_N_HD.uasset": "b61c0cc129b4201e103ad80df285011287a2805245d68435cc8a158babdc85d8",
+    "Content/Maps/SpaceCenter/Assets/25ad6b61ad2a4326/T_FutureTech_Vehicle_ConceptCar_01_wheel_C_HD.uasset": "331875a82339068991d5f88f40aad3bb1e05337aec7da8121f7087d7fc39d5f2",
+    "Content/Maps/SpaceCenter/Assets/263a09e47a0e8ef9/SM_H_Building_FutureTech_Dock_06a_InterWall_01b/Materials/MI_GEN_Metal_Base_02_HD.uasset": "e41317001067e5a8967d3c6855f76dbf87eb138eba7eda0d6c552a33f00d1c78",
+    "Content/Maps/SpaceCenter/Assets/263a09e47a0e8ef9/SM_H_Building_FutureTech_Dock_06a_InterWall_01b/Materials/MI_GEN_Metal_Painting_03_HD.uasset": "aa209acddecf680c69b2df90d051ae6f1f4497ebadb98ed6c4ed5d07a49d797c",
+    "Content/Maps/SpaceCenter/Assets/263a09e47a0e8ef9/SM_H_Building_FutureTech_Dock_06a_InterWall_01b/Materials/MI_GEN_Wooden_Plank_02_HD.uasset": "6ee3fd8480db3a567faf7fd4b6eefabb1587e8ccc7055e780b26c7b705ccd9f0",
+    "Content/Maps/SpaceCenter/Assets/263a09e47a0e8ef9/SM_H_Building_FutureTech_Dock_06a_InterWall_01b/Materials/MI_H_Building_FutureTech_HBoss_01_InterWall_01B_HD.uasset": "84ffe71c464a440d15e75655d61d03b808f0b23aa057248283f1229709715a64",
+    "Content/Maps/SpaceCenter/Assets/263a09e47a0e8ef9/SM_H_Building_FutureTech_Dock_06a_InterWall_01b/Materials/MI_H_Building_FutureTech_HBoss_01_InterWall_01D_HD.uasset": "ff61884799aa1c43b5e599b47af18bdec5998ccea1bd939435110c166d27f4bf",
+    "Content/Maps/SpaceCenter/Assets/263a09e47a0e8ef9/SM_H_Building_FutureTech_Dock_06a_InterWall_01b/Materials/MI_H_Building_FutureTech_HBoss_01_InterWall_01_HD.uasset": "b804e0941a6e0ee0ec856f5d3517d1616f0159377beab2dcae0ae3f3fb5b31c1",
+    "Content/Maps/SpaceCenter/Assets/263a09e47a0e8ef9/SM_H_Building_FutureTech_Dock_06a_InterWall_01b/Materials/MI_H_Building_FutureTech_Stones_01_HD.uasset": "acbc1e833fc933da8200d692ef11c163336009c553bdbb23adbab50857768eaf",
+    "Content/Maps/SpaceCenter/Assets/263a09e47a0e8ef9/SM_H_Building_FutureTech_Dock_06a_InterWall_01b/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_InterWall_01b.uasset": "6cca2137255683c352e612d7ae7497d8a7a26bf3370d04b812bdec5d32b9e273",
+    "Content/Maps/SpaceCenter/Assets/26d3a4be2e808a83/T_GEN_Concrete_09a_CH_HD.uasset": "2e761a3b8cd31256f2a9d4e5ec446fc61fb7faf74ca110389b1ac5f9a0f30c2f",
+    "Content/Maps/SpaceCenter/Assets/2774d61cb4ea2de2/SM_H_Medium_Door_02_Frame/Materials/MI_H_Small_Door_11A_HD.uasset": "ddc549bb4f9dea5c615c87d634d26b6ab9188875b515b238de4e6cf22ef4e2d7",
+    "Content/Maps/SpaceCenter/Assets/2774d61cb4ea2de2/SM_H_Medium_Door_02_Frame/Materials/MI_H_Small_Door_11_Black_HD.uasset": "141821095e098d5131eeb7e5af844b941cb271df29bc8577a69b77bdf6ff621f",
+    "Content/Maps/SpaceCenter/Assets/2774d61cb4ea2de2/SM_H_Medium_Door_02_Frame/StaticMeshes/SM_H_Medium_Door_02_Frame.uasset": "7dbc0ad74dd0b0ac5fef12ff4266b1d92a24dd3384c52485badbfc2cdd0bf076",
+    "Content/Maps/SpaceCenter/Assets/29947c1e28964f13/T_H_Gibraltar_Props_Industrial_ElectricBox_01i_N_HD.uasset": "8d1f9c08c6beea2ccc15bae9b92c6789e9acc7cd42a281de48785bddcdc7c185",
+    "Content/Maps/SpaceCenter/Assets/2c25d54b573f1206/SM_I_RoadFacility_Ground_H_01/Materials/MI_GEN_Concrete_Checkred_02_HD.uasset": "345b16fd7fa8e4261fbe2ee416fca09da236d85e7144ecd7eb7e011a653cb113",
+    "Content/Maps/SpaceCenter/Assets/2c25d54b573f1206/SM_I_RoadFacility_Ground_H_01/Materials/MI_GEN_Marble_Checkred_02_HD.uasset": "2468263e1a322714c5bff695b2c71c86bd7d0f777d68d724ddea0615f8e285a3",
+    "Content/Maps/SpaceCenter/Assets/2c25d54b573f1206/SM_I_RoadFacility_Ground_H_01/Materials/MI_GEN_Metal_Base_01_HD.uasset": "bc2aa79b214c4a7a267cf448f94a380669d82adb5d72b00138ea04a409528dff",
+    "Content/Maps/SpaceCenter/Assets/2c25d54b573f1206/SM_I_RoadFacility_Ground_H_01/Materials/MI_GEN_Stones_Base_01_HD.uasset": "70bc9b5b2672eb65d1b56d9d71bffd7be322d26f12ed338a156e2cb8f9da6809",
+    "Content/Maps/SpaceCenter/Assets/2c25d54b573f1206/SM_I_RoadFacility_Ground_H_01/Materials/MI_H_Building_FutureTech_HTerrace_01_01A_HD.uasset": "28c404f60290ba2bb21fcfef3655e0b24bf467ef5d258ecbff2ad99d5a447429",
+    "Content/Maps/SpaceCenter/Assets/2c25d54b573f1206/SM_I_RoadFacility_Ground_H_01/Materials/MI_I_RoadFacility_Ground_H_01_01A_HD.uasset": "53fbd52f234d5c9d6ba0bf0285f45e85b320357f775b897d8a93df3c6b1f8ce5",
+    "Content/Maps/SpaceCenter/Assets/2c25d54b573f1206/SM_I_RoadFacility_Ground_H_01/Materials/MI_I_RoadFacility_Ground_H_02A_HD.uasset": "e097f3404ce19141ffa1d99b12ff36c33f3a6cac457e2457633c2667f609ecd5",
+    "Content/Maps/SpaceCenter/Assets/2c25d54b573f1206/SM_I_RoadFacility_Ground_H_01/StaticMeshes/SM_I_RoadFacility_Ground_H_01.uasset": "644c02868f9da16468cbb802e921084ee5fd60e02a55e74da717a543a6a27668",
+    "Content/Maps/SpaceCenter/Assets/320cb5c378f1f79d/T_H_Transport_Utility_Trademark_02_CA.uasset": "a305a595d3361b53f845f8aed060b5e36b64f510dc786d546a72f8fdf976f18e",
+    "Content/Maps/SpaceCenter/Assets/329216b7e7e0bcde/T_Default_Black_SRGB_SVT.uasset": "2a1207e4fd6daefd584c3faa79220b1018eb5b8be16142e8f8ce6e5053a9b6ee",
+    "Content/Maps/SpaceCenter/Assets/34dd5fbb4d983dd2/SM_H_Building_FutureTech_Dock_06a_InterWall_Glass_03/Materials/MI_Window_Glass_03_HD.uasset": "ba79487ab24a8abf8ac7757816750d83f58fc4c9a874fc0f37c661095cb9ea89",
+    "Content/Maps/SpaceCenter/Assets/34dd5fbb4d983dd2/SM_H_Building_FutureTech_Dock_06a_InterWall_Glass_03/StaticMeshes/SM_H_Building_FutureTec_k_06a_InterWall_Glass_03.uasset": "35731d2a6a986dd69c4522c2671d9f51b447337b982d5df46975581c71327704",
+    "Content/Maps/SpaceCenter/Assets/3852036024176002/SM_Building_Generic_Pillar_256x1024_01/Materials/MI_Building_Generic_Pillar_256x1024_01_d_HD.uasset": "b35d84ab0b2c981fd8c9280f92e6dc7e9ef279381f0f818bba91a8578e0c2e01",
+    "Content/Maps/SpaceCenter/Assets/3852036024176002/SM_Building_Generic_Pillar_256x1024_01/Materials/MI_GEN_Metal_Pattern_01D_TwoSided_HD.uasset": "2032601d62d066831e3343cf1ab47d85bffe604d340d99823774b4a52455b085",
+    "Content/Maps/SpaceCenter/Assets/3852036024176002/SM_Building_Generic_Pillar_256x1024_01/Materials/MI_H_Building_FutureTech_HBlack_RoomPlatform_01_HD.uasset": "c0f7f38c2c618c8db85db2c1c1c766dae6d3f98e41ab715650bd32fc7840e992",
+    "Content/Maps/SpaceCenter/Assets/3852036024176002/SM_Building_Generic_Pillar_256x1024_01/StaticMeshes/SM_Building_Generic_Pillar_256x1024_01.uasset": "47b9eda01357aa1f4365e1681d9c66801d1a4f68d8988c62c903adb7a83c59a6",
+    "Content/Maps/SpaceCenter/Assets/3a2599f27ca38f4a/SM_H_Building_FutureTech_Dock_06a_InterWall_01c/Materials/MI_GEN_Lighting_01_HD.uasset": "2952aa270156e48bddded9df9e89a136ffd78b5eb076654386c0185f776707c2",
+    "Content/Maps/SpaceCenter/Assets/3a2599f27ca38f4a/SM_H_Building_FutureTech_Dock_06a_InterWall_01c/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_InterWall_01c.uasset": "9dbaf3dc59a8b62017f2c1e2b1848b3bf08b0250f782761ebce0338ec977bd82",
+    "Content/Maps/SpaceCenter/Assets/3b46a1e4dc137783/T_H_Transport_Utility_Trademark_02A_EC_HD.uasset": "ba404b15b84751bec1db484a3c5d14c281998d5a6303137a75b2fa2c57f0c6fd",
+    "Content/Maps/SpaceCenter/Assets/400647c70a7b6a5e/SM_H_Building_FutureTech_Dock_06a_Glass_01/Materials/MI_Window_Glass_02_HD.uasset": "3be3657f70d4755c3f5d818d637e62a91770b4fa8464183139c6450239cca286",
+    "Content/Maps/SpaceCenter/Assets/400647c70a7b6a5e/SM_H_Building_FutureTech_Dock_06a_Glass_01/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_01.uasset": "3e1b48ff9ab3d323464d58ea4508b8fc5949a5c254c4844625ff67e3ad0fc70e",
+    "Content/Maps/SpaceCenter/Assets/417501bd13bc7649/SM_FutureTech_Vehicle_ConceptCar_01_B/Materials/MI_FutureTech_Vehicle_ConceptCar_01_wheel_HD.uasset": "84d0de7db5b298d8c1c5e67c7e6ba5cb94d5438f8dc6df9b92db248e3d5556d9",
+    "Content/Maps/SpaceCenter/Assets/417501bd13bc7649/SM_FutureTech_Vehicle_ConceptCar_01_B/Materials/MI_FutureTech_Vehicle_ConceptCar_01a_Yellow_HD.uasset": "5ccc1b29b28a02bdc764fdf112a96c51780f998e25b7a1575b2b1e597f8f29ee",
+    "Content/Maps/SpaceCenter/Assets/417501bd13bc7649/SM_FutureTech_Vehicle_ConceptCar_01_B/Materials/MI_FutureTech_Vehicle_ConceptCar_01b_HD.uasset": "f5f151611d983bbd92a8a613f604d7509203d2e5542338b4833fae9095b9451c",
+    "Content/Maps/SpaceCenter/Assets/417501bd13bc7649/SM_FutureTech_Vehicle_ConceptCar_01_B/Materials/MI_FutureTech_Vehicle_ConceptCar_01c_HD.uasset": "a8706f52c0b5117f20afafd8673bb05ca8c6ed1a1f9a5ef595ad120de5cd2805",
+    "Content/Maps/SpaceCenter/Assets/417501bd13bc7649/SM_FutureTech_Vehicle_ConceptCar_01_B/Materials/MI_Generic_Vehicle_Glass_01_HD.uasset": "262e7f55ae92326b100f4142c0b94a8951be83558cad77f7c196cb0ce63ea7de",
+    "Content/Maps/SpaceCenter/Assets/417501bd13bc7649/SM_FutureTech_Vehicle_ConceptCar_01_B/StaticMeshes/SM_FutureTech_Vehicle_ConceptCar_01_B.uasset": "1ec3c7a5a69f153599fe942157da5f5bc7815b69885df4ac12cc1052ad476ee4",
+    "Content/Maps/SpaceCenter/Assets/41f6686684798ad1/SM_H_Building_FutureTech_Dock_06a_Glass_16/Materials/MI_Window_Glass_02_HD.uasset": "e15cbc20541603f5cd0abb35a78128e753be4faed797e16195e13dcc9fbc10b5",
+    "Content/Maps/SpaceCenter/Assets/41f6686684798ad1/SM_H_Building_FutureTech_Dock_06a_Glass_16/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_16.uasset": "df1c848ea3faef3d2e6449c77f8ef1132f224202654a66b69768819c53058d60",
+    "Content/Maps/SpaceCenter/Assets/425c727a1e1abd0b/SM_H_Building_FutureTech_Dock_06a_Glass_10/Materials/MI_Window_Glass_02_HD.uasset": "a2347d5d93c64022fbc0bc7bff88a16701d0c919d620fd73b28c1f2c5d7e4c7c",
+    "Content/Maps/SpaceCenter/Assets/425c727a1e1abd0b/SM_H_Building_FutureTech_Dock_06a_Glass_10/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_10.uasset": "44b9f932d19cd93f9f50bebce58d4a3ad365e6ecff6f256c6507dba343d515a4",
+    "Content/Maps/SpaceCenter/Assets/46d7ad8373eb4910/T_GEN_Fabric_Wall_01_CA.uasset": "68a1797f9344b216857e406c6f04337a06f45d6d5c7d742dff0c589346b64257",
+    "Content/Maps/SpaceCenter/Assets/517f5da5aa1b27aa/SM_H_Building_FutureTech_Dock_06a_Glass_12/Materials/MI_Window_Glass_02_HD.uasset": "9c4b29f81196ecb67bca47d36aaae534361eb9c602cf4b8246df8f53e1d61c34",
+    "Content/Maps/SpaceCenter/Assets/517f5da5aa1b27aa/SM_H_Building_FutureTech_Dock_06a_Glass_12/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_12.uasset": "0fc3c7dbeab786467ccdf9faf03bef089be99b30e156dfefa77910d9ef1f9c32",
+    "Content/Maps/SpaceCenter/Assets/53d8db3626247be4/SM_H_Transport_Utility_Trademark_01/Materials/MI_H_Branding_Advertise_Trademark_01_HD.uasset": "4f4260d6c3479abb020678ac01a0b5a42b59278076eafff89309392ad371948c",
+    "Content/Maps/SpaceCenter/Assets/53d8db3626247be4/SM_H_Transport_Utility_Trademark_01/StaticMeshes/SM_H_Transport_Utility_Trademark_01.uasset": "4ca876da94de39a3851f089efde58a4a66a5342cfefac4bd42aacc120d8989a7",
+    "Content/Maps/SpaceCenter/Assets/54a4e281c3f82af3/T_GEN_Wooden_Plank_02B_Inst_C_HD.uasset": "39f40b153a7b371fa8efb1b059673f82edbe03fd71d892154ce3b03feeedf191",
+    "Content/Maps/SpaceCenter/Assets/57d721cd3e21a2ac/T_H_FutureTech_Furniture_Radar_01b_NA_HD.uasset": "66f36f19045563ea295355b0329a35fa278012c5bd956617b4d1e2a4ef239028",
+    "Content/Maps/SpaceCenter/Assets/5ce119777318f7dc/T_GEN_Metal_Pattern_01_N_HD.uasset": "b39169c63c29dd323fcf04e1341f083ff98dd3c2289d0708d341fae959f66215",
+    "Content/Maps/SpaceCenter/Assets/5d8d9e945cbd199b/SM_H_Transport_Utility_TrafficLight_01/Materials/MI_H_Transport_Utility_TrafficLight_01_HD.uasset": "bb9b483e04c452e26cb79454661e711f4e893a59ec4243a1fd00093315928792",
+    "Content/Maps/SpaceCenter/Assets/5d8d9e945cbd199b/SM_H_Transport_Utility_TrafficLight_01/StaticMeshes/SM_H_Transport_Utility_TrafficLight_01.uasset": "44879b780c8a450cd48d65adda6d8248333c258217de855a9a121dbb72ac8361",
+    "Content/Maps/SpaceCenter/Assets/5e525a821630b6f9/T_FutureTech_Vehicle_ConceptCar_01a_N_HD.uasset": "41b2e98d69c57cfb99645d6487fc15c44a60ad64824782265f317db0b99192b7",
+    "Content/Maps/SpaceCenter/Assets/602f160d8ddb441b/T_Window_Glass_00_N_HD.uasset": "6e0f542f724368e004e176cd1b50cfa8e13d7423bb0d98fe673a431b7c2143be",
+    "Content/Maps/SpaceCenter/Assets/6098297b44810465/T_I_Dirt_Decal_03b_C_HD.uasset": "4c840e10be1ba84ff7e0d95827cdd8bb53080eb2d668c22074c431e98eb56ba5",
+    "Content/Maps/SpaceCenter/Assets/61fe9cc0c4fc5fe8/T_Building_Generic_Pillar_256x1024_01_d_C_HD.uasset": "e6300d14e2e79875b084acc0201d08d10cd507d2ecf1ad57bdffe16a5285162d",
+    "Content/Maps/SpaceCenter/Assets/639864741a0f2a7c/SM_Branding_LocationSign_FutureTech_02_D/Materials/MI_GEN_Metal_Base_01_HD.uasset": "471f80e08a6f179a5520a7bdc3efe4dee68a87007475a1020c39d97303906187",
+    "Content/Maps/SpaceCenter/Assets/639864741a0f2a7c/SM_Branding_LocationSign_FutureTech_02_D/StaticMeshes/SM_Branding_LocationSign_FutureTech_02_D.uasset": "5b08efaf91b32d004512148a574886db4b874e4a408f1d2fd0da8aa13c739b2a",
+    "Content/Maps/SpaceCenter/Assets/64a77fc1c2ec6f52/T_Window_Glass_02_C_NoSVT_HD.uasset": "93d350dcc040215d923f96f7a61d6a7645ed3b2ed257ab3528e4e29954ddb478",
+    "Content/Maps/SpaceCenter/Assets/65e8ee7983ef5d2f/SM_H_Building_FutureTech_Dock_06a_InterWall_01f/Materials/MI_GEN_Lighting_01_HD.uasset": "5203aa054d5e9c415e5535e501a6902e288d900b6bd0a8f48f88b87f4a67721a",
+    "Content/Maps/SpaceCenter/Assets/65e8ee7983ef5d2f/SM_H_Building_FutureTech_Dock_06a_InterWall_01f/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_InterWall_01f.uasset": "45ca2dc3873b904ae5dae4134c9f09191a9525c9b94a9de97aeb90e750cb7b24",
+    "Content/Maps/SpaceCenter/Assets/694eb21bfb90117b/SM_I_RoadFacility_Ground_H_01B/Materials/MI_H_FutureTech_Road_Decal_02_HD.uasset": "8834e9fa6322b20350eb939f3d47aa123f63b485542f3890d8bb4f1e6e145dc0",
+    "Content/Maps/SpaceCenter/Assets/694eb21bfb90117b/SM_I_RoadFacility_Ground_H_01B/StaticMeshes/SM_I_RoadFacility_Ground_H_01B.uasset": "4dcad479f0edf33c4ad02e9ba3735420dfe16e8f42292029c97fd248e172f332",
+    "Content/Maps/SpaceCenter/Assets/6a3f6553b8a14498/SM_H_Building_FutureTech_PipeHouse_01_ExterWall_01G/Materials/MI_Window_Glass_02_HD.uasset": "f1c23ee73d5fba788e094148b4944290b031549280596f8bed6f7e25b7eebc0c",
+    "Content/Maps/SpaceCenter/Assets/6a3f6553b8a14498/SM_H_Building_FutureTech_PipeHouse_01_ExterWall_01G/StaticMeshes/SM_H_Building_FutureTech_peHouse_01_ExterWall_01G.uasset": "f879ad163f70153f57ee1e1fa7c8de43ab351718178e681bee620b19a7a3121d",
+    "Content/Maps/SpaceCenter/Assets/6b920227cfff58c7/T_Generic_Vehicle_Glass_01_CA_HD.uasset": "bd5dc655997603a33e1aaa37a307cd0788eedee547bc453c90b14b88382c6638",
+    "Content/Maps/SpaceCenter/Assets/6d2499f596eda666/T_H_Branding_Advertise_Trademark_01_CA.uasset": "0dfa1ab10d7a3cfb9f327221ab659d3233fdcb7eaf861593db3ac23031e372e4",
+    "Content/Maps/SpaceCenter/Assets/6db6aaad354119ff/SM_H_Building_FutureTech_Dock_06_InterWall_Glass_10/Materials/MI_Window_Glass_02_HD.uasset": "dc9d5f6a460f19be45f468557c6821a0d3196ca864ac3270028b9655bc52f3a5",
+    "Content/Maps/SpaceCenter/Assets/6db6aaad354119ff/SM_H_Building_FutureTech_Dock_06_InterWall_Glass_10/StaticMeshes/SM_H_Building_FutureTech_ck_06_InterWall_Glass_10.uasset": "d7b817d88abfd78a04feddd11313adf86a25fa7f3da14e7eff709f5ca83542f3",
+    "Content/Maps/SpaceCenter/Assets/6f60b061a08ba38a/T_H_Transport_Utility_TrafficLight_01_EC_HD.uasset": "44054a6cdccb14699728c530c3d7522f329263b55f9dce836fd88b5ae114fc83",
+    "Content/Maps/SpaceCenter/Assets/78697e73a3b22377/SM_H_Transport_Utility_Guardrail_02/Materials/MI_Branding_Sticker_Number_01D_HD.uasset": "ea0066189e2038b1e1b32d6c00a5d08abf38f785e9c1e97252f8751288e06720",
+    "Content/Maps/SpaceCenter/Assets/78697e73a3b22377/SM_H_Transport_Utility_Guardrail_02/Materials/MI_H_Building_FutureTech_AutomaticWorkshop_02_Decal_HD.uasset": "2ac2f3632f788bb54f32c827450323e2cc91b7daca3d19824f54de1bd97ff79a",
+    "Content/Maps/SpaceCenter/Assets/78697e73a3b22377/SM_H_Transport_Utility_Guardrail_02/Materials/MI_H_Government_Office_CoffeeMachine_01A_HD.uasset": "627a42b4ec4e09872f8bfeb7157b50a0fe0136956009fb6303331303b969159f",
+    "Content/Maps/SpaceCenter/Assets/78697e73a3b22377/SM_H_Transport_Utility_Guardrail_02/Materials/MI_H_Small_Door_11_decal_01A_HD.uasset": "e5f37c8328c852b6faff6f6015bacce0cc255e88f1b9bfbc31cff7600e06b6b1",
+    "Content/Maps/SpaceCenter/Assets/78697e73a3b22377/SM_H_Transport_Utility_Guardrail_02/Materials/MI_H_Transport_Utility_Guardrail_02A_HD.uasset": "e4a8730cdf6027e51a7fddd841ff53eb19b8d85504edc3f98f8661242d979fdb",
+    "Content/Maps/SpaceCenter/Assets/78697e73a3b22377/SM_H_Transport_Utility_Guardrail_02/Materials/MI_H_Transport_Utility_Guardrail_02B_HD.uasset": "9ed1b12ae631d66ce95c5d9541430fe9cd3119402a8f2726751b4174c5b8cb83",
+    "Content/Maps/SpaceCenter/Assets/78697e73a3b22377/SM_H_Transport_Utility_Guardrail_02/StaticMeshes/SM_H_Transport_Utility_Guardrail_02.uasset": "ccfa0d0b5748b038a86eefff85e707098a1b11955012604b39baa1d968b2c00f",
+    "Content/Maps/SpaceCenter/Assets/7922d88bde4eafe9/SM_H_FutureTech_Furniture_Radar_01/Materials/MI_H_FutureTech_Furniture_Radar_01a_HD.uasset": "a707bfe82c406908114239530d1749ee470596b85be1f5f3d61b66e555852fa9",
+    "Content/Maps/SpaceCenter/Assets/7922d88bde4eafe9/SM_H_FutureTech_Furniture_Radar_01/Materials/MI_H_FutureTech_Furniture_Radar_01b_HD.uasset": "c11de844a762492412681693ea2883a9e24a6ed1a2e1ce4912fce9f91d0a9f36",
+    "Content/Maps/SpaceCenter/Assets/7922d88bde4eafe9/SM_H_FutureTech_Furniture_Radar_01/Materials/MI_H_Gibraltar_Props_Industrial_ElectricBox_01i_HD.uasset": "0270486b583743ae05c0308f8c61f0a864fab59ad81dfcd4b7d8f75e0802dcc8",
+    "Content/Maps/SpaceCenter/Assets/7922d88bde4eafe9/SM_H_FutureTech_Furniture_Radar_01/Materials/MI_I_Dirt_Decal_03c_HD.uasset": "1dd465d6e69fd01f51be18d734e7b527752c347ffba8dfd6ae8a568357c7fb6b",
+    "Content/Maps/SpaceCenter/Assets/7922d88bde4eafe9/SM_H_FutureTech_Furniture_Radar_01/StaticMeshes/SM_H_FutureTech_Furniture_Radar_01.uasset": "cfe52181fe1a18334dc4b8b790d3a1bd46547d79d20a9c8d6ea840f8c2283da8",
+    "Content/Maps/SpaceCenter/Assets/7a8a2f3a702434c8/SM_H_Building_FutureTech_Dock_06a_Glass_02/Materials/MI_Window_Glass_02_HD.uasset": "32eea918c014a8ff7730e71e643265cc5b08386eafc6556ff5aed5bc8058b062",
+    "Content/Maps/SpaceCenter/Assets/7a8a2f3a702434c8/SM_H_Building_FutureTech_Dock_06a_Glass_02/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_02.uasset": "3d7d256518c5f9978e5f847e667e601db4643b061e191ce12e9e3d44907d0d7a",
+    "Content/Maps/SpaceCenter/Assets/7addb1796b0d37f9/SM_H_Building_FutureTech_Dock_06a_InterWall_Glass_02/Materials/MI_Window_Glass_03_HD.uasset": "6990c0a0a68d27cd6bc7ce536a37bf5f446bd228f81365fe75cbb4dd74b3a77e",
+    "Content/Maps/SpaceCenter/Assets/7addb1796b0d37f9/SM_H_Building_FutureTech_Dock_06a_InterWall_Glass_02/StaticMeshes/SM_H_Building_FutureTec_k_06a_InterWall_Glass_02.uasset": "aaca388484f98fd158c6018eeafd66c8f145a5bf67b511b6e149815af1dd3dbf",
+    "Content/Maps/SpaceCenter/Assets/8097734e4406d982/T_GEN_Fabric_Wall_01_N_HD.uasset": "bc40f399578a77a8c1e4f384c4e5e4e4ec0c1c71c9dd58652041df38a81b60db",
+    "Content/Maps/SpaceCenter/Assets/8161be89923cd109/SM_H_Building_FutureTech_Dock_06a_Glass_14/Materials/MI_Window_Glass_02_HD.uasset": "e3057335fb24c3b59c028717897d27353db1cadde16970b98c661b8a50b0be8f",
+    "Content/Maps/SpaceCenter/Assets/8161be89923cd109/SM_H_Building_FutureTech_Dock_06a_Glass_14/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_14.uasset": "6946c866b6d82ad6a73208a4496326f3dcf856a83815c70414e16c262083a7d0",
+    "Content/Maps/SpaceCenter/Assets/82e98c307ab48ede/T_H_Gibraltar_Props_Industrial_ElectricBox_01i_CC_HD.uasset": "8e9e8920020ed6b2ca22f96a122f55aacf2749a9cf42e8665ddb8d92cc975950",
+    "Content/Maps/SpaceCenter/Assets/85004c49d473cb38/T_H_Branding_Advertise_Trademark_01_N_HD.uasset": "936c24856f7bf05d3979a8058b74b5a9d40f7d1fadee08c31750e2411956b8e5",
+    "Content/Maps/SpaceCenter/Assets/899ab7e82a5c77da/SM_H_Building_FutureTech_Dock_06a_Glass/Materials/MI_Window_Glass_02_HD.uasset": "fe26f01719394c8a3f43f0d7fcec8ab7e4f82f751bfcc77a606d8b71f9d05321",
+    "Content/Maps/SpaceCenter/Assets/899ab7e82a5c77da/SM_H_Building_FutureTech_Dock_06a_Glass/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass.uasset": "83823ee8e18e6acaee0d4a96fe26a26fa32ae2ce60c621beae1349c01feb4460",
+    "Content/Maps/SpaceCenter/Assets/90a95e8eecdedcab/T_H_Branding_Advertise_Trademark_01_EC_HD.uasset": "914a289f3033e5d93df45be8babfd42e8814811ff0dc8527c2953a00fa9be7e0",
+    "Content/Maps/SpaceCenter/Assets/90e01e36cfa34cb7/SM_H_Building_FutureTech_Dock_06_06/Materials/MI_GEN_Metal_Base_01_HD.uasset": "9fcac462043a4018de163ff9cfb552f15ac8d06f9ebb05812c72429e8a447924",
+    "Content/Maps/SpaceCenter/Assets/90e01e36cfa34cb7/SM_H_Building_FutureTech_Dock_06_06/StaticMeshes/SM_H_Building_FutureTech_Dock_06_06.uasset": "4e401c09a0a6fc369d3afe4599bffeedc88abaac604a3e51cc054d7e008059f7",
+    "Content/Maps/SpaceCenter/Assets/9107172099887e6e/SM_H_Building_FutureTech_Dock_06a_Glass_05/Materials/MI_Window_Glass_02_HD.uasset": "186848b227e109c4c93f54eb0b7b7d91eae8d981d1d49140ea52fc636da86f59",
+    "Content/Maps/SpaceCenter/Assets/9107172099887e6e/SM_H_Building_FutureTech_Dock_06a_Glass_05/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_05.uasset": "a5ac386a3c05b9cfd8ba076e26ab3a9cda42c0bfdccfab5a230c5b71714caba3",
+    "Content/Maps/SpaceCenter/Assets/911830d8070ad2cb/T_GEN_Fabric_Wall_01_C_HD.uasset": "37c0a425264fb0bd9e7443ff2ab95988f6c6b7b45042d4b759c4b1e74516a815",
+    "Content/Maps/SpaceCenter/Assets/938ce6da0fc1891b/T_GEN_Concrete_09a_N_HD.uasset": "b79fff77e309fcd3955ec2db335893060ec52a486edac5265a72f0cacb4d5d5c",
+    "Content/Maps/SpaceCenter/Assets/95910a5991bdf6db/T_RoadCurb_01_EC_HD.uasset": "85f38c3b3120a063e8281c3db2af4ad2367a755914d659e9fff419ade2de68cb",
+    "Content/Maps/SpaceCenter/Assets/95debcc1d146f17a/T_H_Transport_Utility_TrafficLight_01_N_HD.uasset": "18e02917314d4afe2976f97d240e47526e4f1b47a42f1c4fbe9cc7dfd698cf96",
+    "Content/Maps/SpaceCenter/Assets/9a6c2c4c331b9c28/T_GEN_Wooden_Base_02_CA.uasset": "9b09e1d3fa0a6956bd41a48e948c0fa7104dd0ad61878615b4dab26a405581b0",
+    "Content/Maps/SpaceCenter/Assets/9da1ad0319f5944d/SM_H_Building_FutureTech_PipeHouse_01_ExterWall_01F/Materials/MI_Window_Glass_02_HD.uasset": "ad7872be08832945e20ef9906683d49bddfd31559cbb19d96a64a8e0665bd7b0",
+    "Content/Maps/SpaceCenter/Assets/9da1ad0319f5944d/SM_H_Building_FutureTech_PipeHouse_01_ExterWall_01F/StaticMeshes/SM_H_Building_FutureTech_peHouse_01_ExterWall_01F.uasset": "e0cea4f6cbe92d9dfd3c8af86e271677bcae76c11abe8a606732a6420bee6cef",
+    "Content/Maps/SpaceCenter/Assets/a011232e7b753b7a/SM_H_Building_FutureTech_Dock_06a_Glass_18/Materials/MI_Window_Glass_02_HD.uasset": "8d0b68ff3c6948e2d50a6c20a7e8429b9684ecba9a61b8c2c1d97e310b37c904",
+    "Content/Maps/SpaceCenter/Assets/a011232e7b753b7a/SM_H_Building_FutureTech_Dock_06a_Glass_18/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_18.uasset": "f405014ce71a5a2cbaa2143eab4d94bcb868961252997a3c1160a61ba3c95cbe",
+    "Content/Maps/SpaceCenter/Assets/a5e9f6c46966b37d/T_GEN_Wood_06_CH_HD.uasset": "fb87c6e9c527accc37db2031ebeb127b9333eaa4bb284e29547aa2fe30aac236",
+    "Content/Maps/SpaceCenter/Assets/a63e3bc38c9a11ae/T_H_Transport_Utility_Guardrail_02A_NA_HD.uasset": "ff0fc2c433601ee8228c58635dccce06d11f3320f3140fa561f9ba7fa50a72e8",
+    "Content/Maps/SpaceCenter/Assets/a70c3c8bb5c6e6bb/SM_H_Building_FutureTech_Dock_06a_Glass_17/Materials/MI_Window_Glass_02_HD.uasset": "519189723c7cd9c02407a4ac66858cdbd9212a75d4fb1b37bdb454772a4fd2b8",
+    "Content/Maps/SpaceCenter/Assets/a70c3c8bb5c6e6bb/SM_H_Building_FutureTech_Dock_06a_Glass_17/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_17.uasset": "be39f91f07f44d5ef7f2ac2b7fe639dcaaa36744bb5ab57c40ea4159e8a72bbd",
+    "Content/Maps/SpaceCenter/Assets/aa31a06e2eccb4fa/T_FutureTech_Vehicle_ConceptCar_01c_N_HD.uasset": "c0c6e2d1da62e8b9f393f32c9000d09b27d41de828059f49f9968745bf1c74ac",
+    "Content/Maps/SpaceCenter/Assets/abbe4338d539d043/T_FutureTech_Vehicle_ConceptCar_01b_C_HD.uasset": "24289c662de40807348e59612da8df41a54e4de787e77e6520969ff04680dd61",
+    "Content/Maps/SpaceCenter/Assets/aee57334e56e816e/SM_RoadFacility_Road_AsphaltRoad_512_01/Materials/MI_I_RoadFacility_Ground_L_03_HD.uasset": "1f4f3694bcd04b6a451cf978faa3fa030769e4e057be78f1db8015d24ac4a92d",
+    "Content/Maps/SpaceCenter/Assets/aee57334e56e816e/SM_RoadFacility_Road_AsphaltRoad_512_01/Materials/MI_RoadCurb_01B_HD.uasset": "6b65cb9a3cb36bc62b1073a3b0cdba9e72b337bf6aa8b906a4cbb9e2e5996ae4",
+    "Content/Maps/SpaceCenter/Assets/aee57334e56e816e/SM_RoadFacility_Road_AsphaltRoad_512_01/StaticMeshes/SM_RoadFacility_Road_AsphaltRoad_512_01.uasset": "a4e2e00a6d1a3fe5c4f0b4ee1c624af9065b2e5d6a67cc2405d72edf6854d247",
+    "Content/Maps/SpaceCenter/Assets/aefee32ad90e83cb/SM_H_Building_FutureTech_Dock_06a_Glass_04/Materials/MI_Window_Glass_02_HD.uasset": "e574f243c12a405694e645336927002463d1b57fa483c5e38e34f784f3a5b9ff",
+    "Content/Maps/SpaceCenter/Assets/aefee32ad90e83cb/SM_H_Building_FutureTech_Dock_06a_Glass_04/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_04.uasset": "41445f961a64c94c4747ce3632efe76778dd4928faf88ee2bc7ac8510a56fbe1",
+    "Content/Maps/SpaceCenter/Assets/b081dc96431776cf/SM_I_RoadFacility_Ground_H_05/Materials/MI_GEN_Grass_Base_01_HD.uasset": "8bd7af28b8812b129306fa5510a2bba84c1c90f7552713c66e731ace27f9a9a2",
+    "Content/Maps/SpaceCenter/Assets/b081dc96431776cf/SM_I_RoadFacility_Ground_H_05/Materials/MI_GEN_Marble_Base_01_HD.uasset": "c9d798b3ba5f7833f6aaed378b54decc8d8014119ccb5f6d70821b42bfbbc0b7",
+    "Content/Maps/SpaceCenter/Assets/b081dc96431776cf/SM_I_RoadFacility_Ground_H_05/Materials/MI_I_RoadFacility_Road_FlowerBed_01_HD.uasset": "2c5b4c26689f58e59a2839086579ac193b735a3b2edb60582e405bdfa2df6357",
+    "Content/Maps/SpaceCenter/Assets/b081dc96431776cf/SM_I_RoadFacility_Ground_H_05/StaticMeshes/SM_I_RoadFacility_Ground_H_05.uasset": "0b25ac97d11b92bafabf3f2f778ab53f7216cbccae485a4a67f011b362cf7d3d",
+    "Content/Maps/SpaceCenter/Assets/b0ec8c10e5846f23/SM_H_Building_FutureTech_Dock_06a_Glass_03/Materials/MI_Window_Glass_02_HD.uasset": "c7ce16909419be88765f34a80ecb0eb4cdafcc2eab5e92e11b07a72922c498b6",
+    "Content/Maps/SpaceCenter/Assets/b0ec8c10e5846f23/SM_H_Building_FutureTech_Dock_06a_Glass_03/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_03.uasset": "057f5201ec31f795719ae05d51efec60f74b1ca4eb92238c36cb68056369ed1b",
+    "Content/Maps/SpaceCenter/Assets/b1d851c6d916230e/T_Building_Generic_Pillar_256x1024_01_d_N_HD.uasset": "9e338048eb2b07f38d44948450939973abd48b1e6c2c678c6aff8ce6a5794b8b",
+    "Content/Maps/SpaceCenter/Assets/b35e84f14b57e1e0/T_H_FutureTech_Furniture_Radar_01_CA.uasset": "6f072961582ee1192690cdf1df0f2c9146a5c5aa6cccd3a70d53587e88408971",
+    "Content/Maps/SpaceCenter/Assets/bb733a94b3ee51c8/SM_H_Building_FutureTech_Dock_07_Glass_b/Materials/MI_Window_Glass_02A_HD.uasset": "7e42c28c3c2f2269ea0966b3cc437e51edda8d1cac1969fca21566222d06ec68",
+    "Content/Maps/SpaceCenter/Assets/bb733a94b3ee51c8/SM_H_Building_FutureTech_Dock_07_Glass_b/StaticMeshes/SM_H_Building_FutureTech_Dock_07_Glass_b.uasset": "4e91e8988375ae24b14a9cfa314759c6de32d7ec6439515a0386867e9e576ed6",
+    "Content/Maps/SpaceCenter/Assets/bb7665ff2e508063/SM_H_Building_FutureTech_Dock_06a_Glass_07/Materials/MI_Window_Glass_02_HD.uasset": "c01b61c2fa2a04649672b00c20eef6d9dcc91bfd065fed7d9dd982ccd0116298",
+    "Content/Maps/SpaceCenter/Assets/bb7665ff2e508063/SM_H_Building_FutureTech_Dock_06a_Glass_07/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_07.uasset": "c6a909a0a70b334bda0414857a3812f8b29f2f57a5eeaf3572e1159319c7f235",
+    "Content/Maps/SpaceCenter/Assets/bccaa9abf07f7ec1/T_H_Branding_Advertise_Trademark_01_C_HD.uasset": "f3aca8c1b1e64f890624ea037f2cc413d35aaec8eb248af2ecdad2c9f1f0d405",
+    "Content/Maps/SpaceCenter/Assets/bd09ffb301b42f8c/SM_Branding_LocationSign_FutureTech_02_C/Materials/MI_GEN_Metal_Base_01_HD.uasset": "bc73cbf24b68147609e4c34658d8c0b9b33dae0a0ad08aa3000bda7df0b957c6",
+    "Content/Maps/SpaceCenter/Assets/bd09ffb301b42f8c/SM_Branding_LocationSign_FutureTech_02_C/StaticMeshes/SM_Branding_LocationSign_FutureTech_02_C.uasset": "ffeb1bebfe5f8a09e3400496cee0e073fa47b74706d36a5cbd6826f60b43a985",
+    "Content/Maps/SpaceCenter/Assets/c1471dbdf4d36557/T_H_Branding_Advertise_Trademark_01_EC.uasset": "c8ea4065eee07e29b6a841897e18a2cdcaeabad69b25d8db3fd02a7d07f5c6d4",
+    "Content/Maps/SpaceCenter/Assets/c43446bb8adcb8a8/SM_H_Building_FutureTech_Dock_06a_Glass_13/Materials/MI_Window_Glass_02_HD.uasset": "2f35b819e7d6d54ce49cc0fb6726f96bebce19e63f5933d1ab062f29b7e9835b",
+    "Content/Maps/SpaceCenter/Assets/c43446bb8adcb8a8/SM_H_Building_FutureTech_Dock_06a_Glass_13/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_13.uasset": "a6fbfd559a5c5a68687bc06d323f4bc35c33e2147c85f9e8e5a686445c78e097",
+    "Content/Maps/SpaceCenter/Assets/c67aa84d83ccd722/T_H_Transport_Utility_Guardrail_02_CA.uasset": "74f6d7a559ab1702b1e14a54745fcd8a7f943e907daca5979a0b4b78b8bb2308",
+    "Content/Maps/SpaceCenter/Assets/c849ea768aedd92c/T_I_RoadFacility_Road_FlowerBed_01_CA.uasset": "37b07e74d9f7feaef2693162358b0005452009bced219d5bdae16af81c3dac4e",
+    "Content/Maps/SpaceCenter/Assets/c8db1b5618f0e7f4/SM_H_Building_FutureTech_Dock_Glass_02/Materials/MI_Window_Glass_02_HD.uasset": "6610a7e465c9af69274e8c855eec6fc481a0f2ad3ae969303ca15f62c5bbd3de",
+    "Content/Maps/SpaceCenter/Assets/c8db1b5618f0e7f4/SM_H_Building_FutureTech_Dock_Glass_02/StaticMeshes/SM_H_Building_FutureTech_Dock_Glass_02.uasset": "d729acf03f2bbb2a3811ea6810e8776a5b8879fbcc68b2439b643823dd564404",
+    "Content/Maps/SpaceCenter/Assets/cce0a5657d6aabf4/SM_Branding_LocationSign_FutureTech_03/Materials/MI_GEN_Lighting_01_HD.uasset": "dbdd55043b2831989c4d6324e8c5155df225bf30fae352a4e3c9e49edb95f248",
+    "Content/Maps/SpaceCenter/Assets/cce0a5657d6aabf4/SM_Branding_LocationSign_FutureTech_03/Materials/MI_GEN_Metal_Base_01_HD.uasset": "b322080f810f5f0a4170cd8ad1d8cb3c1c8c4d21bccb44caa9226f3d5ad25dda",
+    "Content/Maps/SpaceCenter/Assets/cce0a5657d6aabf4/SM_Branding_LocationSign_FutureTech_03/StaticMeshes/SM_Branding_LocationSign_FutureTech_03.uasset": "2d0df8fc58206a3f539b63d3ca851ca7c969279b8943845acf3743a6447d0b47",
+    "Content/Maps/SpaceCenter/Assets/cd5a1d3c19a08216/T_H_Transport_Utility_TrafficLight_01_C_HD.uasset": "77a2b5c0d9456c265ae9f3af6b9ec65954eabbc6c917be49837f9eb900e7267a",
+    "Content/Maps/SpaceCenter/Assets/d4d938f2c7ebf279/T_FutureTech_Vehicle_ConceptCar_01b_N_HD.uasset": "2ad1fa3e789aae04f0c0df45125067ea8c07f8fbfe5235b9b2c7e1162041eb30",
+    "Content/Maps/SpaceCenter/Assets/d857975dde629cc2/SM_H_Transport_Utility_Trademark_02/Materials/MI_H_Transport_Utility_Trademark_02A_HD.uasset": "c3e4df01e8e301684a562ca3301f0b73e2c5f51ebfd64b6e4a385b3c145e6cf3",
+    "Content/Maps/SpaceCenter/Assets/d857975dde629cc2/SM_H_Transport_Utility_Trademark_02/Materials/MI_H_Transport_Utility_Trademark_02_HD.uasset": "148bdd036fdc945674b02aec8c3d9b96f90a9a550f12412d048669d53957f8b9",
+    "Content/Maps/SpaceCenter/Assets/d857975dde629cc2/SM_H_Transport_Utility_Trademark_02/StaticMeshes/SM_H_Transport_Utility_Trademark_02.uasset": "5befdf59bf2bdac59fd22b5aa42c6bb1b3ea0ab9993dc43afc425b0ca95217fb",
+    "Content/Maps/SpaceCenter/Assets/d8773763d99ecf11/T_I_RoadFacility_Road_FlowerBed_01_NA_HD.uasset": "07003fb5d754efff8382dd76c1589980411901b5b2d54188810477326dcd0f70",
+    "Content/Maps/SpaceCenter/Assets/d8d42292fc04ecb5/SM_H_Building_FutureTech_Dock_06a_InterWall_01/Materials/MI_GEN_Marble_Base_01_HD.uasset": "27b39dc53849d5e5f3e39b142398dbe4b20717e69e711f436090dc2fce786c5d",
+    "Content/Maps/SpaceCenter/Assets/d8d42292fc04ecb5/SM_H_Building_FutureTech_Dock_06a_InterWall_01/Materials/MI_GEN_Metal_Base_02_HD.uasset": "3cb2f688930127498dfb5e1917750485e666d2fcf7aa2741780d7ad0df4a690c",
+    "Content/Maps/SpaceCenter/Assets/d8d42292fc04ecb5/SM_H_Building_FutureTech_Dock_06a_InterWall_01/Materials/MI_GEN_Metal_Painting_03_HD.uasset": "57e8b0e9eb6d67a948261dcb908907cd0b9bff8ea86014304e4227b80c18c17f",
+    "Content/Maps/SpaceCenter/Assets/d8d42292fc04ecb5/SM_H_Building_FutureTech_Dock_06a_InterWall_01/Materials/MI_GEN_Wooden_Base_03_HD.uasset": "cb218c943441d0b6ca4d2fe5efe21b02a2377b9e27b9ab4e5b92631d705943c8",
+    "Content/Maps/SpaceCenter/Assets/d8d42292fc04ecb5/SM_H_Building_FutureTech_Dock_06a_InterWall_01/Materials/MI_GEN_Wooden_Plank_02_HD.uasset": "e89abadef410bf3c05eb45ea8efc8e06fb2fe5169d45ed92e13067694c2fae51",
+    "Content/Maps/SpaceCenter/Assets/d8d42292fc04ecb5/SM_H_Building_FutureTech_Dock_06a_InterWall_01/Materials/MI_H_Building_FutureTech_Ground_20_HD.uasset": "8a9e5113a11f93919033121bbd3508cf1ffa8fcffa86235facc85b8bb900e220",
+    "Content/Maps/SpaceCenter/Assets/d8d42292fc04ecb5/SM_H_Building_FutureTech_Dock_06a_InterWall_01/Materials/MI_H_Building_FutureTech_HBoss_01_InterWall_01B_HD.uasset": "2d8099577581b1b4b74b81a9c6ac76b6d840ebf2713806e2261db8b05e7126c9",
+    "Content/Maps/SpaceCenter/Assets/d8d42292fc04ecb5/SM_H_Building_FutureTech_Dock_06a_InterWall_01/Materials/MI_H_Decal_WellLid_01_HD.uasset": "01c9083d157147cef9d4c461380689b45de98280c5aaf887784e4143ad348b37",
+    "Content/Maps/SpaceCenter/Assets/d8d42292fc04ecb5/SM_H_Building_FutureTech_Dock_06a_InterWall_01/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_InterWall_01.uasset": "8f444ca7f9409a24e1ca1941f38101bee6dec0b873aa78f9d30302c0b47afd22",
+    "Content/Maps/SpaceCenter/Assets/d97482afd1dc36fe/T_H_Transport_Utility_Trademark_02_EC.uasset": "744ba947b308f1c1fbb6c96fe304d163d495a1789814f4d55ba0f2ea49a1e5a7",
+    "Content/Maps/SpaceCenter/Assets/d9fcc5a83dbbe52d/T_RoadCurb_01B_C_HD.uasset": "bbb6974d4d63866284d65a3b9739f251493da93ea6646d657be0091a84183907",
+    "Content/Maps/SpaceCenter/Assets/db480f862cacd574/T_Generic_Vehicle_Glass_01_N_HD.uasset": "0bdfd0efd2b49c35940c411949f32822f2c0c9e30aaf6ad4842c1eea28d0ec58",
+    "Content/Maps/SpaceCenter/Assets/e169a268b85df812/SM_H_Building_FutureTech_Dock_06a_Glass_11/Materials/MI_Window_Glass_02_HD.uasset": "943ff2a12584a9be0683da119a5af9dee26e071c595ce8370a7e9ff06efff0e8",
+    "Content/Maps/SpaceCenter/Assets/e169a268b85df812/SM_H_Building_FutureTech_Dock_06a_Glass_11/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_11.uasset": "e3b9b72eea1f33b2ca8ec4e7a99637509ee7d916fd7a3630167c1cf865e5b8ee",
+    "Content/Maps/SpaceCenter/Assets/e451a35f29ea009d/SM_H_Building_FutureTech_Dock_06a_Glass_06/Materials/MI_Window_Glass_02_HD.uasset": "ac29bba3332d1143d4fa31391ea9f220486db8973af892289682d9fb27478c51",
+    "Content/Maps/SpaceCenter/Assets/e451a35f29ea009d/SM_H_Building_FutureTech_Dock_06a_Glass_06/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_Glass_06.uasset": "7d70c3c1bd01d87e44756c97ffd3f2cfb217d19e1a164d68b752c6a60307aa75",
+    "Content/Maps/SpaceCenter/Assets/e665aa6d50248399/SM_H_Building_FutureTech_Dock_06a_InterWall_01a/Materials/MI_GEN_Fabric_Wall_01_HD.uasset": "c018725c9b63fbb5567923770978ad04c7875587f375b58f59283e5b5638a7b5",
+    "Content/Maps/SpaceCenter/Assets/e665aa6d50248399/SM_H_Building_FutureTech_Dock_06a_InterWall_01a/Materials/MI_GEN_Marble_Base_01_HD.uasset": "55c7511a41dc89be862e5926ec286f582f71379c00ef681f578f96d32e514ec1",
+    "Content/Maps/SpaceCenter/Assets/e665aa6d50248399/SM_H_Building_FutureTech_Dock_06a_InterWall_01a/Materials/MI_GEN_Metal_Base_02_HD.uasset": "d05a35e2bfe64920f4521d4ac1643dd092f88895404e0ae2a909833180836e5a",
+    "Content/Maps/SpaceCenter/Assets/e665aa6d50248399/SM_H_Building_FutureTech_Dock_06a_InterWall_01a/Materials/MI_GEN_Wooden_Base_01_HD.uasset": "af1a51015fb91a44802d31f5d1d32b1ce8ce0545be99906d119dd0413b7b3a99",
+    "Content/Maps/SpaceCenter/Assets/e665aa6d50248399/SM_H_Building_FutureTech_Dock_06a_InterWall_01a/Materials/MI_H_Building_FutureTech_HBoss_01_InterWall_01B_HD.uasset": "5668f150328a64d57d3dd99dc0a05016dc459a16bdf64fcb0e318bf9007cdd77",
+    "Content/Maps/SpaceCenter/Assets/e665aa6d50248399/SM_H_Building_FutureTech_Dock_06a_InterWall_01a/Materials/MI_H_Building_FutureTech_HBoss_01_InterWall_01D_HD.uasset": "59d95ec3e6955cb387b88d27e78bee3d91c2f1349979f432da8ce3e5e8933a29",
+    "Content/Maps/SpaceCenter/Assets/e665aa6d50248399/SM_H_Building_FutureTech_Dock_06a_InterWall_01a/Materials/MI_H_Building_FutureTech_HBoss_01_InterWall_01_HD.uasset": "a83a9797cdddaaa26d8e098928d3255f2de6350248e5ff1d8f95e0708b340f1f",
+    "Content/Maps/SpaceCenter/Assets/e665aa6d50248399/SM_H_Building_FutureTech_Dock_06a_InterWall_01a/StaticMeshes/SM_H_Building_FutureTech_Dock_06a_InterWall_01a.uasset": "f209e11bd1a802c8bad2818142b253a92a2f4842e2f40fb77dc93e76bb4978bb",
+    "Content/Maps/SpaceCenter/Assets/e74d5d335a9c4923/T_H_FutureTech_Furniture_Radar_01a_NA_HD.uasset": "39008d3aa58010447e96bed1615e553b27b950bf410a310e7683a9fa89e41c6c",
+    "Content/Maps/SpaceCenter/Assets/ec0d051bc420d706/T_GEN_Wooden_Plank_02B_Inst_N_HD.uasset": "781e5e7c758dab590760316502f3f4c661e02bff79492d865c2dd1f253c180a6",
+    "Content/Maps/SpaceCenter/Assets/ed0e3c20d95acb8d/T_Generic_Vehicle_Wheel_01_CA.uasset": "eab6630655ff6528f49f64eba3b0c24d7891b9b053df93ad30231ea4b59f4c81",
+    "Content/Maps/SpaceCenter/Assets/ed46cb5d30611e4e/T_FutureTech_Vehicle_ConceptCar_01c_C_HD.uasset": "6f58a529204abeaa228681401af8b5a25b8401b576253e8a86ca912723df1cb3",
+    "Content/Maps/SpaceCenter/Assets/eda2c566b1128949/SM_H_Building_FutureTech_Dock_07_Glass/Materials/MI_Window_Glass_02A_HD.uasset": "3f7116dc744deb272ebebd6432c74b3c8d193393e9e585c9028e26f71034ffc1",
+    "Content/Maps/SpaceCenter/Assets/eda2c566b1128949/SM_H_Building_FutureTech_Dock_07_Glass/StaticMeshes/SM_H_Building_FutureTech_Dock_07_Glass.uasset": "06a11aebb45bebab2178afb60c53bb7fbc798eca02e84e349b268ef99ef77c18",
+    "Content/Maps/SpaceCenter/Assets/f01b76f2e1d428e7/SM_H_Building_FutureTech_Dock_Glass_02a/Materials/MI_Window_Glass_02_HD.uasset": "dc0df3e97dab4125e9c8638a62cb9e12631d1d8c17f5d194d9bb50c043b35be2",
+    "Content/Maps/SpaceCenter/Assets/f01b76f2e1d428e7/SM_H_Building_FutureTech_Dock_Glass_02a/StaticMeshes/SM_H_Building_FutureTech_Dock_Glass_02a.uasset": "57a7693f43081e28f7cfda3542dad95078e4a9ae037985aa3cd8cf6d186b2a72",
+    "Content/Maps/SpaceCenter/Assets/f4d2505d67441f03/T_H_Transport_Utility_TrafficLight_01_EC.uasset": "f39f4e7089ca5612b8705f70086a768719b3afdafa0f265aee2368169ebd10f4",
+    "Content/Maps/SpaceCenter/Assets/f4f6e712c2e73bbb/T_H_Transport_Utility_Trademark_02A_C_HD.uasset": "6d6eeceddb0fa58dc6fac5c22afc6391cb1bf3a1f3874d58b4ed023e1ba7f5f8",
+    "Content/Maps/SpaceCenter/Assets/f80cf087518866b0/T_H_Building_FutureTech_HBlack_RoomPlatform_01_N_HD.uasset": "031b7ca26a570d80c0a08927b853caff19d85d32759e917d0c79add033c15b70",
+    "Content/Maps/SpaceCenter/Assets/fa5a73a198474455/T_FutureTech_Vehicle_ConceptCar_01_wheel_N_HD.uasset": "bfb3c51ad634611acf2e6a38c1aeccacc1b575d754d5f86a214cd6db7676657e",
+    "Content/Maps/SpaceCenter/Assets/fd10b489730001cc/T_GEN_Grass_Base_01B_CA.uasset": "08e56b94eec91cd12e5865c9341d07271a22ebe3e9b0986b91df504e65b13aab",
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "ea5b7583a3a185b6e19b00b1b5e2738fe9a9f14b263d0793b166e79e83b30bfe",
+    "Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap": "49b407fed8f8fcbfc6abb3e184ddbe50cac09effb242ec1d2e3017089fef2c17",
+    "Content/Maps/SpaceCenter/L_SpaceCenterSample.umap": "7e1d74f14774de827914d57d407cdc1c9ca88cbee63413d1326fbda030685389",
+    "Content/Maps/SpaceCenter/Materials/MI_057ae320e6fe08fd.uasset": "0c9f35bd3c9b00093aa03d556e35c080b726826e465c02bff1e817147816c7df",
+    "Content/Maps/SpaceCenter/Materials/MI_12c1db7413cdc96a.uasset": "9138fc513acd6d4b6acb9a4366f8dfed0eda8cd2acb405f1dc26e349dcf317a9",
+    "Content/Maps/SpaceCenter/Materials/MI_176ab45ee6a1aa37.uasset": "9371b02d1f4c0f087234f523001cd1de5584c1f914648976b79f13432b761366",
+    "Content/Maps/SpaceCenter/Materials/MI_1fecf63b6fab7635.uasset": "642642f2d13a95dc2b61fca0c61bf935ed2f01d477f89c7d9b8446d22fded111",
+    "Content/Maps/SpaceCenter/Materials/MI_281c0bd14ca94455.uasset": "a4868a277524ec6b12cacd02c20a7d25fb8baf5e8b60a5820984bf5ad8b2ed18",
+    "Content/Maps/SpaceCenter/Materials/MI_2fb2039d04101716.uasset": "3d923a94d69f46cb612363342377f4a24fd37a19ccedaf6b5c25baf2eb9fe772",
+    "Content/Maps/SpaceCenter/Materials/MI_36a6634f30b1bbf2.uasset": "e9c06ea7b85eedb30d0a204c1bf5c0dc397d6c7c58508cacd8a746a463480222",
+    "Content/Maps/SpaceCenter/Materials/MI_38ee88b3c97a115e.uasset": "4e2e3da4c60f24b009e42136c6d4cc5c96b154aafec6e38ca5e0a2fd6834148f",
+    "Content/Maps/SpaceCenter/Materials/MI_413f72af0dba8537.uasset": "2f3a4551a27a3fa18755a2dcf0e310258909a225638bb21bb4d845410fc192d2",
+    "Content/Maps/SpaceCenter/Materials/MI_4d3f0a5a62e4431f.uasset": "f222fc24635069df16dc846c36ae9b7ac554fc2d5a9b8015b730861b27ca3f51",
+    "Content/Maps/SpaceCenter/Materials/MI_57dec4d657502103.uasset": "a89fc3d8747cec400197e6defdff2bbff2573f554921ca113feebd179dc146c2",
+    "Content/Maps/SpaceCenter/Materials/MI_6ffc0c857a8da153.uasset": "9cb804f75396c51be501cdf353e12d2ed3ca85b7076969ce8d67aae68276f9f1",
+    "Content/Maps/SpaceCenter/Materials/MI_7055a4a47c50b70e.uasset": "aa7b445b10e23ab714a63673b7a485f3527e68846049e05349bc54f466a48dec",
+    "Content/Maps/SpaceCenter/Materials/MI_71bd6b478bd9523a.uasset": "792588e48386b8a13f0c2dbb672b22fcbcdb1920ec981eb9076fcd4017d3dda3",
+    "Content/Maps/SpaceCenter/Materials/MI_727a3d2f1ba55fd7.uasset": "0b324a1e9dd421093588cdd963c2d49f1eebc80f9825b10e4457d1138e169e93",
+    "Content/Maps/SpaceCenter/Materials/MI_7cb925fe4935b3ea.uasset": "8b28c3e1e0ce361e98c186a75fa1a8faf14670ffcceba1e5e048bf839dd8130e",
+    "Content/Maps/SpaceCenter/Materials/MI_7dd829f815ca5453.uasset": "f4c9e1ab4f20f3909365a0f551d453de6035d0d0819954883798c3e2eb417a59",
+    "Content/Maps/SpaceCenter/Materials/MI_808fc80e7bcdde17.uasset": "864cd4ca0da13b7f6057feda6720d52afd8ea2a896d8d49bb89ec34e7da7970d",
+    "Content/Maps/SpaceCenter/Materials/MI_8617004830b1e874.uasset": "7c918d422d3ba1f3e579cfd72aa63d43d49dc74c667dfdbc1486919d0765d1ab",
+    "Content/Maps/SpaceCenter/Materials/MI_87fd44d510d125a5.uasset": "266274a73a25fa2292bc3000ce0ecf0c623b49f7ec2ac1d8de5ad883004928bf",
+    "Content/Maps/SpaceCenter/Materials/MI_89472e7778fa8921.uasset": "1ad586e3ade403dce51cf5b43271b22fba99010b48adf1c0a50fa33d41cffc36",
+    "Content/Maps/SpaceCenter/Materials/MI_8fcddcf4c6c813ad.uasset": "d3ad1da778e787fbd994482d6f94a1eaff11f20136c96522d534ba071890bc5c",
+    "Content/Maps/SpaceCenter/Materials/MI_9448f058dfa970a1.uasset": "ff1fd8855294afe81433ae74c18f265db79e81ec63427f202fb9d944eab5e22c",
+    "Content/Maps/SpaceCenter/Materials/MI_99feaa009d0482b3.uasset": "8bacfa91389f1ba6fdc43eadb9e15455b406ada01bab77ae73e414d9b13a13d1",
+    "Content/Maps/SpaceCenter/Materials/MI_9d56d57d2093bd60.uasset": "fe97fc7d122d4a7ffea2e782a1bdf2716c2f3d41eacbcd07214963d0b126a3ee",
+    "Content/Maps/SpaceCenter/Materials/MI_a1de1b57c000b976.uasset": "01e684b6a1a516f118a3062125f41865a63d444e861caea0e51cb76fe40430cd",
+    "Content/Maps/SpaceCenter/Materials/MI_a3bac075f659c9e1.uasset": "5b10f8a795ea130d82d873d77ab9b7d6a805de4b7336b212399f0dcdee002cb4",
+    "Content/Maps/SpaceCenter/Materials/MI_ac7a3f2e2b521b12.uasset": "94914b9bae7ad2897015c3f92b46b00f01bf04cb27c5c192c66b1ffebc857e6c",
+    "Content/Maps/SpaceCenter/Materials/MI_b12b0d3298d47e0b.uasset": "61f47adf918362d3fecea9f7a192e0c5777b58d99be36b32f1073bfdfbdf0bc3",
+    "Content/Maps/SpaceCenter/Materials/MI_b66a19af8f50eb6a.uasset": "1d21a60fa0dadae3e4e3e7628d7a7d9e069ea7cc3c7cbf7c7a61bad9e5caddc5",
+    "Content/Maps/SpaceCenter/Materials/MI_bb67dad7de4fbf86.uasset": "7b1cdcfc50f9580b1120afa71bdf9faa5e198ffdcdb3d64831f2c67b500ed3c2",
+    "Content/Maps/SpaceCenter/Materials/MI_cfabefab827cd323.uasset": "565bba2751f2318444acc16d29a521b9fd80b77bec9237ddaf9ee685341411d9",
+    "Content/Maps/SpaceCenter/Materials/MI_d1f251657be195d6.uasset": "a1812e8e015c47bd0ee93790a062b22d500c37d494af9e02c7a63389987ade35",
+    "Content/Maps/SpaceCenter/Materials/MI_d5ac23c52fb6b879.uasset": "ecdb13cb1c29a7218843be73503ffe51f5a678c6d332c744ed6438525d3c9d80",
+    "Content/Maps/SpaceCenter/Materials/MI_d9e63f97a7d9bf88.uasset": "bf4f5a911ffc9a2fc85492e557b790740eb23ea61591175f3cc50a4683294b6e",
+    "Content/Maps/SpaceCenter/Materials/MI_dbd240adfa095c0b.uasset": "27d5409cdde613a04bba984eda89ea3ed739a157262c3be799a605bec9496dcd",
+    "Content/Maps/SpaceCenter/Materials/MI_e6d0da38e3603b00.uasset": "2bc200ffac2e7ecefda56fafd79a97eb3a5b7b2158371f9ba1a4953a670126b6",
+    "Content/Maps/SpaceCenter/Materials/MI_e9a4377a20a38619.uasset": "98a39cad62c831faf9185876c86f825038bd9434b63e6773aad6a869caa7c688",
+    "Content/Maps/SpaceCenter/Materials/MI_f15a9df6f8213af2.uasset": "f2c011c7cea21a7bd43ee19423d6f324510afe62166f65fc5fec1edabae0bb40",
+    "Content/Maps/SpaceCenter/Materials/MI_fa28200fa55f5736.uasset": "ef88152a3c5f7e344b767380284db4366a951ba1188184a2dc4e220e1448a081",
+    "Content/Maps/SpaceCenter/Materials/MI_fafba324ca854b87.uasset": "c3080bdd2d719fe54fbfbe6d9e66c03ca1ecaa873993355e5c98a4bb34e5cfb0",
+    "Content/Maps/SpaceCenter/Materials/MI_fd805ae55b055d83.uasset": "01be957f70501a15cb9c0a96772f712b22eceb9c9177c24a1c2da0b2cfe7f253",
+    "Content/Maps/SpaceCenter/Materials/MI_feb6050837da6c00.uasset": "baabfa836a8a0ab103535b0d14052d54c74fa84ef7453f03e5bf6886934ef77d",
+    "Scripts/Extraction/analyze_phase7a_performance.py": "4b978dfb9cfda70c49fd3a9cb142268507a96e123c39763706cc2db75baf0a5d",
+    "Scripts/Extraction/archive_evidence.py": "77617b83e69397e8a59409c20de0579b304eae0221c3a0c4be5b5cae40e66ec4",
+    "Scripts/Extraction/audit_phase7a.py": "681e6683d18fad66bec8f035e75c68168ffbf38243fb0afae9d1a65a0d788c66",
+    "Scripts/Extraction/equipment_scenarios.py": "354873c57c30fa212b6e70c054673f7ff3bd3940ef8adf327e8969b469e0e0be",
+    "Scripts/Extraction/north_combat_scenarios.py": "017a9597931bc0d289e5cdc62ced3567496529c80ac485c4fffe3f403718683c",
+    "Scripts/Extraction/phase5_scenarios.py": "4ee0750f4956c61c43dabce44071ab3b52dc7bfadffe225033b7d696a7e346ce",
+    "Scripts/Extraction/prepare_phase7a.py": "a9f86c926b4e1872028d091cb11311e9d018e7bcfd00733ad8cc180430ecd1e3",
+    "Scripts/Extraction/progression_scenarios.py": "47d473a99f92b5ac858c0591a8df41ea9813f4dbd472650bb4cdca41d28c64ec",
+    "Scripts/Extraction/reproduce_phase7a.py": "c348ccde764097bd111406175325cb3ad89586d10f0a4405be21962ee22c3e01",
+    "Scripts/Extraction/resource_guard.py": "23fc31e8775fbc7dc371ec9333dc0f69105a4a40c87c515621c060f9148bf741",
+    "Scripts/Extraction/run_editor_task.py": "1050cc93a2788d5e5cf83772776a39d2d0ffa77e36988ca04a6e452fdafcbfea",
+    "Scripts/Extraction/run_network.py": "5eb20bb4dba195894fbfd2899a1df073ec7b88ae27c2b1b5fc5dc4373b3b0791",
+    "Scripts/Extraction/run_phase7a_acceptance.py": "4bf792bf37b257ebff5c3e93473b933028a76a1f122739fabd4b235344a27863",
+    "Scripts/Extraction/streaming_scenarios.py": "a09414ec93ff41c6e533837f75531f1592467291dca4ecd62d0aacc16998a2d2",
+    "Scripts/SpaceCenter/audit_geometry.py": "905b1a5ccc1be043f474b095ca376a5bf72dee06068fd5448505b1475dcbe810",
+    "Scripts/SpaceCenter/import_sample.py": "f2a2eb66a201048880c3b5a34c43c61a93a5b1aefde352cbe890f82fafd000a0",
+    "Scripts/SpaceCenter/north_config.json": "5a76dcbca9cd89fd7a77f17a9d0e337d34041bdc44d290b08f7384033b782af8",
+    "Scripts/SpaceCenter/north_route.json": "9051789042db4f764bbd242e8ea63f975312845777c5f105338bfccd483590e4",
+    "Scripts/SpaceCenter/prepare_sample.py": "ab668f4c07522895b694ae6bfa43924d2328e9b68ab11926b12ed878a21fbf2c",
+    "Scripts/SpaceCenter/run_conversion.py": "875d8987fe6db152e9e86f57e7b1fd57333442045c6b687f7d1e3e3910128919",
+    "Scripts/SpaceCenter/source_packages.py": "853eaa339e853193d78ef9871adc45c762f570630631a043314649e39c406f74",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp": "ab7782ae14be3a9fd40fcae60f09385e6151d3bb2074c438b388276514903cf2",
+    "Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp": "07d3df0792c430903d1e37ce821da1ed6b278ab3474367b59b8e28ed6220abac",
+    "Source/BrokenEdge/Extraction/ExtractionRegionStream.cpp": "96a215e729b1d9b7414f64bf37cab9eb54895a328e9862fec541a41051488e3e",
+    "Source/BrokenEdge/Extraction/ExtractionRegionStream.h": "4ede02918379393f85fd05329a2b73556ad3bfc3d54df3aa23fc6232fb050886",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "7c282729aff88d61893936d832e203b074a95e36fdac71c4f810cb14fe57aa4a"
+  },
+  "packages": {
+    "Packaged/Client/Windows/BrokenEdge.exe": {
+      "size": 173568,
+      "sha256": "061bdd6d6c67ab6f19e80c1cc06a9aaa8ad959bb767871d76b5bed6790e52c34"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe": {
+      "size": 337799680,
+      "sha256": "eb7f9b711b3be0954daf3edb5eeeef2b7e0c4cc146b13d0fb30a569e188483cb"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.pak": {
+      "size": 11626321,
+      "sha256": "fc20df95fa64158d9f58e5c4d4797a0929267e0d7a0997b6b202fbb58d62f10f"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.ucas": {
+      "size": 729433312,
+      "sha256": "6f8b2d25fbb4140e56a90353bb5797376136ca31f539e313174bee24e3fb172e"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.utoc": {
+      "size": 984135,
+      "sha256": "4891185065dc305f81c02acb4412de37bb0df7d451633814295d7341d16604c0"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3356272,
+      "sha256": "82d51b038a05c5a35235d3dba9a0c5453a7d6bc6ba4a44084eb5237f8aef7f8c"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "374ef4924ba2a505d00f405d7bee4b1605f9b232bca338d1295d17aaeb652f6f"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdgeServer.exe": {
+      "size": 173568,
+      "sha256": "e9fa4aaa0667e5a6b5d24d86c95d7c126211a48deebb4a9b5b4dee4cac76c631"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe": {
+      "size": 317911552,
+      "sha256": "a38c69dc1f467ec7f4dbfb22795653db0ecbe89b5852e3709b10584b53a1af87"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.pak": {
+      "size": 10598183,
+      "sha256": "6d3abd21dca7b9ec43fbe6d78d4c0539d7915b525b8c17037ecb2b41d2466e51"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.ucas": {
+      "size": 122463424,
+      "sha256": "98d0a0e59bfe62bbe5bc28adc607ab0a325d4e818062d250ba762dd55d0a62ab"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.utoc": {
+      "size": 468388,
+      "sha256": "7183b8b19e3554ce2a230602ad909e7d9f05d26ca444ef4d85b609a99df31665"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3356272,
+      "sha256": "82d51b038a05c5a35235d3dba9a0c5453a7d6bc6ba4a44084eb5237f8aef7f8c"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "374ef4924ba2a505d00f405d7bee4b1605f9b232bca338d1295d17aaeb652f6f"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    }
+  },
+  "review": {
+    "scope": "Bounded north region: 132 source placements, 69 meshes, 153 materials, 234 selected textures; 54 resident and 78 streamed placements. Two supply crates, four guards total. No commit or push.",
+    "runtime": "Same-host Development/OnlineSubsystemNull. Pair has two rendered clients. Six-player streaming and north combat use one rendered plus five NullRHI. Equipment/lifecycle use two rendered; squad uses three rendered to preserve actual crosshair interaction.",
+    "performance": "Ryzen 5 7500F / RTX 4060 Ti, 1920x1080, ten sg qualities=1, screen percentage=100, VSync=0, uncapped. Three >=180 s zero-AI samples per route. P95 9.7762..10.4042 ms; no >100 ms frames in predefined +/-2 s stream-event windows. Three 102.8..436.3 ms GT spikes before the first north load remain unexplained and retained.",
+    "repeatability": "2738 hashes unchanged across repeated conversion and import; 2432 native files still match the first repeat pre-state. Canonical material paths and sorted geometry reports fix metadata-only nondeterminism. Cold audit 1069 checks.",
+    "limits": [
+      "Three Trim05 virtual textures failed export; two parent material dependencies absent. Rebuilt PBR and bounded, cut source geometry remain a visual prototype.",
+      "First visit is separate; OS/driver caches were not purged. No Internet, Shipping or six-rendered-client 60 fps claim.",
+      "Source persistence rules did not change; the historical 42-crash matrix was not repeated.",
+      "Owned native backup cleanup was rejected by automatic approval with blocked by policy. Both D-drive copies (about 1.146 GiB) remain."
+    ],
+    "verification": "15 rule tests; final eight old functional scenarios; PIE Extraction two rounds, Teams, FreeForAll, four teardown cycles; seven legacy LAN checks. No owned live UE/game process or debugger session remains; eight user breakpoints/five enabled preserved."
+  }
+}

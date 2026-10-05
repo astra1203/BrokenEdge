@@ -1,4 +1,5 @@
 #include "ExtractionGameMode.h"
+#include "ExtractionRegionStream.h"
 #include "ExtractionKeyRoom.h"
 #include "ExtractionState.h"
 #include "ExtractionPlayerController.h"
@@ -274,7 +275,8 @@ void AExtractionGameMode::Tick(float Delta)
 		int32 Ready = 0;
 		for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 			if (It->Get()->HasClientLoadedCurrentWorld() && It->Get()->GetPawn()) ++Ready;
-		if (Ready >= ExpectedPlayers)
+		const auto* Region = AExtractionRegionStream::Find(GetWorld());
+		if (Ready >= ExpectedPlayers && (!Region || Region->IsReady()))
 		{
 			FGuid Raid;
 			bool ValidTickets = true;

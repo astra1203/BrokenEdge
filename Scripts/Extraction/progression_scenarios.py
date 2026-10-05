@@ -173,6 +173,20 @@ def run(g):
     send('A', 'unlock')
     time.sleep(.6)
     check('Duplicate opening never consumes remaining key', lambda: carried('A', 'Key') + carried('B', 'Key') == 1)
+    if state('A').get('region'):
+        cache_id = room()['cache']
+        cache_contents = next(c['contents'] for c in state('Server')['loot'] if c['id'] == cache_id)
+        quest_before = progression('A')
+        place('EX_A', [-1500, -300, 460])
+        check('Key-room owner unloads north from the old interior', lambda: not state('A')['region']['loaded'], 45)
+        place('EX_A', approach)
+        check('Key-room owner reloads north on return', lambda: state('A')['region']['visible'])
+        check('Streaming preserves opened door, remaining key, cache and quest state', lambda:
+              all(room(p).get('open') and not room(p).get('blocked') for p in peers)
+              and carried('A', 'Key') + carried('B', 'Key') == 1
+              and room()['cache'] == cache_id
+              and next(c['contents'] for c in state('Server')['loot'] if c['id'] == cache_id) == cache_contents
+              and progression('A') == quest_before)
     place('EX_B', [approach[0]+240, approach[1], approach[2]])
     place('EX_A', [approach[0], approach[1]-150, approach[2]])
     send('A', 'look', yaw=90, pitch=-7)

@@ -1,0 +1,66 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts/Extraction/run_build.py",
+    "--target",
+    "Editor",
+    "--jobs",
+    "4",
+    "--tag",
+    "Phase7AEditor03"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T04:41:59.773058+00:00",
+      "c_free_gib": 69.74529266357422,
+      "d_free_gib": 233.20083618164062,
+      "ram_free_gib": 12.22610092163086,
+      "commit_used_gib": 30.738998413085938,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T04:41:59.778621+00:00",
+      "c_free_gib": 69.74529266357422,
+      "d_free_gib": 233.20083236694336,
+      "ram_free_gib": 12.225780487060547,
+      "commit_used_gib": 30.740097045898438,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T04:42:04.789035+00:00",
+      "c_free_gib": 69.74556732177734,
+      "d_free_gib": 233.2829475402832,
+      "ram_free_gib": 11.195850372314453,
+      "commit_used_gib": 35.17989730834961,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T04:42:09.789397+00:00",
+      "c_free_gib": 69.74459457397461,
+      "d_free_gib": 233.2829475402832,
+      "ram_free_gib": 11.4881591796875,
+      "commit_used_gib": 33.06645202636719,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T04:42:14.449170+00:00",
+      "c_free_gib": 69.74218368530273,
+      "d_free_gib": 233.2010040283203,
+      "ram_free_gib": 11.886367797851562,
+      "commit_used_gib": 31.008342742919922,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 58596,
+  "exit_code": 0
+}

@@ -1,0 +1,103 @@
+{
+  "previous": {
+    "stack": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"frames\":[{\"presentation\":\"AExtractionGuard::Sees(const ABrokenEdgeCharacter *) ExtractionGuard.cpp:37\",\"index\":0,\"file\":\"file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Extraction/ExtractionGuard.cpp\",\"line\":37,\"isCurrent\":true},{\"presentation\":\"AExtractionGuard::Tick(float) ExtractionGuard.cpp:54\",\"index\":1,\"file\":\"file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Extraction/ExtractionGuard.cpp\",\"line\":54,\"isCurrent\":false},{\"presentation\":\"AController::TickActor(float, ELevelTick, FActorTickFunction &) LevelTick.cpp:409\",\"index\":2,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Engine/Private/LevelTick.cpp\",\"line\":409,\"isCurrent\":false},{\"presentation\":\"FActorTickFunction::ExecuteTick(float, ELevelTick, Type, const TRefCountPtr<…> &) Actor.cpp:379\",\"index\":3,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Engine/Private/Actor.cpp\",\"line\":379,\"isCurrent\":false},{\"presentation\":\"[内联] FTickFunctionTask::DoTask(Type, const TRefCountPtr<…> &) TickTaskManager.cpp:334\",\"index\":4,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Engine/Private/TickTaskManager.cpp\",\"line\":334,\"isCurrent\":false},{\"presentation\":\"TGraphTask::ExecuteTask() TaskGraphInterfaces.h:703\",\"index\":5,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Core/Public/Async/TaskGraphInterfaces.h\",\"line\":703,\"isCurrent\":false},{\"presentation\":\"[内联] std::_Atomic_storage::load(memory_order) atomic:932\",\"index\":6,\"file\":\"file://D:/OrekiFiles/VisualStudio/Community/VC/Tools/MSVC/14.44.35207/include/atomic\",\"line\":932,\"isCurrent\":false}],\"threadId\":\"Thread-1-[GameThread] (21048)\",\"totalFrames\":33}"
+        }
+      ],
+      "isError": false
+    },
+    "C->RootComponent.DebugPtr->RelativeLocation": {
+      "content": [
+        {
+          "type": "text",
+          "text": "C->RootComponent.DebugPtr->RelativeLocation = {X=1399.9999999999995 Y=9000 Z=154} {UE::Math::TVector<double>}\n  ├─ X = 1399.9999999999995 {double}\n  ├─ Y = 9000 {double}\n  ├─ Z = 154 {double}\n  ├─ ||V||² = 82983716 {double}\n  └─ + Raw View = {={={X=1399.9999999999995, Y=9000, Z=154}, XYZ= // 0x00007fef880ec748 {1399.9999999999995, 9000, 154}}} {UE::Math::TVector<double>}"
+        }
+      ],
+      "isError": false
+    },
+    "C->RootComponent.DebugPtr->RelativeRotation": {
+      "content": [
+        {
+          "type": "text",
+          "text": "C->RootComponent.DebugPtr->RelativeRotation = {Pitch=0, Yaw=89.999999999999985, Roll=0} {UE::Math::TRotator<double>}\n  ├─ Pitch = 0 {double}\n  ├─ Yaw = 89.999999999999985 {double}\n  └─ Roll = 0 {double}"
+        }
+      ],
+      "isError": false
+    },
+    "Other->RootComponent.DebugPtr->RelativeLocation": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Other->RootComponent.DebugPtr->RelativeLocation = {X=1400 Y=9500 Z=148.1499981880188} {UE::Math::TVector<double>}\n  ├─ X = 1400 {double}\n  ├─ Y = 9500 {double}\n  ├─ Z = 148.1499981880188 {double}\n  ├─ ||V||² = 92231948.421963111 {double}\n  └─ + Raw View = {={={X=1400, Y=9500, Z=148.1499981880188}, XYZ= // 0x00007fef880b1948 {1400, 9500, 148.1499981880188}}} {UE::Math::TVector<double>}"
+        }
+      ],
+      "isError": false
+    },
+    "PS->PlayerNamePrivate": {
+      "content": [
+        {
+          "type": "text",
+          "text": "PS->PlayerNamePrivate = L\"EX_A\" {FString}\n  ├─ [0] = 69 L\"'E'\" {wchar_t}\n  ├─ [1] = 88 L\"'X'\" {wchar_t}\n  ├─ [2] = 95 L\"'_'\" {wchar_t}\n  ├─ [3] = 65 L\"'A'\" {wchar_t}\n  └─ + Raw View = {Data=Num=5, Max=8 L\"EX_A\"} {FString}"
+        }
+      ],
+      "isError": false
+    },
+    "this->ControlRotation": {
+      "content": [
+        {
+          "type": "text",
+          "text": "this->ControlRotation = {Pitch=0, Yaw=90, Roll=0} {UE::Math::TRotator<double>}\n  ├─ Pitch = 0 {double}\n  ├─ Yaw = 90 {double}\n  └─ Roll = 0 {double}"
+        }
+      ],
+      "isError": false
+    },
+    "this->PatrolIndex": {
+      "content": [
+        {
+          "type": "text",
+          "text": "this->PatrolIndex = 1 {int}"
+        }
+      ],
+      "isError": false
+    },
+    "this->State": {
+      "content": [
+        {
+          "type": "text",
+          "text": "this->State = Patrol {EExtractionGuardState}"
+        }
+      ],
+      "isError": false
+    }
+  },
+  "step": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"status\":\"paused\",\"newPosition\":{\"filePath\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/AIModule/Private/AIController.cpp\",\"line\":334},\"frameValues\":\"├─ + this =  // 0x00007fef08081240 (Name=\\\"ExtractionGuard\\\"_2147481828) {AExtractionGuard *}\\n├─ + Other =  // 0x00007ff188264000 (Name=\\\"BP_StingerCharacter_C\\\"_2147481872) {ABrokenEdgeCharacter *}\\n├─ + ViewPoint = {X=1399.9999999999995 Y=9000 Z=218} {UE::Math::TVector<double>}\\n├─ bAlternateChecks = false {bool}\\n├─ + TargetLocation = {X=1400 Y=9500 Z=148.1499981880188} {UE::Math::TVector<double>}\\n├─ + CollisionParams = {TraceTag=\\\"LineOfSight\\\", OwnerTag=\\\"BP_StingerCharacter_C\\\"_2147481832, bTraceComplex=true, ...} {FCollisionQueryParams}\\n└─ bHit = true {bool}\\n\",\"breakpointErrorsTail\":[]}"
+      }
+    ],
+    "isError": false
+  },
+  "stack": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"frames\":[{\"presentation\":\"AAIController::LineOfSightTo(const AActor *, TVector<…>, bool) AIController.cpp:334\",\"index\":0,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/AIModule/Private/AIController.cpp\",\"line\":334,\"isCurrent\":true},{\"presentation\":\"AExtractionGuard::Sees(const ABrokenEdgeCharacter *) ExtractionGuard.cpp:39\",\"index\":1,\"file\":\"file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Extraction/ExtractionGuard.cpp\",\"line\":39,\"isCurrent\":false},{\"presentation\":\"AExtractionGuard::Tick(float) ExtractionGuard.cpp:54\",\"index\":2,\"file\":\"file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Extraction/ExtractionGuard.cpp\",\"line\":54,\"isCurrent\":false},{\"presentation\":\"AController::TickActor(float, ELevelTick, FActorTickFunction &) LevelTick.cpp:409\",\"index\":3,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Engine/Private/LevelTick.cpp\",\"line\":409,\"isCurrent\":false}],\"threadId\":\"Thread-1-[GameThread] (21048)\",\"totalFrames\":34}"
+      }
+    ],
+    "isError": false
+  },
+  "val": {
+    "content": [
+      {
+        "type": "text",
+        "text": "bHit = true {bool}"
+      }
+    ],
+    "isError": false
+  }
+}

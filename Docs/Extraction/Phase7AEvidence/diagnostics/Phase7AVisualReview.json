@@ -1,0 +1,18 @@
+{
+  "result": "reviewed_with_known_limits",
+  "images": [
+    {
+      "file": "Saved/Extraction/Phase7AStreamingFinal01-two-rendered/A-north-route.png",
+      "review": "North traversal endpoint, floor, gun and HUD visible. Cut building shells, overhead fragments and missing surrounding construction remain visible; bounded source selection is a prototype."
+    },
+    {
+      "file": "Saved/Extraction/Phase7ACombatFinal02-north-combat/A-north-ai-export-spectator.png",
+      "review": "Northern spectator camera shows the living squadmate, supply/death container and source trucks. Extraction inventory lists two rifles. Source lighting and full terrain are not restored."
+    },
+    {
+      "file": "Saved/Extraction/Phase7APerformance03-north/A-performance-final.png",
+      "review": "1920x1080 return to the old interior after north route sampling. Weapon, hands and Chinese HUD visible; medium shadows are visibly coarse."
+    }
+  ],
+  "boundary": "Manual review of these saved images only. Movement, collision, replication and frame timing are validated by the separate recorded runs. No claim of full original-art restoration."
+}

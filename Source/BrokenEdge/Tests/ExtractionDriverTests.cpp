@@ -4,6 +4,9 @@
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
 #include "Misc/FileHelper.h"
+#include "ProfilingDebugging/CsvProfiler.h"
+#include "HAL/PlatformMemory.h"
+#include "HAL/IConsoleManager.h"
 #include "HAL/FileManager.h"
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
@@ -32,6 +35,7 @@
 #include "MultiplayerSessionsSubsystem.h"
 #include "Menu.h"
 #include "BrokenEdge/Extraction/ExtractionGameMode.h"
+#include "BrokenEdge/Extraction/ExtractionRegionStream.h"
 #include "BrokenEdge/Extraction/ExtractionAbilities.h"
 #include "BrokenEdge/Extraction/ExtractionHealth.h"
 #include "BrokenEdge/Extraction/ExtractionGuard.h"
@@ -81,6 +85,27 @@ public:
 		auto* PC = World->GetFirstPlayerController();
 		if (Role == TEXT("Server")) PC = nullptr;
 		auto* Pawn = PC ? Cast<ABrokenEdgeCharacter>(PC->GetPawn()) : nullptr;
+		if (Pawn && WalkIndex < WalkPoints.Num())
+		{
+			const FVector Offset = WalkPoints[WalkIndex] - Pawn->GetActorLocation();
+			if (Offset.Size2D() < 45)
+			{
+				++WalkIndex;
+				WalkSince = Now;
+				Inject(PC, TEXT("Move"), false);
+			}
+			else if (Now - WalkSince > 45)
+			{
+				Error = FString::Printf(TEXT("Walk stalled at waypoint %d"), WalkIndex);
+				WalkPoints.Empty();
+				Inject(PC, TEXT("Move"), false);
+			}
+			else
+			{
+				PC->SetControlRotation(FRotator(0, Offset.Rotation().Yaw, 0));
+				Inject(PC, TEXT("Move"), true);
+			}
+		}
 		if (PC && !AimTarget.IsEmpty())
 		{
 			if (auto* Target = FindPawn(World, AimTarget))
@@ -469,6 +494,38 @@ public:
 					FScreenshotRequest::RequestScreenshot(
 						Folder / (Role + TEXT("-") + Command->GetStringField(TEXT("name")) + TEXT(".png")), true,
 						false);
+				else if (Op == TEXT("walk") && Pawn)
+				{
+					WalkPoints.Empty();
+					WalkIndex = 0;
+					WalkSince = Now;
+					AimTarget.Reset();
+					for (const auto& Value : Command->GetArrayField(TEXT("points")))
+					{
+						const auto& P = Value->AsArray();
+						if (P.Num() == 3) WalkPoints.Add(FVector(P[0]->AsNumber(), P[1]->AsNumber(), P[2]->AsNumber()));
+					}
+					if (WalkPoints.IsEmpty()) Inject(PC, TEXT("Move"), false);
+				}
+				else if (Op == TEXT("profile"))
+				{
+#if CSV_PROFILER
+					if (Command->GetBoolField(TEXT("start")))
+					{
+						const FString Name = FPaths::GetCleanFilename(Command->GetStringField(TEXT("name")));
+						FCsvProfiler::Get()->BeginCapture(-1, Folder, Role + TEXT("-") + Name + TEXT(".csv"));
+					}
+					else FCsvProfiler::Get()->EndCapture();
+#else
+					Error = TEXT("CSV profiler unavailable");
+#endif
+				}
+				else if (Op == TEXT("region_delay"))
+				{
+					if (auto* Region = AExtractionRegionStream::Find(World))
+						Region->SetTestLoadDelay(
+							Command->GetNumberField(TEXT("seconds")));
+				}
 				else if (Op == TEXT("lag"))
 				{
 					GEngine->Exec(World, TEXT("NetEmulation.PktLag 50"));
@@ -487,6 +544,9 @@ public:
 private:
 	FAutomationTestBase* Test;
 	FString Role, Folder, Error, PulseAction, AimTarget;
+	TArray<FVector> WalkPoints;
+	int32 WalkIndex = 0;
+	double WalkSince = 0;
 	double Started, LastWrite = 0, PulseEnd = 0;
 	int32 LastCommand = 0;
 	bool bHeadAim = false;
@@ -924,14 +984,55 @@ private:
 		auto State = MakeShared<FJsonObject>();
 		State->SetStringField(TEXT("role"), Role);
 		State->SetNumberField(TEXT("command"), LastCommand);
+		State->SetNumberField(TEXT("walk_index"), WalkIndex);
+		State->SetNumberField(TEXT("walk_count"), WalkPoints.Num());
+		const auto Memory = FPlatformMemory::GetStats();
+		State->SetNumberField(TEXT("physical_mib"), Memory.UsedPhysical / 1048576.);
+		State->SetNumberField(TEXT("peak_physical_mib"), Memory.PeakUsedPhysical / 1048576.);
+		if (PC)
+		{
+			int32 Width = 0, Height = 0;
+			PC->GetViewportSize(Width, Height);
+			State->SetNumberField(TEXT("viewport_width"), Width);
+			State->SetNumberField(TEXT("viewport_height"), Height);
+			FVector Camera;
+			FRotator Rotation;
+			PC->GetPlayerViewPoint(Camera, Rotation);
+			State->SetArrayField(TEXT("view_position"), VectorJson(Camera));
+		}
+		auto Quality = MakeShared<FJsonObject>();
+		for (const TCHAR* Name : {
+			     TEXT("sg.ViewDistanceQuality"), TEXT("sg.AntiAliasingQuality"), TEXT("sg.ShadowQuality"),
+			     TEXT("sg.GlobalIlluminationQuality"), TEXT("sg.ReflectionQuality"), TEXT("sg.PostProcessQuality"),
+			     TEXT("sg.TextureQuality"), TEXT("sg.EffectsQuality"), TEXT("sg.FoliageQuality"),
+			     TEXT("sg.ShadingQuality"),
+			     TEXT("r.ScreenPercentage"), TEXT("r.VSync"), TEXT("t.MaxFPS")
+		     })
+			if (const auto* Value = IConsoleManager::Get().FindConsoleVariable(Name)) Quality->SetNumberField(
+				Name, Value->GetFloat());
+		State->SetObjectField(TEXT("quality"), Quality);
 		State->SetStringField(TEXT("error"), Error);
 		State->SetStringField(TEXT("map"), World->GetPackage()->GetName());
 		State->SetNumberField(TEXT("net_mode"), World->GetNetMode());
 		State->SetNumberField(TEXT("local_players"), World->GetGameInstance()->GetNumLocalPlayers());
+		if (const auto* Region = AExtractionRegionStream::Find(World))
+		{
+			auto Entry = MakeShared<FJsonObject>();
+			Entry->SetBoolField(TEXT("requested"), Region->IsRequested());
+			Entry->SetBoolField(TEXT("loaded"), Region->IsLoaded());
+			Entry->SetBoolField(TEXT("visible"), Region->IsReady());
+			Entry->SetBoolField(TEXT("blocked"), Region->IsBlocked());
+			Entry->SetNumberField(TEXT("loads"), Region->GetLoads());
+			Entry->SetNumberField(TEXT("unloads"), Region->GetUnloads());
+			Entry->SetStringField(TEXT("status"), Region->GetStatus());
+			State->SetObjectField(TEXT("region"), Entry);
+		}
 		if (const UNetDriver* Driver = World->GetNetDriver())
 		{
 			State->SetNumberField(TEXT("packet_lag"), Driver->PacketSimulationSettings.PktLag);
 			State->SetNumberField(TEXT("packet_loss"), Driver->PacketSimulationSettings.PktLoss);
+			State->SetNumberField(TEXT("net_in_bytes_per_second"), Driver->InBytesPerSecond);
+			State->SetNumberField(TEXT("net_out_bytes_per_second"), Driver->OutBytesPerSecond);
 		}
 		if (auto* Mode = World->GetAuthGameMode())
 		{
@@ -1095,6 +1196,7 @@ private:
 					Player->SetNumberField(TEXT("combat_state"), static_cast<int32>(Character->GetCombatState()));
 					Player->SetNumberField(TEXT("carried_ammo"), Character->GetCombat()->GetCarriedAmmo());
 					const FVector P = Character->GetActorLocation();
+					Player->SetBoolField(TEXT("falling"), Character->GetCharacterMovement()->IsFalling());
 					Player->SetArrayField(TEXT("position"), {
 						                      MakeShared<FJsonValueNumber>(P.X), MakeShared<FJsonValueNumber>(P.Y),
 						                      MakeShared<FJsonValueNumber>(P.Z)

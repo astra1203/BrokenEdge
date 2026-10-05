@@ -24,15 +24,21 @@ parser.add_argument('--packaged', action='store_true')
 parser.add_argument('--lag', action='store_true')
 parser.add_argument('--unacked', action='store_true', help='Recovery test: kill server after durable extraction commit before client acknowledgement')
 parser.add_argument('--debug-hold', action='store_true', help='Wait for Continue.txt before combat and extend assertion timeouts')
-parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression'], default='combat')
+parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat'], default='combat')
 parser.add_argument('--players', type=int, choices=[2, 3, 6])
+parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
+parser.add_argument('--performance-route', choices=['old', 'north'], default='north')
+parser.add_argument('--performance-samples', type=int, choices=[1, 3], default=3)
+parser.add_argument('--performance-seconds', type=int, choices=[60, 180], default=180)
+parser.add_argument('--network-stats', action='store_true', help='Enable UE network byte-rate collection for a separate bandwidth capture')
+parser.add_argument('--streaming-loops', type=int, choices=[1, 2, 10], default=10)
 args = parser.parse_args()
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
 OUT = ROOT / 'Saved/Extraction' / args.tag
 OUT.mkdir(parents=True, exist_ok=False)
 ROLES = ['A', 'B', 'C', 'D'] if args.scenario == 'four' else ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
-if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression']:
+if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat']:
     ROLES = list('ABCDEF')[:args.players or (6 if args.scenario in ['pvpve', 'lifecycle'] else 3)]
 processes, commands, checks = {}, {}, []
 last_states = {}
@@ -46,6 +52,11 @@ report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.s
                                    ROOT / 'Scripts/Extraction/storage_scenarios.py', ROOT / 'Scripts/Extraction/phase5_scenarios.py',
                                    ROOT / 'Scripts/Extraction/equipment_scenarios.py',
                                    ROOT / 'Scripts/Extraction/progression_scenarios.py',
+                                   ROOT / 'Scripts/Extraction/streaming_scenarios.py',
+                                   ROOT / 'Scripts/Extraction/north_combat_scenarios.py',
+                                   ROOT / 'Scripts/Extraction/resource_guard.py',
+                                   ROOT / 'Scripts/SpaceCenter/north_route.json',
+                                   ROOT / 'Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap',
                                    ROOT / 'BrokenEdge.uproject', ROOT / 'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap']}
 
 
@@ -53,9 +64,33 @@ def save():
     (OUT / 'Report.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
 
 
+def read_snapshot(path):
+    if os.name != 'nt':
+        return path.read_text(encoding='utf-8-sig')
+    # UE replaces this file atomically. CRT open() denies deletion and can stall
+    # the game thread for FileManager's 0.5 s retry. Share deletion as well as I/O.
+    import ctypes
+    import msvcrt
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel.CreateFileW.argtypes = [ctypes.c_wchar_p, ctypes.c_uint32, ctypes.c_uint32,
+                                  ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_void_p]
+    kernel.CreateFileW.restype = ctypes.c_void_p
+    kernel.CloseHandle.argtypes = [ctypes.c_void_p]
+    handle = kernel.CreateFileW(str(path), 0x80000000, 7, None, 3, 0x80, None)
+    if handle == ctypes.c_void_p(-1).value:
+        raise ctypes.WinError()
+    try:
+        fd = msvcrt.open_osfhandle(handle, os.O_RDONLY | os.O_BINARY)
+    except BaseException:
+        kernel.CloseHandle(handle)
+        raise
+    with os.fdopen(fd, 'r', encoding='utf-8-sig') as stream:
+        return stream.read()
+
+
 def state(role):
     try:
-        last_states[role] = json.loads((OUT / (role + '-state.json')).read_text(encoding='utf-8-sig'))
+        last_states[role] = json.loads(read_snapshot(OUT / (role + '-state.json')))
     except (OSError, ValueError):
         pass
     # Windows replacement briefly removes the destination while UE retries a
@@ -117,15 +152,27 @@ def launch(role):
                    '-server' if role == 'Server' else '-game']
     entry = '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction?ExpectedPlayers=3' if role == 'Server' and args.scenario == 'load_timeout' else '/Game/Maps/Lobby'
     command += [entry, '-nosound', '-unattended', '-nosplash', '-NoLoadingScreen',
-                '-ExtractionGuards=' + ('4' if args.scenario in ['pvpve', 'progression'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
+                '-ExtractionGuards=' + ('4' if args.scenario in ['pvpve', 'progression', 'northcombat'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
                 '-MatchType=Extraction', '-NumPublicConnections=' + str(len(ROLES)),
                 '-MinPlayersToStart=' + str(len(ROLES)), '-port=27777',
-                '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '1200' if args.debug_hold else '600'),
+                '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '1200' if args.debug_hold or args.scenario in ['streaming', 'performance'] else '600'),
                 '-ExtractionTestRole=' + role, '-ExtractionTestDir=' + str(OUT),
                 '-ExtractionStore=' + str(OUT / 'Store'), '-ExtractionProfile=' + args.tag + '_' + ('A' if args.scenario == 'identity' and role == 'B' else role),
                 '-ExecCmds=t.MaxFPS 30,' + ('sg.ShadowQuality 0,sg.EffectsQuality 1,' if len(ROLES) == 6 else '') + 'BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
                 '-TestExit=Automation Test Queue Empty', '-abslog=' + str(OUT / (role + '.log'))]
-    command += ['-nullrhi'] if role == 'Server' else ['-RenderOffscreen', '-windowed', '-ResX=1280', '-ResY=720']
+    rendered = role != 'Server' and (args.rendered_clients is None or role in ROLES and ROLES.index(role) < args.rendered_clients)
+    if args.scenario == 'performance':
+        command = [c for c in command if not c.startswith('-ExecCmds=')]
+        quality = ','.join('sg.' + name + 'Quality 1' for name in ['ViewDistance', 'AntiAliasing', 'Shadow', 'GlobalIllumination', 'Reflection', 'PostProcess', 'Texture', 'Effects', 'Foliage', 'Shading'])
+        command += ['-csvGpuStats', '-csvCategories=GPUMem', '-ExecCmds=' + ('t.MaxFPS 0,r.VSync 0,r.ScreenPercentage 100,' + quality if rendered else 't.MaxFPS 30') + ',Automation RunTests BrokenEdge.Extraction.ProcessDriver']
+    elif args.scenario == 'northcombat':
+        command += ['-csvGpuStats', '-csvCategories=GPUMem']
+    if args.network_stats:
+        command = [c.replace('-ExecCmds=', '-ExecCmds=net.EnableNetStats 1,', 1) if c.startswith('-ExecCmds=') else c for c in command]
+    command += ['-RenderOffscreen', '-windowed', '-ResX=' + ('1920' if args.scenario == 'performance' else '1280'), '-ResY=' + ('1080' if args.scenario == 'performance' else '720')] if rendered else ['-nullrhi']
+    if rendered and args.scenario == 'performance':
+        # GameEngine otherwise clamps offscreen windows to the virtual desktop.
+        command += ['-ForceRes']
     if args.debug_hold and args.scenario == 'equipment':
         command += ['-ExtractionVisualCalibration']
     if role == 'Server' and args.unacked:
@@ -161,7 +208,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression']
+    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
@@ -175,9 +222,12 @@ def begin_round():
     if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment']:
         from phase5_scenarios import lobby
         lobby(globals())
+    if args.scenario == 'streaming' and len(ROLES) == 2:
+        send('B', 'squad', value=1)
+        check('Streaming pair shares a squad for spectator acceptance', lambda: player('Server', 'B').get('squad') == 1)
     for role in ROLES:
         send(role, 'ready')
-    if args.scenario in ['equipment', 'progression']:
+    if args.scenario in ['equipment', 'progression', 'northcombat']:
         # Arrange the comparison as soon as authority starts the round. Waiting
         # for all rendered clients first lets live AI wound a fresh spawn before
         # the test's position fixture, especially on the second travel.
@@ -275,7 +325,7 @@ try:
             send(role, 'lag')
         time.sleep(2)
         check('Packet simulation applied: 50ms each direction and 2 percent loss', lambda: all(state(r).get('packet_lag') == 50 and state(r).get('packet_loss') == 2 for r in processes))
-    for role in ROLES:
+    for role in ROLES[:args.rendered_clients]:
         send(role, 'screenshot', name='spawn')
     if args.scenario == 'identity':
         check('Same credential cannot bind two simultaneous clients', lambda: not state('B').get('account', {}).get('bound') and bool(state('B').get('account', {}).get('message')))
@@ -286,6 +336,12 @@ try:
         check('Duplicate cannot mutate authenticated inventory', lambda: state('A')['account']['revision'] == account['revision'] and state('A')['account']['stash'] == account['stash'])
         check('Duplicate login cannot regrant starter kits', lambda: len(state('Server')['stored_results']) == 1 and sum(i['quantity'] for i in state('A')['account']['stash']['items'] if i['definition'] == 'AK') == 3)
         send('B', 'screenshot', name='duplicate-profile-denied')
+    elif args.scenario in ['streaming', 'performance']:
+        from streaming_scenarios import run
+        run(globals())
+    elif args.scenario == 'northcombat':
+        from north_combat_scenarios import run
+        run(globals())
     elif args.scenario == 'progression':
         from progression_scenarios import run
         run(globals())

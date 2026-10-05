@@ -1,0 +1,71 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+    "--tag",
+    "Phase7ARules01-equipment",
+    "equipment"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T07:26:43.972289+00:00",
+      "c_free_gib": 66.04229736328125,
+      "d_free_gib": 230.90619659423828,
+      "ram_free_gib": 15.024269104003906,
+      "commit_used_gib": 30.55477523803711,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T07:26:43.981290+00:00",
+      "c_free_gib": 66.04229736328125,
+      "d_free_gib": 230.90619277954102,
+      "ram_free_gib": 15.023780822753906,
+      "commit_used_gib": 30.55477523803711,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T07:26:48.991585+00:00",
+      "c_free_gib": 66.0422592163086,
+      "d_free_gib": 231.0311050415039,
+      "ram_free_gib": 14.28787612915039,
+      "commit_used_gib": 31.407684326171875,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T07:26:54.001384+00:00",
+      "c_free_gib": 66.04222106933594,
+      "d_free_gib": 231.0311050415039,
+      "ram_free_gib": 12.931709289550781,
+      "commit_used_gib": 32.50584030151367,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T07:26:59.011783+00:00",
+      "c_free_gib": 66.04221725463867,
+      "d_free_gib": 230.90581893920898,
+      "ram_free_gib": 12.202022552490234,
+      "commit_used_gib": 33.144989013671875,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T07:27:01.231701+00:00",
+      "c_free_gib": 66.04221725463867,
+      "d_free_gib": 230.90577697753906,
+      "ram_free_gib": 15.021568298339844,
+      "commit_used_gib": 30.57500457763672,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 57636,
+  "exit_code": 0
+}
