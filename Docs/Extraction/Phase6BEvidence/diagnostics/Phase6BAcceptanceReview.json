@@ -1,0 +1,151 @@
+{
+  "status": "passed",
+  "reviewed_utc": "2026-10-05T02:55:16.771714+00:00",
+  "network": [
+    {
+      "name": "progression",
+      "run": "Phase6BNetwork02-progression",
+      "checks": 125,
+      "packaged": true,
+      "lag": false,
+      "package_batch": "Phase6BPackages02"
+    },
+    {
+      "name": "progression-lag",
+      "run": "Phase6BNetwork03-progression-lag",
+      "checks": 129,
+      "packaged": true,
+      "lag": true,
+      "package_batch": "Phase6BPackages02"
+    },
+    {
+      "name": "equipment",
+      "run": "Phase6BNetwork04-equipment",
+      "checks": 133,
+      "packaged": true,
+      "lag": false,
+      "package_batch": "Phase6BPackages03"
+    },
+    {
+      "name": "equipment-lag",
+      "run": "Phase6BNetwork04-equipment-lag",
+      "checks": 134,
+      "packaged": true,
+      "lag": true,
+      "package_batch": "Phase6BPackages03"
+    },
+    {
+      "name": "squad",
+      "run": "Phase6BNetwork04-squad",
+      "checks": 72,
+      "packaged": true,
+      "lag": false,
+      "package_batch": "Phase6BPackages03"
+    },
+    {
+      "name": "squad-lag",
+      "run": "Phase6BNetwork04-squad-lag",
+      "checks": 73,
+      "packaged": true,
+      "lag": true,
+      "package_batch": "Phase6BPackages03"
+    },
+    {
+      "name": "pvpve",
+      "run": "Phase6BNetwork04-pvpve",
+      "checks": 57,
+      "packaged": true,
+      "lag": false,
+      "package_batch": "Phase6BPackages03"
+    },
+    {
+      "name": "pvpve-lag",
+      "run": "Phase6BNetwork04-pvpve-lag",
+      "checks": 58,
+      "packaged": true,
+      "lag": true,
+      "package_batch": "Phase6BPackages03"
+    },
+    {
+      "name": "lifecycle",
+      "run": "Phase6BNetwork04-lifecycle",
+      "checks": 108,
+      "packaged": true,
+      "lag": false,
+      "package_batch": "Phase6BPackages03"
+    },
+    {
+      "name": "inventory",
+      "run": "Phase6BNetwork04-inventory",
+      "checks": 93,
+      "packaged": true,
+      "lag": false,
+      "package_batch": "Phase6BPackages03"
+    },
+    {
+      "name": "combat",
+      "run": "Phase6BNetwork04-combat",
+      "checks": 68,
+      "packaged": true,
+      "lag": false,
+      "package_batch": "Phase6BPackages03"
+    },
+    {
+      "name": "spectator",
+      "run": "Phase6BNetwork04-spectator",
+      "checks": 95,
+      "packaged": true,
+      "lag": false,
+      "package_batch": "Phase6BPackages03"
+    },
+    {
+      "name": "four",
+      "run": "Phase6BNetwork04-four",
+      "checks": 38,
+      "packaged": true,
+      "lag": false,
+      "package_batch": "Phase6BPackages03"
+    },
+    {
+      "name": "settlement",
+      "run": "Phase6BNetwork04-settlement",
+      "checks": 42,
+      "packaged": true,
+      "lag": false,
+      "package_batch": "Phase6BPackages03"
+    },
+    {
+      "name": "recovery",
+      "run": "Phase6BNetwork04-recovery",
+      "checks": 38,
+      "packaged": true,
+      "lag": false,
+      "package_batch": "Phase6BPackages03"
+    }
+  ],
+  "packaged_network_scenarios": 15,
+  "packaged_network_checks": 1263,
+  "rules_tests": 15,
+  "independent_crash_process_runs": 42,
+  "representative_screenshots_reviewed": 10,
+  "scope": "UE 5.8.3 same-host Development OnlineSubsystemNull; no Shipping, Internet or capacity claim",
+  "git": "uncommitted and unpushed",
+  "build_boundaries": [
+    "Progression normal and lag use Packages02 with final key-room geometry. Packages02Manifest preserves binary and pak hashes.",
+    "Packages03 changes armor sell-price division from float to double and adds exact rounding assertions; remaining 13 network scenarios use Packages03, including damaged armor trade in normal and lag equipment runs.",
+    "Early dual-client run predates the side-wall yaw correction; final room collision is established by the six-client normal and lag progression runs.",
+    "PIE and crash recovery use Editor05 before the geometry and armor rounding corrections; legacy LAN uses Packages01. These runs do not verify the later geometry change."
+  ],
+  "diagnostics": [
+    "Editor01 compile failure fixed after local API inspection.",
+    "ProgressionNet02 read an account before lobby binding; scenario now waits for binding.",
+    "Network01-progression found side-wall collision failure; solid backing and explicit yaw geometry assertions fixed the room.",
+    "Network02-progression-lag completed 129 functional checks but lost the buffered finish info marker during engine exit; require explicit finish-command acknowledgement, Automation Success and exit 0. Fresh Network03-progression-lag passed.",
+    "Network03-equipment was intentionally held before launching by reserving its immutable tag while preparing Packages03."
+  ],
+  "limits": [
+    "Prototype cube key model and project-authored room using existing meshes.",
+    "Startup logs retain prior engine automation-condition, animation and audio warnings; success is based on selected tests, exit status and runtime assertions.",
+    "Screenshots are sampled views, not every-frame visual or animation validation."
+  ]
+}

@@ -36,6 +36,7 @@ public:
 	FGuid MedicalItem;
 	UPROPERTY(Transient)
 	TObjectPtr<AExtractionLootActor> Focus;
+	UPROPERTY(Transient) TObjectPtr<class AExtractionKeyRoom> DoorFocus;
 	FString Message;
 	bool IsEnabled() const;
 	bool CanAct() const;

@@ -10,6 +10,7 @@
 #include "SessionWidgetStyle.h"
 #include "BrokenEdge/Extraction/ExtractionAccountComponent.h"
 #include "BrokenEdge/Extraction/ExtractionStashWidget.h"
+#include "BrokenEdge/Extraction/ExtractionProgressionWidget.h"
 
 bool ULobbyWidget::Initialize()
 {
@@ -61,7 +62,14 @@ bool ULobbyWidget::Initialize()
 	SessionWidgetStyle::Line(Content, Status);
 	StashButton = SessionWidgetStyle::Button(WidgetTree, TEXT("StashButton"), TEXT("仓库 / 出战配装"));
 	StashButton->OnClicked.AddUniqueDynamic(this, &ThisClass::StashClicked);
-	SessionWidgetStyle::Line(Content, StashButton);
+	UHorizontalBox* Services = WidgetTree->ConstructWidget<UHorizontalBox>();
+	ShopButton = SessionWidgetStyle::Button(WidgetTree, TEXT("ShopButton"), TEXT("商店"));
+	QuestsButton = SessionWidgetStyle::Button(WidgetTree, TEXT("QuestsButton"), TEXT("任务 / 成长"));
+	ShopButton->OnClicked.AddUniqueDynamic(this, &ThisClass::ShopClicked);
+	QuestsButton->OnClicked.AddUniqueDynamic(this, &ThisClass::QuestsClicked);
+	for (auto* Service : {StashButton.Get(), ShopButton.Get(), QuestsButton.Get()})
+		Services->AddChildToHorizontalBox(Service)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+	SessionWidgetStyle::Line(Content, Services);
 	UTextBlock* Label = nullptr;
 	ReadyButton = SessionWidgetStyle::Button(WidgetTree, TEXT("ReadyButton"), TEXT("准备"), &Label);
 	ReadyLabel = Label;
@@ -106,6 +114,12 @@ void ULobbyWidget::Refresh()
 	const auto* Account = PC ? PC->FindComponentByClass<UExtractionAccountComponent>() : nullptr;
 	StashButton->SetVisibility(GS->RoomMatchType == TEXT("Extraction") ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 	StashButton->SetIsEnabled(Account && Account->Bound && !GS->bTravelling);
+	for (auto* Service : {ShopButton.Get(), QuestsButton.Get()})
+	{
+		Service->SetVisibility(StashButton->GetVisibility());
+		Service->SetIsEnabled(Account && Account->Bound && !GS->bTravelling);
+	}
+	if (ProgressionWidget && (GS->bTravelling || GS->RoomMatchType != TEXT("Extraction"))) ProgressionWidget->RemoveFromParent();
 	if (StashWidget && (GS->bTravelling || GS->RoomMatchType != TEXT("Extraction"))) StashWidget->RemoveFromParent();
 	TArray<ABrokenEdgePlayerState*> Players;
 	for (APlayerState* State : GS->PlayerArray)
@@ -210,6 +224,24 @@ void ULobbyWidget::StashClicked()
 
 void ULobbyWidget::NativeDestruct()
 {
+	if (ProgressionWidget) ProgressionWidget->RemoveFromParent();
 	if (StashWidget) StashWidget->RemoveFromParent();
 	Super::NativeDestruct();
+}
+
+void ULobbyWidget::ShopClicked()
+{
+	if (ProgressionWidget) ProgressionWidget->RemoveFromParent();
+	ProgressionWidget = CreateWidget<UExtractionProgressionWidget>(GetOwningPlayer());
+	ProgressionWidget->AddToViewport(160);
+	ProgressionWidget->SetKeyboardFocus();
+}
+
+void ULobbyWidget::QuestsClicked()
+{
+	if (ProgressionWidget) ProgressionWidget->RemoveFromParent();
+	ProgressionWidget = CreateWidget<UExtractionProgressionWidget>(GetOwningPlayer());
+	ProgressionWidget->TasksInitially = true;
+	ProgressionWidget->AddToViewport(160);
+	ProgressionWidget->SetKeyboardFocus();
 }

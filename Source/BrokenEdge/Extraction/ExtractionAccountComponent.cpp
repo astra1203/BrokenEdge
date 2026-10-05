@@ -39,7 +39,9 @@ void UExtractionAccountComponent::Refresh()
 	auto* PS = PC ? PC->GetPlayerState<ABrokenEdgePlayerState>() : nullptr;
 	if (!PS) return;
 	if (const auto* V = Store()->View(PS->ExtractionProfile)) Profile = *V;
-	Locked = PS->IsLobbyReady() || !GetWorld()->GetGameState<ALobbyGameState>() || !Store()->IsAvailable();
+	const auto* Lobby = GetWorld()->GetGameState<ALobbyGameState>();
+	Locked = PS->IsLobbyReady() || !Lobby || Lobby->RoomMatchType != TEXT("Extraction")
+		|| Lobby->bTravelling || Lobby->bModeUpdating || !Store()->IsAvailable();
 	if (!Store()->IsAvailable()) Message = Store()->Error;
 	GetOwner()->ForceNetUpdate();
 }
@@ -188,6 +190,25 @@ void UExtractionAccountComponent::RequestMove(FExtractionStorageRequest R)
 	R.Operation = FGuid::NewGuid();
 	R.Revision = Profile.Revision;
 	ServerMove(R);
+}
+
+void UExtractionAccountComponent::RequestEconomy(FExtractionEconomyRequest R)
+{
+	R.Operation = FGuid::NewGuid();
+	R.Revision = Profile.Revision;
+	ServerEconomy(R);
+}
+
+void UExtractionAccountComponent::ServerEconomy_Implementation(FExtractionEconomyRequest R)
+{
+	Refresh();
+	if (!Bound || Locked)
+	{
+		Message = TEXT("仅可在未准备的航天行动大厅交易和办理任务");
+		return;
+	}
+	Message = Store()->Economy(Profile.Profile, R) ? TEXT("操作已保存") : Store()->Error;
+	Refresh();
 }
 
 void UExtractionAccountComponent::ServerMove_Implementation(FExtractionStorageRequest R)

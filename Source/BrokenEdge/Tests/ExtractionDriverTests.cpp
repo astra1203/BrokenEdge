@@ -45,6 +45,7 @@
 #include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
 #include "BrokenEdge/Extraction/ExtractionLootActor.h"
 #include "BrokenEdge/Extraction/ExtractionAccountComponent.h"
+#include "BrokenEdge/Extraction/ExtractionKeyRoom.h"
 #include "BrokenEdge/Extraction/ExtractionExit.h"
 #include "Framework/Application/SlateApplication.h"
 #include "Widgets/SViewport.h"
@@ -217,6 +218,13 @@ public:
 					bBodyCenterAim = false;
 					Command->TryGetBoolField(TEXT("body_center"), bBodyCenterAim);
 					if (AimTarget.IsEmpty() && PC) PC->SetControlRotation(FRotator::ZeroRotator);
+				}
+				else if (Op == TEXT("look") && PC)
+				{
+					AimTarget.Reset();
+					double Pitch = 0;
+					Command->TryGetNumberField(TEXT("pitch"), Pitch);
+					PC->SetControlRotation(FRotator(Pitch, Command->GetNumberField(TEXT("yaw")), 0));
 				}
 				else if (Op == TEXT("fixture") && Role == TEXT("Server"))
 				{
@@ -414,8 +422,9 @@ public:
 								                     });
 								Value->SetStringField(TEXT("rotation"), Local.Rotator().ToString());
 								Value->SetStringField(TEXT("world_position"), Body->GetBoneLocation(Bone).ToString());
-								if (Body->GetBodyInstance(Bone)) Value->SetStringField(
-									TEXT("collision_center"), Body->GetCenterOfMass(Bone).ToString());
+								if (Body->GetBodyInstance(Bone))
+									Value->SetStringField(
+										TEXT("collision_center"), Body->GetCenterOfMass(Bone).ToString());
 								Bones->SetObjectField(Bone.ToString(), Value);
 							}
 							Probe->SetObjectField(Name, Bones);
@@ -485,6 +494,7 @@ private:
 	FName AimBone;
 	FExtractionItemRequest LastItemRequest;
 	FExtractionStorageRequest LastStorageRequest;
+	TMap<FString, FExtractionEconomyRequest> EconomyRequests;
 	FVector2D LastMouse = FVector2D::ZeroVector;
 	TSet<FKey> PressedMouse;
 	TWeakObjectPtr<AActor> TestOccluder;
@@ -555,6 +565,7 @@ private:
 		J->SetStringField(TEXT("profile"), A->Profile.Profile.ToString());
 		J->SetStringField(TEXT("message"), A->Message);
 		J->SetNumberField(TEXT("revision"), A->Profile.Revision);
+		J->SetObjectField(TEXT("progression"), ProgressionJson(A->Profile.Progression));
 		J->SetNumberField(TEXT("outcome"), static_cast<int32>(A->Profile.Result.Outcome));
 		J->SetObjectField(TEXT("stash"), InventoryJson(A->Profile.Stash));
 		J->SetObjectField(TEXT("loadout"), InventoryJson(A->Profile.Loadout));
@@ -564,13 +575,89 @@ private:
 		return J;
 	}
 
+	static TSharedPtr<FJsonObject> ProgressionJson(const FExtractionProgression& P)
+	{
+		auto J = MakeShared<FJsonObject>();
+		J->SetNumberField(TEXT("credits"), P.Credits);
+		J->SetNumberField(TEXT("experience"), P.Experience);
+		J->SetNumberField(TEXT("level"), GetDefault<UExtractionProgressionRules>()->Level(P.Experience));
+		TArray<TSharedPtr<FJsonValue>> Quests;
+		for (const auto& Q : P.Quests)
+		{
+			auto V = MakeShared<FJsonObject>();
+			V->SetBoolField(TEXT("accepted"), Q.Accepted);
+			V->SetBoolField(TEXT("claimed"), Q.Claimed);
+			V->SetNumberField(TEXT("progress"), Q.Progress);
+			V->SetBoolField(TEXT("delivered"), Q.Delivered);
+			V->SetNumberField(TEXT("eligible_files"), Q.EligibleFiles.Num());
+			Quests.Add(MakeShared<FJsonValueObject>(V));
+		}
+		J->SetArrayField(TEXT("quests"), Quests);
+		return J;
+	}
+
 	bool HandleInventoryCommand(const TSharedPtr<FJsonObject>& Command, APlayerController* Controller, UWorld* World)
 	{
 		const FString Op = Command->GetStringField(TEXT("op"));
 		auto* PC = Cast<AExtractionPlayerController>(Controller);
 		auto* Interaction = PC ? PC->Interaction() : nullptr;
 		auto* Account = Controller ? Controller->FindComponentByClass<UExtractionAccountComponent>() : nullptr;
-		if (Op == TEXT("deadline_tie") && Role == TEXT("Server"))
+		if (Op == TEXT("economy") && Account)
+		{
+			FString Saved = TEXT("last"), Replay, Kind, Definition, Item;
+			Command->TryGetStringField(TEXT("save"), Saved);
+			FExtractionEconomyRequest R;
+			if (Command->TryGetStringField(TEXT("replay"), Replay) && EconomyRequests.Contains(Replay))
+				R =
+					EconomyRequests[Replay];
+			else
+			{
+				R.Operation = FGuid::NewGuid();
+				R.Revision = Account->Profile.Revision;
+				Command->TryGetStringField(TEXT("kind"), Kind);
+				R.Action = Kind == TEXT("sell")
+					           ? EExtractionEconomyAction::Sell
+					           : Kind == TEXT("accept")
+					           ? EExtractionEconomyAction::AcceptQuest
+					           : Kind == TEXT("deliver")
+					           ? EExtractionEconomyAction::DeliverQuest
+					           : Kind == TEXT("claim")
+					           ? EExtractionEconomyAction::ClaimQuest
+					           : EExtractionEconomyAction::Buy;
+				Command->TryGetStringField(TEXT("definition"), Definition);
+				R.Definition = FName(*Definition);
+				Command->TryGetStringField(TEXT("item"), Item);
+				FGuid::Parse(Item, R.Item);
+				Command->TryGetNumberField(TEXT("quantity"), R.Quantity);
+				Command->TryGetNumberField(TEXT("quest"), R.Quest);
+			}
+			Command->TryGetNumberField(TEXT("revision"), R.Revision);
+			EconomyRequests.Add(Saved, R);
+			Account->ServerEconomy(R);
+		}
+		else if (Op == TEXT("progression_ui") && Controller)
+		{
+			TArray<UUserWidget*> Widgets;
+			UWidgetBlueprintLibrary::GetAllWidgetsOfClass(World, Widgets, ULobbyWidget::StaticClass(), true);
+			bool Tasks = false;
+			Command->TryGetBoolField(TEXT("tasks"), Tasks);
+			if (Widgets.Num() == 1)
+				if (auto* Button = Cast<UButton>(
+					Widgets[0]->GetWidgetFromName(Tasks ? TEXT("QuestsButton") : TEXT("ShopButton"))))
+					Button->OnClicked
+					      .Broadcast();
+		}
+		else if (Op == TEXT("unlock") && PC && Interaction && Interaction->Inventory())
+		{
+			int32 Revision = Interaction->Inventory()->Contents.Revision;
+			Command->TryGetNumberField(TEXT("revision"), Revision);
+			for (TActorIterator<AExtractionKeyRoom> It(World); It; ++It)
+			{
+				PC->ServerUnlockDoor(*It, Revision);
+				break;
+			}
+		}
+		else if (Op == TEXT("deadline_tie") && Role == TEXT("Server"))
 		{
 			if (auto* GS = World->GetGameState<AExtractionGameState>())
 				for (APlayerState* State : GS->PlayerArray)
@@ -819,7 +906,10 @@ private:
 			                     ? TEXT("/Game/Characters/Stinger/Blueprints/Input/IA_StingerSprint.IA_StingerSprint")
 			                     : TEXT("/Game/Input/Actions/IA_") + Name + TEXT(".IA_") + Name;
 		auto* Action = LoadObject<UInputAction>(nullptr, *Path);
-		if (Input && Action) Input->InjectInputForAction(Action, FInputActionValue(Pressed), {}, {});
+		if (Input && Action)
+			Input->InjectInputForAction(Action, Name == TEXT("Move")
+				                                    ? FInputActionValue(FVector2D(0, Pressed ? 1 : 0))
+				                                    : FInputActionValue(Pressed), {}, {});
 	}
 
 	static TArray<TSharedPtr<FJsonValue>> VectorJson(const FVector& P)
@@ -877,6 +967,8 @@ private:
 				auto Result = MakeShared<FJsonObject>();
 				Result->SetStringField(TEXT("profile"), Stored.View.Profile.ToString());
 				Result->SetNumberField(TEXT("outcome"), static_cast<int32>(Stored.View.Result.Outcome));
+				Result->SetObjectField(TEXT("progression"), ProgressionJson(Stored.View.Progression));
+				Result->SetNumberField(TEXT("economy_receipts"), Stored.EconomyReceipts.Num());
 				Results.Add(MakeShared<FJsonValueObject>(Result));
 			}
 			State->SetArrayField(TEXT("stored_results"), Results);
@@ -928,6 +1020,7 @@ private:
 					Player->SetNumberField(TEXT("extract_at"), ExtractionPS->ExtractAt);
 					Player->SetNumberField(TEXT("down_health"), ExtractionPS->DownHealth);
 					Player->SetNumberField(TEXT("bleed_at"), ExtractionPS->BleedAt);
+					Player->SetNumberField(TEXT("guard_kills"), ExtractionPS->RaidProgress.GuardKills);
 				}
 				if (auto* Character = Cast<ABrokenEdgeCharacter>(PS->GetPawn()))
 				{
@@ -1131,6 +1224,32 @@ private:
 					Paths.Add(MakeShared<FJsonValueObject>(J));
 				}
 		State->SetArrayField(TEXT("nav_paths"), Paths);
+		TArray<TSharedPtr<FJsonValue>> Rooms;
+		for (TActorIterator<AExtractionKeyRoom> It(World); It; ++It)
+		{
+			auto J = MakeShared<FJsonObject>();
+			J->SetBoolField(TEXT("unlocked"), It->Unlocked);
+			J->SetBoolField(TEXT("open"), It->Open);
+			J->SetArrayField(TEXT("position"), VectorJson(It->GetActorLocation()));
+			J->SetArrayField(TEXT("approach"), VectorJson(It->Approach()));
+			FHitResult Hit;
+			const FVector Offset = It->GetActorRotation().RotateVector(FVector(0, 80, 0));
+			J->SetBoolField(TEXT("blocked"), World->LineTraceSingleByChannel(
+				                Hit, It->GetActorLocation() - Offset, It->GetActorLocation() + Offset, ECC_Visibility));
+			if (It->Cache)
+			{
+				J->SetStringField(TEXT("cache"), It->Cache->ContainerId.ToString());
+				J->SetArrayField(TEXT("cache_position"), VectorJson(It->Cache->GetActorLocation()));
+				if (Role == TEXT("Server"))
+				{
+					auto* Path = UNavigationSystemV1::FindPathToLocationSynchronously(
+						World, It->Approach(), It->Cache->GetActorLocation() + FVector(0, 0, 70));
+					J->SetBoolField(TEXT("nav_valid"), Path && Path->IsValid() && !Path->IsPartial());
+				}
+			}
+			Rooms.Add(MakeShared<FJsonValueObject>(J));
+		}
+		State->SetArrayField(TEXT("key_rooms"), Rooms);
 		State->SetArrayField(TEXT("guards"), Guards);
 		State->SetArrayField(TEXT("smokes"), Smokes);
 		FString Json;

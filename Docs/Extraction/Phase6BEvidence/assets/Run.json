@@ -1,0 +1,20 @@
+{
+  "task": "phase6b-assets",
+  "started_utc": "2026-10-05T01:44:18.494542+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6BAssets03\\Editor.log",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\prepare_phase6b.py"
+  ],
+  "pid": 61244,
+  "exit_code": 0,
+  "result": "passed",
+  "finished_utc": "2026-10-05T01:44:29.317865+00:00"
+}

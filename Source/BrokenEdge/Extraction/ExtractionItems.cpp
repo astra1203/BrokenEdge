@@ -5,7 +5,7 @@ const TArray<FName>& UExtractionItemDefinition::Ids()
 	static const TArray<FName> Names = {
 		TEXT("AK"), TEXT("Ammo"), TEXT("Medkit"), TEXT("Electronics"), TEXT("Tools"),
 		TEXT("AmmoAP"), TEXT("Helmet2"), TEXT("Helmet3"), TEXT("Vest2"), TEXT("Vest3"), TEXT("Bandage"), TEXT("Splint"),
-		TEXT("RedDot"), TEXT("VerticalGrip"), TEXT("Compensator")
+		TEXT("RedDot"), TEXT("VerticalGrip"), TEXT("Compensator"), TEXT("Key"), TEXT("Document")
 	};
 	return Names;
 }

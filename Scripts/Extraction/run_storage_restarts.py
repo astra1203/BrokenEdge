@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
+parser.add_argument('--economy', action='store_true', help='Buy, sell, file delivery, reward and settlement before/after commit')
 args = parser.parse_args()
 assert args.tag and all(c.isalnum() or c in '-_' for c in args.tag)
 out = ROOT / 'Saved/Extraction' / args.tag
@@ -18,17 +19,19 @@ out.mkdir(parents=True, exist_ok=False)
 report = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'runs': [], 'result': 'running'}
 env = dict(os.environ, UE_SKIP_UBT_SDK_SETUP='1')
 try:
-    for boundary in ['prepared', 'active', 'success', 'death']:
+    boundaries = [kind + '-' + point for kind in ['buy', 'sell', 'deliver', 'claim', 'settlement']
+                  for point in ['before', 'after']] if args.economy else ['prepared', 'active', 'success', 'death']
+    for boundary in boundaries:
         folder = out / boundary
         folder.mkdir()
         for attempt in range(3):
             log = out / f'{boundary}-{attempt}.log'
             command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor-Cmd.exe'), str(ROOT / 'BrokenEdge.uproject'),
                        '-unattended', '-nosplash', '-nosound', '-NullRHI', '-NoLoadingScreen',
-                       '-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary',
+                       '-ExecCmds=Automation RunTests BrokenEdge.Extraction.' + ('EconomyCrashBoundary' if args.economy else 'CrashBoundary'),
                        '-TestExit=Automation Test Queue Empty', '-abslog=' + str(log),
                        '-ExtractionBoundaryDir=' + str(folder), '-ExtractionBoundary=' + boundary]
-            if attempt: command += ['-ExtractionVerifyRecovery']
+            if attempt: command += ['-ExtractionVerifyRecovery', '-ExtractionRecoveryAttempt=' + str(attempt)]
             with (out / f'{boundary}-{attempt}-process.log').open('wb') as stream:
                 proc = subprocess.Popen(command, cwd=ROOT, env=env, stdout=stream, stderr=subprocess.STDOUT,
                                         creationflags=subprocess.CREATE_NO_WINDOW)

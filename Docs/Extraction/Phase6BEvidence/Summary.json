@@ -1,0 +1,441 @@
+{
+  "created_utc": "2026-10-05T02:56:47.679119+00:00",
+  "base_commit": "1932b7139a768c3a87cc3832950947323dc2bd27",
+  "engine": "C:/UnrealProjects/UnrealEngine-5.8.3-release",
+  "runs": [
+    {
+      "name": "editor",
+      "folder": "Saved/Extraction/Phase6BEditor06",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "assets",
+      "folder": "Saved/Extraction/Phase6BAssets03",
+      "report": "Run.json"
+    },
+    {
+      "name": "packages02-server",
+      "folder": "Saved/Extraction/Phase6BPackages02-server",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "packages02-client",
+      "folder": "Saved/Extraction/Phase6BPackages02-client",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "packages03-server",
+      "folder": "Saved/Extraction/Phase6BPackages03-server",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "packages03-client",
+      "folder": "Saved/Extraction/Phase6BPackages03-client",
+      "report": "Run.json",
+      "build": true
+    },
+    {
+      "name": "rules-progression",
+      "folder": "Saved/Extraction/Phase6BFinalRules-progression02",
+      "report": "Run.json"
+    },
+    {
+      "name": "rules-equipment",
+      "folder": "Saved/Extraction/Phase6BRules-equipment",
+      "report": "Run.json"
+    },
+    {
+      "name": "rules-inventory",
+      "folder": "Saved/Extraction/Phase6BRules-inventory",
+      "report": "Run.json"
+    },
+    {
+      "name": "rules-persistence",
+      "folder": "Saved/Extraction/Phase6BFinalRules-persistence",
+      "report": "Run.json"
+    },
+    {
+      "name": "crash-economy",
+      "folder": "Saved/Extraction/Phase6BStorage01-economy-crash",
+      "report": "Report.json"
+    },
+    {
+      "name": "crash-raid",
+      "folder": "Saved/Extraction/Phase6BStorage01-raid-crash",
+      "report": "Report.json"
+    },
+    {
+      "name": "pie-extraction",
+      "folder": "Saved/Extraction/Phase6BPIE01-extraction",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-teams",
+      "folder": "Saved/Extraction/Phase6BPIE01-teams",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-freeforall",
+      "folder": "Saved/Extraction/Phase6BPIE01-freeforall",
+      "report": "Run.json"
+    },
+    {
+      "name": "pie-teardown",
+      "folder": "Saved/Extraction/Phase6BPIE01-teardown",
+      "report": "Run.json"
+    },
+    {
+      "name": "legacy-lan",
+      "folder": "Saved/Extraction/Phase6BLegacy01",
+      "report": "Report.json"
+    },
+    {
+      "name": "dual-client",
+      "folder": "Saved/Extraction/Phase6BProgressionNet03",
+      "report": "Report.json"
+    },
+    {
+      "name": "progression",
+      "folder": "Saved/Extraction/Phase6BNetwork02-progression",
+      "report": "Report.json"
+    },
+    {
+      "name": "progression-lag",
+      "folder": "Saved/Extraction/Phase6BNetwork03-progression-lag",
+      "report": "Report.json"
+    },
+    {
+      "name": "equipment",
+      "folder": "Saved/Extraction/Phase6BNetwork04-equipment",
+      "report": "Report.json"
+    },
+    {
+      "name": "equipment-lag",
+      "folder": "Saved/Extraction/Phase6BNetwork04-equipment-lag",
+      "report": "Report.json"
+    },
+    {
+      "name": "squad",
+      "folder": "Saved/Extraction/Phase6BNetwork04-squad",
+      "report": "Report.json"
+    },
+    {
+      "name": "squad-lag",
+      "folder": "Saved/Extraction/Phase6BNetwork04-squad-lag",
+      "report": "Report.json"
+    },
+    {
+      "name": "pvpve",
+      "folder": "Saved/Extraction/Phase6BNetwork04-pvpve",
+      "report": "Report.json"
+    },
+    {
+      "name": "pvpve-lag",
+      "folder": "Saved/Extraction/Phase6BNetwork04-pvpve-lag",
+      "report": "Report.json"
+    },
+    {
+      "name": "lifecycle",
+      "folder": "Saved/Extraction/Phase6BNetwork04-lifecycle",
+      "report": "Report.json"
+    },
+    {
+      "name": "inventory",
+      "folder": "Saved/Extraction/Phase6BNetwork04-inventory",
+      "report": "Report.json"
+    },
+    {
+      "name": "combat",
+      "folder": "Saved/Extraction/Phase6BNetwork04-combat",
+      "report": "Report.json"
+    },
+    {
+      "name": "spectator",
+      "folder": "Saved/Extraction/Phase6BNetwork04-spectator",
+      "report": "Report.json"
+    },
+    {
+      "name": "four",
+      "folder": "Saved/Extraction/Phase6BNetwork04-four",
+      "report": "Report.json"
+    },
+    {
+      "name": "settlement",
+      "folder": "Saved/Extraction/Phase6BNetwork04-settlement",
+      "report": "Report.json"
+    },
+    {
+      "name": "recovery",
+      "folder": "Saved/Extraction/Phase6BNetwork04-recovery",
+      "report": "Report.json"
+    }
+  ],
+  "implementation_sha256": {
+    ".gitattributes": "64ab75f9cea3116c1674d30761f554d603a42433cbee8ee11526c98003740246",
+    "Content/Extraction/Items/DA_Item_Document.uasset": "793bf27688bfc9cad9bbde64fb700c2946611af480375c56bec2a18a40da85c7",
+    "Content/Extraction/Items/DA_Item_Key.uasset": "f40f99373503098fb05914ee3347ceac4c8eb062808aefe564c1fcc2103e2d30",
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "04f6cd7bb602842ded40312f289036c3771872ee2ea9356f16b3e556af3ba13d",
+    "Scripts/Extraction/equipment_scenarios.py": "53a3339cf3460d8b0c86a419851fc4ba4af8e77f5d57c514f47f60ee25b4380a",
+    "Scripts/Extraction/prepare_phase6b.py": "6d978a5dc3c220566d54e39218688d7df264f6953b1c0a46f013091f9380496f",
+    "Scripts/Extraction/progression_scenarios.py": "6f67d3e75313b9d9215e96838c5342d4c7a1dfefe55b29712ce324b1d4d4a8ff",
+    "Scripts/Extraction/run_editor_task.py": "90bc6df8f4832bbc51a4a2dfec2022cbc69aadcf83c449d998ee71084cf0bffc",
+    "Scripts/Extraction/run_network.py": "4db6d6a9f5ee7cc9b3e677616213cc01f236b4aaa185251e8f7359a75d8262c3",
+    "Scripts/Extraction/run_phase6b_acceptance.py": "6679ea1b2769527b547fcce50715b0d1d5059d039a3ff8f1ab36b803960e7071",
+    "Scripts/Extraction/run_storage_restarts.py": "3ab6d62f955aaf42995e4dcf63b512128704c33eda4358710c4b631ec26aff5e",
+    "Source/BrokenEdge/Extraction/ExtractionAccountComponent.cpp": "819c7b72c533a01ab9cce4222d0b01bf6a50060059deca71d4e1da5cd4d032fa",
+    "Source/BrokenEdge/Extraction/ExtractionAccountComponent.h": "6cfc872cd730256e58c75149bb0b28138c8f7be4e0b12b648fefcd9ca70409fd",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp": "f9fd220b16dae998724b35b224b1168fd0f48f38ccc43852be82c8d6698d1453",
+    "Source/BrokenEdge/Extraction/ExtractionInteractionComponent.cpp": "12b3241df80aef2316f61dedf816d57fe6c581abb4ff376db51d284c37e1eb92",
+    "Source/BrokenEdge/Extraction/ExtractionInteractionComponent.h": "b711fc51abb921f45d510653bc2cd0d18d4212c57727a1968510f65f9f0d70f3",
+    "Source/BrokenEdge/Extraction/ExtractionInventoryWidget.cpp": "22e601e3bbb26c651dc347d50e3dbd40bc7dfa719a036a7499e0f211be78928f",
+    "Source/BrokenEdge/Extraction/ExtractionItems.cpp": "17d37c12d1ffec6c9dd380fbfa44b7df77148120b3358cbb9cc3f5c41280b463",
+    "Source/BrokenEdge/Extraction/ExtractionKeyRoom.cpp": "5a82f93c740dcd1239a2b7b926465d766dbefbc9cdadad0a06d1a984341e1717",
+    "Source/BrokenEdge/Extraction/ExtractionKeyRoom.h": "234d0e47758d595bde19b84d06d78f9481cbf018625b1faf871fe1fb4b7c34da",
+    "Source/BrokenEdge/Extraction/ExtractionLootActor.cpp": "04984d8f4582c196b75608371150ebe504f76f98b3e3a85fc6d3ee57ea36145e",
+    "Source/BrokenEdge/Extraction/ExtractionLootActor.h": "de22f20676026e711b71854e79ef695fca3a2a8cad6e2cd49d99040ce1478c6f",
+    "Source/BrokenEdge/Extraction/ExtractionPersistence.cpp": "2dc6f7c4a4013f1977618efacbdab8a4f275b4d7a1c711afb7376f6fcde067d7",
+    "Source/BrokenEdge/Extraction/ExtractionPersistence.h": "12941c407433783b7c4e7ee819a7401ba9ddbd6a3b921e37d7e9c36d6ffc9102",
+    "Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp": "2f01388c68ff0c73a7cbd94e79b183e9f2b5c97ffd49c8ca7cf651b9404f0e61",
+    "Source/BrokenEdge/Extraction/ExtractionPlayerController.h": "33442368fa6246af4872ea967ca6cd2c7863acbf6193979903211b70f62923fa",
+    "Source/BrokenEdge/Extraction/ExtractionProgression.cpp": "7b97826cd1d069e68c2989a96640409ce419cf82baef3ab367c8f34778711a8f",
+    "Source/BrokenEdge/Extraction/ExtractionProgression.h": "a1743dd771604774c283bc928848493810d219992f780e54673c7ab79e25aaec",
+    "Source/BrokenEdge/Extraction/ExtractionProgressionWidget.cpp": "d7c99df94b9ea5ba0220e73f693d2ad81fc7b4a718502cd86b7cace5aec980fc",
+    "Source/BrokenEdge/Extraction/ExtractionProgressionWidget.h": "d3d2f0a2c43d6ec2936f94d0c8d739753c7bfa729eaa60baf912df6ab1a1d1ab",
+    "Source/BrokenEdge/Extraction/ExtractionState.cpp": "31d36c29e7cbde96d498fd1b0264eaad12d034a5c728182884249db5e3f269e7",
+    "Source/BrokenEdge/Extraction/ExtractionState.h": "0a48319f202c631e7a588ec2a32f71c4fb849e296f5276cf16b13ae4808915d5",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "56b4636995ca7590ce8926230736d9f11fecb45635929932971edc27a6dd0179",
+    "Source/BrokenEdge/Tests/ExtractionEquipmentTests.cpp": "8b95992e2556574ea67b4b50e8eb2a975db16b774a25dacf65ac51e757e05b7c",
+    "Source/BrokenEdge/Tests/ExtractionProgressionTests.cpp": "dcaef291e75e89f8788e8dc98d8771ac6d7418a05b4d45704557450bd9095c16",
+    "Source/BrokenEdge/UI/LobbyWidget.cpp": "5b5cc65c6aeb7169ad09e00b7d30c011322eb55cf22ddab4b1f93568509932b9",
+    "Source/BrokenEdge/UI/LobbyWidget.h": "53c307500fc2f81bc99c0ed9f8f418807e9ec68f599e83685c93b60caaccfd5c"
+  },
+  "packages": {
+    "Packaged/Client/Windows/BrokenEdge.exe": {
+      "size": 173568,
+      "sha256": "061bdd6d6c67ab6f19e80c1cc06a9aaa8ad959bb767871d76b5bed6790e52c34"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe": {
+      "size": 337774592,
+      "sha256": "e94bb57ac079589f4e2b3ef7133560cb6ebd176d4104d4dd6ed6d0e4fba85a1e"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.pak": {
+      "size": 11607881,
+      "sha256": "d64c6a3af86316a4d534d3478f630e7b4999684c84322473116e4788e925c5fc"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.ucas": {
+      "size": 702898176,
+      "sha256": "79185a29216e58c1b61faf6bc7095bc06f9a7938d3d1799a0a0c19a2c4cf0dd7"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.utoc": {
+      "size": 922243,
+      "sha256": "feeda8a0caedc0976c3f32ad0810d24120e3425b93c653cb829193fb6461179a"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3356096,
+      "sha256": "c23c0d45165981ac2180bfb4c563f61dfaa83a50fe9e862827ad04b07cf19560"
+    },
+    "Packaged/Client/Windows/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "9381500213be1fe3867fef0455fd41425438825433dc74bf3aa534cf8c682a25"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdgeServer.exe": {
+      "size": 173568,
+      "sha256": "e9fa4aaa0667e5a6b5d24d86c95d7c126211a48deebb4a9b5b4dee4cac76c631"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe": {
+      "size": 317885952,
+      "sha256": "82eab6d64b79e719979b42e19191779803035f20c0b17136655a250e2752f495"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.pak": {
+      "size": 10579743,
+      "sha256": "0b65a6eab3a068a5bb4774256bfc3646f13f5ca42d12717a888318b5afdea35a"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.ucas": {
+      "size": 120868336,
+      "sha256": "0161494886975f89d882688c16ecd73bdca496bed50410862f2ccaa697fa41bd"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.utoc": {
+      "size": 432903,
+      "sha256": "32e862e849fbc890b44ac0fda4e4eafbe509b8259657818f1c418a9e73bbc393"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3356096,
+      "sha256": "c23c0d45165981ac2180bfb4c563f61dfaa83a50fe9e862827ad04b07cf19560"
+    },
+    "Packaged/Server/WindowsServer/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "9381500213be1fe3867fef0455fd41425438825433dc74bf3aa534cf8c682a25"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    }
+  },
+  "review": {
+    "status": "passed",
+    "reviewed_utc": "2026-10-05T02:55:16.771714+00:00",
+    "network": [
+      {
+        "name": "progression",
+        "run": "Phase6BNetwork02-progression",
+        "checks": 125,
+        "packaged": true,
+        "lag": false,
+        "package_batch": "Phase6BPackages02"
+      },
+      {
+        "name": "progression-lag",
+        "run": "Phase6BNetwork03-progression-lag",
+        "checks": 129,
+        "packaged": true,
+        "lag": true,
+        "package_batch": "Phase6BPackages02"
+      },
+      {
+        "name": "equipment",
+        "run": "Phase6BNetwork04-equipment",
+        "checks": 133,
+        "packaged": true,
+        "lag": false,
+        "package_batch": "Phase6BPackages03"
+      },
+      {
+        "name": "equipment-lag",
+        "run": "Phase6BNetwork04-equipment-lag",
+        "checks": 134,
+        "packaged": true,
+        "lag": true,
+        "package_batch": "Phase6BPackages03"
+      },
+      {
+        "name": "squad",
+        "run": "Phase6BNetwork04-squad",
+        "checks": 72,
+        "packaged": true,
+        "lag": false,
+        "package_batch": "Phase6BPackages03"
+      },
+      {
+        "name": "squad-lag",
+        "run": "Phase6BNetwork04-squad-lag",
+        "checks": 73,
+        "packaged": true,
+        "lag": true,
+        "package_batch": "Phase6BPackages03"
+      },
+      {
+        "name": "pvpve",
+        "run": "Phase6BNetwork04-pvpve",
+        "checks": 57,
+        "packaged": true,
+        "lag": false,
+        "package_batch": "Phase6BPackages03"
+      },
+      {
+        "name": "pvpve-lag",
+        "run": "Phase6BNetwork04-pvpve-lag",
+        "checks": 58,
+        "packaged": true,
+        "lag": true,
+        "package_batch": "Phase6BPackages03"
+      },
+      {
+        "name": "lifecycle",
+        "run": "Phase6BNetwork04-lifecycle",
+        "checks": 108,
+        "packaged": true,
+        "lag": false,
+        "package_batch": "Phase6BPackages03"
+      },
+      {
+        "name": "inventory",
+        "run": "Phase6BNetwork04-inventory",
+        "checks": 93,
+        "packaged": true,
+        "lag": false,
+        "package_batch": "Phase6BPackages03"
+      },
+      {
+        "name": "combat",
+        "run": "Phase6BNetwork04-combat",
+        "checks": 68,
+        "packaged": true,
+        "lag": false,
+        "package_batch": "Phase6BPackages03"
+      },
+      {
+        "name": "spectator",
+        "run": "Phase6BNetwork04-spectator",
+        "checks": 95,
+        "packaged": true,
+        "lag": false,
+        "package_batch": "Phase6BPackages03"
+      },
+      {
+        "name": "four",
+        "run": "Phase6BNetwork04-four",
+        "checks": 38,
+        "packaged": true,
+        "lag": false,
+        "package_batch": "Phase6BPackages03"
+      },
+      {
+        "name": "settlement",
+        "run": "Phase6BNetwork04-settlement",
+        "checks": 42,
+        "packaged": true,
+        "lag": false,
+        "package_batch": "Phase6BPackages03"
+      },
+      {
+        "name": "recovery",
+        "run": "Phase6BNetwork04-recovery",
+        "checks": 38,
+        "packaged": true,
+        "lag": false,
+        "package_batch": "Phase6BPackages03"
+      }
+    ],
+    "packaged_network_scenarios": 15,
+    "packaged_network_checks": 1263,
+    "rules_tests": 15,
+    "independent_crash_process_runs": 42,
+    "representative_screenshots_reviewed": 10,
+    "scope": "UE 5.8.3 same-host Development OnlineSubsystemNull; no Shipping, Internet or capacity claim",
+    "git": "uncommitted and unpushed",
+    "build_boundaries": [
+      "Progression normal and lag use Packages02 with final key-room geometry. Packages02Manifest preserves binary and pak hashes.",
+      "Packages03 changes armor sell-price division from float to double and adds exact rounding assertions; remaining 13 network scenarios use Packages03, including damaged armor trade in normal and lag equipment runs.",
+      "Early dual-client run predates the side-wall yaw correction; final room collision is established by the six-client normal and lag progression runs.",
+      "PIE and crash recovery use Editor05 before the geometry and armor rounding corrections; legacy LAN uses Packages01. These runs do not verify the later geometry change."
+    ],
+    "diagnostics": [
+      "Editor01 compile failure fixed after local API inspection.",
+      "ProgressionNet02 read an account before lobby binding; scenario now waits for binding.",
+      "Network01-progression found side-wall collision failure; solid backing and explicit yaw geometry assertions fixed the room.",
+      "Network02-progression-lag completed 129 functional checks but lost the buffered finish info marker during engine exit; require explicit finish-command acknowledgement, Automation Success and exit 0. Fresh Network03-progression-lag passed.",
+      "Network03-equipment was intentionally held before launching by reserving its immutable tag while preparing Packages03."
+    ],
+    "limits": [
+      "Prototype cube key model and project-authored room using existing meshes.",
+      "Startup logs retain prior engine automation-condition, animation and audio warnings; success is based on selected tests, exit status and runtime assertions.",
+      "Screenshots are sampled views, not every-frame visual or animation validation."
+    ]
+  }
+}

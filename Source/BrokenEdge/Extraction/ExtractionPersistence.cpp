@@ -44,9 +44,9 @@ namespace
 		return ExtractionItems::ValidateItem(I, true, Why);
 	}
 
-	bool PreserveLegacyJournal(IPlatformFile& Files, const FString& Journal, int64 ValidEnd)
+	bool PreserveLegacyJournal(IPlatformFile& Files, const FString& Journal, int64 ValidEnd, int32 Version)
 	{
-		const FString Backup = Journal + TEXT(".v1.bak");
+		const FString Backup = Journal + FString::Printf(TEXT(".v%d.bak"), Version);
 		if (!Files.FileExists(*Backup))
 		{
 			const FString Temporary = Backup + TEXT(".tmp");
@@ -166,10 +166,10 @@ bool UExtractionPersistence::Load(const FString& Directory)
 			ValidEnd = File->Tell();
 		}
 	}
-	// Back up the exact v1 journal before recovery, tail repair or migration writes.
-	if (State.Sequence > 0 && State.Version == 1)
+	// Preserve exact legacy bytes before tail repair, recovery, or migration.
+	if (State.Sequence > 0 && State.Version < 3)
 	{
-		if (!PreserveLegacyJournal(Files, Journal, ValidEnd))
+		if (!PreserveLegacyJournal(Files, Journal, ValidEnd, State.Version))
 		{
 			Faulted = true;
 			Error = TEXT("无法备份旧版仓库，未执行迁移");
@@ -193,19 +193,20 @@ bool UExtractionPersistence::Load(const FString& Directory)
 		Initial.Id = FGuid::NewGuid();
 		if (!Commit(Initial)) return false;
 	}
-	if (State.Version == 1)
+	if (State.Version < 3)
 	{
 		FExtractionStoreState Migrated = State;
-		Migrated.Version = 2;
+		Migrated.Version = 3;
+		for (auto& Profile : Migrated.Profiles) Profile.View.Progression.Initialize();
 		if (!Commit(MoveTemp(Migrated))) return false;
-		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=2"));
+		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=3"));
 	}
 	return Recover();
 }
 
 bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) const
 {
-	if ((Candidate.Version != 1 && Candidate.Version != 2) || !Candidate.Id.IsValid()) return false;
+	if (Candidate.Version < 1 || Candidate.Version > 3 || !Candidate.Id.IsValid()) return false;
 	TSet<FGuid> Profiles, Items;
 	for (const auto& P : Candidate.Profiles)
 	{
@@ -213,6 +214,13 @@ bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) co
 			CredentialHash.Len() != 40)
 			return false;
 		Profiles.Add(P.View.Profile);
+		if (Candidate.Version == 3 && !P.View.Progression.Validate()) return false;
+		TSet<FGuid> Operations;
+		for (const auto& Receipt : P.EconomyReceipts)
+		{
+			if (!Receipt.Operation.IsValid() || Operations.Contains(Receipt.Operation) || Receipt.Signature.IsEmpty()) return false;
+			Operations.Add(Receipt.Operation);
+		}
 		FString Why;
 		if (!ExtractionItems::Validate(P.View.Stash, Why) || !ExtractionItems::Validate(P.View.Loadout, Why))
 			return
@@ -326,6 +334,7 @@ bool UExtractionPersistence::OpenProfile(FGuid Requested, const FString& Credent
 	P.View.Profile = FGuid::NewGuid();
 	P.View.Store = State.Id;
 	P.View.Revision = 1;
+	P.View.Progression.Initialize();
 	P.View.Stash.Id = FGuid::NewGuid();
 	P.View.Stash.Width = 10;
 	P.View.Stash.Height = 12;
@@ -344,6 +353,30 @@ bool UExtractionPersistence::OpenProfile(FGuid Requested, const FString& Credent
 	}
 	Id = P.View.Profile;
 	Candidate.Profiles.Add(P);
+	return Commit(MoveTemp(Candidate));
+}
+
+bool UExtractionPersistence::Economy(FGuid Id, const FExtractionEconomyRequest& R)
+{
+	if (!EnsureLoaded()) return false;
+	const auto* Existing = ProfileIn(State, Id);
+	if (!Existing || !R.Operation.IsValid()) { Error = TEXT("档案或操作标识无效"); return false; }
+	if (const auto* Receipt = Existing->EconomyReceipts.FindByPredicate([&](const auto& V) { return V.Operation == R.Operation; }))
+	{
+		const bool Same = Receipt->Signature == R.Signature();
+		Error = Same ? FString() : TEXT("重复操作标识携带不同请求");
+		return Same;
+	}
+	if (IsInRaid(Id) || R.Revision != Existing->View.Revision)
+	{
+		Error = TEXT("档案已出战或已更新，请刷新后重试");
+		return false;
+	}
+	FExtractionStoreState Candidate = State;
+	auto* P = ProfileIn(Candidate, Id);
+	if (!ExtractionProgression::Execute(P->View.Progression, P->View.Stash, R, Error)) return false;
+	P->EconomyReceipts.Add({R.Operation, R.Signature()});
+	++P->View.Revision;
 	return Commit(MoveTemp(Candidate));
 }
 
@@ -468,7 +501,7 @@ void UExtractionPersistence::Deposit(FExtractionProfileView& P, TArray<FExtracti
 }
 
 bool UExtractionPersistence::Settle(FGuid RaidId, FGuid Profile, EExtractionOutcome Outcome,
-                                    const FExtractionContainer& Inventory)
+	                                    const FExtractionContainer& Inventory, const FExtractionRaidProgress& Progress)
 {
 	if (!EnsureLoaded() || Outcome == EExtractionOutcome::None || Outcome == EExtractionOutcome::Recovered || Outcome ==
 		EExtractionOutcome::Aborted)
@@ -499,8 +532,20 @@ bool UExtractionPersistence::Settle(FGuid RaidId, FGuid Profile, EExtractionOutc
 	P->View.Result.Raid = RaidId;
 	P->View.Result.Outcome = Outcome;
 	P->View.Result.Items = Inventory.Items;
+	P->View.Result.ProgressMessage = TEXT("本局未增加任务进度");
 	if (Outcome == EExtractionOutcome::Extracted)
 	{
+		ExtractionProgression::Extract(P->View.Progression, Inventory, Progress);
+		P->View.Result.ProgressMessage = TEXT("成功撤离 · 本局任务进度已保存，返回大厅查看任务");
+		const auto* Rules = GetDefault<UExtractionProgressionRules>();
+		for (int32 Index = 0; Index < P->View.Progression.Quests.Num(); ++Index)
+		{
+			const auto& Quest = P->View.Progression.Quests[Index];
+			if (Quest.Accepted && !Quest.Claimed)
+				P->View.Result.ProgressMessage += Index == 2
+					? FString::Printf(TEXT("\n%s：已带出 %d 份合格文件，回大厅提交"), *Rules->Quests[Index].Label, Quest.EligibleFiles.Num())
+					: FString::Printf(TEXT("\n%s：%d / %d"), *Rules->Quests[Index].Label, Quest.Progress, Rules->Quests[Index].Target);
+		}
 		for (const auto& I : Inventory.Items)
 		{
 			ExtractionItems::MergeOrigins(R->Exported, I.Origins);

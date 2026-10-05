@@ -1,0 +1,89 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "85FD155D41EBCF6AAC16429C8CAAA87B",
+			"instanceName": "DESKTOP-M9PA1SF-59332",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "NVIDIA GeForce RTX 4060 Ti",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.05-02.06.52",
+	"succeeded": 4,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.49835887551307678,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Atomicity",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Atomicity",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"85FD155D41EBCF6AAC16429C8CAAA87B"
+			],
+			"duration": 0.24727709591388702,
+			"dateTime": "2026.10.05-02.06.52",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Economy",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Economy",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"85FD155D41EBCF6AAC16429C8CAAA87B"
+			],
+			"duration": 0.043239500373601913,
+			"dateTime": "2026.10.05-02.06.52",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Migration",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Migration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"85FD155D41EBCF6AAC16429C8CAAA87B"
+			],
+			"duration": 0.06202239915728569,
+			"dateTime": "2026.10.05-02.06.52",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Quests",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Quests",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"85FD155D41EBCF6AAC16429C8CAAA87B"
+			],
+			"duration": 0.14581990242004395,
+			"dateTime": "2026.10.05-02.06.52",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

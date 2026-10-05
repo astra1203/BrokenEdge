@@ -30,6 +30,7 @@ public:
 	void ToggleExtractionMenu();
 	class UExtractionInteractionComponent* Interaction() const;
 	void Interact();
+	UFUNCTION(Server, Reliable) void ServerUnlockDoor(class AExtractionKeyRoom* Door, int32 InventoryRevision);
 	void ReleaseInteract();
 	void HealAbility();
 	void SmokeAbility();

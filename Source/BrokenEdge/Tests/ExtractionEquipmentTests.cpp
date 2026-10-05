@@ -47,8 +47,9 @@ namespace
 				if (Value->Type == EJson::Object)
 				{
 					auto Object = Value->AsObject();
-					for (const TCHAR* Field : {TEXT("magazineAmmo"), TEXT("durability"), TEXT("attachments")}) Object->
-						RemoveField(Field);
+					for (const TCHAR* Field : {TEXT("magazineAmmo"), TEXT("durability"), TEXT("attachments")})
+						Object->
+							RemoveField(Field);
 					for (const auto& Field : Object->Values) Strip(Field.Value);
 				}
 				else if (Value->Type == EJson::Array) for (const auto& Child : Value->AsArray()) Strip(Child);
@@ -71,6 +72,7 @@ namespace
 	FExtractionStoredProfile EquipmentProfile(FGuid Store)
 	{
 		FExtractionStoredProfile P;
+		P.View.Progression.Initialize();
 		P.View.Store = Store;
 		P.View.Profile = FGuid::NewGuid();
 		P.View.Revision = 1;
@@ -222,7 +224,7 @@ bool FExtractionEquipmentMigration::RunTest(const FString&)
 	FFileHelper::LoadFileToArray(Before, *(Directory / TEXT("Store.journal")));
 	auto* S = EquipmentStore(Directory);
 	if (!TestTrue(TEXT("Legacy store loads"), S->IsAvailable())) return false;
-	TestEqual(TEXT("Migrated version"), S->TestState().Version, 2);
+	TestEqual(TEXT("Migrated version"), S->TestState().Version, 3);
 	const auto* Restored = S->View(P.View.Profile)->Stash.Find(Gun.Id);
 	if (!TestNotNull(TEXT("Legacy identity retained"), Restored)) return false;
 	TestEqual(TEXT("Legacy loaded rounds retained"), Restored->Magazine, 17);

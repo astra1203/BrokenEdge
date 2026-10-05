@@ -2,8 +2,8 @@
 
 状态：2026-10-05 **阶段 6A 已完成同机 Development／OnlineSubsystemNull 范围内的验收**。基线为
 `c2ea4952c6d5ba6f1c0f67862ebeb74cfa12fd25`，装备实现检查点为 `7d29e41965e1f602d8f5e275754875b59dfef447`，使用 UE
-5.8.3。本轮资源、校准和回归调整尚未提交或推送；阶段 6B
-未开始。完整运行索引见 [Phase6AEvidence/Summary.json](Phase6AEvidence/Summary.json)。
+5.8.3。资源、校准和回归调整现已提交为 `1932b71`；后续钥匙房、任务和成长记录见
+[阶段 6B](Phase6B.md)。完整运行索引见 [Phase6AEvidence/Summary.json](Phase6AEvidence/Summary.json)。
 
 ## 已写入的实现
 

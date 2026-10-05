@@ -19,6 +19,8 @@ public:
 	UExtractionPersistence* Store() const;
 	void Refresh();
 	void RequestMove(FExtractionStorageRequest Request);
+	void RequestEconomy(FExtractionEconomyRequest Request);
+	UFUNCTION(Server, Reliable) void ServerEconomy(FExtractionEconomyRequest Request);
 	UFUNCTION(Server, Reliable) void ServerMove(FExtractionStorageRequest Request);
 	UFUNCTION(Server, Reliable) void ServerBind(FGuid Id, const FString& Credential);
 	UFUNCTION(Client, Reliable) void ClientCredentials(FGuid StoreId, FGuid ProfileId, const FString& Credential);

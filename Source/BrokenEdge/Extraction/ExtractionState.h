@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "BrokenEdge/GameState/BrokenEdgeGameState.h"
 #include "BrokenEdge/PlayerState/BrokenEdgePlayerState.h"
+#include "ExtractionProgression.h"
 #include "ExtractionState.generated.h"
 
 UENUM(BlueprintType)
@@ -43,6 +44,7 @@ public:
 	double ExtractAt = 0;
 	UPROPERTY(Replicated) double BleedAt = 0;
 	UPROPERTY(Replicated) float DownHealth = 0;
+	UPROPERTY(Replicated) FExtractionRaidProgress RaidProgress;
 	AExtractionPlayerState();
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<class UExtractionInventoryComponent> Inventory;

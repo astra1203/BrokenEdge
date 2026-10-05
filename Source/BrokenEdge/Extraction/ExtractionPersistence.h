@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ExtractionItems.h"
+#include "ExtractionProgression.h"
 #include "ExtractionPersistence.generated.h"
 
 UENUM()
@@ -20,6 +21,8 @@ struct FExtractionResult
 	TArray<FExtractionItem> Items;
 	UPROPERTY()
 	int32 OverflowCount = 0;
+	UPROPERTY()
+	FString ProgressMessage;
 };
 
 USTRUCT()
@@ -40,6 +43,8 @@ struct FExtractionProfileView
 	TArray<FExtractionItem> Overflow;
 	UPROPERTY()
 	FExtractionResult Result;
+	UPROPERTY()
+	FExtractionProgression Progression;
 };
 
 USTRUCT()
@@ -52,6 +57,8 @@ struct FExtractionStoredProfile
 	FString CredentialHash;
 	UPROPERTY()
 	FGuid LastOperation;
+	UPROPERTY()
+	TArray<FExtractionEconomyReceipt> EconomyReceipts;
 };
 
 USTRUCT()
@@ -87,7 +94,7 @@ struct FExtractionStoreState
 {
 	GENERATED_BODY()
 	UPROPERTY()
-	int32 Version = 2;
+	int32 Version = 3;
 	UPROPERTY()
 	int64 Sequence = 0;
 	UPROPERTY()
@@ -129,9 +136,11 @@ public:
 	bool OpenProfile(FGuid Requested, const FString& Credential, FGuid& Profile, FString& IssuedCredential);
 	const FExtractionProfileView* View(FGuid Profile) const;
 	bool Move(FGuid Profile, const FExtractionStorageRequest& Request);
+	bool Economy(FGuid Profile, const FExtractionEconomyRequest& Request);
 	bool BeginRaid(const TArray<FGuid>& Profiles, FGuid& Raid);
 	bool ActivateRaid(FGuid Raid);
-	bool Settle(FGuid Raid, FGuid Profile, EExtractionOutcome Outcome, const FExtractionContainer& Inventory);
+	bool Settle(FGuid Raid, FGuid Profile, EExtractionOutcome Outcome, const FExtractionContainer& Inventory,
+	            const FExtractionRaidProgress& Progress = FExtractionRaidProgress());
 	bool AbortRaid(FGuid Raid);
 	bool AbortPreparedRaids();
 	const FExtractionRaidRecord* FindRaid(FGuid Raid) const;

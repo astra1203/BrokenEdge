@@ -1,0 +1,47 @@
+{
+  "command": [
+    "powershell.exe",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "Scripts/Test-LanSessions.ps1",
+    "-Packaged"
+  ],
+  "result": "passed",
+  "checks": [
+    {
+      "name": "Client1-FreeForAll",
+      "passed": true
+    },
+    {
+      "name": "Client1-Teams",
+      "passed": true
+    },
+    {
+      "name": "Client2-FreeForAll",
+      "passed": true
+    },
+    {
+      "name": "Client2-Teams",
+      "passed": true
+    },
+    {
+      "name": "Empty",
+      "passed": true
+    },
+    {
+      "name": "Server-FreeForAll",
+      "passed": true
+    },
+    {
+      "name": "Server-Teams",
+      "passed": true
+    }
+  ],
+  "harness_exit_code": 0,
+  "original_logs": "Saved\\SessionTests\\Dedicated-20261005-094210",
+  "script_sha256": "d5ee9dca3f1f412aba310bc69c5962393d811192ccc7117b68a84c0da2c508d6",
+  "recorded_utc": "2026-10-05T01:45:18.568144+00:00",
+  "package_run": "Phase6BPackages01; subsequent package changes only the Extraction side-wall transform"
+}

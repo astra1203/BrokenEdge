@@ -1,0 +1,295 @@
+{
+  "result": "prepared",
+  "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+  "definitions": [
+    "Key",
+    "Document"
+  ],
+  "center": [
+    3800,
+    4600,
+    362
+  ],
+  "door": [
+    3800,
+    4300,
+    507
+  ],
+  "approach": [
+    3800,
+    4180,
+    452
+  ],
+  "cache": [
+    3800,
+    4730,
+    387
+  ],
+  "placements": [
+    {
+      "label": "Floor",
+      "position": [
+        3800,
+        4600,
+        352
+      ],
+      "size": [
+        620,
+        620,
+        20
+      ],
+      "mesh": "/Engine/BasicShapes/Cube.Cube",
+      "yaw": 0.0,
+      "bounds_extent": [
+        310.0,
+        310.0,
+        10.0
+      ]
+    },
+    {
+      "label": "Roof",
+      "position": [
+        3800,
+        4600,
+        672
+      ],
+      "size": [
+        620,
+        620,
+        20
+      ],
+      "mesh": "/Engine/BasicShapes/Cube.Cube",
+      "yaw": 0.0,
+      "bounds_extent": [
+        310.0,
+        310.0,
+        10.0
+      ]
+    },
+    {
+      "label": "Back",
+      "position": [
+        3800,
+        4900,
+        512
+      ],
+      "size": [
+        620,
+        30,
+        300
+      ],
+      "mesh": "/Game/Maps/SpaceCenter/Assets/056a6189cab1a746/SM_H_Building_FutureTech_HBoss_01_InterWall_03E/StaticMeshes/SM_H_Building_FutureTech_HBoss_01_InterWall_03E.SM_H_Building_FutureTech_HBoss_01_InterWall_03E",
+      "yaw": 0.0,
+      "bounds_extent": [
+        310.0,
+        15.0,
+        150.0
+      ]
+    },
+    {
+      "label": "BackBacking",
+      "position": [
+        3800,
+        4900,
+        512
+      ],
+      "size": [
+        620,
+        20,
+        300
+      ],
+      "mesh": "/Engine/BasicShapes/Cube.Cube",
+      "yaw": 0.0,
+      "bounds_extent": [
+        310.0,
+        10.0,
+        150.0
+      ]
+    },
+    {
+      "label": "Left",
+      "position": [
+        3500,
+        4600,
+        512
+      ],
+      "size": [
+        620,
+        30,
+        300
+      ],
+      "mesh": "/Game/Maps/SpaceCenter/Assets/056a6189cab1a746/SM_H_Building_FutureTech_HBoss_01_InterWall_03E/StaticMeshes/SM_H_Building_FutureTech_HBoss_01_InterWall_03E.SM_H_Building_FutureTech_HBoss_01_InterWall_03E",
+      "yaw": 89.99999999999999,
+      "bounds_extent": [
+        15.0,
+        310.0,
+        150.0
+      ]
+    },
+    {
+      "label": "LeftBacking",
+      "position": [
+        3500,
+        4600,
+        512
+      ],
+      "size": [
+        620,
+        20,
+        300
+      ],
+      "mesh": "/Engine/BasicShapes/Cube.Cube",
+      "yaw": 89.99999999999999,
+      "bounds_extent": [
+        10.0,
+        310.0,
+        150.0
+      ]
+    },
+    {
+      "label": "Right",
+      "position": [
+        4100,
+        4600,
+        512
+      ],
+      "size": [
+        620,
+        30,
+        300
+      ],
+      "mesh": "/Game/Maps/SpaceCenter/Assets/056a6189cab1a746/SM_H_Building_FutureTech_HBoss_01_InterWall_03E/StaticMeshes/SM_H_Building_FutureTech_HBoss_01_InterWall_03E.SM_H_Building_FutureTech_HBoss_01_InterWall_03E",
+      "yaw": 89.99999999999999,
+      "bounds_extent": [
+        15.0,
+        310.0,
+        150.0
+      ]
+    },
+    {
+      "label": "RightBacking",
+      "position": [
+        4100,
+        4600,
+        512
+      ],
+      "size": [
+        620,
+        20,
+        300
+      ],
+      "mesh": "/Engine/BasicShapes/Cube.Cube",
+      "yaw": 89.99999999999999,
+      "bounds_extent": [
+        10.0,
+        310.0,
+        150.0
+      ]
+    },
+    {
+      "label": "FrontLeft",
+      "position": [
+        3605,
+        4300,
+        512
+      ],
+      "size": [
+        230,
+        30,
+        300
+      ],
+      "mesh": "/Game/Maps/SpaceCenter/Assets/056a6189cab1a746/SM_H_Building_FutureTech_HBoss_01_InterWall_03E/StaticMeshes/SM_H_Building_FutureTech_HBoss_01_InterWall_03E.SM_H_Building_FutureTech_HBoss_01_InterWall_03E",
+      "yaw": 0.0,
+      "bounds_extent": [
+        115.0,
+        15.0,
+        150.0
+      ]
+    },
+    {
+      "label": "FrontLeftBacking",
+      "position": [
+        3605,
+        4300,
+        512
+      ],
+      "size": [
+        230,
+        20,
+        300
+      ],
+      "mesh": "/Engine/BasicShapes/Cube.Cube",
+      "yaw": 0.0,
+      "bounds_extent": [
+        115.0,
+        10.0,
+        150.0
+      ]
+    },
+    {
+      "label": "FrontRight",
+      "position": [
+        3995,
+        4300,
+        512
+      ],
+      "size": [
+        230,
+        30,
+        300
+      ],
+      "mesh": "/Game/Maps/SpaceCenter/Assets/056a6189cab1a746/SM_H_Building_FutureTech_HBoss_01_InterWall_03E/StaticMeshes/SM_H_Building_FutureTech_HBoss_01_InterWall_03E.SM_H_Building_FutureTech_HBoss_01_InterWall_03E",
+      "yaw": 0.0,
+      "bounds_extent": [
+        115.0,
+        15.0,
+        150.0
+      ]
+    },
+    {
+      "label": "FrontRightBacking",
+      "position": [
+        3995,
+        4300,
+        512
+      ],
+      "size": [
+        230,
+        20,
+        300
+      ],
+      "mesh": "/Engine/BasicShapes/Cube.Cube",
+      "yaw": 0.0,
+      "bounds_extent": [
+        115.0,
+        10.0,
+        150.0
+      ]
+    },
+    {
+      "label": "Lintel",
+      "position": [
+        3800,
+        4300,
+        657
+      ],
+      "size": [
+        160,
+        30,
+        30
+      ],
+      "mesh": "/Engine/BasicShapes/Cube.Cube",
+      "yaw": 0.0,
+      "bounds_extent": [
+        80.0,
+        15.0,
+        15.0
+      ]
+    }
+  ],
+  "backup_sha256": "84bb6090b74be663bf417ed47e91d527840700c517b41813a5f09965ecae015d",
+  "limits": [
+    "Key pickup uses a prototype cube.",
+    "Annex is project-authored from existing wall, door and folder assets; it is not an original room reconstruction."
+  ]
+}

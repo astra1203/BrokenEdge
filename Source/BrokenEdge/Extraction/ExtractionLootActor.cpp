@@ -1,4 +1,5 @@
 #include "ExtractionLootActor.h"
+#include "ExtractionKeyRoom.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -80,6 +81,7 @@ void AExtractionLootActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(AExtractionLootActor, Label);
 	DOREPLIFETIME(AExtractionLootActor, Empty);
 	DOREPLIFETIME(AExtractionLootActor, ContainerId);
+	DOREPLIFETIME(AExtractionLootActor, AccessDoor);
 }
 
 void AExtractionLootActor::OnRep_Appearance()

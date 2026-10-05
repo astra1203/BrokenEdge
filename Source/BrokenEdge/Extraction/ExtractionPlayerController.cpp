@@ -1,6 +1,7 @@
 #include "ExtractionPlayerController.h"
 #include "ExtractionHealth.h"
 #include "ExtractionInteractionComponent.h"
+#include "ExtractionKeyRoom.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionSmoke.h"
 #include "ExtractionInventoryComponent.h"
@@ -115,8 +116,15 @@ void AExtractionPlayerController::Interact()
 	auto* I = Interaction();
 	auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
 	if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen) return;
-	if (I->Focus) RequestOpenInventory(I->Focus, true);
+	if (I->DoorFocus) ServerUnlockDoor(I->DoorFocus, I->Inventory()->Contents.Revision);
+	else if (I->Focus) RequestOpenInventory(I->Focus, true);
 	else if (C) ServerSwapExtractionWeapons();
+}
+
+void AExtractionPlayerController::ServerUnlockDoor_Implementation(AExtractionKeyRoom* Door, int32 Revision)
+{
+	if (IsValid(Door) && Door->GetWorld() == GetWorld())
+		ClientItemResult(0, Door->Unlock(Interaction(), Revision));
 }
 
 void AExtractionPlayerController::RequestItem(FExtractionItemRequest Request)
@@ -418,6 +426,19 @@ void UExtractionWidget::Refresh()
 			TEXT("航天基地 · 小队行动\n剩余 %02d:%02d · 存活 %d\n%s"), Seconds / 60, Seconds % 60, GS->AlivePlayers,
 			PS->Life == EExtractionLife::Alive ? TEXT("Esc 打开对局菜单") : PS->Life == EExtractionLife::Downed ? TEXT("倒地待救援 · Esc 打开菜单") : TEXT("本次行动已结束"));
 	if (!GS->StorageError.IsEmpty()) Text = GS->StorageError;
+	if (PC->ExtractionAccount && PS->Life == EExtractionLife::Alive)
+	{
+		const auto& Progression = PC->ExtractionAccount->Profile.Progression;
+		const auto* Rules = GetDefault<UExtractionProgressionRules>();
+		for (int32 Q = 0; Q < Progression.Quests.Num(); ++Q)
+			if (Progression.Quests[Q].Accepted && !Progression.Quests[Q].Claimed)
+			{
+				Text += TEXT("\n任务 · ") + Rules->Quests[Q].Label;
+				if (Q == 1) Text += FString::Printf(TEXT(" %d / %d（本局 +%d，撤离保存）"), Progression.Quests[Q].Progress,
+					Rules->Quests[Q].Target, PS->RaidProgress.GuardKills);
+				else Text += Q == 0 ? TEXT(" · 成功撤离后完成") : TEXT(" · 文件带出后回大厅提交");
+			}
+	}
 	if (PS->Life == EExtractionLife::Alive && GS->Phase == EExtractionPhase::Active && PC->GetPawn())
 	{
 		for (TActorIterator<AExtractionExit> It(GetWorld()); It; ++It)
@@ -435,6 +456,7 @@ void UExtractionWidget::Refresh()
 	{
 		const auto& Result = PC->ExtractionAccount->Profile.Result;
 		Text += TEXT("\n") + UExtractionPersistence::OutcomeLabel(Result.Outcome);
+		if (!Result.ProgressMessage.IsEmpty()) Text += TEXT("\n") + Result.ProgressMessage;
 		Text += Result.Outcome == EExtractionOutcome::Extracted ? TEXT("\n已带出：") : TEXT("\n本次物资：");
 		for (FName Id : UExtractionItemDefinition::Ids())
 		{

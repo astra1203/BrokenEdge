@@ -1,0 +1,22 @@
+{
+  "task": "equipment",
+  "started_utc": "2026-10-05T01:16:12.412403+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6BRules-equipment\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Equipment",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6BRules-equipment\\Automation"
+  ],
+  "pid": 39356,
+  "exit_code": 0,
+  "successful_tests": 4,
+  "result": "passed",
+  "finished_utc": "2026-10-05T01:16:29.590908+00:00"
+}

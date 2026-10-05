@@ -33,6 +33,7 @@ public:
 	bool Empty = false;
 	UPROPERTY(Replicated)
 	FGuid ContainerId;
+	UPROPERTY(Replicated) TObjectPtr<class AExtractionKeyRoom> AccessDoor;
 	/** Filled only once by authority, never by opening the UI. */
 	UPROPERTY()
 	FExtractionContainer Contents;

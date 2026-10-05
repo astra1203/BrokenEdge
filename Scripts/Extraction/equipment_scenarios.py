@@ -295,8 +295,28 @@ def run(g):
     send('B', 'aim', target='', head=False)
     place('B', [center[0], center[1], center[2] + 90])
     check('Assembled AP rifle exports with every independent part', lambda: state('B')['account']['outcome'] == 1 and any(i['id'] == exported['id'] and i['attachments'] == exported['attachments'] and i['ammo_type'] == 'AmmoAP' and i['magazine'] == exported['magazine'] for i in state('B')['account']['stash']['items']), 22)
+    worn_vest = item('A', 'Vest2').copy()
+    send('A', 'aim', target='', head=False)
+    place('A', [center[0]+130, center[1], center[2]+90])
+    check('Bullet-worn armor exports with its actual durability', lambda: state('A')['account']['outcome'] == 1
+          and any(i['id'] == worn_vest['id'] and i['durability'] == worn_vest['durability']
+                  for i in state('A')['account']['stash']['items']), 22)
     send('Server', 'end')
     check('Equipment raid returns to unready lobby', lambda: all(state(p).get('map') == '/Game/Maps/Lobby' for p in peers) and all(not player('Server', r)['ready'] for r in roles), 40)
+    wait(lambda: all(state(r).get('account', {}).get('bound') and not state(r)['account']['locked'] for r in ['A','B']),
+         'Exported accounts rebound before trading')
+    credits = state('A')['account']['progression']['credits']
+    recovery = math.floor(300 * worn_vest['durability'] / 80)
+    send('A', 'economy', kind='sell', item=worn_vest['id'], save='armor_sale')
+    check('Native shop recovers damaged armor at floored durability price', lambda:
+          state('A')['account']['progression']['credits'] == credits + recovery
+          and not any(i['id'] == worn_vest['id'] for i in state('A')['account']['stash']['items']))
+    send('A', 'economy', replay='armor_sale')
+    time.sleep(.7)
+    check('Damaged armor sale replay does not repeat proceeds', lambda:
+          state('A')['account']['progression']['credits'] == credits + recovery)
+    g['report']['armor_sale'] = {'item': worn_vest, 'credits_before': credits, 'expected_proceeds': recovery,
+                               'credits_after': state('A')['account']['progression']['credits']}
     account = state('B')['account']
     send('B', 'storage', item=exported['id'], kind='detach', attachment_slot='optic', **{'from': 0, 'to': 0})
     check('Unready stash can detach exported original optic', lambda: state('B')['account']['revision'] > account['revision'] and any(i['id'] == parts['RedDot'] for i in state('B')['account']['stash']['items']))

@@ -1,6 +1,7 @@
 #include "ExtractionInventoryWidget.h"
 #include "ExtractionPlayerController.h"
 #include "ExtractionInteractionComponent.h"
+#include "ExtractionKeyRoom.h"
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionLootActor.h"
 #include "ExtractionState.h"
@@ -105,6 +106,11 @@ public:
 		const double Now = GS ? GS->GetServerWorldTimeSeconds() : 0;
 		if (!I->InventoryOpen)
 		{
+			if (I->DoorFocus)
+			{
+				Box(FVector2D(380, 505), FVector2D(560, 44), FLinearColor(.015f, .025f, .035f, .9f));
+				Text(FVector2D(395, 518), TEXT("E  机密储藏室 · 消耗一把钥匙开门"), 17);
+			}
 			if (I->Focus)
 			{
 				FString Label = I->Focus->Label;

@@ -1,0 +1,141 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "59638845499325DBEEE7FDA282B751FD",
+			"instanceName": "DESKTOP-M9PA1SF-49884",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "GameViewer Virtual Display Adapter",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "D3D12_SM6",
+			"rHI": "D3D12 (SM6)",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.05-01.42.09",
+	"succeeded": 0,
+	"succeededWithWarnings": 1,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 11.328701019287109,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Teardown",
+			"fullTestPath": "BrokenEdge.Extraction.PIE.Teardown",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"59638845499325DBEEE7FDA282B751FD"
+			],
+			"duration": 11.328701019287109,
+			"dateTime": "2026.10.05-01.41.57",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogMaterial: Material /Game/Maps/SpaceCenter/Assets/7a44c52b93b3be9a/SM_H_Customiz_ExperimentalDoor_01_L/Materials/MI_H_Customiz_ExperimentalDoor_01A_HD.MI_H_Customiz_ExperimentalDoor_01A_HD missing usage flag Nanite! Default Material will be used in game.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.05-01.41.59"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogMaterial:      The material instance will recompile every editor launch until resaved.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.05-01.41.59"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogMaterial: Material /Game/Maps/SpaceCenter/Assets/7a44c52b93b3be9a/SM_H_Customiz_ExperimentalDoor_01_L/Materials/MI_H_Building_FutureTech_AutomaticWorkshop_01_Decal_HD.MI_H_Building_FutureTech_AutomaticWorkshop_01_Decal_HD missing usage flag Nanite! Default Material will be used in game.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.05-01.41.59"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogMaterial:      The material instance will recompile every editor launch until resaved.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.05-01.41.59"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.05-01.42.00"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.05-01.42.03"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.05-01.42.05"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.10.05-01.42.07"
+				}
+			],
+			"warnings": 8,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

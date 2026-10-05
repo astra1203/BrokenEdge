@@ -17,6 +17,11 @@ protected:
 	virtual void NativeDestruct() override;
 
 private:
+	UFUNCTION() void ShopClicked();
+	UFUNCTION() void QuestsClicked();
+	UPROPERTY(Transient) TObjectPtr<class UButton> ShopButton;
+	UPROPERTY(Transient) TObjectPtr<class UButton> QuestsButton;
+	UPROPERTY(Transient) TObjectPtr<class UExtractionProgressionWidget> ProgressionWidget;
 	UFUNCTION() void StashClicked();
 	UFUNCTION() void SquadOneClicked();
 	UFUNCTION() void SquadTwoClicked();

@@ -24,7 +24,7 @@ parser.add_argument('--packaged', action='store_true')
 parser.add_argument('--lag', action='store_true')
 parser.add_argument('--unacked', action='store_true', help='Recovery test: kill server after durable extraction commit before client acknowledgement')
 parser.add_argument('--debug-hold', action='store_true', help='Wait for Continue.txt before combat and extend assertion timeouts')
-parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment'], default='combat')
+parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression'], default='combat')
 parser.add_argument('--players', type=int, choices=[2, 3, 6])
 args = parser.parse_args()
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
@@ -32,7 +32,7 @@ if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
 OUT = ROOT / 'Saved/Extraction' / args.tag
 OUT.mkdir(parents=True, exist_ok=False)
 ROLES = ['A', 'B', 'C', 'D'] if args.scenario == 'four' else ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
-if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment']:
+if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression']:
     ROLES = list('ABCDEF')[:args.players or (6 if args.scenario in ['pvpve', 'lifecycle'] else 3)]
 processes, commands, checks = {}, {}, []
 last_states = {}
@@ -45,6 +45,7 @@ report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.s
                                    ROOT / 'Scripts/Extraction/inventory_scenarios.py',
                                    ROOT / 'Scripts/Extraction/storage_scenarios.py', ROOT / 'Scripts/Extraction/phase5_scenarios.py',
                                    ROOT / 'Scripts/Extraction/equipment_scenarios.py',
+                                   ROOT / 'Scripts/Extraction/progression_scenarios.py',
                                    ROOT / 'BrokenEdge.uproject', ROOT / 'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap']}
 
 
@@ -116,7 +117,7 @@ def launch(role):
                    '-server' if role == 'Server' else '-game']
     entry = '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction?ExpectedPlayers=3' if role == 'Server' and args.scenario == 'load_timeout' else '/Game/Maps/Lobby'
     command += [entry, '-nosound', '-unattended', '-nosplash', '-NoLoadingScreen',
-                '-ExtractionGuards=' + ('4' if args.scenario == 'pvpve' or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
+                '-ExtractionGuards=' + ('4' if args.scenario in ['pvpve', 'progression'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
                 '-MatchType=Extraction', '-NumPublicConnections=' + str(len(ROLES)),
                 '-MinPlayersToStart=' + str(len(ROLES)), '-port=27777',
                 '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '1200' if args.debug_hold else '600'),
@@ -160,7 +161,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment']
+    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
@@ -176,7 +177,7 @@ def begin_round():
         lobby(globals())
     for role in ROLES:
         send(role, 'ready')
-    if args.scenario == 'equipment':
+    if args.scenario in ['equipment', 'progression']:
         # Arrange the comparison as soon as authority starts the round. Waiting
         # for all rendered clients first lets live AI wound a fresh spawn before
         # the test's position fixture, especially on the second travel.
@@ -267,7 +268,7 @@ try:
             join(role)
             if args.scenario == 'identity' and role == 'A':
                 check('First profile authenticated before duplicate connection', lambda: state('A').get('account', {}).get('bound'))
-    if args.scenario not in ['load_timeout', 'identity']:
+    if args.scenario not in ['load_timeout', 'identity', 'progression']:
         begin_round()
     if args.lag:
         for role in processes:
@@ -285,6 +286,9 @@ try:
         check('Duplicate cannot mutate authenticated inventory', lambda: state('A')['account']['revision'] == account['revision'] and state('A')['account']['stash'] == account['stash'])
         check('Duplicate login cannot regrant starter kits', lambda: len(state('Server')['stored_results']) == 1 and sum(i['quantity'] for i in state('A')['account']['stash']['items'] if i['definition'] == 'AK') == 3)
         send('B', 'screenshot', name='duplicate-profile-denied')
+    elif args.scenario == 'progression':
+        from progression_scenarios import run
+        run(globals())
     elif args.scenario == 'equipment':
         from equipment_scenarios import run
         run(globals())
@@ -474,13 +478,22 @@ try:
             continue
         finishing.add(role)
         send(role, 'finish')
+        report['processes'][role]['finish_command'] = commands[role]
+        report['processes'][role]['finish_ack'] = state(role).get('command') == commands[role]
     for role, proc in processes.items():
         code = proc.wait(timeout=40)
         report['processes'][role]['exit_code'] = code
         text = (OUT / (role + '.log')).read_text(encoding='utf-8', errors='replace')
         if report['processes'][role].get('expected_disconnect'):
             continue
-        if code != 0 or 'EXTRACTION_DRIVER_OK' not in text or 'Fatal error:' in text or not re.search(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text):
+        # TestExit can terminate after UE's Success line but before all buffered
+        # AddInfo events reach disk. The finish branch writes this exact command
+        # acknowledgement immediately before returning true; require it as well
+        # as UE's completed-test result and the process exit code.
+        record = report['processes'][role]
+        record['finish_info_logged'] = 'EXTRACTION_DRIVER_OK' in text
+        record['automation_success'] = bool(re.search(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text))
+        if code != 0 or not record.get('finish_ack') or 'Fatal error:' in text or not record['automation_success']:
             raise RuntimeError(f'{role} driver did not finish normally ({code})')
     report['result'] = 'passed'
 except Exception as error:

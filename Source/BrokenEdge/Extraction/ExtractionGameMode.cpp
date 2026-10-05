@@ -1,4 +1,5 @@
 #include "ExtractionGameMode.h"
+#include "ExtractionKeyRoom.h"
 #include "ExtractionState.h"
 #include "ExtractionPlayerController.h"
 #include "ExtractionCombatComponent.h"
@@ -173,7 +174,9 @@ bool AExtractionGameMode::SettlePlayer(AController* Player, EExtractionOutcome O
 	if (PS->Life != EExtractionLife::Alive && PS->Life != EExtractionLife::Downed) return true;
 	if (!PS->Inventory || !PS->ExtractionRaid.IsValid() || !PS->ExtractionProfile.IsValid()) return false;
 	PS->Inventory->CaptureWeapons();
-	if (!Persistence->Settle(PS->ExtractionRaid, PS->ExtractionProfile, Outcome, PS->Inventory->Contents)) return false;
+	auto Progress = PS->RaidProgress;
+	for (TActorIterator<AExtractionKeyRoom> It(GetWorld()); It; ++It) Progress.FileLots.Append(It->FileLots);
+	if (!Persistence->Settle(PS->ExtractionRaid, PS->ExtractionProfile, Outcome, PS->Inventory->Contents, Progress)) return false;
 #if WITH_DEV_AUTOMATION_TESTS
 	FString HoldFile;
 	if (Outcome == EExtractionOutcome::Extracted && FParse::Value(FCommandLine::Get(),
@@ -414,6 +417,12 @@ void AExtractionGameMode::DefeatCombatant(ABrokenEdgeCharacter* C, AController* 
 	C->GetExtractionInteraction()->StopCombatInput();
 	if (C->bExtractionGuard)
 	{
+		if (auto* Killer = Attacker ? Attacker->GetPlayerState<AExtractionPlayerState>() : nullptr;
+			Killer && (Killer->Life == EExtractionLife::Alive || Killer->Life == EExtractionLife::Downed))
+		{
+			++Killer->RaidProgress.GuardKills;
+			Killer->ForceNetUpdate();
+		}
 		C->Defeated(false);
 		C->SetLifeSpan(10);
 		return;

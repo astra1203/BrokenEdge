@@ -2,6 +2,7 @@
 #include "ExtractionHealth.h"
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionLootActor.h"
+#include "ExtractionKeyRoom.h"
 #include "ExtractionState.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionCombatComponent.h"
@@ -59,6 +60,7 @@ bool UExtractionInteractionComponent::CanAct() const
 
 bool UExtractionInteractionComponent::CanReach(const AExtractionLootActor* Target) const
 {
+	if (IsValid(Target) && Target->AccessDoor && !Target->AccessDoor->Open) return false;
 	auto* C = Character();
 	if (!IsValid(Target) || !C || FVector::DistSquared(C->GetActorLocation(), Target->InteractionPoint()) >
 		FMath::Square(200.f))
@@ -76,8 +78,9 @@ bool UExtractionInteractionComponent::CanReach(const AExtractionLootActor* Targe
 void UExtractionInteractionComponent::UpdateFocus()
 {
 	Focus = nullptr;
+	DoorFocus = nullptr;
 	if (!CanAct() || InventoryOpen) return;
-	const auto* C = Character();
+	auto* C = Character();
 	const FVector Forward = C->GetControlRotation().Vector().GetSafeNormal2D();
 	float Best = TNumericLimits<float>::Max();
 	for (TActorIterator<AExtractionLootActor> It(GetWorld()); It; ++It)
@@ -90,6 +93,19 @@ void UExtractionInteractionComponent::UpdateFocus()
 		if (Score < Best)
 		{
 			Focus = *It;
+			Best = Score;
+		}
+	}
+	for (TActorIterator<AExtractionKeyRoom> It(GetWorld()); It; ++It)
+	{
+		if (It->Unlocked || !It->CanReach(C)) continue;
+		const FVector Delta = It->GetActorLocation() - C->GetActorLocation();
+		const float Dot = FVector::DotProduct(Forward, Delta.GetSafeNormal2D());
+		const float Score = Delta.Size() + (1 - Dot) * 100;
+		if (Dot >= -.1f && Score < Best)
+		{
+			DoorFocus = *It;
+			Focus = nullptr;
 			Best = Score;
 		}
 	}

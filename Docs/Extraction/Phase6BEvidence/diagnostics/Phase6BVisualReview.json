@@ -1,0 +1,57 @@
+{
+  "reviewed_utc": "2026-10-05T02:24:09.220630+00:00",
+  "run": "Phase6BNetwork02-progression",
+  "review": "passed",
+  "observations": [
+    "Open doorway is clear and room contains solid walls and searchable crate. Runtime assertions separately verify collision.",
+    "Key and document labels fit the inventory cells; unrevealed loot remains hidden.",
+    "Purchase confirmation shows two keys for 600. Whole loaded starter rifle confirmation explicitly includes 30 rounds and totals 630.",
+    "All three tasks show completed; balance 4308, level 3 and experience 600 are legible."
+  ],
+  "limits": [
+    "Prototype key cube; project-authored annex and solid backing from existing wall/door assets.",
+    "Static sampled views do not establish every-frame visual or animation correctness."
+  ],
+  "sha256": {
+    "A-key-room-open.png": "c7a683ee0c2d194a11882346e94b35c94858fd8c4802f4f163c18815ede1e144",
+    "A-key-room-search.png": "1d6d01f5a8ca0ae24abe041e02fd8556c5d14274f0696f70157429d3495a6e05",
+    "A-shop-key-quote.png": "2c0b2b61bc4a77197adc936ee0594070e3ec7cd0b317f16e5cc1066bf4ab1f82",
+    "A-shop-whole-rifle.png": "1eb36d024eda0cd45b74fa562af2124a9428375c3d2f883d5fa4a7e831baa145",
+    "A-tasks-complete.png": "81616403764567d712108ef3b044f9fef91e7319094cf60394752b04411e6ba7"
+  },
+  "additional_reviews": [
+    {
+      "run": "Phase6BNetwork03-progression-lag",
+      "observations": [
+        "Closed door visually fills the doorway; the prototype door surface and frame remain visible.",
+        "Settlement text explicitly records one eligible extracted file, with readable wrapping in the spectator panel.",
+        "All three completed task rows and level 3 / XP 600 remain legible under packet simulation."
+      ],
+      "screenshots": [
+        "A-key-room-closed.png",
+        "A-progression-settlement.png",
+        "A-tasks-complete.png"
+      ],
+      "sha256": {
+        "A-key-room-closed.png": "545daae02b8b6612dfd6154ecd193e34db04df80f9011f882ffe10a5f556e1bb",
+        "A-progression-settlement.png": "94b30c86991cbf1e15fef189eba2fde87059388c5776e1c54a1559cd76c723b4",
+        "A-tasks-complete.png": "81616403764567d712108ef3b044f9fef91e7319094cf60394752b04411e6ba7"
+      }
+    },
+    {
+      "run": "Phase6BNetwork04-equipment",
+      "observations": [
+        "ADS retains the red dot and clear first-person sight picture.",
+        "Inventory shows the three-part loaded rifle, AP stack, and level 3 armor values without clipping."
+      ],
+      "screenshots": [
+        "B-equipment-ads.png",
+        "B-equipment-inventory.png"
+      ],
+      "sha256": {
+        "B-equipment-ads.png": "69494129f583bc10136b16639ad84aa3c1022e1232b59153db1f5d5fa29cfeaa",
+        "B-equipment-inventory.png": "1fb20e274fad729ccafd85d7f77456680b89ac2a2df76be995d4deb31fcb3cf6"
+      }
+    }
+  ]
+}
