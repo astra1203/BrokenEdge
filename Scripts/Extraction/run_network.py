@@ -24,15 +24,27 @@ parser.add_argument('--packaged', action='store_true')
 parser.add_argument('--lag', action='store_true')
 parser.add_argument('--unacked', action='store_true', help='Recovery test: kill server after durable extraction commit before client acknowledgement')
 parser.add_argument('--debug-hold', action='store_true', help='Wait for Continue.txt before combat and extend assertion timeouts')
+parser.add_argument('--optic-validation', action='store_true', help='Additional mounted-optic visual acceptance in the equipment scenario')
+parser.add_argument('--optic-remote-only', action='store_true', help='Stop equipment acceptance after observer mount captures; not a full combat regression')
+parser.add_argument('--resolution', choices=['1280x720', '1920x1080'], help='Rendered client size for visual acceptance')
 parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat'], default='combat')
 parser.add_argument('--players', type=int, choices=[2, 3, 6])
 parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
+parser.add_argument('--rendered-role', choices=['A', 'B'], help='Render only this client; the other clients remain connected with NullRHI')
 parser.add_argument('--performance-route', choices=['old', 'north'], default='north')
 parser.add_argument('--performance-samples', type=int, choices=[1, 3], default=3)
 parser.add_argument('--performance-seconds', type=int, choices=[60, 180], default=180)
 parser.add_argument('--network-stats', action='store_true', help='Enable UE network byte-rate collection for a separate bandwidth capture')
 parser.add_argument('--streaming-loops', type=int, choices=[1, 2, 10], default=10)
 args = parser.parse_args()
+if args.optic_validation and args.scenario != 'equipment':
+    parser.error('--optic-validation requires --scenario equipment')
+if args.rendered_role and args.rendered_clients:
+    parser.error('Choose --rendered-role or --rendered-clients')
+if args.optic_validation and (args.rendered_role == 'A' or args.rendered_clients == 1):
+    parser.error('Optic pixel acceptance requires rendered client B')
+if args.optic_remote_only and (args.scenario != 'equipment' or args.rendered_role != 'A' or args.optic_validation):
+    parser.error('--optic-remote-only requires equipment with --rendered-role A and no --optic-validation')
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
 OUT = ROOT / 'Saved/Extraction' / args.tag
@@ -40,6 +52,7 @@ OUT.mkdir(parents=True, exist_ok=False)
 ROLES = ['A', 'B', 'C', 'D'] if args.scenario == 'four' else ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
 if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat']:
     ROLES = list('ABCDEF')[:args.players or (6 if args.scenario in ['pvpve', 'lifecycle'] else 3)]
+rendered_roles = [args.rendered_role] if args.rendered_role else ROLES[:args.rendered_clients]
 processes, commands, checks = {}, {}, []
 last_states = {}
 finishing = set()
@@ -51,6 +64,10 @@ report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.s
                                    ROOT / 'Scripts/Extraction/inventory_scenarios.py',
                                    ROOT / 'Scripts/Extraction/storage_scenarios.py', ROOT / 'Scripts/Extraction/phase5_scenarios.py',
                                    ROOT / 'Scripts/Extraction/equipment_scenarios.py',
+                                   ROOT / 'Scripts/Extraction/optic_scenarios.py',
+                                   ROOT / 'Scripts/Extraction/verify_optic_capture.py',
+                                   ROOT / 'Scripts/Extraction/optic_calibration.py',
+                                   ROOT / 'Content/Extraction/Items/DA_Item_RedDot.uasset',
                                    ROOT / 'Scripts/Extraction/progression_scenarios.py',
                                    ROOT / 'Scripts/Extraction/streaming_scenarios.py',
                                    ROOT / 'Scripts/Extraction/north_combat_scenarios.py',
@@ -160,7 +177,7 @@ def launch(role):
                 '-ExtractionStore=' + str(OUT / 'Store'), '-ExtractionProfile=' + args.tag + '_' + ('A' if args.scenario == 'identity' and role == 'B' else role),
                 '-ExecCmds=t.MaxFPS 30,' + ('sg.ShadowQuality 0,sg.EffectsQuality 1,' if len(ROLES) == 6 else '') + 'BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
                 '-TestExit=Automation Test Queue Empty', '-abslog=' + str(OUT / (role + '.log'))]
-    rendered = role != 'Server' and (args.rendered_clients is None or role in ROLES and ROLES.index(role) < args.rendered_clients)
+    rendered = role in rendered_roles
     if args.scenario == 'performance':
         command = [c for c in command if not c.startswith('-ExecCmds=')]
         quality = ','.join('sg.' + name + 'Quality 1' for name in ['ViewDistance', 'AntiAliasing', 'Shadow', 'GlobalIllumination', 'Reflection', 'PostProcess', 'Texture', 'Effects', 'Foliage', 'Shading'])
@@ -169,8 +186,9 @@ def launch(role):
         command += ['-csvGpuStats', '-csvCategories=GPUMem']
     if args.network_stats:
         command = [c.replace('-ExecCmds=', '-ExecCmds=net.EnableNetStats 1,', 1) if c.startswith('-ExecCmds=') else c for c in command]
-    command += ['-RenderOffscreen', '-windowed', '-ResX=' + ('1920' if args.scenario == 'performance' else '1280'), '-ResY=' + ('1080' if args.scenario == 'performance' else '720')] if rendered else ['-nullrhi']
-    if rendered and args.scenario == 'performance':
+    width, height = (args.resolution or ('1920x1080' if args.scenario == 'performance' else '1280x720')).split('x')
+    command += ['-RenderOffscreen', '-windowed', '-ResX=' + width, '-ResY=' + height] if rendered else ['-nullrhi']
+    if rendered and (args.scenario == 'performance' or args.resolution):
         # GameEngine otherwise clamps offscreen windows to the virtual desktop.
         command += ['-ForceRes']
     if args.debug_hold and args.scenario == 'equipment':
@@ -325,7 +343,7 @@ try:
             send(role, 'lag')
         time.sleep(2)
         check('Packet simulation applied: 50ms each direction and 2 percent loss', lambda: all(state(r).get('packet_lag') == 50 and state(r).get('packet_loss') == 2 for r in processes))
-    for role in ROLES[:args.rendered_clients]:
+    for role in rendered_roles:
         send(role, 'screenshot', name='spawn')
     if args.scenario == 'identity':
         check('Same credential cannot bind two simultaneous clients', lambda: not state('B').get('account', {}).get('bound') and bool(state('B').get('account', {}).get('message')))

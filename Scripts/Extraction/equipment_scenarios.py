@@ -26,6 +26,9 @@ def run(g):
         return next(i for i in items(role) if i['definition'] == definition)
 
     def capture(role, name):
+        if role not in g['rendered_roles']:
+            g['report'].setdefault('unrendered_captures', []).append(role + '-' + name)
+            return
         send(role, 'screenshot', name=name)
         wait(lambda: (g['OUT'] / (role + '-' + name + '.png')).is_file(), 'screenshot ' + name)
 
@@ -142,10 +145,14 @@ def run(g):
         assert not operation('B', item('B', definition)['id'], slot=slot)
     assert not operation('B', gun('B')['id'], kind='detach', attachment_slot='grip')
     check('Detaching preserves identity and removes only grip effect', lambda: item('B', 'VerticalGrip')['id'] == parts['VerticalGrip'] and math.isclose(gun('B')['scatter_scale'], .85, abs_tol=.00001))
-    check('Detaching removes grip visuals and restores the original hand target', lambda:
+    # NullRHI observer meshes do not refresh render-driven remote bone poses.
+    # Check the server hand target there; the separate rendered-observer run
+    # checks the actual remote pose. Never label an unrendered pose as visual proof.
+    observer = 'A' if 'A' in g['rendered_roles'] else 'Server'
+    check('Detaching removes grip visuals and restores owner and ' + observer + ' hand targets', lambda:
           len(player('B', 'B')['equipment_visuals']) == 6
           and player('B', 'B')['fp_left_grip_distance'] <= 2
-          and player('A', 'B')['left_grip_distance'] <= 2)
+          and player(observer, 'B')['left_grip_distance'] <= 2)
     capture('B', 'equipment-grip-detached')
     assert operation('B', parts['VerticalGrip'], kind='attach', weapon=gun('A')['id'])
     assert not operation('B', parts['VerticalGrip'], kind='attach', weapon=gun('B')['id'])
@@ -175,6 +182,21 @@ def run(g):
         time.sleep(.3)
         capture('A', 'equipment-remote-' + name)
     send('A', 'camera', target='')
+    if g['args'].optic_remote_only:
+        send('B', 'pulse', action='Aim', duration=20)
+        time.sleep(1)
+        for name, offset in [('left', [-100, -20, 30]), ('right', [100, 0, 35]),
+                             ('front-top', [-80, 60, 60])]:
+            send('A', 'camera', target='EX_B', offset=offset)
+            time.sleep(.5)
+            capture('A', 'optic-remote-' + name)
+        send('B', 'pulse', action='Aim', duration=.04)
+        send('A', 'camera', target='')
+        g['report']['acceptance_scope'] = 'Rendered observer mounts and attachment state only; no combat regression in this run'
+        return
+    if g['args'].optic_validation:
+        from optic_scenarios import run as validate_optic
+        validate_optic(g, capture, operation, gun, item, parts)
     if g['args'].debug_hold:
         print('EQUIPMENT_WAITING_FOR_DEBUGGER', g['OUT'] / 'Continue.txt', flush=True)
         wait(lambda: (g['OUT'] / 'Continue.txt').exists(), 'equipment debugger continue marker', 900)

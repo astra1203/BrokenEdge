@@ -1,0 +1,45 @@
+{
+  "method": "Independent ray/triangle check against an ASCII FBX export of the actual AK.\n\nFBX export uses (X,-Y,Z); the original GLB lens uses (X,Z,Y), metres.\nThis nominal-pose check complements rendered captures, not animated-pose proof.\n",
+  "weapon_vertices": 6178,
+  "weapon_triangles": 6813,
+  "receiver_roof_cm": 12.4404668807983,
+  "weapon_highest_cm": 13.7720241546631,
+  "lens_bounds_cm": [
+    [
+      -1.521594263613224,
+      2.093108557164669,
+      0.5808415357023478
+    ],
+    [
+      1.521626766771078,
+      2.201586030423641,
+      2.498598024249077
+    ]
+  ],
+  "rays": {
+    "previous": {
+      "eye_in_weapon_cm": [
+        1.6251578941250955e-05,
+        -19.832102976427105,
+        12.956556757086506
+      ],
+      "blocked_samples": 8,
+      "total_samples": 25
+    },
+    "corrected": {
+      "eye_in_weapon_cm": [
+        1.6251578941250955e-05,
+        -19.792837553965295,
+        15.956042744549842
+      ],
+      "blocked_samples": 0,
+      "total_samples": 25
+    }
+  },
+  "input_sha256": {
+    "Saved\\Extraction\\OpticAudit02\\AK.fbx": "ffb868a6b9e1047993866740779efc04e3318062cdd2b962e7569e9b4ab63a69",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase6ASources\\\u53ef\u7528\u8d44\u6e90\\DeltaForce\\Content\\Models\\Weapons\\Parts\\Sco\\Sco_Re_Reddot_035\\Sco_Re_Reddot_035_1P_Rigid.glb": "76398f9b12cab988b883a069b7299c5e405b9996ed72d575f40ad66a0fdfe060",
+    "Saved\\Extraction\\OpticAssets02\\Calibration.json": "4f73207916a6288562cd3ec6fb2b3feaf62729d13642f98fcf782f301eeeaca5"
+  },
+  "passed": true
+}

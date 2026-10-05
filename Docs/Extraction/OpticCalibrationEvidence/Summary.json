@@ -1,0 +1,455 @@
+{
+  "created_utc": "2026-10-05T13:49:58.744298+00:00",
+  "base_commit": "22e4c71a84536094e7a97116d67120d044387235",
+  "scope": "UE 5.8.3 editor game processes; dedicated server and two clients, one rendered at a time. No new packaged build.",
+  "runs": {
+    "owner-720": "OpticNet03",
+    "owner-1080": "OpticNet04",
+    "observer": "OpticObserver02"
+  },
+  "checks": {
+    "owner-720": 108,
+    "owner-1080": 108,
+    "observer": 38
+  },
+  "original_definition_sha256": "43fe7e2b04883eb67da1198871b759f9dbb8727fae3632d45f8c3462ad6cfd15",
+  "copied_files": [
+    {
+      "source": "Saved/Extraction/OpticNet03/Report.json",
+      "archive": "owner-720/Report.json.gz",
+      "original_sha256": "6d8173de7fda2a65bf7e98ef736468bb363cbd2a674fb5cc001274643371d0db",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-equipment-ads.png",
+      "archive": "owner-720/B-equipment-ads.png",
+      "original_sha256": "79e2071f60413d4de2e651c73be2ef1e1807dbdcc66b9598a2d168f46e2df99e",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-equipment-dropped.png",
+      "archive": "owner-720/B-equipment-dropped.png",
+      "original_sha256": "402552e89510ccb0b40abccf45fd3c6ee86e75559a5db24877fd5cba1f080ac7",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-equipment-hip.png",
+      "archive": "owner-720/B-equipment-hip.png",
+      "original_sha256": "d5eef9eeec8303dd0bf2589c96346d42e3e74236080920bf88a35073f5e6822e",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-equipment-reload.png",
+      "archive": "owner-720/B-equipment-reload.png",
+      "original_sha256": "2bb9b9375336b63f9453a455b150630c343c894d62d031606d3af737f69de873",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-equipment-swap-away.png",
+      "archive": "owner-720/B-equipment-swap-away.png",
+      "original_sha256": "e0ceaebe7157bdea8da95886eafb543559880a3cdb6461fd055f650eb97cf51d",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-equipment-swap-back.png",
+      "archive": "owner-720/B-equipment-swap-back.png",
+      "original_sha256": "90bd3d88239363a4b01103189b6d586d6969c5151957d2eab032087a50dff10f",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-optic-crouched--35.png",
+      "archive": "owner-720/B-optic-crouched--35.png",
+      "original_sha256": "aca60c47e98075dee772f8462f408b0d62ac61dcae4887d8bb15e9b9e127db61",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-optic-crouched-0.png",
+      "archive": "owner-720/B-optic-crouched-0.png",
+      "original_sha256": "5955b27472a34150802e503e0eb6b0c072d54f85f1185804aa73e6a76cf9b58e",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-optic-crouched-35.png",
+      "archive": "owner-720/B-optic-crouched-35.png",
+      "original_sha256": "63b1b7afd2ff3eaab7f6aaa1a5de451b7367db000da7d349c547491ebd98046b",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-optic-detached-ironsights.png",
+      "archive": "owner-720/B-optic-detached-ironsights.png",
+      "original_sha256": "26af75c57e4ec2b4aea3199a690c2e8885141f19116224c3dcaa6bc7243b62be",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-optic-reattached.png",
+      "archive": "owner-720/B-optic-reattached.png",
+      "original_sha256": "74631e307c1de942808830c3113574f3dff7468f77835323e974260cdc83f07b",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-optic-standing--35.png",
+      "archive": "owner-720/B-optic-standing--35.png",
+      "original_sha256": "136c7313d55500b964a4015821877d905664b8feb30cb6ba25543e2dc4e1b8b4",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-optic-standing-0.png",
+      "archive": "owner-720/B-optic-standing-0.png",
+      "original_sha256": "caa8b89082f2dc0bcca9ac62eb07ca5465fb542c8a1b2f3a7e9af884d3f9e6f4",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B-optic-standing-35.png",
+      "archive": "owner-720/B-optic-standing-35.png",
+      "original_sha256": "1ea20d4318dfeaba2743ea2fd2831b4d2a2f8c4c3d1311513334280fb4253791",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/OpticPixels.json",
+      "archive": "owner-720/OpticPixels.json",
+      "original_sha256": "7a8f3deddb7a48e4fcbbc93120ef97068354f4af36c796e44d150ba841600bcc",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/A.log",
+      "archive": "owner-720/A.log.gz",
+      "original_sha256": "1f4c52d1336e61a258daab0f865ad5ffe6e18909314edf481151587358c1439f",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/B.log",
+      "archive": "owner-720/B.log.gz",
+      "original_sha256": "d2bff6e243f9876d5b4f97d5595bbd8bb83d0f36afb2fbd7abf2d95b949a0905",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03/Server.log",
+      "archive": "owner-720/Server.log.gz",
+      "original_sha256": "c6812ffa75022125bc198ef1f95e323cf447ddba550f5e557f20828d90c54d95",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet03-resources/Report.json",
+      "archive": "owner-720/Resources.json",
+      "original_sha256": "e7659acefa1142ce521b45bec871e4a53afa93274559b0a69f4afdfa5395bc6a",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/Report.json",
+      "archive": "owner-1080/Report.json.gz",
+      "original_sha256": "289676e52fc968ef0afefc5ecd27f1bb01bf7b9b700bfb1825aa340bba626413",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-equipment-ads.png",
+      "archive": "owner-1080/B-equipment-ads.png",
+      "original_sha256": "f012c6f4020465302f8f8c87d8b49c36c6712ac1c96ae5d7279f61f86d460315",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-equipment-dropped.png",
+      "archive": "owner-1080/B-equipment-dropped.png",
+      "original_sha256": "e57f75b1a81b86bfed0c152836c3a3660258f327a8e010aa01ebbe8604172e17",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-equipment-hip.png",
+      "archive": "owner-1080/B-equipment-hip.png",
+      "original_sha256": "29649b770dad6f030e5c08f817c85d7b53f09425590e74811e5d6dfbaa1262a5",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-equipment-reload.png",
+      "archive": "owner-1080/B-equipment-reload.png",
+      "original_sha256": "196762f3fd6847c3d0eff40381dcc2f149793f928b96d0dfe71789d6b92c0da5",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-equipment-swap-away.png",
+      "archive": "owner-1080/B-equipment-swap-away.png",
+      "original_sha256": "82e36641dd0e8ab9547f4d8f729b2e52e9c595353c334cae68083ea3410265ea",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-equipment-swap-back.png",
+      "archive": "owner-1080/B-equipment-swap-back.png",
+      "original_sha256": "b5ac43f7778a9f69855e7c5dab3884993bd17695e9485375aad6f0f72fdfde23",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-optic-crouched--35.png",
+      "archive": "owner-1080/B-optic-crouched--35.png",
+      "original_sha256": "3f40ac85b6b845014c589efac7c6c536201ac1abe0c1122514b72349b6115a36",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-optic-crouched-0.png",
+      "archive": "owner-1080/B-optic-crouched-0.png",
+      "original_sha256": "b70f7ca449c2d7f42572ca4c5c2c72b0e09135bb6b156bc2f117328c0bf04fd0",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-optic-crouched-35.png",
+      "archive": "owner-1080/B-optic-crouched-35.png",
+      "original_sha256": "fd3603675c07cf0cc3a57520b49017ca2227a45beb2fa0aace884df24d62c0d0",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-optic-detached-ironsights.png",
+      "archive": "owner-1080/B-optic-detached-ironsights.png",
+      "original_sha256": "01820dc95c78bafd1ffe672555aaf1553ebae342ca39bd1291672dff23f1b5e4",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-optic-reattached.png",
+      "archive": "owner-1080/B-optic-reattached.png",
+      "original_sha256": "64b6a16101687ec4fc7b1725a267d5d82514668131c2ee5122ea3135bc9474b7",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-optic-standing--35.png",
+      "archive": "owner-1080/B-optic-standing--35.png",
+      "original_sha256": "b4926500d35bad3193966ff995dde990c96ea03a8eea657f4d474c1ccd462a0f",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-optic-standing-0.png",
+      "archive": "owner-1080/B-optic-standing-0.png",
+      "original_sha256": "59c4ca8905681619e48fd1aed8b13ae6600c6b08a2f5e1013e090d07f2b1ce03",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B-optic-standing-35.png",
+      "archive": "owner-1080/B-optic-standing-35.png",
+      "original_sha256": "a1e9a647fd864d411f015561a2519168a111bdc009af1cdb6e70df5fe82ed882",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/OpticPixels.json",
+      "archive": "owner-1080/OpticPixels.json",
+      "original_sha256": "7728cbaec229dcbaaba931769b1b410a60e40cab80f55e1967337deeb8f9c4b9",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/A.log",
+      "archive": "owner-1080/A.log.gz",
+      "original_sha256": "80799e236f74063b574e7aa9dd7c0902e3ae8bd6a5c12b91d049ce52603e7b95",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/B.log",
+      "archive": "owner-1080/B.log.gz",
+      "original_sha256": "25ca6917090f621b009a950c8296fabb49864544587952a244fac7bdb9fac1fb",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04/Server.log",
+      "archive": "owner-1080/Server.log.gz",
+      "original_sha256": "95c1dca6d1ca5760da6553ec45c0091522b52f7cc8ce963917bb0b90d3c88e53",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet04-resources/Report.json",
+      "archive": "owner-1080/Resources.json",
+      "original_sha256": "b22b29c77b179e310ed196154c61a9b223586193c67e043db185246f7c8ee884",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticObserver02/Report.json",
+      "archive": "observer/Report.json.gz",
+      "original_sha256": "19680634309933b1b7311a1b9bb174f8d7c233b73e96296b173638db0778e593",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticObserver02/A-equipment-remote-front.png",
+      "archive": "observer/A-equipment-remote-front.png",
+      "original_sha256": "fb416531656cde3e33d51e6c79e16f0f5881c3c220146b4a52e518a584f49878",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticObserver02/A-equipment-remote-left.png",
+      "archive": "observer/A-equipment-remote-left.png",
+      "original_sha256": "b81b2a96bca5d53eae30e32f66e76914c1f87df2c8fd8eed517e4f26952d8ad1",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticObserver02/A-equipment-remote-right.png",
+      "archive": "observer/A-equipment-remote-right.png",
+      "original_sha256": "7842cfdfad818b5105e256b400fe59b974f5162950586e42efaa1189724c01cd",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticObserver02/A-equipment-remote-top.png",
+      "archive": "observer/A-equipment-remote-top.png",
+      "original_sha256": "aebc09893c437ff03c1335a2dceb1f2022ec2dc85025525c0ffac2052ad55a5d",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticObserver02/A-optic-remote-front-top.png",
+      "archive": "observer/A-optic-remote-front-top.png",
+      "original_sha256": "304a4fcf4c822eb45fa36fe04893961c4f72076b8cec6c9f25537693f290c77b",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticObserver02/A-optic-remote-left.png",
+      "archive": "observer/A-optic-remote-left.png",
+      "original_sha256": "af263a211b4f078b823faec97f0b4317990b542cc2a922314af7ac5226b64435",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticObserver02/A-optic-remote-right.png",
+      "archive": "observer/A-optic-remote-right.png",
+      "original_sha256": "51f3fc2242d8d8ad6ee27277686fda5f0cc94f009325627bc9b0beb8b6a171c0",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticObserver02/A.log",
+      "archive": "observer/A.log.gz",
+      "original_sha256": "2b7bc06f3105935d94dd36bf76b0e933d21b831c794b2a200f24aa5be4134c6a",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticObserver02/B.log",
+      "archive": "observer/B.log.gz",
+      "original_sha256": "25e8a391c5c69c657c11820d2e9a9a537c82cabeadc7cefbc95cfd785181fb13",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticObserver02/Server.log",
+      "archive": "observer/Server.log.gz",
+      "original_sha256": "ceb4ba4ad205f696638a6ba764303fbf120b543364784605f659b423ecf113b5",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticObserver02-resources/Report.json",
+      "archive": "observer/Resources.json",
+      "original_sha256": "cf7fac88009725ebd97b9058b981da00bb419b97955655d8254950fb8e859712",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticNet01/Report.json",
+      "archive": "diagnostics/OpticNet01-Report.json.gz",
+      "original_sha256": "4874f560fd569ee2899c59014ecd83e536374b7204ee83281220caafba506ff2",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet01-resources/Report.json",
+      "archive": "diagnostics/OpticNet01-Resources.json.gz",
+      "original_sha256": "32c7c210baeae42d819820feb0c01c2b4c92ef50dc458ccc834d509fde76295f",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet01-resources/Task.log",
+      "archive": "diagnostics/OpticNet01-Task.log.gz",
+      "original_sha256": "93b33bcb286bec6a1c8f3df5a547d3090d36a8cdd746bd11541ce51285a8703f",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet02/Report.json",
+      "archive": "diagnostics/OpticNet02-Report.json.gz",
+      "original_sha256": "9c3cdfb50923ed4ac6a4a204558c00a7bcf0116967fa2e666ca8a2a3e120f375",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet02-resources/Report.json",
+      "archive": "diagnostics/OpticNet02-Resources.json.gz",
+      "original_sha256": "9782f2875bd6e404fb3dd65d70e662349caac20ddfc3ccba1c9e8b093c875276",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticNet02-resources/Task.log",
+      "archive": "diagnostics/OpticNet02-Task.log.gz",
+      "original_sha256": "c304c556c11690492b617e7d634d7b7ee05bdb870525b5f5c50a5aa4e21c3537",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticAudit01/Editor.log",
+      "archive": "diagnostics/OpticAudit01-Editor.log.gz",
+      "original_sha256": "415ebafc7c1a1c638cf7c47a4fb6879ce63a2d1e8a57d8160cfc4cf1f098cb43",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticAudit02/Audit.json",
+      "archive": "geometry/OpticAudit02-Audit.json",
+      "original_sha256": "8c928fbf31b096532f4f353b06e180affd926bebad871c593c05b0f1960cd509",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticAudit02/Editor.log",
+      "archive": "diagnostics/OpticAudit02-Editor.log.gz",
+      "original_sha256": "63cf03037db49510b87a60d75d44c62ef63b27928c9e864c4c8bf06c32b48224",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticAssets02/Calibration.json",
+      "archive": "geometry/OpticAssets02-Calibration.json",
+      "original_sha256": "4f73207916a6288562cd3ec6fb2b3feaf62729d13642f98fcf782f301eeeaca5",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticAssets02/Geometry.json",
+      "archive": "geometry/OpticAssets02-Geometry.json",
+      "original_sha256": "3345ea32866cd9cecbe40f6559921a9300bcafd0fc72e9bd74d6c401c0840ff2",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticAssets02/Run.json",
+      "archive": "geometry/OpticAssets02-Run.json",
+      "original_sha256": "e02a97e905a6856323cf4c863d9aaae90c05a5bfc88008a9d60039a57d61c738",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticAssets02/Editor.log",
+      "archive": "diagnostics/OpticAssets02-Editor.log.gz",
+      "original_sha256": "7508bb5734a7e8af3ee0dd03134b227b05180a0a73f1af291edef2031fa2fa34",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/OpticAudit02/AK.fbx",
+      "archive": "geometry/AK.fbx.gz",
+      "original_sha256": "ffb868a6b9e1047993866740779efc04e3318062cdd2b962e7569e9b4ab63a69",
+      "gzip": true
+    },
+    {
+      "source": "Saved/Extraction/Phase6ASources/\u53ef\u7528\u8d44\u6e90/DeltaForce/Content/Models/Weapons/Parts/Sco/Sco_Re_Reddot_035/Sco_Re_Reddot_035_1P_Rigid.glb",
+      "archive": "geometry/OriginalOptic.glb.gz",
+      "original_sha256": "76398f9b12cab988b883a069b7299c5e405b9996ed72d575f40ad66a0fdfe060",
+      "gzip": true
+    },
+    {
+      "source": "Docs/Extraction/Phase6AEvidence/equipment-six/B-equipment-ads.png",
+      "archive": "before/B-equipment-ads.png",
+      "original_sha256": "a196c77b9242f8c0b649782f3ee0de22eb9d681763d8efa76e0f67769987e112",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticVisualReview.json",
+      "archive": "VisualReview.json",
+      "original_sha256": "4725b47f4866911a21ab671dff84083ef7381c9d34300cc1678b542fb0ed3279",
+      "gzip": false
+    },
+    {
+      "source": "Saved/Extraction/OpticOwnerTestedScenario.py",
+      "archive": "diagnostics/EquipmentScenarioOwnerRuns.py",
+      "original_sha256": "49af410c89d3cabf33c32f95d9778f55c799c503cbc08f9fec703b89a9d96204",
+      "gzip": false
+    }
+  ],
+  "implementation_sha256": {
+    "Scripts/Extraction/optic_calibration.py": "b623f055937e6a08f425e4929b0a2bad2d18aa7f032d953a76f5224dcc73f7ed",
+    "Scripts/Extraction/calibrate_red_dot.py": "fe5ce849a1a011e8882975c80ac04de2c1553db704c2fd2b52e61ab9596b35a4",
+    "Scripts/Extraction/optic_scenarios.py": "36198225c22a9d5753b1f8916bb1d1a966c53be98635046b7a3f48a58bb75b69",
+    "Scripts/Extraction/verify_optic_capture.py": "d5797b8ba70eacf4795db88318dbb1d313974ad03f4026e6df6f40208d479804",
+    "Scripts/Extraction/verify_optic_geometry.py": "7e21de6fae369b566ad667deb0adda7f2b0a959c5256cf33bd43ed296c8a1625",
+    "Scripts/Extraction/prepare_phase6a.py": "f04f94ae22da79b90bbbdd2b83c8d2e1af7c812919b9792fd3576999b1f9e0aa",
+    "Scripts/Extraction/run_editor_task.py": "d5bbc6238b59388d2c5beb5b608922e0a3c0af25edf28e952ce120f5c65aef77",
+    "Scripts/Extraction/run_network.py": "e77ed779699c75fdb569e6be62da08f0da9d80c3bccbba361f41067944df608e",
+    "Scripts/Extraction/equipment_scenarios.py": "dee1196769db57955e58a52f4f5327275c5ddcddf6915cd5759cd8bf507951da",
+    "Scripts/Extraction/archive_optic_calibration.py": "db6924c02f98c78f69de4937a6e7260ce3b9ab6e9c4b349c138506aacf57d0c7",
+    "Content/Extraction/Items/DA_Item_RedDot.uasset": "28bca5d29cc0b1f5db39d847d1bb4edea26bc785840abc3424a277c5525c461a",
+    ".gitattributes": "782eb46f54284a41bc9d936433ea03f25e75e9ec88f57854cc696b98d911db37"
+  },
+  "limits": "Geometry rays use nominal ADS; captures cover selected steady poses and action samples, not every animation frame.",
+  "scenario_revision": "After owner runs, only the optic_remote_only branch gained three additional observer captures. The exact owner-run source is preserved and hash checked.",
+  "visual_review": "See VisualReview.json for direct inspection; passing center pixels alone is insufficient."
+}

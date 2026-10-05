@@ -72,3 +72,7 @@ Docs/Extraction/Phase7AEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,s
 Docs/Extraction/Phase7BEvidence/** -text
 Docs/Extraction/Phase7BEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 Docs/Extraction/Phase7BEvidence/**/*.glb filter=lfs diff=lfs merge=lfs -text
+
+# Measured optic placement and direct visual acceptance.
+Docs/Extraction/OpticCalibrationEvidence/** -text
+Docs/Extraction/OpticCalibrationEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

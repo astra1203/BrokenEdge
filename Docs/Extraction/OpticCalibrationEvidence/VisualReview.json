@@ -1,0 +1,55 @@
+{
+  "result": "passed",
+  "runs": {
+    "owner-720": "OpticNet03",
+    "owner-1080": "OpticNet04",
+    "observer": "OpticObserver02"
+  },
+  "method": "Direct inspection of unedited UE screenshots, separate red-reticle pixel measurement, and nominal-pose ray/triangle checks.",
+  "reviewed_images": {
+    "owner-720": [
+      "B-optic-standing-0.png",
+      "B-optic-standing-35.png",
+      "B-optic-standing--35.png",
+      "B-optic-crouched-0.png",
+      "B-optic-crouched-35.png",
+      "B-optic-crouched--35.png",
+      "B-optic-reattached.png",
+      "B-equipment-hip.png",
+      "B-equipment-reload.png",
+      "B-equipment-swap-back.png",
+      "B-optic-detached-ironsights.png"
+    ],
+    "owner-1080": [
+      "B-optic-standing-0.png",
+      "B-optic-standing-35.png",
+      "B-optic-standing--35.png",
+      "B-optic-crouched-0.png",
+      "B-optic-crouched-35.png",
+      "B-optic-crouched--35.png",
+      "B-optic-reattached.png",
+      "B-equipment-hip.png"
+    ],
+    "observer": [
+      "A-optic-remote-left.png",
+      "A-optic-remote-right.png",
+      "A-optic-remote-front-top.png"
+    ],
+    "before": [
+      "B-equipment-ads.png"
+    ]
+  },
+  "observations": {
+    "owner_aperture": "Central viewing aperture clear at standing/crouched pitch 0,+35,-35; small iron-sight prongs remain only at the lower edge. Reticle is inside the lens, not on the obstructing receiver.",
+    "owner_actions": "Hip and sampled reload retain the raised optic/adapter. The swap-back frame is before the attachment event and still shows the other rifle; committed actor/attachment identity is covered by runtime assertions, not inferred from that frame.",
+    "detach": "Optic and riser removed, original iron-sight view restored. Reattaching returns the reticle to the same center.",
+    "observer": "Raised-aim left/right/front-top frames expose the optic mount. Adapter sits on the receiver; optic base seats on the adapter. No obvious floating gap or receiver penetration in these samples.",
+    "previous_review": "The old acceptance identified a centered point but missed aperture occlusion; historical files are retained unchanged."
+  },
+  "limits": "Selected steady poses and action samples only. One rendered client per run; NullRHI peers are not visual evidence. Same-host editor-game Development/Null scope, no new package.",
+  "max_center_error_px": {
+    "owner-720": 0.06850195069877177,
+    "owner-1080": 0.16041070052860534
+  },
+  "reviewed_count": 23
+}

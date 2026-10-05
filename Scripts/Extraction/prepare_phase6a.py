@@ -5,10 +5,13 @@ original GLB bind mesh; its source ZIPs and prior evidence are never modified.
 """
 import json
 import shutil
+import sys
 from pathlib import Path
 import unreal
 
 root = Path(unreal.Paths.project_dir()).resolve()
+sys.path.insert(0, str(root / 'Scripts/Extraction'))
+from optic_calibration import MOUNT as RED_DOT_MOUNT, settings as optic_settings
 sources = root / 'Saved/Extraction/Phase6ASources'
 manifest = json.loads((sources / 'Manifest.json').read_text(encoding='utf-8'))
 lib = unreal.EditorAssetLibrary
@@ -153,19 +156,16 @@ definitions = [
     ('Splint', '夹板', unreal.ExtractionItemKind.MEDICAL, (1, 1), 1,
      {'use_seconds': 5.0, 'heal_amount': 0.0, 'medical_effect': unreal.ExtractionMedicalEffect.SPLINT, 'world_mesh': medical_mesh}),
 ]
-mounts = {'RedDot': (0, 12, 11), 'VerticalGrip': (0, 34, 5.5), 'Compensator': (0, 62, 8.2)}
+mounts = {'RedDot': RED_DOT_MOUNT, 'VerticalGrip': (0, 34, 5.5), 'Compensator': (0, 62, 8.2)}
 # Imported attachment meshes use +Y forward and +Z up, matching the AK mesh.
 # Counter the existing iron-sight pitch only on the owner optic, then place its
 # actual lens center on the camera's forward ray instead of drawing a HUD dot.
 character_bp = lib.load_blueprint_class('/Game/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired')
 character_defaults = unreal.get_default_object(character_bp)
 aim_fit = character_defaults.get_editor_property('first_person_weapon_fit').get_editor_property('aim')
-optic_view_rotation = aim_fit.rotation.inversed() * unreal.Rotator(yaw=-90).quaternion()
-optic_view_mount = unreal.Transform(location=unreal.Vector(*mounts['RedDot']), rotation=optic_view_rotation.rotator())
-# Center of the original transparent lens POSITION bounds, converted from GLB meters.
-optic_lens_center = unreal.Vector(0, 2.147347, 1.53972)
-optic_camera_center = aim_fit.transform_location(optic_view_mount.transform_location(optic_lens_center))
-optic_offset = unreal.Vector(0, -optic_camera_center.y, -optic_camera_center.z)
+optic_config = optic_settings(aim_fit)
+optic_view_mount = optic_config['first_person_mount']
+optic_offset = optic_config['optic_aim_offset']
 for ident, label, slot, scatter in [
     ('RedDot', '原作红点瞄具', unreal.ExtractionAttachmentSlot.OPTIC, 1.0),
     ('VerticalGrip', '原作垂直握把', unreal.ExtractionAttachmentSlot.GRIP, .8),
@@ -177,8 +177,8 @@ for ident, label, slot, scatter in [
                          'world_mesh': meshes[ident + '_3P'], 'first_person_mesh': meshes[ident + '_1P'],
                          'mount': mount, 'first_person_mount': optic_view_mount if ident == 'RedDot' else mount,
                          'adapter_mesh': adapter if ident != 'Compensator' else None,
-                         'adapter_mount': unreal.Transform(location=unreal.Vector(0, 12, 10.5) if ident == 'RedDot' else unreal.Vector(0, 34, 6),
-                                                           scale=unreal.Vector(.03, .06, .01) if ident == 'RedDot' else unreal.Vector(.026, .09, .012)),
+                         'adapter_mount': optic_config['adapter_mount'] if ident == 'RedDot' else unreal.Transform(
+                             location=unreal.Vector(0, 34, 6), scale=unreal.Vector(.026, .09, .012)),
                          # Target is the wrist: the closed palm center sits about 9.5 cm forward.
                          'support_grip': unreal.Transform(location=unreal.Vector(2, 24.5, -.3), rotation=unreal.Rotator(yaw=90)),
                          'optic_aim_offset': optic_offset if ident == 'RedDot' else unreal.Vector()}))

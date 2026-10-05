@@ -11,7 +11,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
-parser.add_argument('task', choices=['assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
+parser.add_argument('task', choices=['assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
 parser.add_argument('--tag', required=True)
 parser.add_argument('--store', type=Path, help='Existing store directory; only for recover-existing')
 parser.add_argument('--verify-profile')
@@ -27,6 +27,11 @@ if args.task in ['north-import', 'phase7a-assets', 'phase7a-audit']:
     command += ['-run=pythonscript', '-script=' + str(ROOT / script)]
 elif args.task == 'phase6b-assets':
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/prepare_phase6b.py')]
+elif args.task == 'optic-assets':
+    script = ROOT / 'Scripts/Extraction/calibrate_red_dot.py'
+    subprocess.run(['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+                    str(ROOT / 'Scripts/Assert-EditorClosed.ps1'), '-ProjectFile', str(ROOT / 'BrokenEdge.uproject')], check=True)
+    command += ['-run=pythonscript', '-script=' + str(script)]
 elif args.task == 'phase6a-assets':
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/prepare_phase6a.py')]
 elif args.task in ['assets', 'exit', 'phase5-assets']:
@@ -67,6 +72,8 @@ if args.task in ['north-import', 'phase7a-assets', 'phase7a-audit']:
     passed = passed and marker in text
 elif args.task == 'phase6b-assets':
     passed = passed and 'EXTRACTION_PHASE6B_ASSETS_PREPARED' in text
+elif args.task == 'optic-assets':
+    passed = passed and 'EXTRACTION_OPTIC_PREPARED' in text
 elif args.task == 'phase6a-assets':
     passed = passed and 'EXTRACTION_PHASE6A_ASSETS_PREPARED' in text
 elif args.task in ['assets', 'exit', 'phase5-assets']:

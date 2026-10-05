@@ -1,0 +1,20 @@
+{
+  "task": "optic-assets",
+  "started_utc": "2026-10-05T13:19:56.824745+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\OpticAssets02\\Editor.log",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\calibrate_red_dot.py"
+  ],
+  "pid": 60204,
+  "exit_code": 0,
+  "result": "passed",
+  "finished_utc": "2026-10-05T13:20:10.830440+00:00"
+}
