@@ -1,0 +1,100 @@
+{
+  "result": "verification_passed",
+  "phase_status": "blocked_on_original_material_data",
+  "checks": [
+    {
+      "name": "source height sample audit passed",
+      "passed": true
+    },
+    {
+      "name": "deterministic repeat: TerrainMesh.glb",
+      "passed": true
+    },
+    {
+      "name": "deterministic repeat: TerrainSamples.json.gz",
+      "passed": true
+    },
+    {
+      "name": "deterministic repeat: Report.json",
+      "passed": true
+    },
+    {
+      "name": "unique source sample coordinates",
+      "passed": true
+    },
+    {
+      "name": "finite original samples and bounded RG/normal channels",
+      "passed": true
+    },
+    {
+      "name": "valid non-degenerate triangle indices",
+      "passed": true
+    },
+    {
+      "name": "valid GLB container length",
+      "passed": true
+    },
+    {
+      "name": "valid GLB chunk layout",
+      "passed": true
+    },
+    {
+      "name": "GLB vertex count agrees with source samples",
+      "passed": true
+    },
+    {
+      "name": "every GLB vertex round-trips to source sample within 0.01 cm",
+      "passed": true
+    },
+    {
+      "name": "source quadtree connectivity",
+      "passed": true
+    },
+    {
+      "name": "rejects truncated header",
+      "passed": true
+    },
+    {
+      "name": "rejects truncated section table",
+      "passed": true
+    },
+    {
+      "name": "rejects invalid child pointer",
+      "passed": true
+    },
+    {
+      "name": "material gate rejects removed source nodes",
+      "passed": true
+    },
+    {
+      "name": "all missing-node findings independently match original bytes",
+      "passed": true
+    },
+    {
+      "name": "dependency parse success is separate from source completeness",
+      "passed": true
+    },
+    {
+      "name": "production assets, native gameplay and old evidence unchanged",
+      "passed": true
+    },
+    {
+      "name": "changed Python syntax valid",
+      "passed": true
+    }
+  ],
+  "terrain_run": "Phase7BTerrainFinal01",
+  "repeat_run": "Phase7BTerrainFinalRepeat01",
+  "materials_run": "Phase7BMaterials03",
+  "verified_vertices": 113313,
+  "verified_triangles": 225280,
+  "source_graphs_with_removed_nodes": 171,
+  "zero_source_indices": 5091,
+  "max_glb_roundtrip_error_cm": 0.0003777371457545087,
+  "input_sha256": {
+    "Saved\\SpaceCenter\\Phase7B\\TerrainRuns\\Phase7BTerrainFinal01\\Report.json": "bb064c3ad723fcd1b91cdc662a363e13c9de7fcaffcd531aea7680d65ae6decc",
+    "Saved\\SpaceCenter\\Phase7B\\MaterialRuns\\Phase7BMaterials03\\Report.json": "8ec9b0d05113f3729830146bfbbe7af88dea14f5a8d88a0445edf76ea8fb4986",
+    "Saved\\SpaceCenter\\Phase7B\\MaterialRuns\\Phase7BMaterials03\\Graph.json": "ec92917d1ef2e864a16c07871dcb79a52f7b210ef20e0303ee9df430b95571bb"
+  },
+  "boundary": "Checks validate source recovery evidence and refusal to bypass missing material data. No UE build, native scene import or runtime acceptance was performed."
+}

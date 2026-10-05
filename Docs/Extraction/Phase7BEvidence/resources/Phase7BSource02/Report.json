@@ -1,0 +1,48 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts/SpaceCenter/phase7b_source.py",
+    "--tag",
+    "Phase7BSource02",
+    "--packages",
+    "Saved/SpaceCenter/Phase7B/probe02-packages.json"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T10:25:03.782177+00:00",
+      "c_free_gib": 65.95332717895508,
+      "d_free_gib": 230.30059051513672,
+      "ram_free_gib": 8.385494232177734,
+      "commit_used_gib": 39.475685119628906,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T10:25:03.789178+00:00",
+      "c_free_gib": 65.95332717895508,
+      "d_free_gib": 230.30058670043945,
+      "ram_free_gib": 8.384845733642578,
+      "commit_used_gib": 39.475685119628906,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T10:25:04.590459+00:00",
+      "c_free_gib": 65.95332717895508,
+      "d_free_gib": 230.29705429077148,
+      "ram_free_gib": 8.369674682617188,
+      "commit_used_gib": 39.48476028442383,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 45876,
+  "exit_code": 0
+}

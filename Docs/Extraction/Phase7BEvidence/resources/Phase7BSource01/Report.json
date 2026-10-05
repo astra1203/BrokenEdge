@@ -1,0 +1,46 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts/SpaceCenter/phase7b_source.py",
+    "--tag",
+    "Phase7BSource01"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T10:18:56.108603+00:00",
+      "c_free_gib": 65.97194290161133,
+      "d_free_gib": 230.3326072692871,
+      "ram_free_gib": 8.60003662109375,
+      "commit_used_gib": 39.30541229248047,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T10:18:56.121603+00:00",
+      "c_free_gib": 65.97194290161133,
+      "d_free_gib": 230.3326072692871,
+      "ram_free_gib": 8.602588653564453,
+      "commit_used_gib": 39.298282623291016,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T10:18:57.758826+00:00",
+      "c_free_gib": 65.9719352722168,
+      "d_free_gib": 230.32726669311523,
+      "ram_free_gib": 8.576751708984375,
+      "commit_used_gib": 39.31201934814453,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 17460,
+  "exit_code": 0
+}

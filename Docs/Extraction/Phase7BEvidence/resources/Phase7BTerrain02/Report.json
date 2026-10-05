@@ -1,0 +1,46 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts/SpaceCenter/recover_phase7b_terrain.py",
+    "--tag",
+    "Phase7BTerrain02"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T10:32:38.522658+00:00",
+      "c_free_gib": 65.93110275268555,
+      "d_free_gib": 230.27763748168945,
+      "ram_free_gib": 8.572284698486328,
+      "commit_used_gib": 39.29452133178711,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T10:32:38.527659+00:00",
+      "c_free_gib": 65.93110275268555,
+      "d_free_gib": 230.2776336669922,
+      "ram_free_gib": 8.572090148925781,
+      "commit_used_gib": 39.29452133178711,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T10:32:42.132098+00:00",
+      "c_free_gib": 65.93109893798828,
+      "d_free_gib": 230.2723045349121,
+      "ram_free_gib": 8.55428695678711,
+      "commit_used_gib": 39.3056640625,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 43388,
+  "exit_code": 0
+}

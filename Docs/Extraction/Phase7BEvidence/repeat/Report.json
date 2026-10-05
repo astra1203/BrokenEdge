@@ -1,0 +1,2156 @@
+{
+  "result": "source_height_samples_verified",
+  "source_probe": "Saved\\SpaceCenter\\Phase7B\\SourceRuns\\Phase7BSource01",
+  "source_probe_sha256": "444f78b361e67cf8d005357e15188b445a5b3a89b96e81c793822076bd667a22",
+  "source_region_cm": {
+    "min": [
+      652000.0,
+      -466000.0
+    ],
+    "max": [
+      681000.0,
+      -433000.0
+    ]
+  },
+  "origin_cm": [
+    664000.0,
+    -451000.0,
+    -22400.0
+  ],
+  "scale": [
+    100.0,
+    100.0,
+    125.0
+  ],
+  "height_bias": -128.0,
+  "height_scale": 1.99609375,
+  "height_decode": "(big_endian_rg16 - 32768) / (HeightScaleInLocalSpace * 128) + HeightBiasInLocalSpace",
+  "height_quantization": "Nonnegative encoded values truncated downward; audited against all selected source patch extrema.",
+  "quantum_world_cm": 0.4892367906066536,
+  "max_extrema_error_world_cm": 0.48541462818008085,
+  "header_nodes": 21845,
+  "header_tail": {
+    "offset": 2097220,
+    "bytes": 2816,
+    "sha256": "330d374abf198161165872f940b891e941012c584ce4f07481e9abe8e875ea4e",
+    "interpretation": "Opaque source tail retained; not needed to locate selected LOD0 samples."
+  },
+  "patches": [
+    {
+      "node": 8777,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1166200,
+      "byte_count": 4900,
+      "source_block_sha256": "0b4ce7317033253c9892f25d83599b86655ec747c9b5bd80d3fdd1582ed781c5",
+      "source_minimum": -195.984375,
+      "source_maximum": -183.25,
+      "extrema_error_local": 0.003883317025440647
+    },
+    {
+      "node": 8778,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1171100,
+      "byte_count": 4900,
+      "source_block_sha256": "81e0a58a7983b5e1db05cf2a109f5d13d067c32ab76942998ad7b74ea1d73f67",
+      "source_minimum": -200.0,
+      "source_maximum": -189.0234375,
+      "extrema_error_local": 0.002002813111545265
+    },
+    {
+      "node": 8779,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1176000,
+      "byte_count": 4900,
+      "source_block_sha256": "c22056d12ad0e9025785c0693bef95d429d03077ffe20626f261f15428eebc8a",
+      "source_minimum": -197.65625,
+      "source_maximum": -184.125,
+      "extrema_error_local": 0.003241193737778758
+    },
+    {
+      "node": 8780,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1180900,
+      "byte_count": 4900,
+      "source_block_sha256": "f21a5bc7540affced930d99f7ab43b8d1b32d889751f8d8f40b2652942ea8b78",
+      "source_minimum": -200.0,
+      "source_maximum": -194.828125,
+      "extrema_error_local": 0.0016205968688609573
+    },
+    {
+      "node": 8787,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1215200,
+      "byte_count": 4900,
+      "source_block_sha256": "7c473396eea0560903276b4fe1b812ea278a808cd10375b557371961de7b046c",
+      "source_minimum": -200.140625,
+      "source_maximum": -184.9765625,
+      "extrema_error_local": 0.0019110812133078525
+    },
+    {
+      "node": 8788,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1220100,
+      "byte_count": 4900,
+      "source_block_sha256": "726fc52f5e9881019864ec9ada436e2140afb73dd44ea43a9221a0d6279a6250",
+      "source_minimum": -200.3828125,
+      "source_maximum": -196.71875,
+      "extrema_error_local": 0.001406555772973661
+    },
+    {
+      "node": 8789,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1225000,
+      "byte_count": 4900,
+      "source_block_sha256": "8bd871afc5eb7f01aac88d89999605af7eeb1a1d719c5412306ca6528cfe2a64",
+      "source_minimum": -200.1171875,
+      "source_maximum": -190.8046875,
+      "extrema_error_local": 0.0015747309197706727
+    },
+    {
+      "node": 8790,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1229900,
+      "byte_count": 4900,
+      "source_block_sha256": "ce93deeb0a3807d160bb509ad409af2a01195d070be19baa790bab6679c454b1",
+      "source_minimum": -200.546875,
+      "source_maximum": -198.234375,
+      "extrema_error_local": 0.0010702054794364813
+    },
+    {
+      "node": 8836,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1450400,
+      "byte_count": 4900,
+      "source_block_sha256": "2161e8f16f81ebfc49e7847c5f28a03746f7f5d5f3338153de6870e88b7ee3af",
+      "source_minimum": -199.9765625,
+      "source_maximum": -194.0546875,
+      "extrema_error_local": 0.0038680283757344114
+    },
+    {
+      "node": 8837,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1455300,
+      "byte_count": 4900,
+      "source_block_sha256": "454b63d2bc2fc308d689f5120e7ae6e3b808ed2c6281dd2650e2f25791f3a646",
+      "source_minimum": -200.4453125,
+      "source_maximum": -195.2265625,
+      "extrema_error_local": 0.002400318003907387
+    },
+    {
+      "node": 8838,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1460200,
+      "byte_count": 4900,
+      "source_block_sha256": "29bc70fc96f43679f70ca91013f367ff0fc0e04e56daeae067a96c277aecb510",
+      "source_minimum": -199.4921875,
+      "source_maximum": -196.3125,
+      "extrema_error_local": 0.0029201320939478137
+    },
+    {
+      "node": 8839,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1465100,
+      "byte_count": 4900,
+      "source_block_sha256": "b99e644bf17c0f3c15a71995adcd76a69e14881b03cd21d9f324d27b4974cd0b",
+      "source_minimum": -201.546875,
+      "source_maximum": -197.484375,
+      "extrema_error_local": 0.003027152641891462
+    },
+    {
+      "node": 8841,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1474900,
+      "byte_count": 4900,
+      "source_block_sha256": "c28b2b9dcb4ab96bc0367995984759610ac5fdff552960a7bea01238698a98e4",
+      "source_minimum": -203.8046875,
+      "source_maximum": -197.3984375,
+      "extrema_error_local": 0.0035316780821972316
+    },
+    {
+      "node": 8842,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1479800,
+      "byte_count": 4900,
+      "source_block_sha256": "16318465409e8107f866bce5870b3e4774d4d34b55825e0a8c80f7e6efe9218d",
+      "source_minimum": -205.609375,
+      "source_maximum": -198.3125,
+      "extrema_error_local": 0.0031494618395413454
+    },
+    {
+      "node": 8843,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1484700,
+      "byte_count": 4900,
+      "source_block_sha256": "1ffd26cb1d0a7d723986d95bd95ed05d332a3ccedc31c8c60845b479314a01d4",
+      "source_minimum": -203.828125,
+      "source_maximum": -199.25,
+      "extrema_error_local": 0.003577544031315938
+    },
+    {
+      "node": 8844,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1489600,
+      "byte_count": 4900,
+      "source_block_sha256": "cb5831bdccf6797178ba2d47600ff24c8229a30002355b1d3de88693b965c5a3",
+      "source_minimum": -205.4609375,
+      "source_maximum": -203.09375,
+      "extrema_error_local": 0.002858977495122872
+    },
+    {
+      "node": 8846,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1499400,
+      "byte_count": 4900,
+      "source_block_sha256": "ffaf0f2870ce8cb4b2b1f5cfcf17c96e3e662504efdfe20cfd37ecf9f23caf1f",
+      "source_minimum": -199.4453125,
+      "source_maximum": -196.8046875,
+      "extrema_error_local": 0.002828400195710401
+    },
+    {
+      "node": 8847,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1504300,
+      "byte_count": 4900,
+      "source_block_sha256": "09b52dc0acd54359de5f161fed879950693ceb779e049338837c149dd1954d0f",
+      "source_minimum": -229.1953125,
+      "source_maximum": -197.46875,
+      "extrema_error_local": 0.0028742661448291074
+    },
+    {
+      "node": 8848,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1509200,
+      "byte_count": 4900,
+      "source_block_sha256": "3a737b379befdb7615b48ee0ca9ceaa5038f565181d350383b1352a246669870",
+      "source_minimum": -199.609375,
+      "source_maximum": -198.1640625,
+      "extrema_error_local": 0.0031494618395413454
+    },
+    {
+      "node": 8849,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1514100,
+      "byte_count": 4900,
+      "source_block_sha256": "1f702967f7bc64c227a033a59ebb41d3be9cf15e65aa9a60ee91c698bd506962",
+      "source_minimum": -233.2109375,
+      "source_maximum": -198.609375,
+      "extrema_error_local": 0.002369740704494916
+    },
+    {
+      "node": 8851,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1523900,
+      "byte_count": 4900,
+      "source_block_sha256": "21f1ca03f9988fbfa089356283c710bc979033c4181e6327781d075febe83f3b",
+      "source_minimum": -219.5,
+      "source_maximum": -199.3359375,
+      "extrema_error_local": 0.002935420743654049
+    },
+    {
+      "node": 8852,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1528800,
+      "byte_count": 4900,
+      "source_block_sha256": "357d397ac1549bda5bcfbd00f3715d6d62b9cc4e3dac6bdb61d717d613fc3519",
+      "source_minimum": -203.6328125,
+      "source_maximum": -199.3046875,
+      "extrema_error_local": 0.0031953277886600517
+    },
+    {
+      "node": 8853,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1533700,
+      "byte_count": 4900,
+      "source_block_sha256": "7317b821d1e870717a6798ba5d16ce818289437e21ad2c5531c003edef71d7cc",
+      "source_minimum": -233.203125,
+      "source_maximum": -197.7265625,
+      "extrema_error_local": 0.003378791585134877
+    },
+    {
+      "node": 8854,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1538600,
+      "byte_count": 4900,
+      "source_block_sha256": "85aba4e9204fa110b8e2d126e2403cca619b95f82db478dc43c44b895cf0b326",
+      "source_minimum": -201.7890625,
+      "source_maximum": -197.71875,
+      "extrema_error_local": 0.0035011007827847607
+    },
+    {
+      "node": 8857,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1553300,
+      "byte_count": 4900,
+      "source_block_sha256": "9d4d5c68291bfff52621e87013e2af4a00073b9e09c9a01a655c4a5a9dd7f071",
+      "source_minimum": -205.2265625,
+      "source_maximum": -196.515625,
+      "extrema_error_local": 0.002400318003907387
+    },
+    {
+      "node": 8858,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1558200,
+      "byte_count": 4900,
+      "source_block_sha256": "86c2b6a72c40b609fd01e194b13e7af0b6d45d6ffcb87cfbf1dea3f6c569da2a",
+      "source_minimum": -202.9453125,
+      "source_maximum": -196.109375,
+      "extrema_error_local": 0.0018499266144829107
+    },
+    {
+      "node": 8859,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1563100,
+      "byte_count": 4900,
+      "source_block_sha256": "22a2bc16ab5b76728f3e53a3103dc51c55052cd42ed9d00622c6fecf9a4897bd",
+      "source_minimum": -204.984375,
+      "source_maximum": -201.0625,
+      "extrema_error_local": 0.0020792563600764424
+    },
+    {
+      "node": 8860,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1568000,
+      "byte_count": 4900,
+      "source_block_sha256": "a3a9d237df66d56dc404f060a575b75a96333d616a1f3931c40d2cf6ea261348",
+      "source_minimum": -204.015625,
+      "source_maximum": -201.359375,
+      "extrema_error_local": 0.0026602250489133894
+    },
+    {
+      "node": 8862,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1577800,
+      "byte_count": 4900,
+      "source_block_sha256": "09a5c97e0763bed3503564e742e72264949f47ac51b538814f0aa92fa0700686",
+      "source_minimum": -202.5390625,
+      "source_maximum": -198.515625,
+      "extrema_error_local": 0.0010549168297302458
+    },
+    {
+      "node": 8863,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1582700,
+      "byte_count": 4900,
+      "source_block_sha256": "db507d014a12f2d0dde78f83e25aab864a74e9ce9c81ba9dfef7351fa4795a63",
+      "source_minimum": -201.8671875,
+      "source_maximum": -197.4140625,
+      "extrema_error_local": 0.003653987279847115
+    },
+    {
+      "node": 8864,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1587600,
+      "byte_count": 4900,
+      "source_block_sha256": "fcd4fb2aa5e6736c80660556f3d2ba731cc77b99b8c09ce7dac2e7e5c61866a7",
+      "source_minimum": -203.546875,
+      "source_maximum": -199.9609375,
+      "extrema_error_local": 0.0038374510763219405
+    },
+    {
+      "node": 8865,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1592500,
+      "byte_count": 4900,
+      "source_block_sha256": "1da761f5db58c6b91981d857ef76ae5136103e4c26b3c1cc0ac234adb707f20e",
+      "source_minimum": -201.9140625,
+      "source_maximum": -197.953125,
+      "extrema_error_local": 0.003822162426615705
+    },
+    {
+      "node": 8867,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1602300,
+      "byte_count": 4900,
+      "source_block_sha256": "51b1c91670c17d81f7f22fd8d5cb898895449eeb8638efc74264486d872f84f0",
+      "source_minimum": -203.8828125,
+      "source_maximum": -199.9296875,
+      "extrema_error_local": 0.0037762964774969987
+    },
+    {
+      "node": 8868,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1607200,
+      "byte_count": 4900,
+      "source_block_sha256": "2642d75d413f077b81647222fa2444321c7f0a84e9fc43fec4da4f6179d4058c",
+      "source_minimum": -202.8046875,
+      "source_maximum": -199.3984375,
+      "extrema_error_local": 0.0027366682974729883
+    },
+    {
+      "node": 8869,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1612100,
+      "byte_count": 4900,
+      "source_block_sha256": "7851e028e717bda6175790462efe9c9fd62f0d78b6219a936f4b58dec645d3bb",
+      "source_minimum": -206.1953125,
+      "source_maximum": -198.3203125,
+      "extrema_error_local": 0.0006268346379556533
+    },
+    {
+      "node": 8870,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1617000,
+      "byte_count": 4900,
+      "source_block_sha256": "8a5e2364da38b97b361cbaf8f4a791a1c824927cabd0c888bc3ec3b485136d53",
+      "source_minimum": -203.28125,
+      "source_maximum": -197.4140625,
+      "extrema_error_local": 0.0027672455968854592
+    },
+    {
+      "node": 8872,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1626800,
+      "byte_count": 4900,
+      "source_block_sha256": "ebba41ab0c1483b049eaafd6e6fd42acf1e0a1e550da0c4429bcc289ae46601e",
+      "source_minimum": -201.359375,
+      "source_maximum": -199.140625,
+      "extrema_error_local": 0.0026602250489133894
+    },
+    {
+      "node": 8873,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1631700,
+      "byte_count": 4900,
+      "source_block_sha256": "6dd0ca7f702e46ae1a651c5fa5fcb830d5c8626499cbdb0e5f2b9ef8fce19b01",
+      "source_minimum": -199.9609375,
+      "source_maximum": -198.1484375,
+      "extrema_error_local": 0.0038374510763219405
+    },
+    {
+      "node": 8874,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1636600,
+      "byte_count": 4900,
+      "source_block_sha256": "05ff968a91f618e7bc7c1b331ed7511d614300d64484bd986b2fa12046613fad",
+      "source_minimum": -202.6953125,
+      "source_maximum": -198.921875,
+      "extrema_error_local": 0.0018040606653642044
+    },
+    {
+      "node": 8875,
+      "tile": [
+        5,
+        2
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 1641500,
+      "byte_count": 4900,
+      "source_block_sha256": "d538d8d12f04875ba86184613f96fc1e700bc4464fe755b34615097a63a9c215",
+      "source_minimum": -203.4296875,
+      "source_maximum": -198.53125,
+      "extrema_error_local": 0.00279782289629793
+    },
+    {
+      "node": 9247,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 137200,
+      "byte_count": 4900,
+      "source_block_sha256": "2b4c612ce849576f30d341463deac13cc2b09c79616a299fc61718e5d09580d4",
+      "source_minimum": -200.5234375,
+      "source_maximum": -198.953125,
+      "extrema_error_local": 0.0018652152641891462
+    },
+    {
+      "node": 9248,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 142100,
+      "byte_count": 4900,
+      "source_block_sha256": "b06e344d8d909b6a18c650e39acbdc99b1345bf8388280ec66c93fcfbc149b03",
+      "source_minimum": -201.5,
+      "source_maximum": -198.2265625,
+      "extrema_error_local": 0.002935420743654049
+    },
+    {
+      "node": 9249,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 147000,
+      "byte_count": 4900,
+      "source_block_sha256": "613b817cb98f745aafb7a284d851ebe4781e549b94a2d4819d870d8983e304af",
+      "source_minimum": -200.5546875,
+      "source_maximum": -198.4296875,
+      "extrema_error_local": 0.0010854941291427167
+    },
+    {
+      "node": 9250,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 151900,
+      "byte_count": 4900,
+      "source_block_sha256": "750312b344567d3ee7a1af17d033e53c3bb4ff140d880a12a716aaff000959a4",
+      "source_minimum": -205.4921875,
+      "source_maximum": -197.734375,
+      "extrema_error_local": 0.0033940802348411125
+    },
+    {
+      "node": 9257,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 186200,
+      "byte_count": 4900,
+      "source_block_sha256": "ce1c03e74068147ed895ac3b9b4149fb1bb582b4e7f8fd9c5c3e2570ca0f871d",
+      "source_minimum": -200.140625,
+      "source_maximum": -196.65625,
+      "extrema_error_local": 0.0012842465753237775
+    },
+    {
+      "node": 9258,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 191100,
+      "byte_count": 4900,
+      "source_block_sha256": "17f8fd3f76ab567ef9492f2f2c482e0eacc8d36447c4979918587f4b1ac0e009",
+      "source_minimum": -205.9453125,
+      "source_maximum": -195.6796875,
+      "extrema_error_local": 0.0038068737769094696
+    },
+    {
+      "node": 9259,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 196000,
+      "byte_count": 4900,
+      "source_block_sha256": "371b91cd5180cda7fa7db4c8a5ad587232a17a4e771bb6e77fecb56d2302657a",
+      "source_minimum": -199.953125,
+      "source_maximum": -195.0390625,
+      "extrema_error_local": 0.003822162426615705
+    },
+    {
+      "node": 9260,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 200900,
+      "byte_count": 4900,
+      "source_block_sha256": "27e8743be88984769e27032ed17f8d9298403d6458471dacd3bfdf00b8c9317f",
+      "source_minimum": -204.015625,
+      "source_maximum": -195.078125,
+      "extrema_error_local": 0.0021098336594889133
+    },
+    {
+      "node": 9289,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 343000,
+      "byte_count": 4900,
+      "source_block_sha256": "6fccdd6da225f695f4a80830c8f0e64807549066b8c7c58d4e72595b8cb0d43c",
+      "source_minimum": -200.59375,
+      "source_maximum": -195.3125,
+      "extrema_error_local": 0.0025684931506759767
+    },
+    {
+      "node": 9290,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 347900,
+      "byte_count": 4900,
+      "source_block_sha256": "5f013be192a1e1d4f4916a809a38e176d6fcf7a72a582ef1142177c170257321",
+      "source_minimum": -200.671875,
+      "source_maximum": -195.2890625,
+      "extrema_error_local": 0.0025226272015572704
+    },
+    {
+      "node": 9291,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 352800,
+      "byte_count": 4900,
+      "source_block_sha256": "77b3c5a428b8c3e6529543f70cdaa559808c306832432e97bf9f7237a9058b6a",
+      "source_minimum": -200.5546875,
+      "source_maximum": -197.1640625,
+      "extrema_error_local": 0.0022780088062575032
+    },
+    {
+      "node": 9292,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 357700,
+      "byte_count": 4900,
+      "source_block_sha256": "83ab15ea17637f603c47eb240d64fe8814e4a99eb183bc80c21c92e849c6349c",
+      "source_minimum": -199.7734375,
+      "source_maximum": -197.2734375,
+      "extrema_error_local": 0.0034705234833722898
+    },
+    {
+      "node": 9299,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 392000,
+      "byte_count": 4900,
+      "source_block_sha256": "fd1b44ae2ff0aaff1f4ee80a21f4f8984d79b95569173e6b3bd15724b4c80325",
+      "source_minimum": -201.4296875,
+      "source_maximum": -197.1796875,
+      "extrema_error_local": 0.00279782289629793
+    },
+    {
+      "node": 9300,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 396900,
+      "byte_count": 4900,
+      "source_block_sha256": "188dc73d6cf92aa6d24237544fbc620850540150979126b43290222bf317f025",
+      "source_minimum": -201.4765625,
+      "source_maximum": -198.734375,
+      "extrema_error_local": 0.002889554794535343
+    },
+    {
+      "node": 9306,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 421400,
+      "byte_count": 4900,
+      "source_block_sha256": "b6b96b276abe06f38bf66da0c37a9ac536a8f2c4067e1f56a369e316feaf8698",
+      "source_minimum": -200.7734375,
+      "source_maximum": -198.328125,
+      "extrema_error_local": 0.0015135763209173092
+    },
+    {
+      "node": 9307,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 426300,
+      "byte_count": 4900,
+      "source_block_sha256": "bae2a44cdf7fd384b44e61d91c0b22a96b6c9aeb6382eb21d29b325ae7710b54",
+      "source_minimum": -200.5,
+      "source_maximum": -198.6796875,
+      "extrema_error_local": 0.0013301125244424838
+    },
+    {
+      "node": 9308,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 431200,
+      "byte_count": 4900,
+      "source_block_sha256": "bea51d9fae3b778e7542623c83f9e70766fbfe92e81d3fe6be130aa5b85e2726",
+      "source_minimum": -204.8125,
+      "source_maximum": -199.7265625,
+      "extrema_error_local": 0.003378791585134877
+    },
+    {
+      "node": 9309,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 436100,
+      "byte_count": 4900,
+      "source_block_sha256": "e9e523bebf6d05b08c2d9e95a8e53016d2d5412916d49443bc5039b824c36a9e",
+      "source_minimum": -203.453125,
+      "source_maximum": -199.8671875,
+      "extrema_error_local": 0.003653987279847115
+    },
+    {
+      "node": 9311,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 445900,
+      "byte_count": 4900,
+      "source_block_sha256": "c530b9475f4f091233ca3ec95cb5203ad7c98c8cddc0cbc8b2ef4339ada711c9",
+      "source_minimum": -200.53125,
+      "source_maximum": -197.796875,
+      "extrema_error_local": 0.003516389432490996
+    },
+    {
+      "node": 9312,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 450800,
+      "byte_count": 4900,
+      "source_block_sha256": "626813ffb6bcd9ed40ee403841cec93364cb28db37a04b510d0ff8eecff7c17f",
+      "source_minimum": -210.7265625,
+      "source_maximum": -197.7890625,
+      "extrema_error_local": 0.0035011007827847607
+    },
+    {
+      "node": 9313,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 455700,
+      "byte_count": 4900,
+      "source_block_sha256": "28c8e21e6f87bedaa13fb8a0cd1e6f332123d6707af425de1f6ae413164ed653",
+      "source_minimum": -214.640625,
+      "source_maximum": -199.7734375,
+      "extrema_error_local": 0.0034705234833722898
+    },
+    {
+      "node": 9314,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 460600,
+      "byte_count": 4900,
+      "source_block_sha256": "31eea05ce7fc9310f786d75cc48f063498c67e0827c331762d8d6ffcdbafcba3",
+      "source_minimum": -214.015625,
+      "source_maximum": -199.7421875,
+      "extrema_error_local": 0.003409368884547348
+    },
+    {
+      "node": 9316,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 470400,
+      "byte_count": 4900,
+      "source_block_sha256": "70e323bb43744356e23ed44ff5a57a674724c48a79d49a3e23d3f9ac5b644f92",
+      "source_minimum": -206.7890625,
+      "source_maximum": -202.265625,
+      "extrema_error_local": 0.00154415362032978
+    },
+    {
+      "node": 9317,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 475300,
+      "byte_count": 4900,
+      "source_block_sha256": "08763c7e81ad3e7a42f8f5248f5846248dd6c82646694412e5fff44c7463f5b5",
+      "source_minimum": -206.171875,
+      "source_maximum": -201.578125,
+      "extrema_error_local": 0.0030883072407164036
+    },
+    {
+      "node": 9318,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 480200,
+      "byte_count": 4900,
+      "source_block_sha256": "d1f8a372381562a66e4233aa31e5b0c295de1b8d5fcb553a1cc0d8798f35f27c",
+      "source_minimum": -205.5390625,
+      "source_maximum": -199.6015625,
+      "extrema_error_local": 0.00313417318983511
+    },
+    {
+      "node": 9319,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 485100,
+      "byte_count": 4900,
+      "source_block_sha256": "ef1ab3a9760e957002082fd4f9e7643ebefa6aa2f180c9bd96b8d46a7069411a",
+      "source_minimum": -204.0859375,
+      "source_maximum": -196.953125,
+      "extrema_error_local": 0.0018652152641891462
+    },
+    {
+      "node": 9321,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 494900,
+      "byte_count": 4900,
+      "source_block_sha256": "ddba6192d0140278dd2a3616570d15e9c30a030010df99480b950adb16a6e4b9",
+      "source_minimum": -216.453125,
+      "source_maximum": -203.1640625,
+      "extrema_error_local": 0.0022780088062575032
+    },
+    {
+      "node": 9322,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 499800,
+      "byte_count": 4900,
+      "source_block_sha256": "f46e4ae4c3f8f444811c01cdc5a066c3aa0c496d43ff8a0107350d4896b0e345",
+      "source_minimum": -216.453125,
+      "source_maximum": -207.75,
+      "extrema_error_local": 0.0034246575342535834
+    },
+    {
+      "node": 9323,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 504700,
+      "byte_count": 4900,
+      "source_block_sha256": "130745d2a6bdaa9cf466ceb18aac6e25c7dd696b7f9fadf5d70253eeb0a6c770",
+      "source_minimum": -213.5390625,
+      "source_maximum": -196.3359375,
+      "extrema_error_local": 0.0030118639921852264
+    },
+    {
+      "node": 9324,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 509600,
+      "byte_count": 4900,
+      "source_block_sha256": "a76e3ac125fc7bfe63915e1281602d8a548c58a2b20a262d6777a1c87559b490",
+      "source_minimum": -213.6796875,
+      "source_maximum": -201.5234375,
+      "extrema_error_local": 0.0032870596868974644
+    },
+    {
+      "node": 9327,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 524300,
+      "byte_count": 4900,
+      "source_block_sha256": "e8a78720ac5c83b84d0561cf93e2ee72f569d240a130830bf08885038c84e84a",
+      "source_minimum": -214.875,
+      "source_maximum": -201.7890625,
+      "extrema_error_local": 0.0035011007827847607
+    },
+    {
+      "node": 9328,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 529200,
+      "byte_count": 4900,
+      "source_block_sha256": "42a43de1459539acdb484c9808958ffbb605b592b06966460b4fa99027d60efe",
+      "source_minimum": -211.5078125,
+      "source_maximum": -196.2421875,
+      "extrema_error_local": 0.0029507093933602846
+    },
+    {
+      "node": 9329,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 534100,
+      "byte_count": 4900,
+      "source_block_sha256": "1c7e5bf37ba42ac99cee64fef6dae8355338d8349c7940af7b6e5592ccc6265f",
+      "source_minimum": -215.6953125,
+      "source_maximum": -209.3203125,
+      "extrema_error_local": 0.0033176369863099353
+    },
+    {
+      "node": 9330,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 539000,
+      "byte_count": 4900,
+      "source_block_sha256": "a39388668af45095e702262aebbffd984191fb0cc7456ed92522c58764aa72db",
+      "source_minimum": -213.6953125,
+      "source_maximum": -198.4375,
+      "extrema_error_local": 0.0033176369863099353
+    },
+    {
+      "node": 9332,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 548800,
+      "byte_count": 4900,
+      "source_block_sha256": "7425a7c3001efe74f214b3fac58e4b6a0d7cabe80495f861f29ac8303cf651bc",
+      "source_minimum": -203.1953125,
+      "source_maximum": -197.21875,
+      "extrema_error_local": 0.0023850293542011514
+    },
+    {
+      "node": 9333,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 553700,
+      "byte_count": 4900,
+      "source_block_sha256": "285d8d07940515d2a8fd78efde3c7fef85c82f41e50e55d7799f9c93f99752b5",
+      "source_minimum": -203.7890625,
+      "source_maximum": -198.75,
+      "extrema_error_local": 0.0035011007827847607
+    },
+    {
+      "node": 9334,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 558600,
+      "byte_count": 4900,
+      "source_block_sha256": "c9450b9d56da135cd73c0d5721a161a5439cb8c7856fdf69b6035e17caa0a41b",
+      "source_minimum": -201.6640625,
+      "source_maximum": -198.78125,
+      "extrema_error_local": 0.0032564823874849935
+    },
+    {
+      "node": 9335,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 563500,
+      "byte_count": 4900,
+      "source_block_sha256": "c949935a006745e1b1e79949d61a5ab7ee1ff44ed5dc9bf87acc364ea381c94b",
+      "source_minimum": -200.5859375,
+      "source_maximum": -198.0703125,
+      "extrema_error_local": 0.0011466487279676585
+    },
+    {
+      "node": 9337,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 573300,
+      "byte_count": 4900,
+      "source_block_sha256": "5cdc49b7c8cdfd934ba64c3690474b4f12db134872b2379d09ac89c2a7e9801e",
+      "source_minimum": -215.203125,
+      "source_maximum": -202.7578125,
+      "extrema_error_local": 0.0023544520547886805
+    },
+    {
+      "node": 9338,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 578200,
+      "byte_count": 4900,
+      "source_block_sha256": "9aed22bfcd57c87dfa9f6a64562cba829eb78bc5973ffa27e397b5b62c971bb1",
+      "source_minimum": -213.6484375,
+      "source_maximum": -199.9765625,
+      "extrema_error_local": 0.0038680283757344114
+    },
+    {
+      "node": 9339,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 583100,
+      "byte_count": 4900,
+      "source_block_sha256": "cc7132dc06c4f37846187a20664d82180782a2f0bd4bb9038930f1e338c3c989",
+      "source_minimum": -207.75,
+      "source_maximum": -197.3828125,
+      "extrema_error_local": 0.0034246575342535834
+    },
+    {
+      "node": 9340,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 588000,
+      "byte_count": 4900,
+      "source_block_sha256": "b82496462b96e5271ca046243f85e5555002b8fbc7a454e915d3409cb3903d9f",
+      "source_minimum": -202.7578125,
+      "source_maximum": -196.296875,
+      "extrema_error_local": 0.0014829990215048383
+    },
+    {
+      "node": 9342,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 597800,
+      "byte_count": 4900,
+      "source_block_sha256": "3b6d68257cee3f4908f0a23e63f39923595466b5182282f5a5c1c5377e3033c1",
+      "source_minimum": -202.109375,
+      "source_maximum": -195.3671875,
+      "extrema_error_local": 0.002675513698619625
+    },
+    {
+      "node": 9343,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 602700,
+      "byte_count": 4900,
+      "source_block_sha256": "9d00b76b51942b037c18e078e785cd141d8ae6dca44f80a13c83a1573d6646ce",
+      "source_minimum": -199.953125,
+      "source_maximum": -196.0859375,
+      "extrema_error_local": 0.003822162426615705
+    },
+    {
+      "node": 9344,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 607600,
+      "byte_count": 4900,
+      "source_block_sha256": "8bec4b3a84e464361c3e153120d25ec16b52bca02f01be9884c4f2d680984392",
+      "source_minimum": -199.9765625,
+      "source_maximum": -195.296875,
+      "extrema_error_local": 0.0038680283757344114
+    },
+    {
+      "node": 9345,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 612500,
+      "byte_count": 4900,
+      "source_block_sha256": "5b4718c7ea6ed1f665f7b2b69bac458d25dd6c566c79827d970f63a2aee75812",
+      "source_minimum": -198.6875,
+      "source_maximum": -195.3125,
+      "extrema_error_local": 0.0025684931506759767
+    },
+    {
+      "node": 9348,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 627200,
+      "byte_count": 4900,
+      "source_block_sha256": "b995a0787c2b537a8ae7bb6e9b0898fb45a66608417a3938dce477069d7c1ea1",
+      "source_minimum": -200.734375,
+      "source_maximum": -195.09375,
+      "extrema_error_local": 0.0021404109589013842
+    },
+    {
+      "node": 9349,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 632100,
+      "byte_count": 4900,
+      "source_block_sha256": "dbad5f7a68c75b971eeab346e59cf34f9ac2545918729004aa17e5b2a10a6f46",
+      "source_minimum": -199.96875,
+      "source_maximum": -194.734375,
+      "extrema_error_local": 0.003852739726028176
+    },
+    {
+      "node": 9350,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 637000,
+      "byte_count": 4900,
+      "source_block_sha256": "ec6c851ea35002aad9cd0ea7d1ac6c3b8c945737721c7d93fa2661a645141efe",
+      "source_minimum": -199.3828125,
+      "source_maximum": -195.9609375,
+      "extrema_error_local": 0.0038374510763219405
+    },
+    {
+      "node": 9351,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 641900,
+      "byte_count": 4900,
+      "source_block_sha256": "f08e0c59fbbea832f0958a71f83efc14850aa41b9aca0b2e1402457b040590b8",
+      "source_minimum": -200.1484375,
+      "source_maximum": -197.0390625,
+      "extrema_error_local": 0.002033390410957736
+    },
+    {
+      "node": 9353,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 651700,
+      "byte_count": 4900,
+      "source_block_sha256": "7789a81edba8e36ecd771cee495232843f25265004783699d6f56b8f97dc5e1c",
+      "source_minimum": -201.5234375,
+      "source_maximum": -190.6953125,
+      "extrema_error_local": 0.0029812866927727555
+    },
+    {
+      "node": 9354,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 656600,
+      "byte_count": 4900,
+      "source_block_sha256": "d3854406fb5aa8c09b911f712c811db0f81748d4054e6e52687d04cc0fb98617",
+      "source_minimum": -204.7421875,
+      "source_maximum": -190.6953125,
+      "extrema_error_local": 0.0014524217220923674
+    },
+    {
+      "node": 9355,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 661500,
+      "byte_count": 4900,
+      "source_block_sha256": "14a6c568e93a8c8ae10943b174983692d271b0c4fb5888401105bd22e9764eae",
+      "source_minimum": -199.1953125,
+      "source_maximum": -190.59375,
+      "extrema_error_local": 0.002339163405082445
+    },
+    {
+      "node": 9356,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 666400,
+      "byte_count": 4900,
+      "source_block_sha256": "bd7c51d618fd2628ec9b3f067ea6da57411c018e9a03b86f3e2bf13a657e6f66",
+      "source_minimum": -194.390625,
+      "source_maximum": -187.640625,
+      "extrema_error_local": 0.003210616438366287
+    },
+    {
+      "node": 9358,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 676200,
+      "byte_count": 4900,
+      "source_block_sha256": "6c62ebeea30048f74e0a7a9e1b8f2d21d419039dfe7c0e6622668e27922a86e1",
+      "source_minimum": -199.9609375,
+      "source_maximum": -198.7890625,
+      "extrema_error_local": 0.0038374510763219405
+    },
+    {
+      "node": 9359,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 681100,
+      "byte_count": 4900,
+      "source_block_sha256": "dc496f7298151b0ab0798a3c83e4aa379f68630bc0dcbb940315d3d0fd3d7ad0",
+      "source_minimum": -199.5859375,
+      "source_maximum": -198.234375,
+      "extrema_error_local": 0.003103595890422639
+    },
+    {
+      "node": 9363,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 700700,
+      "byte_count": 4900,
+      "source_block_sha256": "a1025e47c506650e57f0132a61053266673942e5bcc999fa1a7f1f828a2bb77f",
+      "source_minimum": -199.34375,
+      "source_maximum": -192.125,
+      "extrema_error_local": 0.0026296477495009185
+    },
+    {
+      "node": 9364,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 705600,
+      "byte_count": 4900,
+      "source_block_sha256": "b14b7b599b1ce7fd5c8b78ceee460979db9ad76fdaf4d9f1d71c037a3244d63a",
+      "source_minimum": -194.21875,
+      "source_maximum": -188.90625,
+      "extrema_error_local": 0.0017734833659517335
+    },
+    {
+      "node": 9369,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 730100,
+      "byte_count": 4900,
+      "source_block_sha256": "16c240ee7db5a5238ee091ec104d8766991a429c4cfd33cee8203a3649bc23ae",
+      "source_minimum": -204.390625,
+      "source_maximum": -194.390625,
+      "extrema_error_local": 0.0007644324853117723
+    },
+    {
+      "node": 9370,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 735000,
+      "byte_count": 4900,
+      "source_block_sha256": "ffcb5aa81b1921f1f46c6abe7887798919e073d6b6dac8e4a5cd3767fc4e1f23",
+      "source_minimum": -197.4140625,
+      "source_maximum": -194.1484375,
+      "extrema_error_local": 0.0027672455968854592
+    },
+    {
+      "node": 9371,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 739900,
+      "byte_count": 4900,
+      "source_block_sha256": "67d0eb2934ba063c75abd707265463314de48f6fc927a3720a8ebeecdfdffae6",
+      "source_minimum": -195.9765625,
+      "source_maximum": -185.6328125,
+      "extrema_error_local": 0.0038680283757344114
+    },
+    {
+      "node": 9372,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 744800,
+      "byte_count": 4900,
+      "source_block_sha256": "93fc56388558d95cd94c6b6c6d05c79dd89c542b9fc89b77493452c0af6bb029",
+      "source_minimum": -195.8515625,
+      "source_maximum": -189.1171875,
+      "extrema_error_local": 0.0036234099804346442
+    },
+    {
+      "node": 9374,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 754600,
+      "byte_count": 4900,
+      "source_block_sha256": "cfc8d9f03e738aa4d249e7c86f2573dd7af8d5ca1f737c85fd6d664742b3a511",
+      "source_minimum": -196.296875,
+      "source_maximum": -193.359375,
+      "extrema_error_local": 0.0026602250489133894
+    },
+    {
+      "node": 9375,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 759500,
+      "byte_count": 4900,
+      "source_block_sha256": "8976147e6ed094c83be46f77a3c33a79fe29aff7e9c7e921d39fd03acf922362",
+      "source_minimum": -197.75,
+      "source_maximum": -193.265625,
+      "extrema_error_local": 0.0034246575342535834
+    },
+    {
+      "node": 9376,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 764400,
+      "byte_count": 4900,
+      "source_block_sha256": "59150fc9436fc14b34bb12542fc83479178f11a6d75dae2e7d48ad09b18538a1",
+      "source_minimum": -194.1484375,
+      "source_maximum": -191.3984375,
+      "extrema_error_local": 0.0027366682974445666
+    },
+    {
+      "node": 9377,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 769300,
+      "byte_count": 4900,
+      "source_block_sha256": "27b5911fea673748a5e2467d71ae2b3006a36736c18fb939e3a10c2a479cfb89",
+      "source_minimum": -193.609375,
+      "source_maximum": -192.4609375,
+      "extrema_error_local": 0.0031494618395413454
+    },
+    {
+      "node": 9379,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 779100,
+      "byte_count": 4900,
+      "source_block_sha256": "327f259130b4eed26cc6d0c56b17ab0351c1b0990ef202fd2d4fc8b7491d6350",
+      "source_minimum": -193.2421875,
+      "source_maximum": -188.125,
+      "extrema_error_local": 0.0024308953033198577
+    },
+    {
+      "node": 9380,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 784000,
+      "byte_count": 4900,
+      "source_block_sha256": "e162623ec22c66726f3184dd1ab46c26b312091403ac02b93c50f58a8fcd865b",
+      "source_minimum": -191.3984375,
+      "source_maximum": -187.8203125,
+      "extrema_error_local": 0.0035622553816097025
+    },
+    {
+      "node": 9384,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 803600,
+      "byte_count": 4900,
+      "source_block_sha256": "7608cabe8d5e441da71a7ce69a580616825ed209b8de26dfa540d3f96f19e39d",
+      "source_minimum": -192.4609375,
+      "source_maximum": -190.6328125,
+      "extrema_error_local": 0.0012383806262050712
+    },
+    {
+      "node": 9385,
+      "tile": [
+        5,
+        3
+      ],
+      "rect": [
+        0,
+        0,
+        33,
+        33
+      ],
+      "byte_offset": 808500,
+      "byte_count": 4900,
+      "source_block_sha256": "ced9a7b1817ad6d0fc8c8e8307a19c5dcd1be2baa45a864dd1468c721d85db20",
+      "source_minimum": -193.703125,
+      "source_maximum": -191.2734375,
+      "extrema_error_local": 0.0033329256360161708
+    }
+  ],
+  "tiles": [
+    [
+      5,
+      2
+    ],
+    [
+      5,
+      3
+    ]
+  ],
+  "vertices": 113313,
+  "triangles": 225280,
+  "matching_shared_samples": 6477,
+  "glb_roundtrip_error_cm": 0.0003777371457545087,
+  "triangulation": "Diagnostic fixed-diagonal grid; original engine LOD stitching and triangle-index generation have not been recovered.",
+  "files": {
+    "TerrainMesh.glb": {
+      "sha256": "e986e4f1e24795c9ece2c4335ec88993f9161d18b3139e5c5707730ce4f9e790",
+      "bytes": 4063772
+    },
+    "TerrainSamples.json.gz": {
+      "sha256": "075f4066e0900879e377e0f431718c5983e876316455c8a480a2968a680e2a28",
+      "bytes": 1589844
+    }
+  },
+  "boundary": "Original height samples only. Raw normal bytes retained without guessing their shading decode. Diagnostic GLB is not native map acceptance. Original triangulation, materials, UE import, collision and runtime acceptance remain pending."
+}

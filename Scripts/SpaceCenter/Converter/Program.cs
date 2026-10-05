@@ -6,6 +6,8 @@ using CUE4Parse.UE4.Assets.Exports.Component;
 using CUE4Parse.UE4.Assets.Exports.Component.StaticMesh;
 using CUE4Parse.UE4.Objects.Core.Math;
 using CUE4Parse.UE4.Versions;
+using CUE4Parse.UE4.Assets;
+using CUE4Parse.UE4.Objects.UObject;
 using CUE4Parse_Conversion;
 using CUE4Parse_Conversion.Options;
 using CUE4Parse_Conversion.Textures.BC;
@@ -43,6 +45,11 @@ foreach (var path in request["packages"]!.Values<string>())
     {
         var package = provider.LoadPackage(path!);
         result["export_count"] = package.ExportMapLength;
+        if (mode == "inspect")
+        {
+            result["filter_editor_only"] = package.HasFlags(EPackageFlags.PKG_FilterEditorOnly);
+            result["cooked"] = package.HasFlags(EPackageFlags.PKG_Cooked);
+        }
         var objects = new JArray();
         var failures = new JArray();
         for (var i = 0; i < package.ExportsLazy.Length; i++)
@@ -54,6 +61,21 @@ foreach (var path in request["packages"]!.Values<string>())
                 {
                     var record = JObject.FromObject(obj);
                     record["export_index"] = i;
+                    if (package is Package legacyPackage)
+                    {
+                        var sourceExport = legacyPackage.ExportMap[i];
+                        record["source_export"] = new JObject
+                        {
+                            ["serial_offset"] = sourceExport.SerialOffset,
+                            ["serial_size"] = sourceExport.SerialSize,
+                            ["class_index"] = sourceExport.ClassIndex.Index
+                        };
+                    }
+                    foreach (var property in new[] { "Expressions", "FunctionExpressions" })
+                    {
+                        if (obj.TryGetValue(out FPackageIndex[] indices, property))
+                            record[property + "SourceIndices"] = JToken.FromObject(indices.Select(index => index.Index));
+                    }
                     objects.Add(record);
                 }
                 else if (mode == "layout" && obj is UStaticMeshComponent component)

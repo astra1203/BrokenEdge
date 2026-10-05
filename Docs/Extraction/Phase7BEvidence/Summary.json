@@ -1,0 +1,405 @@
+{
+  "result": "blocked",
+  "phase": "7B",
+  "completed_scope": "Source height recovery and material completeness audit",
+  "base_commit": "948ce3f71d559e4fd1b58998120e6c4ce074b79e",
+  "created_utc": "2026-10-05T10:42:40.642832+00:00",
+  "verification": {
+    "result": "passed",
+    "checks": 20
+  },
+  "blocker": {
+    "graphs_with_removed_nodes": 171,
+    "zero_source_indices": 5091,
+    "raw_arrays_verified": 171,
+    "missing_texture_packages": [
+      "/Game/MaterialLib/Materials_HD/Landscape/EditorOnlyTextures/CMO_Iris_LandscapeTint_HD"
+    ],
+    "required_input": "Unstripped original material/function graphs and missing source dependencies, or equivalent original shader source."
+  },
+  "terrain": {
+    "patches": 110,
+    "vertices": 113313,
+    "diagnostic_triangles": 225280,
+    "repeat_bytes_identical": true
+  },
+  "not_performed": [
+    "Native scene import",
+    "Production map replacement",
+    "Building-group expansion",
+    "Multi-region streaming changes",
+    "UE build/package",
+    "Runtime/network/performance acceptance"
+  ],
+  "diagnostics": {
+    "Phase7BMaterials01": "Dependency names parsed; earlier graph_recovered label did not establish connectivity.",
+    "Phase7BTerrain01": "Rejected round-to-nearest tolerance; all selected extrema prove source downward quantization."
+  },
+  "implementation_sha256": {
+    "Scripts/SpaceCenter/phase7b_source.py": "c44ece6eb535b7646098997c9f525905078187796af8bf8fb2a80ff790a6a559",
+    "Scripts/SpaceCenter/recover_phase7b_materials.py": "61f10cda22923338187ad8084481c66aa34cc1cccce5ec7f9656d7946397d84e",
+    "Scripts/SpaceCenter/recover_phase7b_terrain.py": "fbf53649d1fb3e5044720631785c2ff6cab93c1b9c152f24dd76b7d2e51d9af3",
+    "Scripts/SpaceCenter/verify_phase7b_recovery.py": "020d160a41a8553775895570901fc0f27596f6792e43a24a3c7a9974113dbcc1",
+    "Scripts/SpaceCenter/archive_phase7b_recovery.py": "467f0a844453e5a08f90e6d7e17c688143bfc69e268b15c05969395d118a01ea",
+    "Scripts/SpaceCenter/Converter/Program.cs": "6e8c9853d947f33562b104ae4353f4bacacb707e933ad107788acf1ce71a1ec5"
+  },
+  "copied_files": [
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\TerrainRuns\\Phase7BTerrainFinal01\\Report.json",
+      "archive": "terrain/Report.json",
+      "original_bytes": 51083,
+      "original_sha256": "bb064c3ad723fcd1b91cdc662a363e13c9de7fcaffcd531aea7680d65ae6decc",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\TerrainRuns\\Phase7BTerrainFinal01\\SourceExtractions.json",
+      "archive": "terrain/SourceExtractions.json",
+      "original_bytes": 1637,
+      "original_sha256": "d018bb1864881af58b51cf39b734020ba120ce85a2ba35a8584a45b4dcfd3b4d",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\TerrainRuns\\Phase7BTerrainFinal01\\TerrainMesh.glb",
+      "archive": "terrain/TerrainMesh.glb",
+      "original_bytes": 4063772,
+      "original_sha256": "e986e4f1e24795c9ece2c4335ec88993f9161d18b3139e5c5707730ce4f9e790",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\TerrainRuns\\Phase7BTerrainFinal01\\TerrainSamples.json.gz",
+      "archive": "terrain/TerrainSamples.json.gz",
+      "original_bytes": 1589844,
+      "original_sha256": "075f4066e0900879e377e0f431718c5983e876316455c8a480a2968a680e2a28",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\MaterialRuns\\Phase7BMaterials03\\Report.json",
+      "archive": "materials/Report.json",
+      "original_bytes": 441864,
+      "original_sha256": "8ec9b0d05113f3729830146bfbbe7af88dea14f5a8d88a0445edf76ea8fb4986",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\MaterialRuns\\Phase7BMaterials03\\Graph.json",
+      "archive": "materials/Graph.json.gz",
+      "original_bytes": 9847957,
+      "original_sha256": "ec92917d1ef2e864a16c07871dcb79a52f7b210ef20e0303ee9df430b95571bb",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\MaterialRuns\\Phase7BMaterials03\\CustomExpressions.json",
+      "archive": "materials/CustomExpressions.json",
+      "original_bytes": 4,
+      "original_sha256": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\VerificationRuns\\Phase7BVerification01\\Report.json",
+      "archive": "Verification.json",
+      "original_bytes": 3005,
+      "original_sha256": "dd6e6ffd43ea146248c1d389134192a1b8430162f55e491c898fb0a21befeeb6",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\TerrainRuns\\Phase7BTerrainFinalRepeat01\\Report.json",
+      "archive": "repeat/Report.json",
+      "original_bytes": 51083,
+      "original_sha256": "bb064c3ad723fcd1b91cdc662a363e13c9de7fcaffcd531aea7680d65ae6decc",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\MaterialRuns\\Phase7BMaterials03\\round-1\\SourceExtractions.json",
+      "archive": "materials/round-1/SourceExtractions.json.gz",
+      "original_bytes": 425457,
+      "original_sha256": "595f3496236e137aa0a7df31dc8694631996cba084fd92b7d0cd2120e5ec4cb5",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\MaterialRuns\\Phase7BMaterials03\\round-2\\SourceExtractions.json",
+      "archive": "materials/round-2/SourceExtractions.json.gz",
+      "original_bytes": 26011,
+      "original_sha256": "3803432ce1102672b5b7dfbcc5b5865a1fc9d4785d2efcacc3ba42e15e9bb8f4",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\MaterialRuns\\Phase7BMaterials03\\round-3\\SourceExtractions.json",
+      "archive": "materials/round-3/SourceExtractions.json.gz",
+      "original_bytes": 92045,
+      "original_sha256": "2b1c341598c162ab48471ca996b5df26a6b7290b81334307bd5e26567f0b683b",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\MaterialRuns\\Phase7BMaterials03\\round-4\\SourceExtractions.json",
+      "archive": "materials/round-4/SourceExtractions.json.gz",
+      "original_bytes": 5576,
+      "original_sha256": "cbc3a5d8e3feca45bf04fed7ac6fec3df424e9ee4cdc75e3ceb4144d4c67b3c6",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\SourceRuns\\Phase7BSource01\\Report.json",
+      "archive": "source/Phase7BSource01/Report.json",
+      "original_bytes": 413,
+      "original_sha256": "6e61307826be47e59e637e8e763cc201933ad2c16fd01be9b1033a389ae9a0cc",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\SourceRuns\\Phase7BSource01\\SourceExtractions.json",
+      "archive": "source/Phase7BSource01/SourceExtractions.json",
+      "original_bytes": 6425,
+      "original_sha256": "54b6d1bc0bbbdc855001f5bfd1d6107cc206bf81c2a6f70b3baa2a9159b83dbc",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\SourceRuns\\Phase7BSource01\\Request.json",
+      "archive": "source/Phase7BSource01/Request.json",
+      "original_bytes": 1049,
+      "original_sha256": "6f385fe329dd87da35d2740f6af9e3cb792481a5ec2a8befa663943ad4dbf608",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\SourceRuns\\Phase7BSource01\\Parsed\\Packages.json",
+      "archive": "source/Phase7BSource01/Parsed/Packages.json.gz",
+      "original_bytes": 302094,
+      "original_sha256": "444f78b361e67cf8d005357e15188b445a5b3a89b96e81c793822076bd667a22",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\SourceRuns\\Phase7BSource02\\Report.json",
+      "archive": "source/Phase7BSource02/Report.json",
+      "original_bytes": 413,
+      "original_sha256": "332798e1c45406ffbc330aa84e7eced6c961f8cd117261eb5627c94096e46d4f",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\SourceRuns\\Phase7BSource02\\SourceExtractions.json",
+      "archive": "source/Phase7BSource02/SourceExtractions.json",
+      "original_bytes": 4439,
+      "original_sha256": "f9440a0f8c673fd6e46e40fec326093dacd2248e17a3e04269cf872f56aa3e62",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\SourceRuns\\Phase7BSource02\\Request.json",
+      "archive": "source/Phase7BSource02/Request.json",
+      "original_bytes": 829,
+      "original_sha256": "6a87b0465def531bab0bb5af6c3409e5dd0f1dad26a33e9bd08fc72dc5a19b85",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\SourceRuns\\Phase7BSource02\\Parsed\\Packages.json",
+      "archive": "source/Phase7BSource02/Parsed/Packages.json.gz",
+      "original_bytes": 466814,
+      "original_sha256": "e1afb2fbb45b607d9de20d5e07e8c583fa3b6de2987264ab7fe4cda6018f4d05",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Source\\DeltaForce\\Content\\Maps\\BuildMaps_HD\\SpaceCenter_Ma1\\Runtime\\LandscapeCDLOD\\Asset\\CDLODAsset_Header.uasset",
+      "archive": "terrain/source/CDLODAsset_Header.uasset.gz",
+      "original_bytes": 656,
+      "original_sha256": "7bd64ab4f0b06a6c6c622eefcb2888a5a8c34a82b1aae4bbd1c6606882b493e2",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Source\\DeltaForce\\Content\\Maps\\BuildMaps_HD\\SpaceCenter_Ma1\\Runtime\\LandscapeCDLOD\\Asset\\CDLODAsset_Header.uexp",
+      "archive": "terrain/source/CDLODAsset_Header.uexp.gz",
+      "original_bytes": 2100060,
+      "original_sha256": "5ac5ec3e7c4af6048afb6e32503c5296cb630796bece21aa0b7dc5cfb6ca4d84",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Source\\DeltaForce\\Content\\Maps\\BuildMaps_HD\\SpaceCenter_Ma1\\Runtime\\LandscapeCDLOD\\Asset\\CDLODAsset_Heightmap_x5_y2.uasset",
+      "archive": "terrain/source/CDLODAsset_Heightmap_x5_y2.uasset.gz",
+      "original_bytes": 674,
+      "original_sha256": "4d5c6181481ca69e1220159ea536abf81b3df5a53ac193faaad4e9d27c7fe244",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Source\\DeltaForce\\Content\\Maps\\BuildMaps_HD\\SpaceCenter_Ma1\\Runtime\\LandscapeCDLOD\\Asset\\CDLODAsset_Heightmap_x5_y2.uexp",
+      "archive": "terrain/source/CDLODAsset_Heightmap_x5_y2.uexp.gz",
+      "original_bytes": 1646424,
+      "original_sha256": "980899a48ce3b722c76abbef3deb3dbc1d4b004a5a5cf04240b7c97c33d5ab75",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Source\\DeltaForce\\Content\\Maps\\BuildMaps_HD\\SpaceCenter_Ma1\\Runtime\\LandscapeCDLOD\\Asset\\CDLODAsset_Heightmap_x5_y3.uasset",
+      "archive": "terrain/source/CDLODAsset_Heightmap_x5_y3.uasset.gz",
+      "original_bytes": 674,
+      "original_sha256": "f9df5c6775d9bd0b2476a2badbfa949f64a8feda9ee4b434dfc81238411cbb07",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Source\\DeltaForce\\Content\\Maps\\BuildMaps_HD\\SpaceCenter_Ma1\\Runtime\\LandscapeCDLOD\\Asset\\CDLODAsset_Heightmap_x5_y3.uexp",
+      "archive": "terrain/source/CDLODAsset_Heightmap_x5_y3.uexp.gz",
+      "original_bytes": 1646424,
+      "original_sha256": "f7298b6da1f5b47ccdefd759b428a381f1ee6f8def9fe49fbf27a435f89ae7e5",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BSource01-resources\\Report.json",
+      "archive": "resources/Phase7BSource01/Report.json",
+      "original_bytes": 1317,
+      "original_sha256": "8d6c0343321cf85cf0bb99bb45eab54ba9d820d7845d7ae28b29965b47a8eb04",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BSource01-resources\\Task.log",
+      "archive": "resources/Phase7BSource01/Task.log.gz",
+      "original_bytes": 550,
+      "original_sha256": "da9c5cc089d795f996882a0132dfe51f6fd811aff7d93105649c0f196485513f",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BConverter01-resources\\Report.json",
+      "archive": "resources/Phase7BConverter01/Report.json",
+      "original_bytes": 1410,
+      "original_sha256": "b7d6a196c8358f3ff900550328cf6707d2393ac243d661a728bdfd2a22148345",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BConverter01-resources\\Task.log",
+      "archive": "resources/Phase7BConverter01/Task.log.gz",
+      "original_bytes": 3478,
+      "original_sha256": "2611287d3900e63f9614e423a8f869869d57887fad3ec7c1c34aeed7c85cf194",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BSource02-resources\\Report.json",
+      "archive": "resources/Phase7BSource02/Report.json",
+      "original_bytes": 1397,
+      "original_sha256": "148778212e1e4b659a071613c6a023c46d6217995ba53274aa51cdc1cc55bcdf",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BSource02-resources\\Task.log",
+      "archive": "resources/Phase7BSource02/Task.log.gz",
+      "original_bytes": 550,
+      "original_sha256": "970442d98693fb24da7d8fa682185988d218a6b210dae83870971b40434b6676",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BMaterials01-resources\\Report.json",
+      "archive": "resources/Phase7BMaterials01/Report.json",
+      "original_bytes": 1608,
+      "original_sha256": "dd01a281fa3d614e602d372d6947a827281341fb9cbd527b8a70e2ee2872f9ef",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BMaterials01-resources\\Task.log",
+      "archive": "resources/Phase7BMaterials01/Task.log.gz",
+      "original_bytes": 2594,
+      "original_sha256": "b7ecad20374e9b79eee90d6dba9183254ab4aece286ba3b12ee955c20c06b81c",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BMaterials02-resources\\Report.json",
+      "archive": "resources/Phase7BMaterials02/Report.json",
+      "original_bytes": 1885,
+      "original_sha256": "9ecd6a2482745253c20ad2b841bf78d7814b2b393e9f9d3556d98da53bc66185",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BMaterials02-resources\\Task.log",
+      "archive": "resources/Phase7BMaterials02/Task.log.gz",
+      "original_bytes": 2705,
+      "original_sha256": "4eade25eccdb22bf6ca87a44ef1bd59eb99b8d46aaa94817e4814b59494e72e5",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BMaterials03-resources\\Report.json",
+      "archive": "resources/Phase7BMaterials03/Report.json",
+      "original_bytes": 1612,
+      "original_sha256": "b3b344e9090d085e098eb38823223b9b41b68d65d01e474fbddd9e4af412af22",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BMaterials03-resources\\Task.log",
+      "archive": "resources/Phase7BMaterials03/Task.log.gz",
+      "original_bytes": 2705,
+      "original_sha256": "81cd67c8872e61349d1a57837834f9be260b3f417469a083abaf8e6bb2f4a5d1",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BTerrain01-resources\\Report.json",
+      "archive": "resources/Phase7BTerrain01/Report.json",
+      "original_bytes": 1332,
+      "original_sha256": "ba3f2e99c2c6666a5ef3c28a9de63a3ee77e20d711b0002fe8d5299fea851018",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BTerrain01-resources\\Task.log",
+      "archive": "resources/Phase7BTerrain01/Task.log.gz",
+      "original_bytes": 698,
+      "original_sha256": "440d9eef3b893850e3381adc1bf7097162020bae9d9fc45f956c7ac5485721ca",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BTerrain02-resources\\Report.json",
+      "archive": "resources/Phase7BTerrain02/Report.json",
+      "original_bytes": 1323,
+      "original_sha256": "f38993e87a471331623541cb575b6474d905796c2c987f20613abfc4aa65e255",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BTerrain02-resources\\Task.log",
+      "archive": "resources/Phase7BTerrain02/Task.log.gz",
+      "original_bytes": 1491,
+      "original_sha256": "e268199874b7983438a4d6dee57d6e523773eeefdbee43f69904158f8a785f1c",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BTerrainRepeat01-resources\\Report.json",
+      "archive": "resources/Phase7BTerrainRepeat01/Report.json",
+      "original_bytes": 1333,
+      "original_sha256": "d81dce7928c011e38ed6c0490c05d7fbf174603c7faa77f1e19587de3f3639bd",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BTerrainRepeat01-resources\\Task.log",
+      "archive": "resources/Phase7BTerrainRepeat01/Task.log.gz",
+      "original_bytes": 1491,
+      "original_sha256": "e268199874b7983438a4d6dee57d6e523773eeefdbee43f69904158f8a785f1c",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BTerrainFinal01-resources\\Report.json",
+      "archive": "resources/Phase7BTerrainFinal01/Report.json",
+      "original_bytes": 1334,
+      "original_sha256": "4c4e821fcd4053907db36a639870bd9a66e4ebe8ade754cf622fbb5929435ced",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BTerrainFinal01-resources\\Task.log",
+      "archive": "resources/Phase7BTerrainFinal01/Task.log.gz",
+      "original_bytes": 1694,
+      "original_sha256": "51d0f3c0659e566d6a3d48cef5efb4ee7d27a456ba3fbb108fcb7797915fc455",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BTerrainFinalRepeat01-resources\\Report.json",
+      "archive": "resources/Phase7BTerrainFinalRepeat01/Report.json",
+      "original_bytes": 1340,
+      "original_sha256": "ac28350bc2505f14ba28e5f5a8481554cebcc79f2827c0bf1f7d8826f80c4a6d",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\Extraction\\Phase7BTerrainFinalRepeat01-resources\\Task.log",
+      "archive": "resources/Phase7BTerrainFinalRepeat01/Task.log.gz",
+      "original_bytes": 1694,
+      "original_sha256": "51d0f3c0659e566d6a3d48cef5efb4ee7d27a456ba3fbb108fcb7797915fc455",
+      "gzip": true
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\MaterialRuns\\Phase7BMaterials01\\Report.json",
+      "archive": "diagnostics/Phase7BMaterials01/Report.json",
+      "original_bytes": 211676,
+      "original_sha256": "c7c21bf9bb04d0309d8338c6b90375170b2e3b89769b9b26398833b807945255",
+      "gzip": false
+    },
+    {
+      "source": "Saved\\SpaceCenter\\Phase7B\\MaterialRuns\\Phase7BMaterials02\\Report.json",
+      "archive": "diagnostics/Phase7BMaterials02/Report.json",
+      "original_bytes": 372795,
+      "original_sha256": "c75e8e288132a30180ae5724bb2bf5fc99057f84cd4029ae81bdf91b7b67d69b",
+      "gzip": false
+    }
+  ]
+}
