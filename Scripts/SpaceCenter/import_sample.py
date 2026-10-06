@@ -10,7 +10,12 @@ import struct
 import zlib
 from pathlib import Path
 import traceback
+import sys
 import unreal
+
+sys.path.insert(0,str(Path(unreal.Paths.project_dir())/'Scripts/SpaceCenter'))
+from restoration_generation_guard import assert_legacy_sample_allowed
+assert_legacy_sample_allowed()
 
 BASE_WORK = Path(unreal.Paths.project_saved_dir()) / 'SpaceCenter'
 WORK = Path(os.environ.get('SPACECENTER_WORK', str(BASE_WORK))).resolve()

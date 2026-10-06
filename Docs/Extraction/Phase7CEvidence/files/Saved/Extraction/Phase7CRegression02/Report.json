@@ -1,0 +1,34 @@
+{
+  "group": "regression",
+  "result": "failed",
+  "steps": [
+    {
+      "name": "equipment",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7CRegression02-equipment",
+        "--timeout",
+        "2400",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--tag",
+        "Phase7CRegression02-equipment",
+        "--scenario",
+        "equipment",
+        "--players",
+        "6",
+        "--rendered-clients",
+        "2",
+        "--packaged"
+      ],
+      "pid": 66416,
+      "exit_code": 1
+    }
+  ],
+  "started_utc": "2026-10-06T01:19:04.924853+00:00",
+  "error": "RuntimeError('equipment failed')",
+  "finished_utc": "2026-10-06T01:23:58.137425+00:00"
+}

@@ -1,0 +1,54 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts/SpaceCenter/complete_restoration_geometry.py",
+    "--tag",
+    "Phase7CGeometry01"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T17:51:29.473994+00:00",
+      "c_free_gib": 64.01571273803711,
+      "d_free_gib": 223.90320587158203,
+      "ram_free_gib": 11.170272827148438,
+      "commit_used_gib": 30.889507293701172,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:51:29.477992+00:00",
+      "c_free_gib": 64.01571273803711,
+      "d_free_gib": 223.90320205688477,
+      "ram_free_gib": 11.169300079345703,
+      "commit_used_gib": 30.889507293701172,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:51:34.493730+00:00",
+      "c_free_gib": 64.01570510864258,
+      "d_free_gib": 223.881591796875,
+      "ram_free_gib": 10.874080657958984,
+      "commit_used_gib": 31.205528259277344,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:51:39.064454+00:00",
+      "c_free_gib": 64.01568984985352,
+      "d_free_gib": 223.7569122314453,
+      "ram_free_gib": 11.17453384399414,
+      "commit_used_gib": 30.877704620361328,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 60276,
+  "exit_code": 0
+}

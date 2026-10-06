@@ -24,6 +24,9 @@ public:
 	static void ReattachComponent(USceneComponent* Component, USceneComponent* Parent, FName SocketName);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static void BeginValidationPIE(int32 Players);
+	/** Fix the render target size without changing the user's saved PIE settings. */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static bool SetValidationViewportSize(APlayerController* Controller, int32 Width, int32 Height);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static TArray<UWorld*> GetValidationWorlds();
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")

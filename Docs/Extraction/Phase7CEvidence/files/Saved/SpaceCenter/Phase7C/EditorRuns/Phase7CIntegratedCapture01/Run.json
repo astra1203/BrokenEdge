@@ -1,0 +1,36 @@
+{
+  "task": "capture-integrated",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1920",
+    "-ResY=1080",
+    "-ForceRes",
+    "-ExecCmds=py D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\capture_restoration.py",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-ForceTextureEncodeSpeed=Final",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7C\\EditorRuns\\Phase7CIntegratedCapture01\\Editor.log",
+    "-ini:Engine:[DevOptions.Shaders]:ShaderCompilerCoreCountThreshold=999,[DevOptions.Shaders]:NumUnusedShaderCompilingThreads=8,[DevOptions.Shaders]:NumUnusedShaderCompilingThreadsDuringGame=8,[SystemSettings]:Editor.AsyncTextureCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncStaticMeshCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncAssetCompilationMaxConcurrency=2,[SystemSettings]:Editor.AsyncAssetCompilationMaxMemoryUsage=2"
+  ],
+  "started_utc": "2026-10-06T01:54:46.617255+00:00",
+  "script_sha256": "2dcb0f809c06a8f8daa7a0449d6a0d1ed07480ad2c3817ff57fa14f527ef51d1",
+  "manifest_sha256": "05ce654893c5156adc26abec982303deb7091ab32e35e457eccaf7842afb9a0a",
+  "map_sha256_before": {
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "b4d8f6990b60c45b1cd95f8fbafaf7af3b3802e6287fbaf72e6c52841680b0dc",
+    "Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap": "73bb4de7b70c18cf96cdc52bbac654c047e09e1f7b286edde4bad8c1df1cf42b"
+  },
+  "pid": 66708,
+  "exit_code": 0,
+  "map_sha256_after": {
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "b4d8f6990b60c45b1cd95f8fbafaf7af3b3802e6287fbaf72e6c52841680b0dc",
+    "Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap": "73bb4de7b70c18cf96cdc52bbac654c047e09e1f7b286edde4bad8c1df1cf42b"
+  },
+  "result": "passed",
+  "finished_utc": "2026-10-06T01:59:12.994277+00:00"
+}

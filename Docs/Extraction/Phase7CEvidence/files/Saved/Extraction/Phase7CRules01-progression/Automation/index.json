@@ -1,0 +1,89 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "1EE615944FA208F1ACDA6AA13A38816B",
+			"instanceName": "DESKTOP-M9PA1SF-1740",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "NVIDIA GeForce RTX 4060 Ti",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.05-20.26.22",
+	"succeeded": 4,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.42731094360351562,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Atomicity",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Atomicity",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"1EE615944FA208F1ACDA6AA13A38816B"
+			],
+			"duration": 0.21787440776824951,
+			"dateTime": "2026.10.05-20.26.21",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Economy",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Economy",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"1EE615944FA208F1ACDA6AA13A38816B"
+			],
+			"duration": 0.028189800679683685,
+			"dateTime": "2026.10.05-20.26.21",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Migration",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Migration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"1EE615944FA208F1ACDA6AA13A38816B"
+			],
+			"duration": 0.050612799823284149,
+			"dateTime": "2026.10.05-20.26.22",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Quests",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Quests",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"1EE615944FA208F1ACDA6AA13A38816B"
+			],
+			"duration": 0.13063390552997589,
+			"dateTime": "2026.10.05-20.26.22",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

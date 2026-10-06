@@ -1,0 +1,9 @@
+{
+  "task": "audit",
+  "created": [],
+  "reused": 0,
+  "errors": [
+    "Traceback (most recent call last):\n  File \"D:/SourceFiles/UnrealProjects/BrokenEdge/Scripts/SpaceCenter/import_restoration.py\", line 104, in <module>\n    run(globals())\n  File \"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_world.py\", line 192, in run\n    audit(g)\n  File \"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_audit.py\", line 32, in audit\n    if not isinstance(actual,unreal.Transform):raise RuntimeError('Missing native instance transform')\n                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: Missing native instance transform\n"
+  ],
+  "result": "failed"
+}

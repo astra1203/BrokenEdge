@@ -1,0 +1,25 @@
+{
+  "task": "audit-integrated",
+  "created": [],
+  "reused": 0,
+  "errors": [],
+  "override_sha256": {
+    "overrides.json": "1fb22caeef9120989eb5605baaadc85d918a63aee49e164e0a6bb9d81da19335",
+    "restoration_overrides.json": "a692ebba767f6b528d32532972bc8576e60dcb2be06186234064e1015c07ec76"
+  },
+  "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+  "geometry_sha256": "0413371cc9b754b81f71368fbb08e02f5dc5c474ae171c836f314646df29ff4b",
+  "instances": 33120,
+  "max_position_error_cm": 0.0,
+  "max_rotation_error_deg": 180.0,
+  "max_scale_error": 15.835782,
+  "max_world_geometry_error_cm": 0.0008833506053633755,
+  "max_mesh_bound_error_cm": 0.00091552734375,
+  "rotation_scale_note": "Raw Q/S can differ after negative-scale matrix decomposition; transformed bounds corners must match within 1cm.",
+  "native_actors": 9042,
+  "nanite_enabled_meshes": 2009,
+  "geometry_errors": [],
+  "bounds_errors": [],
+  "texture_role_errors": [],
+  "result": "passed"
+}

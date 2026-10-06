@@ -12,6 +12,7 @@ import unreal
 OUT = Path(os.environ['SPACECENTER_RUN_DIR'])
 SUITE = os.environ['SPACECENTER_SUITE']
 PLAYERS = int(os.environ.get('SPACECENTER_PLAYERS', '1'))
+RESTORATION = os.environ.get('SPACECENTER_RESTORATION_VALIDATION') == '1'
 LIB = unreal.StingerAssetLibrary
 report = {'checks': [], 'captures': [], 'samples': [], 'suite': SUITE, 'players': PLAYERS}
 state = {'phase': 'boot', 'elapsed': 0, 'index': 0, 'phase_start': time.monotonic()}
@@ -49,7 +50,7 @@ def pulse_all(action):
 
 def capture(name, pawn):
     name += '.png'
-    unreal.SystemLibrary.execute_console_command(pawn, 'HighResShot 1280x720 filename=' + str(OUT / name), pawn.get_controller())
+    unreal.SystemLibrary.execute_console_command(pawn, 'HighResShot '+('1920x1080' if RESTORATION else '1280x720')+' filename=' + str(OUT / name), pawn.get_controller())
     report['captures'].append(name)
 
 
@@ -102,6 +103,9 @@ def tick(delta):
             raise TimeoutError('Sample validation timed out: ' + phase)
         if phase == 'boot' and elapsed > 5:
             state['weapon_class'] = unreal.EditorAssetLibrary.load_blueprint_class('/Game/Blueprints/Weapon/BP_AK47')
+            if RESTORATION:
+                unreal.SystemLibrary.execute_console_command(None,'Editor.AsyncAssetCompilationFinishAll')
+                unreal.SystemLibrary.collect_garbage()
             LIB.begin_validation_pie(PLAYERS)
             advance('spawn')
         elif phase == 'spawn':
@@ -113,12 +117,14 @@ def tick(delta):
             state['pawns'] = pawns
             for p in pawns:
                 LIB.isolate_validation_input(p.get_controller())
+                if RESTORATION:assert LIB.set_validation_viewport_size(p.get_controller(),1920,1080)
             check('stinger_spawn', all(p.get_class().get_name() == 'BP_StingerCharacter_C' for p in pawns), [vector(p.get_actor_location()) for p in pawns])
             if SUITE == 'traverse':
                 for command in ['r.VSync 0', 't.MaxFPS 0', 't.IdleWhenNotForeground 0', 'r.ScreenPercentage 100',
                                 'sg.ViewDistanceQuality 2', 'sg.AntiAliasingQuality 2', 'sg.ShadowQuality 2',
                                 'sg.GlobalIlluminationQuality 2', 'sg.ReflectionQuality 2', 'sg.PostProcessQuality 2',
                                 'sg.TextureQuality 2', 'sg.EffectsQuality 2', 'sg.FoliageQuality 2', 'sg.ShadingQuality 2']:
+                    if RESTORATION and command.startswith('sg.'):command=command.rsplit(' ',1)[0]+' 1'
                     unreal.SystemLibrary.execute_console_command(pawns[0], command, pawns[0].get_controller())
                 state['route'] = json.loads((Path(unreal.Paths.project_dir()) / 'Scripts/SpaceCenter/route.json').read_text(encoding='utf-8'))
                 report['route'] = state['route']
@@ -126,7 +132,15 @@ def tick(delta):
                 if not unreal.GameplayStatics.get_all_actors_of_class(server, unreal.Weapon):
                     for p in unreal.GameplayStatics.get_all_actors_of_class(server, unreal.BrokenEdgeCharacter):
                         LIB.spawn_validation_weapon(server, state['weapon_class'], p.get_actor_location() + unreal.Vector(20, 0, -50))
-                advance('equip')
+                if RESTORATION:
+                    # Spawn outside the overlap sphere, then enter it through
+                    # real movement. The old sample already has world weapons
+                    # before its pawn spawns; the isolated preview has none.
+                    for weapon in unreal.GameplayStatics.get_all_actors_of_class(server,unreal.Weapon):
+                        weapon.set_actor_location(weapon.get_actor_location()+unreal.Vector(400,0,0),False,True)
+                    state['pickup_weapons']=list(unreal.GameplayStatics.get_all_actors_of_class(server,unreal.Weapon))
+                advance('pickup_approach' if RESTORATION else 'equip')
+                if RESTORATION:unreal.SystemLibrary.collect_garbage()
                 return
             probes = []
             world = pawns[0].get_world()
@@ -177,7 +191,21 @@ def tick(delta):
             if SUITE == 'capture':
                 pawns[0].get_controller().set_view_target_with_blend(state['camera'], 0)
                 advance('camera')
+        elif phase == 'pickup_approach':
+            p=state['pawns'][0];weapon=state['pickup_weapons'][0]
+            separation=math.dist(vector(p.get_actor_location())[:2],vector(weapon.get_actor_location())[:2])
+            if separation<35 and json.loads(LIB.get_validation_state(p))['overlapping_weapon']:
+                check('entered_pickup_overlap',True,{'pawn':snapshot(p),'weapon_location':vector(weapon.get_actor_location()),'horizontal_distance_cm':separation})
+                advance('equip')
+            else:
+                if elapsed>8:raise RuntimeError('Could not reach preview weapon pickup')
+                for p in state['pawns']:
+                    p.get_controller().set_control_rotation(unreal.Rotator())
+                    inject(p,'move_action',(0,.4,0))
         elif phase == 'equip':
+            if RESTORATION:
+                report.setdefault('pickup_samples',[]).append({'elapsed':elapsed,'pawn':snapshot(state['pawns'][0]),
+                    'weapons':[{'name':w.get_name(),'location':vector(w.get_actor_location())} for w in state['pickup_weapons']]})
             if elapsed > 1:
                 pulse_all('equip_action')
             if elapsed > 3:

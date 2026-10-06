@@ -5,6 +5,7 @@ import math
 import os
 from pathlib import Path
 import shutil
+import sys
 import unreal
 
 root = Path(unreal.Paths.project_dir()).resolve()
@@ -25,6 +26,9 @@ if not lib.does_asset_exist(north):
     assert levels.new_level(north)
     assert levels.save_current_level()
 assert levels.load_level(main)
+sys.path.insert(0,str(root/'Scripts/SpaceCenter'))
+from restoration_generation_guard import assert_legacy_map_allowed
+assert_legacy_map_allowed('prepare_phase7a')
 world = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()
 stream = unreal.GameplayStatics.get_streaming_level(world, north)
 if not stream:

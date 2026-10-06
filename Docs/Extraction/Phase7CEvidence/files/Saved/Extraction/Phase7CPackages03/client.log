@@ -1,0 +1,9 @@
+GUARDED_TASK 64228 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7CPackages03-client-resources
+GUARDED_RESULT failed
+Traceback (most recent call last):
+  File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\Extraction\resource_guard.py", line 116, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\Extraction\resource_guard.py", line 87, in main
+    raise RuntimeError('Resource limit reached: ' + str(current))
+RuntimeError: Resource limit reached: {'utc': '2026-10-05T20:18:20.463461+00:00', 'c_free_gib': 61.205810546875, 'd_free_gib': 220.3769302368164, 'ram_free_gib': 0.7415428161621094, 'commit_used_gib': 43.21306610107422, 'commit_limit_gib': 51.32893753051758}

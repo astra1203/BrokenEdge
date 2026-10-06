@@ -73,6 +73,12 @@ Docs/Extraction/Phase7BEvidence/** -text
 Docs/Extraction/Phase7BEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 Docs/Extraction/Phase7BEvidence/**/*.glb filter=lfs diff=lfs merge=lfs -text
 
+# Phase-7C native reconstruction and packaged acceptance evidence.
+Docs/Extraction/Phase7CEvidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Preserve trailing spaces emitted by build/editor logs as original evidence.
+Docs/Extraction/Phase7CEvidence/**/*.log whitespace=-blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Docs/Extraction/Phase7CEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+
 # Measured optic placement and direct visual acceptance.
 Docs/Extraction/OpticCalibrationEvidence/** -text
 Docs/Extraction/OpticCalibrationEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

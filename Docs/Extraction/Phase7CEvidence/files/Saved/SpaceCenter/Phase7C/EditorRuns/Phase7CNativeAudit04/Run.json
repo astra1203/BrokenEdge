@@ -1,0 +1,24 @@
+{
+  "task": "audit",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\import_restoration.py",
+    "-NullRHI",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-ForceTextureEncodeSpeed=Final",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7C\\EditorRuns\\Phase7CNativeAudit04\\Editor.log",
+    "-ini:Engine:[DevOptions.Shaders]:ShaderCompilerCoreCountThreshold=999,[DevOptions.Shaders]:NumUnusedShaderCompilingThreads=8,[DevOptions.Shaders]:NumUnusedShaderCompilingThreadsDuringGame=8,[SystemSettings]:Editor.AsyncTextureCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncStaticMeshCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncAssetCompilationMaxConcurrency=2,[SystemSettings]:Editor.AsyncAssetCompilationMaxMemoryUsage=2"
+  ],
+  "started_utc": "2026-10-05T19:05:05.661637+00:00",
+  "script_sha256": "4b32d5d7e135bd007b89ea71e9e81bbef75ca5083392072760d60a4988c56d86",
+  "manifest_sha256": "5f5b762e126cafdd2d897d8cc356577295883f3622d1bb3d4dc57089d97632be",
+  "pid": 52128,
+  "exit_code": 4294967295,
+  "result": "failed",
+  "finished_utc": "2026-10-05T19:05:29.942567+00:00"
+}

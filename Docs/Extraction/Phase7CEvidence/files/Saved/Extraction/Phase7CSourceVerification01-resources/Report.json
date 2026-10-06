@@ -1,0 +1,46 @@
+{
+  "command": [
+    "C:/Users/Oreki/AppData/Roaming/uv/python/cpython-3.12.13-windows-x86_64-none/python.exe",
+    "Scripts/SpaceCenter/verify_restoration_inputs.py",
+    "--tag",
+    "Phase7CSourceVerification01"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T18:52:13.571099+00:00",
+      "c_free_gib": 61.823726654052734,
+      "d_free_gib": 218.83407974243164,
+      "ram_free_gib": 12.400970458984375,
+      "commit_used_gib": 29.994491577148438,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:52:13.579692+00:00",
+      "c_free_gib": 61.823726654052734,
+      "d_free_gib": 218.83407592773438,
+      "ram_free_gib": 12.40146255493164,
+      "commit_used_gib": 29.992919921875,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:52:15.710388+00:00",
+      "c_free_gib": 61.82362747192383,
+      "d_free_gib": 218.8258934020996,
+      "ram_free_gib": 12.387687683105469,
+      "commit_used_gib": 29.99868392944336,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 46044,
+  "exit_code": 0
+}

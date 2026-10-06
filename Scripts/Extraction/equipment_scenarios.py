@@ -11,13 +11,19 @@ def run(g):
     send, check, wait, state, player = (g[k] for k in ('send', 'check', 'wait', 'state', 'player'))
     roles = g['ROLES']
     peers = ['Server'] + roles
-    positions = {r: [5700 + 160 * i, 5000, 180] for i, r in enumerate(roles)}
-    positions.update(A=[5700, 4500, 180], B=[5400, 4500, 180], C=[5860, 4580, 180])
+    # The old outdoor fixture stood on the removed placeholder ground. Use the
+    # source room's validated walking floor; keep the same shooter/target offsets.
+    positions = {r: [-1800 - 160 * i, -300, 460] for i, r in enumerate(roles)}
+    positions.update(A=[-1500, -300, 460], B=[-1800, -300, 460], C=[-1340, -220, 460])
 
     def place(role, point=None, health=100, shield=0):
         send('Server', 'fixture', players=[{'name': 'EX_' + role, 'position': point or positions[role],
                                           'health': health, 'shield': shield}])
         time.sleep(.4)
+        if point is None:
+            wait(lambda: all(not player(peer, role)['falling']
+                             and 300 < player(peer, role)['position'][2] < 500
+                             for peer in ['Server', role]), 'Equipment fixture settled on source room floor', 8)
 
     def items(role, peer='Server'):
         return player(peer, role)['inventory']['items']
@@ -64,12 +70,17 @@ def run(g):
 
     def fire_at(shooter, target, bone, expected=None, prepared=False):
         if not prepared:
+            wait(lambda: all(not player(peer, role)['falling']
+                             for role in [shooter, target] for peer in ['Server', role]),
+                 'Shooter and target grounded before damage sample', 8)
             send(shooter, 'inventory', open=False)
             # Aim at the actual head collision body, not an assumed bone offset.
             send(shooter, 'aim', target='EX_' + target, head=False, bone=bone,
                  body_center=bone == 'Head')
             time.sleep(.5)
         if bone == 'Head':
+            g['report'].setdefault('equipment_head_preconditions', []).append(
+                {role: player('Server', role).copy() for role in [shooter, target]})
             for peer in ['Server', shooter]:
                 send(peer, 'pose', target='EX_' + target, name='helmet-target')
             capture(shooter, 'equipment-helmet-aim')
@@ -119,7 +130,17 @@ def run(g):
         check('Equipment map retains complete patrol navigation', lambda: len(state('Server')['nav_paths']) == 10 and all(p['valid'] for p in state('Server')['nav_paths']))
         check('Equipment map guards reach patrol points', lambda: all(a['arrivals'] >= 1 for a in state('Server')['guards']), 80)
         # After proving live navigation, isolate the supply/armor comparison
-        # from unrelated AI bullets. AI stays alive; PVPVE covers its combat.
+        # from unrelated AI bullets. Source navigation lets relocated guards
+        # return, and an empty magazine alone triggers reload from reserve.
+        # Disarm only these fixture guards; PVPVE/northcombat test live AI combat.
+        g['report']['equipment_ai_isolation'] = {
+            'reason': 'After live patrol validation, remove unrelated AI damage from bounded equipment comparison',
+            'before': state('Server')['guards']}
+        for guard in state('Server')['guards']:
+            assert not send('Server', 'inventory_fixture', target=guard['name'], clear=True, items=[])
+        check('Four patrol guards stay alive but disarmed for isolated equipment comparison', lambda:
+              len(state('Server')['guards']) == 4 and all(not a.get('dead') and not a['inventory']['items']
+                                                         for a in state('Server')['guards']))
         send('Server', 'fixture', players=[{'name': guard['name'],
                                           'position': [-4300 + 200 * i, -6300, 180],
                                           'health': 100, 'shield': 0}

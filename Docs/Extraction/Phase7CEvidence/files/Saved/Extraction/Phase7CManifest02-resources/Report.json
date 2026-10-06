@@ -1,0 +1,70 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts/SpaceCenter/build_restoration_manifest.py",
+    "--tag",
+    "Phase7CManifest02"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T19:08:03.463697+00:00",
+      "c_free_gib": 61.61070251464844,
+      "d_free_gib": 218.78234481811523,
+      "ram_free_gib": 13.22562026977539,
+      "commit_used_gib": 30.086761474609375,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T19:08:03.468697+00:00",
+      "c_free_gib": 61.61070251464844,
+      "d_free_gib": 218.78234100341797,
+      "ram_free_gib": 13.224960327148438,
+      "commit_used_gib": 30.086761474609375,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T19:08:08.478468+00:00",
+      "c_free_gib": 61.61069869995117,
+      "d_free_gib": 218.78228759765625,
+      "ram_free_gib": 12.565540313720703,
+      "commit_used_gib": 30.423259735107422,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T19:08:13.480683+00:00",
+      "c_free_gib": 61.61065673828125,
+      "d_free_gib": 218.73719024658203,
+      "ram_free_gib": 12.666637420654297,
+      "commit_used_gib": 30.49231719970703,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T19:08:18.487515+00:00",
+      "c_free_gib": 61.61044692993164,
+      "d_free_gib": 218.73719024658203,
+      "ram_free_gib": 12.658130645751953,
+      "commit_used_gib": 30.646636962890625,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T19:08:21.816003+00:00",
+      "c_free_gib": 61.61043930053711,
+      "d_free_gib": 218.59983444213867,
+      "ram_free_gib": 13.124401092529297,
+      "commit_used_gib": 30.14531707763672,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 65940,
+  "exit_code": 0
+}

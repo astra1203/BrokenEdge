@@ -1,0 +1,1147 @@
+{
+	"role": "B",
+	"command": 10,
+	"walk_index": 0,
+	"walk_count": 0,
+	"physical_mib": 718.69921875,
+	"peak_physical_mib": 777.5703125,
+	"viewport_width": 0,
+	"viewport_height": 0,
+	"view_position": [
+		-2090,
+		-300,
+		524
+	],
+	"quality":
+	{
+		"sg.ViewDistanceQuality": 3,
+		"sg.AntiAliasingQuality": 3,
+		"sg.ShadowQuality": 3,
+		"sg.GlobalIlluminationQuality": 3,
+		"sg.ReflectionQuality": 3,
+		"sg.PostProcessQuality": 3,
+		"sg.TextureQuality": 3,
+		"sg.EffectsQuality": 3,
+		"sg.FoliageQuality": 3,
+		"sg.ShadingQuality": 3,
+		"r.ScreenPercentage": 0,
+		"r.VSync": 0,
+		"t.MaxFPS": 30
+	},
+	"error": "",
+	"map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+	"net_mode": 3,
+	"local_players": 1,
+	"region":
+	{
+		"requested": false,
+		"loaded": false,
+		"visible": false,
+		"blocked": false,
+		"loads": 1,
+		"unloads": 1,
+		"status": ""
+	},
+	"packet_lag": 0,
+	"packet_loss": 0,
+	"net_in_bytes_per_second": 0,
+	"net_out_bytes_per_second": 0,
+	"storage_error": "",
+	"exit_position": [
+		1400,
+		2900,
+		353
+	],
+	"exit_trace": [
+		1400,
+		2900,
+		350.33157348632812
+	],
+	"exit_surface": "SpaceCenterInstanceGroup_6218",
+	"phase": 1,
+	"alive": 2,
+	"remaining": 584.8982075676322,
+	"session": true,
+	"spectating": false,
+	"spectated": "",
+	"account":
+	{
+		"bound": true,
+		"locked": true,
+		"profile": "0E196CC140919254CF0EC5B4B5C7A6D2",
+		"message": "",
+		"revision": 7,
+		"progression":
+		{
+			"credits": 2000,
+			"experience": 0,
+			"level": 1,
+			"quests": [
+				{
+					"accepted": false,
+					"claimed": false,
+					"progress": 0,
+					"delivered": false,
+					"eligible_files": 0
+				},
+				{
+					"accepted": false,
+					"claimed": false,
+					"progress": 0,
+					"delivered": false,
+					"eligible_files": 0
+				},
+				{
+					"accepted": false,
+					"claimed": false,
+					"progress": 0,
+					"delivered": false,
+					"eligible_files": 0
+				}
+			]
+		},
+		"outcome": 0,
+		"stash":
+		{
+			"id": "76AF275B4C1544100E9105B495EB9A2E",
+			"revision": 6,
+			"items": [
+				{
+					"id": "25795F8C4D6658AF282C71A79BA4AB40",
+					"definition": "AK",
+					"quantity": 1,
+					"x": 4,
+					"y": 1,
+					"slot": -1,
+					"magazine": 30,
+					"ammo_type": "Ammo",
+					"durability": 0,
+					"scatter_scale": 1,
+					"attachments": [],
+					"rotated": false
+				},
+				{
+					"id": "2097C4F349105CDD6D66669E6F2651BF",
+					"definition": "Ammo",
+					"quantity": 60,
+					"x": 8,
+					"y": 1,
+					"slot": -1,
+					"magazine": 0,
+					"ammo_type": "Ammo",
+					"durability": 0,
+					"scatter_scale": 1,
+					"attachments": [],
+					"rotated": false
+				},
+				{
+					"id": "5B1B400A4BEBE208068DFF923C5F5FAF",
+					"definition": "Medkit",
+					"quantity": 1,
+					"x": 0,
+					"y": 2,
+					"slot": -1,
+					"magazine": 0,
+					"ammo_type": "Ammo",
+					"durability": 0,
+					"scatter_scale": 1,
+					"attachments": [],
+					"rotated": false
+				},
+				{
+					"id": "F99A72F84978B766A47D3FA0CCAFB01E",
+					"definition": "Ammo",
+					"quantity": 60,
+					"x": 9,
+					"y": 1,
+					"slot": -1,
+					"magazine": 0,
+					"ammo_type": "Ammo",
+					"durability": 0,
+					"scatter_scale": 1,
+					"attachments": [],
+					"rotated": false
+				},
+				{
+					"id": "C7D77EC445CE8793413B30B455FD1C01",
+					"definition": "Medkit",
+					"quantity": 1,
+					"x": 2,
+					"y": 2,
+					"slot": -1,
+					"magazine": 0,
+					"ammo_type": "Ammo",
+					"durability": 0,
+					"scatter_scale": 1,
+					"attachments": [],
+					"rotated": false
+				},
+				{
+					"id": "CC63AF7B452B8BD4EF13BCAAE0D5DE04",
+					"definition": "AK",
+					"quantity": 1,
+					"x": 0,
+					"y": 3,
+					"slot": -1,
+					"magazine": 30,
+					"ammo_type": "Ammo",
+					"durability": 0,
+					"scatter_scale": 1,
+					"attachments": [],
+					"rotated": false
+				},
+				{
+					"id": "FBC210ED4BE2C0449F3A4A9B3AC5A141",
+					"definition": "Ammo",
+					"quantity": 60,
+					"x": 8,
+					"y": 2,
+					"slot": -1,
+					"magazine": 0,
+					"ammo_type": "Ammo",
+					"durability": 0,
+					"scatter_scale": 1,
+					"attachments": [],
+					"rotated": false
+				},
+				{
+					"id": "C971455E4E8DB854EE29429CA5280F3F",
+					"definition": "Medkit",
+					"quantity": 1,
+					"x": 4,
+					"y": 3,
+					"slot": -1,
+					"magazine": 0,
+					"ammo_type": "Ammo",
+					"durability": 0,
+					"scatter_scale": 1,
+					"attachments": [],
+					"rotated": false
+				},
+				{
+					"id": "C9EB56FE40ECBE52F55BF08182121B93",
+					"definition": "Ammo",
+					"quantity": 60,
+					"x": 9,
+					"y": 2,
+					"slot": -1,
+					"magazine": 0,
+					"ammo_type": "Ammo",
+					"durability": 0,
+					"scatter_scale": 1,
+					"attachments": [],
+					"rotated": false
+				},
+				{
+					"id": "44E18366485980D1D15864A22E7140DF",
+					"definition": "Medkit",
+					"quantity": 1,
+					"x": 6,
+					"y": 3,
+					"slot": -1,
+					"magazine": 0,
+					"ammo_type": "Ammo",
+					"durability": 0,
+					"scatter_scale": 1,
+					"attachments": [],
+					"rotated": false
+				}
+			]
+		},
+		"loadout":
+		{
+			"id": "FE1D641E4326E6BEE95C83A11EA88800",
+			"revision": 7,
+			"items": []
+		},
+		"overflow":
+		{
+			"id": "00000000000000000000000000000000",
+			"revision": 1,
+			"items": []
+		}
+	},
+	"has_pawn": true,
+	"width": 0,
+	"height": 0,
+	"item_message": "",
+	"item_sequence": 0,
+	"players": [
+		{
+			"name": "EX_A",
+			"id": 256,
+			"ready": false,
+			"squad": 1,
+			"life": 0,
+			"inventory":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			},
+			"extract_at": 0,
+			"down_health": 0,
+			"bleed_at": 0,
+			"guard_kills": 0,
+			"health": 80,
+			"bleeding": false,
+			"fracture": false,
+			"bullet_sequence": 0,
+			"hit_bone": "None",
+			"hit_loss": 0,
+			"walk_speed": 600,
+			"crouch_speed": 300,
+			"action": 0,
+			"action_end": 0,
+			"heal_ready": 0,
+			"smoke_ready": 0,
+			"rescuer": "",
+			"reach": [
+				{
+					"target": "A97125F64E49D1D82C2734AB080BE01F",
+					"hit": "ExtractionLootActor_0",
+					"name": "ExtractionLootActor_0",
+					"distance": 196.4805908203125,
+					"clear": true,
+					"eye": [
+						-1473.5799999999999,
+						-299.54000000000002,
+						520.44000000000005
+					]
+				},
+				{
+					"target": "D4BE4EA4410BD1BEDCFF5C94D72A7DCE",
+					"hit": "ExtractionLootActor_1",
+					"name": "ExtractionLootActor_1",
+					"distance": 76.725105285644531,
+					"clear": true,
+					"eye": [
+						-1473.5799999999999,
+						-299.54000000000002,
+						520.44000000000005
+					]
+				},
+				{
+					"target": "C244882744F1D553B3D2EC8F2D122638",
+					"hit": "ExtractionLootActor_11",
+					"name": "ExtractionLootActor_11",
+					"distance": 170.17350769042969,
+					"clear": true,
+					"eye": [
+						-1473.5799999999999,
+						-299.54000000000002,
+						520.44000000000005
+					]
+				},
+				{
+					"target": "77BFFCC44285E722E688D2A7AC0E1EA2",
+					"hit": "ExtractionLootActor_9",
+					"name": "ExtractionLootActor_9",
+					"distance": 214.26325988769531,
+					"clear": true,
+					"eye": [
+						-1473.5799999999999,
+						-299.54000000000002,
+						520.44000000000005
+					]
+				}
+			],
+			"inventory_open": false,
+			"focus": "None",
+			"loot_target": "None",
+			"loot_id": "",
+			"loot_view":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			},
+			"session": 0,
+			"medical_end": 0,
+			"search_end": 0,
+			"shield": 0,
+			"disabled": false,
+			"defeated": false,
+			"first_person": false,
+			"pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+			"body_anim": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.BP_StingerCharacter_C_2147481825.CharacterMesh0.ABP_BrokenEdgeAnimInstance_Stinger_C_2147481824",
+			"overlap": "",
+			"accepted": 0,
+			"rejected": 0,
+			"combat_state": 0,
+			"carried_ammo": 0,
+			"falling": false,
+			"position": [
+				-1473.5799999999999,
+				-299.54000000000002,
+				456.44
+			],
+			"left_grip_distance": 69.918080149577236,
+			"right_grip_distance": 1.2448066975344329e-06,
+			"weapon": "BP_AK47_C_2147481813",
+			"weapon_item": "4A06C430439D27BD6D05F5BB8CBE208F",
+			"equipment_visuals": [],
+			"ammo": 30,
+			"ammo_type": "Ammo",
+			"weapon_parts": [],
+			"damage": 20,
+			"head_damage": 40
+		},
+		{
+			"name": "EX_B",
+			"id": 257,
+			"account":
+			{
+				"bound": true,
+				"locked": true,
+				"profile": "0E196CC140919254CF0EC5B4B5C7A6D2",
+				"message": "",
+				"revision": 7,
+				"progression":
+				{
+					"credits": 2000,
+					"experience": 0,
+					"level": 1,
+					"quests": [
+						{
+							"accepted": false,
+							"claimed": false,
+							"progress": 0,
+							"delivered": false,
+							"eligible_files": 0
+						},
+						{
+							"accepted": false,
+							"claimed": false,
+							"progress": 0,
+							"delivered": false,
+							"eligible_files": 0
+						},
+						{
+							"accepted": false,
+							"claimed": false,
+							"progress": 0,
+							"delivered": false,
+							"eligible_files": 0
+						}
+					]
+				},
+				"outcome": 0,
+				"stash":
+				{
+					"id": "76AF275B4C1544100E9105B495EB9A2E",
+					"revision": 6,
+					"items": [
+						{
+							"id": "25795F8C4D6658AF282C71A79BA4AB40",
+							"definition": "AK",
+							"quantity": 1,
+							"x": 4,
+							"y": 1,
+							"slot": -1,
+							"magazine": 30,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "2097C4F349105CDD6D66669E6F2651BF",
+							"definition": "Ammo",
+							"quantity": 60,
+							"x": 8,
+							"y": 1,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "5B1B400A4BEBE208068DFF923C5F5FAF",
+							"definition": "Medkit",
+							"quantity": 1,
+							"x": 0,
+							"y": 2,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "F99A72F84978B766A47D3FA0CCAFB01E",
+							"definition": "Ammo",
+							"quantity": 60,
+							"x": 9,
+							"y": 1,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "C7D77EC445CE8793413B30B455FD1C01",
+							"definition": "Medkit",
+							"quantity": 1,
+							"x": 2,
+							"y": 2,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "CC63AF7B452B8BD4EF13BCAAE0D5DE04",
+							"definition": "AK",
+							"quantity": 1,
+							"x": 0,
+							"y": 3,
+							"slot": -1,
+							"magazine": 30,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "FBC210ED4BE2C0449F3A4A9B3AC5A141",
+							"definition": "Ammo",
+							"quantity": 60,
+							"x": 8,
+							"y": 2,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "C971455E4E8DB854EE29429CA5280F3F",
+							"definition": "Medkit",
+							"quantity": 1,
+							"x": 4,
+							"y": 3,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "C9EB56FE40ECBE52F55BF08182121B93",
+							"definition": "Ammo",
+							"quantity": 60,
+							"x": 9,
+							"y": 2,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "44E18366485980D1D15864A22E7140DF",
+							"definition": "Medkit",
+							"quantity": 1,
+							"x": 6,
+							"y": 3,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						}
+					]
+				},
+				"loadout":
+				{
+					"id": "FE1D641E4326E6BEE95C83A11EA88800",
+					"revision": 7,
+					"items": []
+				},
+				"overflow":
+				{
+					"id": "00000000000000000000000000000000",
+					"revision": 1,
+					"items": []
+				}
+			},
+			"ready": false,
+			"squad": 2,
+			"life": 0,
+			"inventory":
+			{
+				"id": "8B7CF8B74839F05B0CA1179C211753CA",
+				"revision": 6,
+				"items": [
+					{
+						"id": "843D336B4DD927BBBA5523A6C6D1C519",
+						"definition": "AK",
+						"quantity": 1,
+						"x": 0,
+						"y": 0,
+						"slot": 0,
+						"magazine": 30,
+						"ammo_type": "Ammo",
+						"durability": 0,
+						"scatter_scale": 1,
+						"attachments": [],
+						"rotated": false
+					},
+					{
+						"id": "61202A0944192F75A50061B252760741",
+						"definition": "Ammo",
+						"quantity": 60,
+						"x": 0,
+						"y": 0,
+						"slot": -1,
+						"magazine": 0,
+						"ammo_type": "Ammo",
+						"durability": 0,
+						"scatter_scale": 1,
+						"attachments": [],
+						"rotated": false
+					},
+					{
+						"id": "990DEFD74A47EAB10B84D281C793FC22",
+						"definition": "Ammo",
+						"quantity": 60,
+						"x": 1,
+						"y": 0,
+						"slot": -1,
+						"magazine": 0,
+						"ammo_type": "Ammo",
+						"durability": 0,
+						"scatter_scale": 1,
+						"attachments": [],
+						"rotated": false
+					},
+					{
+						"id": "20C7820A482FADA280C58D97546B1A79",
+						"definition": "Medkit",
+						"quantity": 1,
+						"x": 2,
+						"y": 0,
+						"slot": -1,
+						"magazine": 0,
+						"ammo_type": "Ammo",
+						"durability": 0,
+						"scatter_scale": 1,
+						"attachments": [],
+						"rotated": false
+					},
+					{
+						"id": "6B4D17AE449419E2E12A4193B1C6B750",
+						"definition": "Medkit",
+						"quantity": 1,
+						"x": 4,
+						"y": 0,
+						"slot": -1,
+						"magazine": 0,
+						"ammo_type": "Ammo",
+						"durability": 0,
+						"scatter_scale": 1,
+						"attachments": [],
+						"rotated": false
+					}
+				]
+			},
+			"extract_at": 0,
+			"down_health": 0,
+			"bleed_at": 0,
+			"guard_kills": 0,
+			"health": 100,
+			"bleeding": false,
+			"fracture": false,
+			"bullet_sequence": 0,
+			"hit_bone": "None",
+			"hit_loss": 0,
+			"walk_speed": 600,
+			"crouch_speed": 300,
+			"action": 0,
+			"action_end": 0,
+			"heal_ready": 0,
+			"smoke_ready": 0,
+			"rescuer": "",
+			"reach": [],
+			"inventory_open": false,
+			"focus": "None",
+			"loot_target": "None",
+			"loot_id": "",
+			"loot_view":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			},
+			"session": 0,
+			"medical_end": 0,
+			"search_end": 0,
+			"shield": 0,
+			"disabled": false,
+			"defeated": false,
+			"first_person": true,
+			"pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+			"body_anim": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.BP_StingerCharacter_C_2147481879.CharacterMesh0.ABP_BrokenEdgeAnimInstance_Stinger_C_2147481877",
+			"fp_lods": 1,
+			"fp_gear_slot": 0,
+			"fp_gear_visible": false,
+			"overlap": "",
+			"accepted": 0,
+			"rejected": 0,
+			"combat_state": 0,
+			"carried_ammo": 120,
+			"falling": false,
+			"position": [
+				-2100,
+				-300,
+				460
+			],
+			"left_grip_distance": 0.073703015583699336,
+			"right_grip_distance": 1.1397550059468014e-05,
+			"weapon": "BP_AK47_C_2147481840",
+			"weapon_item": "843D336B4DD927BBBA5523A6C6D1C519",
+			"fp_left_grip_distance": 5.1315832914858001e-05,
+			"equipment_visuals": [],
+			"ammo": 30,
+			"ammo_type": "Ammo",
+			"weapon_parts": [],
+			"damage": 20,
+			"head_damage": 40
+		}
+	],
+	"weapons": [
+		{
+			"name": "BP_AK47_C_2147481840",
+			"ammo": 30,
+			"state": 1,
+			"owner": "BP_StingerCharacter_C_2147481879",
+			"position": [
+				-2103.8814030878279,
+				-279.41658320096303,
+				467.3272526973667
+			]
+		},
+		{
+			"name": "BP_AK47_C_2147481813",
+			"ammo": 30,
+			"state": 1,
+			"owner": "BP_StingerCharacter_C_2147481825",
+			"position": [
+				-1482.2188132656686,
+				-338.74467253691034,
+				450.95276415349633
+			]
+		}
+	],
+	"loot": [
+		{
+			"name": "ExtractionLootActor_0",
+			"label": "ExtractionAK_00",
+			"id": "A97125F64E49D1D82C2734AB080BE01F",
+			"loose": true,
+			"empty": false,
+			"definition": "AK",
+			"position": [
+				-1655,
+				-300,
+				381
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_1",
+			"label": "ExtractionAK_01",
+			"id": "D4BE4EA4410BD1BEDCFF5C94D72A7DCE",
+			"loose": true,
+			"empty": false,
+			"definition": "AK",
+			"position": [
+				-1455,
+				-300,
+				382
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_10",
+			"label": "步枪弹药",
+			"id": "95E9714E471EB296B588E7803196C89F",
+			"loose": true,
+			"empty": false,
+			"definition": "Ammo",
+			"position": [
+				1550,
+				4110,
+				371
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_11",
+			"label": "医疗补给",
+			"id": "C244882744F1D553B3D2EC8F2D122638",
+			"loose": true,
+			"empty": false,
+			"definition": "Medkit",
+			"position": [
+				-1380,
+				-420,
+				381
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_12",
+			"label": "电子元件",
+			"id": "ADDF62D546DFFBA7305405870D64BAD3",
+			"loose": true,
+			"empty": false,
+			"definition": "Electronics",
+			"position": [
+				1570,
+				4470,
+				370
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_13",
+			"label": "工具组件",
+			"id": "C81DB8A7463700906733BD9E8EE842E8",
+			"loose": true,
+			"empty": false,
+			"definition": "Tools",
+			"position": [
+				-1330,
+				-120,
+				382
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_16",
+			"label": "装备补给箱 · 2级",
+			"id": "F59B298B43300B9A29435D97BAED3E77",
+			"loose": false,
+			"empty": false,
+			"definition": "None",
+			"position": [
+				1490,
+				4660,
+				370
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_17",
+			"label": "装备补给箱 · 3级",
+			"id": "404636494B611C3553508696ED7EEAD5",
+			"loose": false,
+			"empty": false,
+			"definition": "None",
+			"position": [
+				-1140,
+				-420,
+				382
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_18",
+			"label": "北侧补给箱 1",
+			"id": "158A1F2A4C7620024F945E9209699B05",
+			"loose": false,
+			"empty": false,
+			"definition": "None",
+			"position": [
+				1700,
+				7500,
+				67
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_19",
+			"label": "北侧补给箱 2",
+			"id": "6F94DF244C3A95B419068380C22AD39C",
+			"loose": false,
+			"empty": false,
+			"definition": "None",
+			"position": [
+				1700,
+				10100,
+				73
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_2",
+			"label": "ExtractionAK_02",
+			"id": "09E167E4494D071CB2BE91BFD65DCC74",
+			"loose": true,
+			"empty": false,
+			"definition": "AK",
+			"position": [
+				-1455,
+				0,
+				382
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_3",
+			"label": "ExtractionAK_03",
+			"id": "F389151C4E83CD91AEF00998455FE3F3",
+			"loose": true,
+			"empty": false,
+			"definition": "AK",
+			"position": [
+				1445,
+				3800,
+				370
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_4",
+			"label": "ExtractionAK_04",
+			"id": "2EB7A9F34621A38F24F3788E740B9EFD",
+			"loose": true,
+			"empty": false,
+			"definition": "AK",
+			"position": [
+				1445,
+				4200,
+				370
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_5",
+			"label": "ExtractionAK_05",
+			"id": "06EC88194E8FACBA99D57A85EE76F66B",
+			"loose": true,
+			"empty": false,
+			"definition": "AK",
+			"position": [
+				1845,
+				4200,
+				370
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_6",
+			"label": "ExtractionAK_06",
+			"id": "0557989541697B416FB9F1843FA519F8",
+			"loose": true,
+			"empty": false,
+			"definition": "AK",
+			"position": [
+				2245,
+				3800,
+				381
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_7",
+			"label": "ExtractionAK_07",
+			"id": "3F4E47654E18B72F59CC478F2E5B0668",
+			"loose": true,
+			"empty": false,
+			"definition": "AK",
+			"position": [
+				2245,
+				4200,
+				383
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_8",
+			"label": "室外补给箱",
+			"id": "97773F0F49E5857054B0EC9AF683071E",
+			"loose": false,
+			"empty": false,
+			"definition": "None",
+			"position": [
+				1570,
+				4370,
+				370
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_9",
+			"label": "室内工具箱",
+			"id": "77BFFCC44285E722E688D2A7AC0E1EA2",
+			"loose": false,
+			"empty": false,
+			"definition": "None",
+			"position": [
+				-1320,
+				-170,
+				382
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		},
+		{
+			"name": "ExtractionLootActor_2147481849",
+			"label": "机密储藏箱",
+			"id": "8897C7864999B60CBEE5908C161F4C41",
+			"loose": false,
+			"empty": false,
+			"definition": "None",
+			"position": [
+				3800,
+				4730,
+				387
+			],
+			"contents":
+			{
+				"id": "00000000000000000000000000000000",
+				"revision": 1,
+				"items": []
+			}
+		}
+	],
+	"nav_paths": [],
+	"key_rooms": [
+		{
+			"unlocked": false,
+			"open": false,
+			"position": [
+				3800,
+				4300,
+				507
+			],
+			"approach": [
+				3800,
+				4180,
+				452
+			],
+			"blocked": true,
+			"cache": "8897C7864999B60CBEE5908C161F4C41",
+			"cache_position": [
+				3800,
+				4730,
+				387
+			]
+		}
+	],
+	"guards": [],
+	"smokes": []
+}

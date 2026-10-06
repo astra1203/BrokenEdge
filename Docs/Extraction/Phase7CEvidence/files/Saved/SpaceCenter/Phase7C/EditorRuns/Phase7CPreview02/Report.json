@@ -1,0 +1,10 @@
+{
+  "task": "preview",
+  "created": [],
+  "reused": 0,
+  "errors": [
+    "Traceback (most recent call last):\n  File \"D:/SourceFiles/UnrealProjects/BrokenEdge/Scripts/SpaceCenter/import_restoration.py\", line 104, in <module>\n    run(globals())\n  File \"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_world.py\", line 189, in run\n    elif g['TASK']=='preview':assemble(g)\n                              ^^^^^^^^^^^\n  File \"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_world.py\", line 113, in assemble\n    actor.set_actor_transform(transform,False,True);configure(actor.static_mesh_component,source)\n                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_world.py\", line 94, in configure\n    configure_collision(component,source)\n  File \"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_world.py\", line 33, in configure_collision\n    values={'ECR_Ignore':unreal.CollisionResponse.IGNORE,'ECR_Overlap':unreal.CollisionResponse.OVERLAP,'ECR_Block':unreal.CollisionResponse.BLOCK}\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: type object 'CollisionResponse' has no attribute 'IGNORE'\n"
+  ],
+  "slot_bindings_sha256": "d3997cf86acdd283c2e9bf72bfaf107c76880a2429e020c7681ba7386520afde",
+  "result": "failed"
+}

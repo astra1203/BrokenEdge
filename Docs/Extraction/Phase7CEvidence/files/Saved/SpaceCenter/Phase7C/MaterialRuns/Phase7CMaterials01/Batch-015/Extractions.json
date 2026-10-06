@@ -1,0 +1,760 @@
+{
+  "requested": [
+    "/Game/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Building_Tide_Metal_23_HD",
+    "/Game/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Building_Tide_PrisonMain_14_Layer_01c_HD",
+    "/Game/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Building_Tide_Rubber_01_Layer_03_HD",
+    "/Game/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Building_Tide_Trim_Indoor_07_HD",
+    "/Game/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Tide_Building_Concrete_Damaged_02_HD",
+    "/Game/Environment/Structures/HAAVK/Building/Tide/00_Materials/MI_M_Building_Tide_Pipeline_02",
+    "/Game/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/HD/MI_H_Decal_WellLid_01A_HD",
+    "/Game/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/HD/MI_H_Decal_WellLid_01B_HD",
+    "/Game/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/HD/MI_H_Decal_WellLid_01C_HD",
+    "/Game/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/MI_H_Decal_WellLid_01",
+    "/Game/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/MI_H_Decal_WellLid_01B",
+    "/Game/Environment/Structures/HAAVK/Door/00_Materials/HD/MI_H_Customiz_FoldDoor_01a_HD",
+    "/Game/Environment/Structures/HAAVK/Door/00_Materials/HD/MI_H_Customiz_FoldDoor_01b_HD",
+    "/Game/Environment/Structures/HAAVK/Door/00_Materials/HD/MI_H_Customiz_FoldDoor_01c_HD",
+    "/Game/Environment/Structures/HAAVK/Door/00_Materials/HD/MI_H_Small_Door_11B_HD",
+    "/Game/Environment/Structures/HAAVK/Door/00_Materials/MI_H_Customiz_FoldDoor_01",
+    "/Game/Environment/Structures/HAAVK/Fence/00_Materials/HD/MI_H_Fence_Metal_1024x768_01a_HD",
+    "/Game/Environment/Structures/HAAVK/Fence/00_Materials/HD/MI_H_Fence_Metal_1024x768_01b_HD",
+    "/Game/Environment/Structures/HAAVK/Fence/00_Materials/HD/MI_H_Fence_Metal_1024x768_01e_HD",
+    "/Game/Environment/Structures/HAAVK/Fence/00_Materials/HD/MI_H_Fence_Metal_1024x768_01f_HD",
+    "/Game/Environment/Structures/HAAVK/Fence/00_Materials/MI_H_Fence_Metal_1024x768_01",
+    "/Game/Environment/Structures/HAAVK/Fence/00_Materials/MI_H_Fence_Metal_1024x768_01B",
+    "/Game/Environment/Structures/HAAVK/Fence/00_Materials/MI_H_Fence_Metal_1024x768_01C",
+    "/Game/Environment/Structures/HAAVK/Fence/00_Materials/MI_H_Fence_Metal_1024x768_01D",
+    "/Game/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_01_HD",
+    "/Game/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_01_Yellow_HD",
+    "/Game/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_02_HD",
+    "/Game/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_Ring_01B_HD",
+    "/Game/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_Ring_01_HD",
+    "/Game/Environment/Structures/HAAVK/Pipeline/00_Materials/MI_H_PipeLine_02",
+    "/Game/Environment/Structures/HAAVK/Pipeline/00_Materials/MI_H_PipeLine_Ring_01",
+    "/Game/Environment/Structures/HAAVK/Pipeline/00_Materials/MI_H_PipeLine_Ring_01B",
+    "/Game/Environment/Structures/HAAVK/Pipeline/00_Materials/MI_H_PipeLine_Yellow",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_A_01_01_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_A_01_09_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_A_10A_02_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_A_10A_03_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_C_01e_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_C_08e_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01A_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01D_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01E_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01F_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01G_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01H_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01I_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_02D_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_02E_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_02F_HD",
+    "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_02G_HD"
+  ],
+  "recursive": false,
+  "bytes": 27314891,
+  "packages": 50,
+  "entries": [
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Building_Tide_Metal_23_HD.uasset",
+      "size": 5498,
+      "sha256": "1e9dc08b5822afbdb38def845082475e4b9d8c8612c66868e9a33a5dc5357684",
+      "crc": 136024916
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Building_Tide_Metal_23_HD.uexp",
+      "size": 1057327,
+      "sha256": "74fb04284555c1152a23a3626c2f51f70e0d5b150f848d2584fce86a72101181",
+      "crc": 1449196485
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Building_Tide_PrisonMain_14_Layer_01c_HD.uasset",
+      "size": 5391,
+      "sha256": "dd86a9f743bdfe04e0483ca131950702c424379431e50324a456b894df077f57",
+      "crc": 314015428
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Building_Tide_PrisonMain_14_Layer_01c_HD.uexp",
+      "size": 668780,
+      "sha256": "adb28702a21b6c7e5b6cb0c9d2a02e10bb62cad4c44de2ca08adf62e32cc91ae",
+      "crc": 1949942657
+    },
+    {
+      "archive": "05_环境场景_001.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Building_Tide_Rubber_01_Layer_03_HD.uasset",
+      "size": 5538,
+      "sha256": "e8881ddb5c4d59ae43d0eab24f5a56746cf7e88c79180db2ca71c741cf4a5b3b",
+      "crc": 2692507833
+    },
+    {
+      "archive": "05_环境场景_001.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Building_Tide_Rubber_01_Layer_03_HD.uexp",
+      "size": 657565,
+      "sha256": "f5a0d7bd2148edc6229fa9ceea02674f65d14f9429561bd309f2aa8e5ed72982",
+      "crc": 1487715844
+    },
+    {
+      "archive": "05_环境场景_001.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Building_Tide_Trim_Indoor_07_HD.uasset",
+      "size": 3246,
+      "sha256": "c4d71a6834bfa9dfddc638ca41a200be4cf7450706afeec42a17618cb1db3b25",
+      "crc": 3660426687
+    },
+    {
+      "archive": "05_环境场景_001.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Building_Tide_Trim_Indoor_07_HD.uexp",
+      "size": 2924,
+      "sha256": "11ec3e8d7a276e8d5f28a64cd70180af019c3a5243c2ddb19bfee49588c85aa7",
+      "crc": 4173700334
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Tide_Building_Concrete_Damaged_02_HD.uasset",
+      "size": 4416,
+      "sha256": "249f42d25436889f0c759a7709380392307963816f0fcfebfc765aac299197a5",
+      "crc": 1764308130
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Building/Tide/00_Materials/HD/MI_H_Tide_Building_Concrete_Damaged_02_HD.uexp",
+      "size": 997802,
+      "sha256": "e814a35ee6243d32538a30ef8f9a5355a1d8f9ec249bb034812a215b8f7aad62",
+      "crc": 2023546539
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Building/Tide/00_Materials/MI_M_Building_Tide_Pipeline_02.uasset",
+      "size": 3278,
+      "sha256": "067234759a3cb0101770fd388ba6da7254b652b549486bc06fb07c348b1fb195",
+      "crc": 212988832
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Building/Tide/00_Materials/MI_M_Building_Tide_Pipeline_02.uexp",
+      "size": 447980,
+      "sha256": "fb58bebfa45d1a946ecb5216c89d200f2c6d7fd22aaaa622dd57fbc4e1c29b69",
+      "crc": 3100140355
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/HD/MI_H_Decal_WellLid_01A_HD.uasset",
+      "size": 5943,
+      "sha256": "0f286fc06743df84436187b84d87d260475931f8034714f8926886c47964e8c0",
+      "crc": 448302546
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/HD/MI_H_Decal_WellLid_01A_HD.uexp",
+      "size": 1057105,
+      "sha256": "f457f1baf0c558c09dc9b6101c9abaa90ea400ef604b1f66dcdc7313b95b62d8",
+      "crc": 315583607
+    },
+    {
+      "archive": "05_环境场景_001.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/HD/MI_H_Decal_WellLid_01B_HD.uasset",
+      "size": 5376,
+      "sha256": "8d6c3d2a2bb4a3fb29b676ad5c932391d0b7568c1c950fa417ee8d6baa3d3c6b",
+      "crc": 644842922
+    },
+    {
+      "archive": "05_环境场景_001.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/HD/MI_H_Decal_WellLid_01B_HD.uexp",
+      "size": 1026412,
+      "sha256": "beceb1dfdf3558f8a673c261b9d71a8e1e0a00733176cdb66f0ea892d7b0bffd",
+      "crc": 3236084208
+    },
+    {
+      "archive": "05_环境场景_001.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/HD/MI_H_Decal_WellLid_01C_HD.uasset",
+      "size": 5675,
+      "sha256": "bfc812f5e2f4e6ba3269745c87c90ed8043ad52dc28dbe27578e42fdacb44f3a",
+      "crc": 1511403180
+    },
+    {
+      "archive": "05_环境场景_001.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/HD/MI_H_Decal_WellLid_01C_HD.uexp",
+      "size": 1056156,
+      "sha256": "3662c9e59f41ca3bd41b5aec6677f37548be6051bdc20240ae4b232c4977b8be",
+      "crc": 1152049947
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/MI_H_Decal_WellLid_01.uasset",
+      "size": 2354,
+      "sha256": "ec438fa15ad0b6ea0ab42adce0a276f90f9fc4fe0c38838bf7c5be525ae4ca49",
+      "crc": 4027366360
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/MI_H_Decal_WellLid_01.uexp",
+      "size": 933,
+      "sha256": "5f11c4d740eb5e4cc5387e32838da27a550efb07c32ee8567c00091158725127",
+      "crc": 1694325350
+    },
+    {
+      "archive": "05_环境场景_001.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/MI_H_Decal_WellLid_01B.uasset",
+      "size": 3131,
+      "sha256": "0cec1a05ac729b7cc01942f156c6e4d9f0b0f0a983bc78532907bb2160622872",
+      "crc": 541856643
+    },
+    {
+      "archive": "05_环境场景_001.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Decal/WellLid/00_Materials/MI_H_Decal_WellLid_01B.uexp",
+      "size": 447829,
+      "sha256": "b9067d9b4a954aaa351b84e7096da830247eb3ae168ec1ec8a91ff1166f0a173",
+      "crc": 2203854730
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Door/00_Materials/HD/MI_H_Customiz_FoldDoor_01a_HD.uasset",
+      "size": 4892,
+      "sha256": "f6f35dc5b965e5fca7aaae5a1307abe6314b6cf15095357e4897322926c68dff",
+      "crc": 2831784187
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Door/00_Materials/HD/MI_H_Customiz_FoldDoor_01a_HD.uexp",
+      "size": 1022681,
+      "sha256": "0b152bb54fade5c9f6a43489dd1337b573aa3eaa30d26739a90872bec5ac0261",
+      "crc": 2363702387
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Door/00_Materials/HD/MI_H_Customiz_FoldDoor_01b_HD.uasset",
+      "size": 4993,
+      "sha256": "e179925aafe9a8e8b73776cefec11cc1aa4c636fb5ced76c7493a54438a26784",
+      "crc": 3968148405
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Door/00_Materials/HD/MI_H_Customiz_FoldDoor_01b_HD.uexp",
+      "size": 1022703,
+      "sha256": "dcc491633deb1582159f35528382ac6de875f1bec115fea08f51e9d4637f8afb",
+      "crc": 4174499662
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Door/00_Materials/HD/MI_H_Customiz_FoldDoor_01c_HD.uasset",
+      "size": 2807,
+      "sha256": "edb164cdc415dcd8d85b9ab181cdea17fbde494c1c31841e0896cf0859cd87be",
+      "crc": 2425555048
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Door/00_Materials/HD/MI_H_Customiz_FoldDoor_01c_HD.uexp",
+      "size": 1926,
+      "sha256": "f9b134e991c5bd43f779be56c98261b278155bffab6f5504ab4b7af39ffbc09d",
+      "crc": 2642921336
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Door/00_Materials/HD/MI_H_Small_Door_11B_HD.uasset",
+      "size": 3112,
+      "sha256": "ecc33b1e801bfc84cd16c94bb7bcdb14626992a16c27a6a069e176ee8fbe4262",
+      "crc": 3982986692
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Door/00_Materials/HD/MI_H_Small_Door_11B_HD.uexp",
+      "size": 571189,
+      "sha256": "1b4b9f90fa9e4542d5d4c1ff8f9b2aba4f5619331852f9b4274ffb765bcd5580",
+      "crc": 2803075549
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Door/00_Materials/MI_H_Customiz_FoldDoor_01.uasset",
+      "size": 3272,
+      "sha256": "690ac0b91a967b7dddee9314c37881b570bc4a5203e653aff38e9bb04fa8346a",
+      "crc": 346067147
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Door/00_Materials/MI_H_Customiz_FoldDoor_01.uexp",
+      "size": 448117,
+      "sha256": "a9412fe86a1283e8602a13e6ee6c209d45b1e6d12dbfc02181e892ee5a958236",
+      "crc": 3499339845
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/HD/MI_H_Fence_Metal_1024x768_01a_HD.uasset",
+      "size": 5353,
+      "sha256": "178971ff88a41457ce196e355cf65e120f217c6d060cb5ef0c64aeb61f99b58b",
+      "crc": 1402177744
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/HD/MI_H_Fence_Metal_1024x768_01a_HD.uexp",
+      "size": 517831,
+      "sha256": "08405dbba4241d0887b8de80d9ef2460a077cd475ce83e274ceb9e882b1d21ae",
+      "crc": 2037732331
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/HD/MI_H_Fence_Metal_1024x768_01b_HD.uasset",
+      "size": 5250,
+      "sha256": "3022ed6a6140437105b8d1026390505452eeca456943019aa531e2ee3a6ebd8d",
+      "crc": 171536354
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/HD/MI_H_Fence_Metal_1024x768_01b_HD.uexp",
+      "size": 517534,
+      "sha256": "015e81a92d2c39488cc695722f67bb31ace741ba187771cdbdc25de6ff21ea65",
+      "crc": 1186973999
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/HD/MI_H_Fence_Metal_1024x768_01e_HD.uasset",
+      "size": 2892,
+      "sha256": "dd5b08c8023d851bddd805f6afba3f9b8564d7aef6e36e26cdf333d986d73239",
+      "crc": 1442398639
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/HD/MI_H_Fence_Metal_1024x768_01e_HD.uexp",
+      "size": 1926,
+      "sha256": "298c1ebc9db2b174e82ed7357e1e5c11583f6d93a5611f44bf72a51ccce28477",
+      "crc": 383127941
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/HD/MI_H_Fence_Metal_1024x768_01f_HD.uasset",
+      "size": 3713,
+      "sha256": "934df33340073a9dea1844bcffac9294dfdddb12feec0e9df0951623e613f155",
+      "crc": 2801721755
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/HD/MI_H_Fence_Metal_1024x768_01f_HD.uexp",
+      "size": 592839,
+      "sha256": "c86f972283703b0e806b2dc2768c6b3bdbd7d17d95849021abd70dba38d8fbcf",
+      "crc": 2852044197
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/MI_H_Fence_Metal_1024x768_01.uasset",
+      "size": 2749,
+      "sha256": "9ba5664e48258a139c4682eebf0f3b98db78ce72f98f294f69cb67085ea40809",
+      "crc": 3134929367
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/MI_H_Fence_Metal_1024x768_01.uexp",
+      "size": 443932,
+      "sha256": "5913d5140bb2cd0db02e01c9c65ebe77aeff84a09d4302131377f33da2c95e4a",
+      "crc": 3700435678
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/MI_H_Fence_Metal_1024x768_01B.uasset",
+      "size": 2514,
+      "sha256": "f1a97b269066deeecebd15fc719d5ecf7db5c4f75e5b090412e0a47a1462e729",
+      "crc": 2752044146
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/MI_H_Fence_Metal_1024x768_01B.uexp",
+      "size": 1619,
+      "sha256": "32b9942ddb388468ebed736456be01226174aa981dabfb5861f1eec0387e0872",
+      "crc": 1400708796
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/MI_H_Fence_Metal_1024x768_01C.uasset",
+      "size": 2514,
+      "sha256": "8bff89c691541b421eb7978e22c378e6d2036dbd06d5bfb446efa02a233df547",
+      "crc": 1771361299
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/MI_H_Fence_Metal_1024x768_01C.uexp",
+      "size": 1619,
+      "sha256": "32b9942ddb388468ebed736456be01226174aa981dabfb5861f1eec0387e0872",
+      "crc": 1400708796
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/MI_H_Fence_Metal_1024x768_01D.uasset",
+      "size": 2514,
+      "sha256": "0e203bfb243e4197d30bdca7feaf10eeb950027919510f5b7b63ae6b4e891043",
+      "crc": 4120112439
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Fence/00_Materials/MI_H_Fence_Metal_1024x768_01D.uexp",
+      "size": 1619,
+      "sha256": "32b9942ddb388468ebed736456be01226174aa981dabfb5861f1eec0387e0872",
+      "crc": 1400708796
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_01_HD.uasset",
+      "size": 3661,
+      "sha256": "15e1abee82930d9d3ff6630180251e3785d919f6906cc5f3c76b04d5c5c1b686",
+      "crc": 1382958850
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_01_HD.uexp",
+      "size": 588468,
+      "sha256": "8e1e26d7a48af4ddbb853b5e53a2e9fbed3baca264de67a7d5f3c6788b6fcdab",
+      "crc": 1580877486
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_01_Yellow_HD.uasset",
+      "size": 3793,
+      "sha256": "f96be44117de0781ad8903e15e93aba681b0bbed91ccec9f52a99398488219d9",
+      "crc": 3811450259
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_01_Yellow_HD.uexp",
+      "size": 588852,
+      "sha256": "77f3be3941bb21e312ddb2f0e53405ff7ee3c616d653c71357508bafc42e4af0",
+      "crc": 1736131256
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_02_HD.uasset",
+      "size": 3389,
+      "sha256": "a947bc24d401d7b83b1bb05ff5d3e16fad322562b7b183ffc729a7ba5cefd4e6",
+      "crc": 3812334677
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_02_HD.uexp",
+      "size": 579079,
+      "sha256": "2d4ff40c5303fa198cc6e8a73b2f889da2a02b0d0e8d0cb6d524696a9064d35f",
+      "crc": 3212505559
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_Ring_01B_HD.uasset",
+      "size": 2858,
+      "sha256": "e2c499ed16b2e17ceb8de6fa60463aaef5b9bccf2fc2954bcc9025b495cf13d6",
+      "crc": 3234590076
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_Ring_01B_HD.uexp",
+      "size": 570776,
+      "sha256": "8af305798823067e32c066a305a0225668515153db04ebb804b5bed7905a68a2",
+      "crc": 1724836023
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_Ring_01_HD.uasset",
+      "size": 3194,
+      "sha256": "2c6900e45b73dcff0941e0567dec762a0a9892c3d8784531e8eb41ae8063882c",
+      "crc": 1660510539
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/HD/MI_H_PipeLine_Ring_01_HD.uexp",
+      "size": 580065,
+      "sha256": "6623ff2760f5829d49c7dff66a10cc1609d2d1d363b9abf3ee520be51804e12d",
+      "crc": 2595764011
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/MI_H_PipeLine_02.uasset",
+      "size": 3076,
+      "sha256": "b7cf509568ede7aeea88e72974ac78431daf6f5c1a5e025d8ffe4dfb8054038d",
+      "crc": 2206819440
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/MI_H_PipeLine_02.uexp",
+      "size": 447600,
+      "sha256": "e6457fcafc2c4918eb9705d004bfcf0b007883c1b1fd26ad683dda6326f8ce20",
+      "crc": 3870299708
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/MI_H_PipeLine_Ring_01.uasset",
+      "size": 2378,
+      "sha256": "1907ee129385a86665f772629ded6ab4135adfb64fe9a88a97d20b10a36fd6a1",
+      "crc": 839695650
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/MI_H_PipeLine_Ring_01.uexp",
+      "size": 1536,
+      "sha256": "8a84cc4c5dc29bfc729fffe3be1138960aa2f3eb85ecc4e9d7c3cac1579a6760",
+      "crc": 1395472621
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/MI_H_PipeLine_Ring_01B.uasset",
+      "size": 2382,
+      "sha256": "1d5b33bc7e0f504cc03e0747661535075d9aeb5a2a74e767e922d9ab97c1f190",
+      "crc": 4223048293
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/MI_H_PipeLine_Ring_01B.uexp",
+      "size": 1536,
+      "sha256": "8a84cc4c5dc29bfc729fffe3be1138960aa2f3eb85ecc4e9d7c3cac1579a6760",
+      "crc": 1395472621
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/MI_H_PipeLine_Yellow.uasset",
+      "size": 3410,
+      "sha256": "93b67f3474b3307d670d1a99722c73412e808f840a3e2544e03e57a59380a148",
+      "crc": 1339287517
+    },
+    {
+      "archive": "05_环境场景_002.zip",
+      "path": "DeltaForce/Content/Environment/Structures/HAAVK/Pipeline/00_Materials/MI_H_PipeLine_Yellow.uexp",
+      "size": 310015,
+      "sha256": "5522b94c02752fe3ae1ec41edfaf513eab3728a5c0894e751c14a8f9ffc9f6ad",
+      "crc": 1361649222
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_A_01_01_HD.uasset",
+      "size": 5319,
+      "sha256": "57ba0b72a3afc48670bfd000aac10c24d2f7655aab9ace4472f60a82517dd0c4",
+      "crc": 2260275117
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_A_01_01_HD.uexp",
+      "size": 664451,
+      "sha256": "96962fb1d7c3badf1cdf99fe97e7b4e11899abf4e16fd131c65a5ca3841de927",
+      "crc": 3422984470
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_A_01_09_HD.uasset",
+      "size": 4621,
+      "sha256": "5528b45709ab0a16efa5ad7eb545db410e101fb78a64d54e68ff066107de1d86",
+      "crc": 1189678003
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_A_01_09_HD.uexp",
+      "size": 675603,
+      "sha256": "d861c12c019907e142f6ba3c63b300ffa7047ba8a8404282b90ecc1f7a6aff9c",
+      "crc": 246100746
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_A_10A_02_HD.uasset",
+      "size": 4724,
+      "sha256": "fb13c6e896d840fdfbe26d6a9c9d5792698601bdc2f65ea6a538bab749cdf013",
+      "crc": 3539594234
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_A_10A_02_HD.uexp",
+      "size": 514062,
+      "sha256": "a39dc16ec4419a753c3e5fca31de6bef6beb8e444dbf47771d63b93c0d4910a6",
+      "crc": 1060858286
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_A_10A_03_HD.uasset",
+      "size": 4976,
+      "sha256": "3d22e78cb2dbe28476a4f7bc6ac2ef3363d1dd1ab9a3af2f7ed7192a587c949b",
+      "crc": 158465415
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_A_10A_03_HD.uexp",
+      "size": 516664,
+      "sha256": "54302904be9761602cb5bd8aea2d83c7ca86b0fda0b31a24850ce0e9aea75eca",
+      "crc": 1971163902
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_C_01e_HD.uasset",
+      "size": 5026,
+      "sha256": "eab72ee57f7543d17a7c0562eb04dca9b2fcbb6e1eab14d4df81ecbbc3bdd89c",
+      "crc": 3704228836
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_C_01e_HD.uexp",
+      "size": 516684,
+      "sha256": "4088c2c81bef9a9343ac28e6bae77544825237c08cf6515c183fd0e439e0e31d",
+      "crc": 2893041492
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_C_08e_HD.uasset",
+      "size": 4717,
+      "sha256": "dfb51a925d437d4c5b038b2a404a4db55ae63b23ba2259c81a1d48f805285685",
+      "crc": 1872502195
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_C_08e_HD.uexp",
+      "size": 678859,
+      "sha256": "ac39fc301b83160912940446b3c9c90edf5c5656ac8a4627711121eecc4db713",
+      "crc": 4263077362
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01A_HD.uasset",
+      "size": 4831,
+      "sha256": "503bc22cb6e49fc348a53de944f88af6c7278163a2306509e57c6739cb0392a9",
+      "crc": 688943871
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01A_HD.uexp",
+      "size": 664687,
+      "sha256": "92218211bd04c83c312df46fedd427f453eacb010dbc6aa15c9b5e1a607039a9",
+      "crc": 3688631332
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01D_HD.uasset",
+      "size": 4831,
+      "sha256": "a8d49b626730872317c2f167d6f4187574f3980a09ae484afc41b83c37b5d6f9",
+      "crc": 2982679865
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01D_HD.uexp",
+      "size": 664687,
+      "sha256": "92218211bd04c83c312df46fedd427f453eacb010dbc6aa15c9b5e1a607039a9",
+      "crc": 3688631332
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01E_HD.uasset",
+      "size": 4831,
+      "sha256": "f068afb429548663f945334975e31d83aad6370dc517ad192e2e4ddf1fcc5082",
+      "crc": 372176964
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01E_HD.uexp",
+      "size": 664687,
+      "sha256": "92218211bd04c83c312df46fedd427f453eacb010dbc6aa15c9b5e1a607039a9",
+      "crc": 3688631332
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01F_HD.uasset",
+      "size": 4831,
+      "sha256": "ffa1b08ec6cd4d065dc3494cfe3884349341f6aea34087e1f8bc2d4a605ebabc",
+      "crc": 1457047867
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01F_HD.uexp",
+      "size": 664687,
+      "sha256": "6d53cede28320cb0057a85e1a440321af097b40853a84a3dd502e7b16275db2c",
+      "crc": 391079418
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01G_HD.uasset",
+      "size": 4831,
+      "sha256": "b3d4f82e5b2b88ed86f8a9ee7ea208f2c6c3b534d49ec9435e35fd234cad3a73",
+      "crc": 4047381574
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01G_HD.uexp",
+      "size": 664687,
+      "sha256": "92218211bd04c83c312df46fedd427f453eacb010dbc6aa15c9b5e1a607039a9",
+      "crc": 3688631332
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01H_HD.uasset",
+      "size": 4831,
+      "sha256": "c5f73dbee379315dde0d1a2247a4e7dd370a3ed8fec9c894f1fb3e8af2c8c1a6",
+      "crc": 2285877726
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01H_HD.uexp",
+      "size": 664687,
+      "sha256": "92218211bd04c83c312df46fedd427f453eacb010dbc6aa15c9b5e1a607039a9",
+      "crc": 3688631332
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01I_HD.uasset",
+      "size": 4831,
+      "sha256": "f6301ee7d120e35c93f0f17cf136544d597279269a9ae277aae07722fac3112e",
+      "crc": 3905997963
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_01I_HD.uexp",
+      "size": 664687,
+      "sha256": "92218211bd04c83c312df46fedd427f453eacb010dbc6aa15c9b5e1a607039a9",
+      "crc": 3688631332
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_02D_HD.uasset",
+      "size": 4608,
+      "sha256": "55c29055aa5e8171cc0ef52467adf0bf5fb59850fb1796a64387f56ea3a15359",
+      "crc": 2620666524
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_02D_HD.uexp",
+      "size": 663872,
+      "sha256": "6a953e957a6938d0d54cd2c0dd80b4cda5b5936d29f65e5b640d8304d3153de8",
+      "crc": 200039925
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_02E_HD.uasset",
+      "size": 4608,
+      "sha256": "b99b96c411b4364a2de67df8b6b9f331ad94dfc4c1f4a4662251eeb5cdbf4fdf",
+      "crc": 1993046340
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_02E_HD.uexp",
+      "size": 663674,
+      "sha256": "2338f9e5dc1e8e4632ac26cbda682b72c6b6b409924ef792069768ee6f213fad",
+      "crc": 1567183935
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_02F_HD.uasset",
+      "size": 4608,
+      "sha256": "858df22536965f8c5cf0ae6a1b8a2d5f1e1ab05e7e9e266c8a4ba08529fed186",
+      "crc": 131578944
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_02F_HD.uexp",
+      "size": 663872,
+      "sha256": "6a953e957a6938d0d54cd2c0dd80b4cda5b5936d29f65e5b640d8304d3153de8",
+      "crc": 200039925
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_02G_HD.uasset",
+      "size": 4608,
+      "sha256": "6622f1e8d252d15135c1c05566444327173544dfb054b2c5e3aec8bc9eb454a8",
+      "crc": 1795216885
+    },
+    {
+      "archive": "05_环境场景_007.zip",
+      "path": "DeltaForce/Content/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/00_Materials/HD/MI_I_RoadFacility_Ground_H_02G_HD.uexp",
+      "size": 663872,
+      "sha256": "6a953e957a6938d0d54cd2c0dd80b4cda5b5936d29f65e5b640d8304d3153de8",
+      "crc": 200039925
+    }
+  ],
+  "missing": []
+}

@@ -1,0 +1,91 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\run_restoration_editor.py",
+    "warm",
+    "--tag",
+    "Phase7CNativeWarm01-22",
+    "--manifest",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7C\\ManifestRuns\\Phase7CManifest01\\Manifest.json",
+    "--limit",
+    "250"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T18:48:51.868070+00:00",
+      "c_free_gib": 61.90692901611328,
+      "d_free_gib": 218.82822799682617,
+      "ram_free_gib": 12.34982681274414,
+      "commit_used_gib": 30.249252319335938,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:48:51.873069+00:00",
+      "c_free_gib": 61.90692901611328,
+      "d_free_gib": 218.8282241821289,
+      "ram_free_gib": 12.349193572998047,
+      "commit_used_gib": 30.249252319335938,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:48:56.878175+00:00",
+      "c_free_gib": 61.90817642211914,
+      "d_free_gib": 218.82786560058594,
+      "ram_free_gib": 11.809036254882812,
+      "commit_used_gib": 31.029739379882812,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:49:01.882851+00:00",
+      "c_free_gib": 61.904842376708984,
+      "d_free_gib": 218.82785034179688,
+      "ram_free_gib": 10.31045150756836,
+      "commit_used_gib": 32.495452880859375,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:49:06.891018+00:00",
+      "c_free_gib": 61.90119552612305,
+      "d_free_gib": 218.83745956420898,
+      "ram_free_gib": 9.391056060791016,
+      "commit_used_gib": 33.52699279785156,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:49:12.007798+00:00",
+      "c_free_gib": 61.85148239135742,
+      "d_free_gib": 218.83743286132812,
+      "ram_free_gib": 8.884742736816406,
+      "commit_used_gib": 33.97689437866211,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:49:17.019669+00:00",
+      "c_free_gib": 61.83707046508789,
+      "d_free_gib": 218.83729553222656,
+      "ram_free_gib": 9.49826431274414,
+      "commit_used_gib": 33.30987548828125,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:49:17.817398+00:00",
+      "c_free_gib": 61.83706283569336,
+      "d_free_gib": 218.83738327026367,
+      "ram_free_gib": 11.785663604736328,
+      "commit_used_gib": 30.915328979492188,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 66824,
+  "exit_code": 0
+}

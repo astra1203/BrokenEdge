@@ -1,0 +1,73 @@
+{
+  "command": [
+    "C:/Users/Oreki/AppData/Roaming/uv/python/cpython-3.12.13-windows-x86_64-none/python.exe",
+    "Scripts/SpaceCenter/run_restoration_editor.py",
+    "terrain-fidelity",
+    "--tag",
+    "Phase7CTerrainFidelity01",
+    "--manifest",
+    "Saved/SpaceCenter/Phase7C/ManifestRuns/Phase7CManifest01/Manifest.json"
+  ],
+  "result": "failed",
+  "samples": [
+    {
+      "utc": "2026-10-05T18:55:16.131685+00:00",
+      "c_free_gib": 61.820011138916016,
+      "d_free_gib": 218.68393325805664,
+      "ram_free_gib": 12.702056884765625,
+      "commit_used_gib": 29.921329498291016,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:55:16.135685+00:00",
+      "c_free_gib": 61.820011138916016,
+      "d_free_gib": 218.68392944335938,
+      "ram_free_gib": 12.701221466064453,
+      "commit_used_gib": 29.922313690185547,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:55:21.146363+00:00",
+      "c_free_gib": 61.819976806640625,
+      "d_free_gib": 218.6835708618164,
+      "ram_free_gib": 11.994823455810547,
+      "commit_used_gib": 30.671466827392578,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:55:26.159119+00:00",
+      "c_free_gib": 61.81987380981445,
+      "d_free_gib": 218.68355560302734,
+      "ram_free_gib": 11.09048843383789,
+      "commit_used_gib": 31.409305572509766,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:55:31.166703+00:00",
+      "c_free_gib": 61.81984329223633,
+      "d_free_gib": 218.8246612548828,
+      "ram_free_gib": 10.763435363769531,
+      "commit_used_gib": 31.729007720947266,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:55:32.166612+00:00",
+      "c_free_gib": 61.81984329223633,
+      "d_free_gib": 218.8247184753418,
+      "ram_free_gib": 12.700675964355469,
+      "commit_used_gib": 30.015235900878906,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 9868,
+  "exit_code": 1
+}

@@ -1,0 +1,49 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts/SpaceCenter/restore_assets.py",
+    "meshes",
+    "--selection",
+    "Phase7CSelect05",
+    "--tag",
+    "Phase7CMeshes02"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T17:51:56.480464+00:00",
+      "c_free_gib": 64.0143814086914,
+      "d_free_gib": 223.7569122314453,
+      "ram_free_gib": 11.184356689453125,
+      "commit_used_gib": 30.89862823486328,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:51:56.485465+00:00",
+      "c_free_gib": 64.0143814086914,
+      "d_free_gib": 223.75690841674805,
+      "ram_free_gib": 11.183929443359375,
+      "commit_used_gib": 30.89962387084961,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:51:59.434921+00:00",
+      "c_free_gib": 64.01202392578125,
+      "d_free_gib": 223.7369384765625,
+      "ram_free_gib": 11.122604370117188,
+      "commit_used_gib": 30.92764663696289,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 74160,
+  "exit_code": 0
+}

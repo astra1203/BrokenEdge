@@ -1,0 +1,43 @@
+READY Server 51720
+READY A 56776
+PASS A joined LAN lobby
+PASS A name replicated
+READY B 62640
+PASS B joined LAN lobby
+PASS B name replicated
+PASS A persistent account ready
+PASS B persistent account ready
+PASS All players loaded in Extraction
+PASS Dedicated authority and Stinger pawns
+PASS A equipped AK
+PASS B equipped AK
+PASS First-person backpack section hidden on each owner
+PASS Server and owners keep both hands within two cm of weapon grips
+PASS A server starts individual extraction
+PASS A extraction timer reset outside zone
+PASS Leaving cannot finalize extraction
+PASS A server starts individual extraction
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS A direct bullet health damage 20
+PASS A damage replication
+PASS Damage does not reset extraction deadline
+PASS A durably extracted
+PASS A has no live inventory or pawn
+PASS Full stash preserves successful loot in overflow
+PASS Successful items never become a death container
+PASS Other player keeps playing after individual success
+PASS B server starts individual extraction
+PASS B durably extracted
+PASS B has no live inventory or pawn
+PASS All terminal players return to ready lobby
+PASS Returned accounts retain settlement and readiness resets
+PASS Full stash rejects claim without losing overflow
+PASS Actual context menu transfers to loadout
+PASS Claim consumes overflow only after fitting
+PASS Stash drag rotates into loadout grid
+PASS UI split preserves stored reserve and creates two stacks
+PASS Preparing locks account editing
+PASS Locked request cannot move items
+PASS Cancel ready unlocks inventory
+RESULT passed 39 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7CRegression03-settlement

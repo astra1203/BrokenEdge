@@ -1,0 +1,55 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts/SpaceCenter/restore_texture_sources.py",
+    "terrain",
+    "--tag",
+    "Phase7CTerrainTextures01"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T17:45:02.915023+00:00",
+      "c_free_gib": 64.00312805175781,
+      "d_free_gib": 224.0485954284668,
+      "ram_free_gib": 11.45254898071289,
+      "commit_used_gib": 30.779281616210938,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:45:02.925026+00:00",
+      "c_free_gib": 64.00312805175781,
+      "d_free_gib": 224.04859161376953,
+      "ram_free_gib": 11.45241928100586,
+      "commit_used_gib": 30.779281616210938,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:45:07.933532+00:00",
+      "c_free_gib": 64.00311279296875,
+      "d_free_gib": 223.9954376220703,
+      "ram_free_gib": 11.023578643798828,
+      "commit_used_gib": 31.173473358154297,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:45:09.101889+00:00",
+      "c_free_gib": 64.00310516357422,
+      "d_free_gib": 223.96488189697266,
+      "ram_free_gib": 11.37374496459961,
+      "commit_used_gib": 30.786754608154297,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 53724,
+  "exit_code": 0
+}

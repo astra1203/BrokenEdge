@@ -1,0 +1,71 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+    "--tag",
+    "Phase7CRules01-progression",
+    "progression"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T20:26:02.517765+00:00",
+      "c_free_gib": 59.88465118408203,
+      "d_free_gib": 215.8465805053711,
+      "ram_free_gib": 14.153457641601562,
+      "commit_used_gib": 31.084346771240234,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T20:26:02.521764+00:00",
+      "c_free_gib": 59.88465118408203,
+      "d_free_gib": 215.84657669067383,
+      "ram_free_gib": 14.153282165527344,
+      "commit_used_gib": 31.08542251586914,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T20:26:07.528993+00:00",
+      "c_free_gib": 59.88461685180664,
+      "d_free_gib": 215.99438095092773,
+      "ram_free_gib": 13.54330825805664,
+      "commit_used_gib": 31.826995849609375,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T20:26:12.541749+00:00",
+      "c_free_gib": 59.88459777832031,
+      "d_free_gib": 215.9942283630371,
+      "ram_free_gib": 12.352420806884766,
+      "commit_used_gib": 32.8149528503418,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T20:26:17.557144+00:00",
+      "c_free_gib": 59.88459777832031,
+      "d_free_gib": 215.64373397827148,
+      "ram_free_gib": 11.194618225097656,
+      "commit_used_gib": 33.92683410644531,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T20:26:22.481125+00:00",
+      "c_free_gib": 59.88440704345703,
+      "d_free_gib": 215.8453712463379,
+      "ram_free_gib": 14.158939361572266,
+      "commit_used_gib": 31.100547790527344,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 32812,
+  "exit_code": 0
+}

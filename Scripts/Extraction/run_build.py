@@ -16,10 +16,13 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--target', choices=['Editor', 'Client', 'Server'], default='Editor')
 parser.add_argument('--package', action='store_true')
 parser.add_argument('--jobs', type=int, default=0, help='Optional UBT compile action limit; 0 uses the engine default')
+parser.add_argument('--cook-workers', type=int, default=0, help='Optional shader worker limit and bounded async asset compilation during cooking')
 parser.add_argument('--tag', required=True)
 args = parser.parse_args()
 if args.jobs < 0:
     raise ValueError('jobs must be zero or positive')
+if args.cook_workers < 0:
+    raise ValueError('cook-workers must be zero or positive')
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
 out = ROOT / 'Saved/Extraction' / args.tag
@@ -35,6 +38,18 @@ if args.package:
                '-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction',
                '-prereqs', '-ubtargs=-NoHotReloadFromIDE -WaitMutex' + (f' -MaxParallelActions={args.jobs}' if args.jobs else ''), '-utf8output']
     command += ['-server', '-noclient', '-serverplatform=Win64', '-serverconfig=Development'] if args.target == 'Server' else ['-platform=Win64', '-clientconfig=Development']
+    if args.cook_workers:
+        unused=max(0,(os.cpu_count() or 8)-args.cook_workers)
+        settings=[('DevOptions.Shaders','ShaderCompilerCoreCountThreshold',999),
+                  ('DevOptions.Shaders','NumUnusedShaderCompilingThreads',unused),
+                  ('DevOptions.Shaders','NumUnusedShaderCompilingThreadsDuringGame',unused),
+                  ('SystemSettings','Editor.AsyncTextureCompilationMaxConcurrency',1),
+                  ('SystemSettings','Editor.AsyncStaticMeshCompilationMaxConcurrency',1),
+                  ('SystemSettings','Editor.AsyncAssetCompilationMaxConcurrency',2),
+                  ('SystemSettings','Editor.AsyncAssetCompilationMaxMemoryUsage',2)]
+        command += ['-AdditionalCookerOptions=-ForceTextureEncodeSpeed=Final -ini:Engine:'+','.join(
+            '['+section+']:'+name+'='+str(value) for section,name,value in settings)
+            +' -ini:Editor:[CookSettings]:MemoryMinFreePhysical=4096,[CookSettings]:MemoryMaxUsedPhysical=8192']
 else:
     target = 'BrokenEdge' + (args.target if args.target != 'Client' else '')
     command = [str(ENGINE / 'Engine/Build/BatchFiles/Build.bat'), target, 'Win64', 'Development',

@@ -1,5 +1,6 @@
 """Duplicate only the phase-1 map; share its meshes/materials and preserve the original."""
 import json
+import sys
 from pathlib import Path
 import unreal
 
@@ -11,6 +12,9 @@ if not lib.does_asset_exist(target):
     assert lib.duplicate_asset(source, target), 'Map duplication failed'
 levels = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
 assert levels.load_level(target)
+sys.path.insert(0,str(root/'Scripts/SpaceCenter'))
+from restoration_generation_guard import assert_legacy_map_allowed
+assert_legacy_map_allowed('prepare_map')
 actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 # Translucent imported glass uses its fallback mesh; Nanite only supports the
 # opaque parent. Keep this choice when the phase-2 map is regenerated.

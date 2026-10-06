@@ -1,0 +1,36 @@
+{
+  "task": "integrate",
+  "created": [],
+  "reused": 0,
+  "errors": [
+    "Traceback (most recent call last):\n  File \"D:/SourceFiles/UnrealProjects/BrokenEdge/Scripts/SpaceCenter/import_restoration.py\", line 144, in <module>\n    run(globals())\n  File \"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_world.py\", line 199, in run\n    integrate(g)\n  File \"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\integrate_restoration.py\", line 79, in integrate\n    assert unreal.ExtractionNavigation.build_navigation(world),'Restored patrol navigation failed; no map has been saved'\nAssertionError: Restored patrol navigation failed; no map has been saved\n"
+  ],
+  "acceptance": {
+    "version": 1,
+    "manifest_sha256": "05ce654893c5156adc26abec982303deb7091ab32e35e457eccaf7842afb9a0a",
+    "audit": "Saved/SpaceCenter/Phase7C/EditorRuns/Phase7CNativeAudit05",
+    "capture": "Saved/SpaceCenter/Phase7C/EditorRuns/Phase7CCapture05",
+    "traverse": "Saved/SpaceCenter/Phase7C/EditorRuns/Phase7CTraverse03",
+    "visual_review": "passed",
+    "review_notes": [
+      "13 native 1920x1080 inspection captures reviewed. Ordinary foliage no longer uses white impostor defaults.",
+      "east_district is a close wall-material view, not a district overview. terrain_seam currently overlooks the paved yard; numeric native terrain seam/collision evidence is recorded separately.",
+      "Source effect/glitch textures retained. Static effect reconstruction is not animated source graph equivalence.",
+      "Historical 2024 centrifuge reference is a same-room candidate; exact source build and camera pose are not matched."
+    ]
+  },
+  "backups": [
+    {
+      "file": "Content\\Maps\\SpaceCenter\\L_SpaceCenterExtraction.umap",
+      "backup": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7C\\EditorRuns\\Phase7CIntegrateRepeat01\\OriginalMaps\\L_SpaceCenterExtraction.umap",
+      "sha256": "65768fb530c47941128054941a33c691ee6314fafde12eb5bf935f83b2c08da4"
+    },
+    {
+      "file": "Content\\Maps\\SpaceCenter\\L_SpaceCenterNorth.umap",
+      "backup": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7C\\EditorRuns\\Phase7CIntegrateRepeat01\\OriginalMaps\\L_SpaceCenterNorth.umap",
+      "sha256": "d6787ce3ce608b8ed19f46358b4bbeaadfb01dcbe1f58c7e4a8f355c22f47541"
+    }
+  ],
+  "removed_legacy_geometry": [],
+  "result": "failed"
+}

@@ -1,0 +1,34 @@
+{
+  "group": "packages",
+  "result": "failed",
+  "steps": [
+    {
+      "name": "server",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7CPackages02-server",
+        "--timeout",
+        "7200",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_build.py",
+        "--tag",
+        "Phase7CPackages02-server",
+        "--target",
+        "Server",
+        "--package",
+        "--jobs",
+        "4",
+        "--cook-workers",
+        "4"
+      ],
+      "pid": 73172,
+      "exit_code": 1
+    }
+  ],
+  "started_utc": "2026-10-05T20:13:35.473653+00:00",
+  "error": "RuntimeError('server failed')",
+  "finished_utc": "2026-10-05T20:14:51.895618+00:00"
+}

@@ -1,0 +1,9 @@
+{
+  "task": "preview",
+  "created": [],
+  "reused": 0,
+  "errors": [
+    "Traceback (most recent call last):\n  File \"D:/SourceFiles/UnrealProjects/BrokenEdge/Scripts/SpaceCenter/import_restoration.py\", line 104, in <module>\n    run(globals())\n  File \"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_world.py\", line 155, in run\n    elif g['TASK']=='preview':assemble(g)\n                              ^^^^^^^^^^^\n  File \"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_world.py\", line 107, in assemble\n    component.clear_instances();configure(component,entries[0][0])\n                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_world.py\", line 68, in configure\n    translucent |= native.get_base_material().get_editor_property('blend_mode')==unreal.BlendMode.BLEND_TRANSLUCENT\n                   ^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'get_base_material'\n"
+  ],
+  "result": "failed"
+}

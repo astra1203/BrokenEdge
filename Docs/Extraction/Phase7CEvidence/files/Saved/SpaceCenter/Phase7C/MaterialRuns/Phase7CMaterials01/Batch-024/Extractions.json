@@ -1,0 +1,760 @@
+{
+  "requested": [
+    "/Game/Environment/Biome/BiomeGlobalAsset/Mobile_GlobalTintParam",
+    "/Game/MaterialLib/MaterialFunctions/Tools/MaterialLayers/DataProvider/MF_HD_Data_BNMRA_Decal_NoSVT",
+    "/Game/MaterialLib/Materials/Scene/GeneralRock/MF_BaseDataLayer",
+    "/Game/MaterialLib/Materials/Scene/GeneralRock/MF_GeneralRock_BaseData",
+    "/Game/MaterialLib/Materials/Scene/GeneralRock/MF_GradientTint",
+    "/Game/MaterialLib/Materials/Scene/GeneralRock/MF_NearDetail",
+    "/Game/MaterialLib/Materials/Scene/GeneralRock/MF_NearDetail_HD",
+    "/Game/MaterialLib/Materials/Scene/GeneralRock/MF_Rock_DetailLayer",
+    "/Game/MaterialLib/Materials/Scene/GeneralRock/MF_Rock_DetailLayer_HD",
+    "/Game/MaterialLib/Materials/Scene/GeneralRock/MF_Rock_TopLayer",
+    "/Game/MaterialLib/Materials/Scene/GeneralRock/MF_TopLayer",
+    "/Game/MaterialLib/Materials_HD/Plants/GlobalWindParameters/MPC_Global_WindField_HD",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Adjustment/MF_AoAdjustment_st",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_BiomeRainDroplets",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_BiomeRockWetEffect",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_EditorModeSwitch_MA",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_EditorModeSwitch_Value",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_GlobalTint",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_Impostor",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_LeafTint",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/WarDamage/MF_WarDamage",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/Functions/MF_FastSineIn2PI",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/Functions/MF_FoliageWindRotate",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_AdvanceWindParams",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_Global_WindField",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_LeafRipple",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_PP_OmniExplosion",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_PP_OmniExplosion_PerCenter",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_RippleMotion",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_SimpleDirectionalWind",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_VertexWind",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/Pasta/MF_Pasta_Wind",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter/MF_GR_BS_PivotData",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter/MF_PP_Wind_Bush",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter/MF_PP_Wind_Grass",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/Functions/MF_PP2_2dArrayLookUpByIndex",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/Functions/MF_PP2_GetIndex",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/Functions/MF_PP2_GetParentDataUVs",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/Functions/MF_PP2_UnpackIntegerAsFloat",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/MF_PP2_PerLevelWind",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/MF_PP2_RootWind",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/MF_PP2_Wind_Tree",
+    "/Game/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/MF_SimpleLeafRipple",
+    "/Game/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_AdvancedDetailOverlay",
+    "/Game/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_AdvancedDetail_HD",
+    "/Game/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_BlendRVTWithDither",
+    "/Game/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_Clamp_Wetness",
+    "/Game/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_ContactShadow",
+    "/Game/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_DetailMask",
+    "/Game/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_ExtraLayerBlend"
+  ],
+  "recursive": false,
+  "bytes": 338528,
+  "packages": 50,
+  "entries": [
+    {
+      "archive": "05_环境场景_001.zip",
+      "path": "DeltaForce/Content/Environment/Biome/BiomeGlobalAsset/Mobile_GlobalTintParam.uasset",
+      "size": 1530,
+      "sha256": "210816d732489665388b5c6d18841ac3edae3c1d7605e05de0822bb8f89b7674",
+      "crc": 3549134105
+    },
+    {
+      "archive": "05_环境场景_001.zip",
+      "path": "DeltaForce/Content/Environment/Biome/BiomeGlobalAsset/Mobile_GlobalTintParam.uexp",
+      "size": 1086,
+      "sha256": "72059857dde0744f2df1fecc8976e71a85d2a69173721354611d394967576297",
+      "crc": 1308699088
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/MaterialFunctions/Tools/MaterialLayers/DataProvider/MF_HD_Data_BNMRA_Decal_NoSVT.uasset",
+      "size": 6453,
+      "sha256": "eba9f3920a0d4de55957d31224ecd1206a4ec8292d4336c28110f59c1d1151d3",
+      "crc": 1629397299
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/MaterialFunctions/Tools/MaterialLayers/DataProvider/MF_HD_Data_BNMRA_Decal_NoSVT.uexp",
+      "size": 5748,
+      "sha256": "fa249e9f3af1e38a7a6ac7c5e36582bf696d6137e1e44b8dd9f0f7e9d150d1b4",
+      "crc": 3988830775
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_BaseDataLayer.uasset",
+      "size": 5547,
+      "sha256": "41a4efab1dd0f856ce701026f855ea996fa1928b9c05007bb4e3c1c6948dcb69",
+      "crc": 3875136966
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_BaseDataLayer.uexp",
+      "size": 5304,
+      "sha256": "510d14ac981f9e4b036e1cfd3a07f3b2df6981f820e88a80da587d39494a3518",
+      "crc": 2224033896
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_GeneralRock_BaseData.uasset",
+      "size": 3020,
+      "sha256": "4ee9141c342b2699b3e664ef46772614e8a61ff5d6186cbc0fafc7781fbb9b9b",
+      "crc": 2130007112
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_GeneralRock_BaseData.uexp",
+      "size": 1434,
+      "sha256": "9796939db264439ef3b832a236f1c1a5521c8eda85f2926223776ac124ae0588",
+      "crc": 2410972781
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_GradientTint.uasset",
+      "size": 2069,
+      "sha256": "69b668d401e6de874a969504cdef1fb9ad80364b87e42eb800bdcd9f9da07000",
+      "crc": 275238049
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_GradientTint.uexp",
+      "size": 860,
+      "sha256": "a03e779c4532447eb28f0c91168e7ce099a9e84b781d8c5600da52b72517d47f",
+      "crc": 1194937577
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_NearDetail.uasset",
+      "size": 2527,
+      "sha256": "1adcdc2834a6ac0334425f21dd819e59ac3b23a4289a58b2afc50132a095d4fa",
+      "crc": 4138852621
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_NearDetail.uexp",
+      "size": 1127,
+      "sha256": "2c2a53850e6a918914a4da3b418f986b39052b148159260d3994800300679c1f",
+      "crc": 1410063465
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_NearDetail_HD.uasset",
+      "size": 2539,
+      "sha256": "49d1fda2b3842808a12362f0d2feb265fc3273f578a82ed18251c400ba53ecbb",
+      "crc": 149457684
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_NearDetail_HD.uexp",
+      "size": 1127,
+      "sha256": "ad0d8cc0eeb6ebee76f7ac47b30a3eb449e81a9e26e46b8006ac7846134e9c09",
+      "crc": 2653992953
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_Rock_DetailLayer.uasset",
+      "size": 5004,
+      "sha256": "55ba1070a8b81f1307bb16f85c07ecac45c7636a0c5666d0530cc0b10a998c4e",
+      "crc": 1804373807
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_Rock_DetailLayer.uexp",
+      "size": 2521,
+      "sha256": "395c96398a50be0ed2681dd9dd5b33d15ec8603ab4a017756b74dd6db613f3e6",
+      "crc": 3622639286
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_Rock_DetailLayer_HD.uasset",
+      "size": 8803,
+      "sha256": "025c8ee3e1ee8a0d3d2a1170895da03c4272570096958877b2a55ea6450f68a8",
+      "crc": 2387418790
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_Rock_DetailLayer_HD.uexp",
+      "size": 5933,
+      "sha256": "80f55058dbe2e52a0ba291a8fded817007102d92b2d3845d78322f6815ac3b37",
+      "crc": 168395844
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_Rock_TopLayer.uasset",
+      "size": 5614,
+      "sha256": "cb1a9fa67d118ad93e58ea54bd578600b7377d697616f06bf707b8e34cbeccb0",
+      "crc": 1198577502
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_Rock_TopLayer.uexp",
+      "size": 2705,
+      "sha256": "5faf4020eb7207e8ff1259ae73ce19f4b55595b314db779a48f9c8341c012cda",
+      "crc": 3114267145
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_TopLayer.uasset",
+      "size": 2458,
+      "sha256": "c573b2062fc028e2151a5c516b4699dd44e6bca346436e2842dd1dae63f8041f",
+      "crc": 3897880840
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials/Scene/GeneralRock/MF_TopLayer.uexp",
+      "size": 1182,
+      "sha256": "8d672a1dab13b7c8c6d78a32d5038368c028d494b4dcbc63f06810893e1f6de8",
+      "crc": 2562731412
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/GlobalWindParameters/MPC_Global_WindField_HD.uasset",
+      "size": 1018,
+      "sha256": "18e23aa43cbab2118adc74be387aa0c272c6f537fa92a4619b4d93f4efa21247",
+      "crc": 1491760774
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/GlobalWindParameters/MPC_Global_WindField_HD.uexp",
+      "size": 572,
+      "sha256": "52e5cef4d052cb35979e9621cad833bddc60349d4c562c0f6978fd7627d8ba08",
+      "crc": 1604537568
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Adjustment/MF_AoAdjustment_st.uasset",
+      "size": 2596,
+      "sha256": "95d363fa2959f1647f5f4e380a0dbe3be58609f9ae2e4a835fd0134bcb1361b1",
+      "crc": 2446556984
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Adjustment/MF_AoAdjustment_st.uexp",
+      "size": 1708,
+      "sha256": "de5a8287cb0aac04707486b28b844b6b067ae9650df7acaa6310c4e2c6c08f7d",
+      "crc": 21054090
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_BiomeRainDroplets.uasset",
+      "size": 3908,
+      "sha256": "51434bfe47198a5f13773e8530230653501b93531979ffc5cba1fc5cf2bf3922",
+      "crc": 3124903773
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_BiomeRainDroplets.uexp",
+      "size": 1918,
+      "sha256": "0bae38e865850a08c8e97fec8fa1ce5b4901670ee85a36cdc2e654f1df6c606b",
+      "crc": 3826830980
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_BiomeRockWetEffect.uasset",
+      "size": 5941,
+      "sha256": "b4990d0af35b2cb3e09f68b4cbcc3f303d747d7dae45905284a03903926a7aa4",
+      "crc": 1763389260
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_BiomeRockWetEffect.uexp",
+      "size": 5183,
+      "sha256": "f0db41aa98744be4cdfd48867c1eed9e9c60aac93c94328ac1ecb85ef1847ef2",
+      "crc": 3106288107
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_EditorModeSwitch_MA.uasset",
+      "size": 1257,
+      "sha256": "988ef8fef2c1db08cd71f030e0ba0541a2c8cd55d5ee31db5467a6edb097b2cf",
+      "crc": 48398931
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_EditorModeSwitch_MA.uexp",
+      "size": 293,
+      "sha256": "2959f840951e82975c3d62b4573201a3e6d4ae8e89b64cd8ec7f0cdb9d7eb9f7",
+      "crc": 2712389660
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_EditorModeSwitch_Value.uasset",
+      "size": 1263,
+      "sha256": "d58b44e8b248c16c4383ccbdfcc15f8b7fb7984cf63918a3eb6587392bc14ae3",
+      "crc": 2244235050
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_EditorModeSwitch_Value.uexp",
+      "size": 301,
+      "sha256": "e30029983fd791db98a67dee5b8f4b080a1c38565995d67bd495d965a31e73c0",
+      "crc": 2577437441
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_GlobalTint.uasset",
+      "size": 14189,
+      "sha256": "60a2be2f88dee99fb823392fc06a41115e694d0198311e45d88094981176ee41",
+      "crc": 588816707
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_GlobalTint.uexp",
+      "size": 11126,
+      "sha256": "c6d4a7dd561cb102c5aa314ba379f129a6e13be666eca7b06591f7de85137e11",
+      "crc": 3123071753
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_Impostor.uasset",
+      "size": 3224,
+      "sha256": "29f1c446a75af7a0200bb31abc92f312e02f9918c16e449e81199cf1928c8716",
+      "crc": 4022405805
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_Impostor.uexp",
+      "size": 1698,
+      "sha256": "e13910bbd8f1146dc6e37c6328f7683fd3891c617ba8855376fb11f99d54fd3a",
+      "crc": 2358913680
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_LeafTint.uasset",
+      "size": 799,
+      "sha256": "da5a238770dbdadc1d2cd56fd002a79a0cd04f565280892d76ae3f4dce014626",
+      "crc": 2806956115
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/MF_LeafTint.uexp",
+      "size": 170,
+      "sha256": "c9192baa24fd297a55a6b0bb543181fe2b53efcd3f5fb5c69798cbee386dac9a",
+      "crc": 278070298
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/WarDamage/MF_WarDamage.uasset",
+      "size": 7284,
+      "sha256": "cb2b4a2f7b6106f42599a388603840d20874f3b65e1ca76a0be0d8e9a81dde87",
+      "crc": 2216357064
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/WarDamage/MF_WarDamage.uexp",
+      "size": 5815,
+      "sha256": "d2502bc013ff25b82a34f15214bf333d09595d4197c212e669bd095a245f3aaf",
+      "crc": 1071187814
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/Functions/MF_FastSineIn2PI.uasset",
+      "size": 870,
+      "sha256": "34ad3a3e3b2da2d21f843e682242804a3d54e0909c1ca149e6bdb951126938e7",
+      "crc": 4282120724
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/Functions/MF_FastSineIn2PI.uexp",
+      "size": 268,
+      "sha256": "5de974e30955c32c849a69f759552e439dbc85a5ba49c2f7e796d253f312d2a8",
+      "crc": 2491944264
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/Functions/MF_FoliageWindRotate.uasset",
+      "size": 878,
+      "sha256": "980ffd2401c1dc321d74b78972b08bbe55365aa27176fcadace1ad6e1755a1b3",
+      "crc": 2203574976
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/Functions/MF_FoliageWindRotate.uexp",
+      "size": 320,
+      "sha256": "0fb389c4cb94c0908cbc608d84b278085a7578bc8e38b740c138d58f4bdbe511",
+      "crc": 4265685509
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_AdvanceWindParams.uasset",
+      "size": 2728,
+      "sha256": "0c17795f2ddbcf81b82915cadb004d3c2f591975a7c42ca43b1aaa65f8de4236",
+      "crc": 3248689397
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_AdvanceWindParams.uexp",
+      "size": 1406,
+      "sha256": "4638eb63dd07d20fe0ff37d10dc46aad10fc25fa99ad18e55b3514a10eed1173",
+      "crc": 2664088273
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_Global_WindField.uasset",
+      "size": 6400,
+      "sha256": "62a3f7df4fb2306c9588282044da697bd9781973c45783e545bc7bb20cdf3eab",
+      "crc": 2498209691
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_Global_WindField.uexp",
+      "size": 5852,
+      "sha256": "7926bac59f31d4efe6e73534fd716c15e55d52d6825044a9509877c26752f03e",
+      "crc": 1102247875
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_LeafRipple.uasset",
+      "size": 1557,
+      "sha256": "376061d0c1a93cd18f35f88c86ec40d15a09fdcf5ca0b7eece185cc9b2f8cc8f",
+      "crc": 95841411
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_LeafRipple.uexp",
+      "size": 426,
+      "sha256": "6c2a4c1721c39086f28d6a134884f4e21834e6646ba2c16cd34926e4e72e355f",
+      "crc": 3280161798
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_PP_OmniExplosion.uasset",
+      "size": 5005,
+      "sha256": "e14bf25efce169706e46cd3d03725d7c5dc067196f65346d7aea98500f8644e2",
+      "crc": 2633308340
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_PP_OmniExplosion.uexp",
+      "size": 5425,
+      "sha256": "1850bfb18ee36995fc7fbc55676d3117da9219690d4b6de27db9982ded4a72b7",
+      "crc": 2290409297
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_PP_OmniExplosion_PerCenter.uasset",
+      "size": 2753,
+      "sha256": "a7ce810fa807bffa2c1d726921b51d0eb08e7e88c0110c9cb47e7037b447e06d",
+      "crc": 2425194437
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_PP_OmniExplosion_PerCenter.uexp",
+      "size": 1410,
+      "sha256": "9eb3e0dd32c811b90d3ee25fad28ccad76b10b4915c3fd8e24b3a27a96d44071",
+      "crc": 2844787838
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_RippleMotion.uasset",
+      "size": 10515,
+      "sha256": "00344fe6b52f77c16c085a60bb7970826f3f86754ebd6c8ffd8b5eec5857b069",
+      "crc": 29871086
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_RippleMotion.uexp",
+      "size": 6170,
+      "sha256": "0d4925a35a86fb65ecc471fa8c1707f23449dad15611b38db96a8f55120398e1",
+      "crc": 2038198258
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_SimpleDirectionalWind.uasset",
+      "size": 7006,
+      "sha256": "bb45d2cbf842086f5ef9b9225360cd1d37510abacd87178296671107ff1d8a91",
+      "crc": 2067764048
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_SimpleDirectionalWind.uexp",
+      "size": 4645,
+      "sha256": "5c41d9adad13abfacd400a26a286a7658469ed7cdabfe8304ecc2b0689e61ff3",
+      "crc": 2417954629
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_VertexWind.uasset",
+      "size": 5637,
+      "sha256": "35cdebf9d22e62d93a978cc6606f991306b4bb280ff089d4e117b58cd984b5f5",
+      "crc": 1100954684
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/MF_VertexWind.uexp",
+      "size": 4304,
+      "sha256": "bc9156048e7e4314db90c2236c3dbff1950b510fe35de28305e462680cf1bcfd",
+      "crc": 86819353
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/Pasta/MF_Pasta_Wind.uasset",
+      "size": 1866,
+      "sha256": "5a35dcfb098d033a6f793df2a26a4dd59e8941a91e3a9267aa0d3ea6335bb341",
+      "crc": 1133233064
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/Pasta/MF_Pasta_Wind.uexp",
+      "size": 579,
+      "sha256": "bf75f1a740b1061b7b2acf60d01b88606469ae1e8f48f4eaf03ca6331bdcf072",
+      "crc": 1358214825
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter/MF_GR_BS_PivotData.uasset",
+      "size": 1839,
+      "sha256": "a9b7856be063c077b8348c87b546eac1d313e6b021b4e3e7f0f1d51b62a943f2",
+      "crc": 4102260331
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter/MF_GR_BS_PivotData.uexp",
+      "size": 458,
+      "sha256": "da1b0c229cd428df2d9f0bdd3a134300950859ee8e85b9af09e4c2d26a939a73",
+      "crc": 2979829404
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter/MF_PP_Wind_Bush.uasset",
+      "size": 7417,
+      "sha256": "1670ff24a37901a566ea6b877ae97cd5e3f019cc7a8cd71331351e804b509429",
+      "crc": 1357172717
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter/MF_PP_Wind_Bush.uexp",
+      "size": 4977,
+      "sha256": "62ee0aff4a08fd2a2d87afe9357ecf388fbbf68ae313e982f03f8a7645807628",
+      "crc": 952019856
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter/MF_PP_Wind_Grass.uasset",
+      "size": 7531,
+      "sha256": "e4c4d5ebac6f359d51b043539c70e9e22d2d6422b6d6692fb75f36551b9a2854",
+      "crc": 89650929
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter/MF_PP_Wind_Grass.uexp",
+      "size": 6420,
+      "sha256": "490ac4f26310b34346e2158ff2cfb3c9a17d035efc16d02d96a52990049924b4",
+      "crc": 61986884
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/Functions/MF_PP2_2dArrayLookUpByIndex.uasset",
+      "size": 1694,
+      "sha256": "55686434de2b569237825c81bd2b1cd7f53b2c03bfd2394e08a020e20a0245c8",
+      "crc": 1982012250
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/Functions/MF_PP2_2dArrayLookUpByIndex.uexp",
+      "size": 318,
+      "sha256": "19d056aaf816b3eb8ccca13974056eba803c2924382965a6bbf0c9a9927035d0",
+      "crc": 2787445041
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/Functions/MF_PP2_GetIndex.uasset",
+      "size": 882,
+      "sha256": "9947292e704ed782559f07d4ea99b1e0fc2d79ffeada441984c4c27069a9d8cc",
+      "crc": 575528736
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/Functions/MF_PP2_GetIndex.uexp",
+      "size": 188,
+      "sha256": "d0ca97865d30e1ea730b6d771cfd153cfc1b47478f338c6f5a4a5eb19748efc1",
+      "crc": 2969938392
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/Functions/MF_PP2_GetParentDataUVs.uasset",
+      "size": 1495,
+      "sha256": "7b1dba2bba62f143047d5c70c404417d00ff1dd61deb255c8fabfb3538f9854e",
+      "crc": 1874324459
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/Functions/MF_PP2_GetParentDataUVs.uexp",
+      "size": 254,
+      "sha256": "ba40b7b3839453c3b7c1a33ea7ab6b1e98aeb95455a3e58c647ed7e76588ed2b",
+      "crc": 642204623
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/Functions/MF_PP2_UnpackIntegerAsFloat.uasset",
+      "size": 906,
+      "sha256": "01b11492370fc74c6e6aeb3468a91cbeb3446a8dca09dfc28d0d5a08c34ea4c4",
+      "crc": 3613803709
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/Functions/MF_PP2_UnpackIntegerAsFloat.uexp",
+      "size": 156,
+      "sha256": "2c38d709f7149f9443f6c3d18f14e04a693e4b3f48bdd7533d6d18869c565f33",
+      "crc": 3024401171
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/MF_PP2_PerLevelWind.uasset",
+      "size": 5493,
+      "sha256": "d518f9874838b738f2b2f76efaa51cbdf796b8919166297770afc5a0a80801ab",
+      "crc": 2812300410
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/MF_PP2_PerLevelWind.uexp",
+      "size": 3970,
+      "sha256": "e9670faeadde98c4fe309d461bea54c1b19deeedcfb7dcb663cbdc115a3b0b22",
+      "crc": 1354805030
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/MF_PP2_RootWind.uasset",
+      "size": 4146,
+      "sha256": "6485257ed05a231bba4ee551f901197b10a203ba5b3456beb147b99010459360",
+      "crc": 2755114876
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/MF_PP2_RootWind.uexp",
+      "size": 2726,
+      "sha256": "682f13e68457554a2bca7ffc949fecfecb8902f93cdd9c333685dd4a7220a03e",
+      "crc": 252163749
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/MF_PP2_Wind_Tree.uasset",
+      "size": 12145,
+      "sha256": "c15c3ebe9506951dba1ef9100593478120c8e231e1db37fdd216980bfb922f62",
+      "crc": 1855357938
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/MF_PP2_Wind_Tree.uexp",
+      "size": 9863,
+      "sha256": "0ab08a9b86c129058dbe6c852c81632f3ff9ddc8c76e433d8e0a17bc7fe29ad6",
+      "crc": 2857636085
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/MF_SimpleLeafRipple.uasset",
+      "size": 2275,
+      "sha256": "8aef18b55b57f2e0db211340d320bb792e53b7f0953a1eb4e73dad821e154aac",
+      "crc": 247377978
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Plants/MaterialFunctions/Wind/PivotPainter2/MF_SimpleLeafRipple.uexp",
+      "size": 666,
+      "sha256": "d8f8eb92205d92bbbec971f5561f206777c6d04487331962f18c3245742c4cd8",
+      "crc": 157244886
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_AdvancedDetailOverlay.uasset",
+      "size": 1362,
+      "sha256": "8f69672a7cf71090d1cc4b2ffa475867e29cdaceab0f470c434961d61ec6debb",
+      "crc": 3694761757
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_AdvancedDetailOverlay.uexp",
+      "size": 240,
+      "sha256": "97f5a6f9d571cfea225c34c6ac70bcfa79702b9620b8d75857030e43c4a62a32",
+      "crc": 1889490722
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_AdvancedDetail_HD.uasset",
+      "size": 4131,
+      "sha256": "5c1dd1fea27c0a30cf4f6fc8c0a696eb3db24be72594fda9a9b0c35e5d7aebe0",
+      "crc": 1659996623
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_AdvancedDetail_HD.uexp",
+      "size": 1797,
+      "sha256": "c8d570d35f1c810e1bd709d699b9eb0ede64aa5f34c49ce2c3bda265220e31fe",
+      "crc": 4260004626
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_BlendRVTWithDither.uasset",
+      "size": 7253,
+      "sha256": "e9491c1404bec642d42bf03765ab33e147ef618e01e828c4f83b72bd307848d7",
+      "crc": 4229607686
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_BlendRVTWithDither.uexp",
+      "size": 6051,
+      "sha256": "45e8441e17166e7dbf43c66cc43db1707b760ba37c718ee6069f3e942558389a",
+      "crc": 2311109738
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_Clamp_Wetness.uasset",
+      "size": 4164,
+      "sha256": "89c2a38f83cdb9f3336bc786002a229877026592b289074da917de7c0ddcd154",
+      "crc": 3642625459
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_Clamp_Wetness.uexp",
+      "size": 1552,
+      "sha256": "af6d0415a4db12974853e01eb82647afd368943163da608ad6dd7aefc35a659b",
+      "crc": 550802395
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_ContactShadow.uasset",
+      "size": 2544,
+      "sha256": "f2f1bff8c37884b291009a676946d0736b7b78429f0d0445f19a891d260d47a6",
+      "crc": 3091023729
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_ContactShadow.uexp",
+      "size": 941,
+      "sha256": "2264cee492b53fa6d0a0b88c4b6a1104c9ddbdbc2b58c0b4c0d3fa39281f0e99",
+      "crc": 1320909902
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_DetailMask.uasset",
+      "size": 2954,
+      "sha256": "1e9031cada106da216ac1e57ac002bff460d33d19aee7153ebfc8016d174e3cb",
+      "crc": 3813776958
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_DetailMask.uexp",
+      "size": 1021,
+      "sha256": "4adea969f353215e6d411329ec1110868a07b4cbb24de72781ee965f4bd97da6",
+      "crc": 526955271
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_ExtraLayerBlend.uasset",
+      "size": 4053,
+      "sha256": "bab4ddb7266462999f1e0bf5a64e71f4c5dbac66f250f8d72776a42bf7936533",
+      "crc": 1335194134
+    },
+    {
+      "archive": "07_贴图材质_002.zip",
+      "path": "DeltaForce/Content/MaterialLib/Materials_HD/Scene/AdvancedRock/MF_ExtraLayerBlend.uexp",
+      "size": 3772,
+      "sha256": "788d472009601ffb7f546f7cc705ad13713fa11df7ce431901078dd015a26fb8",
+      "crc": 2961032224
+    }
+  ],
+  "missing": []
+}

@@ -1,4 +1,6 @@
 #include "StingerAssetLibrary.h"
+#include "Engine/GameViewportClient.h"
+#include "Slate/SceneViewport.h"
 #include "Animation/AnimSequence.h"
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimBlueprint.h"
@@ -369,6 +371,16 @@ void UStingerAssetLibrary::BeginValidationPIE(int32 Players)
 	Params.EditorPlaySettings = Settings;
 	Params.bAllowOnlineSubsystem = false;
 	GEditor->RequestPlaySession(Params);
+}
+
+bool UStingerAssetLibrary::SetValidationViewportSize(APlayerController* Controller, int32 Width, int32 Height)
+{
+	if (!Controller || !Controller->GetLocalPlayer() || Width < 1 || Height < 1 || Width > 3840 || Height > 2160) return
+		false;
+	UGameViewportClient* Client = Controller->GetLocalPlayer()->ViewportClient;
+	if (!Client || !Client->GetGameViewport()) return false;
+	Client->GetGameViewport()->SetFixedViewportSize(Width, Height);
+	return true;
 }
 
 TArray<UWorld*> UStingerAssetLibrary::GetValidationWorlds()

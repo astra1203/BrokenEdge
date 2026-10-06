@@ -1,0 +1,73 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts/SpaceCenter/run_restoration_editor.py",
+    "textures",
+    "--tag",
+    "Phase7CTextureSmoke01",
+    "--manifest",
+    "Saved/SpaceCenter/Phase7C/Manifests/MaterialSmoke01.json"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T17:59:06.708229+00:00",
+      "c_free_gib": 63.979732513427734,
+      "d_free_gib": 221.22794342041016,
+      "ram_free_gib": 11.292064666748047,
+      "commit_used_gib": 30.80215072631836,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:59:06.714229+00:00",
+      "c_free_gib": 63.979732513427734,
+      "d_free_gib": 221.2279396057129,
+      "ram_free_gib": 11.291934967041016,
+      "commit_used_gib": 30.80215072631836,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:59:11.723918+00:00",
+      "c_free_gib": 63.97975158691406,
+      "d_free_gib": 221.2276611328125,
+      "ram_free_gib": 10.57904052734375,
+      "commit_used_gib": 31.538230895996094,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:59:16.731665+00:00",
+      "c_free_gib": 63.97968292236328,
+      "d_free_gib": 221.22764587402344,
+      "ram_free_gib": 9.730159759521484,
+      "commit_used_gib": 32.30553436279297,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:59:21.735639+00:00",
+      "c_free_gib": 63.97968292236328,
+      "d_free_gib": 221.2173728942871,
+      "ram_free_gib": 8.776252746582031,
+      "commit_used_gib": 33.05869674682617,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:59:25.053509+00:00",
+      "c_free_gib": 63.98448944091797,
+      "d_free_gib": 221.1833038330078,
+      "ram_free_gib": 11.00262451171875,
+      "commit_used_gib": 30.985565185546875,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 70132,
+  "exit_code": 0
+}

@@ -1,0 +1,73 @@
+{
+  "command": [
+    "C:/Users/Oreki/AppData/Roaming/uv/python/cpython-3.12.13-windows-x86_64-none/python.exe",
+    "Scripts/SpaceCenter/run_restoration_editor.py",
+    "preview",
+    "--tag",
+    "Phase7CPreview03",
+    "--manifest",
+    "Saved/SpaceCenter/Phase7C/ManifestRuns/Phase7CManifest01/Manifest.json"
+  ],
+  "result": "failed",
+  "samples": [
+    {
+      "utc": "2026-10-05T18:26:45.198324+00:00",
+      "c_free_gib": 63.87202835083008,
+      "d_free_gib": 218.89993286132812,
+      "ram_free_gib": 11.18642807006836,
+      "commit_used_gib": 30.920913696289062,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:26:45.205321+00:00",
+      "c_free_gib": 63.87202835083008,
+      "d_free_gib": 218.89992904663086,
+      "ram_free_gib": 11.191967010498047,
+      "commit_used_gib": 30.91344451904297,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:26:50.211377+00:00",
+      "c_free_gib": 63.87200927734375,
+      "d_free_gib": 218.89958572387695,
+      "ram_free_gib": 10.489742279052734,
+      "commit_used_gib": 31.65462875366211,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:26:55.216342+00:00",
+      "c_free_gib": 63.871891021728516,
+      "d_free_gib": 218.89958572387695,
+      "ram_free_gib": 9.376548767089844,
+      "commit_used_gib": 32.79697799682617,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:27:00.219747+00:00",
+      "c_free_gib": 63.87185287475586,
+      "d_free_gib": 218.89957809448242,
+      "ram_free_gib": 9.007904052734375,
+      "commit_used_gib": 32.989990234375,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:27:03.378021+00:00",
+      "c_free_gib": 63.871849060058594,
+      "d_free_gib": 218.89957427978516,
+      "ram_free_gib": 11.191383361816406,
+      "commit_used_gib": 31.004718780517578,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 49476,
+  "exit_code": 1
+}

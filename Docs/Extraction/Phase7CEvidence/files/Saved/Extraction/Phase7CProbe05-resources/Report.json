@@ -1,0 +1,47 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts/SpaceCenter/probe_restoration.py",
+    "--dependencies",
+    "--tag",
+    "Phase7CProbe05"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T17:20:44.686311+00:00",
+      "c_free_gib": 64.57067489624023,
+      "d_free_gib": 225.3922004699707,
+      "ram_free_gib": 12.292839050292969,
+      "commit_used_gib": 30.382640838623047,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:20:44.692309+00:00",
+      "c_free_gib": 64.57067489624023,
+      "d_free_gib": 225.39219665527344,
+      "ram_free_gib": 12.29195785522461,
+      "commit_used_gib": 30.384605407714844,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:20:47.187100+00:00",
+      "c_free_gib": 64.5706558227539,
+      "d_free_gib": 225.39007568359375,
+      "ram_free_gib": 12.279041290283203,
+      "commit_used_gib": 30.396595001220703,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 57584,
+  "exit_code": 0
+}

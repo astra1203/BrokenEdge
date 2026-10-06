@@ -1,0 +1,65 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts/SpaceCenter/restore_assets.py",
+    "materials",
+    "--selection",
+    "Phase7CSelect05",
+    "--tag",
+    "Phase7CMaterials02"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T17:52:25.462594+00:00",
+      "c_free_gib": 64.00395584106445,
+      "d_free_gib": 223.7369384765625,
+      "ram_free_gib": 11.119022369384766,
+      "commit_used_gib": 30.946334838867188,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:52:25.467593+00:00",
+      "c_free_gib": 64.00395584106445,
+      "d_free_gib": 223.73693466186523,
+      "ram_free_gib": 11.118515014648438,
+      "commit_used_gib": 30.946334838867188,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:52:30.481263+00:00",
+      "c_free_gib": 64.00392532348633,
+      "d_free_gib": 223.68647003173828,
+      "ram_free_gib": 10.846500396728516,
+      "commit_used_gib": 31.181434631347656,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:52:35.492991+00:00",
+      "c_free_gib": 64.0,
+      "d_free_gib": 223.63529586791992,
+      "ram_free_gib": 10.767402648925781,
+      "commit_used_gib": 31.231719970703125,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:52:37.082641+00:00",
+      "c_free_gib": 63.99993133544922,
+      "d_free_gib": 223.61408233642578,
+      "ram_free_gib": 11.152534484863281,
+      "commit_used_gib": 30.839561462402344,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 36332,
+  "exit_code": 0
+}

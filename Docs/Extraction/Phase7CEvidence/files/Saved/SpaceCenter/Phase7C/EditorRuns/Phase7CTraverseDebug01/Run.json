@@ -1,0 +1,28 @@
+{
+  "task": "traverse",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Maps/SpaceCenter/L_SpaceCenterRestorationPreview",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1920",
+    "-ResY=1080",
+    "-ForceRes",
+    "-ExecCmds=py D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\validate_sample.py",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-ForceTextureEncodeSpeed=Final",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7C\\EditorRuns\\Phase7CTraverseDebug01\\Editor.log",
+    "-ini:Engine:[DevOptions.Shaders]:ShaderCompilerCoreCountThreshold=999,[DevOptions.Shaders]:NumUnusedShaderCompilingThreads=8,[DevOptions.Shaders]:NumUnusedShaderCompilingThreadsDuringGame=8,[SystemSettings]:Editor.AsyncTextureCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncStaticMeshCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncAssetCompilationMaxConcurrency=2,[SystemSettings]:Editor.AsyncAssetCompilationMaxMemoryUsage=2"
+  ],
+  "started_utc": "2026-10-05T19:49:04.337261+00:00",
+  "script_sha256": "7b45bc61083f106eb2917b3ae81559eba7eee093e375c6225f98a0737c8dd595",
+  "manifest_sha256": "05ce654893c5156adc26abec982303deb7091ab32e35e457eccaf7842afb9a0a",
+  "pid": 22116,
+  "exit_code": 0,
+  "result": "failed",
+  "finished_utc": "2026-10-05T19:52:05.308762+00:00"
+}

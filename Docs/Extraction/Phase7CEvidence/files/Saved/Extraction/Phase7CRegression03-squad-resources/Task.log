@@ -1,0 +1,81 @@
+READY Server 64592
+READY A 51684
+PASS A joined LAN lobby
+PASS A name replicated
+READY B 50244
+PASS B joined LAN lobby
+PASS B name replicated
+READY C 39824
+PASS C joined LAN lobby
+PASS C name replicated
+READY D 56572
+PASS D joined LAN lobby
+PASS D name replicated
+READY E 56216
+PASS E joined LAN lobby
+PASS E name replicated
+READY F 62632
+PASS F joined LAN lobby
+PASS F name replicated
+PASS A persistent account ready
+PASS B persistent account ready
+PASS C persistent account ready
+PASS D persistent account ready
+PASS E persistent account ready
+PASS F persistent account ready
+PASS Extraction auto assignment is balanced and capped
+PASS Invalid squad rejected
+PASS Full squad rejects fourth member
+READY G 74000
+PASS Seventh client is rejected by lobby authority
+PASS Rejected client never occupies a squad or raid slot
+PASS A readied through lobby UI
+PASS Ready player cannot switch squad
+PASS Ready cancellation unlocks player
+PASS All players loaded in Extraction
+PASS Dedicated authority and Stinger pawns
+PASS A equipped AK
+PASS B equipped AK
+PASS C equipped AK
+PASS D equipped AK
+PASS E equipped AK
+PASS F equipped AK
+PASS First-person backpack section hidden on each owner
+PASS Server and owners keep both hands within two cm of weapon grips
+PASS Squads survive seamless travel
+PASS Friendly shot is authoritative
+PASS Friendly shots do not reduce health
+PASS Cannot heal enemy
+PASS Z input starts an authoritative self heal channel
+PASS Self heal completes once for 50 HP
+PASS Heal cooldown and duplicate cannot grant extra healing
+PASS Ally heal succeeds and replicates
+PASS Interruptible heal begins
+PASS Movement cancels healing without cooldown
+PASS Inventory interruption channel starts
+PASS Inventory cancels channel
+PASS A reaches life state 5 through actual shots
+PASS Downed players retain their inventory and do not drop
+PASS Downed state replicates to every peer
+PASS Downed cannot fire or heal
+PASS Holding E owns the rescue channel
+PASS Second rescuer cannot steal the active rescue
+PASS Releasing E cancels rescue and frees target
+PASS Second rescue begins
+PASS Movement cancels rescue
+PASS Wall blocks rescue
+PASS Enemy cannot rescue a downed player
+PASS Rescue restores 30 HP and zero shield
+PASS Rescue clears deadline without changing inventory
+PASS X input creates one smoke actor on every peer
+PASS Smoke deployment is clipped before the opaque wall
+PASS Smoke radius and server expiry agree
+PASS Smoke cooldown prevents duplicate actors
+PASS Smoke expires on every client
+PASS A reaches life state 5 through actual shots
+PASS C reaches life state 5 through actual shots
+PASS E reaches life state 1 through actual shots
+PASS Squad wipe finalizes downed teammate
+PASS Wiped squad cannot spectate the enemy
+PASS Returns to lobby with ready reset and squad retained
+RESULT passed 72 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7CRegression03-squad

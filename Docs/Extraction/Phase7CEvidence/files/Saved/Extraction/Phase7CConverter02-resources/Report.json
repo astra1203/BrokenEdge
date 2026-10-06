@@ -1,0 +1,52 @@
+{
+  "command": [
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Tools\\dotnet\\dotnet.exe",
+    "build",
+    "Scripts/SpaceCenter/Converter/SpaceCenter.Converter.csproj",
+    "-c",
+    "Release",
+    "-p:",
+    "CUE4PARSE_SKIP_NATIVE=true",
+    "--no-restore",
+    "-v:",
+    "q"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T17:09:18.548617+00:00",
+      "c_free_gib": 64.56576156616211,
+      "d_free_gib": 225.59677505493164,
+      "ram_free_gib": 12.151657104492188,
+      "commit_used_gib": 30.211185455322266,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:09:18.552617+00:00",
+      "c_free_gib": 64.56576156616211,
+      "d_free_gib": 225.59677124023438,
+      "ram_free_gib": 12.151805877685547,
+      "commit_used_gib": 30.211185455322266,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T17:09:21.261523+00:00",
+      "c_free_gib": 64.56575393676758,
+      "d_free_gib": 225.5892677307129,
+      "ram_free_gib": 11.986957550048828,
+      "commit_used_gib": 30.353302001953125,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 69328,
+  "exit_code": 0
+}

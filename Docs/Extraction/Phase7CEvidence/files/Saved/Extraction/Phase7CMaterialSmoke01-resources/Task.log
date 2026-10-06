@@ -1,0 +1,33 @@
+RESTORATION_EDITOR 62136 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\SpaceCenter\Phase7C\EditorRuns\Phase7CMaterialSmoke01
+RESTORATION_EDITOR_RESULT failed
+[2026.10.05-18.00.37:993][  0]LogPython: Error: Traceback (most recent call last):
+[2026.10.05-18.00.37:993][  0]LogPython: Error:   File "D:/SourceFiles/UnrealProjects/BrokenEdge/Scripts/SpaceCenter/import_restoration.py", line 104, in <module>
+[2026.10.05-18.00.37:993][  0]LogPython: Error:     run(globals())
+[2026.10.05-18.00.37:993][  0]LogPython: Error:   File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\restoration_world.py", line 146, in run
+[2026.10.05-18.00.37:993][  0]LogPython: Error:     create_materials(g)
+[2026.10.05-18.00.37:993][  0]LogPython: Error:   File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\restoration_materials.py", line 157, in create_materials
+[2026.10.05-18.00.37:993][  0]LogPython: Error:     edit.set_material_instance_parent(mi,master(len(r['layers']),r['mode'],r['two_sided']))
+[2026.10.05-18.00.37:993][  0]LogPython: Error:                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[2026.10.05-18.00.37:993][  0]LogPython: Error:   File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\restoration_materials.py", line 124, in master
+[2026.10.05-18.00.37:993][  0]LogPython: Error:     inputs=[unreal.CustomInput(input_name=n) for n in inputs],
+[2026.10.05-18.00.37:993][  0]LogPython: Error:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[2026.10.05-18.00.37:993][  0]LogPython: Error:   File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\restoration_materials.py", line 124, in <listcomp>
+[2026.10.05-18.00.37:993][  0]LogPython: Error:     inputs=[unreal.CustomInput(input_name=n) for n in inputs],
+[2026.10.05-18.00.37:993][  0]LogPython: Error:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[2026.10.05-18.00.37:993][  0]LogPython: Error: TypeError: call() takes at most 0 arguments (1 given)
+[2026.10.05-18.00.37:993][  0]LogPythonScriptCommandlet: Error: Python script executed with errors
+[2026.10.05-18.00.37:993][  0]LogInit: Display: LogPython: Error: Traceback (most recent call last):
+[2026.10.05-18.00.37:993][  0]LogInit: Display: LogPython: Error:   File "D:/SourceFiles/UnrealProjects/BrokenEdge/Scripts/SpaceCenter/import_restoration.py", line 104, in <module>
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPython: Error:     run(globals())
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPython: Error:   File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\restoration_world.py", line 146, in run
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPython: Error:     create_materials(g)
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPython: Error:   File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\restoration_materials.py", line 157, in create_materials
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPython: Error:     edit.set_material_instance_parent(mi,master(len(r['layers']),r['mode'],r['two_sided']))
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPython: Error:                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPython: Error:   File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\restoration_materials.py", line 124, in master
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPython: Error:     inputs=[unreal.CustomInput(input_name=n) for n in inputs],
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPython: Error:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPython: Error:   File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\restoration_materials.py", line 124, in <listcomp>
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPython: Error:             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPython: Error: TypeError: call() takes at most 0 arguments (1 given)
+[2026.10.05-18.00.37:994][  0]LogInit: Display: LogPythonScriptCommandlet: Error: Python script executed with errors

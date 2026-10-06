@@ -1,0 +1,108 @@
+Log started at 10/06/2026 04:19:30 (2026-10-05T20:19:30Z)
+No project argument provided while trying to parse Project File. Attempting fallback parsing to attempt to find a Project File.
+No project directory provided for project scope BuildConfiguration.xml resolution.
+No config file at C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Restricted\NotForLicensees\Programs\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\ProgramData\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\Oreki\AppData\Local\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\Oreki\Documents\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Configuration will be read from:
+  C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Saved\UnrealBuildTool\BuildConfiguration.xml
+  C:\Users\Oreki\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Intermediate\Build\XmlConfigCache.bin): C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Saved\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Intermediate\Build\XmlConfigCache.bin): C:\Users\Oreki\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Intermediate\Build\XmlConfigCache.bin): C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Intermediate\Build\UnrealBuildTool.Env.BuildConfiguration.xml
+Log file: C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Programs\AutomationTool\Saved\Logs\UBA-BootstrapPackagedGame-Win64-Shipping.txt
+
+Setting temp directory to 'D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7CPackages04-server-resources\Temp\UnrealBuildTool\326a9b52'
+    Registering build platform: UnrealBuildTool.AndroidPlatformFactory
+Unable to find valid SDK(s) for Android:
+  Found Sdk Version, MinRequired=r27c, MaxRequired=r29.
+  Found AutoSdk Version, Required=r27c.
+        Registering build platform: Android - buildable: False
+    Registering build platform: UnrealBuildTool.IOSPlatformFactory
+Unable to find valid SDK(s) for IOS:
+  Found Sdk Version, MinRequired=1100.0.0.0, MaxRequired=8999.0.
+  Found AutoSdk Version, Required=26.1.1.
+        Registering build platform: IOS - buildable: False
+    Registering build platform: UnrealBuildTool.LinuxPlatformFactory
+Unable to find valid SDK(s) for Linux:
+  Found Sdk Version, Required=v26_clang-20.1.8-rockylinux8.
+  Found AutoSdk Version, Required=v26_clang-20.1.8-rockylinux8.
+        Registering build platform: Linux - buildable: False
+Unable to find valid SDK(s) for LinuxArm64:
+  Found Sdk Version, Required=v26_clang-20.1.8-rockylinux8.
+  Found AutoSdk Version, Required=v26_clang-20.1.8-rockylinux8.
+        Registering build platform: LinuxArm64 - buildable: False
+    Registering build platform: UnrealBuildTool.MacPlatformFactory
+Unable to find valid SDK(s) for Mac:
+  Found Sdk Version, MinRequired=1100.0.0.0, MaxRequired=8999.0.
+  Found AutoSdk Version, Required=26.1.1.
+        Registering build platform: Mac - buildable: False
+    Registering build platform: UnrealBuildTool.TVOSPlatformFactory
+Unable to find valid SDK(s) for TVOS:
+  Found Sdk Version, MinRequired=1100.0.0.0, MaxRequired=8999.0.
+  Found AutoSdk Version, Required=26.1.1.
+        Registering build platform: TVOS - buildable: False
+    Registering build platform: UnrealBuildTool.WindowsPlatformFactory
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (1)
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (2)
+Found Windows 10 SDK version 10.0.22621.0 at C:\Program Files (x86)\Windows Kits\10
+Found Universal CRT version 10.0.22621.0 at C:\Program Files (x86)\Windows Kits\10
+Found Windows 10 SDK version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Found Universal CRT version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Win64 Installed SDK(s): MinVersion_Sdk=10.0.19041.0, MaxVersion_Sdk=10.9.99999.0, CurrentVersion_Sdk=10.0.22621.0, Version_AutoSdk=10.0.22621.0, CurrentVersion_AutoSdk=
+        Registering build platform: Win64 - buildable: True
+    Registering build platform: UnrealBuildTool.VisionOSPlatformFactory
+        Registering build platform: VisionOS - buildable: False
+Command line: C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll BootstrapPackagedGame Win64 Shipping -log=C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Programs\AutomationTool\Saved\Logs\UBA-BootstrapPackagedGame-Win64-Shipping.txt
+Determining max actions to execute in parallel (6 physical cores, 12 logical cores)
+  Executing up to 6 processes, one per physical core
+UbaStorageServer - Database loaded from C:\ProgramData\Epic\UnrealBuildAccelerator\cas\casdb (v32) in 3ms (contained 0 entries estimated to 0b)
+UbaServer - Listening on 0.0.0.0:1345
+Building BootstrapPackagedGame - BootstrapPackagedGame - Win64 - Shipping
+Target is up to date
+Using Unreal Build Accelerator local executor to run 0 action(s)
+Total time in Unreal Build Accelerator local executor: 0.12 seconds
+Output binary: C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Binaries\Win64\BootstrapPackagedGame-Win64-Shipping.exe
+UbaStorageServer - Database saved in 1ms (0 file entries, 0 cas entries. deleted 0 dropped cas files)
+WriteFileIfChanged() wrote 0 changed files of 1 requested writes.
+
+Timeline:
+[  0.000]  +0.519 Main
+   0.011          [  0.011]  +0.119 Apply XmlConfig
+   0.016             0.015          [  0.004]  +0.015 Find target files
+   0.138          [  0.138]  +0.065 AddTelemetry
+   0.237          [  0.237]  +0.281 RegisterPlatforms
+[  0.538]  +0.014 ParseCommandLine
+[  0.609]  +0.080 EngineRulesPlugins
+   0.610          [  0.001]  +0.051 LoadMakefile
+   0.666          [  0.057]  +0.000 FindPlugins
+[  0.692]  +0.536 MakefileValid
+   0.695          [  0.002]  +0.013 EngineRulesFetchDirs
+   0.721          [  0.028]  +0.020 EngineRulesAssembly
+   0.741          [  0.049]  +0.003 ProgramRulesAssembly
+   0.760          [  0.068]  +0.324 CreateTargetRules
+   1.102          [  0.410]  +0.005 CppDependencyCache
+[  1.230]  +0.007 BootstrapPackagedGame Win64 Shipping
+[  1.259]  +0.000 CppDependencyCache
+[  1.259]  +0.070 Preparing ActionGraph
+   1.270          [  0.010]  +0.005 LinkActions
+   1.274             0.015          [  0.004]  +0.000 DetectActionGraphCycles
+   1.275          [  0.016]  +0.000 GatherPrerequisiteActions
+   1.276          [  0.016]  +0.000 CppDependencyCacheWait
+   1.277          [  0.017]  +0.044 GatherOutdatedActions
+   1.324          [  0.064]  +0.003 LinkActions
+   1.324             0.064          [  0.000]  +0.000 DetectActionGraphCycles
+   1.329          [  0.069]  +0.000 DeleteOutdatedProducedItems
+   1.329          [  0.069]  +0.000 SaveActionHistory
+   1.330          [  0.070]  +0.000 CreateDirectoriesForProducedItems
+[  1.334]  +0.114 GarbageCollect
+[  1.452]  +0.000 Deploying targets
+[  1.453]  +0.000 DisconnectCache
+[  1.458]  +0.002 SaveCasTable
+[  1.462]  +0.010 Saving caches
+[  1.474]  +0.003 TelemetryService.FlushEvents
+[  1.478]
+
+Result: Succeeded
+Total execution time: 1.48 seconds

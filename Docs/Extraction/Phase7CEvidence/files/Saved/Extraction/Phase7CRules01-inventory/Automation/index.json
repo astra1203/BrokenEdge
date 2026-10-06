@@ -1,0 +1,74 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "7FD44458425C9E8706E18896B80E3FFA",
+			"instanceName": "DESKTOP-M9PA1SF-71812",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "NVIDIA GeForce RTX 4060 Ti",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.05-20.25.19",
+	"succeeded": 3,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.024490103125572205,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "EquipmentAndValidation",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.EquipmentAndValidation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"7FD44458425C9E8706E18896B80E3FFA"
+			],
+			"duration": 0.0080603025853633881,
+			"dateTime": "2026.10.05-20.25.19",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "GridTransactions",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.GridTransactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"7FD44458425C9E8706E18896B80E3FFA"
+			],
+			"duration": 0.0080416984856128693,
+			"dateTime": "2026.10.05-20.25.19",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "StackConservation",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.StackConservation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"7FD44458425C9E8706E18896B80E3FFA"
+			],
+			"duration": 0.0083881020545959473,
+			"dateTime": "2026.10.05-20.25.19",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

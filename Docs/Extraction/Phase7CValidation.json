@@ -1,0 +1,132 @@
+{
+  "phase": "7C",
+  "result": "passed",
+  "checked_utc": "2026-10-06T02:35:18.506329+00:00",
+  "head": "227b65b9d0ec76411dafa5a8839caa3fb3a5b358",
+  "git_diff_check": "passed",
+  "index_empty": true,
+  "commit_or_push_performed": false,
+  "archive": {
+    "path": "Docs/Extraction/Phase7CEvidence",
+    "resource_guard": "Saved/Extraction/ArchivePhase7C02-resources/Report.json",
+    "index_sha256": "f3da9f9904be7da1c67f033b03edf4f335f0d3017b07bf07d3e800be9d905537",
+    "indexed_files": 2512,
+    "indexed_bytes": 439776924,
+    "copies_roundtrip_sha256_verified": true,
+    "indexed_file_hashes_verified": true
+  },
+  "current_implementation_files_matching_archive": 106,
+  "python_syntax_files_passed": 81,
+  "formal_maps_sha256": {
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "b4d8f6990b60c45b1cd95f8fbafaf7af3b3802e6287fbaf72e6c52841680b0dc",
+    "Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap": "73bb4de7b70c18cf96cdc52bbac654c047e09e1f7b286edde4bad8c1df1cf42b"
+  },
+  "native_asset_manifest_count": 12070,
+  "packaged_artifact_manifest_count": 18,
+  "actors": 33120,
+  "terrain_tiles": 110,
+  "final_captures": 14,
+  "performance": [
+    {
+      "file": "Saved\\Extraction\\Phase7CPerformance01-old\\A-performance-old-1.csv",
+      "elapsed_seconds": 189.89960569999874,
+      "frame_ms": {
+        "count": 20404,
+        "min": 3.3101,
+        "mean": 9.306979303077828,
+        "p50": 9.0662,
+        "p95": 11.9687,
+        "p99": 14.0539,
+        "max": 37.2952
+      },
+      "frames_over_100ms": [],
+      "stream_window_frames_over_100ms": []
+    },
+    {
+      "file": "Saved\\Extraction\\Phase7CPerformance01-old\\A-performance-old-2.csv",
+      "elapsed_seconds": 190.2341835999987,
+      "frame_ms": {
+        "count": 20294,
+        "min": 3.7402,
+        "mean": 9.373912663841528,
+        "p50": 9.1012,
+        "p95": 12.2358,
+        "p99": 14.4347,
+        "max": 32.5525
+      },
+      "frames_over_100ms": [],
+      "stream_window_frames_over_100ms": []
+    },
+    {
+      "file": "Saved\\Extraction\\Phase7CPerformance01-old\\A-performance-old-3.csv",
+      "elapsed_seconds": 189.9799777000002,
+      "frame_ms": {
+        "count": 20285,
+        "min": 3.0513,
+        "mean": 9.365539940842988,
+        "p50": 9.0914,
+        "p95": 12.2142,
+        "p99": 14.6707,
+        "max": 106.2559
+      },
+      "frames_over_100ms": [
+        {
+          "seconds": 44.78347040000008,
+          "frame_ms": 106.2559
+        },
+        {
+          "seconds": 164.7942983999999,
+          "frame_ms": 103.1045
+        }
+      ],
+      "stream_window_frames_over_100ms": []
+    },
+    {
+      "file": "Saved\\Extraction\\Phase7CPerformance01-north\\A-performance-north-1.csv",
+      "elapsed_seconds": 185.84311259999933,
+      "frame_ms": {
+        "count": 19750,
+        "min": 2.988,
+        "mean": 9.409777853164556,
+        "p50": 9.1473,
+        "p95": 12.2238,
+        "p99": 14.464,
+        "max": 34.7262
+      },
+      "frames_over_100ms": [],
+      "stream_window_frames_over_100ms": []
+    },
+    {
+      "file": "Saved\\Extraction\\Phase7CPerformance01-north\\A-performance-north-2.csv",
+      "elapsed_seconds": 186.00630999999964,
+      "frame_ms": {
+        "count": 19759,
+        "min": 3.4271,
+        "mean": 9.413751201983906,
+        "p50": 9.1186,
+        "p95": 12.1759,
+        "p99": 14.7078,
+        "max": 50.1683
+      },
+      "frames_over_100ms": [],
+      "stream_window_frames_over_100ms": []
+    },
+    {
+      "file": "Saved\\Extraction\\Phase7CPerformance01-north\\A-performance-north-3.csv",
+      "elapsed_seconds": 185.7227797000004,
+      "frame_ms": {
+        "count": 19784,
+        "min": 4.1656,
+        "mean": 9.387524246866155,
+        "p50": 9.1392,
+        "p95": 12.0033,
+        "p99": 14.2766,
+        "max": 40.3252
+      },
+      "frames_over_100ms": [],
+      "stream_window_frames_over_100ms": []
+    }
+  ],
+  "boundary": "Original-source geometry and visual material reconstruction. Stripped source shaders and exact source-version camera matching are not claimed recovered. Same-host Development/Null multiplayer acceptance only.",
+  "documentation_sha256": "92c14f1bb108c3c6ac1d0efc4157c112541d5febee9ec5459679a09b779acba4"
+}

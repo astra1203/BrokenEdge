@@ -1,0 +1,97 @@
+READY Server 65204
+READY A 21132
+PASS A joined LAN lobby
+PASS A name replicated
+READY B 42440
+PASS B joined LAN lobby
+PASS B name replicated
+PASS A persistent account ready
+PASS B persistent account ready
+PASS All players loaded in Extraction
+PASS Dedicated authority and Stinger pawns
+PASS A visible reachable pickup focus
+PASS A equipped AK
+PASS B visible reachable pickup focus
+PASS B equipped AK
+PASS First-person backpack section hidden on each owner
+PASS Server and owners keep both hands within two cm of weapon grips
+PASS Both players receive 120 real reserve rounds and two medical items
+PASS Other players inventories are not replicated to either client
+PASS World containers do not replicate hidden contents
+PASS Initial identities have exactly one container owner
+PASS Inventory opens through production controller
+PASS Mouse drag and R rotation commit correct grid cells
+PASS Context split creates 31 and 29 without changing total ammunition
+PASS Merge retires split identity and conserves ammunition
+PASS Accepted shot updates authoritative weapon instance
+PASS Storing weapon removes equipped actor
+PASS Re-equipping preserves identity and 29 loaded rounds
+PASS World drop preserves the same loaded weapon instance
+PASS Other player receives dropped gun in secondary slot
+PASS Original owner reclaims same gun and magazine
+PASS First search initially masks undiscovered identities and definitions
+PASS Forged request cannot take an unrevealed item
+PASS Closing and reopening preserves completed reveals
+PASS Second player starts an independent search
+PASS Simultaneous take has exactly one winner
+PASS Duplicate request cannot execute again
+PASS Competing transfers leave every identity with one owner
+PASS Closed search session rejects later transfer
+PASS Walking out of range closes container on server and owner
+PASS Out-of-range transfer preserves contents
+PASS Opaque wall blocks interaction inside the distance limit
+PASS Removing obstruction restores a valid session
+PASS Full backpack rejects transfer without partial mutation
+PASS Invalid quantities never change ammunition
+PASS Stale inventory revision rejected
+PASS Reload draws thirteen rounds from inventory
+PASS Interruptible reload starts
+PASS Cancelled reload consumes no reserve rounds
+PASS Dropped partial magazine can be re-equipped
+PASS Medical use starts a server timer
+PASS Active medical item is reserved
+PASS Medical completion consumes one and heals exactly fifty
+PASS Cancelled medical action neither heals nor consumes
+PASS Full health rejects use without consuming
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS A direct bullet health damage 20
+PASS A damage replication
+PASS Real hit cancels healing with no consumption
+PASS Cancelled healing stays cancelled while the new wound bleeds
+PASS Firing cancels medical action
+PASS Jump cancels medical use without consumption
+PASS Jump cancellation cannot heal later
+PASS Sprint cancels medical use without consumption
+PASS Sprint cancellation cannot heal later
+PASS Reload cancels medical use without consumption
+PASS Reload cancellation cannot heal later
+PASS Weapon switch cancels medical and commits equipment identities
+PASS Switching back restores original gun and correct slots
+PASS Occupied weapon slot rejects replacement without dropping either gun
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS A direct bullet health damage 20
+PASS A damage replication
+PASS Death empties inventory and enters spectator
+PASS Exactly one death container owns all possessions
+PASS Death preserves quantities and weapon magazine
+PASS Survivor loots the same weapon with unchanged magazine
+PASS Dead player leaves without a second drop
+PASS Death and subsequent leave preserve unique ownership
+PASS Round returns survivor and server to lobby
+PASS A joined LAN lobby
+PASS A name replicated
+PASS A persistent account ready
+PASS B persistent account ready
+PASS All players loaded in Extraction
+PASS Dedicated authority and Stinger pawns
+PASS A visible reachable pickup focus
+PASS A equipped AK
+PASS B visible reachable pickup focus
+PASS B equipped AK
+PASS First-person backpack section hidden on each owner
+PASS Server and owners keep both hands within two cm of weapon grips
+PASS Next round has fresh loadouts instead of previous loot
+PASS Reopened match has no duplicated inventory identities
+RESULT passed 93 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7CRegression03-inventory

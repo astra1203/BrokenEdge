@@ -1,0 +1,22 @@
+RESTORATION_EDITOR 52128 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\SpaceCenter\Phase7C\EditorRuns\Phase7CNativeAudit04
+RESTORATION_EDITOR_RESULT failed
+[2026.10.05-19.05.28:013][  0]LogPython: Error: Traceback (most recent call last):
+[2026.10.05-19.05.28:013][  0]LogPython: Error:   File "D:/SourceFiles/UnrealProjects/BrokenEdge/Scripts/SpaceCenter/import_restoration.py", line 144, in <module>
+[2026.10.05-19.05.28:013][  0]LogPython: Error:     run(globals())
+[2026.10.05-19.05.28:013][  0]LogPython: Error:   File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\restoration_world.py", line 186, in run
+[2026.10.05-19.05.28:013][  0]LogPython: Error:     audit(g)
+[2026.10.05-19.05.28:013][  0]LogPython: Error:   File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\restoration_audit.py", line 97, in audit
+[2026.10.05-19.05.28:013][  0]LogPython: Error:     if errors or bounds_errors or texture_errors:raise RuntimeError('Native audit failed; see detailed report')
+[2026.10.05-19.05.28:013][  0]LogPython: Error:                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[2026.10.05-19.05.28:013][  0]LogPython: Error: RuntimeError: Native audit failed; see detailed report
+[2026.10.05-19.05.28:013][  0]LogPythonScriptCommandlet: Error: Python script executed with errors
+[2026.10.05-19.05.28:013][  0]LogInit: Display: LogPython: Error: Traceback (most recent call last):
+[2026.10.05-19.05.28:013][  0]LogInit: Display: LogPython: Error:   File "D:/SourceFiles/UnrealProjects/BrokenEdge/Scripts/SpaceCenter/import_restoration.py", line 144, in <module>
+[2026.10.05-19.05.28:013][  0]LogInit: Display: LogPython: Error:     run(globals())
+[2026.10.05-19.05.28:013][  0]LogInit: Display: LogPython: Error:   File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\restoration_world.py", line 186, in run
+[2026.10.05-19.05.28:013][  0]LogInit: Display: LogPython: Error:     audit(g)
+[2026.10.05-19.05.28:013][  0]LogInit: Display: LogPython: Error:   File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\restoration_audit.py", line 97, in audit
+[2026.10.05-19.05.28:013][  0]LogInit: Display: LogPython: Error:     if errors or bounds_errors or texture_errors:raise RuntimeError('Native audit failed; see detailed report')
+[2026.10.05-19.05.28:013][  0]LogInit: Display: LogPython: Error:                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[2026.10.05-19.05.28:013][  0]LogInit: Display: LogPython: Error: RuntimeError: Native audit failed; see detailed report
+[2026.10.05-19.05.28:013][  0]LogInit: Display: LogPythonScriptCommandlet: Error: Python script executed with errors

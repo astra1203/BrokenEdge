@@ -1,0 +1,85 @@
+READY Server 46016
+READY A 38080
+PASS A joined LAN lobby
+PASS A name replicated
+READY B 68148
+PASS B joined LAN lobby
+PASS B name replicated
+READY C 19384
+PASS C joined LAN lobby
+PASS C name replicated
+READY D 7192
+PASS D joined LAN lobby
+PASS D name replicated
+READY E 62932
+PASS E joined LAN lobby
+PASS E name replicated
+READY F 62508
+PASS F joined LAN lobby
+PASS F name replicated
+PASS A persistent account ready
+PASS B persistent account ready
+PASS C persistent account ready
+PASS D persistent account ready
+PASS E persistent account ready
+PASS F persistent account ready
+PASS Extraction auto assignment is balanced and capped
+PASS Invalid squad rejected
+PASS Full squad rejects fourth member
+READY G 61024
+PASS Seventh client is rejected by lobby authority
+PASS Rejected client never occupies a squad or raid slot
+PASS A readied through lobby UI
+PASS Ready player cannot switch squad
+PASS Ready cancellation unlocks player
+PASS All players loaded in Extraction
+PASS Dedicated authority and Stinger pawns
+PASS A equipped AK
+PASS B equipped AK
+PASS C equipped AK
+PASS D equipped AK
+PASS E equipped AK
+PASS F equipped AK
+PASS First-person backpack section hidden on each owner
+PASS Server and owners keep both hands within two cm of weapon grips
+PASS Six humans and four AI coexist with equipment
+PASS Equipment map retains complete patrol navigation
+PASS Equipment map guards reach patrol points
+PASS Two map supplies contain exactly the approved eight items
+PASS A acquired Helmet2 with original identity
+PASS A acquired Vest2 with original identity
+PASS A acquired Bandage with original identity
+PASS A acquired Splint with original identity
+PASS B acquired RedDot with original identity
+PASS B acquired VerticalGrip with original identity
+PASS B acquired Compensator with original identity
+PASS B acquired AmmoAP with original identity
+PASS A acquired Bandage with original identity
+PASS A acquired Splint with original identity
+PASS RedDot appears on all weapon actors
+PASS VerticalGrip appears on all weapon actors
+PASS Compensator appears on all weapon actors
+PASS Server combines both scatter modifiers multiplicatively
+PASS B acquired Helmet3 with original identity
+PASS B acquired Vest3 with original identity
+PASS Detaching preserves identity and removes only grip effect
+PASS Detaching removes grip visuals and restores owner and A hand targets
+PASS Owner has five first-person parts and hides five world parts
+PASS Remote client sees five world parts and no owner-only parts
+PASS Dropping assembled rifle removes equipped actor on every peer
+PASS Dropped rifle retains all attachment identities and magazine
+PASS Recovered rifle restores every attachment on all peers
+PASS Equipment swap away commits on every peer
+PASS Equipment swap back commits on every peer
+PASS Switching back preserves assembled rifle identity and effects
+PASS One server shot spends one round
+PASS Equipment shot ammo agrees on all peers
+PASS One server shot spends one round
+PASS Equipment shot ammo agrees on all peers
+PASS Real bullet Spine2 health damage 8
+PASS Torso armor spends absorbed damage; Extraction ignores generic shield
+PASS Subthreshold damage creates no trauma
+PASS One server shot spends one round
+PASS Equipment shot ammo agrees on all peers
+FAILED AssertionError(('Unexpected real hit', 'Head', 'RightShoulder', 20, 16))
+RESULT failed 75 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7CRegression01-equipment

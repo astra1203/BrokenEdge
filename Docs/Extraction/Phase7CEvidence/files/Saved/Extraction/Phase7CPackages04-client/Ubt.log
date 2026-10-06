@@ -1,0 +1,190 @@
+Log started at 10/06/2026 04:21:32 (2026-10-05T20:21:32Z)
+No project argument provided while trying to parse Project File. Attempting fallback parsing to attempt to find a Project File.
+-Target argument detected in original command line args. Will attempt to subparse in search of ProjectFile.
+Resolved project argument D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject to D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject
+-Target argument detected in original command line args. Will attempt to subparse in search of ProjectFile.
+Resolved project argument D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject to D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject
+-Target argument detected in original command line args. Will attempt to subparse in search of ProjectFile.
+Resolved project argument D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject to D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject
+-Target argument detected in original command line args. Will attempt to subparse in search of ProjectFile.
+Resolved project argument D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject to D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject
+Resolved project argument D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject to D:/SourceFiles/UnrealProjects/BrokenEdge/BrokenEdge.uproject through -Target resolution.
+No config file at C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Restricted\NotForLicensees\Programs\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\ProgramData\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\Oreki\AppData\Local\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\Oreki\Documents\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Configuration will be read from:
+  C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Saved\UnrealBuildTool\BuildConfiguration.xml
+  C:\Users\Oreki\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (D:\SourceFiles\UnrealProjects\BrokenEdge\Intermediate\Build\XmlConfigCache.bin): C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Saved\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (D:\SourceFiles\UnrealProjects\BrokenEdge\Intermediate\Build\XmlConfigCache.bin): C:\Users\Oreki\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (D:\SourceFiles\UnrealProjects\BrokenEdge\Intermediate\Build\XmlConfigCache.bin): D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (D:\SourceFiles\UnrealProjects\BrokenEdge\Intermediate\Build\XmlConfigCache.bin): C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Intermediate\Build\UnrealBuildTool.Env.BuildConfiguration.xml
+Log file: C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Programs\AutomationTool\Saved\Logs\UBA-BrokenEdgeEditor-Win64-Development.txt
+
+Setting temp directory to 'D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7CPackages04-client-resources\Temp\UnrealBuildTool\326a9b52'
+    Registering build platform: UnrealBuildTool.AndroidPlatformFactory
+Unable to find valid SDK(s) for Android:
+  Found Sdk Version, MinRequired=r27c, MaxRequired=r29.
+  Found AutoSdk Version, Required=r27c.
+        Registering build platform: Android - buildable: False
+    Registering build platform: UnrealBuildTool.IOSPlatformFactory
+Unable to find valid SDK(s) for IOS:
+  Found Sdk Version, MinRequired=1100.0.0.0, MaxRequired=8999.0.
+  Found AutoSdk Version, Required=26.1.1.
+        Registering build platform: IOS - buildable: False
+    Registering build platform: UnrealBuildTool.LinuxPlatformFactory
+Unable to find valid SDK(s) for Linux:
+  Found Sdk Version, Required=v26_clang-20.1.8-rockylinux8.
+  Found AutoSdk Version, Required=v26_clang-20.1.8-rockylinux8.
+        Registering build platform: Linux - buildable: False
+Unable to find valid SDK(s) for LinuxArm64:
+  Found Sdk Version, Required=v26_clang-20.1.8-rockylinux8.
+  Found AutoSdk Version, Required=v26_clang-20.1.8-rockylinux8.
+        Registering build platform: LinuxArm64 - buildable: False
+    Registering build platform: UnrealBuildTool.MacPlatformFactory
+Unable to find valid SDK(s) for Mac:
+  Found Sdk Version, MinRequired=1100.0.0.0, MaxRequired=8999.0.
+  Found AutoSdk Version, Required=26.1.1.
+        Registering build platform: Mac - buildable: False
+    Registering build platform: UnrealBuildTool.TVOSPlatformFactory
+Unable to find valid SDK(s) for TVOS:
+  Found Sdk Version, MinRequired=1100.0.0.0, MaxRequired=8999.0.
+  Found AutoSdk Version, Required=26.1.1.
+        Registering build platform: TVOS - buildable: False
+    Registering build platform: UnrealBuildTool.WindowsPlatformFactory
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (1)
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (2)
+Found Windows 10 SDK version 10.0.22621.0 at C:\Program Files (x86)\Windows Kits\10
+Found Universal CRT version 10.0.22621.0 at C:\Program Files (x86)\Windows Kits\10
+Found Windows 10 SDK version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Found Universal CRT version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Win64 Installed SDK(s): MinVersion_Sdk=10.0.19041.0, MaxVersion_Sdk=10.9.99999.0, CurrentVersion_Sdk=10.0.22621.0, Version_AutoSdk=10.0.22621.0, CurrentVersion_AutoSdk=
+        Registering build platform: Win64 - buildable: True
+    Registering build platform: UnrealBuildTool.VisionOSPlatformFactory
+        Registering build platform: VisionOS - buildable: False
+Command line: C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll "-Target=BrokenEdgeEditor Win64 Development -Project=D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject" "-Target=ShaderCompileWorker Win64 Development -Project=D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject" "-Target=UnrealPak Win64 Development -Project=D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject" "-Target=BrokenEdge Win64 Development -Project=D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject  -remoteini=\"D:\SourceFiles\UnrealProjects\BrokenEdge\"  -NoHotReloadFromIDE -WaitMutex -MaxParallelActions=1 " -log=C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Programs\AutomationTool\Saved\Logs\UBA-BrokenEdgeEditor-Win64-Development.txt
+Executing up to 1 actions based on MaxProcessorCount override
+Using 'git status' to determine working set for adaptive non-unity build (D:\SourceFiles\UnrealProjects\BrokenEdge).
+UbaStorageServer - Database loaded from C:\ProgramData\Epic\UnrealBuildAccelerator\cas\casdb (v32) in 1ms (contained 0 entries estimated to 0b)
+UbaServer - Listening on 0.0.0.0:1345
+Old command line arguments:
+-remoteini=D:\SourceFiles\UnrealProjects\BrokenEdge -NoHotReloadFromIDE -WaitMutex -MaxParallelActions=4
+New command line arguments:
+-remoteini=D:\SourceFiles\UnrealProjects\BrokenEdge -NoHotReloadFromIDE -WaitMutex -MaxParallelActions=1
+Creating makefile for BrokenEdge (command line arguments changed)
+Building ShaderCompileWorker - ShaderCompileWorker - Win64 - Development
+Building UnrealPak - UnrealPak - Win64 - Development
+Building UnrealEditor - BrokenEdgeEditor - Win64 - Development
+Generated code is up to date.
+Generated code is up to date.
+Generated code is up to date.
+Compiler: D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207\bin\Hostx64\x64\cl.exe
+Linker: D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207\bin\Hostx64\x64\link.exe
+Library Manager: D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207\bin\Hostx64\x64\link.exe
+Resource Compiler: C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\rc.exe
+Resource Converter: D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207\bin\Hostx64\x64\cvtres.exe
+Using EngineIncludeOrderVersion.Unreal5_8 for target BrokenEdge.Target.cs
+Building BrokenEdge - BrokenEdge - Win64 - Development
+VerseVMBytecodeGenerator.Generate, generating CPP headers in: 'D:\SourceFiles\UnrealProjects\BrokenEdge\Intermediate\Build\Win64\BrokenEdge\Inc\CoreUObject\VerseVMBytecode'
+	Writing out generated header file. Changed:False Path:'D:\SourceFiles\UnrealProjects\BrokenEdge\Intermediate\Build\Win64\BrokenEdge\Inc\CoreUObject\VerseVMBytecode\VVMBytecodeOps.gen.h'
+	Writing out generated header file. Changed:False Path:'D:\SourceFiles\UnrealProjects\BrokenEdge\Intermediate\Build\Win64\BrokenEdge\Inc\CoreUObject\VerseVMBytecode\VVMBytecodesAndCaptures.gen.h'
+	Writing out generated header file. Changed:False Path:'D:\SourceFiles\UnrealProjects\BrokenEdge\Intermediate\Build\Win64\BrokenEdge\Inc\CoreUObject\VerseVMBytecode\VVMMakeCapturesFuncs.gen.h'
+	Writing out generated header file. Changed:False Path:'D:\SourceFiles\UnrealProjects\BrokenEdge\Intermediate\Build\Win64\BrokenEdge\Inc\CoreUObject\VerseVMBytecode\VVMCaptureSwitch.gen.h'
+Generated code is up to date.
+Found 4 shared PCH headers (listed in order of preference):
+	Engine
+	Slate
+	CoreUObject
+	Core
+Building ShaderCompileWorker, UnrealPak, BrokenEdgeEditor and BrokenEdge...
+===== Toolchain Information =====
+ShaderCompileWorker Win64 Development:
+  Using ISPC compiler (C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Source\ThirdParty\Intel\ISPC\bin\Windows\ispc.exe)
+    Intel(r) Implicit SPMD Program Compiler (Intel(r) ISPC), 1.24.0 (build commit  @ 20250404, LLVM 18.1.2) 
+  Using Visual Studio 14.44.35229 toolchain (D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207) and Windows 10.0.22621.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+UnrealPak Win64 Development:
+  Using ISPC compiler (C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Source\ThirdParty\Intel\ISPC\bin\Windows\ispc.exe)
+    Intel(r) Implicit SPMD Program Compiler (Intel(r) ISPC), 1.24.0 (build commit  @ 20250404, LLVM 18.1.2) 
+  Using Visual Studio 14.44.35229 toolchain (D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207) and Windows 10.0.22621.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+BrokenEdgeEditor Win64 Development:
+  Using ISPC compiler (C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Source\ThirdParty\Intel\ISPC\bin\Windows\ispc.exe)
+    Intel(r) Implicit SPMD Program Compiler (Intel(r) ISPC), 1.24.0 (build commit  @ 20250404, LLVM 18.1.2) 
+  Using Visual Studio 14.44.35229 toolchain (D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207) and Windows 10.0.22621.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+  [Adaptive Build] Excluded from BrokenEdge unity file: SpaceCenterInstanceGroup.cpp
+  [Adaptive Build] Excluded from StingerTools unity file: StingerAssetLibrary.cpp
+BrokenEdge Win64 Development:
+  Using ISPC compiler (C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Source\ThirdParty\Intel\ISPC\bin\Windows\ispc.exe)
+    Intel(r) Implicit SPMD Program Compiler (Intel(r) ISPC), 1.24.0 (build commit  @ 20250404, LLVM 18.1.2) 
+  Using Visual Studio 14.44.35229 toolchain (D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207) and Windows 10.0.22621.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+  [Adaptive Build] Excluded from BrokenEdge unity file: SpaceCenterInstanceGroup.cpp
+=================================
+Using Unreal Build Accelerator local executor to run 2 action(s)
+  CPU 6 physical cores, 12 logical cores
+  Memory 31.61 GB physical, 32.91 GB/51.33 GB committed
+  UBA Storage capacity 40 GB
+  UBA RootDir C:\ProgramData\Epic\UnrealBuildAccelerator
+Cache bucket 1610756143 used. Action: Link [x64] BrokenEdge.exe (BrokenEdge-Win64-Development)
+All processes queued
+** For BrokenEdge-Win64-Development **
+[1/2] Link [x64] BrokenEdge.exe
+  正在创建库 D:\SourceFiles\UnrealProjects\BrokenEdge\Binaries\Win64\BrokenEdge.lib 和对象 D:\SourceFiles\UnrealProjects\BrokenEdge\Binaries\Win64\BrokenEdge.exp
+[2/2] WriteMetadata BrokenEdge.target [NoUba]
+
+Total time in Unreal Build Accelerator local executor: 31.95 seconds
+Output binary: C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Binaries\Win64\ShaderCompileWorker.exe
+Output binary: C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Binaries\Win64\UnrealPak.exe
+Output binary: C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Binaries\Win64\UnrealEditor.exe
+Output binary: D:\SourceFiles\UnrealProjects\BrokenEdge\Binaries\Win64\BrokenEdge.exe
+UbaStorageServer - Database saved in 1ms (0 file entries, 0 cas entries. deleted 0 dropped cas files)
+WriteFileIfChanged() wrote 0 changed files of 1 requested writes.
+
+Timeline:
+[  0.000]  +0.322 Main
+   0.010          [  0.010]  +0.081 Apply XmlConfig
+   0.015             0.015          [  0.005]  +0.014 Find target files
+   0.098          [  0.098]  +0.040 AddTelemetry
+   0.161          [  0.161]  +0.160 RegisterPlatforms
+[  0.339]  +0.031 ParseCommandLine
+[  0.416]  +0.065 LoadMakefile
+   0.416          [  0.000]  +0.303 LoadMakefile
+   0.416             0.000          [  0.000]  +0.157 LoadMakefile
+   0.585             0.168          [  0.168]  +0.004 EngineRulesFetchDirs
+   0.597             0.180          [  0.180]  +0.012 EngineRulesAssembly
+   0.609             0.192          [  0.192]  +0.001 ProgramRulesAssembly
+   0.613             0.196          [  0.196]  +0.001 ProjectRulesAssembly
+   0.614             0.197          [  0.197]  +0.169 CreateTargetRules
+[  0.482]  +0.316 <unknown>
+[  0.799]  +0.016 CppDependencyCache
+   0.799          [  0.000]  +0.030 CppDependencyCache
+   0.799             0.000          [  0.000]  +0.124 CppDependencyCache
+[  0.946]  +0.035 ShaderCompileWorker Win64 Development
+   0.946          [  0.000]  +0.035 UnrealPak Win64 Development
+   0.946             0.000          [  0.000]  +0.065 BrokenEdgeEditor Win64 Development
+[  1.011]  +0.017 UHTWait
+   1.027          [  0.015]  +0.010 UHTTimestamps
+[  1.029]  +0.241 <unknown>
+[  1.270]  +0.032 UHTModules
+[  1.347]  +0.006 UHTManifest
+[  1.354]  +0.004 UHTTimestamps
+[  1.358]  +0.479 <unknown>
+[  1.837]  +0.000 WaitOnWrites
+[  1.839]  +0.000 UHTWait
+   1.840          [  0.000]  +0.080 SavingMakefile
+   1.856             0.016          [  0.015]  +0.000 CppDependencyCache
+   1.856             0.016          [  0.015]  +0.000 CppDependencyCache
+   1.856             0.016          [  0.015]  +0.000 CppDependencyCache
+   1.856             0.016          [  0.015]  +0.000 CppDependencyCache
+   1.856             0.016          [  0.016]  +0.242 Preparing ActionGraph
+[  1.840]  +0.268 <unknown>
+[  2.108]  +0.201 GarbageCollect
+[  2.310] +31.748 <unknown>
+[ 34.059]  +0.000 Deploying targets
+[ 34.060]  +0.000 DisconnectCache
+[ 34.068]  +0.051 SaveCasTable
+[ 34.125]  +0.084 Saving caches
+[ 34.210]  +0.002 TelemetryService.FlushEvents
+[ 34.214]
+
+Result: Succeeded
+Total execution time: 34.21 seconds

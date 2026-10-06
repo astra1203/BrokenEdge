@@ -1,0 +1,75 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\run_restoration_editor.py",
+    "warm",
+    "--tag",
+    "Phase7CNativeWarm01-14",
+    "--manifest",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7C\\ManifestRuns\\Phase7CManifest01\\Manifest.json",
+    "--limit",
+    "250"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-05T18:45:37.552940+00:00",
+      "c_free_gib": 62.7202262878418,
+      "d_free_gib": 218.83257675170898,
+      "ram_free_gib": 11.980838775634766,
+      "commit_used_gib": 30.695491790771484,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:45:37.557939+00:00",
+      "c_free_gib": 62.7202262878418,
+      "d_free_gib": 218.83257293701172,
+      "ram_free_gib": 11.980270385742188,
+      "commit_used_gib": 30.695491790771484,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:45:42.569264+00:00",
+      "c_free_gib": 62.7203369140625,
+      "d_free_gib": 218.83221435546875,
+      "ram_free_gib": 11.385673522949219,
+      "commit_used_gib": 31.489879608154297,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:45:47.576805+00:00",
+      "c_free_gib": 62.72026824951172,
+      "d_free_gib": 218.8321990966797,
+      "ram_free_gib": 10.049423217773438,
+      "commit_used_gib": 32.8463020324707,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:45:52.587627+00:00",
+      "c_free_gib": 62.70343780517578,
+      "d_free_gib": 218.8321533203125,
+      "ram_free_gib": 9.123794555664062,
+      "commit_used_gib": 33.689273834228516,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-05T18:45:56.768851+00:00",
+      "c_free_gib": 62.68885040283203,
+      "d_free_gib": 218.8320426940918,
+      "ram_free_gib": 11.960620880126953,
+      "commit_used_gib": 30.732711791992188,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 67548,
+  "exit_code": 0
+}

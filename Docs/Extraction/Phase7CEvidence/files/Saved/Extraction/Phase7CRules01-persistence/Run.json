@@ -1,0 +1,22 @@
+{
+  "task": "persistence",
+  "started_utc": "2026-10-05T20:25:19.625481+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase7CRules01-persistence\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Persistence",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase7CRules01-persistence\\Automation"
+  ],
+  "pid": 70592,
+  "exit_code": 0,
+  "successful_tests": 4,
+  "result": "passed",
+  "finished_utc": "2026-10-05T20:25:41.788291+00:00"
+}
