@@ -48,6 +48,12 @@ public:
 	float SmokeCooldown = 30;
 	UPROPERTY(Config)
 	int32 Guards = 4;
+	UPROPERTY(Config)
+	float GuardReactionSeconds = 2.f;
+	UPROPERTY(Config)
+	float GuardShotInterval = .8f;
+	UPROPERTY(Config)
+	float GuardDamageScale = .3f;
 };
 
 UCLASS()

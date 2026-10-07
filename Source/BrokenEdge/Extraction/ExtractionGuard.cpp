@@ -32,9 +32,11 @@ bool AExtractionGuard::Sees(const ABrokenEdgeCharacter* Other) const
 {
 	const auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
 	const auto* PS = Other ? Other->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	if (!C || !PS || Other->IsDefeated() || (PS->Life != EExtractionLife::Alive && PS->Life != EExtractionLife::Downed)) return false;
+	if (!C || !PS || Other->IsDefeated() || (PS->Life != EExtractionLife::Alive && PS->Life != EExtractionLife::Downed))
+		return false;
 	const FVector Delta = Other->GetActorLocation() - C->GetActorLocation();
-	if (Delta.SizeSquared() > FMath::Square(3000.f) || FVector::DotProduct(C->GetActorForwardVector(), Delta.GetSafeNormal()) < .5f) return false;
+	if (Delta.SizeSquared() > FMath::Square(3000.f) || FVector::DotProduct(
+		C->GetActorForwardVector(), Delta.GetSafeNormal()) < .5f) return false;
 	if (AExtractionSmoke::Blocks(GetWorld(), C->GetPawnViewLocation(), Other->GetPawnViewLocation())) return false;
 	return LineOfSightTo(Other);
 }
@@ -44,9 +46,20 @@ void AExtractionGuard::Tick(float Delta)
 	Super::Tick(Delta);
 	auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
 	const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
-	if (!C || C->IsDefeated()) { StopMovement(); ClearFocus(EAIFocusPriority::Gameplay); Target = nullptr; State = EExtractionGuardState::Dead; return; }
+	if (!C || C->IsDefeated())
+	{
+		StopMovement();
+		ClearFocus(EAIFocusPriority::Gameplay);
+		Target = nullptr;
+		State = EExtractionGuardState::Dead;
+		return;
+	}
 	const auto* GM = GetWorld()->GetAuthGameMode<AExtractionGameMode>();
-	if (!GS || GS->Phase != EExtractionPhase::Active || !GM || !GM->Store() || !GM->Store()->IsAvailable()) { StopMovement(); return; }
+	if (!GS || GS->Phase != EExtractionPhase::Active || !GM || !GM->Store() || !GM->Store()->IsAvailable())
+	{
+		StopMovement();
+		return;
+	}
 	const double Now = GetWorld()->GetTimeSeconds();
 	ABrokenEdgeCharacter* Seen = nullptr;
 	float Best = TNumericLimits<float>::Max();
@@ -56,25 +69,32 @@ void AExtractionGuard::Tick(float Delta)
 			++VisibleChecks;
 			const float Score = FVector::DistSquared(C->GetActorLocation(), Other->GetActorLocation())
 				+ (Other->GetExtractionAbilities()->IsDowned() ? 10000000.f : 0.f);
-			if (Score < Best) { Seen = Other; Best = Score; }
+			if (Score < Best)
+			{
+				Seen = Other;
+				Best = Score;
+			}
 		}
 	if (Seen)
 	{
-		if (Target != Seen) ReactAt = Now + .7;
+		const auto* Rules = GetDefault<UExtractionRules>();
+		if (Target != Seen) ReactAt = Now + FMath::Max(0.f, Rules->GuardReactionSeconds);
 		Target = Seen;
 		LastKnown = Seen->GetActorLocation();
 		LostAt = Now;
 		State = EExtractionGuardState::Engage;
 		SetFocus(Seen);
 		StopMovement();
-		if (auto* W = C->GetEquippedWeapon(); W && Now >= ReactAt)
+		if (auto* W = C->GetEquippedWeapon(); W && Now >= ReactAt && Now >= NextFireAt)
 		{
 			if (W->IsEmpty()) C->GetExtractionCombat()->BeginServerReload();
 			else
 			{
 				const uint32 Before = C->GetExtractionCombat()->GetAcceptedShots();
 				C->GetExtractionCombat()->FireGuard(LastKnown + FVector(0, 0, 10) + FMath::VRand() * 20);
-				Shots += C->GetExtractionCombat()->GetAcceptedShots() - Before;
+				const uint32 Fired = C->GetExtractionCombat()->GetAcceptedShots() - Before;
+				Shots += Fired;
+				if (Fired) NextFireAt = Now + FMath::Max(.1f, Rules->GuardShotInterval);
 			}
 		}
 		return;
@@ -90,7 +110,11 @@ void AExtractionGuard::Tick(float Delta)
 	{
 		if (Now - LostAt < 5)
 		{
-			if (Now >= NextMove) { MoveToLocation(LastKnown, 80); NextMove = Now + 1; }
+			if (Now >= NextMove)
+			{
+				MoveToLocation(LastKnown, 80);
+				NextMove = Now + 1;
+			}
 			return;
 		}
 		State = EExtractionGuardState::Return;
@@ -105,7 +129,11 @@ void AExtractionGuard::Tick(float Delta)
 		State = EExtractionGuardState::Patrol;
 		NextMove = Now + .6;
 	}
-	if (Now >= NextMove) { MoveToLocation(Point, 70); NextMove = Now + 1; }
+	if (Now >= NextMove)
+	{
+		MoveToLocation(Point, 70);
+		NextMove = Now + 1;
+	}
 }
 
 void AExtractionGameMode::SpawnGuards()
@@ -130,7 +158,8 @@ void AExtractionGameMode::SpawnGuards()
 			continue;
 		}
 		const FTransform Transform(FRotator::ZeroRotator, Projected.Location + FVector(0, 0, 100));
-		auto* C = GetWorld()->SpawnActorDeferred<ABrokenEdgeCharacter>(DefaultPawnClass, Transform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+		auto* C = GetWorld()->SpawnActorDeferred<ABrokenEdgeCharacter>(DefaultPawnClass, Transform, nullptr, nullptr,
+		                                                               ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 		if (!C) continue;
 		C->bExtractionGuard = true;
 		C->ExtractionGuardId = I;
@@ -154,7 +183,11 @@ void AExtractionGameMode::RemoveGuards()
 {
 	for (TActorIterator<AExtractionGuard> It(GetWorld()); It; ++It)
 	{
-		if (auto* C = Cast<ABrokenEdgeCharacter>(It->GetPawn())) { C->GuardInventory->ClearSettled(); C->Destroy(); }
+		if (auto* C = Cast<ABrokenEdgeCharacter>(It->GetPawn()))
+		{
+			C->GuardInventory->ClearSettled();
+			C->Destroy();
+		}
 		It->Destroy();
 	}
 	for (TActorIterator<AExtractionSmoke> It(GetWorld()); It; ++It) It->Destroy();

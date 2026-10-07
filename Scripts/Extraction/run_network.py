@@ -27,7 +27,7 @@ parser.add_argument('--debug-hold', action='store_true', help='Wait for Continue
 parser.add_argument('--optic-validation', action='store_true', help='Additional mounted-optic visual acceptance in the equipment scenario')
 parser.add_argument('--optic-remote-only', action='store_true', help='Stop equipment acceptance after observer mount captures; not a full combat regression')
 parser.add_argument('--resolution', choices=['1280x720', '1920x1080'], help='Rendered client size for visual acceptance')
-parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east'], default='combat')
+parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east'], default='combat')
 parser.add_argument('--players', type=int, choices=[2, 3, 6])
 parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
 parser.add_argument('--rendered-role', choices=['A', 'B'], help='Render only this client; the other clients remain connected with NullRHI')
@@ -81,6 +81,13 @@ report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.s
 if args.scenario == 'east' or args.scenario == 'performance' and args.performance_route == 'east':
     for name in ['Scripts/SpaceCenter/east_route.json','Scripts/Extraction/east_scenarios.py']:
         report['input_sha256'][name]=hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
+if args.scenario == 'guard_tuning':
+    for name in ['Scripts/Extraction/guard_tuning_scenarios.py', 'Config/DefaultGame.ini',
+                 'Source/BrokenEdge/Extraction/ExtractionAbilities.h',
+                 'Source/BrokenEdge/Extraction/ExtractionGuard.h',
+                 'Source/BrokenEdge/Extraction/ExtractionGuard.cpp',
+                 'Source/BrokenEdge/Extraction/ExtractionHealth.cpp']:
+        report['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
 
 
 def save():
@@ -175,7 +182,7 @@ def launch(role):
                    '-server' if role == 'Server' else '-game']
     entry = '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction?ExpectedPlayers=3' if role == 'Server' and args.scenario == 'load_timeout' else '/Game/Maps/Lobby'
     command += [entry, '-nosound', '-unattended', '-nosplash', '-NoLoadingScreen',
-                '-ExtractionGuards=' + ('4' if args.scenario in ['pvpve', 'progression', 'northcombat'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
+                '-ExtractionGuards=' + ('4' if args.scenario in ['pvpve', 'guard_tuning', 'progression', 'northcombat'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
                 '-MatchType=Extraction', '-NumPublicConnections=' + str(len(ROLES)),
                 '-MinPlayersToStart=' + str(len(ROLES)), '-port=27777',
                 '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '1200' if args.debug_hold or args.scenario in ['streaming', 'performance', 'east'] else '600'),
@@ -232,7 +239,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east']
+    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
@@ -261,7 +268,7 @@ def begin_round():
         send('Server', 'fixture', players=[{'name': 'EX_'+r, 'position': [5700+150*i, 5000, 180],
                                            'health': 100, 'shield': 0} for i,r in enumerate(ROLES)])
     check('All players loaded in Extraction', lambda: all(state(r).get('phase') == 1 for r in processes), 120)
-    if args.scenario == 'pvpve':
+    if args.scenario in ['pvpve', 'guard_tuning']:
         send('Server', 'fixture', players=[{'name': 'EX_'+r, 'position': [5700+150*i, 5000, 180], 'health': 100, 'shield': 0} for i,r in enumerate(ROLES)])
     check('Dedicated authority and Stinger pawns', lambda: state('Server').get('net_mode') == 1
           and state('Server').get('local_players') == 0 and state('Server').get('alive') == len(ROLES)
@@ -374,6 +381,9 @@ try:
         run(globals())
     elif args.scenario == 'equipment':
         from equipment_scenarios import run
+        run(globals())
+    elif args.scenario == 'guard_tuning':
+        from guard_tuning_scenarios import run
         run(globals())
     elif args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle']:
         from phase5_scenarios import run

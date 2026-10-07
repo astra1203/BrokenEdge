@@ -61,6 +61,11 @@ void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController
 	if (Damage <= 0) return; // Friendly fire cannot damage equipment or create trauma.
 	const auto* AmmoDef = UExtractionItemDefinition::Get(Ammo);
 	if (!AmmoDef || AmmoDef->Kind != EExtractionItemKind::Ammo) return;
+	// Bullet damage is validated again in ReceiveDamage; scale only at this entry.
+	// The attacker, not the weapon instance, determines guard difficulty after looting.
+	if (const auto* Shooter = Attacker ? Cast<ABrokenEdgeCharacter>(Attacker->GetPawn()) : nullptr;
+		Shooter && Shooter->bExtractionGuard)
+		Damage *= FMath::Clamp(GetDefault<UExtractionRules>()->GuardDamageScale, 0.f, 1.f);
 	Damage *= AmmoDef->DamageScale;
 	if (C->GetExtractionAbilities()->IsDowned())
 	{
