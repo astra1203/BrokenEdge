@@ -1,0 +1,37 @@
+{
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Build\\BatchFiles\\RunUAT.bat",
+    "BuildCookRun",
+    "-project=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-nop4",
+    "-build",
+    "-cook",
+    "-stage",
+    "-pak",
+    "-iostore",
+    "-archive",
+    "-archivedirectory=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\ExperiencePhaseA01\\Server",
+    "-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+    "-prereqs",
+    "-ubtargs=-NoHotReloadFromIDE -WaitMutex -MaxParallelActions=2",
+    "-utf8output",
+    "-server",
+    "-noclient",
+    "-serverplatform=Win64",
+    "-serverconfig=Development",
+    "-CookOutputDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\ExperienceAFileServer01\\Cooked",
+    "-stagingdirectory=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\ExperienceAFileServer01\\Staged",
+    "-AdditionalCookerOptions=-SkipZenStore -ForceTextureEncodeSpeed=Final -ini:Engine:[DevOptions.Shaders]:ShaderCompilerCoreCountThreshold=999,[DevOptions.Shaders]:NumUnusedShaderCompilingThreads=10,[DevOptions.Shaders]:NumUnusedShaderCompilingThreadsDuringGame=10,[SystemSettings]:Editor.AsyncTextureCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncStaticMeshCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncAssetCompilationMaxConcurrency=2,[SystemSettings]:Editor.AsyncAssetCompilationMaxMemoryUsage=2 -ini:Editor:[CookSettings]:MemoryMinFreePhysical=4096,[CookSettings]:MemoryMaxUsedPhysical=8192"
+  ],
+  "head": "fac5dbcb01b263c3bb5668187bec587bddf01735",
+  "started_utc": "2026-10-07T08:47:17.034368+00:00",
+  "archive_root": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\ExperiencePhaseA01",
+  "cook_store": "filesystem",
+  "environment_overrides": {
+    "UE_SKIP_UBT_SDK_SETUP": "1",
+    "UnrealBuildTool_BuildConfiguration__bAllowUBAExecutor": "false"
+  },
+  "pid": 60000,
+  "exit_code": 25,
+  "elapsed_seconds": 152.06200000003446
+}

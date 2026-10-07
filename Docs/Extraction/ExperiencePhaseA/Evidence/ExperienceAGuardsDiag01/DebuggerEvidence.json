@@ -1,0 +1,178 @@
+{
+  "purpose": "Guard fixture diagnosis only; no acceptance claim",
+  "notes": [
+    "Optimized fixture variable Character unavailable; conditional breakpoint was removed.",
+    "Stopped early after debugger pauses disrupted client readiness; no production change made.",
+    "All agent breakpoints removed; eight pre-existing user exception breakpoints retained (IDs were not unique)."
+  ],
+  "events": [
+    {
+      "action": "set_fixture_breakpoint",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"breakpointId\":\"line|file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Tests/ExtractionDriverTests.cpp|286\",\"added\":{\"id\":\"line|file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Tests/ExtractionDriverTests.cpp|286\",\"type\":\"line\",\"file\":\"file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\",\"line\":287,\"enabled\":true,\"owner\":\"agent\",\"condition\":\"Character->bExtractionGuard && Character->ExtractionGuardId == 0\",\"isLogMessage\":false,\"isLogStack\":false,\"temporary\":false,\"suspendPolicy\":\"all\",\"hitCount\":0},\"totalBreakpoints\":9,\"lineText\":\"bool ClearTrauma = false;\",\"message\":\"Breakpoint created.\"}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "attach",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"attached\":false,\"outcome\":\"initiated\",\"pid\":69016,\"executable\":\"BrokenEdgeServer\",\"debuggerDisplayName\":\"LLDB\",\"debuggerKind\":\"native\",\"availableDebuggerDetails\":[{\"debuggerKind\":\"native\",\"debuggerDisplayName\":\"LLDB\",\"mixedMode\":false}],\"message\":\"Attach to PID 69016 was initiated, but this debugger did not report a definitive result. Verify with xdebug_get_debugger_status before relying on the session.\"}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "status",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"sessions\":[{\"id\":\"BrokenEdgeServer (69016)\",\"name\":\"BrokenEdgeServer (69016)\",\"state\":\"running\",\"runConfigurationName\":\"BrokenEdgeServer (69016)\"}],\"activeSessionId\":\"BrokenEdgeServer (69016)\"}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "wait_fixture",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"status\":\"paused\",\"newPosition\":{\"filePath\":\"file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\",\"line\":287},\"frameValues\":\"├─ + this =  // 0x00007ff73fbaab00 {BrokenEdgeServer.exe!`string'} {Test= // 0x006f006300200065 {bComplexTask=???, bRunOnSeparateThread=???, bSuppressLogs=???, ...}, Role=Invalid, Folder=<error>, ...} {FExtractionDriver *}\\n├─ + Command = SharedPtr= // 0x00007fea7d210c50 {...} {TSharedPtr<FJsonObject, 1>}\\n├─ + Data = L\\\"{\\\"id\\\": 1, \\\"op\\\": \\\"fixture\\\", \\\"players\\\": [{\\\"name\\\": \\\"EX_A\\\", \\\"position\\\": [5700, 5000, 180], \\\"health\\\": 100, \\\"shield\\\": 0}, {\\\"name\\\": \\\"EX_B\\\", \\\"position\\\": [5850, 5000, 180], \\\"health\\\": 100, \\\"shield\\\": 0}]}\\\" {FString}\\n├─ + <begin>$L0 = {Iter={Ptr= // 0x00007fe93ca6c2c8 { // 0xdddddddddddddddd}, CurrentNum= // 0x00007ff27c999320 {1}, InitialNum=1}} {TDereferencingIterator<const FWorldContext, TCheckedPointerIterator<void *const, int, 0>>}\\n├─ + Offset = {X=1.2882297539194272E-231 Y=6.9494273130280185E-310 Z=1.3129848956597622E-312} {UE::Math::TVector<double>}\\n├─ + Point = {X=6.9507535475615463E-310 Y=6.950753547831899E-310 Z=1.1857575500189917E-322} {UE::Math::TVector<double>}\\n├─ + Rotation = {Pitch=6.9514878538031588E-310, Yaw=0, Roll=6.9515006433149242E-310} {UE::Math::TRotator<double>}\\n├─ + Camera = {X=3.7367821889791274E-312 Y=6.948737695961216E-310 Z=6.948737695961216E-310} {UE::Math::TVector<double>}\\n├─ + Op = L\\\"fixture\\\" {FString}\\n├─ + Widgets = Invalid {TArray<UUserWidget *, TSizedDefaultAllocator<32>>}\\n├─ + RequiredRoom = Invalid {FString}\\n├─ + Mode = Invalid {FString}\\n├─ + Room = Invalid {FString}\\n├─ + Kind = L\\\"\\\\x4\\\" {FString}\\n├─ + Name = Invalid {FString}\\n├─ bExpectRejection = true {bool}\\n├─ Port = 0 {int}\\n├─ + Reason = Empty {FString}\\n├─ Duration = 0 {double}\\n├─ + Bone = Invalid {FString}\\n├─ Pitch = 2.3715151000379834E-322 {double}\\n├─ Yaw = 0 {double}\\n├─ ClearTrauma = false {bool}\\n├─ + Item = SharedPtr= // 0x00007fea7d210b00 {...} {TSharedPtr<FJsonObject, 1>}\\n├─ + End = {X=3.1620201333839779E-322 Y=6.9501728141515702E-310 Z=6.949427313027228E-310} {UE::Math::TVector<double>}\\n├─ + Target = {X=0 Y=0 Z=0} {UE::Math::TVector<double>}\\n├─ + Start = {X=0 Y=0 Z=0} {UE::Math::TVector<double>}\\n├─ + ReadVector = <lambda> UE::Math::TVector<double> (const wchar_t *) const {Command=SharedPtr= // 0x00007ff81bdd29e0 {...}} {<lambda_1>}\\n├─ + OldAdapter = {Translation={X=6.9495866738535179E-310 Y=6.9502230518185618E-310 Z=0} Rotation={X=1.8823901106551493E-321 Y=0 Z=0 W=6.9514904759632946E-310}} {UE::Math::TTransform<double>}\\n├─ + Angles = {X=6.9502230519027012E-310 Y=2.1219957904712067E-314 Z=6.949427313027228E-310} {UE::Math::TVector<double>}\\n├─ + It =  {TActorIterator<AWeapon>}\\n├─ + Components = Invalid {TInlineComponentArray<UStaticMeshComponent *, 24>}\\n├─ + Probe = Unset {TSharedRef<FJsonObject, 1>}\\n├─ + WriteMesh = <lambda> void (const wchar_t *, USkeletalMeshComponent *, USkeletalMeshComponent *) const {Probe={}} {<lambda_2>}\\n├─ + Output = Invalid {FString}\\n├─ + Location = {X=6.9514870219395444E-310 Y=5.7293886371872453E-313 Z=6.9514871846127828E-310} {UE::Math::TVector<double>}\\n├─ + TargetName = Invalid {FString}\\n├─ + Transform = {Translation={X=6.9514983408642726E-310 Y=6.9514870062118539E-310 Z=8.4879839904329148E-314} Rotation={X=6.9514983408642726E-310 Y=1.4422710429966152E-311 Z=1.2731975642520781E-313 W=6.9514983406856185E-310}} {UE::Math::TTransform<double>}\\n├─ + Center = {X=6.9487376959616113E-310 Y=2.1219957909652723E-314 Z=6.9487376959624018E-310} {UE::Math::TVector<double>}\\n├─ bShowUI = true {bool}\\n├─ Started = 2.2089259756924583E+161 {double}\\n├─ + Test =  // 0x006f006300200065 {bComplexTask=???, bRunOnSeparateThread=???, bSuppressLogs=???, ...} {FAutomationTestBase *}\\n├─ + Role = Invalid {FString}\\n├─ WalkIndex = 1665229374 {int}\\n├─ + WalkPoints = Invalid {TArray<UE::Math::TVector<double>, TSizedDefaultAllocator<32>>}\\n├─ WalkSince = 0 {double}\\n├─ + Error = Invalid {FString}\\n├─ + AimTarget = Invalid {FString}\\n├─ bHeadAim = true {bool}\\n├─ + AimBone = Illegal name (block index out of range)_1818322289 {FName}\\n├─ bBodyCenterAim = true {bool}\\n├─ + PulseAction = Invalid {FString}\\n├─ PulseEnd = 1.5076279125288481E+161 {double}\\n├─ + Folder = <error> {FString}\\n├─ LastCommand = 1869762668 {int}\\n├─ + UE::Math::TRotator<double>::ZeroRotator = {Pitch=0, Yaw=0, Roll=0} {UE::Math::TRotator<double>}\\n├─ + TestCamera = ??? {TWeakObjectPtr<ACameraActor, FWeakObjectPtr>}\\n└─ LastWrite = 4.9406564584124654E-322 {double}\\n\",\"breakpointErrorsTail\":[{\"type\":\"BREAKPOINT_ERROR\",\"timestampMs\":1791364274824,\"timestampIso\":\"2026-10-07T09:11:14.824Z\",\"sessionId\":\"BrokenEdgeServer (69016)\",\"message\":\"断点当前不会被命中。没有可执行代码与此行相关联。\",\"breakpointId\":\"line|file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Tests/ExtractionDriverTests.cpp|286\",\"filePath\":\"file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\",\"line\":287},{\"type\":\"BREAKPOINT_ERROR\",\"timestampMs\":1791364275646,\"timestampIso\":\"2026-10-07T09:11:15.646Z\",\"sessionId\":\"BrokenEdgeServer (69016)\",\"message\":\"断点当前不会被命中。没有可执行代码与此行相关联。\",\"breakpointId\":\"line|file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Tests/ExtractionDriverTests.cpp|286\",\"filePath\":\"file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\",\"line\":287}]}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "xdebug_get_stack --sessionId 'BrokenEdgeServer (69016)' --limit 5",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"frames\":[{\"presentation\":\"FExtractionDriver::Update() ExtractionDriverTests.cpp:287\",\"index\":0,\"file\":\"file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\",\"line\":287,\"isCurrent\":true},{\"presentation\":\"[内联] IAutomationLatentCommand::InternalUpdate() AutomationTest.h:547\",\"index\":1,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Core/Public/Misc/AutomationTest.h\",\"line\":547,\"isCurrent\":false},{\"presentation\":\"FAutomationTestFramework::ExecuteLatentCommands() AutomationTest.cpp:690\",\"index\":2,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Core/Private/Misc/AutomationTest.cpp\",\"line\":690,\"isCurrent\":false},{\"presentation\":\"[内联] FAutomationWorkerModule::ExecuteLatentCommands() AutomationWorkerModule.cpp:113\",\"index\":3,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/AutomationWorker/Private/AutomationWorkerModule.cpp\",\"line\":113,\"isCurrent\":false},{\"presentation\":\"FAutomationWorkerModule::Tick() AutomationWorkerModule.cpp:68\",\"index\":4,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/AutomationWorker/Private/AutomationWorkerModule.cpp\",\"line\":68,\"isCurrent\":false}],\"threadId\":\"Thread-1-[GameThread] (73536)\",\"totalFrames\":15}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "xdebug_evaluate_expression --sessionId 'BrokenEdgeServer (69016)' --expression 'Item' --depth 1",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Item = SharedPtr= // 0x00007fea7d210b00 {...} {TSharedPtr<FJsonObject, 1>}\n  ├─ + UE::JSON::Private::FJsonObjectSharedStringStorage = {StringSet=SharedPtr= // 0x00007fe93cd30210 {Strings=Num=7, Max=7}, Values=Num=4, Max=4} {UE::JSON::Private::FJsonObjectSharedStringStorage}\n  ├─ + [Internal] = SharedCount={...}, WeakCount={...}, Ptr= // 0x00007fea7d210b00 {void *}\n  └─ + Raw View = {Object= // 0x00007fea7d210b00 {...}, SharedReferenceCount={ReferenceController= // 0x00007fea7d210af0 {ObjectStorage={...}}}} {TSharedPtr<FJsonObject, 1>}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "xdebug_evaluate_expression --sessionId 'BrokenEdgeServer (69016)' --expression 'Character'",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Character = <error: Identifier 'Character' is not available, possibly due to compiler optimizations>"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "xdebug_evaluate_expression --sessionId 'BrokenEdgeServer (69016)' --expression 'Data' --depth 3",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Data = L\"{\"id\": 1, \"op\": \"fixture\", \"players\": [{\"name\": \"EX_A\", \"position\": [5700, 5000, 180], \"health\": 100, \"shield\": 0}, {\"name\": \"EX_B\", \"position\": [5850, 5000, 180], \"health\": 100, \"shield\": 0}]}\" {FString}\n  ├─ [0] = 123 L\"'{'\" {wchar_t}\n  ├─ [1] = 34 L\"'\"'\" {wchar_t}\n  ├─ [2] = 105 L\"'i'\" {wchar_t}\n  ├─ [3] = 100 L\"'d'\" {wchar_t}\n  ├─ [4] = 34 L\"'\"'\" {wchar_t}\n  ├─ [5] = 58 L\"':'\" {wchar_t}\n  ├─ [6] = 32 L\"' '\" {wchar_t}\n  ├─ [7] = 49 L\"'1'\" {wchar_t}\n  ├─ [8] = 44 L\"','\" {wchar_t}\n  ├─ [9] = 32 L\"' '\" {wchar_t}\n  ├─ [10] = 34 L\"'\"'\" {wchar_t}\n  ├─ [11] = 111 L\"'o'\" {wchar_t}\n  ├─ [12] = 112 L\"'p'\" {wchar_t}\n  ├─ [13] = 34 L\"'\"'\" {wchar_t}\n  ├─ [14] = 58 L\"':'\" {wchar_t}\n  ├─ [15] = 32 L\"' '\" {wchar_t}\n  ├─ [16] = 34 L\"'\"'\" {wchar_t}\n  ├─ [17] = 102 L\"'f'\" {wchar_t}\n  ├─ [18] = 105 L\"'i'\" {wchar_t}\n  ├─ [19] = 120 L\"'x'\" {wchar_t}\n  ├─ [20] = 116 L\"'t'\" {wchar_t}\n  ├─ [21] = 117 L\"'u'\" {wchar_t}\n  ├─ [22] = 114 L\"'r'\" {wchar_t}\n  ├─ [23] = 101 L\"'e'\" {wchar_t}\n  ├─ [24] = 34 L\"'\"'\" {wchar_t}\n  ├─ [25] = 44 L\"','\" {wchar_t}\n  ├─ [26] = 32 L\"' '\" {wchar_t}\n  ├─ [27] = 34 L\"'\"'\" {wchar_t}\n  ├─ [28] = 112 L\"'p'\" {wchar_t}\n  ├─ [29] = 108 L\"'l'\" {wchar_t}\n  ├─ [30] = 97 L\"'a'\" {wchar_t}\n  ├─ [31] = 121 L\"'y'\" {wchar_t}\n  ├─ [32] = 101 L\"'e'\" {wchar_t}\n  ├─ [33] = 114 L\"'r'\" {wchar_t}\n  ├─ [34] = 115 L\"'s'\" {wchar_t}\n  ├─ [35] = 34 L\"'\"'\" {wchar_t}\n  ├─ [36] = 58 L\"':'\" {wchar_t}\n  ├─ [37] = 32 L\"' '\" {wchar_t}\n  ├─ [38] = 91 L\"'['\" {wchar_t}\n  ├─ [39] = 123 L\"'{'\" {wchar_t}\n  ├─ [40] = 34 L\"'\"'\" {wchar_t}\n  ├─ [41] = 110 L\"'n'\" {wchar_t}\n  ├─ [42] = 97 L\"'a'\" {wchar_t}\n  ├─ [43] = 109 L\"'m'\" {wchar_t}\n  ├─ [44] = 101 L\"'e'\" {wchar_t}\n  ├─ [45] = 34 L\"'\"'\" {wchar_t}\n  ├─ [46] = 58 L\"':'\" {wchar_t}\n  ├─ [47] = 32 L\"' '\" {wchar_t}\n  ├─ [48] = 34 L\"'\"'\" {wchar_t}\n  └─ [49] = 69 L\"'E'\" {wchar_t}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "xdebug_set_breakpoint --filePath Source/BrokenEdge/Extraction/ExtractionGuard.cpp --line 35 --enabled true",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"breakpointId\":\"line|file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Extraction/ExtractionGuard.cpp|34\",\"added\":{\"id\":\"line|file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Extraction/ExtractionGuard.cpp|34\",\"type\":\"line\",\"file\":\"file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Extraction/ExtractionGuard.cpp\",\"line\":35,\"enabled\":true,\"owner\":\"agent\",\"isLogMessage\":false,\"isLogStack\":false,\"temporary\":false,\"suspendPolicy\":\"all\",\"hitCount\":0},\"totalBreakpoints\":10,\"lineText\":\"if (!C || !PS || Other->IsDefeated() || (PS->Life != EExtractionLife::Alive && PS->Life != EExtractionLife::Downed))\",\"message\":\"Breakpoint created.\"}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "wait_guard_sees",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"status\":\"paused\",\"newPosition\":{\"filePath\":\"file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Extraction/ExtractionGuard.cpp\",\"line\":35},\"frameValues\":\"├─ + this =  // 0x00007fef3ca36000 (Name=\\\"ExtractionGuard\\\"_2147482074) {AExtractionGuard *}\\n├─ + Other =  // 0x00007ff1bce95000 (Name=\\\"BP_StingerCharacter_C\\\"_2147482164) {ABrokenEdgeCharacter *}\\n├─ + C =  // 0x00007ff1bce8f000 (Name=\\\"BP_StingerCharacter_C\\\"_2147482078) {ABrokenEdgeCharacter *}\\n└─ + PS =  // 0x00007feefca1d400 (Name=\\\"ExtractionPlayerState\\\"_2147482168) {AExtractionPlayerState *}\\n\",\"message\":\"Session 'BrokenEdgeServer (69016)' is already paused.\",\"breakpointErrorsTail\":[]}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "C->RootComponent->RelativeLocation",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "C->RootComponent->RelativeLocation = {X=300 Y=100 Z=457.6387939453125} {UE::Math::TVector<double>}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "Other->RootComponent->RelativeLocation",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Other->RootComponent->RelativeLocation = {X=5700 Y=5000 Z=-3529.2426594333947} {UE::Math::TVector<double>}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "C->RootComponent->RelativeRotation",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "C->RootComponent->RelativeRotation = {Pitch=0, Yaw=0, Roll=0} {UE::Math::TRotator<double>}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "action": "C->ExtractionGuardId == 0 && Other->RootComponent->RelativeLocation.Y == 4500",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "C->ExtractionGuardId == 0 && Other->RootComponent->RelativeLocation.Y == 4500 = false {bool}"
+          }
+        ],
+        "isError": false
+      }
+    }
+  ]
+}

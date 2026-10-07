@@ -1,0 +1,167 @@
+{
+  "result": "blocked",
+  "content_production_allowed": false,
+  "errors": [
+    "Missing baseline.client_build",
+    "Missing baseline.season",
+    "Missing baseline.sampled_at",
+    "Missing capture_settings.resolution",
+    "Missing capture_settings.fov",
+    "Missing capture_settings.input_settings",
+    "ui.hud requires reviewed continuous video",
+    "ui.loadout requires reviewed continuous video",
+    "ui.stash requires reviewed continuous video",
+    "ui.inventory requires reviewed continuous video",
+    "ui.search requires reviewed continuous video",
+    "ui.details requires reviewed continuous video",
+    "ui.map requires reviewed continuous video",
+    "ui.spectator requires reviewed continuous video",
+    "ui.settlement requires reviewed continuous video",
+    "weapon.AKM requires reviewed continuous video",
+    "weapon.M4A1 requires reviewed continuous video",
+    "weapon.MP5 requires reviewed continuous video",
+    "container.supply requires reviewed continuous video",
+    "container.medical requires reviewed continuous video",
+    "container.equipment requires reviewed continuous video",
+    "container.valuable requires reviewed continuous video"
+  ],
+  "missing_observations": {
+    "ui.hud": [
+      "default",
+      "extraction",
+      "interaction",
+      "medical"
+    ],
+    "ui.loadout": [
+      "default",
+      "equip",
+      "invalid",
+      "unequip"
+    ],
+    "ui.stash": [
+      "default",
+      "drag",
+      "full",
+      "rotate",
+      "split"
+    ],
+    "ui.inventory": [
+      "close_input",
+      "default",
+      "drag",
+      "rotate",
+      "split"
+    ],
+    "ui.search": [
+      "cancel",
+      "out_of_range",
+      "revealed",
+      "searching",
+      "taken",
+      "unsearched"
+    ],
+    "ui.details": [
+      "ammo",
+      "armor",
+      "attachment",
+      "medical",
+      "valuable",
+      "weapon"
+    ],
+    "ui.map": [
+      "default",
+      "extraction",
+      "self",
+      "teammate"
+    ],
+    "ui.spectator": [
+      "dead",
+      "downed",
+      "no_target",
+      "switch_target"
+    ],
+    "ui.settlement": [
+      "failure",
+      "loot_value",
+      "return_stash",
+      "success"
+    ],
+    "weapon.AKM": [
+      "ads_auto",
+      "ads_single",
+      "default_assembly",
+      "empty_reload",
+      "hip_auto",
+      "hip_single",
+      "mechanical_action_audio",
+      "muzzle_ejection",
+      "recoil_recovery",
+      "sprint_to_ready",
+      "stats_ammo",
+      "supported_parts",
+      "swap",
+      "tactical_reload",
+      "third_person"
+    ],
+    "weapon.M4A1": [
+      "ads_auto",
+      "ads_single",
+      "default_assembly",
+      "empty_reload",
+      "hip_auto",
+      "hip_single",
+      "mechanical_action_audio",
+      "muzzle_ejection",
+      "recoil_recovery",
+      "sprint_to_ready",
+      "stats_ammo",
+      "supported_parts",
+      "swap",
+      "tactical_reload",
+      "third_person"
+    ],
+    "weapon.MP5": [
+      "ads_auto",
+      "ads_single",
+      "default_assembly",
+      "empty_reload",
+      "hip_auto",
+      "hip_single",
+      "mechanical_action_audio",
+      "muzzle_ejection",
+      "recoil_recovery",
+      "sprint_to_ready",
+      "stats_ammo",
+      "supported_parts",
+      "swap",
+      "tactical_reload",
+      "third_person"
+    ],
+    "container.supply": [
+      "appearance",
+      "audio",
+      "item_reveal",
+      "search_sequence"
+    ],
+    "container.medical": [
+      "appearance",
+      "audio",
+      "item_reveal",
+      "search_sequence"
+    ],
+    "container.equipment": [
+      "appearance",
+      "audio",
+      "item_reveal",
+      "search_sequence"
+    ],
+    "container.valuable": [
+      "appearance",
+      "audio",
+      "item_reveal",
+      "search_sequence"
+    ]
+  },
+  "verified_evidence": [],
+  "boundary": "Checks evidence identity/completeness; the recorded media review is still required."
+}

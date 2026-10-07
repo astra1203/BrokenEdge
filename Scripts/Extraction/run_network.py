@@ -21,6 +21,9 @@ ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
 parser.add_argument('--packaged', action='store_true')
+parser.add_argument('--package-root', default='Packaged', help='Archive root containing the Client/Server packages')
+parser.add_argument('--port', type=int, default=27777, help='Isolated test server port')
+parser.add_argument('--isolated-room', action='store_true', help='Only join the room advertised with this run tag; requires the current driver')
 parser.add_argument('--lag', action='store_true')
 parser.add_argument('--unacked', action='store_true', help='Recovery test: kill server after durable extraction commit before client acknowledgement')
 parser.add_argument('--debug-hold', action='store_true', help='Wait for Continue.txt before combat and extend assertion timeouts')
@@ -37,6 +40,11 @@ parser.add_argument('--performance-seconds', type=int, choices=[60, 180], defaul
 parser.add_argument('--network-stats', action='store_true', help='Enable UE network byte-rate collection for a separate bandwidth capture')
 parser.add_argument('--streaming-loops', type=int, choices=[1, 2, 10], default=10)
 args = parser.parse_args()
+if not 1024 <= args.port <= 65535:
+    parser.error('--port must be between 1024 and 65535')
+if not args.packaged and args.package_root != 'Packaged':
+    parser.error('--package-root requires --packaged')
+package_root = (ROOT / args.package_root).resolve()
 if args.optic_validation and args.scenario != 'equipment':
     parser.error('--optic-validation requires --scenario equipment')
 if args.rendered_role and args.rendered_clients:
@@ -174,8 +182,8 @@ def send(role, op, **fields):
 
 def launch(role):
     if args.packaged:
-        executable = ROOT / ('Packaged/Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe'
-                             if role == 'Server' else 'Packaged/Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe')
+        executable = package_root / ('Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe'
+                                     if role == 'Server' else 'Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe')
         command = [str(executable)]
     else:
         command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe'), str(ROOT / 'BrokenEdge.uproject'),
@@ -184,12 +192,14 @@ def launch(role):
     command += [entry, '-nosound', '-unattended', '-nosplash', '-NoLoadingScreen',
                 '-ExtractionGuards=' + ('4' if args.scenario in ['pvpve', 'guard_tuning', 'progression', 'northcombat'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
                 '-MatchType=Extraction', '-NumPublicConnections=' + str(len(ROLES)),
-                '-MinPlayersToStart=' + str(len(ROLES)), '-port=27777',
+                '-MinPlayersToStart=' + str(len(ROLES)), '-port=' + str(args.port), '-ExtractionTestPort=' + str(args.port),
                 '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '1200' if args.debug_hold or args.scenario in ['streaming', 'performance', 'east'] else '600'),
                 '-ExtractionTestRole=' + role, '-ExtractionTestDir=' + str(OUT),
                 '-ExtractionStore=' + str(OUT / 'Store'), '-ExtractionProfile=' + args.tag + '_' + ('A' if args.scenario == 'identity' and role == 'B' else role),
                 '-ExecCmds=t.MaxFPS 30,' + ('sg.ShadowQuality 0,sg.EffectsQuality 1,' if len(ROLES) == 6 else '') + 'BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
                 '-TestExit=Automation Test Queue Empty', '-abslog=' + str(OUT / (role + '.log'))]
+    if args.isolated_room:
+        command += ['-RoomName=' + args.tag, '-ExtractionTestRoom=' + args.tag]
     rendered = role in rendered_roles
     if args.scenario == 'performance':
         command = [c for c in command if not c.startswith('-ExecCmds=')]

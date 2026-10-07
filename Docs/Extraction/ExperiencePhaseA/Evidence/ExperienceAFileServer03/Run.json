@@ -1,0 +1,47 @@
+{
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Build\\BatchFiles\\RunUAT.bat",
+    "BuildCookRun",
+    "-project=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-nop4",
+    "-build",
+    "-cook",
+    "-stage",
+    "-pak",
+    "-iostore",
+    "-archive",
+    "-archivedirectory=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\ExperiencePhaseA03\\Server",
+    "-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+    "-prereqs",
+    "-ubtargs=-NoHotReloadFromIDE -WaitMutex -MaxParallelActions=2",
+    "-utf8output",
+    "-server",
+    "-noclient",
+    "-serverplatform=Win64",
+    "-serverconfig=Development",
+    "-CookOutputDir=D:\\BEExperienceCook\\A03S\\WindowsServer",
+    "-stagingdirectory=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\ExperienceAFileServer03\\Staged",
+    "-AdditionalCookerOptions=-SkipZenStore -ForceTextureEncodeSpeed=Final -ini:Engine:[DevOptions.Shaders]:ShaderCompilerCoreCountThreshold=999,[DevOptions.Shaders]:NumUnusedShaderCompilingThreads=10,[DevOptions.Shaders]:NumUnusedShaderCompilingThreadsDuringGame=10,[SystemSettings]:Editor.AsyncTextureCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncStaticMeshCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncAssetCompilationMaxConcurrency=2,[SystemSettings]:Editor.AsyncAssetCompilationMaxMemoryUsage=2 -ini:Editor:[CookSettings]:MemoryMinFreePhysical=4096,[CookSettings]:MemoryMaxUsedPhysical=8192"
+  ],
+  "head": "fac5dbcb01b263c3bb5668187bec587bddf01735",
+  "started_utc": "2026-10-07T08:54:39.872256+00:00",
+  "archive_root": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\ExperiencePhaseA03",
+  "cook_store": "filesystem",
+  "cook_root": "D:\\BEExperienceCook\\A03S",
+  "input_sha256": {
+    "Scripts/Extraction/run_build.py": "28d150a62eee94bfea1e9d6260ae53e68a5c72de9c7cbc1014a783b03dc5f8d7",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "56ba44f7a8654dede42e3d3855283ff0e8a5becd047df2666a52b8c3475a82a1",
+    "Config/DefaultGame.ini": "7fc4e60951e69808b6c183465820a5a302b448ffdb510f97affbe271d79923e0",
+    "Config/DefaultEngine.ini": "01df3b1fc0e4b2533180b8b5ce0b26b2893c8cb5f88c412a5e782407e6abdf7d",
+    "BrokenEdge.uproject": "6d5d2fb43db38a1131cfa9a64eff084d82d2a14c8dec8db837cd3111973073cd",
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "83d33c72bc7b0651a3e3fc08387e79fe2b32bb628b3f97b14f5975994910f7be",
+    "Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap": "eb30d8c6375fd7022887f6c3226a30772b6c32eed6b755531e5542d21d99a8db"
+  },
+  "environment_overrides": {
+    "UE_SKIP_UBT_SDK_SETUP": "1",
+    "UnrealBuildTool_BuildConfiguration__bAllowUBAExecutor": "false"
+  },
+  "pid": 72208,
+  "exit_code": 0,
+  "elapsed_seconds": 49.51600000006147
+}

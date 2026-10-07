@@ -1,6 +1,7 @@
 """Recorded UE 5.8.3 builds and Development packages; never overwrite a run."""
 import argparse
 import datetime
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -15,6 +16,9 @@ ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
 parser.add_argument('--target', choices=['Editor', 'Client', 'Server'], default='Editor')
 parser.add_argument('--package', action='store_true')
+parser.add_argument('--package-root', help='Separate archive root containing Client/Server; must be inside Packaged')
+parser.add_argument('--file-cook', action='store_true', help='Fresh isolated filesystem cook with SkipZenStore; still builds IoStore packages')
+parser.add_argument('--cook-root', help='New short absolute cook directory, required with --file-cook to avoid Windows package path limits')
 parser.add_argument('--no-uba', action='store_true', help='Use UE non-detoured local builds for this process tree through UBT environment configuration')
 parser.add_argument('--jobs', type=int, default=0, help='Optional UBT compile action limit; 0 uses the engine default')
 parser.add_argument('--cook-workers', type=int, default=0, help='Optional shader worker limit and bounded async asset compilation during cooking')
@@ -26,6 +30,19 @@ if args.cook_workers < 0:
     raise ValueError('cook-workers must be zero or positive')
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
+if (args.package_root or args.file_cook or args.cook_root) and not args.package:
+    parser.error('--package-root and --file-cook require --package')
+if args.file_cook != bool(args.cook_root):
+    parser.error('--file-cook and --cook-root must be used together')
+cook_root = Path(args.cook_root).resolve() if args.cook_root else None
+if cook_root and (not Path(args.cook_root).is_absolute() or cook_root.exists()):
+    parser.error('--cook-root must be a new absolute directory; existing cooks are never reused')
+archive_root = (ROOT / (args.package_root or 'Packaged')).resolve()
+if not archive_root.is_relative_to((ROOT / 'Packaged').resolve()):
+    parser.error('--package-root must be inside this project Packaged directory')
+archive = archive_root / args.target
+if args.package_root and archive.exists():
+    parser.error('Use a new archive target; existing packages are never overwritten with --package-root')
 out = ROOT / 'Saved/Extraction' / args.tag
 out.mkdir(parents=True, exist_ok=False)
 if args.package:
@@ -35,10 +52,19 @@ if args.package:
                     '-ProjectFile', str(ROOT / 'BrokenEdge.uproject')], check=True)
     command = [str(ENGINE / 'Engine/Build/BatchFiles/RunUAT.bat'), 'BuildCookRun', '-project=' + str(ROOT / 'BrokenEdge.uproject'),
                '-nop4', '-build', '-cook', '-stage', '-pak', '-iostore', '-archive',
-               '-archivedirectory=' + str(ROOT / 'Packaged' / args.target),
+               '-archivedirectory=' + str(archive),
                '-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction',
                '-prereqs', '-ubtargs=-NoHotReloadFromIDE -WaitMutex' + (f' -MaxParallelActions={args.jobs}' if args.jobs else ''), '-utf8output']
     command += ['-server', '-noclient', '-serverplatform=Win64', '-serverconfig=Development'] if args.target == 'Server' else ['-platform=Win64', '-clientconfig=Development']
+    cooker_options = []
+    if args.file_cook:
+        # A fresh output avoids carrying a stale Zen projectstore/file manifest
+        # into staging. DDC may still use Zen; cooked package storage does not.
+        cook_platform = 'WindowsServer' if args.target == 'Server' else 'Windows'
+        # CookCommandlet writes exactly OutputDir; UAT staging appends the
+        # platform unless the supplied directory already ends in its name.
+        command += ['-CookOutputDir=' + str(cook_root / cook_platform), '-stagingdirectory=' + str(out / 'Staged')]
+        cooker_options.append('-SkipZenStore')
     if args.cook_workers:
         unused=max(0,(os.cpu_count() or 8)-args.cook_workers)
         settings=[('DevOptions.Shaders','ShaderCompilerCoreCountThreshold',999),
@@ -48,9 +74,11 @@ if args.package:
                   ('SystemSettings','Editor.AsyncStaticMeshCompilationMaxConcurrency',1),
                   ('SystemSettings','Editor.AsyncAssetCompilationMaxConcurrency',2),
                   ('SystemSettings','Editor.AsyncAssetCompilationMaxMemoryUsage',2)]
-        command += ['-AdditionalCookerOptions=-ForceTextureEncodeSpeed=Final -ini:Engine:'+','.join(
+        cooker_options.append('-ForceTextureEncodeSpeed=Final -ini:Engine:'+','.join(
             '['+section+']:'+name+'='+str(value) for section,name,value in settings)
-            +' -ini:Editor:[CookSettings]:MemoryMinFreePhysical=4096,[CookSettings]:MemoryMaxUsedPhysical=8192']
+            +' -ini:Editor:[CookSettings]:MemoryMinFreePhysical=4096,[CookSettings]:MemoryMaxUsedPhysical=8192')
+    if cooker_options:
+        command.append('-AdditionalCookerOptions=' + ' '.join(cooker_options))
 else:
     target = 'BrokenEdge' + (args.target if args.target != 'Client' else '')
     command = [str(ENGINE / 'Engine/Build/BatchFiles/Build.bat'), target, 'Win64', 'Development',
@@ -59,6 +87,14 @@ else:
         command.append(f'-MaxParallelActions={args.jobs}')
 metadata = {'command': command, 'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
             'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+if args.package:
+    metadata.update(archive_root=str(archive_root), cook_store='filesystem' if args.file_cook else 'project-default')
+    if cook_root:
+        metadata['cook_root'] = str(cook_root)
+metadata['input_sha256'] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in [
+    'Scripts/Extraction/run_build.py', 'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
+    'Config/DefaultGame.ini', 'Config/DefaultEngine.ini', 'BrokenEdge.uproject',
+    'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap', 'Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap']}
 start = time.monotonic()
 environment = os.environ.copy()
 overrides = {}
@@ -91,7 +127,7 @@ if args.package and metadata['exit_code'] == 0:
     for launcher in (['StartServer.bat'] if args.target == 'Server' else ['StartClient.bat']):
         source = ROOT / 'Deployment' / launcher
         if source.exists():
-            shutil.copy2(source, ROOT / 'Packaged' / args.target / platform / launcher)
+            shutil.copy2(source, archive / platform / launcher)
 (out / 'Run.json').write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8')
 for line in (out / 'Build.log').read_bytes().splitlines():
     if b'error ' in line.lower() or b'Result:' in line or b'AutomationTool exiting' in line:

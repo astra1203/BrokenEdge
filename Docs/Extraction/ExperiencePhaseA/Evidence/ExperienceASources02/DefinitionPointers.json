@@ -1,0 +1,39 @@
+{
+  "weapon": "AKM",
+  "reference_build": null,
+  "boundary": "Source definition pointers only; final model mapping and current official version unverified.",
+  "rows": [
+    {
+      "archive": "可用资源_DeltaForce_DataTables_001.zip",
+      "entry": "可用资源/DeltaForce/Content/DataTables/WeaponPart/GunPresetTable.json",
+      "entry_sha256": "599feb1fd707e263daa2a01044a8409adb6f4d3ece3a451a635bd352f4666549",
+      "row": "10010000012",
+      "value": {
+        "ItemId": 10010000012,
+        "RecId": 18010000006,
+        "DescId": 10010000012,
+        "Name": "AKM标准预设",
+        "RowDescription": "None"
+      }
+    },
+    {
+      "archive": "可用资源_DeltaForce_DataTables_001.zip",
+      "entry": "可用资源/DeltaForce/Content/DataTables/WeaponPart/PartsMergeableDataTable.json",
+      "entry_sha256": "a283ff0e4069c1a56f88f3b504177ffcc6f54a3686325b51044384fd3e99a63c",
+      "row": "18010000006",
+      "value": {
+        "ItemID": "18010000006",
+        "ItemIdUint": 18010000006,
+        "AppearanceId": 0,
+        "b1PMergeable": true,
+        "b3PMergeable": true,
+        "bSupportDualMagazine": true,
+        "b1PMergeableBySpecificFunction": true,
+        "Catagory": "Default",
+        "PakLevel": "EPrimaryAssetPakRule::Default",
+        "FallbackRowName": "None",
+        "RowDescription": "None"
+      }
+    }
+  ]
+}

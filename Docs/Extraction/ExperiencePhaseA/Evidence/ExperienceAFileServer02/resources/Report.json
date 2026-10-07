@@ -1,0 +1,131 @@
+{
+  "command": [
+    "C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Binaries/ThirdParty/Python3/Win64/python.exe",
+    "Scripts/Extraction/run_build.py",
+    "--target",
+    "Server",
+    "--package",
+    "--file-cook",
+    "--cook-root",
+    "D:/BEExperienceCook/A02S",
+    "--package-root",
+    "Packaged/ExperiencePhaseA02",
+    "--no-uba",
+    "--jobs",
+    "2",
+    "--cook-workers",
+    "2",
+    "--tag",
+    "ExperienceAFileServer02"
+  ],
+  "result": "failed",
+  "samples": [
+    {
+      "utc": "2026-10-07T08:52:03.213194+00:00",
+      "c_free_gib": 48.18320083618164,
+      "d_free_gib": 198.97158813476562,
+      "ram_free_gib": 12.919227600097656,
+      "commit_used_gib": 30.797195434570312,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T08:52:03.218195+00:00",
+      "c_free_gib": 48.18320083618164,
+      "d_free_gib": 198.97158432006836,
+      "ram_free_gib": 12.919082641601562,
+      "commit_used_gib": 30.797195434570312,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T08:52:08.224961+00:00",
+      "c_free_gib": 48.1820182800293,
+      "d_free_gib": 198.9713592529297,
+      "ram_free_gib": 12.25106430053711,
+      "commit_used_gib": 31.92587661743164,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T08:52:13.231075+00:00",
+      "c_free_gib": 48.18172073364258,
+      "d_free_gib": 198.97129821777344,
+      "ram_free_gib": 12.236766815185547,
+      "commit_used_gib": 31.581623077392578,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T08:52:18.237650+00:00",
+      "c_free_gib": 48.194087982177734,
+      "d_free_gib": 198.97151565551758,
+      "ram_free_gib": 11.629425048828125,
+      "commit_used_gib": 33.71076965332031,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T08:52:23.252033+00:00",
+      "c_free_gib": 48.19300079345703,
+      "d_free_gib": 199.13533401489258,
+      "ram_free_gib": 11.30434799194336,
+      "commit_used_gib": 32.243873596191406,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T08:52:28.256452+00:00",
+      "c_free_gib": 48.19270324707031,
+      "d_free_gib": 199.13521194458008,
+      "ram_free_gib": 10.689594268798828,
+      "commit_used_gib": 32.80289840698242,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T08:52:33.267075+00:00",
+      "c_free_gib": 48.19365310668945,
+      "d_free_gib": 198.97195053100586,
+      "ram_free_gib": 9.402259826660156,
+      "commit_used_gib": 33.57331848144531,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T08:52:38.276054+00:00",
+      "c_free_gib": 48.19176483154297,
+      "d_free_gib": 198.92584991455078,
+      "ram_free_gib": 5.613861083984375,
+      "commit_used_gib": 36.87825393676758,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T08:52:43.283253+00:00",
+      "c_free_gib": 48.19010925292969,
+      "d_free_gib": 198.75340270996094,
+      "ram_free_gib": 5.031517028808594,
+      "commit_used_gib": 37.388084411621094,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T08:52:48.288207+00:00",
+      "c_free_gib": 48.18775177001953,
+      "d_free_gib": 198.55229949951172,
+      "ram_free_gib": 4.646350860595703,
+      "commit_used_gib": 37.568294525146484,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T08:52:51.066702+00:00",
+      "c_free_gib": 48.18736267089844,
+      "d_free_gib": 198.5470848083496,
+      "ram_free_gib": 11.764373779296875,
+      "commit_used_gib": 31.66405487060547,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 17052,
+  "exit_code": 1
+}

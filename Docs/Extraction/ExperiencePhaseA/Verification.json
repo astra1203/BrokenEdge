@@ -1,0 +1,25 @@
+{
+  "result": "passed",
+  "build_inputs": [
+    {
+      "tag": "ExperienceAFileServer03",
+      "exit_code": 0,
+      "input_hashes_current": true
+    },
+    {
+      "tag": "ExperienceAFileClient01",
+      "exit_code": 0,
+      "input_hashes_current": true
+    }
+  ],
+  "archive_files_verified": 85,
+  "source_files_verified": 82,
+  "implementation_hashes_verified": 6,
+  "ignored_evidence_files": 0,
+  "python_syntax_files": 5,
+  "synthetic_gate_tests": 9,
+  "git_diff_check": "passed",
+  "phase_a_complete": false,
+  "phase_b_started": false,
+  "release": "not_committed_not_pushed"
+}

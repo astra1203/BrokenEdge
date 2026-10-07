@@ -1,0 +1,319 @@
+{
+  "created_utc": "2026-10-07T09:18:45.526320+00:00",
+  "base_commit": "fac5dbcb01b263c3bb5668187bec587bddf01735",
+  "phase_a_complete": false,
+  "phase_b_started": false,
+  "reference_gate": {
+    "result": "blocked",
+    "content_production_allowed": false,
+    "errors": [
+      "Missing baseline.client_build",
+      "Missing baseline.season",
+      "Missing baseline.sampled_at",
+      "Missing capture_settings.resolution",
+      "Missing capture_settings.fov",
+      "Missing capture_settings.input_settings",
+      "ui.hud requires reviewed continuous video",
+      "ui.loadout requires reviewed continuous video",
+      "ui.stash requires reviewed continuous video",
+      "ui.inventory requires reviewed continuous video",
+      "ui.search requires reviewed continuous video",
+      "ui.details requires reviewed continuous video",
+      "ui.map requires reviewed continuous video",
+      "ui.spectator requires reviewed continuous video",
+      "ui.settlement requires reviewed continuous video",
+      "weapon.AKM requires reviewed continuous video",
+      "weapon.M4A1 requires reviewed continuous video",
+      "weapon.MP5 requires reviewed continuous video",
+      "container.supply requires reviewed continuous video",
+      "container.medical requires reviewed continuous video",
+      "container.equipment requires reviewed continuous video",
+      "container.valuable requires reviewed continuous video"
+    ],
+    "missing_observations": {
+      "ui.hud": [
+        "default",
+        "extraction",
+        "interaction",
+        "medical"
+      ],
+      "ui.loadout": [
+        "default",
+        "equip",
+        "invalid",
+        "unequip"
+      ],
+      "ui.stash": [
+        "default",
+        "drag",
+        "full",
+        "rotate",
+        "split"
+      ],
+      "ui.inventory": [
+        "close_input",
+        "default",
+        "drag",
+        "rotate",
+        "split"
+      ],
+      "ui.search": [
+        "cancel",
+        "out_of_range",
+        "revealed",
+        "searching",
+        "taken",
+        "unsearched"
+      ],
+      "ui.details": [
+        "ammo",
+        "armor",
+        "attachment",
+        "medical",
+        "valuable",
+        "weapon"
+      ],
+      "ui.map": [
+        "default",
+        "extraction",
+        "self",
+        "teammate"
+      ],
+      "ui.spectator": [
+        "dead",
+        "downed",
+        "no_target",
+        "switch_target"
+      ],
+      "ui.settlement": [
+        "failure",
+        "loot_value",
+        "return_stash",
+        "success"
+      ],
+      "weapon.AKM": [
+        "ads_auto",
+        "ads_single",
+        "default_assembly",
+        "empty_reload",
+        "hip_auto",
+        "hip_single",
+        "mechanical_action_audio",
+        "muzzle_ejection",
+        "recoil_recovery",
+        "sprint_to_ready",
+        "stats_ammo",
+        "supported_parts",
+        "swap",
+        "tactical_reload",
+        "third_person"
+      ],
+      "weapon.M4A1": [
+        "ads_auto",
+        "ads_single",
+        "default_assembly",
+        "empty_reload",
+        "hip_auto",
+        "hip_single",
+        "mechanical_action_audio",
+        "muzzle_ejection",
+        "recoil_recovery",
+        "sprint_to_ready",
+        "stats_ammo",
+        "supported_parts",
+        "swap",
+        "tactical_reload",
+        "third_person"
+      ],
+      "weapon.MP5": [
+        "ads_auto",
+        "ads_single",
+        "default_assembly",
+        "empty_reload",
+        "hip_auto",
+        "hip_single",
+        "mechanical_action_audio",
+        "muzzle_ejection",
+        "recoil_recovery",
+        "sprint_to_ready",
+        "stats_ammo",
+        "supported_parts",
+        "swap",
+        "tactical_reload",
+        "third_person"
+      ],
+      "container.supply": [
+        "appearance",
+        "audio",
+        "item_reveal",
+        "search_sequence"
+      ],
+      "container.medical": [
+        "appearance",
+        "audio",
+        "item_reveal",
+        "search_sequence"
+      ],
+      "container.equipment": [
+        "appearance",
+        "audio",
+        "item_reveal",
+        "search_sequence"
+      ],
+      "container.valuable": [
+        "appearance",
+        "audio",
+        "item_reveal",
+        "search_sequence"
+      ]
+    },
+    "verified_evidence": [],
+    "boundary": "Checks evidence identity/completeness; the recorded media review is still required."
+  },
+  "runs": [
+    {
+      "tag": "ExperienceAFileServer01",
+      "result": "failed",
+      "checks": 0,
+      "error": null,
+      "exit_code": 25,
+      "resource_result": "failed"
+    },
+    {
+      "tag": "ExperienceAFileServer02",
+      "result": "failed",
+      "checks": 0,
+      "error": null,
+      "exit_code": 1,
+      "resource_result": "failed"
+    },
+    {
+      "tag": "ExperienceAFileServer03",
+      "result": "passed",
+      "checks": 0,
+      "error": null,
+      "exit_code": 0,
+      "resource_result": "passed"
+    },
+    {
+      "tag": "ExperienceAFileClient01",
+      "result": "passed",
+      "checks": 0,
+      "error": null,
+      "exit_code": 0,
+      "resource_result": "passed"
+    },
+    {
+      "tag": "ExperienceASettlement01",
+      "result": "failed",
+      "checks": 34,
+      "error": "AssertionError('Scatter killed target before requested classification')",
+      "exit_code": null,
+      "resource_result": "failed"
+    },
+    {
+      "tag": "ExperienceASettlement02",
+      "result": "passed",
+      "checks": 39,
+      "error": null,
+      "exit_code": null,
+      "resource_result": "passed"
+    },
+    {
+      "tag": "ExperienceARecovery01",
+      "result": "passed",
+      "checks": 38,
+      "error": null,
+      "exit_code": null,
+      "resource_result": "passed"
+    },
+    {
+      "tag": "ExperienceAGuards01",
+      "result": "failed",
+      "checks": 14,
+      "error": "TimeoutError('guard acquires player')",
+      "exit_code": null,
+      "resource_result": "failed"
+    },
+    {
+      "tag": "ExperienceAGuards02",
+      "result": "passed",
+      "checks": 32,
+      "error": null,
+      "exit_code": null,
+      "guard_tuning": {
+        "reaction_seconds": 2.138763699680567,
+        "shot_intervals": [
+          0.8010884001851082,
+          0.7686939984560013,
+          0.7688575014472008,
+          0.9624387994408607
+        ],
+        "hits": [
+          {
+            "loss": 6,
+            "bone": "RightUpLeg"
+          },
+          {
+            "loss": 6,
+            "bone": "Spine1"
+          },
+          {
+            "loss": 6,
+            "bone": "Spine1"
+          }
+        ]
+      },
+      "resource_result": "passed"
+    },
+    {
+      "tag": "ExperienceAGuardsDiag01",
+      "result": "aborted_diagnostic",
+      "checks": 8,
+      "error": null,
+      "exit_code": null,
+      "resource_result": "failed"
+    },
+    {
+      "tag": "ExperienceAGuardsDiag02",
+      "resource_result": "failed"
+    },
+    {
+      "tag": "ExperienceAReference03",
+      "result": "blocked",
+      "checks": 0,
+      "error": null,
+      "exit_code": null
+    },
+    {
+      "tag": "ExperienceAGateTests02",
+      "result": "passed",
+      "checks": 0,
+      "error": null,
+      "exit_code": 0
+    },
+    {
+      "tag": "ExperienceASources02",
+      "result": "inventory_complete_reference_gate_not_passed",
+      "checks": 0,
+      "error": null,
+      "exit_code": null
+    }
+  ],
+  "implementation_sha256": {
+    "Scripts/Extraction/audit_experience_sources.py": "d55d0d757300486c1d940fbdc32499d822bca65607da2ffc14c9baa568c7ca9f",
+    "Scripts/Extraction/experience_reference.py": "45b556281e820042b0300dd2d3a89015909a67182c8224d104633ef55890e0c2",
+    "Scripts/Extraction/run_build.py": "28d150a62eee94bfea1e9d6260ae53e68a5c72de9c7cbc1014a783b03dc5f8d7",
+    "Scripts/Extraction/run_network.py": "31bff5a5d21fda7fd9a735317d670d153603a23c3dbe2f1fd022e1106eea42f4",
+    "Scripts/Extraction/test_experience_reference.py": "59a3ba4c005e2709a7ebe626d241b78a657aaf045610c59ae27423ce1b21702e",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "56ba44f7a8654dede42e3d3855283ff0e8a5becd047df2666a52b8c3475a82a1"
+  },
+  "boundaries": [
+    "Reference version and all 103 observations remain missing.",
+    "Source inventory and GLB structure do not prove complete imported weapons.",
+    "Two-rendered guard acquisition timeout remains unresolved; keep failed evidence.",
+    "Debugger run was interrupted; subsequent resource preflight failed before launch.",
+    "No new traversal, weak-network, audio, recoil, UI-reference or performance acceptance.",
+    "Original play server and package were preserved. No commit or push."
+  ]
+}

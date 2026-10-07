@@ -153,11 +153,15 @@ public:
 					{
 						auto* Menu = Cast<UMenu>(Widgets[0]);
 						bool Found = false;
+						FString RequiredRoom;
+						FParse::Value(FCommandLine::Get(), TEXT("ExtractionTestRoom="), RequiredRoom);
 						for (int32 Index = 0; Index < Menu->GetRooms().Num(); ++Index)
 						{
 							FString Mode;
 							Menu->GetRooms()[Index].Session.SessionSettings.Get(TEXT("MatchType"), Mode);
-							if (Mode == TEXT("Extraction"))
+							FString Room;
+							Menu->GetRooms()[Index].Session.SessionSettings.Get(TEXT("RoomName"), Room);
+							if (Mode == TEXT("Extraction") && (RequiredRoom.IsEmpty() || Room == RequiredRoom))
 							{
 								Menu->JoinRoom(Index);
 								Found = true;
@@ -211,7 +215,10 @@ public:
 						Command->TryGetStringField(TEXT("reason"), Reason);
 						Test->AddExpectedError(Reason, EAutomationExpectedErrorFlags::Contains, 0);
 					}
-					PC->ClientTravel(TEXT("127.0.0.1:27777"), TRAVEL_Absolute);
+					int32 Port = 27777;
+					FParse::Value(FCommandLine::Get(), TEXT("ExtractionTestPort="), Port);
+					if (Port < 1024 || Port > 65535) Error = TEXT("Invalid test server port");
+					else PC->ClientTravel(FString::Printf(TEXT("127.0.0.1:%d"), Port), TRAVEL_Absolute);
 				}
 				else if (Op == TEXT("ready") && PC)
 				{

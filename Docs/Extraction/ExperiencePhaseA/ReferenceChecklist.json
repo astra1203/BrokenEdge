@@ -1,0 +1,201 @@
+{
+  "schema": 1,
+  "baseline": {
+    "region": "CN",
+    "platform": "PC",
+    "client_build": null,
+    "season": null,
+    "sampled_at": null
+  },
+  "capture_settings": {
+    "resolution": null,
+    "fov": null,
+    "input_settings": null
+  },
+  "policy": "All first-phase references must be reviewed before B content production.",
+  "groups": {
+    "ui.hud": {
+      "required_observations": [
+        "default",
+        "interaction",
+        "medical",
+        "extraction"
+      ],
+      "evidence": []
+    },
+    "ui.loadout": {
+      "required_observations": [
+        "default",
+        "equip",
+        "unequip",
+        "invalid"
+      ],
+      "evidence": []
+    },
+    "ui.stash": {
+      "required_observations": [
+        "default",
+        "drag",
+        "rotate",
+        "split",
+        "full"
+      ],
+      "evidence": []
+    },
+    "ui.inventory": {
+      "required_observations": [
+        "default",
+        "drag",
+        "rotate",
+        "split",
+        "close_input"
+      ],
+      "evidence": []
+    },
+    "ui.search": {
+      "required_observations": [
+        "unsearched",
+        "searching",
+        "revealed",
+        "taken",
+        "cancel",
+        "out_of_range"
+      ],
+      "evidence": []
+    },
+    "ui.details": {
+      "required_observations": [
+        "weapon",
+        "ammo",
+        "armor",
+        "attachment",
+        "medical",
+        "valuable"
+      ],
+      "evidence": []
+    },
+    "ui.map": {
+      "required_observations": [
+        "default",
+        "self",
+        "teammate",
+        "extraction"
+      ],
+      "evidence": []
+    },
+    "ui.spectator": {
+      "required_observations": [
+        "downed",
+        "dead",
+        "switch_target",
+        "no_target"
+      ],
+      "evidence": []
+    },
+    "ui.settlement": {
+      "required_observations": [
+        "success",
+        "failure",
+        "loot_value",
+        "return_stash"
+      ],
+      "evidence": []
+    },
+    "weapon.AKM": {
+      "required_observations": [
+        "default_assembly",
+        "supported_parts",
+        "stats_ammo",
+        "hip_single",
+        "hip_auto",
+        "ads_single",
+        "ads_auto",
+        "recoil_recovery",
+        "muzzle_ejection",
+        "mechanical_action_audio",
+        "tactical_reload",
+        "empty_reload",
+        "swap",
+        "sprint_to_ready",
+        "third_person"
+      ],
+      "evidence": []
+    },
+    "weapon.M4A1": {
+      "required_observations": [
+        "default_assembly",
+        "supported_parts",
+        "stats_ammo",
+        "hip_single",
+        "hip_auto",
+        "ads_single",
+        "ads_auto",
+        "recoil_recovery",
+        "muzzle_ejection",
+        "mechanical_action_audio",
+        "tactical_reload",
+        "empty_reload",
+        "swap",
+        "sprint_to_ready",
+        "third_person"
+      ],
+      "evidence": []
+    },
+    "weapon.MP5": {
+      "required_observations": [
+        "default_assembly",
+        "supported_parts",
+        "stats_ammo",
+        "hip_single",
+        "hip_auto",
+        "ads_single",
+        "ads_auto",
+        "recoil_recovery",
+        "muzzle_ejection",
+        "mechanical_action_audio",
+        "tactical_reload",
+        "empty_reload",
+        "swap",
+        "sprint_to_ready",
+        "third_person"
+      ],
+      "evidence": []
+    },
+    "container.supply": {
+      "required_observations": [
+        "appearance",
+        "search_sequence",
+        "audio",
+        "item_reveal"
+      ],
+      "evidence": []
+    },
+    "container.medical": {
+      "required_observations": [
+        "appearance",
+        "search_sequence",
+        "audio",
+        "item_reveal"
+      ],
+      "evidence": []
+    },
+    "container.equipment": {
+      "required_observations": [
+        "appearance",
+        "search_sequence",
+        "audio",
+        "item_reveal"
+      ],
+      "evidence": []
+    },
+    "container.valuable": {
+      "required_observations": [
+        "appearance",
+        "search_sequence",
+        "audio",
+        "item_reveal"
+      ],
+      "evidence": []
+    }
+  }
+}
