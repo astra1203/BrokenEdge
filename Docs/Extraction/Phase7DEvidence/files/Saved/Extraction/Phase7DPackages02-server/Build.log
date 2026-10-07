@@ -1,0 +1,37 @@
+Running AutomationTool...
+Using bundled DotNet SDK version: 10.0 win-x64
+UnrealBuildTool is up-to-date
+AutomationTool is up-to-date
+Starting AutomationTool...
+Parsing command line: BuildCookRun -project=D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject -nop4 -build -cook -stage -pak -iostore -archive -archivedirectory=D:\SourceFiles\UnrealProjects\BrokenEdge\Packaged\Server -map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction -prereqs -ubtargs="-NoHotReloadFromIDE -WaitMutex -MaxParallelActions=1" -utf8output -server -noclient -serverplatform=Win64 -serverconfig=Development -AdditionalCookerOptions="-ForceTextureEncodeSpeed=Final -ini:Engine:[DevOptions.Shaders]:ShaderCompilerCoreCountThreshold=999,[DevOptions.Shaders]:NumUnusedShaderCompilingThreads=8,[DevOptions.Shaders]:NumUnusedShaderCompilingThreadsDuringGame=8,[SystemSettings]:Editor.AsyncTextureCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncStaticMeshCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncAssetCompilationMaxConcurrency=2,[SystemSettings]:Editor.AsyncAssetCompilationMaxMemoryUsage=2 -ini:Editor:[CookSettings]:MemoryMinFreePhysical=4096,[CookSettings]:MemoryMaxUsedPhysical=8192"
+Initializing script modules...
+Total script module initialization time: 0.72 s.
+Using D:\OrekiFiles\VisualStudio\Community\MSBuild\Current\Bin\MSBuild.exe
+Executing commands...
+Setting up ProjectParams for D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject
+********** BUILD COMMAND STARTED **********
+Running: C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Binaries\ThirdParty\DotNet\10.0\win-x64\dotnet.exe "C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" -Target="BrokenEdgeEditor Win64 Development -Project=D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject" -Target="ShaderCompileWorker Win64 Development -Project=D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject" -Target="UnrealPak Win64 Development -Project=D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject" -Target="BrokenEdgeServer Win64 Development -Project=D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject  -remoteini=\"D:\SourceFiles\UnrealProjects\BrokenEdge\"  -NoHotReloadFromIDE -WaitMutex -MaxParallelActions=1 " -log="C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Programs\AutomationTool\Saved\Logs\UBA-BrokenEdgeEditor-Win64-Development.txt"
+Log file: C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Programs\AutomationTool\Saved\Logs\UBA-BrokenEdgeEditor-Win64-Development.txt
+Executing up to 1 actions based on MaxProcessorCount override
+Using 'git status' to determine working set for adaptive non-unity build (D:\SourceFiles\UnrealProjects\BrokenEdge).
+UbaServer - Listening on 0.0.0.0:1345
+Building ShaderCompileWorker, UnrealPak, BrokenEdgeServer and BrokenEdgeEditor...
+===== Toolchain Information =====
+ShaderCompileWorker Win64 Development:
+  Using ISPC compiler (C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Source\ThirdParty\Intel\ISPC\bin\Windows\ispc.exe)
+    Intel(r) Implicit SPMD Program Compiler (Intel(r) ISPC), 1.24.0 (build commit  @ 20250404, LLVM 18.1.2)
+  Using Visual Studio 14.44.35229 toolchain (D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207) and Windows 10.0.22621.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+UnrealPak Win64 Development:
+  Using ISPC compiler (C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Source\ThirdParty\Intel\ISPC\bin\Windows\ispc.exe)
+    Intel(r) Implicit SPMD Program Compiler (Intel(r) ISPC), 1.24.0 (build commit  @ 20250404, LLVM 18.1.2)
+  Using Visual Studio 14.44.35229 toolchain (D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207) and Windows 10.0.22621.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+BrokenEdgeServer Win64 Development:
+  Using ISPC compiler (C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Source\ThirdParty\Intel\ISPC\bin\Windows\ispc.exe)
+    Intel(r) Implicit SPMD Program Compiler (Intel(r) ISPC), 1.24.0 (build commit  @ 20250404, LLVM 18.1.2)
+  Using Visual Studio 14.44.35229 toolchain (D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207) and Windows 10.0.22621.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+  [Adaptive Build] Excluded from BrokenEdge unity file: ExtractionDriverTests.cpp
+BrokenEdgeEditor Win64 Development:
+  Using ISPC compiler (C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Source\ThirdParty\Intel\ISPC\bin\Windows\ispc.exe)
+    Intel(r) Implicit SPMD Program Compiler (Intel(r) ISPC), 1.24.0 (build commit  @ 20250404, LLVM 18.1.2)
+  Using Visual Studio 14.44.35229 toolchain (D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207) and Windows 10.0.22621.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+  [Adaptive Build] Excluded from BrokenEdge unity file: ExtractionDriverTests.cpp

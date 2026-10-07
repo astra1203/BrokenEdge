@@ -1,0 +1,386 @@
+{
+	"role": "Server",
+	"command": 8,
+	"walk_index": 0,
+	"walk_count": 0,
+	"physical_mib": 340.53515625,
+	"peak_physical_mib": 753.9765625,
+	"quality":
+	{
+		"sg.ViewDistanceQuality": 3,
+		"sg.AntiAliasingQuality": 3,
+		"sg.ShadowQuality": 3,
+		"sg.GlobalIlluminationQuality": 3,
+		"sg.ReflectionQuality": 3,
+		"sg.PostProcessQuality": 3,
+		"sg.TextureQuality": 3,
+		"sg.EffectsQuality": 3,
+		"sg.FoliageQuality": 3,
+		"sg.ShadingQuality": 3,
+		"r.ScreenPercentage": 0,
+		"r.VSync": 0,
+		"t.MaxFPS": 30
+	},
+	"error": "",
+	"map": "/Game/Maps/Lobby",
+	"net_mode": 1,
+	"local_players": 0,
+	"packet_lag": 0,
+	"packet_loss": 0,
+	"net_in_bytes_per_second": 0,
+	"net_out_bytes_per_second": 0,
+	"game_mode": "/Game/Blueprints/GameMode/BP_LobbyGameMode.BP_LobbyGameMode_C",
+	"capacity": 6,
+	"session": true,
+	"stored_results": [
+		{
+			"profile": "34EF352F4EBE04D567ABF3ABB9293504",
+			"outcome": 1,
+			"progression":
+			{
+				"credits": 2000,
+				"experience": 0,
+				"level": 1,
+				"quests": [
+					{
+						"accepted": false,
+						"claimed": false,
+						"progress": 0,
+						"delivered": false,
+						"eligible_files": 0
+					},
+					{
+						"accepted": false,
+						"claimed": false,
+						"progress": 0,
+						"delivered": false,
+						"eligible_files": 0
+					},
+					{
+						"accepted": false,
+						"claimed": false,
+						"progress": 0,
+						"delivered": false,
+						"eligible_files": 0
+					}
+				]
+			},
+			"economy_receipts": 0
+		},
+		{
+			"profile": "1FA9D4224358B5131A0C5D9C3759CEC9",
+			"outcome": 1,
+			"progression":
+			{
+				"credits": 2000,
+				"experience": 0,
+				"level": 1,
+				"quests": [
+					{
+						"accepted": false,
+						"claimed": false,
+						"progress": 0,
+						"delivered": false,
+						"eligible_files": 0
+					},
+					{
+						"accepted": false,
+						"claimed": false,
+						"progress": 0,
+						"delivered": false,
+						"eligible_files": 0
+					},
+					{
+						"accepted": false,
+						"claimed": false,
+						"progress": 0,
+						"delivered": false,
+						"eligible_files": 0
+					}
+				]
+			},
+			"economy_receipts": 0
+		}
+	],
+	"players": [
+		{
+			"name": "EX_B",
+			"id": 257,
+			"account":
+			{
+				"bound": true,
+				"locked": false,
+				"profile": "1FA9D4224358B5131A0C5D9C3759CEC9",
+				"message": "",
+				"revision": 8,
+				"progression":
+				{
+					"credits": 2000,
+					"experience": 0,
+					"level": 1,
+					"quests": [
+						{
+							"accepted": false,
+							"claimed": false,
+							"progress": 0,
+							"delivered": false,
+							"eligible_files": 0
+						},
+						{
+							"accepted": false,
+							"claimed": false,
+							"progress": 0,
+							"delivered": false,
+							"eligible_files": 0
+						},
+						{
+							"accepted": false,
+							"claimed": false,
+							"progress": 0,
+							"delivered": false,
+							"eligible_files": 0
+						}
+					]
+				},
+				"outcome": 1,
+				"stash":
+				{
+					"id": "C5C663F14332972769AF958C2DD962B3",
+					"revision": 7,
+					"items": [
+						{
+							"id": "FE3F319742D395192C483CA4496867B7",
+							"definition": "AK",
+							"quantity": 1,
+							"x": 4,
+							"y": 1,
+							"slot": -1,
+							"magazine": 30,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "63697436480D16EEFE32CAB9717FD341",
+							"definition": "Ammo",
+							"quantity": 60,
+							"x": 8,
+							"y": 1,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "E9731D00442FBBC272E82F8DB798FA74",
+							"definition": "Medkit",
+							"quantity": 1,
+							"x": 0,
+							"y": 2,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "AC420FBB4697C928FE6D6B9847ED3239",
+							"definition": "Ammo",
+							"quantity": 60,
+							"x": 9,
+							"y": 1,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "45F86AEC4BD65B5F8F20DA910E46145B",
+							"definition": "Medkit",
+							"quantity": 1,
+							"x": 2,
+							"y": 2,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "7FF1DC214FB2429585137989333229CE",
+							"definition": "AK",
+							"quantity": 1,
+							"x": 0,
+							"y": 3,
+							"slot": -1,
+							"magazine": 30,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "B220EA2D423DD87625765EA47C7BAB59",
+							"definition": "Ammo",
+							"quantity": 60,
+							"x": 8,
+							"y": 2,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "E441702F4DA693B5079C828AF62349F2",
+							"definition": "Medkit",
+							"quantity": 1,
+							"x": 4,
+							"y": 3,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "8FB90DF046C117EA9CC1D682DD73C286",
+							"definition": "Ammo",
+							"quantity": 60,
+							"x": 9,
+							"y": 2,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "C74236874DF4C6FFCC3541A4A0D3A1E4",
+							"definition": "Medkit",
+							"quantity": 1,
+							"x": 6,
+							"y": 3,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "5D09D4BE42AE9D80B71C4FA13EFC1633",
+							"definition": "AK",
+							"quantity": 1,
+							"x": 0,
+							"y": 0,
+							"slot": -1,
+							"magazine": 28,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "CD7C24E94E78618E681A3EA23AFDE3AD",
+							"definition": "Ammo",
+							"quantity": 60,
+							"x": 4,
+							"y": 0,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "52750262443242F72DA650AAA35421BE",
+							"definition": "Ammo",
+							"quantity": 60,
+							"x": 5,
+							"y": 0,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "8C43FB954491C2CBD2797783B026B660",
+							"definition": "Medkit",
+							"quantity": 1,
+							"x": 6,
+							"y": 0,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						},
+						{
+							"id": "EE68D6F0486D4FAD32D9109F36D4B51E",
+							"definition": "Medkit",
+							"quantity": 1,
+							"x": 8,
+							"y": 0,
+							"slot": -1,
+							"magazine": 0,
+							"ammo_type": "Ammo",
+							"durability": 0,
+							"scatter_scale": 1,
+							"attachments": [],
+							"rotated": false
+						}
+					]
+				},
+				"loadout":
+				{
+					"id": "60524DB943D725BCCFA50DAB0437781A",
+					"revision": 7,
+					"items": []
+				},
+				"overflow":
+				{
+					"id": "00000000000000000000000000000000",
+					"revision": 1,
+					"items": []
+				}
+			},
+			"ready": false,
+			"squad": 2
+		}
+	],
+	"weapons": [],
+	"loot": [],
+	"nav_paths": [],
+	"key_rooms": [],
+	"guards": [],
+	"smokes": []
+}

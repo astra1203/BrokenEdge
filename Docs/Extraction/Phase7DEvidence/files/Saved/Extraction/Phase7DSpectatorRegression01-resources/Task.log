@@ -1,0 +1,76 @@
+READY Server 9512
+READY A 55620
+PASS A joined LAN lobby
+PASS A name replicated
+READY B 38720
+PASS B joined LAN lobby
+PASS B name replicated
+READY C 72416
+PASS C joined LAN lobby
+PASS C name replicated
+PASS A persistent account ready
+PASS B persistent account ready
+PASS C persistent account ready
+PASS All players loaded in Extraction
+PASS Dedicated authority and Stinger pawns
+PASS A visible reachable pickup focus
+PASS A equipped AK
+PASS B visible reachable pickup focus
+PASS B equipped AK
+PASS C visible reachable pickup focus
+PASS C equipped AK
+PASS First-person backpack section hidden on each owner
+PASS Server and owners keep both hands within two cm of weapon grips
+PASS Scene cover blocks damage while consuming the shot
+PASS Visible remote character keeps both weapon grips
+PASS Third-person view toggle
+PASS First-person view restored
+PASS A one authoritative shot
+PASS A ammo agreement
+PASS B direct bullet health damage 20
+PASS B damage replication
+PASS Extraction bullet damage bypasses legacy shield
+PASS A one authoritative shot
+PASS A ammo agreement
+PASS B direct bullet health damage 40
+PASS B damage replication
+PASS Duplicate foreign legacy rewind and invalid range cannot damage or spend ammo
+PASS Server cadence accepts one of twelve immediate requests
+PASS Rejected prediction corrected
+PASS Reload entered on server
+PASS Reload fills once on all processes
+PASS Reload terminates
+PASS Empty weapon request rejected
+PASS Empty reload transfers exactly thirty rounds
+PASS Owner reserve matches authority
+PASS Partial reload started before drop
+PASS Drop is authoritative
+PASS Drop cancels unfinished reload and preserves weapon identity
+PASS Dropped weapon can be picked up
+PASS Re-equipped after interrupted reload
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS B one authoritative shot
+PASS B ammo agreement
+FAILED AssertionError('No requested hit after 12 scatter attempts')
+RESULT failed 82 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7DSpectatorRegression01

@@ -1,0 +1,131 @@
+{
+	"role": "A",
+	"command": 14,
+	"walk_index": 445,
+	"walk_count": 445,
+	"physical_mib": 407.921875,
+	"peak_physical_mib": 799.84765625,
+	"viewport_width": 0,
+	"viewport_height": 0,
+	"view_position": [
+		0,
+		0,
+		92
+	],
+	"quality":
+	{
+		"sg.ViewDistanceQuality": 3,
+		"sg.AntiAliasingQuality": 3,
+		"sg.ShadowQuality": 3,
+		"sg.GlobalIlluminationQuality": 3,
+		"sg.ReflectionQuality": 3,
+		"sg.PostProcessQuality": 3,
+		"sg.TextureQuality": 3,
+		"sg.EffectsQuality": 3,
+		"sg.FoliageQuality": 3,
+		"sg.ShadingQuality": 3,
+		"r.ScreenPercentage": 0,
+		"r.VSync": 0,
+		"t.MaxFPS": 30
+	},
+	"error": "",
+	"map": "/Game/Maps/Lobby",
+	"net_mode": 3,
+	"local_players": 1,
+	"packet_lag": 0,
+	"packet_loss": 0,
+	"net_in_bytes_per_second": 0,
+	"net_out_bytes_per_second": 0,
+	"session": true,
+	"account":
+	{
+		"bound": false,
+		"locked": false,
+		"profile": "00000000000000000000000000000000",
+		"message": "",
+		"revision": 0,
+		"progression":
+		{
+			"credits": 0,
+			"experience": 0,
+			"level": 1,
+			"quests": []
+		},
+		"outcome": 0,
+		"stash":
+		{
+			"id": "00000000000000000000000000000000",
+			"revision": 1,
+			"items": []
+		},
+		"loadout":
+		{
+			"id": "00000000000000000000000000000000",
+			"revision": 1,
+			"items": []
+		},
+		"overflow":
+		{
+			"id": "00000000000000000000000000000000",
+			"revision": 1,
+			"items": []
+		}
+	},
+	"has_pawn": false,
+	"width": 0,
+	"height": 0,
+	"players": [
+		{
+			"name": "EX_A",
+			"id": 256,
+			"account":
+			{
+				"bound": false,
+				"locked": false,
+				"profile": "00000000000000000000000000000000",
+				"message": "",
+				"revision": 0,
+				"progression":
+				{
+					"credits": 0,
+					"experience": 0,
+					"level": 1,
+					"quests": []
+				},
+				"outcome": 0,
+				"stash":
+				{
+					"id": "00000000000000000000000000000000",
+					"revision": 1,
+					"items": []
+				},
+				"loadout":
+				{
+					"id": "00000000000000000000000000000000",
+					"revision": 1,
+					"items": []
+				},
+				"overflow":
+				{
+					"id": "00000000000000000000000000000000",
+					"revision": 1,
+					"items": []
+				}
+			},
+			"ready": false,
+			"squad": 1
+		},
+		{
+			"name": "EX_B",
+			"id": 257,
+			"ready": false,
+			"squad": 1
+		}
+	],
+	"weapons": [],
+	"loot": [],
+	"nav_paths": [],
+	"key_rooms": [],
+	"guards": [],
+	"smokes": []
+}

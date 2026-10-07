@@ -1,0 +1,123 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\run_restoration_editor.py",
+    "preview",
+    "--manifest",
+    "Saved/SpaceCenter/Phase7D/ManifestRuns/Phase7DManifest02/Manifest.json",
+    "--tag",
+    "Phase7DPreview01-preview",
+    "--profile",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-06T10:05:22.224169+00:00",
+      "c_free_gib": 54.55253601074219,
+      "d_free_gib": 208.02740478515625,
+      "ram_free_gib": 11.357933044433594,
+      "commit_used_gib": 31.904888153076172,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T10:05:22.230169+00:00",
+      "c_free_gib": 54.55253601074219,
+      "d_free_gib": 208.02740097045898,
+      "ram_free_gib": 11.357769012451172,
+      "commit_used_gib": 31.905895233154297,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T10:05:27.238752+00:00",
+      "c_free_gib": 54.556488037109375,
+      "d_free_gib": 208.0270118713379,
+      "ram_free_gib": 10.431304931640625,
+      "commit_used_gib": 33.08279800415039,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T10:05:32.240611+00:00",
+      "c_free_gib": 54.556419372558594,
+      "d_free_gib": 208.02699661254883,
+      "ram_free_gib": 9.910633087158203,
+      "commit_used_gib": 33.111297607421875,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T10:05:37.243699+00:00",
+      "c_free_gib": 54.5558967590332,
+      "d_free_gib": 208.02698516845703,
+      "ram_free_gib": 9.023361206054688,
+      "commit_used_gib": 33.985939025878906,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T10:05:42.245252+00:00",
+      "c_free_gib": 54.55585861206055,
+      "d_free_gib": 208.02698516845703,
+      "ram_free_gib": 6.699222564697266,
+      "commit_used_gib": 36.11753845214844,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T10:05:47.254898+00:00",
+      "c_free_gib": 54.55634307861328,
+      "d_free_gib": 208.02698516845703,
+      "ram_free_gib": 5.439945220947266,
+      "commit_used_gib": 36.89506530761719,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T10:05:52.256544+00:00",
+      "c_free_gib": 54.55632019042969,
+      "d_free_gib": 208.02698516845703,
+      "ram_free_gib": 4.580196380615234,
+      "commit_used_gib": 38.156532287597656,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T10:05:57.266962+00:00",
+      "c_free_gib": 54.55632019042969,
+      "d_free_gib": 208.02692413330078,
+      "ram_free_gib": 4.856105804443359,
+      "commit_used_gib": 37.49229431152344,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T10:06:02.277863+00:00",
+      "c_free_gib": 54.55632019042969,
+      "d_free_gib": 208.02393341064453,
+      "ram_free_gib": 4.49560546875,
+      "commit_used_gib": 37.838897705078125,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T10:06:07.292481+00:00",
+      "c_free_gib": 54.55704116821289,
+      "d_free_gib": 208.0177345275879,
+      "ram_free_gib": 4.7962188720703125,
+      "commit_used_gib": 37.52797317504883,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T10:06:08.679163+00:00",
+      "c_free_gib": 54.55653381347656,
+      "d_free_gib": 208.0177993774414,
+      "ram_free_gib": 11.487369537353516,
+      "commit_used_gib": 31.79730224609375,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 64208,
+  "exit_code": 0
+}

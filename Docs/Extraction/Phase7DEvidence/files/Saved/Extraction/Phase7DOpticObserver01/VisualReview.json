@@ -1,0 +1,42 @@
+{
+  "result": "passed",
+  "utc": "2026-10-07T01:39:41.338559+00:00",
+  "scope": "Current packaged rendered-observer ADS optic mount inspection",
+  "captures": [
+    {
+      "file": "A-optic-remote-left.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "01c9ae9942680cccd5af109683ee043813262174d7867922dc550ed7b1e0a9d4",
+      "visually_reviewed": true
+    },
+    {
+      "file": "A-optic-remote-right.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "7881d05ed68fc871dd5351a7276f7cbc5709f92970e62162a5380b78be74fe93",
+      "visually_reviewed": true
+    },
+    {
+      "file": "A-optic-remote-front-top.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "073362727869ccb72ba84f518c3e21e8d7572131a65c92c2d3a38264deaf9309",
+      "visually_reviewed": true
+    }
+  ],
+  "checks": 38,
+  "input_hashes_verified": 21,
+  "observations": [
+    "Left, right and oblique overhead ADS views show the optic and adapter above the receiver.",
+    "The adapter visibly meets the receiver; no obvious floating gap or buried sight window is visible.",
+    "Original prototype adapter geometry and source optic art are retained."
+  ],
+  "boundary": "Visual mount inspection complements the separate seven first-person pixel measurements and full equipment combat regression."
+}

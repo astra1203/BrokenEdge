@@ -1,0 +1,90 @@
+{
+  "result": "passed",
+  "scope": "First-person optic ADS, detachment and reattachment only",
+  "reviewed_utc": "2026-10-07T00:54:36.831066+00:00",
+  "captures": [
+    {
+      "file": "B-optic-standing-0.png",
+      "sha256": "9cfb758141bd71e5c7a315bdf3b27aaa1f5e4431cf4f5b120c10f280b96d480a",
+      "size": [
+        1920,
+        1080
+      ],
+      "visually_reviewed": true
+    },
+    {
+      "file": "B-optic-standing-35.png",
+      "sha256": "1265c0ca0eb7402927a9fcd8a11598758319e6ec2c6c451c3acdf2d98620eeb8",
+      "size": [
+        1920,
+        1080
+      ],
+      "visually_reviewed": true
+    },
+    {
+      "file": "B-optic-standing--35.png",
+      "sha256": "06a2cb0ce0e4906c630dfe7d2b769f3342f10fc7ba1d1a12f6550d04c28d037e",
+      "size": [
+        1920,
+        1080
+      ],
+      "visually_reviewed": true
+    },
+    {
+      "file": "B-optic-crouched-0.png",
+      "sha256": "55487580615b92dca7937467958974a5989dbcfa101d07dbea5351e8473a606a",
+      "size": [
+        1920,
+        1080
+      ],
+      "visually_reviewed": true
+    },
+    {
+      "file": "B-optic-crouched-35.png",
+      "sha256": "a48c8906d0eddf19e4fcd87e19584bb61ca0d0cc95199c652ccbf5d14bdd1c10",
+      "size": [
+        1920,
+        1080
+      ],
+      "visually_reviewed": true
+    },
+    {
+      "file": "B-optic-crouched--35.png",
+      "sha256": "7fe19d43c1d545b5b7a9a7d64065d0c4fe24b0176e4fd7609bd1b1803c4a82ab",
+      "size": [
+        1920,
+        1080
+      ],
+      "visually_reviewed": true
+    },
+    {
+      "file": "B-optic-detached-ironsights.png",
+      "sha256": "8f7e4ccdef15acb918b4c20dc36cfb5dd4919b7eae754f4ae89d45909d4bca85",
+      "size": [
+        1920,
+        1080
+      ],
+      "visually_reviewed": true
+    },
+    {
+      "file": "B-optic-reattached.png",
+      "sha256": "3e2709775b75aa169579e0efcab27c506f84031e21e7e84120ccff35b2e5cacc",
+      "size": [
+        1920,
+        1080
+      ],
+      "visually_reviewed": true
+    }
+  ],
+  "max_center_error_px": 0.12288335159547176,
+  "observations": [
+    "Reticle remains inside the unobstructed sight window at standing/crouched 0 and +/-35 degrees.",
+    "Detachment returns to iron sights; reattachment restores the sight and centered dot."
+  ],
+  "excluded_capture": {
+    "file": "B-equipment-third-person.png",
+    "reason": "The fixed fixture view is obstructed by the owner body. The same obstruction is visible in the prior Phase7CRegression03-optic capture. This image is not accepted as third-person optic mount proof."
+  },
+  "mount_scope": "Completed separately in Saved/Extraction/Phase7DOpticObserver01/VisualReview.json",
+  "mount_review_sha256": "57a76be0fbb5e8f8d38dd61afbc4729c13526f425c9fe3bc35b878b120769cb1"
+}

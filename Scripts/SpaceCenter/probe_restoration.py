@@ -20,7 +20,7 @@ def probe(tag):
 
 def dependencies(tag):
     out=WORK/'ProbeRuns'/tag
-    prior=read(WORK/'ProbeRuns/Phase7CProbe02/Inspect/Parsed/Packages.json')
+    prior=read(input_path('probe_base','ProbeRuns/Phase7CProbe02/Inspect/Parsed/Packages.json'))
     names=set()
     for p in prior:
         for o in p.get('objects',[]):

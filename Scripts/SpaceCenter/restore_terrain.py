@@ -4,7 +4,7 @@ import gzip
 import json
 import math
 import struct
-from restoration_common import ROOT, WORK, ORIGIN, read, sha, write_json
+from restoration_common import ROOT, WORK, ORIGIN, read, sha, write_json, input_path
 
 
 def glb(path, positions, normals, uv, indices):
@@ -39,7 +39,7 @@ def glb(path, positions, normals, uv, indices):
 def generate(tag):
     out = WORK / 'TerrainRuns' / tag
     out.mkdir(parents=True, exist_ok=False)
-    original = ROOT / 'Docs/Extraction/Phase7BEvidence/terrain'
+    original = input_path('terrain_source',ROOT / 'Docs/Extraction/Phase7BEvidence/terrain')
     report = read(original / 'Report.json')
     source = json.loads(gzip.decompress((original / 'TerrainSamples.json.gz').read_bytes()))
     assert sha(original / 'TerrainSamples.json.gz') == report['files']['TerrainSamples.json.gz']['sha256']

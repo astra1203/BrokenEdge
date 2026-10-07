@@ -1,0 +1,40 @@
+{
+  "task": "capture",
+  "result": "passed",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Maps/SpaceCenter/L_SpaceCenterRestorationPreview?game=/Game/Characters/Stinger/Blueprints/BP_StingerTestGameMode.BP_StingerTestGameMode_C",
+    "-game",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1920",
+    "-ResY=1080",
+    "-ForceRes",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-ExtractionTestRole=A",
+    "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7C\\EditorRuns\\Phase7DBaselineCapture01",
+    "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7C\\EditorRuns\\Phase7DBaselineCapture01\\Store",
+    "-ExecCmds=r.VSync 0,r.ScreenPercentage 100,t.MaxFPS 60,t.IdleWhenNotForeground 0,sg.ViewDistanceQuality 1,sg.AntiAliasingQuality 1,sg.ShadowQuality 1,sg.GlobalIlluminationQuality 1,sg.ReflectionQuality 1,sg.PostProcessQuality 1,sg.TextureQuality 1,sg.EffectsQuality 1,sg.FoliageQuality 1,sg.ShadingQuality 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+    "-TestExit=Automation Test Queue Empty",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7C\\EditorRuns\\Phase7DBaselineCapture01\\Editor.log",
+    "-ini:GameUserSettings:[ScalabilityGroups]:sg.ViewDistanceQuality=1,[ScalabilityGroups]:sg.AntiAliasingQuality=1,[ScalabilityGroups]:sg.ShadowQuality=1,[ScalabilityGroups]:sg.GlobalIlluminationQuality=1,[ScalabilityGroups]:sg.ReflectionQuality=1,[ScalabilityGroups]:sg.PostProcessQuality=1,[ScalabilityGroups]:sg.TextureQuality=1,[ScalabilityGroups]:sg.EffectsQuality=1,[ScalabilityGroups]:sg.FoliageQuality=1,[ScalabilityGroups]:sg.ShadingQuality=1"
+  ],
+  "manifest_sha256": "05ce654893c5156adc26abec982303deb7091ab32e35e457eccaf7842afb9a0a",
+  "profile_sha256": "3a374de7d6ee0c371f3b15ab9020108b105e44568ac1bde1a7a4736a7514b981",
+  "script_sha256": "26d702868ddbc46b42599ce62be7b1edfb7efc7ad5d855d8f2466be2476d4f41",
+  "driver_sha256": "75904a8c2224b16e747e302fb15d96f15b3e52aae55697dff1b11860c8519327",
+  "started_utc": "2026-10-06T11:02:34.073820+00:00",
+  "map_sha256_before": {
+    "Content/Maps/SpaceCenter/L_SpaceCenterRestorationPreview.umap": "2216b96757ddbf7ffc7f62b84b50b45edd28c8098da3d62d65f36a09e8c15d70"
+  },
+  "pid": 32932,
+  "exit_code": 0,
+  "map_sha256_after": {
+    "Content/Maps/SpaceCenter/L_SpaceCenterRestorationPreview.umap": "2216b96757ddbf7ffc7f62b84b50b45edd28c8098da3d62d65f36a09e8c15d70"
+  },
+  "finished_utc": "2026-10-06T11:06:09.428500+00:00"
+}

@@ -1,0 +1,19 @@
+{
+  "result": "passed",
+  "reviewed_utc": "2026-10-06T22:42:05.388589+00:00",
+  "boundary": "Focused fixture-only spectator verification, not input-driven traversal or performance acceptance.",
+  "observations": [
+    "Far endpoint: EX_B character visible against blue source containers, spectator HUD names EX_B; materials render normally in this view.",
+    "Old interior: EX_B visible at measured room origin with spectator HUD; original white prototype loot containers remain."
+  ],
+  "captures": [
+    {
+      "file": "A-spectator-far-east.png",
+      "sha256": "4d812bf66ea211fdf4198dad2f2c6c3e57e0d4798dc536de4e553ef96d658804"
+    },
+    {
+      "file": "A-spectator-old-interior.png",
+      "sha256": "e40ec4586d141abb669a6e36a79c9dd3b061c00c466c3311e825adf8ba65fce6"
+    }
+  ]
+}

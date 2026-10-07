@@ -1,0 +1,37 @@
+{
+  "group": "east",
+  "phase": "7D",
+  "result": "failed",
+  "steps": [
+    {
+      "name": "two-rendered-a",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DEast03-two-rendered-a",
+        "--timeout",
+        "2400",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--tag",
+        "Phase7DEast03-two-rendered-a",
+        "--scenario",
+        "east",
+        "--players",
+        "2",
+        "--rendered-role",
+        "A",
+        "--resolution",
+        "1920x1080",
+        "--packaged"
+      ],
+      "pid": 20584,
+      "exit_code": 1
+    }
+  ],
+  "started_utc": "2026-10-06T21:49:40.893847+00:00",
+  "error": "RuntimeError('two-rendered-a failed')",
+  "finished_utc": "2026-10-06T21:54:43.474298+00:00"
+}

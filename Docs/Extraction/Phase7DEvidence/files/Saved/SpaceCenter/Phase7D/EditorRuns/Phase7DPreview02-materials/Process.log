@@ -1,0 +1,302 @@
+[2026.10.06-10.17.41:170][  0]LogInit: Display: Running engine for game: BrokenEdge
+[2026.10.06-10.17.41:170][  0]LogCore: Display: Requested channels: 'cpu,gpu,frame,log,bookmark,screenshot,region'
+[2026.10.06-10.17.41:170][  0]LogTrace: Display: Control listening on port 1985
+[2026.10.06-10.17.41:170][  0]LogCsvProfiler: Display: Metadata set : platform="Windows"
+[2026.10.06-10.17.41:170][  0]LogCsvProfiler: Display: Metadata set : config="Development"
+[2026.10.06-10.17.41:170][  0]LogCsvProfiler: Display: Metadata set : buildversion="UE5-CL-0"
+[2026.10.06-10.17.41:170][  0]LogCsvProfiler: Display: Metadata set : engineversion="5.8.3-0+UE5"
+[2026.10.06-10.17.41:170][  0]LogCsvProfiler: Display: Metadata set : enginereleaseversion="5.8.3"
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : os="Windows 10 (22H2) [10.0.19045.6466] "
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : cpu="AuthenticAMD|AMD Ryzen 5 7500F 6-Core Processor"
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : pgoenabled="0"
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : pgoprofilingenabled="0"
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : ltoenabled="0"
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : asan="0"
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : mergedmodules="0"
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : compacttset="0"
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : commandline="" D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject -run=pythonscript -script=D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\import_restoration.py -NullRHI -unattended -nosplash -nosound -NoLoadingScreen -ForceTextureEncodeSpeed=Final -abslog=D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\SpaceCenter\Phase7D\EditorRuns\Phase7DPreview02-materials\Editor.log -ini:Engine:[DevOptions.Shaders]:ShaderCompilerCoreCountThreshold=999,[DevOptions.Shaders]:NumUnusedShaderCompilingThreads=8,[DevOptions.Shaders]:NumUnusedShaderCompilingThreadsDuringGame=8,[SystemSettings]:Editor.AsyncTextureCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncStaticMeshCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncAssetCompilationMaxConcurrency=2,[SystemSettings]:Editor.AsyncAssetCompilationMaxMemoryUsage=2""
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : loginid="d2d47d5d1b1d40ef9e7ffd95aa5ee3c7"
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : llm="0"
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : zenstreaming="0"
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Branch Engine had commandline override(s), so override NoReplay mode. This will use a bit more memory, but is needed for plugin/GFP handling.
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Branch Engine had commandline override(s), so override NoReplay mode. This will use a bit more memory, but is needed for plugin/GFP handling.
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Branch Engine had commandline override(s), so override NoReplay mode. This will use a bit more memory, but is needed for plugin/GFP handling.
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Branch Engine had commandline override(s), so override NoReplay mode. This will use a bit more memory, but is needed for plugin/GFP handling.
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : systemresolution.resx="1280"
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : systemresolution.resy="720"
+[2026.10.06-10.17.41:171][  0]LogAudio: Display: Audio Device Manager not initializing due to all audio being disabled. If this is not intentional, please check command line arguments for "-nosound".
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Loading VulkanPC ini files took 0.04 seconds
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Loading Android ini files took 0.05 seconds
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Loading Mac ini files took 0.05 seconds
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Loading IOS ini files took 0.05 seconds
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Loading Unix ini files took 0.06 seconds
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Loading TVOS ini files took 0.06 seconds
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Loading Linux ini files took 0.07 seconds
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Loading LinuxArm64 ini files took 0.07 seconds
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Loading Windows ini files took 0.04 seconds
+[2026.10.06-10.17.41:171][  0]LogConfig: Display: Loading VisionOS ini files took 0.03 seconds
+[2026.10.06-10.17.41:171][  0]RenderDocPlugin: Display: RenderDoc plugin will not be loaded. Use '-AttachRenderDoc' on the cmd line or enable 'renderdoc.AutoAttach' in the plugin settings.
+[2026.10.06-10.17.41:171][  0]LogAnalytics: Display: Provider StudioTelemetry.Provider.Log is disabled for this application
+[2026.10.06-10.17.41:171][  0]LogAnalytics: Display: Provider StudioTelemetry.Provider.CSV is disabled for this application
+[2026.10.06-10.17.41:171][  0]LogAnalytics: Display: Provider StudioTelemetry.Provider.Horde is disabled for this application
+[2026.10.06-10.17.41:171][  0]LogAnalytics: Display: Provider StudioTelemetry.Provider.Log is disabled for this application
+[2026.10.06-10.17.41:171][  0]LogAnalytics: Display: Provider StudioTelemetry.Provider.CSV is disabled for this application
+[2026.10.06-10.17.41:171][  0]LogAnalytics: Display: Provider StudioTelemetry.Provider.Horde is disabled for this application
+[2026.10.06-10.17.41:171][  0]LogAsyncCompilation: Display: MemorySharingInfo: UsedMemory=320MiB, MaxMemoryAvailable=52560MiB
+[2026.10.06-10.17.41:171][  0]LogStreaming: Display: AsyncLoading2 - Created: Async Loading Thread: false, Async Post Load: false, Multithreaded: false
+[2026.10.06-10.17.41:171][  0]LogHAL: Display: Platform has ~ 32 GB [33946230784 / 34359738368 / 32], which maps to Largest [LargestMinGB=32, LargerMinGB=12, DefaultMinGB=8, SmallerMinGB=6, SmallestMinGB=0)
+[2026.10.06-10.17.41:171][  0]LogCsvProfiler: Display: Metadata set : extradevelopmentmemorymb="0"
+[2026.10.06-10.17.41:171][  0]LogObj: Display: Attempting to load config data for Default__DownlinkBandwidthManagerConfig before the Class has been constructed/registered/linked (likely during module loading or early startup). This will result in the load silently failing and should be fixed.
+[2026.10.06-10.17.41:792][  0]LogObj: Display: Attempting to load config data for Default__SlateThemeManager before the Class has been constructed/registered/linked (likely during module loading or early startup). This will result in the load silently failing and should be fixed.
+[2026.10.06-10.17.42:082][  0]LogCsvProfiler: Display: Metadata set : verbatimrhiname="Null"
+[2026.10.06-10.17.42:082][  0]LogCsvProfiler: Display: Metadata set : rhiname="Null"
+[2026.10.06-10.17.42:082][  0]LogCsvProfiler: Display: Metadata set : rhifeaturelevel="SM6"
+[2026.10.06-10.17.42:082][  0]LogCsvProfiler: Display: Metadata set : shaderplatform="PCD3D_SM6"
+[2026.10.06-10.17.42:082][  0]LogCsvProfiler: Display: Metadata set : gpu=""
+[2026.10.06-10.17.42:082][  0]LogCsvProfiler: Display: Metadata set : gpudriver=""
+[2026.10.06-10.17.42:082][  0]LogTextureFormatASTC: Display: ASTCEnc version 5.0.1 library loaded
+[2026.10.06-10.17.42:082][  0]LogTextureFormatManager: Display: Loaded Base TextureFormat: TextureFormatASTC
+[2026.10.06-10.17.42:082][  0]LogTextureFormatManager: Display: Loaded Base TextureFormat: TextureFormatETC2
+[2026.10.06-10.17.42:082][  0]LogTextureFormatOodle: Display: Oodle Texture TFO init; latest sdk version = 2.9.16
+[2026.10.06-10.17.42:082][  0]LogTextureFormatOodle: Display: Oodle Texture loading DLL: oo2tex_win64_2.9.16.dll
+[2026.10.06-10.17.42:082][  0]LogTextureFormatManager: Display: Loaded Base TextureFormat: TextureFormatOodle
+[2026.10.06-10.17.42:082][  0]LogTextureFormatManager: Display: Loaded Base TextureFormat: TextureFormatUncompressed
+[2026.10.06-10.17.42:170][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android'
+[2026.10.06-10.17.42:170][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_ASTC'
+[2026.10.06-10.17.42:170][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_DXT'
+[2026.10.06-10.17.42:170][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_ETC2'
+[2026.10.06-10.17.42:170][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'AndroidClient'
+[2026.10.06-10.17.42:170][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_ASTCClient'
+[2026.10.06-10.17.42:170][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_DXTClient'
+[2026.10.06-10.17.42:170][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_ETC2Client'
+[2026.10.06-10.17.42:170][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_Multi'
+[2026.10.06-10.17.42:170][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_MultiClient'
+[2026.10.06-10.17.42:241][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Linux'
+[2026.10.06-10.17.42:242][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxEditor'
+[2026.10.06-10.17.42:242][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxServer'
+[2026.10.06-10.17.42:242][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxClient'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64Server'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64Client'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64_DXT'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64_DXTServer'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64_DXTClient'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64_ASTC'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64_ASTCServer'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64_ASTCClient'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64_ETC2'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64_ETC2Server'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64_ETC2Client'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64_Multi'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64_MultiServer'
+[2026.10.06-10.17.42:278][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64_MultiClient'
+[2026.10.06-10.17.42:345][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Windows'
+[2026.10.06-10.17.42:345][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'WindowsEditor'
+[2026.10.06-10.17.42:345][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'WindowsServer'
+[2026.10.06-10.17.42:345][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'WindowsClient'
+[2026.10.06-10.17.42:345][  0]LogTargetPlatformManager: Display: Building Assets For WindowsEditor
+[2026.10.06-10.17.42:351][  0]LogAudioDebug: Display: Lib vorbis DLL was dynamically loaded.
+[2026.10.06-10.17.42:408][  0]LogZenServiceInstance: Display: Launching zen utility 'C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Binaries/Win64/zen.exe service status'.
+[2026.10.06-10.17.43:058][  0]LogZenServiceInstance: Display: Writing plugin version info to 'C:/Users/Oreki/AppData/Local/UnrealEngine/Common/Zen/Install/zen_plugin_versions.json'
+[2026.10.06-10.17.43:059][  0]LogZenServiceInstance: Display: Read zen version cache file from 'C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Saved/Zen/zen.version', version: '5.8.13-202605190912-windows-x64-release-094f62c2'
+[2026.10.06-10.17.43:059][  0]LogZenServiceInstance: Display: Read zen version cache file from 'C:/Users/Oreki/AppData/Local/UnrealEngine/Common/Zen/Install/zen.version', version: '5.8.13-202605190912-windows-x64-release-094f62c2'
+[2026.10.06-10.17.43:059][  0]LogZenServiceInstance: Display: Installed service at 'C:/Users/Oreki/AppData/Local/UnrealEngine/Common/Zen/Install/zenserver.exe' is up to date
+[2026.10.06-10.17.43:060][  0]LogZenServiceInstance: Display: Launching executable 'C:/Users/Oreki/AppData/Local/UnrealEngine/Common/Zen/Install/zenserver.exe', working dir 'C:/Users/Oreki/AppData/Local/UnrealEngine/Common/Zen/Install', data dir 'C:/Users/Oreki/AppData/Local/UnrealEngine/Common/Zen/Data', args '--port 8558 --data-dir C:\Users\Oreki\AppData\Local\UnrealEngine\Common\Zen\Data --http asio --gc-cache-duration-seconds 1209600 --gc-interval-seconds 21600 --gc-low-diskspace-threshold 2147483648 --cache-bucket-limit-overwrites --quiet --restrict-content-types --allow-external-oidctoken-exe=false --plugins-config "C:/Users/Oreki/AppData/Local/UnrealEngine/Common/Zen/Install/zen_plugins_v1.json" --security-config-path "C:/Users/Oreki/AppData/Local/UnrealEngine/Common/Zen/Install/security-config.json" --owner-pid 57824  --child-id Zen_57824_Startup'
+[2026.10.06-10.17.45:856][  0]LogZenServiceInstance: Display: Unreal Zen Storage Server HTTP service at http://[::1]:8558 status: OK!.
+[2026.10.06-10.17.45:858][  0]LogDerivedDataCache: Display: ZenLocal: Using ZenServer HTTP service at [::1] with namespace ue.ddc. Status: OK!.
+[2026.10.06-10.17.45:869][  0]LogDerivedDataCache: Display: ../../../Engine/DerivedDataCache: Performance: Latency=0.04ms. RandomReadSpeed=1200.37MBs, RandomWriteSpeed=95.68MBs. Assigned SpeedClass 'Local'
+[2026.10.06-10.17.45:873][  0]LogUbaHorde: Display: UBA/Horde Configuration [Uba.Provider.Horde]: Not Enabled
+[2026.10.06-10.17.45:873][  0]LogShaderCompilers: Display: No distributed shader compiler controller found
+[2026.10.06-10.17.45:873][  0]LogShaderCompilers: Display: Using 4 local workers for shader compilation
+[2026.10.06-10.17.45:883][  0]LogShaderCompilers: Display: Compiling shader autogen file: D:/SourceFiles/UnrealProjects/BrokenEdge/Intermediate/ShaderAutogen/PCD3D_SM6/AutogenShaderHeaders.ush
+[2026.10.06-10.17.45:883][  0]LogShaderCompilers: Display: Autogen file is unchanged, skipping write.
+[2026.10.06-10.17.46:410][  0]LogEditorDomain: Display: EditorDomain is Disabled
+[2026.10.06-10.17.46:784][  0]LogDeviceProfileManager: Display: Deviceprofile LinuxArm64Editor not found.
+[2026.10.06-10.17.46:784][  0]LogDeviceProfileManager: Display: Deviceprofile LinuxArm64 not found.
+[2026.10.06-10.17.46:841][  0]LogCsvProfiler: Display: Metadata set : deviceprofile="WindowsEditor"
+[2026.10.06-10.17.46:846][  0]LogStreaming: Display: FlushAsyncLoading(1): 1 QueuedPackages, 0 AsyncPackages
+[2026.10.06-10.17.46:867][  0]LogTextureEncodingSettings: Display: Texture Encode Speed forced to Final via command line.
+[2026.10.06-10.17.46:893][  0]LogMeshReduction: Display: Using QuadricMeshReduction for automatic static mesh reduction
+[2026.10.06-10.17.46:893][  0]LogMeshReduction: Display: Using SkeletalMeshReduction for automatic skeletal mesh reduction
+[2026.10.06-10.17.46:893][  0]LogMeshReduction: Display: Using ProxyLODMeshReduction for automatic mesh merging
+[2026.10.06-10.17.46:893][  0]LogMeshReduction: Display: No distributed automatic mesh merging module available
+[2026.10.06-10.17.47:064][  0]LogShaderCompilers: Display: Compiling shader autogen file: D:/SourceFiles/UnrealProjects/BrokenEdge/Intermediate/ShaderAutogen/PCD3D_SM5/AutogenShaderHeaders.ush
+[2026.10.06-10.17.47:064][  0]LogShaderCompilers: Display: Autogen file is unchanged, skipping write.
+[2026.10.06-10.17.47:064][  0]LogVirtualization: Display: VirtualizationSystem name found in ini file: None
+[2026.10.06-10.17.47:064][  0]LogVirtualization: Display: FNullVirtualizationSystem mounted, virtualization will be disabled
+[2026.10.06-10.17.47:144][  0]LogWorldPartition: Display: FWorldPartitionClassDescRegistry::Initialize started...
+[2026.10.06-10.17.47:147][  0]LogWorldPartition: Display: FWorldPartitionClassDescRegistry::Initialize took 2.816 ms
+[2026.10.06-10.17.47:748][  0]LogMetaSound: Display: MetaSound Page Target Initialized to 'Default'
+[2026.10.06-10.17.47:750][  0]LogAudio: Display: Registering Engine Module Parameter Interfaces...
+[2026.10.06-10.17.48:201][  0]LogAsyncCompilation: Warning: 注意：AssetCompile内存估计值大于硬内存限制，但我们无论如何都会运行它[SkinnedAsset]！RequiredMemory =0.000 MiB + 4608.000MiB、AvailableAssetCompilationMemory =1984.000MiB、HardMemoryLimit =2048.000 MiB
+[2026.10.06-10.17.48:201][  0]LogAsyncCompilation: Warning: 注意：AssetCompile内存估计值大于硬内存限制，但我们无论如何都会运行它[SkinnedAsset]！RequiredMemory =0.000 MiB + 4608.000MiB、AvailableAssetCompilationMemory =1984.000MiB、HardMemoryLimit =2048.000 MiB
+[2026.10.06-10.17.48:489][  0]LogBlueprint: Warning: [AssetLog]D:\SourceFiles\UnrealProjects\BrokenEdge\Content\Characters\Stinger\Animations\ThirdPerson\ABP_BrokenEdgeAnimInstance_Stinger.uasset：[编译器]Transform (Modify) Bone - Bone: RightHand  - 没有选中要修改的组件。旋转度、平移或缩放应该设置为'忽略'之外的内容。
+[2026.10.06-10.17.48:730][  0]LogAsyncCompilation: Warning: 注意：AssetCompile内存估计值大于硬内存限制，但我们无论如何都会运行它[SkinnedAsset]！RequiredMemory =0.000 MiB + 4608.000MiB、AvailableAssetCompilationMemory =1984.000MiB、HardMemoryLimit =2048.000 MiB
+[2026.10.06-10.17.48:730][  0]LogAsyncCompilation: Warning: 注意：AssetCompile内存估计值大于硬内存限制，但我们无论如何都会运行它[SkinnedAsset]！RequiredMemory =0.000 MiB + 4608.000MiB、AvailableAssetCompilationMemory =1984.000MiB、HardMemoryLimit =2048.000 MiB
+[2026.10.06-10.17.48:734][  0]LogAsyncCompilation: Warning: 注意：AssetCompile内存估计值大于硬内存限制，但我们无论如何都会运行它[SkinnedAsset]！RequiredMemory =0.000 MiB + 4608.000MiB、AvailableAssetCompilationMemory =1984.000MiB、HardMemoryLimit =2048.000 MiB
+[2026.10.06-10.17.48:734][  0]LogAsyncCompilation: Warning: 注意：AssetCompile内存估计值大于硬内存限制，但我们无论如何都会运行它[SkinnedAsset]！RequiredMemory =0.000 MiB + 4608.000MiB、AvailableAssetCompilationMemory =1984.000MiB、HardMemoryLimit =2048.000 MiB
+[2026.10.06-10.17.48:752][  0]LogAsyncCompilation: Warning: 注意：AssetCompile内存估计值大于硬内存限制，但我们无论如何都会运行它[SkinnedAsset]！RequiredMemory =0.000 MiB + 4608.000MiB、AvailableAssetCompilationMemory =1984.000MiB、HardMemoryLimit =2048.000 MiB
+[2026.10.06-10.17.48:753][  0]LogAsyncCompilation: Warning: 注意：AssetCompile内存估计值大于硬内存限制，但我们无论如何都会运行它[SkinnedAsset]！RequiredMemory =0.000 MiB + 4608.000MiB、AvailableAssetCompilationMemory =1984.000MiB、HardMemoryLimit =2048.000 MiB
+[2026.10.06-10.17.48:759][  0]LogAsyncCompilation: Warning: 注意：AssetCompile内存估计值大于硬内存限制，但我们无论如何都会运行它[SkinnedAsset]！RequiredMemory =0.000 MiB + 4608.000MiB、AvailableAssetCompilationMemory =1984.000MiB、HardMemoryLimit =2048.000 MiB
+[2026.10.06-10.17.48:759][  0]LogAsyncCompilation: Warning: 注意：AssetCompile内存估计值大于硬内存限制，但我们无论如何都会运行它[SkinnedAsset]！RequiredMemory =0.000 MiB + 4608.000MiB、AvailableAssetCompilationMemory =1984.000MiB、HardMemoryLimit =2048.000 MiB
+[2026.10.06-10.17.48:795][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_113' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:795][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_114' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:795][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_115' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:795][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_116' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:795][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_117' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:795][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_118' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:795][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_119' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:795][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_138' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:795][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_Root_5' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:797][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.EdGraphNode_Comment_1' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:797][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.EdGraphNode_Comment_3' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:797][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_3' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:797][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_80' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:797][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_81' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:797][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_82' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:797][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_83' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:797][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_84' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:797][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_85' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:798][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_86' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:798][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_87' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:798][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_88' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:798][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_89' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:798][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_90' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:798][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_91' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:798][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_92' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:798][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_93' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:798][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_94' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.48:798][  0]LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_Root_11' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.50:022][  0]LogAudioCaptureCore: Display: No Audio Capture implementations found. Audio input will be silent.
+[2026.10.06-10.17.50:022][  0]LogAudioCaptureCore: Display: No Audio Capture implementations found. Audio input will be silent.
+[2026.10.06-10.17.50:246][  0]LogToolsetRegistry: Display: Registering Toolset ToolsetRegistry.AgentSkillToolset
+[2026.10.06-10.17.50:246][  0]LogToolsetRegistry: Display: Registering Toolset AIAssistant.AIAssistantToolset
+[2026.10.06-10.17.50:268][  0]LogAssetRegistry: Display: PlatformFileJournal is not available on volume 'D:' of project directory 'D:/SourceFiles/UnrealProjects/BrokenEdge/', so AssetDiscovery cache will not be read or written. Unavailability reason:
+	NTFS Journal is not active for volume 'D:'. Launch cmd.exe as admin and run command `fsutil usn createJournal D: m=<SizeInBytes>`. Recommended <SizeInBytes> is 0x40000000 (1GB).
+[2026.10.06-10.17.50:416][  0]LogAssetRegistry: Display: CleanupOrphanedCacheFiles (PreLoad): 1 .ref files found, 1 referenced binaries
+[2026.10.06-10.17.50:416][  0]LogAssetRegistry: Display: CleanupOrphanedCacheFiles: 1 total binaries, 1 referenced (kept), 0 old-style pre-migration (kept), 0 orphans deleted, 0 orphans locked (kept)
+[2026.10.06-10.17.50:416][  0]LogAssetRegistry: Display: FindShardedCacheFiles: 1 via .ref, 0 via migration fallback, 1 total
+[2026.10.06-10.17.50:416][  0]LogAssetRegistry: Display: LoadCacheFiles: loading 1 cache files, memory-mapping=enabled
+[2026.10.06-10.17.50:601][  0]LogAssetRegistry: Display: Asset registry cache read as 154.1 MiB from D:/SourceFiles/UnrealProjects/BrokenEdge/Intermediate/CachedAssetRegistry/CachedAssetRegistry_0_EFF1BACA4A22B2FA44E13DB2FBEC2332.bin (memory-mapped=yes)
+[2026.10.06-10.17.50:604][  0]LogAssetRegistry: Display: AssetDataGatherer spent 0.189s loading caches from D:/SourceFiles/UnrealProjects/BrokenEdge/Intermediate/CachedAssetRegistry.
+[2026.10.06-10.17.50:900][  0]LogGameFeatures: Display: Total built in plugin load time 0.0012s
+[2026.10.06-10.17.50:916][  0]LogCsvProfiler: Display: Metadata set : largeworldcoordinates="1"
+[2026.10.06-10.17.50:974][  0]LogPython: Display: No pip-enabled plugins with python dependencies found, skipping
+[2026.10.06-10.17.51:329][  0]LogCsvProfiler: Display: Metadata set : raytracing="0"
+[2026.10.06-10.17.51:449][  0]LogToolsetRegistry: Display: Registering Toolset AutomationTestToolset.AutomationTestToolset
+[2026.10.06-10.17.51:453][  0]LogToolsetRegistry: Display: Registering Toolset ConfigSettingsToolset.ConfigSettingsToolset
+[2026.10.06-10.17.51:456][  0]LogToolsetRegistry: Display: Registering Toolset DataRegistryToolset.DataRegistryTools
+[2026.10.06-10.17.51:460][  0]LogToolsetRegistry: Display: Registering Toolset DataflowAgent.DataflowAgentToolset
+[2026.10.06-10.17.51:461][  0]LogToolsetRegistry: Display: Registering Toolset GameFeaturesToolset.GameFeaturesToolset
+[2026.10.06-10.17.51:465][  0]LogToolsetRegistry: Display: Registering Toolset EditorToolset.EditorAppToolset
+[2026.10.06-10.17.51:465][  0]LogToolsetRegistry: Display: Registering Toolset EditorToolset.LogsToolset
+[2026.10.06-10.17.51:467][  0]LogToolsetRegistry: Display: Registering Toolset GameplayTagsToolset.GameplayTagsToolset
+[2026.10.06-10.17.51:469][  0]LogToolsetRegistry: Display: Registering Toolset GASToolsets.GameplayCueToolset
+[2026.10.06-10.17.51:470][  0]LogToolsetRegistry: Display: Registering Toolset GASToolsets.AttributeSetToolset
+[2026.10.06-10.17.51:470][  0]LogToolsetRegistry: Display: Registering Toolset GASToolsets.AbilitySystemInspectorToolset
+[2026.10.06-10.17.51:477][  0]LogToolsetRegistry: Display: Registering Toolset PCGToolset.PCGToolset
+[2026.10.06-10.17.51:477][  0]LogToolsetRegistry: Display: Registering Toolset PCGToolset.PCGSpatialToolset
+[2026.10.06-10.17.51:480][  0]LogToolsetRegistry: Display: Registering Toolset PhysicsToolsets.PhysicsAssetToolset
+[2026.10.06-10.17.51:484][  0]LogToolsetRegistry: Display: Registering Toolset NiagaraToolsets.NiagaraToolset_Info
+[2026.10.06-10.17.51:491][  0]LogToolsetRegistry: Display: Registering Toolset NiagaraToolsets.NiagaraToolset_Component
+[2026.10.06-10.17.51:491][  0]LogToolsetRegistry: Display: Registering Toolset NiagaraToolsets.NiagaraToolset_Blueprint
+[2026.10.06-10.17.51:515][  0]LogToolsetRegistry: Display: Registering Toolset NiagaraToolsets.NiagaraToolset_System
+[2026.10.06-10.17.51:515][  0]LogToolsetRegistry: Display: Registering Toolset NiagaraToolsets.NiagaraToolset_Assets
+[2026.10.06-10.17.51:521][  0]LogToolsetRegistry: Display: Registering Toolset PluginToolset.PluginToolset
+[2026.10.06-10.17.51:523][  0]LogToolsetRegistry: Display: Registering Toolset SemanticSearchToolset.SemanticSearchToolset
+[2026.10.06-10.17.51:524][  0]LogToolsetRegistry: Display: Registering Toolset SlateInspectorToolset.SlateInspectorToolset
+[2026.10.06-10.17.51:530][  0]LogToolsetRegistry: Display: Registering Toolset WorldConditionsToolset.WorldConditionTools
+[2026.10.06-10.17.51:537][  0]LogToolsetRegistry: Display: Registering Toolset UMGToolSet.UMGToolSet
+[2026.10.06-10.17.51:563][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/Toolsets/StateTreeToolset/Content/Python/init_unreal.py…… started...
+[2026.10.06-10.17.51:641][  0]LogToolsetRegistry: Display: Registering Toolset state_tree_toolset.toolsets.state_tree.StateTreeTools
+[2026.10.06-10.17.51:641][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/Toolsets/StateTreeToolset/Content/Python/init_unreal.py…… took 78.981 ms
+[2026.10.06-10.17.51:642][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/Toolsets/NiagaraToolsets/Content/Python/init_unreal.py…… started...
+[2026.10.06-10.17.51:648][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/Toolsets/NiagaraToolsets/Content/Python/init_unreal.py…… took 6.544 ms (total: 85.526 ms)
+[2026.10.06-10.17.51:648][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/Toolsets/EditorToolset/Content/Python/init_unreal.py…… started...
+[2026.10.06-10.17.51:705][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.actor.ActorTools
+[2026.10.06-10.17.51:706][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.asset.AssetTools
+[2026.10.06-10.17.51:711][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.blueprint.BlueprintTools
+[2026.10.06-10.17.51:712][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.curve_table.CurveTableTools
+[2026.10.06-10.17.51:712][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.data_asset.DataAssetTools
+[2026.10.06-10.17.51:713][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.data_table.DataTableTools
+[2026.10.06-10.17.51:718][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.material.MaterialTools
+[2026.10.06-10.17.51:719][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.material_instance.MaterialInstanceTools
+[2026.10.06-10.17.51:720][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.object.ObjectTools
+[2026.10.06-10.17.51:720][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.primitive.PrimitiveTools
+[2026.10.06-10.17.51:722][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.scene.SceneTools
+[2026.10.06-10.17.51:724][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.skeletal_mesh.SkeletalMeshTools
+[2026.10.06-10.17.51:725][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.static_mesh.StaticMeshTools
+[2026.10.06-10.17.51:725][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.string_table.StringTableTools
+[2026.10.06-10.17.51:725][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.programmatic.ProgrammaticToolset
+[2026.10.06-10.17.51:726][  0]LogToolsetRegistry: Display: Registering Toolset editor_toolset.toolsets.texture.TextureTools
+[2026.10.06-10.17.51:726][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/Toolsets/EditorToolset/Content/Python/init_unreal.py…… took 77.521 ms (total: 163.048 ms)
+[2026.10.06-10.17.51:726][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/Toolsets/ConversationToolset/Content/Python/init_unreal.py…… started...
+[2026.10.06-10.17.51:731][  0]LogToolsetRegistry: Display: Registering Toolset conversation_toolset.toolsets.conversation.ConversationTools
+[2026.10.06-10.17.51:731][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/Toolsets/ConversationToolset/Content/Python/init_unreal.py…… took 5.119 ms (total: 168.167 ms)
+[2026.10.06-10.17.51:731][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/Toolsets/AnimationAssistantToolset/Content/Python/init_unreal.py…… started...
+[2026.10.06-10.17.51:767][  0]LogToolsetRegistry: Display: Registering Toolset animation_toolset.toolsets.controlrig.ControlRigTools
+[2026.10.06-10.17.51:776][  0]LogToolsetRegistry: Display: Registering Toolset animation_toolset.toolsets.sequencer.SequencerTools
+[2026.10.06-10.17.51:777][  0]LogToolsetRegistry: Display: Registering Toolset animation_toolset.toolsets.keyframing.SequencerKeyframingTools
+[2026.10.06-10.17.51:782][  0]LogToolsetRegistry: Display: Registering Toolset animation_toolset.toolsets.controlrig_sequencer.SequencerControlRigTools
+[2026.10.06-10.17.51:783][  0]LogToolsetRegistry: Display: Registering Toolset animation_toolset.toolsets.outliner.SequencerOutlinerTools
+[2026.10.06-10.17.51:784][  0]LogToolsetRegistry: Display: Registering Toolset animation_toolset.toolsets.conditions.SequencerConditionTools
+[2026.10.06-10.17.51:784][  0]LogToolsetRegistry: Display: Registering Toolset animation_toolset.toolsets.custom_bindings.SequencerCustomBindingTools
+[2026.10.06-10.17.51:785][  0]LogToolsetRegistry: Display: Registering Toolset animation_toolset.toolsets.import_export.SequencerImportExportTools
+[2026.10.06-10.17.51:810][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/Toolsets/AnimationAssistantToolset/Content/Python/init_unreal.py…… took 79.403 ms (total: 247.570 ms)
+[2026.10.06-10.17.51:810][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/Toolsets/AIModuleToolset/Content/Python/init_unreal.py…… started...
+[2026.10.06-10.17.51:815][  0]LogToolsetRegistry: Display: Registering Toolset aimodule_toolset.toolsets.behavior_tree.BehaviorTreeTools
+[2026.10.06-10.17.51:815][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/Toolsets/AIModuleToolset/Content/Python/init_unreal.py…… took 4.592 ms (total: 252.163 ms)
+[2026.10.06-10.17.51:815][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/ToolsetRegistry/Content/Python/init_unreal.py…… started...
+[2026.10.06-10.17.51:815][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Experimental/ToolsetRegistry/Content/Python/init_unreal.py…… took 210 us (total: 252.373 ms)
+[2026.10.06-10.17.51:815][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Animation/IKRig/Content/Python/init_unreal.py…… started...
+[2026.10.06-10.17.51:820][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Animation/IKRig/Content/Python/init_unreal.py…… took 4.872 ms (total: 257.246 ms)
+[2026.10.06-10.17.51:820][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Animation/ControlRig/Content/Python/init_unreal.py…… started...
+[2026.10.06-10.17.51:841][  0]LogPython: Display: 正在运行启动脚本C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Plugins/Animation/ControlRig/Content/Python/init_unreal.py…… took 20.709 ms (total: 277.955 ms)
+[2026.10.06-10.17.51:841][  0]LogPythonScriptCommandlet: Display: Running Python script: D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\import_restoration.py
+[2026.10.06-10.17.55:260][  0]LogSourceControl: Display: Uncontrolled Changelist persistency file loaded D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/SourceControl/UncontrolledChangelists.json
+[2026.10.06-10.17.56:023][  0]LogPythonScriptCommandlet: Display: Python script executed successfully
+[2026.10.06-10.17.56:023][  0]LogInit: Display: 
+[2026.10.06-10.17.56:023][  0]LogInit: Display: Warning/Error Summary (Unique only)
+[2026.10.06-10.17.56:023][  0]LogInit: Display: -----------------------------------
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogAsyncCompilation: Warning: 注意：AssetCompile内存估计值大于硬内存限制，但我们无论如何都会运行它[SkinnedAsset]！RequiredMemory =0.000 MiB + 4608.000MiB、AvailableAssetCompilationMemory =1984.000MiB、HardMemoryLimit =2048.000 MiB
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: [AssetLog]D:\SourceFiles\UnrealProjects\BrokenEdge\Content\Characters\Stinger\Animations\ThirdPerson\ABP_BrokenEdgeAnimInstance_Stinger.uasset：[编译器]Transform (Modify) Bone - Bone: RightHand  - 没有选中要修改的组件。旋转度、平移或缩放应该设置为'忽略'之外的内容。
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_113' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_114' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_115' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_116' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_117' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_118' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_119' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_138' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/Rifle_ImpactBody_Cue.Rifle_ImpactBody_Cue:SoundCueGraph_5.SoundCueGraphNode_Root_5' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.EdGraphNode_Comment_1' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.EdGraphNode_Comment_3' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_3' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_80' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_81' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_82' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_83' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_84' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_85' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_86' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_87' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_88' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_89' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_90' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_91' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_92' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_93' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_94' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: LogBlueprint: Warning: Node '/Game/MilitaryWeapSilver/Sound/Rifle/Cues/RifleA_Fire_Cue.RifleA_Fire_Cue:SoundCueGraph_11.SoundCueGraphNode_Root_11' missing NodeGuid because of upgrade from old package version, this can cause deterministic cooking issues please resave package.
+[2026.10.06-10.17.56:023][  0]LogInit: Display: 
+[2026.10.06-10.17.56:023][  0]LogInit: Display: Success - 0 error(s), 39 warning(s)
+[2026.10.06-10.17.56:023][  0]LogInit: Display: 
+Execution of commandlet took:  4.46 seconds, PeakPhysMemoryMB=2383 MB, PeakVirtMemoryMB=2253 MB
+[2026.10.06-10.17.56:035][  0]LogToolsetRegistry: Display: Unregistering Toolset ToolsetRegistry.AgentSkillToolset
+[2026.10.06-10.17.56:035][  0]LogToolsetRegistry: Display: Unregistering Toolset AIAssistant.AIAssistantToolset
+[2026.10.06-10.17.56:035][  0]LogToolsetRegistry: Display: Unregistering Toolset AutomationTestToolset.AutomationTestToolset
+[2026.10.06-10.17.56:035][  0]LogToolsetRegistry: Display: Unregistering Toolset SlateInspectorToolset.SlateInspectorToolset
+[2026.10.06-10.17.57:137][  0]LogAssetRegistry: Display: CleanupOrphanedCacheFiles (PostWrite): 1 .ref files found, 1 referenced binaries
+[2026.10.06-10.17.57:137][  0]LogAssetRegistry: Display: CleanupOrphanedCacheFiles: 1 total binaries, 1 referenced (kept), 0 old-style pre-migration (kept), 0 orphans deleted, 0 orphans locked (kept)
+[2026.10.06-10.17.57:336][  0]LogShaderCompilers: Display: Exiting ShaderCompilingThread
+[2026.10.06-10.17.57:460][  0]LogSourceControl: Display: Uncontrolled Changelist persistency file saved D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/SourceControl/UncontrolledChangelists.json

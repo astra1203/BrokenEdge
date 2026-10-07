@@ -1,0 +1,85 @@
+{
+  "group": "rules",
+  "phase": "7D",
+  "result": "passed",
+  "steps": [
+    {
+      "name": "inventory",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DRules03-inventory",
+        "--timeout",
+        "2400",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+        "--tag",
+        "Phase7DRules03-inventory",
+        "inventory"
+      ],
+      "pid": 70072,
+      "exit_code": 0
+    },
+    {
+      "name": "persistence",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DRules03-persistence",
+        "--timeout",
+        "2400",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+        "--tag",
+        "Phase7DRules03-persistence",
+        "persistence"
+      ],
+      "pid": 40196,
+      "exit_code": 0
+    },
+    {
+      "name": "equipment",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DRules03-equipment",
+        "--timeout",
+        "2400",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+        "--tag",
+        "Phase7DRules03-equipment",
+        "equipment"
+      ],
+      "pid": 63480,
+      "exit_code": 0
+    },
+    {
+      "name": "progression",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DRules03-progression",
+        "--timeout",
+        "2400",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+        "--tag",
+        "Phase7DRules03-progression",
+        "progression"
+      ],
+      "pid": 52052,
+      "exit_code": 0
+    }
+  ],
+  "started_utc": "2026-10-06T22:38:30.839761+00:00",
+  "finished_utc": "2026-10-06T22:39:58.156520+00:00"
+}

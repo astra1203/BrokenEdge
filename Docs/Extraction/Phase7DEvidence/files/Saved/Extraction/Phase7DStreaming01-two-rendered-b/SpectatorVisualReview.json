@@ -1,0 +1,19 @@
+{
+  "result": "passed",
+  "reviewed_utc": "2026-10-06T23:50:02.185679+00:00",
+  "boundary": "Functional spectator screenshot only; retained formal-map shadowed lighting, not fixed-camera material comparison or performance acceptance.",
+  "observations": [
+    "Correct living teammate and spectator HUD visible after North region becomes ready.",
+    "Ground, planter, building and original white prototype supply container remain visible; this location is in deep source-scene shadow."
+  ],
+  "captures": [
+    {
+      "file": "B-north-spectator.png",
+      "sha256": "fe7d0eab616f30d4a195318922438b14c1c443ccecd74b25dc0ad9060ff57ab3",
+      "resolution": [
+        1920,
+        1080
+      ]
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+	"role": "B",
+	"command": 11,
+	"walk_index": 0,
+	"walk_count": 0,
+	"physical_mib": 423.8671875,
+	"peak_physical_mib": 826.9609375,
+	"viewport_width": 0,
+	"viewport_height": 0,
+	"view_position": [
+		0,
+		0,
+		92
+	],
+	"quality":
+	{
+		"sg.ViewDistanceQuality": 3,
+		"sg.AntiAliasingQuality": 3,
+		"sg.ShadowQuality": 0,
+		"sg.GlobalIlluminationQuality": 3,
+		"sg.ReflectionQuality": 3,
+		"sg.PostProcessQuality": 3,
+		"sg.TextureQuality": 3,
+		"sg.EffectsQuality": 1,
+		"sg.FoliageQuality": 3,
+		"sg.ShadingQuality": 3,
+		"r.ScreenPercentage": 0,
+		"r.VSync": 0,
+		"t.MaxFPS": 30
+	},
+	"error": "",
+	"map": "/Game/Maps/Lobby",
+	"net_mode": 0,
+	"local_players": 1,
+	"game_mode": "/Game/Blueprints/GameMode/BP_LobbyGameMode.BP_LobbyGameMode_C",
+	"capacity": 16,
+	"session": false,
+	"account":
+	{
+		"bound": false,
+		"locked": false,
+		"profile": "00000000000000000000000000000000",
+		"message": "",
+		"revision": 0,
+		"progression":
+		{
+			"credits": 0,
+			"experience": 0,
+			"level": 1,
+			"quests": []
+		},
+		"outcome": 0,
+		"stash":
+		{
+			"id": "00000000000000000000000000000000",
+			"revision": 1,
+			"items": []
+		},
+		"loadout":
+		{
+			"id": "00000000000000000000000000000000",
+			"revision": 1,
+			"items": []
+		},
+		"overflow":
+		{
+			"id": "00000000000000000000000000000000",
+			"revision": 1,
+			"items": []
+		}
+	},
+	"has_pawn": false,
+	"width": 0,
+	"height": 0,
+	"players": [
+		{
+			"name": "DESKTOP-M9PA1SF-80D4",
+			"id": 257,
+			"account":
+			{
+				"bound": false,
+				"locked": false,
+				"profile": "00000000000000000000000000000000",
+				"message": "",
+				"revision": 0,
+				"progression":
+				{
+					"credits": 0,
+					"experience": 0,
+					"level": 1,
+					"quests": []
+				},
+				"outcome": 0,
+				"stash":
+				{
+					"id": "00000000000000000000000000000000",
+					"revision": 1,
+					"items": []
+				},
+				"loadout":
+				{
+					"id": "00000000000000000000000000000000",
+					"revision": 1,
+					"items": []
+				},
+				"overflow":
+				{
+					"id": "00000000000000000000000000000000",
+					"revision": 1,
+					"items": []
+				}
+			},
+			"ready": false,
+			"squad": 0
+		}
+	],
+	"weapons": [],
+	"loot": [],
+	"nav_paths": [],
+	"key_rooms": [],
+	"guards": [],
+	"smokes": []
+}

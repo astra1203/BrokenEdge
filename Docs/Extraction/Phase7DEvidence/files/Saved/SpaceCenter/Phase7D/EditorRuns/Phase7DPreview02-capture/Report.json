@@ -1,0 +1,38 @@
+{
+  "task": "capture",
+  "result": "running",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "quality": 1,
+  "camera_config_sha256": "028a1dead31a92e013c62f4cbed70288e188d75cdad1fe1409e680cab591c1b6",
+  "captures": [
+    {
+      "name": "overview",
+      "position": [
+        35000,
+        28000,
+        22000
+      ],
+      "target": [
+        500,
+        500,
+        0
+      ],
+      "file": "overview.png",
+      "sha256": "05def5bc6c7b38dc3699b400c1b8403c90865c13ae950c79849ddf3f023b0b7c",
+      "size": [
+        1920,
+        1080
+      ]
+    }
+  ],
+  "reference_status": "Source-version matched gameplay views are not yet paired; these are reproducible reconstruction inspection cameras.",
+  "capture_world": "editor",
+  "render_boundary": "One editor world, native high-resolution scene render at requested dimensions, unchanged camera/lighting and Medium. PIE collision and packaged gameplay are separately verified.",
+  "native_render_resolution": [
+    1920,
+    1080
+  ]
+}

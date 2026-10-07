@@ -1,0 +1,183 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "Scripts/SpaceCenter/capture_restoration_runtime.py",
+    "--task",
+    "traverse",
+    "--integrated",
+    "--probe-report",
+    "Saved/SpaceCenter/Phase7D/EditorRuns/Phase7DEastProbeIntegrated01",
+    "--tag",
+    "Phase7DEastTraverseIntegrated01",
+    "--manifest",
+    "Saved/SpaceCenter/Phase7D/ManifestRuns/Phase7DManifest04/Manifest.json",
+    "--profile",
+    "Scripts/SpaceCenter/restoration_profile_7d.json"
+  ],
+  "result": "failed",
+  "samples": [
+    {
+      "utc": "2026-10-06T13:26:49.632390+00:00",
+      "c_free_gib": 53.35060119628906,
+      "d_free_gib": 206.8410186767578,
+      "ram_free_gib": 15.814445495605469,
+      "commit_used_gib": 31.845428466796875,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:26:49.641389+00:00",
+      "c_free_gib": 53.35060119628906,
+      "d_free_gib": 206.84101486206055,
+      "ram_free_gib": 15.814193725585938,
+      "commit_used_gib": 31.845428466796875,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:26:54.657192+00:00",
+      "c_free_gib": 53.34864807128906,
+      "d_free_gib": 206.84057998657227,
+      "ram_free_gib": 13.891021728515625,
+      "commit_used_gib": 34.129737854003906,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:26:59.659378+00:00",
+      "c_free_gib": 53.34848403930664,
+      "d_free_gib": 206.84057998657227,
+      "ram_free_gib": 14.007152557373047,
+      "commit_used_gib": 33.944252014160156,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:27:04.661145+00:00",
+      "c_free_gib": 53.34842300415039,
+      "d_free_gib": 206.84057998657227,
+      "ram_free_gib": 12.213287353515625,
+      "commit_used_gib": 35.72300720214844,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:27:09.677888+00:00",
+      "c_free_gib": 53.348419189453125,
+      "d_free_gib": 206.84057998657227,
+      "ram_free_gib": 9.133110046386719,
+      "commit_used_gib": 37.967010498046875,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:27:14.692529+00:00",
+      "c_free_gib": 53.348419189453125,
+      "d_free_gib": 206.99945068359375,
+      "ram_free_gib": 6.929988861083984,
+      "commit_used_gib": 42.382652282714844,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:27:19.708786+00:00",
+      "c_free_gib": 53.348419189453125,
+      "d_free_gib": 206.99945068359375,
+      "ram_free_gib": 6.90283203125,
+      "commit_used_gib": 42.93526840209961,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:27:24.713379+00:00",
+      "c_free_gib": 53.348419189453125,
+      "d_free_gib": 206.99945068359375,
+      "ram_free_gib": 6.932163238525391,
+      "commit_used_gib": 42.89340591430664,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:27:29.717077+00:00",
+      "c_free_gib": 53.34513473510742,
+      "d_free_gib": 206.99904251098633,
+      "ram_free_gib": 6.603572845458984,
+      "commit_used_gib": 44.038169860839844,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:27:34.728712+00:00",
+      "c_free_gib": 53.3451042175293,
+      "d_free_gib": 206.9990692138672,
+      "ram_free_gib": 6.819019317626953,
+      "commit_used_gib": 43.160884857177734,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:27:39.734469+00:00",
+      "c_free_gib": 53.3450813293457,
+      "d_free_gib": 206.9990692138672,
+      "ram_free_gib": 6.589855194091797,
+      "commit_used_gib": 44.035667419433594,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:27:44.742293+00:00",
+      "c_free_gib": 53.345001220703125,
+      "d_free_gib": 206.99906539916992,
+      "ram_free_gib": 6.838115692138672,
+      "commit_used_gib": 43.15594482421875,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:27:49.750517+00:00",
+      "c_free_gib": 53.344966888427734,
+      "d_free_gib": 206.99906539916992,
+      "ram_free_gib": 6.827983856201172,
+      "commit_used_gib": 43.17033386230469,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:27:54.762047+00:00",
+      "c_free_gib": 53.34489822387695,
+      "d_free_gib": 206.99906539916992,
+      "ram_free_gib": 6.7163543701171875,
+      "commit_used_gib": 43.258033752441406,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:27:59.765484+00:00",
+      "c_free_gib": 53.3436393737793,
+      "d_free_gib": 206.99906539916992,
+      "ram_free_gib": 6.817043304443359,
+      "commit_used_gib": 43.17941665649414,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:28:04.770125+00:00",
+      "c_free_gib": 53.343597412109375,
+      "d_free_gib": 206.99906539916992,
+      "ram_free_gib": 6.814777374267578,
+      "commit_used_gib": 43.179779052734375,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:28:09.778955+00:00",
+      "c_free_gib": 53.34842300415039,
+      "d_free_gib": 206.99906539916992,
+      "ram_free_gib": 6.052989959716797,
+      "commit_used_gib": 44.0514030456543,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T13:28:13.092246+00:00",
+      "c_free_gib": 53.34827423095703,
+      "d_free_gib": 206.99921417236328,
+      "ram_free_gib": 15.054241180419922,
+      "commit_used_gib": 33.4535026550293,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 50756,
+  "exit_code": 1
+}

@@ -1,0 +1,201 @@
+{
+  "result": "passed",
+  "profile": "Scripts\\SpaceCenter\\restoration_profile_7d.json",
+  "started_utc": "2026-10-06T09:48:13.127175+00:00",
+  "steps": [
+    {
+      "name": "foliage",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DSources01-foliage",
+        "--timeout",
+        "3600",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restore_foliage.py",
+        "--tag",
+        "Phase7DFoliage01",
+        "--probe",
+        "Phase7DProbe01",
+        "--profile",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+      ],
+      "pid": 4480,
+      "exit_code": 0
+    },
+    {
+      "name": "geometry",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DSources01-geometry",
+        "--timeout",
+        "3600",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\complete_restoration_geometry.py",
+        "--tag",
+        "Phase7DGeometry01",
+        "--profile",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+      ],
+      "pid": 70600,
+      "exit_code": 0
+    },
+    {
+      "name": "meshes",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DSources01-meshes",
+        "--timeout",
+        "3600",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restore_assets.py",
+        "meshes",
+        "--tag",
+        "Phase7DMeshes01",
+        "--selection",
+        "Phase7DSelect02",
+        "--profile",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+      ],
+      "pid": 74420,
+      "exit_code": 0
+    },
+    {
+      "name": "materials",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DSources01-materials",
+        "--timeout",
+        "3600",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restore_assets.py",
+        "materials",
+        "--tag",
+        "Phase7DMaterials01",
+        "--selection",
+        "Phase7DSelect02",
+        "--profile",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+      ],
+      "pid": 28444,
+      "exit_code": 0
+    },
+    {
+      "name": "textures",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DSources01-textures",
+        "--timeout",
+        "3600",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restore_assets.py",
+        "textures",
+        "--tag",
+        "Phase7DTextures01",
+        "--materials",
+        "Phase7DMaterials01",
+        "--profile",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+      ],
+      "pid": 60756,
+      "exit_code": 0
+    },
+    {
+      "name": "heights",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DSources01-heights",
+        "--timeout",
+        "3600",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\recover_phase7b_terrain.py",
+        "--tag",
+        "Phase7DHeight01",
+        "--profile",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+      ],
+      "pid": 30940,
+      "exit_code": 0
+    },
+    {
+      "name": "terrain",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DSources01-terrain",
+        "--timeout",
+        "3600",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restore_terrain.py",
+        "--tag",
+        "Phase7DTerrain01",
+        "--profile",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+      ],
+      "pid": 48456,
+      "exit_code": 0
+    },
+    {
+      "name": "manifest",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DSources01-manifest",
+        "--timeout",
+        "3600",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\build_restoration_manifest.py",
+        "--tag",
+        "Phase7DManifest01",
+        "--profile",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+      ],
+      "pid": 26900,
+      "exit_code": 0
+    },
+    {
+      "name": "slots",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DSources01-slots",
+        "--timeout",
+        "3600",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restore_material_slots.py",
+        "--tag",
+        "Phase7DSlots01",
+        "--manifest",
+        "Saved/SpaceCenter/Phase7D/ManifestRuns/Phase7DManifest01/Manifest.json",
+        "--profile",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+      ],
+      "pid": 27408,
+      "exit_code": 0
+    }
+  ],
+  "finished_utc": "2026-10-06T09:50:12.350199+00:00"
+}

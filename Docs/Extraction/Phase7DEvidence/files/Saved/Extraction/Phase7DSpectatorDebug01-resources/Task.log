@@ -1,0 +1,21 @@
+READY Server 68144
+READY A 39072
+PASS A joined LAN lobby
+PASS A name replicated
+READY B 22088
+PASS B joined LAN lobby
+PASS B name replicated
+PASS A persistent account ready
+PASS B persistent account ready
+PASS Streaming pair shares a squad for spectator acceptance
+PASS All players loaded in Extraction
+PASS Dedicated authority and Stinger pawns
+PASS A equipped AK
+PASS B equipped AK
+PASS First-person backpack section hidden on each owner
+PASS Server and owners keep both hands within two cm of weapon grips
+PASS A extracts for the focused spectator diagnostic
+PASS B target exists at the far-east endpoint on server and owner
+SPECTATOR_DEBUG_READY 68144
+FAILED TimeoutExpired(['D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Server\\WindowsServer\\BrokenEdge\\Binaries\\Win64\\BrokenEdgeServer.exe', '/Game/Maps/Lobby', '-nosound', '-unattended', '-nosplash', '-NoLoadingScreen', '-ExtractionGuards=0', '-MatchType=Extraction', '-NumPublicConnections=2', '-MinPlayersToStart=2', '-port=27777', '-ExtractionRoundSeconds=1200', '-ExtractionTestRole=Server', '-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase7DSpectatorDebug01', '-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase7DSpectatorDebug01\\Store', '-ExtractionProfile=Phase7DSpectatorDebug01_Server', '-ExecCmds=t.MaxFPS 30,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver', '-TestExit=Automation Test Queue Empty', '-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase7DSpectatorDebug01\\Server.log', '-nullrhi'], 40)
+RESULT failed 15 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7DSpectatorDebug01

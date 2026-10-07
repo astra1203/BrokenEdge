@@ -1,0 +1,42 @@
+{
+  "task": "capture",
+  "result": "running",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "quality": 1,
+  "camera_config_sha256": "028a1dead31a92e013c62f4cbed70288e188d75cdad1fe1409e680cab591c1b6",
+  "captures": [
+    {
+      "name": "overview",
+      "position": [
+        35000,
+        28000,
+        22000
+      ],
+      "target": [
+        500,
+        500,
+        0
+      ],
+      "file": "overview.png",
+      "sha256": "092afe27bed652ce54af0a42c4419cb4a32f652176fafece7e33b2d83056e053",
+      "size": [
+        1920,
+        1080
+      ]
+    }
+  ],
+  "reference_status": "Source-version matched gameplay views are not yet paired; these are reproducible reconstruction inspection cameras.",
+  "viewport_size": [
+    1920,
+    1080
+  ],
+  "terrain_collision": {
+    "result": "passed",
+    "tiles": 143,
+    "errors": [],
+    "max_error_cm": 0.00011920928955078125
+  }
+}

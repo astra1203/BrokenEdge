@@ -1,0 +1,33 @@
+{
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Build\\BatchFiles\\RunUAT.bat",
+    "BuildCookRun",
+    "-project=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-nop4",
+    "-build",
+    "-cook",
+    "-stage",
+    "-pak",
+    "-iostore",
+    "-archive",
+    "-archivedirectory=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Server",
+    "-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+    "-prereqs",
+    "-ubtargs=-NoHotReloadFromIDE -WaitMutex -MaxParallelActions=1",
+    "-utf8output",
+    "-server",
+    "-noclient",
+    "-serverplatform=Win64",
+    "-serverconfig=Development",
+    "-AdditionalCookerOptions=-ForceTextureEncodeSpeed=Final -ini:Engine:[DevOptions.Shaders]:ShaderCompilerCoreCountThreshold=999,[DevOptions.Shaders]:NumUnusedShaderCompilingThreads=8,[DevOptions.Shaders]:NumUnusedShaderCompilingThreadsDuringGame=8,[SystemSettings]:Editor.AsyncTextureCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncStaticMeshCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncAssetCompilationMaxConcurrency=2,[SystemSettings]:Editor.AsyncAssetCompilationMaxMemoryUsage=2 -ini:Editor:[CookSettings]:MemoryMinFreePhysical=4096,[CookSettings]:MemoryMaxUsedPhysical=8192"
+  ],
+  "head": "7757ee0a9ce18f2b038bd43d46c6b6c12f48d079",
+  "started_utc": "2026-10-06T22:31:31.367998+00:00",
+  "environment_overrides": {
+    "UE_SKIP_UBT_SDK_SETUP": "1",
+    "UnrealBuildTool_BuildConfiguration__bAllowUBAExecutor": "false"
+  },
+  "pid": 30552,
+  "exit_code": 0,
+  "elapsed_seconds": 164.93799999996554
+}

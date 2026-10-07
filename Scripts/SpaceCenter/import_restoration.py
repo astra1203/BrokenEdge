@@ -9,7 +9,7 @@ import unreal
 
 ROOT=Path(unreal.Paths.project_dir()).resolve()
 sys.path.insert(0,str(ROOT/'Scripts/SpaceCenter'))
-from restoration_common import WORK, read, write_json, sha, identity
+from restoration_common import WORK, read, write_json, sha, identity, input_path, cache_files
 OUT=Path(os.environ['SPACECENTER_RUN_DIR'])
 TASK=os.environ['SPACECENTER_RESTORE_TASK']
 MANIFEST=read(os.environ['SPACECENTER_RESTORE_MANIFEST'])
@@ -18,7 +18,8 @@ LIB=unreal.EditorAssetLibrary
 TOOLS=unreal.AssetToolsHelpers.get_asset_tools()
 EDIT=unreal.MaterialEditingLibrary
 STATE_FILE=WORK/'NativeAssets.json'
-state=read(STATE_FILE) if STATE_FILE.exists() else {}
+seed=input_path('native_seed',STATE_FILE)
+state=read(STATE_FILE) if STATE_FILE.exists() else read(seed) if seed.exists() else {}
 report={'task':TASK,'created':[],'reused':0,'errors':[]}
 
 
@@ -29,14 +30,17 @@ def asset(entry,kind,role=None):
     if previous and previous['sha256']==digest and previous.get('asset') and LIB.does_asset_exist(previous['asset']):
         report['reused']+=1
         return previous['asset']
-    if previous and (previous['sha256']!=digest or not previous.get('pending')):
+    revision=entry.get('revision')
+    if previous and previous['sha256']!=digest and revision==digest[:12]:
+        previous=None
+    elif previous and (previous['sha256']!=digest or not previous.get('pending')):
         raise RuntimeError('Changed import input requires explicit asset revision: '+key)
     if kind=='mesh' and entry.get('native_asset'):
         path=entry['native_asset']
         assert LIB.does_asset_exist(path),path
         report['reused']+=1
     else:
-        folder=DEST+('/Terrain/' if kind=='terrain' else '/Assets/')+identity(key)
+        folder=DEST+('/Revisions/'+revision if revision else '')+('/Terrain/' if kind=='terrain' else '/Assets/')+identity(key)
         cls=unreal.Texture2D if kind=='texture' else unreal.StaticMesh
         paths=[p for p in LIB.list_assets(folder,recursive=True) if isinstance(LIB.load_asset(p),cls)] if LIB.does_directory_exist(folder) else []
         if paths:
@@ -103,7 +107,8 @@ def import_textures():
 
 
 def warm_assets():
-    ledger=WORK/'WarmAssets.json';warmed=read(ledger) if ledger.exists() else {}
+    ledger=WORK/'WarmAssets.json';warmed={}
+    for previous in cache_files('WarmAssets.json'):warmed.update(read(previous))
     entries=[(key,value) for key,value in state.items() if key.startswith(('texture:','mesh:','terrain:','restoration_master:','restoration_material:')) and value.get('sha256')]
     pending=[(k,v) for k,v in entries if warmed.get(k)!=v['sha256']]
     limit=int(os.environ.get('SPACECENTER_IMPORT_LIMIT','250')) or 250

@@ -1,0 +1,89 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "46791D4E4BD252FF047FE5ACBF2FAD8A",
+			"instanceName": "DESKTOP-M9PA1SF-62792",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "GameViewer Virtual Display Adapter",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.06-21.43.08",
+	"succeeded": 4,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.42780840396881104,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Atomicity",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Atomicity",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"46791D4E4BD252FF047FE5ACBF2FAD8A"
+			],
+			"duration": 0.21449489891529083,
+			"dateTime": "2026.10.06-21.43.07",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Economy",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Economy",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"46791D4E4BD252FF047FE5ACBF2FAD8A"
+			],
+			"duration": 0.030960600823163986,
+			"dateTime": "2026.10.06-21.43.07",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Migration",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Migration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"46791D4E4BD252FF047FE5ACBF2FAD8A"
+			],
+			"duration": 0.054730299860239029,
+			"dateTime": "2026.10.06-21.43.07",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Quests",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Quests",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"46791D4E4BD252FF047FE5ACBF2FAD8A"
+			],
+			"duration": 0.12762260437011719,
+			"dateTime": "2026.10.06-21.43.07",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

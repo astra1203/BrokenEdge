@@ -9,7 +9,7 @@ from restoration_recipes import make_recipes,calibration
 
 
 def weight_image(out):
-    entries=read(WORK/'TerrainTextureRuns/Phase7CTerrainTextures01/Weights.json')
+    entries=read(input_path('terrain_textures','TerrainTextureRuns/Phase7CTerrainTextures01')/'Weights.json')
     active=[0,1,2,4];width=height=512;pixels=bytearray(width*height*4);sources=[]
     for e in entries:
         x,y=map(int,re.search(r'_x(\d+)_y(\d+)',e['name']).groups())
@@ -35,13 +35,15 @@ def weight_image(out):
 
 def main(tag):
     out=WORK/'ManifestRuns'/tag
-    graph=read(WORK/'AugmentRuns/Phase7CAugment01/Graph.json')
-    textures=read(WORK/'AugmentRuns/Phase7CAugment01/Textures.json')
-    roots=read(WORK/'MaterialRuns/Phase7CMaterials02/Report.json')['roots']
+    graph=read(input_path('graph','AugmentRuns/Phase7CAugment01/Graph.json'))
+    textures={}
+    for path in cache_files('AugmentRuns/*/Textures.json'):textures.update(read(path))
+    textures.update(read(input_path('textures','AugmentRuns/Phase7CAugment01/Textures.json')))
+    roots=read(input_path('material_roots','MaterialRuns/Phase7CMaterials02/Report.json'))['roots']
     variants=read(ROOT/'Scripts/SpaceCenter/restoration_source_variants.json')['material_variants']
     recipes,bindings,missing=make_recipes(graph,roots,textures,material_variants=variants)
     if missing:raise RuntimeError('Selected material recipe has missing images: '+str(missing))
-    terrain_report=read(WORK/'TerrainTextureRuns/Phase7CTerrainTextures01/Report.json')
+    terrain_report=read(input_path('terrain_textures','TerrainTextureRuns/Phase7CTerrainTextures01')/'Report.json')
     arrays=terrain_report['arrays'];layers=[]
     parameters=next(o['Properties']['LayerParameters'] for p in read(BASE/'Phase7B/SourceRuns/Phase7BSource01/Parsed/Packages.json')
                     for o in p.get('objects',[]) if o.get('Type')=='DTAComponent')
@@ -63,12 +65,15 @@ def main(tag):
         notes=['Source height and weight samples; terrain shader visually reconstructed. Missing shared Rock01 image uses same-name original Forrest_Tutorial asset.',
                'Lost global landscape tint and original virtual-texture shader graph are not claimed recovered.'])
     recipes[terrain_source]=terrain
-    scene=read(WORK/'SelectionRuns/Phase7CSelect05/Selection.json')
-    scene['meshes']={p:stage_import(e) for p,e in read(WORK/'AssetRuns/Phase7CMeshes02/Meshes.json').items()}
-    scene['terrain']=read(WORK/'TerrainRuns/Phase7CTerrain01/Manifest.json')
+    scene=read(input_path('selection','SelectionRuns/Phase7CSelect05/Selection.json'))
+    scene['meshes']={p:stage_import(e) for p,e in read(input_path('meshes','AssetRuns/Phase7CMeshes02/Meshes.json')).items()}
+    scene['terrain']=read(input_path('terrain','TerrainRuns/Phase7CTerrain01/Manifest.json'))
     scene['terrain']['tiles']=[stage_import(e)|{'material':terrain_source} for e in scene['terrain']['tiles']]
+    if PROFILE['material_revision']>1:
+        for entry in scene['terrain']['tiles']:entry['revision']=entry['sha256'][:12]
     scene.update(version=3,materials=recipes,texture_bindings={k:stage_import(e) for k,e in sorted(bindings.items())},
                  reconstruction_scope='Visual reconstruction of original-source version; source shader equivalence not claimed.')
+    scene['profile']={'file':str(PROFILE_FILE.relative_to(ROOT)),'sha256':sha(PROFILE_FILE),'phase':PROFILE['phase']}
     write_json(out/'Manifest.json',scene)
     write_json(out/'Report.json',{'actors':len(scene['actors']),'materials':len(recipes),'textures':len(bindings),
         'meshes':len(scene['meshes']),'terrain_tiles':len(scene['terrain']['tiles']),'manifest_sha256':sha(out/'Manifest.json')})

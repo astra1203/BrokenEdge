@@ -247,6 +247,23 @@ void AExtractionPlayerController::ServerCycleSpectator_Implementation(int32 Dire
 		SelectSpectatorTarget(Direction);
 }
 
+void AExtractionPlayerController::GetPlayerViewPoint(FVector& OutLocation, FRotator& OutRotation) const
+{
+	// The local orbit camera is separate from the spectator pawn. Its synced
+	// location can remain at extraction, so server relevancy must follow the
+	// living teammate selected by the authority instead.
+	if (HasAuthority() && !IsLocalController() && bExtractionSpectating && SpectatedPlayer
+		&& SpectatedPlayer->Life == EExtractionLife::Alive)
+	{
+		if (const APawn* Target = SpectatedPlayer->GetPawn())
+		{
+			Target->GetActorEyesViewPoint(OutLocation, OutRotation);
+			return;
+		}
+	}
+	Super::GetPlayerViewPoint(OutLocation, OutRotation);
+}
+
 void AExtractionPlayerController::Tick(float Delta)
 {
 	Super::Tick(Delta);

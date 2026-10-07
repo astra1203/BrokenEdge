@@ -1,0 +1,34 @@
+{
+  "result": "failed",
+  "config": {
+    "version": 1,
+    "minimum": [
+      1000,
+      3000
+    ],
+    "maximum": [
+      25500,
+      11000
+    ],
+    "step_cm": 100,
+    "trace_heights": [
+      450,
+      900,
+      1600
+    ],
+    "trace_bottom": -4500,
+    "start": [
+      1400,
+      4200,
+      362
+    ],
+    "desired_end": [
+      22000,
+      6500,
+      54
+    ]
+  },
+  "config_sha256": "e60e7a74fbd6c369849e417d891f89c732e40eaca6ff3729507cdbf8282968f3",
+  "elapsed_seconds": 30.875,
+  "error": "Traceback (most recent call last):\n  File \"D:/SourceFiles/UnrealProjects/BrokenEdge/Scripts/SpaceCenter/probe_east_route.py\", line 99, in tick\n    try:next(state['generator'])\n        ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:/SourceFiles/UnrealProjects/BrokenEdge/Scripts/SpaceCenter/probe_east_route.py\", line 70, in measure\n    assert candidates,'No capsule-clear east connection found in measured corridor'\nAssertionError: No capsule-clear east connection found in measured corridor\n"
+}

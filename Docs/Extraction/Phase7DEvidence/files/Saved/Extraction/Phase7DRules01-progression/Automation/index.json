@@ -1,0 +1,89 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "3787D50747FF27348A22E68F6AF92EAD",
+			"instanceName": "DESKTOP-M9PA1SF-66668",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "NVIDIA GeForce RTX 4060 Ti",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.06-12.20.12",
+	"succeeded": 4,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.43401628732681274,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Atomicity",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Atomicity",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"3787D50747FF27348A22E68F6AF92EAD"
+			],
+			"duration": 0.21500140428543091,
+			"dateTime": "2026.10.06-12.20.11",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Economy",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Economy",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"3787D50747FF27348A22E68F6AF92EAD"
+			],
+			"duration": 0.027600500732660294,
+			"dateTime": "2026.10.06-12.20.12",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Migration",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Migration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"3787D50747FF27348A22E68F6AF92EAD"
+			],
+			"duration": 0.052459299564361572,
+			"dateTime": "2026.10.06-12.20.12",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Quests",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Quests",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"3787D50747FF27348A22E68F6AF92EAD"
+			],
+			"duration": 0.13895510137081146,
+			"dateTime": "2026.10.06-12.20.12",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

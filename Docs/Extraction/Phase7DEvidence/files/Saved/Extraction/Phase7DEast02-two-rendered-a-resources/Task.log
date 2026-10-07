@@ -1,0 +1,23 @@
+READY Server 63024
+READY A 30456
+PASS A joined LAN lobby
+PASS A name replicated
+READY B 59212
+PASS B joined LAN lobby
+PASS B name replicated
+PASS A persistent account ready
+PASS B persistent account ready
+PASS Streaming pair shares a squad for spectator acceptance
+PASS All players loaded in Extraction
+PASS Dedicated authority and Stinger pawns
+PASS A equipped AK
+PASS B equipped AK
+PASS First-person backpack section hidden on each owner
+PASS Server and owners keep both hands within two cm of weapon grips
+PASS A east arrival grounded
+PASS A east arrival authority agrees
+PASS A reached expanded source area
+PASS A old-area return grounded
+PASS A old-area return authority agrees
+FAILED AssertionError('B east arrival: Walk stalled at waypoint 0')
+RESULT failed 18 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7DEast02-two-rendered-a

@@ -4,18 +4,21 @@ import datetime
 import os
 import subprocess
 import sys
-from restoration_common import ROOT, WORK, read, sha, write_json
+from restoration_common import ROOT, WORK, PROFILE, PROFILE_FILE, input_path, read, sha, write_json
 
 parser=argparse.ArgumentParser()
-parser.add_argument('task',choices=['meshes','textures','materials','terrain-fidelity','warm','preview','capture','capture-integrated','traverse','audit','audit-integrated','integrate'])
+parser.add_argument('task',choices=['meshes','textures','materials','terrain-fidelity','warm','preview','capture','capture-integrated','probe-east','probe-east-integrated','traverse','audit','audit-integrated','integrate'])
 parser.add_argument('--tag',required=True)
 parser.add_argument('--manifest',help='Explicit source manifest; defaults to the active reconstruction marker')
 parser.add_argument('--limit',type=int,default=0)
+parser.add_argument('--capture-world',choices=['pie','editor'],default='pie')
 args=parser.parse_args()
 if not args.manifest:
     marker=ROOT/'Scripts/SpaceCenter/restoration_active.json'
     if not marker.is_file():parser.error('Pass --manifest for the initial reconstruction')
     args.manifest=str(ROOT/read(marker)['manifest_file'])
+manifest_profile=read(args.manifest).get('profile')
+if manifest_profile:assert manifest_profile['sha256']==sha(PROFILE_FILE),'Manifest must be rebuilt after profile changes'
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):parser.error('Use a new tag')
 out=WORK/'EditorRuns'/args.tag
 out.mkdir(parents=True,exist_ok=False)
@@ -23,16 +26,23 @@ subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File
                 '-ProjectFile',str(ROOT/'BrokenEdge.uproject')],check=True)
 config=read(ROOT/'Scripts/SpaceCenter/north_config.json')
 from pathlib import Path
-engine=Path(config['engine']);rendered=args.task in ['capture','capture-integrated','traverse']
-script=ROOT/'Scripts/SpaceCenter'/({'capture':'capture_restoration.py','capture-integrated':'capture_restoration.py','traverse':'validate_sample.py'}.get(args.task,'import_restoration.py'))
+engine=Path(config['engine']);rendered=args.task in ['capture','capture-integrated','probe-east','probe-east-integrated','traverse']
+script=ROOT/'Scripts/SpaceCenter'/({'capture':'capture_restoration.py','capture-integrated':'capture_restoration.py','probe-east':'probe_east_route.py','probe-east-integrated':'probe_east_route.py','traverse':'validate_sample.py'}.get(args.task,'import_restoration.py'))
 command=[str(engine/'Engine/Binaries/Win64'/('UnrealEditor.exe' if rendered else 'UnrealEditor-Cmd.exe')),str(ROOT/'BrokenEdge.uproject')]
 if rendered:
-    map_name='L_SpaceCenterExtraction' if args.task=='capture-integrated' else 'L_SpaceCenterRestorationPreview'
-    command+=['/Game/Maps/SpaceCenter/'+map_name,'-RenderOffscreen','-windowed','-ResX=1920','-ResY=1080','-ForceRes','-ExecCmds=py '+str(script)]
+    map_name='/Game/Maps/SpaceCenter/L_SpaceCenterExtraction' if args.task.endswith('-integrated') else PROFILE.get('preview_map','/Game/Maps/SpaceCenter/L_SpaceCenterRestorationPreview')
+    # Apply the accepted quality before the first rendered editor/PIE frame;
+    # loading in default Epic first retains avoidable render allocations.
+    startup=['r.VSync 0','t.MaxFPS 60','t.IdleWhenNotForeground 0','r.ScreenPercentage 100']
+    startup+=['sg.'+group+'Quality 1' for group in ['ViewDistance','AntiAliasing','Shadow','GlobalIllumination','Reflection','PostProcess','Texture','Effects','Foliage','Shading']]
+    command+=[map_name,'-RenderOffscreen','-windowed','-ResX=1920','-ResY=1080','-ForceRes','-ExecCmds='+','.join(startup+['py '+str(script)])]
+    initial_quality=','.join('[ScalabilityGroups]:sg.'+group+'Quality=1' for group in ['ViewDistance','AntiAliasing','Shadow','GlobalIllumination','Reflection','PostProcess','Texture','Effects','Foliage','Shading'])
+    command+=['-ini:'+kind+':'+initial_quality for kind in ['EditorSettings','GameUserSettings']]
 else:
     command+=['-run=pythonscript','-script='+str(script)]
     command+=['-AllowCommandletRendering','-RenderOffscreen'] if args.task=='warm' else ['-NullRHI']
 command+=['-unattended','-nosplash','-nosound','-NoLoadingScreen','-ForceTextureEncodeSpeed=Final','-abslog='+str(out/'Editor.log')]
+if args.task.startswith('probe-east'):command+=['-NullRHI']
 unused=max(0,(os.cpu_count() or 8)-4)
 settings=[('DevOptions.Shaders','ShaderCompilerCoreCountThreshold',999),('DevOptions.Shaders','NumUnusedShaderCompilingThreads',unused),
           ('DevOptions.Shaders','NumUnusedShaderCompilingThreadsDuringGame',unused),('SystemSettings','Editor.AsyncTextureCompilationMaxConcurrency',1),
@@ -42,11 +52,15 @@ command+=['-ini:Engine:'+','.join('['+section+']:'+name+'='+str(value) for secti
 env=os.environ.copy();env.update(SPACECENTER_RUN_DIR=str(out),SPACECENTER_RESTORE_TASK=args.task,
                                SPACECENTER_RESTORE_MANIFEST=str(Path(args.manifest).resolve()),UE_SKIP_UBT_SDK_SETUP='1',
                                SPACECENTER_IMPORT_LIMIT=str(args.limit))
-if args.task=='traverse':env.update(SPACECENTER_SUITE='traverse',SPACECENTER_PLAYERS='1',SPACECENTER_RESTORATION_VALIDATION='1')
+env['SPACECENTER_CAPTURE_WORLD']=args.capture_world
+if args.task=='traverse':env.update(SPACECENTER_SUITE='traverse',SPACECENTER_PLAYERS='1',SPACECENTER_RESTORATION_VALIDATION='1',
+    SPACECENTER_TRAVERSE_ROUTE=str(input_path('traverse_route',ROOT/'Scripts/SpaceCenter/route.json')))
 metadata={'task':args.task,'command':command,'started_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
-          'script_sha256':sha(script),'manifest_sha256':sha(args.manifest)}
+          'script_sha256':sha(script),'manifest_sha256':sha(args.manifest),
+          'profile_file':PROFILE_FILE.relative_to(ROOT).as_posix(),'profile_sha256':sha(PROFILE_FILE),
+          'capture_world':args.capture_world if args.task.startswith('capture') else None}
 inspection_maps=[ROOT/'Content/Maps/SpaceCenter'/name for name in
-                 ['L_SpaceCenterExtraction.umap','L_SpaceCenterNorth.umap']] if args.task in ['audit-integrated','capture-integrated'] else []
+                 ['L_SpaceCenterExtraction.umap','L_SpaceCenterNorth.umap']] if args.task.endswith('-integrated') else []
 if inspection_maps:
     metadata['map_sha256_before']={p.relative_to(ROOT).as_posix():sha(p) for p in inspection_maps}
 with (out/'Process.log').open('wb') as log:
@@ -60,7 +74,7 @@ with (out/'Process.log').open('wb') as log:
 report=read(out/'Report.json') if (out/'Report.json').is_file() else {}
 text=(out/'Editor.log').read_text(encoding='utf-8',errors='replace')
 passed=metadata['exit_code']==0 and report.get('result')=='passed' and not any(s in text for s in
-    ['Fatal error:','Traceback (most recent call last)','Failed to compile Material','LogMaterial: Error:'])
+    ['Fatal error:','Traceback (most recent call last)','Failed to compile Material','LogMaterial: Error:','Ensure condition failed:'])
 if inspection_maps:
     metadata['map_sha256_after']={p.relative_to(ROOT).as_posix():sha(p) for p in inspection_maps}
     if metadata['map_sha256_after']!=metadata['map_sha256_before']:

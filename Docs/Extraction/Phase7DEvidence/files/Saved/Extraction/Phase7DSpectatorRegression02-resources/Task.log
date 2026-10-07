@@ -1,0 +1,82 @@
+READY Server 46068
+READY A 65240
+PASS A joined LAN lobby
+PASS A name replicated
+READY B 61012
+PASS B joined LAN lobby
+PASS B name replicated
+READY C 37340
+PASS C joined LAN lobby
+PASS C name replicated
+PASS A persistent account ready
+PASS B persistent account ready
+PASS C persistent account ready
+PASS All players loaded in Extraction
+PASS Dedicated authority and Stinger pawns
+PASS A visible reachable pickup focus
+PASS A equipped AK
+PASS B visible reachable pickup focus
+PASS B equipped AK
+PASS C visible reachable pickup focus
+PASS C equipped AK
+PASS First-person backpack section hidden on each owner
+PASS Server and owners keep both hands within two cm of weapon grips
+PASS Scene cover blocks damage while consuming the shot
+PASS Visible remote character keeps both weapon grips
+PASS Third-person view toggle
+PASS First-person view restored
+PASS A one authoritative shot
+PASS A ammo agreement
+PASS B direct bullet health damage 20
+PASS B damage replication
+PASS Extraction bullet damage bypasses legacy shield
+PASS A one authoritative shot
+PASS A ammo agreement
+PASS A one authoritative shot
+PASS A ammo agreement
+PASS A one authoritative shot
+PASS A ammo agreement
+PASS A one authoritative shot
+PASS A ammo agreement
+PASS B direct bullet health damage 40
+PASS B damage replication
+PASS Duplicate foreign legacy rewind and invalid range cannot damage or spend ammo
+PASS Server cadence accepts one of twelve immediate requests
+PASS Rejected prediction corrected
+PASS Reload entered on server
+PASS Reload fills once on all processes
+PASS Reload terminates
+PASS Empty weapon request rejected
+PASS Empty reload transfers exactly thirty rounds
+PASS Owner reserve matches authority
+PASS Partial reload started before drop
+PASS Drop is authoritative
+PASS Drop cancels unfinished reload and preserves weapon identity
+PASS Dropped weapon can be picked up
+PASS Re-equipped after interrupted reload
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS A direct bullet health damage 40
+PASS A damage replication
+PASS Reload active immediately before lethal shot
+PASS B one authoritative shot
+PASS B ammo agreement
+PASS A direct bullet health damage 20
+PASS A damage replication
+PASS Lethal hit downs player while their squadmate lives
+PASS Finishing shots finalize downed player
+PASS Death enters spectator without pawn
+PASS Restart cannot respawn the dead player
+PASS Death container preserves weapon and cancels its reload
+PASS Living player keeps round active
+PASS Dead player spectates only their living squadmate
+PASS Next target wraps within the one living squadmate
+PASS Previous target cannot select the opposing squad
+PASS C one authoritative shot
+PASS C ammo agreement
+PASS B direct bullet health damage 40
+PASS B damage replication
+PASS C one authoritative shot
+PASS C ammo agreement
+FAILED AssertionError('Invalid shot damage: 38')
+RESULT failed 79 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7DSpectatorRegression02

@@ -1,0 +1,647 @@
+{
+  "task": "traverse",
+  "result": "running",
+  "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+  "captures": [
+    {
+      "name": "door",
+      "position": [
+        312.3563498966602,
+        121.60415429480852,
+        457.64881272316376
+      ],
+      "file": "A-door.png",
+      "sha256": "2d229e6705b3d7585fd87798653ffaa01a5162c27cfa2620b691814296d91f2f",
+      "size": [
+        1920,
+        1080
+      ]
+    }
+  ],
+  "resolution": [
+    1920,
+    1080
+  ],
+  "quality": 1,
+  "camera_config_sha256": "fead8dac4a2e4685dbfcdd33eb98c1cb64806d3ba2123bbb63289358d21fe147",
+  "reference_status": "Source-version matched gameplay views are not yet paired; these are reproducible reconstruction inspection cameras.",
+  "capture_world": "standalone",
+  "render_boundary": "One uncooked Development game world with the existing local test GameMode. Real native viewport screenshots, no editor or PIE world and no image scaling. Packaged gameplay is separately accepted.",
+  "terrain_probe_source": {
+    "directory": "Saved\\SpaceCenter\\Phase7D\\EditorRuns\\Phase7DEastProbeIntegrated01",
+    "run_sha256": "8f0cbf5674218dfd19858c7e9fea123680a489f8349ca44a98e258cb96fe1268",
+    "terrain_sha256": "c1a671f42049c0fb88b66281ea1851d7993f7b9e04e137c0e2f059eb907a9428",
+    "world": "PIE NullRHI"
+  },
+  "route_sha256": "e70406b61510c5f813c85ac86de1e4d0538557503db894f2a337afa3beb27624",
+  "checks": [
+    {
+      "name": "door",
+      "passed": true,
+      "pawn": {
+        "name": "DESKTOP-M9PA1SF-D2D4",
+        "id": 256,
+        "account": {
+          "bound": false,
+          "locked": false,
+          "profile": "00000000000000000000000000000000",
+          "message": "",
+          "revision": 0,
+          "progression": {
+            "credits": 0,
+            "experience": 0,
+            "level": 1,
+            "quests": []
+          },
+          "outcome": 0,
+          "stash": {
+            "id": "00000000000000000000000000000000",
+            "revision": 1,
+            "items": []
+          },
+          "loadout": {
+            "id": "00000000000000000000000000000000",
+            "revision": 1,
+            "items": []
+          },
+          "overflow": {
+            "id": "00000000000000000000000000000000",
+            "revision": 1,
+            "items": []
+          }
+        },
+        "ready": false,
+        "squad": 0,
+        "health": 100,
+        "bleeding": false,
+        "fracture": false,
+        "bullet_sequence": 0,
+        "hit_bone": "None",
+        "hit_loss": 0,
+        "walk_speed": 600,
+        "crouch_speed": 300,
+        "action": 0,
+        "action_end": 0,
+        "heal_ready": 0,
+        "smoke_ready": 0,
+        "rescuer": "",
+        "reach": [],
+        "inventory_open": false,
+        "focus": "None",
+        "loot_target": "None",
+        "loot_id": "",
+        "loot_view": {
+          "id": "00000000000000000000000000000000",
+          "revision": 1,
+          "items": []
+        },
+        "session": 0,
+        "medical_end": 0,
+        "search_end": 0,
+        "shield": 0,
+        "disabled": false,
+        "defeated": false,
+        "first_person": true,
+        "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+        "body_anim": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.BP_StingerCharacter_C_0.CharacterMesh0.ABP_BrokenEdgeAnimInstance_Stinger_C_0",
+        "fp_lods": 1,
+        "fp_gear_slot": 0,
+        "fp_gear_visible": false,
+        "overlap": "",
+        "accepted": 0,
+        "rejected": 0,
+        "combat_state": 0,
+        "carried_ammo": 0,
+        "falling": false,
+        "position": [
+          312.3563498966602,
+          121.60415429480852,
+          457.64881272316376
+        ]
+      }
+    }
+  ],
+  "samples": [
+    {
+      "segment": "door",
+      "time": 47.96900000004098,
+      "players": [
+        {
+          "name": "DESKTOP-M9PA1SF-D2D4",
+          "id": 256,
+          "account": {
+            "bound": false,
+            "locked": false,
+            "profile": "00000000000000000000000000000000",
+            "message": "",
+            "revision": 0,
+            "progression": {
+              "credits": 0,
+              "experience": 0,
+              "level": 1,
+              "quests": []
+            },
+            "outcome": 0,
+            "stash": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            },
+            "loadout": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            },
+            "overflow": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            }
+          },
+          "ready": false,
+          "squad": 0,
+          "health": 100,
+          "bleeding": false,
+          "fracture": false,
+          "bullet_sequence": 0,
+          "hit_bone": "None",
+          "hit_loss": 0,
+          "walk_speed": 600,
+          "crouch_speed": 300,
+          "action": 0,
+          "action_end": 0,
+          "heal_ready": 0,
+          "smoke_ready": 0,
+          "rescuer": "",
+          "reach": [
+            {
+              "target": "3A60F23945A81C219FB505B79063DD89",
+              "hit": "ExtractionLootActor_0",
+              "name": "ExtractionLootActor_0",
+              "distance": 172.91151428222656,
+              "clear": true,
+              "eye": [
+                -1499.4192375249218,
+                -300,
+                520.2947543945302
+              ]
+            },
+            {
+              "target": "525C56F444627359DCE7A99ED60E7282",
+              "hit": "ExtractionLootActor_1",
+              "name": "ExtractionLootActor_1",
+              "distance": 86.30799102783203,
+              "clear": true,
+              "eye": [
+                -1499.4192375249218,
+                -300,
+                520.2947543945302
+              ]
+            },
+            {
+              "target": "E6254CBB4E5AC21620DF78BF1CCA19E8",
+              "hit": "ExtractionLootActor_11",
+              "name": "ExtractionLootActor_11",
+              "distance": 185.41534423828125,
+              "clear": true,
+              "eye": [
+                -1499.4192375249218,
+                -300,
+                520.2947543945302
+              ]
+            }
+          ],
+          "inventory_open": false,
+          "focus": "None",
+          "loot_target": "None",
+          "loot_id": "",
+          "loot_view": {
+            "id": "00000000000000000000000000000000",
+            "revision": 1,
+            "items": []
+          },
+          "session": 0,
+          "medical_end": 0,
+          "search_end": 0,
+          "shield": 0,
+          "disabled": false,
+          "defeated": false,
+          "first_person": true,
+          "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+          "body_anim": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.BP_StingerCharacter_C_0.CharacterMesh0.ABP_BrokenEdgeAnimInstance_Stinger_C_0",
+          "fp_lods": 1,
+          "fp_gear_slot": 0,
+          "fp_gear_visible": false,
+          "overlap": "",
+          "accepted": 0,
+          "rejected": 0,
+          "combat_state": 0,
+          "carried_ammo": 0,
+          "falling": false,
+          "position": [
+            -1499.4192375249218,
+            -300,
+            456.2947543945302
+          ]
+        }
+      ]
+    },
+    {
+      "segment": "door",
+      "time": 49.07799999997951,
+      "players": [
+        {
+          "name": "DESKTOP-M9PA1SF-D2D4",
+          "id": 256,
+          "account": {
+            "bound": false,
+            "locked": false,
+            "profile": "00000000000000000000000000000000",
+            "message": "",
+            "revision": 0,
+            "progression": {
+              "credits": 0,
+              "experience": 0,
+              "level": 1,
+              "quests": []
+            },
+            "outcome": 0,
+            "stash": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            },
+            "loadout": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            },
+            "overflow": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            }
+          },
+          "ready": false,
+          "squad": 0,
+          "health": 100,
+          "bleeding": false,
+          "fracture": false,
+          "bullet_sequence": 0,
+          "hit_bone": "None",
+          "hit_loss": 0,
+          "walk_speed": 600,
+          "crouch_speed": 300,
+          "action": 0,
+          "action_end": 0,
+          "heal_ready": 0,
+          "smoke_ready": 0,
+          "rescuer": "",
+          "reach": [
+            {
+              "target": "736AF8B34750F9E113088B9254ED25AD",
+              "hit": "ExtractionLootActor_17",
+              "name": "ExtractionLootActor_17",
+              "distance": 219.8162078857422,
+              "clear": true,
+              "eye": [
+                -998.3796673833718,
+                -269.17186533399496,
+                520.0421265449513
+              ]
+            }
+          ],
+          "inventory_open": false,
+          "focus": "None",
+          "loot_target": "None",
+          "loot_id": "",
+          "loot_view": {
+            "id": "00000000000000000000000000000000",
+            "revision": 1,
+            "items": []
+          },
+          "session": 0,
+          "medical_end": 0,
+          "search_end": 0,
+          "shield": 0,
+          "disabled": false,
+          "defeated": false,
+          "first_person": true,
+          "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+          "body_anim": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.BP_StingerCharacter_C_0.CharacterMesh0.ABP_BrokenEdgeAnimInstance_Stinger_C_0",
+          "fp_lods": 1,
+          "fp_gear_slot": 0,
+          "fp_gear_visible": false,
+          "overlap": "",
+          "accepted": 0,
+          "rejected": 0,
+          "combat_state": 0,
+          "carried_ammo": 0,
+          "falling": false,
+          "position": [
+            -998.3796673833718,
+            -269.17186533399496,
+            456.0421265449513
+          ]
+        }
+      ]
+    },
+    {
+      "segment": "door",
+      "time": 50.14099999994505,
+      "players": [
+        {
+          "name": "DESKTOP-M9PA1SF-D2D4",
+          "id": 256,
+          "account": {
+            "bound": false,
+            "locked": false,
+            "profile": "00000000000000000000000000000000",
+            "message": "",
+            "revision": 0,
+            "progression": {
+              "credits": 0,
+              "experience": 0,
+              "level": 1,
+              "quests": []
+            },
+            "outcome": 0,
+            "stash": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            },
+            "loadout": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            },
+            "overflow": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            }
+          },
+          "ready": false,
+          "squad": 0,
+          "health": 100,
+          "bleeding": false,
+          "fracture": false,
+          "bullet_sequence": 0,
+          "hit_bone": "None",
+          "hit_loss": 0,
+          "walk_speed": 600,
+          "crouch_speed": 300,
+          "action": 0,
+          "action_end": 0,
+          "heal_ready": 0,
+          "smoke_ready": 0,
+          "rescuer": "",
+          "reach": [],
+          "inventory_open": false,
+          "focus": "None",
+          "loot_target": "None",
+          "loot_id": "",
+          "loot_view": {
+            "id": "00000000000000000000000000000000",
+            "revision": 1,
+            "items": []
+          },
+          "session": 0,
+          "medical_end": 0,
+          "search_end": 0,
+          "shield": 0,
+          "disabled": false,
+          "defeated": false,
+          "first_person": true,
+          "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+          "body_anim": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.BP_StingerCharacter_C_0.CharacterMesh0.ABP_BrokenEdgeAnimInstance_Stinger_C_0",
+          "fp_lods": 1,
+          "fp_gear_slot": 0,
+          "fp_gear_visible": false,
+          "overlap": "",
+          "accepted": 0,
+          "rejected": 0,
+          "combat_state": 0,
+          "carried_ammo": 0,
+          "falling": false,
+          "position": [
+            -677.7254448713504,
+            -8.432796264977277,
+            456.0421265449513
+          ]
+        }
+      ]
+    },
+    {
+      "segment": "door",
+      "time": 51.20299999997951,
+      "players": [
+        {
+          "name": "DESKTOP-M9PA1SF-D2D4",
+          "id": 256,
+          "account": {
+            "bound": false,
+            "locked": false,
+            "profile": "00000000000000000000000000000000",
+            "message": "",
+            "revision": 0,
+            "progression": {
+              "credits": 0,
+              "experience": 0,
+              "level": 1,
+              "quests": []
+            },
+            "outcome": 0,
+            "stash": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            },
+            "loadout": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            },
+            "overflow": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            }
+          },
+          "ready": false,
+          "squad": 0,
+          "health": 100,
+          "bleeding": false,
+          "fracture": false,
+          "bullet_sequence": 0,
+          "hit_bone": "None",
+          "hit_loss": 0,
+          "walk_speed": 600,
+          "crouch_speed": 300,
+          "action": 0,
+          "action_end": 0,
+          "heal_ready": 0,
+          "smoke_ready": 0,
+          "rescuer": "",
+          "reach": [],
+          "inventory_open": false,
+          "focus": "None",
+          "loot_target": "None",
+          "loot_id": "",
+          "loot_view": {
+            "id": "00000000000000000000000000000000",
+            "revision": 1,
+            "items": []
+          },
+          "session": 0,
+          "medical_end": 0,
+          "search_end": 0,
+          "shield": 0,
+          "disabled": false,
+          "defeated": false,
+          "first_person": true,
+          "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+          "body_anim": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.BP_StingerCharacter_C_0.CharacterMesh0.ABP_BrokenEdgeAnimInstance_Stinger_C_0",
+          "fp_lods": 1,
+          "fp_gear_slot": 0,
+          "fp_gear_visible": false,
+          "overlap": "",
+          "accepted": 0,
+          "rejected": 0,
+          "combat_state": 0,
+          "carried_ammo": 0,
+          "falling": false,
+          "position": [
+            -279.30758568573543,
+            179.5562227726161,
+            454.9266611854534
+          ]
+        }
+      ]
+    },
+    {
+      "segment": "door",
+      "time": 52.26599999994505,
+      "players": [
+        {
+          "name": "DESKTOP-M9PA1SF-D2D4",
+          "id": 256,
+          "account": {
+            "bound": false,
+            "locked": false,
+            "profile": "00000000000000000000000000000000",
+            "message": "",
+            "revision": 0,
+            "progression": {
+              "credits": 0,
+              "experience": 0,
+              "level": 1,
+              "quests": []
+            },
+            "outcome": 0,
+            "stash": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            },
+            "loadout": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            },
+            "overflow": {
+              "id": "00000000000000000000000000000000",
+              "revision": 1,
+              "items": []
+            }
+          },
+          "ready": false,
+          "squad": 0,
+          "health": 100,
+          "bleeding": false,
+          "fracture": false,
+          "bullet_sequence": 0,
+          "hit_bone": "None",
+          "hit_loss": 0,
+          "walk_speed": 600,
+          "crouch_speed": 300,
+          "action": 0,
+          "action_end": 0,
+          "heal_ready": 0,
+          "smoke_ready": 0,
+          "rescuer": "",
+          "reach": [],
+          "inventory_open": false,
+          "focus": "None",
+          "loot_target": "None",
+          "loot_id": "",
+          "loot_view": {
+            "id": "00000000000000000000000000000000",
+            "revision": 1,
+            "items": []
+          },
+          "session": 0,
+          "medical_end": 0,
+          "search_end": 0,
+          "shield": 0,
+          "disabled": false,
+          "defeated": false,
+          "first_person": true,
+          "pawn_class": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C",
+          "body_anim": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.BP_StingerCharacter_C_0.CharacterMesh0.ABP_BrokenEdgeAnimInstance_Stinger_C_0",
+          "fp_lods": 1,
+          "fp_gear_slot": 0,
+          "fp_gear_visible": false,
+          "overlap": "",
+          "accepted": 0,
+          "rejected": 0,
+          "combat_state": 0,
+          "carried_ammo": 0,
+          "falling": false,
+          "position": [
+            281.0263582598541,
+            196.0050117280321,
+            457.64881272316376
+          ]
+        }
+      ]
+    }
+  ],
+  "initial_fixture": {
+    "before": [
+      1800,
+      4200,
+      444.48157010655274
+    ],
+    "position": [
+      -1500.0,
+      -300.0,
+      456.2947543945302
+    ],
+    "boundary": "One initial placement; every route segment uses real movement input."
+  },
+  "viewport_size": [
+    1920,
+    1080
+  ],
+  "native_render_resolution": [
+    1920,
+    1080
+  ],
+  "runtime_quality": {
+    "sg.ViewDistanceQuality": 1,
+    "sg.AntiAliasingQuality": 1,
+    "sg.ShadowQuality": 1,
+    "sg.GlobalIlluminationQuality": 1,
+    "sg.ReflectionQuality": 1,
+    "sg.PostProcessQuality": 1,
+    "sg.TextureQuality": 1,
+    "sg.EffectsQuality": 1,
+    "sg.FoliageQuality": 1,
+    "sg.ShadingQuality": 1,
+    "r.ScreenPercentage": 100,
+    "r.VSync": 0,
+    "t.MaxFPS": 60
+  }
+}

@@ -3,7 +3,7 @@ import argparse
 import collections
 import math
 from pathlib import Path
-from restoration_common import ROOT,BASE,WORK,read,sha,write_json
+from restoration_common import ROOT,BASE,WORK,read,sha,write_json,input_path
 from restore_terrain import generate
 
 
@@ -11,14 +11,14 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('--tag',required=True);args=parser.parse_args()
     out=WORK/'VerificationRuns'/args.tag;out.mkdir(parents=True,exist_ok=False)
     generate(args.tag)
-    original=read(WORK/'TerrainRuns/Phase7CTerrain01/Manifest.json')
+    original=read(input_path('terrain','TerrainRuns/Phase7CTerrain01/Manifest.json'))
     repeat=read(WORK/'TerrainRuns'/args.tag/'Manifest.json')
     assert [(t['id'],t['sha256'],t['position']) for t in original['tiles']]==[(t['id'],t['sha256'],t['position']) for t in repeat['tiles']]
     by_package=collections.defaultdict(list)
-    for actor in read(WORK/'FoliageRuns/Phase7CFoliage05/Decoded.json'):
+    for actor in read(input_path('foliage','FoliageRuns/Phase7CFoliage05/Decoded.json')):
         if actor.get('physics_validated'):by_package[actor['source_package']].append(actor)
     duplicate_records=[];physics_count=0
-    for package in read(WORK/'ProbeRuns/Phase7CProbe06/Inspect/Parsed/Packages.json'):
+    for package in read(input_path('foliage_probe','ProbeRuns/Phase7CProbe06/Inspect/Parsed/Packages.json')):
         for obj in package.get('objects',[]):
             if obj.get('Type')!='OpenWorldFoliageAsset':continue
             physics=obj['Properties'].get('PhysicsData',{});base=physics.get('Position',{})

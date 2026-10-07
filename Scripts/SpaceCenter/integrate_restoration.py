@@ -5,6 +5,7 @@ from pathlib import Path
 import shutil
 import unreal
 from restoration_world import assemble,geometry_signature
+from restoration_common import PROFILE, PROFILE_FILE, input_path
 
 MAIN='/Game/Maps/SpaceCenter/L_SpaceCenterExtraction'
 NORTH='/Game/Maps/SpaceCenter/L_SpaceCenterNorth'
@@ -21,7 +22,7 @@ def transform_values(actor):
 def integrate(g):
     read,write,root,out=g['read'],g['write_json'],g['ROOT'],g['OUT']
     manifest,report=g['MANIFEST'],g['report']
-    gates=read(root/'Scripts/SpaceCenter/restoration_acceptance.json')
+    gates=read(input_path('acceptance',root/'Scripts/SpaceCenter/restoration_acceptance.json'))
     digest=g['sha'](os.environ['SPACECENTER_RESTORE_MANIFEST'])
     assert gates['manifest_sha256']==digest,'Acceptance manifest differs'
     for kind in ['audit','capture','traverse']:
@@ -30,6 +31,15 @@ def integrate(g):
         assert run['result']==detail['result']=='passed',(kind,'not passed')
         assert run['manifest_sha256']==digest,(kind,'stale manifest')
     assert gates['visual_review']=='passed','Review fixed-camera output before integrating'
+    if PROFILE['phase']=='7D':
+        assert len(gates.get('east_navigation',[]))==2,'East navigation endpoints are required'
+        capture=read(root/gates['capture']/'Report.json')
+        review=read(root/gates['capture']/'VisualReview.json')
+        assert review['result']=='passed' and len(review['captures'])>=20
+        assert {c['file']:c['sha256'] for c in review['captures']}=={c['file']:c['sha256'] for c in capture['captures']}
+        traverse=read(root/gates['traverse']/'Report.json')
+        assert traverse['route_sha256']==g['sha'](input_path('traverse_route',root/'Scripts/SpaceCenter/route.json')),'Traversal route changed'
+        assert {'east_arrival','east_return','room_return'}.issubset({c['name'] for c in traverse['checks'] if c['passed']})
     report['acceptance']=gates
     report['backups']=[]
     for name in [MAIN,NORTH]:
@@ -80,18 +90,27 @@ def integrate(g):
         actor=by_path[path]
         assert actor.get_class().get_path_name()==entry['class'] and transform_values(actor)==entry['transform'],'Gameplay actor changed: '+path
     bounds=next(a for a in native if a.get_actor_label()=='ExtractionNavigationBounds')
-    bounds.set_actor_location(unreal.Vector(2500,1500,2500),False,True)
-    bounds.set_actor_scale3d(unreal.Vector(155,175,60))
+    from restoration_common import MINIMUM,MAXIMUM,ORIGIN
+    low=[MINIMUM[i]-ORIGIN[i] for i in range(2)]
+    high=[MAXIMUM[i]-ORIGIN[i] for i in range(2)]
+    bounds.set_actor_location(unreal.Vector(*[(a+b)/2 for a,b in zip(low,high)],2500),False,True)
+    bounds.set_actor_scale3d(unreal.Vector(*[(b-a+2000)/200 for a,b in zip(low,high)],60))
     assert unreal.ExtractionNavigation.build_navigation(world),'Restored patrol navigation failed; no map has been saved'
     path=unreal.NavigationSystemV1.find_path_to_location_synchronously(world,unreal.Vector(1400,5000,362),unreal.Vector(1400,10000,54))
     assert path and path.is_valid() and not path.is_partial(),'Restored north route is incomplete; no map has been saved'
     report['north_route']=[[p.x,p.y,p.z] for p in path.path_points]
+    if gates.get('east_navigation'):
+        start,end=gates['east_navigation']
+        east=unreal.NavigationSystemV1.find_path_to_location_synchronously(world,unreal.Vector(*start),unreal.Vector(*end))
+        assert east and east.is_valid() and not east.is_partial(),'Restored east route is incomplete; no map has been saved'
+        report['east_route']=[[p.x,p.y,p.z] for p in east.path_points]
     report['gameplay_actors_preserved']=len(before)
     stream.set_editor_property('initially_loaded',False);stream.set_editor_property('initially_visible',False)
     report.update(assemblies=assemblies,geometry_sha256=geometry_signature(manifest),instances=len(bindings))
     write(out/'ActorBindings.json',bindings)
     assert levels.save_all_dirty_levels()
     marker={'version':1,'manifest_sha256':digest,'geometry_sha256':geometry_signature(manifest),
+            'profile_file':PROFILE_FILE.relative_to(root).as_posix(),'profile_sha256':g['sha'](PROFILE_FILE),
             'manifest_file':str(Path(os.environ['SPACECENTER_RESTORE_MANIFEST']).relative_to(root)),
             'integration_report':str((out/'Report.json').relative_to(root)),
             'boundary':'Visual reconstruction; original stripped material graphs are not claimed recovered.'}

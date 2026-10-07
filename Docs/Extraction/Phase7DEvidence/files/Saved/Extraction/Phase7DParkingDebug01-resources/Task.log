@@ -1,0 +1,10 @@
+RUNTIME_CAPTURE 65120 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\SpaceCenter\Phase7D\EditorRuns\Phase7DParkingDebug01
+PARKING_DEBUG_READY 65120
+Traceback (most recent call last):
+  File "D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7DParkingDebug01.py", line 131, in <module>
+    send('finish');run['exit_code']=process.wait(timeout=45)
+    ^^^^^^^^^^^^^^
+  File "D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\Phase7DParkingDebug01.py", line 91, in send
+    assert not state().get('error'),state().get('error')
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Walk stalled at waypoint 0

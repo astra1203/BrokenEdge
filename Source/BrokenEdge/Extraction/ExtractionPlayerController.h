@@ -14,6 +14,7 @@ class BROKENEDGE_API AExtractionPlayerController : public ABrokenEdgePlayerContr
 
 public:
 	virtual void Tick(float Delta) override;
+	virtual void GetPlayerViewPoint(FVector& OutLocation, FRotator& OutRotation) const override;
 	virtual void SetupInputComponent() override;
 	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out) const override;

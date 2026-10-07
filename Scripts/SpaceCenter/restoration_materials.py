@@ -3,8 +3,9 @@ import hashlib
 import json
 import re
 import unreal
+from restoration_common import PROFILE
 
-SHADER_VERSION=1
+SHADER_VERSION=PROFILE['material_revision']
 
 
 def shader_code(count):
@@ -92,9 +93,11 @@ def create_materials(g):
         mat=tools.create_asset(name,dest,unreal.Material,unreal.MaterialFactoryNew())
         mat.set_editor_property('two_sided',two_sided)
         mat.set_editor_property('used_with_instanced_static_meshes',True)
-        mat.set_editor_property('used_with_nanite',mode!='translucent')
+        mat.set_editor_property('used_with_nanite',mode in ['opaque','masked'])
         mat.set_editor_property('blend_mode',{'opaque':unreal.BlendMode.BLEND_OPAQUE,
-            'masked':unreal.BlendMode.BLEND_MASKED,'translucent':unreal.BlendMode.BLEND_TRANSLUCENT}[mode])
+            'masked':unreal.BlendMode.BLEND_MASKED,'translucent':unreal.BlendMode.BLEND_TRANSLUCENT,
+            'additive':unreal.BlendMode.BLEND_ADDITIVE}[mode])
+        if mode=='additive':mat.set_editor_property('shading_model',unreal.MaterialShadingModel.MSM_UNLIT)
         if mode=='translucent':mat.set_editor_property('translucency_lighting_mode',unreal.TranslucencyLightingMode.TLM_SURFACE)
         inputs={}
         inputs['UV']=expression(mat,unreal.MaterialExpressionTextureCoordinate)
@@ -155,7 +158,7 @@ def create_materials(g):
             native=overrides['materials'][path];assert lib.does_asset_exist(native)
             state['restoration_material:'+path]={'asset':native,'manual_override':True};continue
         signature=hashlib.sha256(json.dumps([SHADER_VERSION,r],sort_keys=True).encode()).hexdigest()
-        name='MI_SC_R_'+r['id'];native=dest+'/'+name;key='restoration_material:'+path
+        name=('MI_SC_R_' if SHADER_VERSION==1 else f'MI_SC_R{SHADER_VERSION}_')+r['id'];native=dest+'/'+name;key='restoration_material:'+path
         if lib.does_asset_exist(native) and state.get(key,{}).get('sha256')==signature:
             report['reused']+=1;continue
         mi=lib.load_asset(native) if lib.does_asset_exist(native) else tools.create_asset(name,dest,unreal.MaterialInstanceConstant,unreal.MaterialInstanceConstantFactoryNew())

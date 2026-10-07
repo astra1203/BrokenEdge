@@ -126,8 +126,17 @@ def tick(delta):
                                 'sg.TextureQuality 2', 'sg.EffectsQuality 2', 'sg.FoliageQuality 2', 'sg.ShadingQuality 2']:
                     if RESTORATION and command.startswith('sg.'):command=command.rsplit(' ',1)[0]+' 1'
                     unreal.SystemLibrary.execute_console_command(pawns[0], command, pawns[0].get_controller())
-                state['route'] = json.loads((Path(unreal.Paths.project_dir()) / 'Scripts/SpaceCenter/route.json').read_text(encoding='utf-8'))
+                route_file=Path(os.environ.get('SPACECENTER_TRAVERSE_ROUTE',str(Path(unreal.Paths.project_dir())/'Scripts/SpaceCenter/route.json')))
+                state['route'] = json.loads(route_file.read_text(encoding='utf-8'))
                 report['route'] = state['route']
+                if RESTORATION:
+                    sys.path.insert(0,str(Path(unreal.Paths.project_dir())/'Scripts/SpaceCenter'))
+                    from restoration_terrain_audit import audit
+                    terrain=audit(pawns[0].get_world(),json.loads(Path(os.environ['SPACECENTER_RESTORE_MANIFEST']).read_text(encoding='utf-8')))
+                    (OUT/'TerrainCollision.json').write_text(json.dumps(terrain,indent=2)+'\n',encoding='utf-8')
+                    check('all_original_terrain_collision',terrain['result']=='passed',
+                          {k:v for k,v in terrain.items() if k!='probes'})
+                    if terrain['result']!='passed':raise RuntimeError('Native terrain collision audit failed')
                 server = next(w for w in worlds if unreal.GameplayStatics.get_game_mode(w))
                 if not unreal.GameplayStatics.get_all_actors_of_class(server, unreal.Weapon):
                     for p in unreal.GameplayStatics.get_all_actors_of_class(server, unreal.BrokenEdgeCharacter):

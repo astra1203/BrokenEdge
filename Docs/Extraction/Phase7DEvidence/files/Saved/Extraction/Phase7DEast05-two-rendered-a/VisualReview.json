@@ -1,0 +1,27 @@
+{
+  "result": "passed",
+  "reviewed_utc": "2026-10-06T23:03:14.001019+00:00",
+  "boundary": "Packaged functional traversal captures; close endpoint views, not the fixed-camera Medium visual comparison or performance sample.",
+  "observations": [
+    "First-person endpoint: blue source container and wall close to the camera, weapon and HUD visible; not a broad map overview.",
+    "Far-east spectator: EX_B character remains visibly rendered with the correct spectator HUD and source containers."
+  ],
+  "captures": [
+    {
+      "file": "A-east-walk.png",
+      "sha256": "5f375a05c7d54176856c2d6e2c74cb7f8d1f034adb8ac600ffb3f551ca47319f",
+      "resolution": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "A-east-spectator.png",
+      "sha256": "466cb6cb83006161accbfbab3869ed0068642f9622352b2b4045bf880dddacb5",
+      "resolution": [
+        1920,
+        1080
+      ]
+    }
+  ]
+}

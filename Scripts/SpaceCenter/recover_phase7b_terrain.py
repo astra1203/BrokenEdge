@@ -12,6 +12,8 @@ import json
 import math
 from pathlib import Path
 import struct
+import os
+import sys
 
 from phase7b_source import BASE_WORK, ROOT, TERRAIN, WORK, sha, write_json
 from source_packages import extract, read_names
@@ -20,6 +22,10 @@ ASSETS = BASE_WORK / 'Source/DeltaForce/Content/Maps/BuildMaps_HD/SpaceCenter_Ma
 ORIGIN = (664000., -451000., -22400.)
 MINIMUM = (652000., -466000.)
 MAXIMUM = (681000., -433000.)
+TERRAIN_RUNS = 'TerrainRuns'
+if '--profile' in sys.argv or os.environ.get('SPACECENTER_RESTORE_PROFILE'):
+    from restoration_common import WORK, ORIGIN, MINIMUM, MAXIMUM
+    TERRAIN_RUNS = 'TerrainSourceRuns'
 
 
 def read_binary_asset(stem):
@@ -112,7 +118,7 @@ def write_glb(path, vertices, indices):
 
 
 def recover(tag, source_probe):
-    out = WORK / 'TerrainRuns' / tag
+    out = WORK / TERRAIN_RUNS / tag
     out.mkdir(parents=True, exist_ok=False)
     parsed = json.loads((source_probe / 'Parsed/Packages.json').read_text(encoding='utf-8'))
     component = next(o['Properties'] for p in parsed for o in p.get('objects', []) if o.get('Type') == 'CDLODComponent')
@@ -209,7 +215,7 @@ def recover(tag, source_probe):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--tag', required=True)
-    parser.add_argument('--source-probe', type=Path, default=WORK / 'SourceRuns/Phase7BSource01')
+    parser.add_argument('--source-probe', type=Path, default=ROOT / 'Saved/SpaceCenter/Phase7B/SourceRuns/Phase7BSource01')
     args = parser.parse_args()
     if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
         parser.error('Use a new alphanumeric run tag')

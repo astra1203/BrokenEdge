@@ -1,0 +1,22 @@
+{
+  "task": "progression",
+  "started_utc": "2026-10-06T22:39:37.448736+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase7DRules03-progression\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Progression",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\Phase7DRules03-progression\\Automation"
+  ],
+  "pid": 36696,
+  "exit_code": 0,
+  "successful_tests": 4,
+  "result": "passed",
+  "finished_utc": "2026-10-06T22:39:58.139521+00:00"
+}

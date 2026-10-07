@@ -8,10 +8,10 @@ from restore_scene import world_bounds
 
 def main(tag):
     out=WORK/'GeometryRuns'/tag
-    scene=read(WORK/'SelectionRuns/Phase7CSelect04/Selection.json')
-    metadata=read(WORK/'SelectionRuns/Phase7CSelect04/MeshMetadata.json')
-    foliage=read(WORK/'FoliageRuns/Phase7CFoliage05/Decoded.json')
-    packages={p['package']:p for p in read(WORK/'ProbeRuns/Phase7CProbe06/Inspect/Parsed/Packages.json')}
+    scene=read(input_path('static_selection','SelectionRuns/Phase7CSelect04/Selection.json'))
+    metadata=read(input_path('static_metadata','SelectionRuns/Phase7CSelect04/MeshMetadata.json'))
+    foliage=read(input_path('foliage','FoliageRuns/Phase7CFoliage05/Decoded.json'))
+    packages={p['package']:p for p in read(input_path('foliage_probe','ProbeRuns/Phase7CProbe06/Inspect/Parsed/Packages.json'))}
     missing=sorted({a['mesh'] for a in foliage}-set(metadata));failures=[]
     for start in range(0,len(missing),24):
         batch=missing[start:start+24];folder=out/('Meshes-%03d'%start)
@@ -49,7 +49,7 @@ def main(tag):
         a['region']='North' if no_collision and -445000<=p['Y']<=-439000 and 659000<=p['X']<=671000 else 'Persistent'
     scene['actors']=sorted(actors,key=lambda a:a['id']);scene['excluded']+=excluded
     selected={a['mesh'] for a in actors}
-    target=WORK/'SelectionRuns/Phase7CSelect05'
+    target=input_path('selection','SelectionRuns/Phase7CSelect05/Selection.json').parent
     write_json(target/'Selection.json',scene);write_json(target/'MeshMetadata.json',{p:metadata[p] for p in sorted(selected)})
     write_json(out/'Report.json',{'actors':len(actors),'foliage':sum(a.get('foliage',False) for a in actors),
                                 'meshes':len(selected),'materials':len({m for a in actors for m in a['materials'] if m}),

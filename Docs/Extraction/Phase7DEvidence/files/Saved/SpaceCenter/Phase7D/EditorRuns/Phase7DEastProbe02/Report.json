@@ -1,0 +1,70 @@
+{
+  "result": "passed",
+  "config": {
+    "version": 1,
+    "minimum": [
+      1000,
+      -14000
+    ],
+    "maximum": [
+      25500,
+      17000
+    ],
+    "step_cm": 100,
+    "trace_heights": [
+      450,
+      900,
+      1600
+    ],
+    "trace_bottom": -4500,
+    "start": [
+      1400,
+      4200,
+      362
+    ],
+    "desired_end": [
+      22000,
+      6500,
+      54
+    ]
+  },
+  "config_sha256": "dcbb33a7218c0358e95287058726c6d0821b1a81580321c9ef531c237f7c1733",
+  "terrain_collision": {
+    "result": "passed",
+    "tiles": 143,
+    "errors": [],
+    "max_error_cm": 0.00011920928955078125
+  },
+  "probes": 103640,
+  "tested_edges": 150199,
+  "blocked_edges": 1310,
+  "reachable_nodes": 39832,
+  "reachable_bounds": [
+    [
+      999.9999944290405,
+      24599.999996917802
+    ],
+    [
+      -14000.000002536386,
+      17000.00001352322
+    ],
+    [
+      -457.80576330859344,
+      1574.5539038696297
+    ]
+  ],
+  "east_start": [
+    1400.0,
+    4200.0,
+    350.3315734863281
+  ],
+  "east_end": [
+    24099.99999730108,
+    15599.999996601271,
+    63.568565426649116
+  ],
+  "east_distance_cm": 36134.36663517208,
+  "source_route_sha256": "ea51685ea6904efb0d8547ae4d0768b529cb3be6e12396483b1f4996c356d8c9",
+  "boundary": "Measured floor/capsule graph only; requires input-driven traversal and packaged replication acceptance.",
+  "elapsed_seconds": 62.51500000001397
+}

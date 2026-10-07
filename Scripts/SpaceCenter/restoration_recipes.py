@@ -58,6 +58,8 @@ def make_recipes(graph,roots,textures,substitutions=None,material_variants=None)
         impostor=foliage and sw.get('IsImpostor',False)
         notes=[];layers=[]
         layered=bool(tex('01_R_Base','01_Base','BaseLayer_BaseColor_Height'))
+        if PROFILE['material_revision']>=2 and 'MatBlend' in parent:
+            layered=layered or bool(tex('02_G_Base','03_B_Base','02_Base','03_Base'))
         rock=bool(tex('BaseLayer_BaseColor_Height'))
         count=(3 if sw.get('Three Layers?',bool(tex('03_Base'))) else 2) if layered else 1
         if rock:count=3 if sw.get('Use Layer G') else 2 if sw.get('Use Layer R') else 1
@@ -72,6 +74,9 @@ def make_recipes(graph,roots,textures,substitutions=None,material_variants=None)
             elif layered:
                 base=tex(prefix+'_Base','0%d_Base'%(i+1));normal=tex(prefix+'_Normal','0%d_Normal'%(i+1))
                 packed=tex(prefix+'_MRA');mode=0
+                if PROFILE['material_revision']>=2 and path.endswith('/MI_H_Government_Office_Desk_01C_HD') and i==0 and not base:
+                    base=tex('02_G_Base');packed=tex('02_G_MRA')
+                    notes.append('Substitution: missing 01_R wood base/MRA use this same source material 02_G wood base/MRA; shared source wood normal confirms the surface family. Original 01_R tint/UV retained.')
                 uv=[scalar(['Texcoord_'+prefix,'0%d_Tiling'%(i+1)],1)]*2+[0,0]
                 tint=vector(['BaseColorScaler_'+prefix,'0%d_Color'%(i+1)],[1,1,1,1])
             else:
@@ -111,6 +116,19 @@ def make_recipes(graph,roots,textures,substitutions=None,material_variants=None)
         opacity_source=2 if decal and tex('Metalic_Roughness_Alpha_Map','Metalic_Roughness_Alpha_Tex_PC') else 3 if foliage and not impostor and tex('Opacity') else 1
         opacity=scalar(['Opacity','Alpha','OpacityMaskMax'],.22 if glass else 1)
         overlay=tex('Overlay_ColorMap');overlay_enabled=bool(sw.get('UseOverlay',sw.get('UseOverlay?',bool(overlay))))
+        if PROFILE['material_revision']>=2:
+            explicit_overlay=sw.get('UseOverlay',sw.get('UseOverlay?'))
+            diagnostic=bool(overlay and overlay.rsplit('/',1)[-1] in {'T_Default_BadTips','T_Default_Error'})
+            # A retained diagnostic texture is evidence of an unavailable branch,
+            # not evidence that the original surface enabled that branch.
+            if diagnostic:
+                overlay_enabled=False
+                notes.append('Diagnostic overlay disabled: '+overlay+'; original base layers retained.')
+            elif explicit_overlay is None:
+                # Only authored opacity/intensity enables an otherwise unproven branch.
+                authored=[s[n] for n in ['Overlay_Opcaity','Overlay_Opacity','OverlayIntensity'] if n in s]
+                overlay_enabled=bool(overlay and authored and any(value>0 for value in authored))
+                if overlay and not overlay_enabled:notes.append('Overlay inactive: no enabled switch or authored positive opacity.')
         emission=tex('EmissiveMap','EMMap','EmissiveMap2')
         if not emission and any(k in parent for k in ['Screen','Brand','Spectrum']):emission=tex('BaseColor','BaseColorMap','PatternA','Backround')
         intensity=scalar(['EmissiveIntensity','EmissivePower','LightPower','EmissionIntensity','Emission'],1 if emission else 0)
@@ -132,6 +150,9 @@ def make_recipes(graph,roots,textures,substitutions=None,material_variants=None)
                 'opacity_texture':bind(tex('Opacity'),'data','white',path,'opacity'),
                 'opacity_source':opacity_source,'opacity':opacity if mode!='opaque' else 1,
                 'specular':scalar(['Specular'],.5),'source_chain':m['chain'],'notes':notes}
+        if PROFILE['material_revision']>=2:
+            from restoration_repairs import repair
+            repair(recipe,m,lambda source,role,default,parameter:bind(source,role,default,path,parameter))
         if not layers[0]['base'].startswith('calibration:'):
             notes.append('Original texture and inherited parameters; lost source node wiring visually reconstructed.')
         else:notes.append('No decodable base texture selected; use retained tint pending visual review.')

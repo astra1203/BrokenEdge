@@ -1,0 +1,67 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restore_assets.py",
+    "meshes",
+    "--tag",
+    "Phase7DMeshes01",
+    "--selection",
+    "Phase7DSelect02",
+    "--profile",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-06T09:48:25.985041+00:00",
+      "c_free_gib": 55.356075286865234,
+      "d_free_gib": 211.31539154052734,
+      "ram_free_gib": 12.187171936035156,
+      "commit_used_gib": 31.04458999633789,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T09:48:25.989040+00:00",
+      "c_free_gib": 55.356075286865234,
+      "d_free_gib": 211.31538772583008,
+      "ram_free_gib": 12.18661880493164,
+      "commit_used_gib": 31.04544448852539,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T09:48:31.003934+00:00",
+      "c_free_gib": 55.35506057739258,
+      "d_free_gib": 211.27317810058594,
+      "ram_free_gib": 11.90555191040039,
+      "commit_used_gib": 31.255630493164062,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T09:48:36.006746+00:00",
+      "c_free_gib": 55.355045318603516,
+      "d_free_gib": 211.2578125,
+      "ram_free_gib": 12.10342025756836,
+      "commit_used_gib": 31.10659408569336,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T09:48:36.061260+00:00",
+      "c_free_gib": 55.355045318603516,
+      "d_free_gib": 211.25037384033203,
+      "ram_free_gib": 12.148792266845703,
+      "commit_used_gib": 31.053974151611328,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 73544,
+  "exit_code": 0
+}

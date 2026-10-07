@@ -10,9 +10,13 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-WORK = ROOT / 'Saved/SpaceCenter/Phase7B'
+if '--profile' in sys.argv or os.environ.get('SPACECENTER_RESTORE_PROFILE'):
+    from restoration_common import WORK
+else:
+    WORK = ROOT / 'Saved/SpaceCenter/Phase7B'
 os.environ['SPACECENTER_WORK'] = str(WORK)
 from source_packages import BASE_WORK, extract, write_json
 

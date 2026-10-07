@@ -1,0 +1,9 @@
+RUNTIME_CAPTURE 64164 D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\SpaceCenter\Phase7D\EditorRuns\Phase7DEastTraverseIntegrated01
+Traceback (most recent call last):
+  File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\capture_restoration_runtime.py", line 138, in <module>
+    if args.task=='traverse':traverse()
+                             ^^^^^^^^^^
+  File "D:\SourceFiles\UnrealProjects\BrokenEdge\Scripts\SpaceCenter\capture_restoration_runtime.py", line 117, in traverse
+    current=state();assert not current.get('error'),current.get('error')
+                           ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Walk stalled at waypoint 0

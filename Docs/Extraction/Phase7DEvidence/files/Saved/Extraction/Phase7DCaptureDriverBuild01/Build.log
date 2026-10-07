@@ -1,0 +1,197 @@
+Using bundled DotNet SDK version: 10.0 win-x64
+UnrealBuildTool is up-to-date
+Running UnrealBuildTool: dotnet "..\..\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" BrokenEdgeEditor Win64 Development -Project=D:\SourceFiles\UnrealProjects\BrokenEdge\BrokenEdge.uproject -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1
+Log file: C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Programs\UnrealBuildTool\Log.txt
+Executing up to 1 actions based on MaxProcessorCount override
+Using 'git status' to determine working set for adaptive non-unity build (D:\SourceFiles\UnrealProjects\BrokenEdge).
+UbaServer - Listening on 0.0.0.0:1345
+Invalidating makefile for BrokenEdgeEditor (working set of source files changed)
+Building BrokenEdgeEditor...
+===== Toolchain Information =====
+Using ISPC compiler (C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Source\ThirdParty\Intel\ISPC\bin\Windows\ispc.exe)
+  Intel(r) Implicit SPMD Program Compiler (Intel(r) ISPC), 1.24.0 (build commit  @ 20250404, LLVM 18.1.2) 
+Using Visual Studio 14.44.35229 toolchain (D:\OrekiFiles\VisualStudio\Community\VC\Tools\MSVC\14.44.35207) and Windows 10.0.22621.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+[Adaptive Build] Excluded from BrokenEdge unity file: ExtractionDriverTests.cpp
+=================================
+Using Unreal Build Accelerator local executor to run 7 action(s)
+  CPU 6 physical cores, 12 logical cores
+  Memory 31.61 GB physical, 34.47 GB/51.33 GB committed
+  UBA Storage capacity 40 GB
+[1/7] Compile [x64] ExtractionDriverTests.cpp
+[2/7] Link [x64] UnrealEditor-StingerTools.lib
+  正在创建库 D:/SourceFiles/UnrealProjects/BrokenEdge/Intermediate/Build/Win64/x64/UnrealEditor/Development/StingerTools/UnrealEditor-StingerTools.lib 和对象 D:/SourceFiles/UnrealProjects/BrokenEdge/Intermediate/Build/Win64/x64/UnrealEditor/Development/StingerTools/UnrealEditor-StingerTools.exp
+[3/7] Compile [x64] Module.BrokenEdge.2.cpp
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(49,38): warning C4305: “参数”: 从“double”到“float”截断
+		const FLinearColor Button(.1, .25, .32), Selected(.12, .42, .39);
+		                                   ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(49,29): warning C4305: “参数”: 从“double”到“float”截断
+		const FLinearColor Button(.1, .25, .32), Selected(.12, .42, .39);
+		                          ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(49,63): warning C4305: “参数”: 从“double”到“float”截断
+		const FLinearColor Button(.1, .25, .32), Selected(.12, .42, .39);
+		                                                            ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(49,58): warning C4305: “参数”: 从“double”到“float”截断
+		const FLinearColor Button(.1, .25, .32), Selected(.12, .42, .39);
+		                                                       ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(49,53): warning C4305: “参数”: 从“double”到“float”截断
+		const FLinearColor Button(.1, .25, .32), Selected(.12, .42, .39);
+		                                                  ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(50,59): warning C4305: “参数”: 从“double”到“float”截断
+		Box({0, 0}, {1280, 720}, FLinearColor(.008, .015, .023, .99));
+		                                                        ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(50,53): warning C4305: “参数”: 从“double”到“float”截断
+		Box({0, 0}, {1280, 720}, FLinearColor(.008, .015, .023, .99));
+		                                                  ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(50,47): warning C4305: “参数”: 从“double”到“float”截断
+		Box({0, 0}, {1280, 720}, FLinearColor(.008, .015, .023, .99));
+		                                            ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(50,41): warning C4305: “参数”: 从“double”到“float”截断
+		Box({0, 0}, {1280, 720}, FLinearColor(.008, .015, .023, .99));
+		                                      ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(65,56): warning C4305: “参数”: 从“double”到“float”截断
+				Box({65, Y}, {1140, 132}, FLinearColor(.035, .065, .085));
+				                                                   ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(65,50): warning C4305: “参数”: 从“double”到“float”截断
+				Box({65, Y}, {1140, 132}, FLinearColor(.035, .065, .085));
+				                                             ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(65,44): warning C4305: “参数”: 从“double”到“float”截断
+				Box({65, Y}, {1140, 132}, FLinearColor(.035, .065, .085));
+				                                       ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(86,109): warning C4305: “参数”: 从“double”到“float”截断
+					Box({65, Y}, {550, 40}, !Selling && SelectedOffer == O.Definition ? Selected : FLinearColor(.04, .075, .10));
+					                                                                                                       ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(86,103): warning C4305: “参数”: 从“double”到“float”截断
+					Box({65, Y}, {550, 40}, !Selling && SelectedOffer == O.Definition ? Selected : FLinearColor(.04, .075, .10));
+					                                                                                                 ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(86,98): warning C4305: “参数”: 从“double”到“float”截断
+					Box({65, Y}, {550, 40}, !Selling && SelectedOffer == O.Definition ? Selected : FLinearColor(.04, .075, .10));
+					                                                                                            ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(93,100): warning C4305: “参数”: 从“double”到“float”截断
+					Box({650, Y}, {555, 40}, Selling && SelectedItem == I.Id ? Selected : FLinearColor(.04, .075, .10));
+					                                                                                              ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(93,94): warning C4305: “参数”: 从“double”到“float”截断
+					Box({650, Y}, {555, 40}, Selling && SelectedItem == I.Id ? Selected : FLinearColor(.04, .075, .10));
+					                                                                                        ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(93,89): warning C4305: “参数”: 从“double”到“float”截断
+					Box({650, Y}, {555, 40}, Selling && SelectedItem == I.Id ? Selected : FLinearColor(.04, .075, .10));
+					                                                                                   ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(107,56): warning C4305: “参数”: 从“double”到“float”截断
+			Box({200, 205}, {880, 300}, FLinearColor(.055, .10, .13), 5);
+			                                                    ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(107,51): warning C4305: “参数”: 从“double”到“float”截断
+			Box({200, 205}, {880, 300}, FLinearColor(.055, .10, .13), 5);
+			                                               ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionProgressionWidget.cpp(107,45): warning C4305: “参数”: 从“double”到“float”截断
+			Box({200, 205}, {880, 300}, FLinearColor(.055, .10, .13), 5);
+			                                         ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(71,54): warning C4305: “参数”: 从“double”到“float”截断
+		Box({50, 45}, {1180, 630}, FLinearColor(.018, .03, .045, 1));
+		                                                   ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(71,49): warning C4305: “参数”: 从“double”到“float”截断
+		Box({50, 45}, {1180, 630}, FLinearColor(.018, .03, .045, 1));
+		                                              ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(71,43): warning C4305: “参数”: 从“double”到“float”截断
+		Box({50, 45}, {1180, 630}, FLinearColor(.018, .03, .045, 1));
+		                                        ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(75,53): warning C4305: “参数”: 从“double”到“float”截断
+		Box({1070, 65}, {115, 42}, FLinearColor(.12, .25, .32));
+		                                                  ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(75,43): warning C4305: “参数”: 从“double”到“float”截断
+		Box({1070, 65}, {115, 42}, FLinearColor(.12, .25, .32));
+		                                        ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(83,93): warning C4305: “参数”: 从“double”到“float”截断
+					Box(Grid(Side) + FVector2D(X, Y) * Cell, {Cell - 2, Cell - 2}, FLinearColor(.085, .12, .15));
+					                                                                                       ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(83,88): warning C4305: “参数”: 从“double”到“float”截断
+					Box(Grid(Side) + FVector2D(X, Y) * Cell, {Cell - 2, Cell - 2}, FLinearColor(.085, .12, .15));
+					                                                                                  ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(83,82): warning C4305: “参数”: 从“double”到“float”截断
+					Box(Grid(Side) + FVector2D(X, Y) * Cell, {Cell - 2, Cell - 2}, FLinearColor(.085, .12, .15));
+					                                                                            ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(86,52): warning C4305: “参数”: 从“double”到“float”截断
+				Box(Slot(I), {172, 58}, FLinearColor(.09, .15, .18));
+				                                               ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(86,47): warning C4305: “参数”: 从“double”到“float”截断
+				Box(Slot(I), {172, 58}, FLinearColor(.09, .15, .18));
+				                                          ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(86,42): warning C4305: “参数”: 从“double”到“float”截断
+				Box(Slot(I), {172, 58}, FLinearColor(.09, .15, .18));
+				                                     ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(95,61): warning C4305: “参数”: 从“double”到“float”截断
+				    I.Definition == TEXT("AK") ? FLinearColor(.30, .31, .24) : FLinearColor(.16, .32, .34));
+				                                                        ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(95,56): warning C4305: “参数”: 从“double”到“float”截断
+				    I.Definition == TEXT("AK") ? FLinearColor(.30, .31, .24) : FLinearColor(.16, .32, .34));
+				                                                   ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(95,51): warning C4305: “参数”: 从“double”到“float”截断
+				    I.Definition == TEXT("AK") ? FLinearColor(.30, .31, .24) : FLinearColor(.16, .32, .34));
+				                                              ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(95,91): warning C4305: “参数”: 从“double”到“float”截断
+				    I.Definition == TEXT("AK") ? FLinearColor(.30, .31, .24) : FLinearColor(.16, .32, .34));
+				                                                                                      ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(95,86): warning C4305: “参数”: 从“double”到“float”截断
+				    I.Definition == TEXT("AK") ? FLinearColor(.30, .31, .24) : FLinearColor(.16, .32, .34));
+				                                                                                 ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(95,81): warning C4305: “参数”: 从“double”到“float”截断
+				    I.Definition == TEXT("AK") ? FLinearColor(.30, .31, .24) : FLinearColor(.16, .32, .34));
+				                                                                            ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(110,67): warning C4305: “参数”: 从“double”到“float”截断
+			Box({660, 453.f + Row * 29}, {495, 27}, FLinearColor(.11, .18, .21));
+			                                                               ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(110,62): warning C4305: “参数”: 从“double”到“float”截断
+			Box({660, 453.f + Row * 29}, {495, 27}, FLinearColor(.11, .18, .21));
+			                                                          ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(110,57): warning C4305: “参数”: 从“double”到“float”截断
+			Box({660, 453.f + Row * 29}, {495, 27}, FLinearColor(.11, .18, .21));
+			                                                     ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(123,72): warning C4305: “参数”: 从“double”到“float”截断
+				Box(Mouse, FVector2D(E.X, E.Y) * Cell, FLinearColor(.25, .65, .65, .8), 3);
+				                                                                   ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(123,67): warning C4305: “参数”: 从“double”到“float”截断
+				Box(Mouse, FVector2D(E.X, E.Y) * Cell, FLinearColor(.25, .65, .65, .8), 3);
+				                                                              ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(123,62): warning C4305: “参数”: 从“double”到“float”截断
+				Box(Mouse, FVector2D(E.X, E.Y) * Cell, FLinearColor(.25, .65, .65, .8), 3);
+				                                                         ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(129,59): warning C4305: “参数”: 从“double”到“float”截断
+			Box(MenuAt, {250, MenuHeight()}, FLinearColor(.06, .1, .14), 5);
+			                                                       ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(129,55): warning C4305: “参数”: 从“double”到“float”截断
+			Box(MenuAt, {250, MenuHeight()}, FLinearColor(.06, .1, .14), 5);
+			                                                   ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(129,50): warning C4305: “参数”: 从“double”到“float”截断
+			Box(MenuAt, {250, MenuHeight()}, FLinearColor(.06, .1, .14), 5);
+			                                              ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(137,55): warning C4305: “参数”: 从“double”到“float”截断
+			Box({430, 270}, {430, 145}, FLinearColor(.08, .14, .18), 7);
+			                                                   ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(137,50): warning C4305: “参数”: 从“double”到“float”截断
+			Box({430, 270}, {430, 145}, FLinearColor(.08, .14, .18), 7);
+			                                              ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionStashWidget.cpp(137,45): warning C4305: “参数”: 从“double”到“float”截断
+			Box({430, 270}, {430, 145}, FLinearColor(.08, .14, .18), 7);
+			                                         ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\test\MyCharacter.h(34,7): warning C4263: “void AMyCharacter::TakeDamage(float)”: 成员函数不重写任何基类虚拟成员函数
+	void TakeDamage(float DamageAmount);
+	     ^
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\test\MyCharacter.h(15,22): warning C4264: “float APawn::TakeDamage(float,const FDamageEvent &,AController *,AActor *)”: 不重写基“APawn”中的虚拟成员函数；函数被隐藏
+class BROKENEDGE_API AMyCharacter : public ACharacter
+                     ^
+C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Source\Runtime\Engine\Classes\GameFramework\Pawn.h(310,27): note: 参见“APawn::TakeDamage”的声明
+	ENGINE_API virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	                         ^
+C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Source\Runtime\Engine\Classes\GameFramework\Pawn.h(43,7): note: 参见“APawn”的声明
+class APawn : public AActor, public INavAgentInterface
+      ^
+[4/7] Link [x64] UnrealEditor-BrokenEdge.lib
+  正在创建库 D:/SourceFiles/UnrealProjects/BrokenEdge/Intermediate/Build/Win64/x64/UnrealEditor/Development/BrokenEdge/UnrealEditor-BrokenEdge.lib 和对象 D:/SourceFiles/UnrealProjects/BrokenEdge/Intermediate/Build/Win64/x64/UnrealEditor/Development/BrokenEdge/UnrealEditor-BrokenEdge.exp
+[5/7] Link [x64] UnrealEditor-BrokenEdge.dll
+[6/7] Link [x64] UnrealEditor-StingerTools.dll
+[7/7] WriteMetadata BrokenEdgeEditor.target [NoUba]
+
+Total time in Unreal Build Accelerator local executor: 42.76 seconds
+Output binary: C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Binaries\Win64\UnrealEditor.exe
+
+Result: Succeeded
+Total execution time: 48.82 seconds
+Trace written to file C:\UnrealProjects\UnrealEngine-5.8.3-release\Engine\Programs\UnrealBuildTool\Trace.uba with size 10.2kb

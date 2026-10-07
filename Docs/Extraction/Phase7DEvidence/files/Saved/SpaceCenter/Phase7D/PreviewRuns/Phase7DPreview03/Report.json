@@ -1,0 +1,81 @@
+{
+  "result": "failed",
+  "manifest_sha256": "6c237dd8300542c2bd22744acdfdaa7f13d183d802e01bca6465b0c0a4cb850b",
+  "profile_sha256": "0a9609d903f5620884bf9209f8530a33ad47c5ea17c771c588b09ca1ea2724bf",
+  "steps": [
+    {
+      "name": "preview",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DPreview03-preview",
+        "--timeout",
+        "5400",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\run_restoration_editor.py",
+        "preview",
+        "--manifest",
+        "Saved/SpaceCenter/Phase7D/ManifestRuns/Phase7DManifest04/Manifest.json",
+        "--tag",
+        "Phase7DPreview03-preview",
+        "--profile",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+      ],
+      "pid": 63024,
+      "exit_code": 0
+    },
+    {
+      "name": "audit",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DPreview03-audit",
+        "--timeout",
+        "5400",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\run_restoration_editor.py",
+        "audit",
+        "--manifest",
+        "Saved/SpaceCenter/Phase7D/ManifestRuns/Phase7DManifest04/Manifest.json",
+        "--tag",
+        "Phase7DPreview03-audit",
+        "--profile",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+      ],
+      "pid": 67864,
+      "exit_code": 0
+    },
+    {
+      "name": "capture",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DPreview03-capture",
+        "--timeout",
+        "5400",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\run_restoration_editor.py",
+        "capture",
+        "--manifest",
+        "Saved/SpaceCenter/Phase7D/ManifestRuns/Phase7DManifest04/Manifest.json",
+        "--tag",
+        "Phase7DPreview03-capture",
+        "--profile",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json",
+        "--capture-world",
+        "pie"
+      ],
+      "pid": 40664,
+      "exit_code": 1
+    }
+  ],
+  "started_utc": "2026-10-06T10:32:56.478010+00:00",
+  "error": "RuntimeError('capture failed')",
+  "finished_utc": "2026-10-06T10:35:40.391280+00:00"
+}

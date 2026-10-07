@@ -3,7 +3,7 @@ import argparse
 import gzip
 import json
 import sqlite3
-from restoration_common import ROOT, BASE, WORK, read, sha, identity, canonical, write_json, extract_recorded, run_converter
+from restoration_common import ROOT, BASE, WORK, read, sha, identity, canonical, write_json, extract_recorded, run_converter, cache_files
 
 
 def references(value):
@@ -28,9 +28,10 @@ def existing_exports(kind):
                 result[path]={'id':identity(path),'source':path,'file':row['DiskFilePaths'][0],
                               'files':row['DiskFilePaths'],'export_report':str(target)}
     pattern='AssetRuns/*/Meshes.json' if kind=='mesh' else 'TextureRuns/*/Textures.json'
-    for target in sorted(WORK.glob(pattern)):result.update(read(target))
-    recovery=WORK/'TextureRecoveryRuns/Phase7CRecoverTextures03/Textures.json'
-    if kind=='texture' and recovery.exists():result.update(read(recovery))
+    for target in cache_files(pattern):result.update(read(target))
+    if kind=='texture':
+        for pattern in ['TextureRecoveryRuns/*/Textures.json','AugmentRuns/*/Textures.json']:
+            for target in cache_files(pattern):result.update(read(target))
     return result
 
 
@@ -64,7 +65,8 @@ def material_graph(tag, selection):
     out.mkdir(parents=True,exist_ok=False)
     scene=read(WORK/'SelectionRuns'/selection/'Selection.json')
     graph=json.loads(gzip.decompress((ROOT/'Docs/Extraction/Phase7BEvidence/materials/Graph.json.gz').read_bytes()))
-    for target in sorted(WORK.glob('MaterialRuns/*/Graph.json')):graph.update(read(target))
+    for pattern in ['MaterialRuns/*/Graph.json','AugmentRuns/*/Graph.json']:
+        for target in cache_files(pattern):graph.update(read(target))
     roots={m for a in scene['actors'] for m in a['materials'] if m and m.startswith('/Game/')}
     pending=roots-set(graph); missing=set(); failed=[]; index=0
     db=sqlite3.connect((BASE/'catalog.sqlite').resolve().as_uri()+'?mode=ro',uri=True)

@@ -1,0 +1,50 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restore_foliage.py",
+    "--tag",
+    "Phase7DFoliage01",
+    "--probe",
+    "Phase7DProbe01",
+    "--profile",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-06T09:48:13.196027+00:00",
+      "c_free_gib": 55.359962463378906,
+      "d_free_gib": 211.4816780090332,
+      "ram_free_gib": 12.305213928222656,
+      "commit_used_gib": 30.961536407470703,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T09:48:13.201274+00:00",
+      "c_free_gib": 55.359962463378906,
+      "d_free_gib": 211.48167419433594,
+      "ram_free_gib": 12.304710388183594,
+      "commit_used_gib": 30.961536407470703,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T09:48:14.008487+00:00",
+      "c_free_gib": 55.359962463378906,
+      "d_free_gib": 211.45931243896484,
+      "ram_free_gib": 12.273956298828125,
+      "commit_used_gib": 30.974082946777344,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 74132,
+  "exit_code": 0
+}

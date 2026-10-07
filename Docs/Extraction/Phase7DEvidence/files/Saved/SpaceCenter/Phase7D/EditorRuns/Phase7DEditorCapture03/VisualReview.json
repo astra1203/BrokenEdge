@@ -1,0 +1,253 @@
+{
+  "result": "failed",
+  "reason": "Historical 13-camera fallback was selected instead of the required 20; editor high-resolution captures also show divergent dark interior/temporal lighting. Not a final visual acceptance.",
+  "captures": [
+    {
+      "name": "overview",
+      "position": [
+        35000,
+        28000,
+        22000
+      ],
+      "target": [
+        500,
+        500,
+        0
+      ],
+      "file": "overview.png",
+      "sha256": "df43899a8fd316d55f80d8696fe749d4209582e1a2682b4e675ccfd5b39ae3ce",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "name": "top",
+      "position": [
+        500,
+        1000,
+        30000
+      ],
+      "target": [
+        500,
+        1000,
+        0
+      ],
+      "file": "top.png",
+      "sha256": "51d0f067a75c8fc80199ed583efffb7877991d57490bc16c81996cb57f2db6de",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "name": "main_overview",
+      "position": [
+        9500,
+        8500,
+        9500
+      ],
+      "target": [
+        800,
+        -600,
+        700
+      ],
+      "file": "main_overview.png",
+      "sha256": "fe0587eabf1fdde90590f106f996332ccc74fc8303d23da95fa61feb97bc99e0",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "name": "main_interior",
+      "position": [
+        -1700,
+        -500,
+        550
+      ],
+      "target": [
+        800,
+        -500,
+        550
+      ],
+      "file": "main_interior.png",
+      "sha256": "72023363f369c046b19e3cb35ef6518996c3e5865e304e5a23a5e69453cad17d",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "name": "stairs_lower",
+      "position": [
+        850,
+        -900,
+        550
+      ],
+      "target": [
+        1500,
+        -1500,
+        850
+      ],
+      "file": "stairs_lower.png",
+      "sha256": "9d3988a219baf23bac5c0726765e09f69f9d570c0a053bed6a77869d0890ddc0",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "name": "stairs_upper",
+      "position": [
+        1550,
+        -1500,
+        925
+      ],
+      "target": [
+        900,
+        -1000,
+        550
+      ],
+      "file": "stairs_upper.png",
+      "sha256": "747d61ed94ea1e946694f573c06a33b3fd412dd16c37c6bc37fa4ff24d5a8c12",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "name": "north_exit",
+      "position": [
+        -500,
+        3300,
+        550
+      ],
+      "target": [
+        0,
+        5500,
+        550
+      ],
+      "file": "north_exit.png",
+      "sha256": "1f9fa7b1a1b6497880c1d19e361a6d0797a0f5ba88d7a796469cdfe8e33448a6",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "name": "north_forecourt",
+      "position": [
+        6000,
+        5500,
+        850
+      ],
+      "target": [
+        0,
+        2000,
+        600
+      ],
+      "file": "north_forecourt.png",
+      "sha256": "07f2753b86243ce7b0f5d0916af7791989dd636434b92d5df53d4b79d968bf5c",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "name": "north_road",
+      "position": [
+        5500,
+        8000,
+        650
+      ],
+      "target": [
+        3000,
+        5000,
+        500
+      ],
+      "file": "north_road.png",
+      "sha256": "45754a1980c7f403c572c00314307019f2e9d5597eb33791581dc2e51f790bfb",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "name": "east_district",
+      "position": [
+        14000,
+        -2000,
+        3000
+      ],
+      "target": [
+        6000,
+        -2000,
+        1000
+      ],
+      "file": "east_district.png",
+      "sha256": "50b331b649ad9e3905dd62f39a7161f4e6dfc3ddb90299a34b5ab05f1a742740",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "name": "south_yard",
+      "position": [
+        -6000,
+        -11000,
+        1500
+      ],
+      "target": [
+        0,
+        -5000,
+        700
+      ],
+      "file": "south_yard.png",
+      "sha256": "6412be17107f69ffc3d1422e5b641548cbd27cb962bd4c5add0beecb15e39784",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "name": "northwest",
+      "position": [
+        -10000,
+        14000,
+        1200
+      ],
+      "target": [
+        0,
+        6000,
+        500
+      ],
+      "file": "northwest.png",
+      "sha256": "1e69502899ff02fdeebddff18512a42e08f173169a44607802c1411fb09d39dd",
+      "size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "name": "terrain_seam",
+      "position": [
+        16000,
+        16500,
+        850
+      ],
+      "target": [
+        15000,
+        13500,
+        0
+      ],
+      "file": "terrain_seam.png",
+      "sha256": "7e9f28dbf5ec9a8f33e7f7438dcd245ed7bbab94f6f9383be137f0529bfb5570",
+      "size": [
+        1920,
+        1080
+      ]
+    }
+  ]
+}

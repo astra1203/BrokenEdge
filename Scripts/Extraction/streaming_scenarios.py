@@ -25,7 +25,8 @@ def run(g):
     def walk(role, points, label):
         nonlocal telemetry_at
         assert not send(role, 'walk', points=points)
-        end = time.monotonic() + 180
+        distance=sum(math.dist(a,b) for a,b in zip(points,points[1:]))
+        end = time.monotonic() + max(180,min(600,distance/200+60))
         while time.monotonic() < end:
             current = state(role)
             if args.scenario == 'performance' and time.monotonic() >= telemetry_at:
@@ -52,6 +53,9 @@ def run(g):
         check('Performance viewport is 1920 x 1080', lambda: state(active).get('viewport_width') == 1920 and state(active).get('viewport_height') == 1080)
         check('Runtime medium settings, full resolution, no VSync or frame cap', lambda: len(state(active).get('quality', {})) == 13 and all(value == (1 if key.startswith('sg.') else 100 if key == 'r.ScreenPercentage' else 0) for key, value in state(active)['quality'].items()))
         route = outward + (north + list(reversed(north[:-1])) + [[1400, 4200, 362]] if args.performance_route == 'north' else []) + homeward
+        if args.performance_route=='east':
+            east=json.loads((root/'Scripts/SpaceCenter/east_route.json').read_text(encoding='utf-8'))
+            route=east['outward']+east['homeward']
         for role in ['Server', active]:
             assert not send(role, 'profile', start=True, name='first-route')
         walk(active, route, 'warmup')
@@ -59,7 +63,7 @@ def run(g):
             assert not send(role, 'profile', start=False)
         wait(lambda: all(capture_finished(role, 'first-route') for role in [active, 'Server']), 'First visit CSV saved', 45)
         g['report']['first_visit_boundary'] = 'First route in a fresh game process; OS disk cache is not purged. Excluded from subsequent route samples.'
-        g['report']['performance_boundary'] = 'Same current packaged map and binaries; old-area route versus north route. One rendered client, one NullRHI peer, dedicated server. No AI in this environmental profile.'
+        g['report']['performance_boundary'] = 'Same current packaged map and binaries; separately selected '+args.performance_route+' route. One rendered client, one NullRHI peer, dedicated server. No AI in this environmental profile.'
         g['report']['profile_runs'] = []
         for repetition in range(args.performance_samples):
             name = 'performance-' + args.performance_route + '-' + str(repetition + 1)

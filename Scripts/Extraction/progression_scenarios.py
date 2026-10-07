@@ -152,7 +152,9 @@ def run(g):
     send('A', 'item', item=key['id'], kind='drop')
     wait(lambda: carried('A', 'Key') == 1, 'key dropped')
     loose = next(c for c in state('Server')['loot'] if any(i['id'] == key['id'] for i in c['contents']['items']))
-    send('B', 'open_loot', target=loose['id'])
+    check('Dropped key reaches the receiving client before pickup', lambda: any(
+        c['id'] == loose['id'] and c['loose'] and not c['empty'] for c in state('B')['loot']))
+    assert not send('B', 'open_loot', target=loose['id'])
     check('Key identity can be transferred through normal pickup', lambda: carried('B', 'Key') == 1)
     place('EX_B', [approach[0]+240, approach[1], approach[2]])
     place('EX_A', approach)

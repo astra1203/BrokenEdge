@@ -5,7 +5,8 @@ import copy
 import json
 import math
 import sqlite3
-from restoration_common import BASE, WORK, ROOT, MINIMUM, MAXIMUM, ORIGIN, read, write_json, canonical, identity, extract_recorded, run_converter
+from pathlib import Path
+from restoration_common import BASE, WORK, ROOT, MINIMUM, MAXIMUM, ORIGIN, read, write_json, canonical, identity, extract_recorded, run_converter, input_path, CACHE_WORKSPACES
 
 GEOMETRY_GROUPS = {'BigMeshGroup', 'MidMeshGroup', 'SmallMeshGroup', 'Room', 'Landmark',
                    'Decorations', 'Decorations_HQ', 'Decorations_SQ', 'Decorations_SSQ',
@@ -99,8 +100,10 @@ def world_bounds(actor, metadata):
 def select(tag, discovery, bounds_tag):
     out=WORK/'SelectionRuns'/tag
     out.mkdir(parents=True,exist_ok=False)
-    metadata=read(WORK/'BoundsRuns'/bounds_tag/'MeshMetadata.json')
-    failed=read(WORK/'BoundsRuns'/bounds_tag/'Failures.json')
+    metadata=read(input_path('mesh_metadata',Path('BoundsRuns')/bounds_tag/'MeshMetadata.json'))
+    for cache in CACHE_WORKSPACES:
+        for prior in sorted(cache.glob('SelectionRuns/*/MeshMetadata.json')):metadata.update(read(prior))
+    failed=[p for p in read(input_path('mesh_failures',Path('BoundsRuns')/bounds_tag/'Failures.json')) if canonical(p['package']) not in metadata]
     # The existing parser only exposes a geometry snapshot after a proven tail failure.
     # Recovery stays scoped to this explicit source list; it never fabricates geometry.
     for start in range(0,len(failed),20):
@@ -110,7 +113,7 @@ def select(tag, discovery, bounds_tag):
             for o in p.get('objects',[]):
                 if o.get('class')=='StaticMesh' and o.get('bounds'):
                     metadata[canonical(o['object_path'])]=o
-    layouts=read(WORK/'DiscoveryRuns'/discovery/'Layouts.json')
+    layouts=read(input_path('layouts',Path('DiscoveryRuns')/discovery/'Layouts.json'))
     known={a['source_object']:a['id'] for directory in [BASE,BASE/'Phase7A'] for a in read(directory/'ImportManifest.json')['actors']}
     candidates,excluded,unresolved=[],[],[]
     for package in layouts:

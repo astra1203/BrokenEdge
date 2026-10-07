@@ -1,0 +1,60 @@
+{
+  "purpose": "Focused packaged spectator relevance diagnosis; not traversal acceptance.",
+  "session": "BrokenEdgeServer (68144)",
+  "paused_location": "NetDriver.cpp:5126",
+  "stack": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"frames\":[{\"presentation\":\"FNetViewer::FNetViewer(UNetConnection *, float) NetDriver.cpp:5126\",\"index\":0,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Engine/Private/NetDriver.cpp\",\"line\":5126,\"isCurrent\":true},{\"presentation\":\"UNetDriver::ServerReplicateActors_ForConnection(UE::Net::FServerReplicateActors_ForConnectionParams &) NetDriver.cpp:5961\",\"index\":1,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Engine/Private/NetDriver.cpp\",\"line\":5961,\"isCurrent\":false},{\"presentation\":\"UNetDriver::ServerReplicateActors(float) NetDriver.cpp:6455\",\"index\":2,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Engine/Private/NetDriver.cpp\",\"line\":6455,\"isCurrent\":false},{\"presentation\":\"UNetDriver::TickFlush(float) NetDriver.cpp:1230\",\"index\":3,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Engine/Private/NetDriver.cpp\",\"line\":1230,\"isCurrent\":false},{\"presentation\":\"UNetDriver::InternalTickFlush(float) NetDriver.cpp:2541\",\"index\":4,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Engine/Private/NetDriver.cpp\",\"line\":2541,\"isCurrent\":false},{\"presentation\":\"[内联] Invoke(void (UNetDriver::*)(float), UNetDriver *&, float &&) Invoke.h:65\",\"index\":5,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Core/Public/Templates/Invoke.h\",\"line\":65,\"isCurrent\":false},{\"presentation\":\"[内联] UE::Core::Private::Tuple::TTupleBase::ApplyAfter(void (UNetDriver::*&)(float), UNetDriver *&, float &&) Tuple.h:264\",\"index\":6,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Core/Public/Templates/Tuple.h\",\"line\":264,\"isCurrent\":false},{\"presentation\":\"TBaseUObjectMethodDelegateInstance::ExecuteIfSafe(float) DelegateInstancesImpl.h:625\",\"index\":7,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Core/Public/Delegates/DelegateInstancesImpl.h\",\"line\":625,\"isCurrent\":false}],\"threadId\":\"Thread-1-[GameThread] (51112)\",\"totalFrames\":22}"
+      }
+    ],
+    "isError": false
+  },
+  "frame": {
+    "content": [
+      {
+        "type": "text",
+        "text": "├─ + this =  // 0x00007fecbc691360 {Connection= // 0x00007ff3fc61d550 (Name=\"IpConnection\"_2147482343, InternalFlags=ReachabilityFlag0), InViewer= // 0x00007ff0fc7d4cb0 (Name=\"ExtractionPlayerController\"_2147482168), ViewTarget= // 0x00007ff0fc7d4cb0 (Name=\"ExtractionPlayerController\", ...} {FNetViewer *}\n│  ├─ + Connection =  // 0x00007ff3fc61d550 (Name=\"IpConnection\"_2147482343, InternalFlags=ReachabilityFlag0) {TObjectPtr<UNetConnection>}\n│  ├─ + InViewer =  // 0x00007ff0fc7d4cb0 (Name=\"ExtractionPlayerController\"_2147482168) {TObjectPtr<AActor>}\n│  ├─ + ViewTarget =  // 0x00007ff0fc7d4cb0 (Name=\"ExtractionPlayerController\"_2147482168) {TObjectPtr<AActor>}\n│  ├─ + ViewLocation = {X=1410 Y=2900 Z=509} {UE::Math::TVector<double>}\n│  └─ + ViewDir = {X=0 Y=0 Z=0} {UE::Math::TVector<double>}\n├─ InConnection = <error: Variable is not available>\n├─ DeltaSeconds = 0 {float}\n├─ + ViewingController =  // 0x00007ff0fc7d4cb0 (Name=\"ExtractionPlayerController\"_2147482168) {AExtractionPlayerController *}\n│  ├─ + ABrokenEdgePlayerController = (Name=\"ExtractionPlayerController\"_2147482168) {ABrokenEdgePlayerController}\n│  ├─ + SpectatedPlayer =  // 0x00007fef3ce97c00 (Name=\"ExtractionPlayerState\"_2147482179) {TObjectPtr<AExtractionPlayerState>}\n│  ├─ bExtractionSpectating = true {bool}\n│  ├─ + ItemMessage = Empty {FString}\n│  ├─ ItemResultSequence = 0 {unsigned int}\n│  ├─ bMenuOpen = false {bool}\n│  ├─ bLeaving = false {bool}\n│  ├─ LocalItemSequence = 0 {unsigned int}\n│  ├─ LocalInventorySession = 0 {unsigned int}\n│  ├─ + InventoryWidget = nullptr {TObjectPtr<UExtractionInventoryWidget>}\n│  ├─ + LeaveRetryTimer = {Handle=0} {FTimerHandle}\n│  ├─ + ExtractionWidget = nullptr {TObjectPtr<UExtractionWidget>}\n│  ├─ + SpectatorCamera = nullptr {TObjectPtr<ACameraActor>}\n│  ├─ + LastSpectatorLocation = {X=1410 Y=2900 Z=509} {UE::Math::TVector<double>}\n│  └─ + LastSpectatorRotation = {Pitch=0, Yaw=0, Roll=0} {UE::Math::TRotator<double>}\n├─ + ViewRotation = {Pitch=0, Yaw=0, Roll=0} {UE::Math::TRotator<double>}\n│  ├─ Pitch = 0 {double}\n│  ├─ Yaw = 0 {double}\n│  └─ Roll = 0 {double}\n├─ + ViewLocation = {X=1410 Y=2900 Z=509} {UE::Math::TVector<double>}\n│  ├─ X = 1410 {double}\n│  ├─ Y = 2900 {double}\n│  ├─ Z = 509 {double}\n│  ├─ ||V||² = 10657181 {double}\n│  └─ + Raw View = {={={X=1410, Y=2900, Z=509}, XYZ= // 0x00007fecbc691378 {1410, 2900, 509}}} {UE::Math::TVector<double>}\n├─ + ViewTarget =  // 0x00007ff0fc7d4cb0 (Name=\"ExtractionPlayerController\"_2147482168) {TObjectPtr<AActor>}\n│  ├─ + ABrokenEdgePlayerController = (Name=\"ExtractionPlayerController\"_2147482168) {ABrokenEdgePlayerController}\n│  ├─ + SpectatedPlayer =  // 0x00007fef3ce97c00 (Name=\"ExtractionPlayerState\"_2147482179) {TObjectPtr<AExtractionPlayerState>}\n│  ├─ bExtractionSpectating = true {bool}\n│  ├─ + ItemMessage = Empty {FString}\n│  ├─ ItemResultSequence = 0 {unsigned int}\n│  ├─ bMenuOpen = false {bool}\n│  ├─ bLeaving = false {bool}\n│  ├─ LocalItemSequence = 0 {unsigned int}\n│  ├─ LocalInventorySession = 0 {unsigned int}\n│  ├─ + InventoryWidget = nullptr {TObjectPtr<UExtractionInventoryWidget>}\n│  ├─ + LeaveRetryTimer = {Handle=0} {FTimerHandle}\n│  ├─ + ExtractionWidget = nullptr {TObjectPtr<UExtractionWidget>}\n│  ├─ + SpectatorCamera = nullptr {TObjectPtr<ACameraActor>}\n│  ├─ + LastSpectatorLocation = {X=1410 Y=2900 Z=509} {UE::Math::TVector<double>}\n│  ├─ + LastSpectatorRotation = {Pitch=0, Yaw=0, Roll=0} {UE::Math::TRotator<double>}\n│  └─ + Raw View = {={ObjectPtr= // 0x00007ff0fc7d4cb0 (Name=\"ExtractionPlayerController\"_2147482168), DebugPtr= // 0x00007ff0fc7d4cb0 (Name=\"ExtractionPlayerController\"_2147482168)}} {TObjectPtr<AActor>}\n└─ + ViewDir = {X=0 Y=0 Z=0} {UE::Math::TVector<double>}\n   ├─ X = 0 {double}\n   ├─ Y = 0 {double}\n   ├─ Z = 0 {double}\n   ├─ ||V||² = 0 {double}\n   └─ + Raw View = {={={X=0, Y=0, Z=0}, XYZ= // 0x00007fecbc691390 {0, 0, 0}}} {UE::Math::TVector<double>}\n"
+      }
+    ],
+    "isError": false
+  },
+  "target_name": {
+    "content": [
+      {
+        "type": "text",
+        "text": "((AExtractionPlayerState*)0x00007fef3ce97c00)->PlayerNamePrivate = L\"EX_B\" {FString}"
+      }
+    ],
+    "isError": false
+  },
+  "target_location": {
+    "content": [
+      {
+        "type": "text",
+        "text": "((AActor*)0x00007ff1fcacd000)->ReplicatedMovement.Location = {X=24100 Y=15600 Z=160.17737627029419} {UE::Math::TVector<double>}"
+      }
+    ],
+    "isError": false
+  },
+  "cull_distance_squared": {
+    "content": [
+      {
+        "type": "text",
+        "text": "((AActor*)0x00007ff1fcacd000)->NetCullDistanceSquared = 225000000 {float}"
+      }
+    ],
+    "isError": false
+  },
+  "synced_location": {
+    "content": [
+      {
+        "type": "text",
+        "text": "ViewingController->LastSpectatorSyncLocation = {X=1410 Y=2900 Z=509} {UE::Math::TVector<double>}"
+      }
+    ],
+    "isError": false
+  },
+  "conclusion": "Server FNetViewer takes the stale spectator sync location [1410,2900,509] while the selected living teammate EX_B is at [24100,15600,160.177]. The 15000 cm pawn cull radius excludes B from A. The local custom camera cannot recover once the pawn channel disappears. Compute authoritative remote-spectator viewpoint from the server-selected living pawn, while retaining local camera and streaming readiness."
+}

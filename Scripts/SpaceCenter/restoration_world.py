@@ -4,8 +4,9 @@ import hashlib
 import json
 import math
 import unreal
+from restoration_common import PROFILE
 
-PREVIEW='/Game/Maps/SpaceCenter/L_SpaceCenterRestorationPreview'
+PREVIEW=PROFILE.get('preview_map','/Game/Maps/SpaceCenter/L_SpaceCenterRestorationPreview')
 VERSION=1
 
 

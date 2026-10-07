@@ -9,6 +9,7 @@ import statistics
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True, help='Performance acceptance group tag')
+parser.add_argument('--routes',nargs='+',choices=['old','north','east'],default=['old','north'])
 parser.add_argument('--combat-tag', action='append', default=[], help='Additional successful six-player/four-AI functional profile')
 parser.add_argument('--network-tag', help='Separate short old/north profile group with net.EnableNetStats enabled')
 args = parser.parse_args()
@@ -77,7 +78,7 @@ def capture(path):
 
 
 report = {'runs': [], 'boundary': 'Same-host Development/Null, one 1080p medium rendered client, NullRHI peer and dedicated server. Environment routes have zero AI. First visit is separate; no OS cache purge.'}
-for route in ['old', 'north']:
+for route in args.routes:
     folder = ROOT / 'Saved/Extraction' / (args.tag + '-' + route)
     network = json.loads((folder / 'Report.json').read_text(encoding='utf-8'))
     assert network['result'] == 'passed', str(folder)
@@ -94,7 +95,7 @@ report['result'] = 'passed' if report['target_passed'] else 'failed'
 report['ai_stress'] = []
 report['network_profiles'] = []
 if args.network_tag:
-    for route in ['old', 'north']:
+    for route in args.routes:
         folder = ROOT / 'Saved/Extraction' / (args.network_tag + '-' + route)
         run = json.loads((folder / 'Report.json').read_text(encoding='utf-8'))
         assert run['result'] == 'passed' and run['options']['network_stats']

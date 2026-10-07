@@ -86,7 +86,9 @@ def run(g):
             capture(shooter, 'equipment-helmet-aim')
         for attempt in range(12):
             old, victim = player('Server', shooter).copy(), player('Server', target).copy()
-            send(shooter, 'pulse', action='Fire')
+            # One input frame avoids holding the automatic rifle through an
+            # extra frame when the multi-client render workload stalls.
+            send(shooter, 'pulse', action='Fire', duration=0)
             check('One server shot spends one round', lambda: player('Server', shooter)['accepted'] == old['accepted'] + 1)
             check('Equipment shot ammo agrees on all peers', lambda: all(player(p, shooter).get('ammo') == old['ammo'] - 1 for p in peers))
             time.sleep(.3)

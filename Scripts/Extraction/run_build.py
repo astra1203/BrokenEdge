@@ -15,6 +15,7 @@ ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
 parser.add_argument('--target', choices=['Editor', 'Client', 'Server'], default='Editor')
 parser.add_argument('--package', action='store_true')
+parser.add_argument('--no-uba', action='store_true', help='Use UE non-detoured local builds for this process tree through UBT environment configuration')
 parser.add_argument('--jobs', type=int, default=0, help='Optional UBT compile action limit; 0 uses the engine default')
 parser.add_argument('--cook-workers', type=int, default=0, help='Optional shader worker limit and bounded async asset compilation during cooking')
 parser.add_argument('--tag', required=True)
@@ -60,9 +61,17 @@ metadata = {'command': command, 'head': subprocess.check_output(['git', 'rev-par
             'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat()}
 start = time.monotonic()
 environment = os.environ.copy()
+overrides = {}
 if args.package:
-    environment['UE_SKIP_UBT_SDK_SETUP'] = '1'
-    metadata['environment_overrides'] = {'UE_SKIP_UBT_SDK_SETUP': '1'}
+    overrides['UE_SKIP_UBT_SDK_SETUP'] = '1'
+if args.no_uba:
+    # UAT nests -ubtargs inside each target; global executor switches there
+    # are not reliable there. UE 5.8 XmlConfig reads process settings last.
+    # ExecutorFactory still uses UBA but bAllowUBAExecutor=false disables detours.
+    overrides['UnrealBuildTool_BuildConfiguration__bAllowUBAExecutor'] = 'false'
+if overrides:
+    environment.update(overrides)
+    metadata['environment_overrides'] = overrides
 with (out / 'Build.log').open('wb') as log:
     process = subprocess.Popen(command, cwd=ROOT, env=environment, stdout=log, stderr=subprocess.STDOUT, creationflags=subprocess.CREATE_NO_WINDOW)
     metadata['pid'] = process.pid

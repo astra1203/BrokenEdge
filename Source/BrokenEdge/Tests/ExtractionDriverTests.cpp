@@ -251,7 +251,7 @@ public:
 					Command->TryGetNumberField(TEXT("pitch"), Pitch);
 					PC->SetControlRotation(FRotator(Pitch, Command->GetNumberField(TEXT("yaw")), 0));
 				}
-				else if (Op == TEXT("fixture") && Role == TEXT("Server"))
+				else if (Op == TEXT("fixture") && (Role == TEXT("Server") || World->GetNetMode() == NM_Standalone))
 				{
 					for (const auto& Value : Command->GetArrayField(TEXT("players")))
 					{
@@ -466,6 +466,27 @@ public:
 								"-pose.json"))));
 					}
 				}
+				else if (Op == TEXT("world_camera") && PC)
+				{
+					const auto& Position = Command->GetArrayField(TEXT("position"));
+					const auto& Target = Command->GetArrayField(TEXT("target"));
+					if (Position.Num() != 3 || Target.Num() != 3) Error = TEXT("Camera requires two world vectors");
+					else
+					{
+						const FVector Location(Position[0]->AsNumber(), Position[1]->AsNumber(),
+						                       Position[2]->AsNumber());
+						const FVector Center(Target[0]->AsNumber(), Target[1]->AsNumber(), Target[2]->AsNumber());
+						if (!TestCamera.IsValid()) TestCamera = World->SpawnActor<ACameraActor>();
+						TestCamera->SetActorLocationAndRotation(Location, (Center - Location).Rotation());
+						TestCamera->GetCameraComponent()->
+						            SetFieldOfView(Command->GetNumberField(TEXT("field_of_view")));
+						TestCamera->GetCameraComponent()->SetAspectRatio(1920.f / 1080.f);
+						PC->SetViewTarget(TestCamera.Get());
+						if (const auto* Local = PC->GetLocalPlayer(); Local && Local->ViewportClient && Local->
+							ViewportClient->GetGameViewport())
+							Local->ViewportClient->GetGameViewport()->SetFixedViewportSize(1920, 1080);
+					}
+				}
 				else if (Op == TEXT("camera") && PC)
 				{
 					const FString TargetName = Command->GetStringField(TEXT("target"));
@@ -491,9 +512,13 @@ public:
 					else Error = TEXT("Camera target has no equipped weapon");
 				}
 				else if (Op == TEXT("screenshot") && PC)
+				{
+					bool bShowUI = true;
+					Command->TryGetBoolField(TEXT("show_ui"), bShowUI);
 					FScreenshotRequest::RequestScreenshot(
-						Folder / (Role + TEXT("-") + Command->GetStringField(TEXT("name")) + TEXT(".png")), true,
+						Folder / (Role + TEXT("-") + Command->GetStringField(TEXT("name")) + TEXT(".png")), bShowUI,
 						false);
+				}
 				else if (Op == TEXT("walk") && Pawn)
 				{
 					WalkPoints.Empty();
@@ -1008,8 +1033,9 @@ private:
 			     TEXT("sg.ShadingQuality"),
 			     TEXT("r.ScreenPercentage"), TEXT("r.VSync"), TEXT("t.MaxFPS")
 		     })
-			if (const auto* Value = IConsoleManager::Get().FindConsoleVariable(Name)) Quality->SetNumberField(
-				Name, Value->GetFloat());
+			if (const auto* Value = IConsoleManager::Get().FindConsoleVariable(Name))
+				Quality->SetNumberField(
+					Name, Value->GetFloat());
 		State->SetObjectField(TEXT("quality"), Quality);
 		State->SetStringField(TEXT("error"), Error);
 		State->SetStringField(TEXT("map"), World->GetPackage()->GetName());

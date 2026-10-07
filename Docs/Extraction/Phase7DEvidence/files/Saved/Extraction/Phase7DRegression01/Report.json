@@ -1,0 +1,36 @@
+{
+  "group": "regression",
+  "phase": "7D",
+  "result": "failed",
+  "steps": [
+    {
+      "name": "progression",
+      "command": [
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\resource_guard.py",
+        "--tag",
+        "Phase7DRegression01-progression",
+        "--timeout",
+        "2400",
+        "--",
+        "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+        "--tag",
+        "Phase7DRegression01-progression",
+        "--scenario",
+        "progression",
+        "--players",
+        "6",
+        "--rendered-clients",
+        "1",
+        "--packaged",
+        "--lag"
+      ],
+      "pid": 30024,
+      "exit_code": 1
+    }
+  ],
+  "started_utc": "2026-10-07T00:12:20.551543+00:00",
+  "error": "RuntimeError('progression failed')",
+  "finished_utc": "2026-10-07T00:14:56.109357+00:00"
+}

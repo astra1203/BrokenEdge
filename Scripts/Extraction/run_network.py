@@ -27,11 +27,11 @@ parser.add_argument('--debug-hold', action='store_true', help='Wait for Continue
 parser.add_argument('--optic-validation', action='store_true', help='Additional mounted-optic visual acceptance in the equipment scenario')
 parser.add_argument('--optic-remote-only', action='store_true', help='Stop equipment acceptance after observer mount captures; not a full combat regression')
 parser.add_argument('--resolution', choices=['1280x720', '1920x1080'], help='Rendered client size for visual acceptance')
-parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat'], default='combat')
+parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east'], default='combat')
 parser.add_argument('--players', type=int, choices=[2, 3, 6])
 parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
 parser.add_argument('--rendered-role', choices=['A', 'B'], help='Render only this client; the other clients remain connected with NullRHI')
-parser.add_argument('--performance-route', choices=['old', 'north'], default='north')
+parser.add_argument('--performance-route', choices=['old', 'north', 'east'], default='north')
 parser.add_argument('--performance-samples', type=int, choices=[1, 3], default=3)
 parser.add_argument('--performance-seconds', type=int, choices=[60, 180], default=180)
 parser.add_argument('--network-stats', action='store_true', help='Enable UE network byte-rate collection for a separate bandwidth capture')
@@ -50,7 +50,7 @@ if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
 OUT = ROOT / 'Saved/Extraction' / args.tag
 OUT.mkdir(parents=True, exist_ok=False)
 ROLES = ['A', 'B', 'C', 'D'] if args.scenario == 'four' else ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
-if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat']:
+if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east']:
     ROLES = list('ABCDEF')[:args.players or (6 if args.scenario in ['pvpve', 'lifecycle'] else 3)]
 rendered_roles = [args.rendered_role] if args.rendered_role else ROLES[:args.rendered_clients]
 processes, commands, checks = {}, {}, []
@@ -61,6 +61,8 @@ report = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(
 report['base_commit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
 report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(p.read_bytes()).hexdigest()
                          for p in [Path(__file__).resolve(), ROOT / 'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
+                                   ROOT / 'Source/BrokenEdge/Extraction/ExtractionPlayerController.h',
+                                   ROOT / 'Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp',
                                    ROOT / 'Scripts/Extraction/inventory_scenarios.py',
                                    ROOT / 'Scripts/Extraction/storage_scenarios.py', ROOT / 'Scripts/Extraction/phase5_scenarios.py',
                                    ROOT / 'Scripts/Extraction/equipment_scenarios.py',
@@ -73,8 +75,12 @@ report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.s
                                    ROOT / 'Scripts/Extraction/north_combat_scenarios.py',
                                    ROOT / 'Scripts/Extraction/resource_guard.py',
                                    ROOT / 'Scripts/SpaceCenter/north_route.json',
+                                   ROOT / 'Scripts/SpaceCenter/route.json',
                                    ROOT / 'Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap',
                                    ROOT / 'BrokenEdge.uproject', ROOT / 'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap']}
+if args.scenario == 'east' or args.scenario == 'performance' and args.performance_route == 'east':
+    for name in ['Scripts/SpaceCenter/east_route.json','Scripts/Extraction/east_scenarios.py']:
+        report['input_sha256'][name]=hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
 
 
 def save():
@@ -172,7 +178,7 @@ def launch(role):
                 '-ExtractionGuards=' + ('4' if args.scenario in ['pvpve', 'progression', 'northcombat'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
                 '-MatchType=Extraction', '-NumPublicConnections=' + str(len(ROLES)),
                 '-MinPlayersToStart=' + str(len(ROLES)), '-port=27777',
-                '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '1200' if args.debug_hold or args.scenario in ['streaming', 'performance'] else '600'),
+                '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '1200' if args.debug_hold or args.scenario in ['streaming', 'performance', 'east'] else '600'),
                 '-ExtractionTestRole=' + role, '-ExtractionTestDir=' + str(OUT),
                 '-ExtractionStore=' + str(OUT / 'Store'), '-ExtractionProfile=' + args.tag + '_' + ('A' if args.scenario == 'identity' and role == 'B' else role),
                 '-ExecCmds=t.MaxFPS 30,' + ('sg.ShadowQuality 0,sg.EffectsQuality 1,' if len(ROLES) == 6 else '') + 'BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
@@ -226,7 +232,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat']
+    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
@@ -240,7 +246,7 @@ def begin_round():
     if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment']:
         from phase5_scenarios import lobby
         lobby(globals())
-    if args.scenario == 'streaming' and len(ROLES) == 2:
+    if args.scenario in ['streaming','east'] and len(ROLES) == 2:
         send('B', 'squad', value=1)
         check('Streaming pair shares a squad for spectator acceptance', lambda: player('Server', 'B').get('squad') == 1)
     for role in ROLES:
@@ -354,6 +360,9 @@ try:
         check('Duplicate cannot mutate authenticated inventory', lambda: state('A')['account']['revision'] == account['revision'] and state('A')['account']['stash'] == account['stash'])
         check('Duplicate login cannot regrant starter kits', lambda: len(state('Server')['stored_results']) == 1 and sum(i['quantity'] for i in state('A')['account']['stash']['items'] if i['definition'] == 'AK') == 3)
         send('B', 'screenshot', name='duplicate-profile-denied')
+    elif args.scenario == 'east':
+        from east_scenarios import run
+        run(globals())
     elif args.scenario in ['streaming', 'performance']:
         from streaming_scenarios import run
         run(globals())
@@ -527,6 +536,12 @@ try:
             send('Server', 'fixture', players=[{'name': 'EX_C', 'position': [1400, 4200, 500], 'health': 80, 'shield': 0}])
             aim('C', 'B', True)
             shot('C', 'B', 40)
+            # Bleeding can tick between the pre-shot snapshot and the bullet.
+            # Isolate this legacy spectator fixture's final direct-damage check.
+            send('Server', 'fixture', players=[{'name': 'EX_B', 'position': player('Server', 'B')['position'],
+                                               'health': 40, 'shield': 0, 'clear_trauma': True}])
+            check('Finishing-shot fixture isolates direct damage from bleeding ticks', lambda: all(
+                player(r, 'B').get('health') == 40 and not player(r, 'B').get('bleeding') for r in processes))
             shot('C', 'B', 40)
             check('Enemy death preserves the friendly spectator target', lambda: state('A')['spectated'] == 'EX_C')
             send('C', 'leave')

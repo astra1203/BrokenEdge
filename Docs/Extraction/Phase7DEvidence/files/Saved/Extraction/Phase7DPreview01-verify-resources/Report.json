@@ -1,0 +1,48 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\verify_restoration_inputs.py",
+    "--tag",
+    "Phase7DPreview01-verify",
+    "--profile",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\restoration_profile_7d.json"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-06T09:58:43.434618+00:00",
+      "c_free_gib": 54.66037368774414,
+      "d_free_gib": 208.12376403808594,
+      "ram_free_gib": 11.659740447998047,
+      "commit_used_gib": 31.564701080322266,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T09:58:43.439620+00:00",
+      "c_free_gib": 54.66037368774414,
+      "d_free_gib": 208.12376022338867,
+      "ram_free_gib": 11.659046173095703,
+      "commit_used_gib": 31.564701080322266,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T09:58:45.295766+00:00",
+      "c_free_gib": 54.66037368774414,
+      "d_free_gib": 208.11310195922852,
+      "ram_free_gib": 11.646778106689453,
+      "commit_used_gib": 31.571006774902344,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 71008,
+  "exit_code": 0
+}

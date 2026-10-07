@@ -1,0 +1,79 @@
+{
+  "command": [
+    "C:\\Users\\Oreki\\AppData\\Roaming\\uv\\python\\cpython-3.12.13-windows-x86_64-none\\python.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+    "--tag",
+    "Phase7DRules03-equipment",
+    "equipment"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-06T22:39:16.236617+00:00",
+      "c_free_gib": 51.20798110961914,
+      "d_free_gib": 206.78398513793945,
+      "ram_free_gib": 13.478248596191406,
+      "commit_used_gib": 34.86545944213867,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T22:39:16.242617+00:00",
+      "c_free_gib": 51.20798110961914,
+      "d_free_gib": 206.7839813232422,
+      "ram_free_gib": 13.478134155273438,
+      "commit_used_gib": 34.86545944213867,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T22:39:21.245163+00:00",
+      "c_free_gib": 51.207881927490234,
+      "d_free_gib": 206.9433937072754,
+      "ram_free_gib": 12.830768585205078,
+      "commit_used_gib": 35.477359771728516,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T22:39:26.256622+00:00",
+      "c_free_gib": 51.20780944824219,
+      "d_free_gib": 206.9432716369629,
+      "ram_free_gib": 11.758674621582031,
+      "commit_used_gib": 36.39049530029297,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T22:39:31.263259+00:00",
+      "c_free_gib": 51.21043014526367,
+      "d_free_gib": 206.94321060180664,
+      "ram_free_gib": 10.629520416259766,
+      "commit_used_gib": 38.39264678955078,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T22:39:36.271381+00:00",
+      "c_free_gib": 51.210391998291016,
+      "d_free_gib": 206.78360748291016,
+      "ram_free_gib": 10.481452941894531,
+      "commit_used_gib": 37.454078674316406,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-06T22:39:37.291391+00:00",
+      "c_free_gib": 51.210391998291016,
+      "d_free_gib": 206.78356552124023,
+      "ram_free_gib": 13.394451141357422,
+      "commit_used_gib": 34.79226303100586,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 40452,
+  "exit_code": 0
+}
