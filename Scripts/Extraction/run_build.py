@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import sys
 import time
+from pe_validation import validate_executable
 
 sys.stdout.reconfigure(encoding='utf-8')
 ROOT = Path(__file__).resolve().parents[2]
@@ -19,7 +20,9 @@ parser.add_argument('--package', action='store_true')
 parser.add_argument('--package-root', help='Separate archive root containing Client/Server; must be inside Packaged')
 parser.add_argument('--file-cook', action='store_true', help='Fresh isolated filesystem cook with SkipZenStore; still builds IoStore packages')
 parser.add_argument('--cook-root', help='New short absolute cook directory, required with --file-cook to avoid Windows package path limits')
+parser.add_argument('--direct-stage', action='store_true', help='Stage the fresh distributable directly in the archive root, avoiding a duplicate archive copy')
 parser.add_argument('--no-uba', action='store_true', help='Use UE non-detoured local builds for this process tree through UBT environment configuration')
+parser.add_argument('--compile-only', action='store_true', help='Compile objects with UBT -NoLink; never report an executable from this step')
 parser.add_argument('--jobs', type=int, default=0, help='Optional UBT compile action limit; 0 uses the engine default')
 parser.add_argument('--cook-workers', type=int, default=0, help='Optional shader worker limit and bounded async asset compilation during cooking')
 parser.add_argument('--tag', required=True)
@@ -28,10 +31,14 @@ if args.jobs < 0:
     raise ValueError('jobs must be zero or positive')
 if args.cook_workers < 0:
     raise ValueError('cook-workers must be zero or positive')
+if args.compile_only and args.package:
+    parser.error('--compile-only cannot package')
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
 if (args.package_root or args.file_cook or args.cook_root) and not args.package:
     parser.error('--package-root and --file-cook require --package')
+if args.direct_stage and not (args.package and args.package_root and args.file_cook):
+    parser.error('--direct-stage requires a fresh --package-root and --file-cook')
 if args.file_cook != bool(args.cook_root):
     parser.error('--file-cook and --cook-root must be used together')
 cook_root = Path(args.cook_root).resolve() if args.cook_root else None
@@ -56,6 +63,9 @@ if args.package:
                '-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction',
                '-prereqs', '-ubtargs=-NoHotReloadFromIDE -WaitMutex' + (f' -MaxParallelActions={args.jobs}' if args.jobs else ''), '-utf8output']
     command += ['-server', '-noclient', '-serverplatform=Win64', '-serverconfig=Development'] if args.target == 'Server' else ['-platform=Win64', '-clientconfig=Development']
+    if args.direct_stage:
+        command.remove('-archive')
+        command.remove('-archivedirectory=' + str(archive))
     cooker_options = []
     if args.file_cook:
         # A fresh output avoids carrying a stale Zen projectstore/file manifest
@@ -63,7 +73,7 @@ if args.package:
         cook_platform = 'WindowsServer' if args.target == 'Server' else 'Windows'
         # CookCommandlet writes exactly OutputDir; UAT staging appends the
         # platform unless the supplied directory already ends in its name.
-        command += ['-CookOutputDir=' + str(cook_root / cook_platform), '-stagingdirectory=' + str(out / 'Staged')]
+        command += ['-CookOutputDir=' + str(cook_root / cook_platform), '-stagingdirectory=' + str(archive if args.direct_stage else out / 'Staged')]
         cooker_options.append('-SkipZenStore')
     if args.cook_workers:
         unused=max(0,(os.cpu_count() or 8)-args.cook_workers)
@@ -85,16 +95,21 @@ else:
                '-Project=' + str(ROOT / 'BrokenEdge.uproject'), '-WaitMutex', '-NoHotReloadFromIDE']
     if args.jobs:
         command.append(f'-MaxParallelActions={args.jobs}')
+    if args.compile_only:
+        command.append('-NoLink')
 metadata = {'command': command, 'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-            'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat()}
+            'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'compile_only': args.compile_only}
 if args.package:
-    metadata.update(archive_root=str(archive_root), cook_store='filesystem' if args.file_cook else 'project-default')
+    metadata.update(archive_root=str(archive_root), direct_stage=args.direct_stage, cook_store='filesystem' if args.file_cook else 'project-default')
     if cook_root:
         metadata['cook_root'] = str(cook_root)
 metadata['input_sha256'] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in [
     'Scripts/Extraction/run_build.py', 'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
     'Config/DefaultGame.ini', 'Config/DefaultEngine.ini', 'BrokenEdge.uproject',
     'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap', 'Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap']}
+for source in sorted((ROOT/'Source/BrokenEdge').rglob('*')):
+    if source.suffix in ('.h','.cpp'):
+        metadata['input_sha256'][source.relative_to(ROOT).as_posix()] = hashlib.sha256(source.read_bytes()).hexdigest()
 start = time.monotonic()
 environment = os.environ.copy()
 overrides = {}
@@ -115,6 +130,14 @@ with (out / 'Build.log').open('wb') as log:
     print('BUILD_STARTED', process.pid, out, flush=True)
     metadata['exit_code'] = process.wait()
 metadata['elapsed_seconds'] = time.monotonic() - start
+if metadata['exit_code']==0 and not args.compile_only and args.target in ('Client','Server'):
+    executable='BrokenEdgeServer.exe' if args.target=='Server' else 'BrokenEdge.exe'
+    binary=(archive / ('WindowsServer' if args.target=='Server' else 'Windows') / 'BrokenEdge/Binaries/Win64' / executable
+            if args.package else ROOT/'Binaries/Win64'/executable)
+    try:
+        metadata['executable']=validate_executable(binary)
+    except (OSError,ValueError) as error:
+        metadata.update(exit_code=1,error=str(error))
 if args.package:
     # UAT writes the detailed child build output separately from its console log.
     for child, name in [('UBA-BrokenEdgeEditor-Win64-Development.txt', 'Ubt.log'),

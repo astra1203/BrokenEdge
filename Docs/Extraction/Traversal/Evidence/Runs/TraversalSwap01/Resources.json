@@ -1,0 +1,128 @@
+{
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+    "Scripts/Extraction/run_network.py",
+    "--tag",
+    "TraversalSwap01",
+    "--packaged",
+    "--package-root",
+    "Packaged/Traversal08",
+    "--port",
+    "28777",
+    "--isolated-room",
+    "--scenario",
+    "swap",
+    "--rendered-clients",
+    "2"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-10-07T15:29:53.117318+00:00",
+      "c_free_gib": 45.74587631225586,
+      "d_free_gib": 104.044921875,
+      "ram_free_gib": 13.229084014892578,
+      "commit_used_gib": 33.248050689697266,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T15:29:53.126343+00:00",
+      "c_free_gib": 45.74587631225586,
+      "d_free_gib": 104.04491806030273,
+      "ram_free_gib": 13.22903823852539,
+      "commit_used_gib": 33.248050689697266,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T15:29:58.136985+00:00",
+      "c_free_gib": 45.74587631225586,
+      "d_free_gib": 104.04469680786133,
+      "ram_free_gib": 13.013256072998047,
+      "commit_used_gib": 33.56270980834961,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T15:30:03.151634+00:00",
+      "c_free_gib": 45.745361328125,
+      "d_free_gib": 104.04450988769531,
+      "ram_free_gib": 11.836776733398438,
+      "commit_used_gib": 37.49696731567383,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T15:30:08.162217+00:00",
+      "c_free_gib": 45.74533462524414,
+      "d_free_gib": 104.04447937011719,
+      "ram_free_gib": 11.907279968261719,
+      "commit_used_gib": 37.419952392578125,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T15:30:13.169851+00:00",
+      "c_free_gib": 45.745269775390625,
+      "d_free_gib": 104.04431915283203,
+      "ram_free_gib": 10.889183044433594,
+      "commit_used_gib": 41.35430908203125,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T15:30:18.175143+00:00",
+      "c_free_gib": 45.745174407958984,
+      "d_free_gib": 104.04389572143555,
+      "ram_free_gib": 10.874847412109375,
+      "commit_used_gib": 41.37248229980469,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T15:30:23.181024+00:00",
+      "c_free_gib": 45.74513626098633,
+      "d_free_gib": 104.04386138916016,
+      "ram_free_gib": 9.766571044921875,
+      "commit_used_gib": 41.55613327026367,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T15:30:28.188783+00:00",
+      "c_free_gib": 45.7451057434082,
+      "d_free_gib": 104.04008483886719,
+      "ram_free_gib": 8.65938949584961,
+      "commit_used_gib": 45.286399841308594,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T15:30:33.201574+00:00",
+      "c_free_gib": 45.74409103393555,
+      "d_free_gib": 104.0398063659668,
+      "ram_free_gib": 8.654827117919922,
+      "commit_used_gib": 45.267066955566406,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T15:30:38.204894+00:00",
+      "c_free_gib": 45.74397659301758,
+      "d_free_gib": 104.03939056396484,
+      "ram_free_gib": 8.926631927490234,
+      "commit_used_gib": 44.95968246459961,
+      "commit_limit_gib": 51.32893753051758
+    },
+    {
+      "utc": "2026-10-07T15:30:42.098753+00:00",
+      "c_free_gib": 45.74303436279297,
+      "d_free_gib": 104.03928756713867,
+      "ram_free_gib": 13.246528625488281,
+      "commit_used_gib": 33.180789947509766,
+      "commit_limit_gib": 51.32893753051758
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 70944,
+  "exit_code": 0
+}

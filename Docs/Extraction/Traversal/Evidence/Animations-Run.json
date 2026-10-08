@@ -1,0 +1,19 @@
+{
+  "stage": "animations",
+  "command": [
+    "C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Binaries/Win64/UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Traversal\\import_animations.py",
+    "-NullRHI",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\EditorRuns\\TraversalAnimations02\\Editor.log"
+  ],
+  "script_sha256": "d83319ad1ad7637dcdf319731ec0fe22b977aa08d53fe11fc29f2ece1cb236e2",
+  "started_utc": "2026-10-07T10:26:14.573332+00:00",
+  "pid": 51300,
+  "exit_code": 0,
+  "result": "passed"
+}

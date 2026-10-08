@@ -1,0 +1,33 @@
+{
+  "file": "Saved\\Extraction\\TraversalVisual02\\B-180.mp4",
+  "sha256": "2d1d99f3ef75cc55cdb195efd45df08504526e3a1e7e786e44c34939a9c0c82a",
+  "frames": 19,
+  "seconds": 2.187336001545191,
+  "measured_fps": 8.229188376767143,
+  "max_frame_interval": 0.1458970010280609,
+  "boundary": "Rendered viewport frames timed by capture requests; no audio. Captures add readback overhead, separate from performance runs.",
+  "command": [
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\Tools\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+    "-hide_banner",
+    "-loglevel",
+    "error",
+    "-f",
+    "concat",
+    "-safe",
+    "0",
+    "-i",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\TraversalVisual02\\B-180\\Concat.txt",
+    "-fps_mode",
+    "vfr",
+    "-c:v",
+    "libx264",
+    "-crf",
+    "18",
+    "-pix_fmt",
+    "yuv420p",
+    "-movflags",
+    "+faststart",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\TraversalVisual02\\B-180.partial.mp4"
+  ],
+  "result": "passed"
+}

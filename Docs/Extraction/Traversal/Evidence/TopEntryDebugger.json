@@ -1,0 +1,41 @@
+{
+  "run": "TraversalDebug04",
+  "package": "Traversal05",
+  "debugger": "Rider native LLDB",
+  "pid": 71072,
+  "paused_file": "Source/BrokenEdge/Traversal/TraversalMovementComponent.cpp",
+  "paused_line_before_fix": 337,
+  "stack": [
+    "TryLadder",
+    "UpdateCharacterStateBeforeMovement",
+    "PerformMovement",
+    "MoveAutonomous",
+    "ServerMove_PerformMovement"
+  ],
+  "values": {
+    "Ladder": null,
+    "bInteractRequested": true,
+    "State.Kind": "None",
+    "Controller.ControlRotation": {
+      "Pitch": 0,
+      "Yaw": 0,
+      "Roll": 0
+    },
+    "position": [
+      30090,
+      29100,
+      6344.149998188019
+    ]
+  },
+  "input": {
+    "look_yaw_before_E": 180,
+    "fixture_top_exit": [
+      30085,
+      29100,
+      6345
+    ]
+  },
+  "finding": "Predicted LadderEnter immediately rotated control yaw to zero. Authority received that yaw with the interaction move, so its facing test rejected the nearby top entrance behind the player.",
+  "fix": "Keep entry control rotation through prediction and move camera alignment to the visual Ladder transition after entry.",
+  "cleanup": "Agent breakpoints removed and owned debug session stopped; user exception breakpoint baseline unchanged."
+}

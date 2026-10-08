@@ -1,25 +1,32 @@
 """Record the existing packaged FreeForAll/Teams LAN regression in an isolated evidence run."""
 import argparse
 import datetime
+import hashlib
 import json
 from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
+from pe_validation import validate_executable
 
 root = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
+parser.add_argument('--package-root', default='Packaged')
 args = parser.parse_args()
 assert args.tag and all(c.isalnum() or c in '-_' for c in args.tag)
 out = root / 'Saved/Extraction' / args.tag
 out.mkdir(parents=True, exist_ok=False)
 before = set((root / 'Saved/SessionTests').glob('Dedicated-*'))
 command = ['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
-           str(root / 'Scripts/Test-LanSessions.ps1'), '-Packaged']
+           str(root / 'Scripts/Test-LanSessions.ps1'), '-Packaged', '-PackageRoot', args.package_root,
+           '-LanGameUniqueId', str(int(hashlib.sha256(args.tag.encode()).hexdigest()[:8],16) & 0x7fffffff or 1)]
 report = {'command': command, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
           'result': 'running', 'checks': []}
+report['executables'] = {role: validate_executable(root / args.package_root / path) for role, path in (
+    ('Server', 'Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe'),
+    ('Client', 'Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe'))}
 with (out / 'Console.log').open('wb') as output:
     proc = subprocess.Popen(command, cwd=root, stdout=output, stderr=subprocess.STDOUT,
                             creationflags=subprocess.CREATE_NO_WINDOW)

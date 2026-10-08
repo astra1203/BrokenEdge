@@ -1,4 +1,6 @@
 #include "ExtractionPlayerController.h"
+#include "BrokenEdge/Traversal/TraversalMovementComponent.h"
+#include "BrokenEdge/Traversal/ExtractionTraversalComponent.h"
 #include "ExtractionRegionStream.h"
 #include "ExtractionHealth.h"
 #include "ExtractionInteractionComponent.h"
@@ -108,6 +110,8 @@ void AExtractionPlayerController::SmokeAbility()
 
 void AExtractionPlayerController::Interact()
 {
+	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
+		if (CastChecked<UTraversalMovementComponent>(C->GetCharacterMovement())->RequestInteract()) return;
 	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
 		if (auto* Other = C->GetExtractionAbilities()->RescueFocus())
 		{
@@ -505,6 +509,8 @@ void UExtractionWidget::Refresh()
 		Text += FString::Printf(TEXT("\n你已倒地 · %.0f 生命 · %.1f 秒后阵亡\n缓慢移动至掩体，等待队友救援"), PS->DownHealth, FMath::Max(0.0, PS->BleedAt - Now));
 	if (auto* C = Cast<ABrokenEdgeCharacter>(PC->GetPawn()))
 	{
+		const FString TraversalPrompt = C->GetTraversal()->Prompt();
+		if (!TraversalPrompt.IsEmpty()) Text += TEXT("\n") + TraversalPrompt;
 		const auto* A = C->GetExtractionAbilities();
 		if (PS->Life == EExtractionLife::Alive)
 		{

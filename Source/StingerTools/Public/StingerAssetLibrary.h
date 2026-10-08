@@ -39,6 +39,15 @@ public:
 	static FString DescribeThirdPersonGripIK(UAnimBlueprint* Blueprint);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Setup")
 	static bool ConfigureThirdPersonGripIK(UAnimBlueprint* Blueprint);
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Setup")
+	static bool ConfigureTraversalSlot(UAnimBlueprint* Blueprint);
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static FString DescribeLadderVertices(class UStaticMesh* Mesh);
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static TArray<FVector> TraceTraversalSurface(UObject* WorldContext, FVector Start, FVector End);
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static bool TraversalCapsuleClear(UObject* WorldContext, FVector Start, FVector End, float Radius,
+	                                  float HalfHeight);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static void SetValidationFixedStep(float Seconds);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")

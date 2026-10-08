@@ -1,0 +1,47 @@
+{
+  "run": "TraversalDebug05",
+  "package": "Traversal06",
+  "debugger": "Rider native LLDB",
+  "paused_file": "Source/BrokenEdge/Traversal/TraversalMovementComponent.cpp",
+  "paused_line": 388,
+  "stack": [
+    "StartPath",
+    "TryObstacle",
+    "DoJump",
+    "CheckJumpInput",
+    "MoveAutonomous"
+  ],
+  "candidate": {
+    "kind": "Vault",
+    "start": [
+      1699.9929,
+      298.5521,
+      457.3595
+    ],
+    "raised": [
+      1699.9929,
+      298.5521,
+      569.8598
+    ],
+    "across": [
+      1484.8008,
+      298.5521,
+      569.8598
+    ],
+    "end": [
+      1484.8008,
+      298.5521,
+      458.2095
+    ],
+    "height": 109.6502
+  },
+  "queries": {
+    "ClearAtEnd": true,
+    "StartToRaised": true,
+    "RaisedToAcross": false,
+    "AcrossToEnd": true
+  },
+  "finding": "Authority correctly rejects the horizontal full-capsule segment for this candidate. The blocking actor was not resolved before the owned test timeout; the editor probe alone cannot establish runtime clearance.",
+  "disposition": "Retain collision checks and select another source-map barrier for actual-input route acceptance.",
+  "cleanup": "Owned run ended on assertion timeout; debugger session closed, agent breakpoints removed, user exception baseline preserved."
+}

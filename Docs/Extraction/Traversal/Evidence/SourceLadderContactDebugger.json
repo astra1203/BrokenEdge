@@ -1,0 +1,102 @@
+{
+  "run": "TraversalDebug07",
+  "session": "BrokenEdge (40100)",
+  "stack": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"frames\":[{\"presentation\":\"FTraversalContactPose::Apply(FCompactPose &) TraversalContactPose.cpp:102\",\"index\":0,\"file\":\"file://D:/SourceFiles/UnrealProjects/BrokenEdge/Source/BrokenEdge/Traversal/TraversalContactPose.cpp\",\"line\":102,\"isCurrent\":true},{\"presentation\":\"FPoseLink::Evaluate(FPoseContext &) AnimNodeBase.cpp:392\",\"index\":1,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Engine/Private/Animation/AnimNodeBase.cpp\",\"line\":392,\"isCurrent\":false},{\"presentation\":\"FAnimInstanceProxy::EvaluateAnimationNode_WithRoot(FPoseContext &, FAnimNode_Base *) AnimInstanceProxy.cpp:1535\",\"index\":2,\"file\":\"file://C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Source/Runtime/Engine/Private/Animation/AnimInstanceProxy.cpp\",\"line\":1535,\"isCurrent\":false}],\"threadId\":\"Thread-5-[Foreground Worker #0] (66992)\",\"totalFrames\":37}"
+      }
+    ],
+    "isError": false
+  },
+  "state": {
+    "content": [
+      {
+        "type": "text",
+        "text": "this =  // 0x00007ff433459c80 {bEnabled=true, bLadder=true, bArmsOnly=false, ...} {const FTraversalContactPose *}\n  ├─ bEnabled = true {bool}\n  ├─ bLadder = true {bool}\n  ├─ bArmsOnly = false {bool}\n  ├─ + MeshToWorld = {Translation={X=-4003.6500000000001 Y=-2196.2400000000002 Z=363.32999999999998} Rotation={X=0 Y=0 Z=0.00000012377484848169473 W=0.99999999999999267}} {UE::Math::TTransform<double>}\n  │  ├─ + Translation = {X=-4003.6500000000001 Y=-2196.2400000000002 Z=363.32999999999998} {void *}\n  │  ├─ + Rotation = {X=0 Y=0 Z=0.00000012377484848169473 W=0.99999999999999267} {void *}\n  │  ├─ + Scale3D = {X=1 Y=1 Z=1} {void *}\n  │  └─ + Raw View = {Rotation={XY={m128d_f64= // 0x00007ff433459c90 {0, 0}}, ZW={m128d_f64= // 0x00007ff433459ca0 {0.00000012377484848169473, 0.99999999999999267}}}, Translation={XY={m128d_f64= // 0x00007ff433459cb0 {-4003.6500000000001, -2196.2400000000002}}, ZW={m128d_f64= // 0x00007ff433459cc0 {...}}}, ...} {UE::Math::TTransform<double>}\n  ├─ + Origin = {X=-4004.4642801146078 Y=-2122.0382388863186 Z=398.08325167810386} {UE::Math::TVector<double>}\n  │  ├─ X = -4004.4642801146078 {double}\n  │  ├─ Y = -2122.0382388863186 {double}\n  │  ├─ Z = 398.08325167810386 {double}\n  │  ├─ ||V||² = 20697250.733276166 {double}\n  │  └─ + Raw View = {={={X=-4004.4642801146078, Y=-2122.0382388863186, Z=398.08325167810386}, XYZ= // 0x00007ff433459cf0 {-4004.4642801146078, -2122.0382388863186, 398.08325167810386}}} {UE::Math::TVector<double>}\n  ├─ + Facing = {X=-0.0000019973708176301837 Y=0.99999999999800526 Z=0} {UE::Math::TVector<double>}\n  │  ├─ X = -0.0000019973708176301837 {double}\n  │  ├─ Y = 0.99999999999800526 {double}\n  │  ├─ Z = 0 {double}\n  │  ├─ ||V||² = 1 {double}\n  │  └─ + Raw View = {={={X=-0.0000019973708176301837, Y=0.99999999999800526, Z=0}, XYZ= // 0x00007ff433459d08 {-0.0000019973708176301837, 0.99999999999800526, 0}}} {UE::Math::TVector<double>}\n  ├─ Weight = 1 {float}\n  ├─ RungSpacing = 37.0832214 {float}\n  ├─ HalfWidth = 14.7402411 {float}\n  └─ + Rungs = Num=6, Max=24 {TArray<UE::Math::TVector<double>, TSizedDefaultAllocator<32>>}\n     ├─ + [0] = {X=-4004.4642801146078 Y=-2122.0382388863186 Z=398.08325167810386} {UE::Math::TVector<double>}\n     ├─ + [1] = {X=-4004.4642688772692 Y=-2115.8908009562097 Z=435.09603418205677} {UE::Math::TVector<double>}\n     ├─ + [2] = {X=-4004.4642576628771 Y=-2109.7348452414321 Z=472.03127361847771} {UE::Math::TVector<double>}\n     ├─ + [3] = {X=-4004.4642480213429 Y=-2103.5330230389186 Z=509.04301663812942} {UE::Math::TVector<double>}\n     ├─ + [4] = {X=-4004.4642434895231 Y=-2097.3855892591441 Z=546.05576962781493} {UE::Math::TVector<double>}\n     ├─ + [5] = {X=-4003.9538631638675 Y=-2090.9111246642506 Z=592.39189050306277} {UE::Math::TVector<double>}\n     └─ + Raw View = {AllocatorInstance={TSizedAllocatorBase<32,TSizedHeapAllocator<32,FMemory> >::ForAnyElementType={Data= // 0x00007fedb2f39480 {...}}}, ArrayNum=6, ArrayMax=24} {TArray<UE::Math::TVector<double>, TSizedDefaultAllocator<32>>}"
+      }
+    ],
+    "isError": false
+  },
+  "expressions": [
+    {
+      "exp": "FVector::Distance(Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(23)).GetLocation(), Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(25)).GetLocation()) + FVector::Distance(Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(25)).GetLocation(), Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(26)).GetLocation())",
+      "r": {
+        "content": [
+          {
+            "type": "text",
+            "text": "FVector::Distance(Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(23)).GetLocation(), Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(25)).GetLocation()) + FVector::Distance(Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(25)).GetLocation(), Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(26)).GetLocation()) = <error: error: no matching conversion for functional-style cast from 'int' to 'FCompactPoseBoneIndex'\ncandidate constructor (the implicit copy constructor) not viable: no known conversion from 'int' to 'const FCompactPoseBoneIndex' for 1st argument\ncandidate constructor (the implicit move constructor) not viable: no known conversion from 'int' to 'FCompactPoseBoneIndex' for 1st argument\ncandidate constructor (the implicit default constructor) not viable: requires 0 arguments, but 1 was provided\nerror: no matching conversion for functional-style cast from 'int' to 'FCompactPoseBoneIndex'\ncandidate constructor (the implicit copy constructor) not viable: no known conversion from 'int' to 'const FCompactPoseBoneIndex' for 1st argument\ncandidate constructor (the implicit move constructor) not viable: no known conversion from 'int' to 'FCompactPoseBoneIndex' for 1st argument\ncandidate constructor (the implicit default constructor) not viable: requires 0 arguments, but 1 was provided\nerror: no matching conversion for functional-style cast from 'int' to 'FCompactPoseBoneIndex'\ncandidate constructor (the implicit copy constructor) not viable: no known conversion from 'int' to 'const FCompactPoseBoneIndex' for 1st argument\ncandidate constructor (the implicit move constructor) not viable: no known conversion from 'int' to 'FCompactPoseBoneIndex' for 1st argument\ncandidate constructor (the implicit default constructor) not viable: requires 0 arguments, but 1 was provided\nerror: no matching conversion for functional-style cast from 'int' to 'FCompactPoseBoneIndex'\ncandidate constructor (the implicit copy constructor) not viable: no known conversion from 'int' to 'const FCompactPoseBoneIndex' for 1st argument\ncandidate constructor (the implicit move constructor) not viable: no known conversion from 'int' to 'FCompactPoseBoneIndex' for 1st argument\ncandidate constructor (the implicit default constructor) not viable: requires 0 arguments, but 1 was provided\n>"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "exp": "FVector::Distance(Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(23)).GetLocation(), FVector(13.926,92.707,145.713))",
+      "r": {
+        "content": [
+          {
+            "type": "text",
+            "text": "FVector::Distance(Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(23)).GetLocation(), FVector(13.926,92.707,145.713)) = <error: error: no matching conversion for functional-style cast from 'int' to 'FCompactPoseBoneIndex'\ncandidate constructor (the implicit copy constructor) not viable: no known conversion from 'int' to 'const FCompactPoseBoneIndex' for 1st argument\ncandidate constructor (the implicit move constructor) not viable: no known conversion from 'int' to 'FCompactPoseBoneIndex' for 1st argument\ncandidate constructor (the implicit default constructor) not viable: requires 0 arguments, but 1 was provided\nerror: no matching constructor for initialization of 'FVector' (aka 'UE::Math::TVector<double>')\ncandidate constructor (the implicit copy constructor) not viable: requires 1 argument, but 3 were provided\ncandidate constructor (the implicit move constructor) not viable: requires 1 argument, but 3 were provided\ncandidate constructor (the implicit default constructor) not viable: requires 0 arguments, but 3 were provided\n>"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "exp": "Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(26))",
+      "r": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(26)) = {Translation={X=25.725086370581206 Y=61.516291579080075 Z=154.94888032459542} Rotation={X=-0.031927589378907377 Y=-0.76274620145671279 Z=0.14810995784215919 W=0.62869889580609362}} {const UE::Math::TTransform<double>}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "exp": "Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(23))",
+      "r": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(23)) = {Translation={X=17.09400879561138 Y=23.450544729848126 Z=144.81177141873806} Rotation={X=-0.33639734810763805 Y=0.037388411393238639 Z=0.47707008100393788 W=0.81107525464073582}} {const UE::Math::TTransform<double>}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "exp": "Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(25))",
+      "r": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(25)) = {Translation={X=32.360492587392173 Y=44.539372833886091 Z=134.06295381702063} Rotation={X=0.06755761791175223 Y=-0.51465142010185083 Z=0.58151930648149708 W=0.62642252532816589}} {const UE::Math::TTransform<double>}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "exp": "Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(26))",
+      "r": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Pose.GetComponentSpaceTransform(FCompactPoseBoneIndex(26)) = {Translation={X=25.725086370581206 Y=61.516291579080075 Z=154.94888032459542} Rotation={X=-0.031927589378907377 Y=-0.76274620145671279 Z=0.14810995784215919 W=0.62869889580609362}} {const UE::Math::TTransform<double>}"
+          }
+        ],
+        "isError": false
+      }
+    }
+  ],
+  "derived": {
+    "left_arm_length_cm": 55.88753953109388,
+    "left_target_distance_cm": 69.33473220018449,
+    "target_basis": "FormalContactAnalysis rung 3 transformed into paused mesh space"
+  },
+  "conclusion": "Contact cache enabled at weight 1. Upper rung exceeds the un-stretched arm length after the fixed 15 cm body shift; reach guard preserves floating source wrists."
+}

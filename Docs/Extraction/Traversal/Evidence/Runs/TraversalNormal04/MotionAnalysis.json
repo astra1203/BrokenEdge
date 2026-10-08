@@ -1,0 +1,167 @@
+{
+  "result": "measured",
+  "capture_boundary": "Snapshots sample engine frames, not every present. Completion estimates have snapshot and movement-timestamp uncertainty (about 0.15 s). Frame cap is not proof of achieved frame rate.",
+  "frame_samples": {
+    "30": {
+      "samples": 32,
+      "median_fps": 29.99993808580302,
+      "p95_frame_ms": 33.33350270986557
+    },
+    "60": {
+      "samples": 35,
+      "median_fps": 59.99988287710165,
+      "p95_frame_ms": 16.693301498889923
+    },
+    "120": {
+      "samples": 57,
+      "median_fps": 119.99759321271681,
+      "p95_frame_ms": 8.989598602056503
+    }
+  },
+  "runs": [
+    {
+      "fps_cap": 30,
+      "height": 60,
+      "end": [
+        30075,
+        30000,
+        6094.1499967423915
+      ],
+      "observed_completion_seconds": 0.8459947854280472,
+      "last_active_elapsed": 0.7014201879501343,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 30,
+      "height": 90,
+      "end": [
+        30075,
+        30350,
+        6094.149998464064
+      ],
+      "observed_completion_seconds": 0.9346639700233936,
+      "last_active_elapsed": 0.833332896232605,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 30,
+      "height": 120,
+      "end": [
+        30075,
+        30700,
+        6094.149998013642
+      ],
+      "observed_completion_seconds": 0.9336452521383762,
+      "last_active_elapsed": 0.833332896232605,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 30,
+      "height": 180,
+      "end": [
+        29997,
+        31050,
+        6274.149994915355
+      ],
+      "observed_completion_seconds": 1.2986540868878365,
+      "last_active_elapsed": 1.199999213218689,
+      "configured_duration": 1.25
+    },
+    {
+      "fps_cap": 60,
+      "height": 60,
+      "end": [
+        30075,
+        30000,
+        6094.149997474885
+      ],
+      "observed_completion_seconds": 0.9362721741199493,
+      "last_active_elapsed": 0.8028919100761414,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 60,
+      "height": 90,
+      "end": [
+        30075,
+        30350,
+        6094.149997369861
+      ],
+      "observed_completion_seconds": 0.8522297982126474,
+      "last_active_elapsed": 0.7538184523582458,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 60,
+      "height": 120,
+      "end": [
+        30075,
+        30700,
+        6094.149996314435
+      ],
+      "observed_completion_seconds": 0.930462222546339,
+      "last_active_elapsed": 0.7927836775779724,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 60,
+      "height": 180,
+      "end": [
+        29997,
+        31050,
+        6274.150001289582
+      ],
+      "observed_completion_seconds": 1.341684902086854,
+      "last_active_elapsed": 1.239181399345398,
+      "configured_duration": 1.25
+    },
+    {
+      "fps_cap": 120,
+      "height": 60,
+      "end": [
+        30075,
+        30000,
+        6094.149999328876
+      ],
+      "observed_completion_seconds": 0.8679745085537434,
+      "last_active_elapsed": 0.7709941864013672,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 120,
+      "height": 90,
+      "end": [
+        30075,
+        30350,
+        6094.149999728308
+      ],
+      "observed_completion_seconds": 0.9308991320431232,
+      "last_active_elapsed": 0.8152389526367188,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 120,
+      "height": 120,
+      "end": [
+        30075,
+        30700,
+        6094.149997329041
+      ],
+      "observed_completion_seconds": 0.8635490834712982,
+      "last_active_elapsed": 0.7366352081298828,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 120,
+      "height": 180,
+      "end": [
+        29997,
+        31050,
+        6274.149999279653
+      ],
+      "observed_completion_seconds": 1.3547477051615715,
+      "last_active_elapsed": 1.2252922058105469,
+      "configured_duration": 1.25
+    }
+  ]
+}

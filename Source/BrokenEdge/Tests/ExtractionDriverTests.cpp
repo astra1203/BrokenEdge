@@ -25,6 +25,7 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/Button.h"
 #include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Camera/CameraActor.h"
@@ -59,6 +60,10 @@
 #include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/Component/LagCompensationComponent.h"
 #include "BrokenEdge/Weapon/Weapon.h"
+#include "TraversalAcceptanceFixture.h"
+#include "BrokenEdge/Traversal/TraversalMovementComponent.h"
+#include "BrokenEdge/Traversal/ExtractionTraversalComponent.h"
+#include "BrokenEdge/Traversal/ExtractionLadder.h"
 
 class FExtractionDriver : public IAutomationLatentCommand
 {
@@ -126,6 +131,18 @@ public:
 		{
 			Inject(PC, PulseAction, Now < PulseEnd);
 			if (Now >= PulseEnd) PulseAction.Reset();
+		}
+		if (PC && !Recording.IsEmpty() && Now - LastFrame >= 1.0 / 30.0 && !FScreenshotRequest::IsScreenshotRequested())
+		{
+			const FString Frame = FString::Printf(TEXT("%06d.png"), RecordingFrame++);
+			const FString Directory = Folder / (Role + TEXT("-") + Recording);
+			IFileManager::Get().MakeDirectory(*Directory, true);
+			FScreenshotRequest::RequestScreenshot(Directory / Frame, true, false);
+			FFileHelper::SaveStringToFile(FString::Printf(TEXT("%s,%.6f\n"), *Frame, Now),
+			                              *(Directory / TEXT("Frames.csv")),
+			                              FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM, &IFileManager::Get(),
+			                              FILEWRITE_Append);
+			LastFrame = Now;
 		}
 		FString Data;
 		TSharedPtr<FJsonObject> Command;
@@ -438,7 +455,9 @@ public:
 							for (int32 Index = 0; Index < Body->GetNumBones(); ++Index)
 							{
 								const FName Bone = Body->GetBoneName(Index);
-								if (!Bone.ToString().Contains(TEXT("LeftHand")) && Bone != TEXT("Head") && Bone != TEXT(
+								if (!Bone.ToString().Contains(TEXT("LeftHand")) && Bone != TEXT("RightHand") && Bone !=
+									TEXT("LeftFoot") && Bone != TEXT("RightFoot") && Bone != TEXT("Head") && Bone !=
+									TEXT(
 										"Neck")
 									&& Bone != TEXT("RightShoulder") && Bone != TEXT("LeftShoulder") && Bone != TEXT(
 										"Spine2"))
@@ -489,9 +508,6 @@ public:
 						            SetFieldOfView(Command->GetNumberField(TEXT("field_of_view")));
 						TestCamera->GetCameraComponent()->SetAspectRatio(1920.f / 1080.f);
 						PC->SetViewTarget(TestCamera.Get());
-						if (const auto* Local = PC->GetLocalPlayer(); Local && Local->ViewportClient && Local->
-							ViewportClient->GetGameViewport())
-							Local->ViewportClient->GetGameViewport()->SetFixedViewportSize(1920, 1080);
 					}
 				}
 				else if (Op == TEXT("camera") && PC)
@@ -558,6 +574,22 @@ public:
 						Region->SetTestLoadDelay(
 							Command->GetNumberField(TEXT("seconds")));
 				}
+				else if (Op == TEXT("traversal_fixture") && Role == TEXT("Server"))
+				{
+					World->SpawnActor<ATraversalAcceptanceFixture>(FVector(30000, 30000, 6000), FRotator::ZeroRotator);
+				}
+				else if (Op == TEXT("record") && PC)
+				{
+					Recording = Command->GetBoolField(TEXT("enabled"))
+						            ? FPaths::GetCleanFilename(Command->GetStringField(TEXT("name")))
+						            : FString();
+					RecordingFrame = 0;
+				}
+				else if (Op == TEXT("fps"))
+				{
+					const int32 Cap = FMath::Clamp(static_cast<int32>(Command->GetNumberField(TEXT("value"))), 15, 120);
+					GEngine->Exec(World, *FString::Printf(TEXT("t.MaxFPS %d"), Cap));
+				}
 				else if (Op == TEXT("lag"))
 				{
 					GEngine->Exec(World, TEXT("NetEmulation.PktLag 50"));
@@ -576,6 +608,9 @@ public:
 private:
 	FAutomationTestBase* Test;
 	FString Role, Folder, Error, PulseAction, AimTarget;
+	FString Recording;
+	int32 RecordingFrame = 0;
+	double LastFrame = 0;
 	TArray<FVector> WalkPoints;
 	int32 WalkIndex = 0;
 	double WalkSince = 0;
@@ -994,13 +1029,15 @@ private:
 		auto* Input = PC->GetLocalPlayer()
 			              ? PC->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>()
 			              : nullptr;
-		const FString Path = Name == TEXT("Sprint")
+		const FString ActionName = Name == TEXT("MoveBack") ? TEXT("Move") : Name;
+		const FString Path = ActionName == TEXT("Sprint")
 			                     ? TEXT("/Game/Characters/Stinger/Blueprints/Input/IA_StingerSprint.IA_StingerSprint")
-			                     : TEXT("/Game/Input/Actions/IA_") + Name + TEXT(".IA_") + Name;
+			                     : TEXT("/Game/Input/Actions/IA_") + ActionName + TEXT(".IA_") + ActionName;
 		auto* Action = LoadObject<UInputAction>(nullptr, *Path);
 		if (Input && Action)
-			Input->InjectInputForAction(Action, Name == TEXT("Move")
-				                                    ? FInputActionValue(FVector2D(0, Pressed ? 1 : 0))
+			Input->InjectInputForAction(Action, ActionName == TEXT("Move")
+				                                    ? FInputActionValue(FVector2D(
+					                                    0, Pressed ? (Name == TEXT("MoveBack") ? -1 : 1) : 0))
 				                                    : FInputActionValue(Pressed), {}, {});
 	}
 
@@ -1018,6 +1055,8 @@ private:
 		State->SetNumberField(TEXT("command"), LastCommand);
 		State->SetNumberField(TEXT("walk_index"), WalkIndex);
 		State->SetNumberField(TEXT("walk_count"), WalkPoints.Num());
+		State->SetNumberField(TEXT("world_time"), World->GetTimeSeconds());
+		State->SetNumberField(TEXT("frame_delta"), World->GetDeltaSeconds());
 		const auto Memory = FPlatformMemory::GetStats();
 		State->SetNumberField(TEXT("physical_mib"), Memory.UsedPhysical / 1048576.);
 		State->SetNumberField(TEXT("peak_physical_mib"), Memory.PeakUsedPhysical / 1048576.);
@@ -1213,7 +1252,28 @@ private:
 					Player->SetBoolField(TEXT("defeated"), Character->IsDefeated());
 					Player->SetBoolField(TEXT("first_person"), Character->IsFirstPersonView());
 					Player->SetStringField(TEXT("pawn_class"), Character->GetClass()->GetPathName());
+					if (const auto* Movement = Cast<UTraversalMovementComponent>(Character->GetCharacterMovement()))
+					{
+						const auto& Traversal = Character->GetLocalRole() == ROLE_SimulatedProxy
+							                        ? Character->GetTraversal()->VisualState
+							                        : Movement->State;
+						Player->SetNumberField(TEXT("traversal"), static_cast<int32>(Traversal.Kind));
+						Player->SetNumberField(TEXT("traversal_serial"), Traversal.Serial);
+						Player->SetNumberField(TEXT("traversal_elapsed"), Traversal.Elapsed);
+						Player->SetNumberField(TEXT("traversal_duration"), Traversal.Duration);
+						Player->SetArrayField(TEXT("traversal_contact"), VectorJson(Traversal.Contact));
+						Player->SetArrayField(TEXT("traversal_end"), VectorJson(Traversal.End));
+						Player->SetStringField(TEXT("traversal_rejection"), Movement->LastRejection);
+						Player->SetStringField(TEXT("ladder_focus"), GetNameSafe(Movement->FindLadder()));
+						Player->SetNumberField(
+							TEXT("capsule_half"), Character->GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+						Player->SetNumberField(
+							TEXT("capsule_radius"), Character->GetCapsuleComponent()->GetScaledCapsuleRadius());
+					}
 					Player->SetStringField(TEXT("body_anim"), GetPathNameSafe(Character->GetMesh()->GetAnimInstance()));
+					if (auto* BodyAnim = Character->GetMesh()->GetAnimInstance())
+						Player->SetBoolField(
+							TEXT("body_montage_active"), BodyAnim->GetCurrentActiveMontage() != nullptr);
 					if (auto* ViewMesh = Character->GetFirstPersonMesh())
 					{
 						Player->SetNumberField(TEXT("fp_lods"), ViewMesh->GetNumLODs());
@@ -1236,6 +1296,9 @@ private:
 					                      });
 					if (auto* Weapon = Character->GetEquippedWeapon())
 					{
+						Player->SetBoolField(TEXT("weapon_hidden"), Weapon->IsHidden());
+						if (auto* ViewWeapon = Character->GetFirstPersonWeaponMesh())
+							Player->SetBoolField(TEXT("fp_weapon_visible"), ViewWeapon->IsVisible());
 						Player->SetNumberField(
 							TEXT("left_grip_distance"),
 							FVector::Dist(Character->GetMesh()->GetSocketLocation(TEXT("LeftHand")),

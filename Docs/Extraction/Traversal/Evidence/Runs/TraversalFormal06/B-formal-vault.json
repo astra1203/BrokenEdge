@@ -1,0 +1,33 @@
+{
+  "file": "Saved\\Extraction\\TraversalFormal06\\B-formal-vault.mp4",
+  "sha256": "c5cdf2e3aec9dbc2d50cdd03761c044b4933fc157caf8ec4fc07d521af134dc3",
+  "frames": 13,
+  "seconds": 1.529823001474142,
+  "measured_fps": 7.844044695652219,
+  "max_frame_interval": 0.14806199818849564,
+  "boundary": "Rendered viewport frames timed by capture requests; no audio. Captures add readback overhead, separate from performance runs.",
+  "command": [
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\Tools\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+    "-hide_banner",
+    "-loglevel",
+    "error",
+    "-f",
+    "concat",
+    "-safe",
+    "0",
+    "-i",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\TraversalFormal06\\B-formal-vault\\Concat.txt",
+    "-fps_mode",
+    "vfr",
+    "-c:v",
+    "libx264",
+    "-crf",
+    "18",
+    "-pix_fmt",
+    "yuv420p",
+    "-movflags",
+    "+faststart",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\TraversalFormal06\\B-formal-vault.partial.mp4"
+  ],
+  "result": "passed"
+}

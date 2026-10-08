@@ -9,6 +9,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "TwoBoneIK.h"
+#include "BrokenEdge/Traversal/TraversalContactPose.h"
 
 // 原生动画图负责基础姿势和视觉蒙太奇；AnimBP 资产只配置动画引用。
 struct FStingerFirstPersonProxy : FAnimInstanceProxy
@@ -27,6 +28,7 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 	bool bActionMotion = false;
 	FTransform RightTarget, LeftTarget, RightReference, LeftReference;
 	bool bLeftActionMotion = false;
+	FTraversalContactPose TraversalContacts;
 
 	explicit FStingerFirstPersonProxy(UAnimInstance* Instance) : FAnimInstanceProxy(Instance)
 	{
@@ -54,6 +56,7 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 	virtual void PreUpdate(UAnimInstance* Instance, float DeltaSeconds) override
 	{
 		FAnimInstanceProxy::PreUpdate(Instance, DeltaSeconds);
+		TraversalContacts.Cache(Instance);
 		FrameDelta = DeltaSeconds;
 		UAnimSequence* Desired = CastChecked<UStingerFirstPersonAnimInstance>(Instance)->ActiveAnimation;
 		if (Desired && Desired != Player.GetSequence())
@@ -104,7 +107,8 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 			}
 		}
 		LeftHandIK.Alpha = 0.f;
-		if (Character && Character->GetFirstPersonWeaponMesh() && Character->GetFirstPersonMesh()
+		if (Character && !Character->IsTraversing() && Character->GetFirstPersonWeaponMesh() && Character->
+			GetFirstPersonMesh()
 			&& Character->GetFirstPersonWeaponMesh()->DoesSocketExist(TEXT("LeftHandSocket"))
 			&& Character->GetCombatState() == ECombatState::ECS_Unoccuiped)
 		{
@@ -220,6 +224,7 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 			SolveArm(TEXT("LeftArm"),TEXT("LeftForeArm"),TEXT("LeftHand"), MovingLeftTarget, LeftReference, false);
 			FCSPose<FCompactPose>::ConvertComponentPosesToLocalPoses(MoveTemp(Pose), Output.Pose);
 		}
+		TraversalContacts.Apply(Output.Pose);
 		return true;
 	}
 };

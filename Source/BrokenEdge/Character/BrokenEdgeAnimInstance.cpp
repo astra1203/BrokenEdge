@@ -85,7 +85,7 @@ void UBrokenEdgeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	if (bWeaponEquipped && IsValid(EquippedWeapon) && EquippedWeapon->GetWeaponMesh() && BrokenEdgeCharacter->GetMesh()
 		&& EquippedWeapon->GetOwner() == BrokenEdgeCharacter
 		&& EquippedWeapon->GetWeaponState() == EWeaponState::EWS_Equipped
-		&& !bDefeated && !BrokenEdgeCharacter->GetDisableGameplay())
+		&& !bDefeated && !BrokenEdgeCharacter->GetDisableGameplay() && !BrokenEdgeCharacter->IsTraversing())
 	{
 		const auto WeaponMesh = EquippedWeapon->GetWeaponMesh();
 		const auto Body = BrokenEdgeCharacter->GetMesh();

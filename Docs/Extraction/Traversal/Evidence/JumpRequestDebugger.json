@@ -1,0 +1,43 @@
+{
+  "run": "TraversalDebug03",
+  "result": "root_cause_confirmed",
+  "client_pid": 13700,
+  "server_pid": 69592,
+  "debugger": "Rider native LLDB via xdebug tools",
+  "observations": [
+    {
+      "file": "Source/BrokenEdge/Traversal/TraversalMovementComponent.cpp",
+      "line_at_probe": 201,
+      "front_distance_cm": 80,
+      "max_step_height_cm": 45
+    },
+    {
+      "line_at_probe": 209,
+      "top_impact_point": [
+        29975,
+        30000,
+        6060
+      ]
+    },
+    {
+      "line_at_probe": 379,
+      "state": "Vault",
+      "bPressedJump_before_SetMovementMode": 1
+    },
+    {
+      "line_at_probe": 380,
+      "bPressedJump_after_SetMovementMode": 0
+    }
+  ],
+  "stack": [
+    "UTraversalMovementComponent::StartPath",
+    "UTraversalMovementComponent::TryObstacle",
+    "UTraversalMovementComponent::DoJump",
+    "ACharacter::CheckJumpInput",
+    "UCharacterMovementComponent::ControlledCharacterMove"
+  ],
+  "engine_cause": "ACharacter::OnMovementModeChanged calls ResetJumpState when the new mode is not falling. ControlledCharacterMove checks jumping before ReplicateMoveToServer captures the saved move.",
+  "fix": "Preserve the obstacle input edge in FLAG_Custom_3 and saved-move replay. Server independently probes the obstacle in UpdateCharacterStateBeforeMovement.",
+  "cleanup": "Agent breakpoints removed; both task debug sessions stopped. Original server PID 69528 preserved.",
+  "acceptance": "Debugger evidence establishes the defect; post-fix packaged network acceptance is recorded separately."
+}

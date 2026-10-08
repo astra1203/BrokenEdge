@@ -66,7 +66,10 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UExtractionInteractionComponent> ExtractionInteraction;
 	// Sets default values for this character's properties
-	ABrokenEdgeCharacter();
+	ABrokenEdgeCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<class UExtractionTraversalComponent> Traversal;
+	class UExtractionTraversalComponent* GetTraversal() const { return Traversal; }
+	bool IsTraversing() const;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

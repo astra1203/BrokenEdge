@@ -1,0 +1,146 @@
+{
+  "result": "measured",
+  "poses": {
+    "A": {
+      "world": {
+        "LeftHand": {
+          "position": [
+            29995.0,
+            29078.0,
+            6209.643
+          ],
+          "target": [
+            29995,
+            29078,
+            6216.5
+          ],
+          "error_cm": 6.856999999999971
+        },
+        "RightHand": {
+          "position": [
+            29995.0,
+            29122.0,
+            6241.5
+          ],
+          "target": [
+            29995,
+            29122,
+            6241.5
+          ],
+          "error_cm": 0.0
+        },
+        "LeftFoot": {
+          "position": [
+            29989.0,
+            29083.5,
+            6116.5
+          ],
+          "target": [
+            29989.0,
+            29083.5,
+            6116.5
+          ],
+          "error_cm": 0.0
+        },
+        "RightFoot": {
+          "position": [
+            29989.0,
+            29116.5,
+            6087.391
+          ],
+          "target": [
+            29989.0,
+            29116.5,
+            6091.5
+          ],
+          "error_cm": 4.109000000000378
+        }
+      },
+      "first_person": {
+        "LeftHand": {
+          "position": [
+            29995.0,
+            29078.0,
+            6191.5
+          ],
+          "target": [
+            29995,
+            29078,
+            6191.5
+          ],
+          "error_cm": 0.0
+        },
+        "RightHand": {
+          "position": [
+            29995.0,
+            29122.0,
+            6241.5
+          ],
+          "target": [
+            29995,
+            29122,
+            6241.5
+          ],
+          "error_cm": 0.0
+        }
+      }
+    },
+    "B": {
+      "world": {
+        "LeftHand": {
+          "position": [
+            29995.0,
+            29078.0,
+            6209.94
+          ],
+          "target": [
+            29995,
+            29078,
+            6216.5
+          ],
+          "error_cm": 6.5600000000004
+        },
+        "RightHand": {
+          "position": [
+            29995.0,
+            29122.0,
+            6241.5
+          ],
+          "target": [
+            29995,
+            29122,
+            6241.5
+          ],
+          "error_cm": 0.0
+        },
+        "LeftFoot": {
+          "position": [
+            29989.0,
+            29083.5,
+            6116.5
+          ],
+          "target": [
+            29989.0,
+            29083.5,
+            6116.5
+          ],
+          "error_cm": 0.0
+        },
+        "RightFoot": {
+          "position": [
+            29989.0,
+            29116.5,
+            6088.211
+          ],
+          "target": [
+            29989.0,
+            29116.5,
+            6091.5
+          ],
+          "error_cm": 3.28899999999976
+        }
+      }
+    }
+  },
+  "boundary": "Wrist and ankle targets at a paused sample. A limb in the reach part of its cycle may be between rungs; this does not replace video inspection of transitions and fingers/soles."
+}

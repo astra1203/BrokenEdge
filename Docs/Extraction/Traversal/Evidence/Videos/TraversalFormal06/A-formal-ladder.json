@@ -1,0 +1,33 @@
+{
+  "file": "Saved\\Extraction\\TraversalFormal06\\A-formal-ladder.mp4",
+  "sha256": "ce700ed36168f5c87195532d26433303b452ac21cd37da66b5ee8badf9f3396c",
+  "frames": 23,
+  "seconds": 2.7215839996933937,
+  "measured_fps": 8.08352782882265,
+  "max_frame_interval": 0.13482100144028664,
+  "boundary": "Rendered viewport frames timed by capture requests; no audio. Captures add readback overhead, separate from performance runs.",
+  "command": [
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\Tools\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+    "-hide_banner",
+    "-loglevel",
+    "error",
+    "-f",
+    "concat",
+    "-safe",
+    "0",
+    "-i",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\TraversalFormal06\\A-formal-ladder\\Concat.txt",
+    "-fps_mode",
+    "vfr",
+    "-c:v",
+    "libx264",
+    "-crf",
+    "18",
+    "-pix_fmt",
+    "yuv420p",
+    "-movflags",
+    "+faststart",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\TraversalFormal06\\A-formal-ladder.partial.mp4"
+  ],
+  "result": "passed"
+}

@@ -33,6 +33,11 @@
 #include "AnimGraphNode_LocalToComponentSpace.h"
 #include "AnimGraphNode_ComponentToLocalSpace.h"
 #include "AnimGraphNode_Root.h"
+#include "AnimGraphNode_Slot.h"
+#include "AnimGraphNode_TraversalContact.h"
+#include "Engine/StaticMesh.h"
+#include "StaticMeshResources.h"
+#include "MeshDescription.h"
 
 USkeleton* UStingerAssetLibrary::CreateSourceSkeleton(const FString& PackageName, const TArray<FName>& Names,
                                                       const TArray<int32>& Parents,
@@ -301,6 +306,102 @@ bool UStingerAssetLibrary::ConfigureThirdPersonGripIK(UAnimBlueprint* Blueprint)
 	return Blueprint->Status != BS_Error;
 }
 
+FString UStingerAssetLibrary::DescribeLadderVertices(UStaticMesh* Mesh)
+{
+	TArray<TSharedPtr<FJsonValue>> Points;
+	if (Mesh)
+		if (const auto* Description = Mesh->GetMeshDescription(0))
+		{
+			const auto Positions = Description->GetVertexPositions();
+			for (const auto Vertex : Description->Vertices().GetElementIDs())
+			{
+				const FVector3f P = Positions[Vertex] * FVector3f(Mesh->GetSourceModel(0).BuildSettings.BuildScale3D);
+				Points.Add(MakeShared<FJsonValueArray>(TArray<TSharedPtr<FJsonValue>>{
+					MakeShared<FJsonValueNumber>(P.X), MakeShared<FJsonValueNumber>(P.Y),
+					MakeShared<FJsonValueNumber>(P.Z)
+				}));
+			}
+			FString Result;
+			FJsonSerializer::Serialize(Points, TJsonWriterFactory<>::Create(&Result));
+			return Result;
+		}
+	if (Mesh && Mesh->GetRenderData() && Mesh->GetRenderData()->LODResources.Num())
+	{
+		const auto& Positions = Mesh->GetRenderData()->LODResources[0].VertexBuffers.PositionVertexBuffer;
+		for (uint32 I = 0; I < Positions.GetNumVertices(); ++I)
+		{
+			const auto P = Positions.VertexPosition(I);
+			Points.Add(MakeShared<FJsonValueArray>(TArray<TSharedPtr<FJsonValue>>{
+				MakeShared<FJsonValueNumber>(P.X), MakeShared<FJsonValueNumber>(P.Y), MakeShared<FJsonValueNumber>(P.Z)
+			}));
+		}
+	}
+	FString Result;
+	FJsonSerializer::Serialize(Points, TJsonWriterFactory<>::Create(&Result));
+	return Result;
+}
+
+TArray<FVector> UStingerAssetLibrary::TraceTraversalSurface(UObject* WorldContext, FVector Start, FVector End)
+{
+	UWorld* World = WorldContext ? WorldContext->GetWorld() : nullptr;
+	FHitResult Hit;
+	if (World && World->LineTraceSingleByChannel(Hit, Start, End, ECC_Pawn,
+	                                             FCollisionQueryParams(
+		                                             SCENE_QUERY_STAT(TraversalEditorSurface), false)))
+		return {Hit.ImpactPoint, Hit.ImpactNormal};
+	return {};
+}
+
+bool UStingerAssetLibrary::TraversalCapsuleClear(UObject* WorldContext, FVector Start, FVector End, float Radius,
+                                                 float HalfHeight)
+{
+	UWorld* World = WorldContext ? WorldContext->GetWorld() : nullptr;
+	FHitResult Hit;
+	return World && !World->SweepSingleByChannel(Hit, Start, End, FQuat::Identity, ECC_Pawn,
+	                                             FCollisionShape::MakeCapsule(Radius, HalfHeight),
+	                                             FCollisionQueryParams(
+		                                             SCENE_QUERY_STAT(TraversalEditorCapsule), false));
+}
+
+bool UStingerAssetLibrary::ConfigureTraversalSlot(UAnimBlueprint* Blueprint)
+{
+	if (!Blueprint || !Blueprint->GetPathName().StartsWith(TEXT("/Game/Characters/Stinger/"))) return false;
+	TArray<UEdGraph*> Graphs;
+	Blueprint->GetAllGraphs(Graphs);
+	for (auto* Graph : Graphs)
+	{
+		if (Graph->GetFName() != TEXT("AnimGraph")) continue;
+		UAnimGraphNode_Root* Root = nullptr;
+		for (auto Node : Graph->Nodes)
+			if (auto* Candidate = Cast<UAnimGraphNode_Root>(Node)) Root = Candidate;
+		if (!Root) return false;
+		auto* Result = Root->FindPinChecked(TEXT("Result"));
+		if (Result->LinkedTo.Num() != 1) return false;
+		auto* Previous = Result->LinkedTo[0];
+		if (Cast<UAnimGraphNode_TraversalContact>(Previous->GetOwningNode())) return true;
+		FGraphNodeCreator<UAnimGraphNode_Slot> Creator(*Graph);
+		auto* Slot = Creator.CreateNode();
+		Slot->Node.SlotName = TEXT("DefaultSlot");
+		Slot->NodePosX = Root->NodePosX;
+		Slot->NodePosY = Root->NodePosY;
+		Creator.Finalize();
+		Result->BreakLinkTo(Previous);
+		Previous->MakeLinkTo(Slot->FindPinChecked(TEXT("Source")));
+		FGraphNodeCreator<UAnimGraphNode_TraversalContact> ContactCreator(*Graph);
+		auto* Contact = ContactCreator.CreateNode();
+		ContactCreator.Finalize();
+		Slot->FindPinChecked(TEXT("Pose"), EGPD_Output)->MakeLinkTo(Contact->FindPinChecked(TEXT("Source")));
+		Contact->FindPinChecked(TEXT("Pose"), EGPD_Output)->MakeLinkTo(Result);
+		Contact->NodePosX = Root->NodePosX + 300;
+		Contact->NodePosY = Root->NodePosY;
+		Root->NodePosX += 600;
+		FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(Blueprint);
+		FKismetEditorUtilities::CompileBlueprint(Blueprint);
+		return Blueprint->Status != BS_Error;
+	}
+	return false;
+}
+
 void UStingerAssetLibrary::SetValidationFixedStep(float Seconds)
 {
 	FApp::SetUseFixedTimeStep(Seconds > 0.f);
@@ -375,8 +476,9 @@ void UStingerAssetLibrary::BeginValidationPIE(int32 Players)
 
 bool UStingerAssetLibrary::SetValidationViewportSize(APlayerController* Controller, int32 Width, int32 Height)
 {
-	if (!Controller || !Controller->GetLocalPlayer() || Width < 1 || Height < 1 || Width > 3840 || Height > 2160) return
-		false;
+	if (!Controller || !Controller->GetLocalPlayer() || Width < 1 || Height < 1 || Width > 3840 || Height > 2160)
+		return
+			false;
 	UGameViewportClient* Client = Controller->GetLocalPlayer()->ViewportClient;
 	if (!Client || !Client->GetGameViewport()) return false;
 	Client->GetGameViewport()->SetFixedViewportSize(Width, Height);

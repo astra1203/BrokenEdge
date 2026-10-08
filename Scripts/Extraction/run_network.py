@@ -14,6 +14,7 @@ import subprocess
 import sys
 import time
 import traceback
+from pe_validation import validate_executable
 
 sys.stdout.reconfigure(encoding='utf-8')
 ROOT = Path(__file__).resolve().parents[2]
@@ -27,10 +28,16 @@ parser.add_argument('--isolated-room', action='store_true', help='Only join the 
 parser.add_argument('--lag', action='store_true')
 parser.add_argument('--unacked', action='store_true', help='Recovery test: kill server after durable extraction commit before client acknowledgement')
 parser.add_argument('--debug-hold', action='store_true', help='Wait for Continue.txt before combat and extend assertion timeouts')
+parser.add_argument('--traversal-record', action='store_true', help='Record owner and observer traversal clips')
+parser.add_argument('--traversal-route-only', action='store_true', help='Run only the continuous source-map traversal route')
+parser.add_argument('--traversal-top-only', action='store_true', help='Focused top-entry prediction reproducer')
+parser.add_argument('--traversal-debug-point', choices=['vault','ladder'], default='vault')
+parser.add_argument('--traversal-route', action='store_true', help='Also run the continuous source-map traversal route')
+parser.add_argument('--traversal-lifecycle', action='store_true', help='Three-player traversal damage, death and disconnect acceptance')
 parser.add_argument('--optic-validation', action='store_true', help='Additional mounted-optic visual acceptance in the equipment scenario')
 parser.add_argument('--optic-remote-only', action='store_true', help='Stop equipment acceptance after observer mount captures; not a full combat regression')
 parser.add_argument('--resolution', choices=['1280x720', '1920x1080'], help='Rendered client size for visual acceptance')
-parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east'], default='combat')
+parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
 parser.add_argument('--players', type=int, choices=[2, 3, 6])
 parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
 parser.add_argument('--rendered-role', choices=['A', 'B'], help='Render only this client; the other clients remain connected with NullRHI')
@@ -42,6 +49,8 @@ parser.add_argument('--streaming-loops', type=int, choices=[1, 2, 10], default=1
 args = parser.parse_args()
 if not 1024 <= args.port <= 65535:
     parser.error('--port must be between 1024 and 65535')
+if args.traversal_lifecycle and (args.scenario!='traversal' or args.players!=3):
+    parser.error('--traversal-lifecycle requires --scenario traversal --players 3')
 if not args.packaged and args.package_root != 'Packaged':
     parser.error('--package-root requires --packaged')
 package_root = (ROOT / args.package_root).resolve()
@@ -58,8 +67,8 @@ if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
 OUT = ROOT / 'Saved/Extraction' / args.tag
 OUT.mkdir(parents=True, exist_ok=False)
 ROLES = ['A', 'B', 'C', 'D'] if args.scenario == 'four' else ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
-if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east']:
-    ROLES = list('ABCDEF')[:args.players or (6 if args.scenario in ['pvpve', 'lifecycle'] else 3)]
+if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']:
+    ROLES = list('ABCDEF')[:args.players or (6 if args.scenario in ['pvpve', 'lifecycle'] else 2 if args.scenario == 'traversal' else 3)]
 rendered_roles = [args.rendered_role] if args.rendered_role else ROLES[:args.rendered_clients]
 processes, commands, checks = {}, {}, []
 last_states = {}
@@ -156,7 +165,13 @@ def wait(predicate, message, timeout=45):
 
 def check(name, predicate, timeout=45):
     wait(predicate, name, timeout)
-    checks.append({'name': name, 'states': {r: state(r) for r in processes}})
+    snapshots={r:state(r) for r in processes}
+    if args.scenario=='traversal':
+        # Keep motion evidence without repeatedly serializing every stash/container during subsecond actions.
+        snapshots={r:{k:v for k,v in s.items() if k in ('role','map','phase','packet_lag','packet_loss','quality')} |
+                     {'players':[{k:v for k,v in p.items() if k not in ('account','inventory','loot_view','progression')} for p in s.get('players',[])]}
+                   for r,s in snapshots.items()}
+    checks.append({'name': name, 'states': snapshots})
     save()
     print('PASS', name, flush=True)
 
@@ -185,6 +200,7 @@ def launch(role):
         executable = package_root / ('Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe'
                                      if role == 'Server' else 'Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe')
         command = [str(executable)]
+        report.setdefault('executables',{})[role]=validate_executable(executable)
     else:
         command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe'), str(ROOT / 'BrokenEdge.uproject'),
                    '-server' if role == 'Server' else '-game']
@@ -201,10 +217,13 @@ def launch(role):
     if args.isolated_room:
         command += ['-RoomName=' + args.tag, '-ExtractionTestRoom=' + args.tag]
     rendered = role in rendered_roles
-    if args.scenario == 'performance':
+    if args.scenario in ['performance', 'traversal']:
         command = [c for c in command if not c.startswith('-ExecCmds=')]
         quality = ','.join('sg.' + name + 'Quality 1' for name in ['ViewDistance', 'AntiAliasing', 'Shadow', 'GlobalIllumination', 'Reflection', 'PostProcess', 'Texture', 'Effects', 'Foliage', 'Shading'])
-        command += ['-csvGpuStats', '-csvCategories=GPUMem', '-ExecCmds=' + ('t.MaxFPS 0,r.VSync 0,r.ScreenPercentage 100,' + quality if rendered else 't.MaxFPS 30') + ',Automation RunTests BrokenEdge.Extraction.ProcessDriver']
+        if args.scenario == 'traversal' and args.traversal_record:
+            quality += ',r.MotionBlurQuality 0'
+        cap = '0' if args.scenario == 'performance' else '30'
+        command += ['-csvGpuStats', '-csvCategories=GPUMem', '-ExecCmds=' + ('t.MaxFPS '+cap+',r.VSync 0,r.ScreenPercentage 100,' + quality if rendered else 't.MaxFPS 30') + ',Automation RunTests BrokenEdge.Extraction.ProcessDriver']
     elif args.scenario == 'northcombat':
         command += ['-csvGpuStats', '-csvCategories=GPUMem']
     if args.network_stats:
@@ -216,11 +235,16 @@ def launch(role):
         command += ['-ForceRes']
     if args.debug_hold and args.scenario == 'equipment':
         command += ['-ExtractionVisualCalibration']
+    if args.debug_hold:
+        command += ['-ini:Engine:[/Script/OnlineSubsystemUtils.IpNetDriver]:ConnectionTimeout=600.0',
+                    '-ini:Engine:[/Script/OnlineSubsystemUtils.IpNetDriver]:InitialConnectTimeout=600.0']
     if role == 'Server' and args.unacked:
         command += ['-ExtractionHoldSettlement=' + str(OUT / 'SettlementCommitted.txt')]
     if role == 'Server' and args.scenario == 'lifecycle':
         # Observe transport disconnect while the 30-second downed deadline is
         # still active. This applies only to this isolated acceptance server.
+        command += ['-ini:Engine:[/Script/OnlineSubsystemUtils.IpNetDriver]:ConnectionTimeout=10.0']
+    if role == 'Server' and args.traversal_lifecycle:
         command += ['-ini:Engine:[/Script/OnlineSubsystemUtils.IpNetDriver]:ConnectionTimeout=10.0']
     if args.scenario == 'swap':
         command += ['-LogCmds=LogTemp Verbose']
@@ -249,7 +273,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east']
+    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
@@ -266,6 +290,9 @@ def begin_round():
     if args.scenario in ['streaming','east'] and len(ROLES) == 2:
         send('B', 'squad', value=1)
         check('Streaming pair shares a squad for spectator acceptance', lambda: player('Server', 'B').get('squad') == 1)
+    if args.scenario == 'traversal' and args.traversal_lifecycle:
+        send('C', 'squad', value=1)
+        check('Traversal casualty has a living squadmate', lambda: player('Server', 'C').get('squad') == player('Server', 'A').get('squad'))
     for role in ROLES:
         send(role, 'ready')
     if args.scenario in ['equipment', 'progression', 'northcombat']:
@@ -377,6 +404,9 @@ try:
         check('Duplicate cannot mutate authenticated inventory', lambda: state('A')['account']['revision'] == account['revision'] and state('A')['account']['stash'] == account['stash'])
         check('Duplicate login cannot regrant starter kits', lambda: len(state('Server')['stored_results']) == 1 and sum(i['quantity'] for i in state('A')['account']['stash']['items'] if i['definition'] == 'AK') == 3)
         send('B', 'screenshot', name='duplicate-profile-denied')
+    elif args.scenario == 'traversal':
+        from traversal_scenarios import run
+        run(globals())
     elif args.scenario == 'east':
         from east_scenarios import run
         run(globals())

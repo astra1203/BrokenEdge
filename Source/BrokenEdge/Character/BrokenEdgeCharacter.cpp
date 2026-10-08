@@ -14,6 +14,8 @@
 #include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
 #include "BrokenEdge/Extraction/ExtractionPlayerController.h"
 #include "StingerFirstPersonAnimInstance.h"
+#include "BrokenEdge/Traversal/TraversalMovementComponent.h"
+#include "BrokenEdge/Traversal/ExtractionTraversalComponent.h"
 #include "Animation/AnimMontage.h"
 
 #include "EnhancedInputComponent.h"
@@ -40,7 +42,9 @@
 
 
 // Sets default values
-ABrokenEdgeCharacter::ABrokenEdgeCharacter()
+ABrokenEdgeCharacter::ABrokenEdgeCharacter(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UTraversalMovementComponent>(
+		ACharacter::CharacterMovementComponentName))
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -60,6 +64,7 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter()
 	OverheadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadWidget"));
 	OverheadWidget->SetupAttachment(RootComponent);
 
+	Traversal = CreateDefaultSubobject<UExtractionTraversalComponent>(TEXT("Traversal"));
 	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	Combat->SetIsReplicated(true);
 	ExtractionCombat = CreateDefaultSubobject<UExtractionCombatComponent>(TEXT("ExtractionCombat"));
@@ -299,6 +304,12 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
  */
 void ABrokenEdgeCharacter::RotateInPlace(float DeltaTime)
 {
+	if (IsTraversing())
+	{
+		bUseControllerRotationYaw = false;
+		TurningInPlace = ETurningInPlace::ETIP_NotTurning;
+		return;
+	}
 	if (Combat && Combat->bHoldingTheFlag)
 	{
 		bUseControllerRotationYaw = false;
@@ -748,14 +759,14 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 		ViewWeaponTarget.SetRotation(FMath::QInterpTo(ViewWeaponTarget.GetRotation(), Target.GetRotation(),
 		                                              GetWorld()->GetDeltaSeconds(), FirstPersonAimInterpSpeed));
 	}
-	SyncFirstPersonAction();
-	if (FirstPersonWeaponMesh) FirstPersonWeaponMesh->SetVisibility(Weapon && !bDefeated);
-	DedicatedFirstPersonMesh->SetVisibility(Weapon && !bDefeated, false);
+	if (!IsTraversing()) SyncFirstPersonAction();
+	if (FirstPersonWeaponMesh) FirstPersonWeaponMesh->SetVisibility(Weapon && !bDefeated && !IsTraversing(), true);
+	DedicatedFirstPersonMesh->SetVisibility((Weapon || IsTraversing()) && !bDefeated, false);
 }
 
 bool ABrokenEdgeCharacter::UsesFirstPersonWeaponFit() const
 {
-	return FirstPersonWeaponFit.bEnabled && FirstPersonSourceWeapon && FirstPersonWeaponMesh &&
+	return !IsTraversing() && FirstPersonWeaponFit.bEnabled && FirstPersonSourceWeapon && FirstPersonWeaponMesh &&
 		FirstPersonSourceWeapon->GetWeaponMesh()->GetSkeletalMeshAsset() == FirstPersonWeaponSourceMesh;
 }
 
@@ -1021,7 +1032,7 @@ void ABrokenEdgeCharacter::PlaySwapMontage()
  */
 void ABrokenEdgeCharacter::PlayHitReactMontage()
 {
-	if (bDefeated || Combat == nullptr || HitReactMontage == nullptr) return;
+	if (bDefeated || IsTraversing() || Combat == nullptr || HitReactMontage == nullptr) return;
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance)
@@ -1149,8 +1160,19 @@ void ABrokenEdgeCharacter::UpdateHUDAmmo()
 /**
  * @brief 跳跃处理
  */
+bool ABrokenEdgeCharacter::IsTraversing() const
+{
+	return Traversal && Traversal->Active();
+}
+
 void ABrokenEdgeCharacter::Jump()
 {
+	if (IsTraversing())
+	{
+		auto* Movement = CastChecked<UTraversalMovementComponent>(GetCharacterMovement());
+		if (Movement->OnLadder()) Movement->RequestDetach(true);
+		return;
+	}
 	if (ExtractionAbilities->IsDowned()) return;
 	if (ExtractionInteraction->IsEnabled())
 		if (auto* PC = Cast<AExtractionPlayerController>(Controller)) PC->ServerCancelMedical();
@@ -1172,6 +1194,12 @@ void ABrokenEdgeCharacter::Move(const FInputActionValue& Value)
 	if (bDisableGameplay) return;
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
+	if (IsTraversing())
+	{
+		const auto* Movement = CastChecked<UTraversalMovementComponent>(GetCharacterMovement());
+		if (Movement->OnLadder()) AddMovementInput(Movement->State.Facing, MovementVector.Y);
+		return;
+	}
 
 	if (Controller != nullptr)
 	{
@@ -1206,6 +1234,7 @@ void ABrokenEdgeCharacter::Look(const FInputActionValue& Value)
 
 void ABrokenEdgeCharacter::CrouchButtonPressed()
 {
+	if (IsTraversing()) return;
 	if (Combat && Combat->bHoldingTheFlag) return;
 	if (bDisableGameplay) return;
 	if (Combat == nullptr) return;
@@ -1550,6 +1579,7 @@ void ABrokenEdgeCharacter::MulticastDefeated_Implementation(bool bPlayerLeftGame
 
 	// 禁用角色移动
 	bDisableGameplay = true;
+	if (IsTraversing()) CastChecked<UTraversalMovementComponent>(GetCharacterMovement())->Finish();
 	GetCharacterMovement()->DisableMovement();
 
 	if (Combat)

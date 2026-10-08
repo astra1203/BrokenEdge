@@ -1,8 +1,10 @@
 ﻿param(
     [string]$EngineRoot = 'C:\UnrealProjects\UnrealEngine-5.8.3-release',
     [switch]$Packaged,
+    [string]$PackageRoot = 'Packaged',
     [switch]$Render,
     [switch]$SwitchMode,
+    [int]$LanGameUniqueId = 0,
     [ValidateSet('FreeForAll', 'Teams')]
     [string[]]$MatchTypes = @('FreeForAll', 'Teams'),
     [string]$BindAddress = ''
@@ -26,11 +28,11 @@ function Start-SessionTest([string]$Role, [string]$MatchType, [string]$Name, [in
     $executable = $editor
     if ($Packaged) {
         $relative = if ($Role -in @('Server', 'Advertise')) {
-            'Packaged/Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe'
+            'Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe'
         } else {
-            'Packaged/Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe'
+            'Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe'
         }
-        $executable = Join-Path $projectRoot $relative
+        $executable = Join-Path (Join-Path $projectRoot $PackageRoot) $relative
     } else {
         $arguments += ('"' + $project + '"')
         $arguments += if ($Role -in @('Server', 'Advertise')) { '-server' } else { '-game' }
@@ -56,6 +58,8 @@ function Start-SessionTest([string]$Role, [string]$MatchType, [string]$Name, [in
         $arguments += @('-ExecCmds="Automation RunTests MultiplayerSessions.LAN.MenuFlow"', '-TestExit="Automation Test Queue Empty"')
     }
     if ($BindAddress) { $arguments += ('-MULTIHOME=' + $BindAddress) }
+    # Isolate automation discovery without stopping other running game servers.
+    if ($LanGameUniqueId) { $arguments += ('-ini:Engine:[LANSession]:LanGameUniqueId=' + $LanGameUniqueId) }
     $process = Start-Process -FilePath $executable -ArgumentList $arguments -WindowStyle Hidden -PassThru
     $ownedProcesses.Add($process)
     Write-Output ([pscustomobject]@{ Process = $process; Log = $log; Name = $Name })

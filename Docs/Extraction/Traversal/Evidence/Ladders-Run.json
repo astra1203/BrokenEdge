@@ -1,0 +1,19 @@
+{
+  "stage": "ladders",
+  "command": [
+    "C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Binaries/Win64/UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Traversal\\bind_ladders.py",
+    "-NullRHI",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\EditorRuns\\TraversalLadders10\\Editor.log"
+  ],
+  "script_sha256": "2e3173c9a25ab264e70b8ae8bc3faf7a9197fd95949e9ec653cf39130363f52a",
+  "started_utc": "2026-10-07T12:18:02.977681+00:00",
+  "pid": 32952,
+  "exit_code": 0,
+  "result": "passed"
+}

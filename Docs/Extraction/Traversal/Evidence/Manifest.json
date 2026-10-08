@@ -1,0 +1,1150 @@
+{
+  "result": "passed",
+  "builds": {
+    "Server": {
+      "tag": "TraversalServer08",
+      "executable": {
+        "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Traversal08\\Server\\WindowsServer\\BrokenEdge\\Binaries\\Win64\\BrokenEdgeServer.exe",
+        "bytes": 317998592,
+        "sha256": "3068f1c53dbc4422c62d3ebe60d1009dbcfd1360bdc5d888b5c7536f00461c21",
+        "machine": "AMD64",
+        "sections": 11
+      }
+    },
+    "Client": {
+      "tag": "TraversalClient08",
+      "executable": {
+        "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Traversal08\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+        "bytes": 337886720,
+        "sha256": "d0ccfcfb20f4b2dda1f719b4ffbb6884015ef1d1c66e336840df95c2ce1d0bad",
+        "machine": "AMD64",
+        "sections": 12
+      }
+    }
+  },
+  "runs": {
+    "TraversalNormal02": {
+      "result": "passed",
+      "checks": 82
+    },
+    "TraversalNormal03": {
+      "result": "passed",
+      "checks": 82
+    },
+    "TraversalNormal04": {
+      "result": "passed",
+      "checks": 82
+    },
+    "TraversalWeak01": {
+      "result": "passed",
+      "checks": 83
+    },
+    "TraversalLifecycle01": {
+      "result": "passed",
+      "checks": 100
+    },
+    "TraversalVisual02": {
+      "result": "passed",
+      "checks": 82
+    },
+    "TraversalFormal06": {
+      "result": "passed",
+      "checks": 27
+    },
+    "TraversalCombat01": {
+      "result": "passed",
+      "checks": 62
+    },
+    "TraversalInventory01": {
+      "result": "passed",
+      "checks": 93
+    },
+    "TraversalSwap01": {
+      "result": "passed",
+      "checks": 22
+    },
+    "TraversalTimeout01": {
+      "result": "passed",
+      "checks": 28
+    },
+    "TraversalLegacy02": {
+      "result": "passed",
+      "checks": 7
+    }
+  },
+  "videos": [
+    {
+      "file": "Videos/TraversalVisual02/A-120.mp4",
+      "seconds": 1.4874179996550083,
+      "measured_fps": 8.739977600792258
+    },
+    {
+      "file": "Videos/TraversalVisual02/A-180.mp4",
+      "seconds": 2.1823330000042915,
+      "measured_fps": 8.706279014230475
+    },
+    {
+      "file": "Videos/TraversalVisual02/A-60.mp4",
+      "seconds": 1.6398760005831718,
+      "measured_fps": 8.537230860761014
+    },
+    {
+      "file": "Videos/TraversalVisual02/A-90.mp4",
+      "seconds": 1.9940510019659996,
+      "measured_fps": 8.525358670986423
+    },
+    {
+      "file": "Videos/TraversalVisual02/A-ladder.mp4",
+      "seconds": 12.554108999669552,
+      "measured_fps": 8.204485081554665
+    },
+    {
+      "file": "Videos/TraversalVisual02/B-120.mp4",
+      "seconds": 1.5422060005366802,
+      "measured_fps": 8.429483477224226
+    },
+    {
+      "file": "Videos/TraversalVisual02/B-180.mp4",
+      "seconds": 2.187336001545191,
+      "measured_fps": 8.229188376767143
+    },
+    {
+      "file": "Videos/TraversalVisual02/B-60.mp4",
+      "seconds": 1.6317799985408783,
+      "measured_fps": 8.579587942319836
+    },
+    {
+      "file": "Videos/TraversalVisual02/B-90.mp4",
+      "seconds": 1.8346589989960194,
+      "measured_fps": 8.175906262803306
+    },
+    {
+      "file": "Videos/TraversalVisual02/B-ladder.mp4",
+      "seconds": 12.592497002333403,
+      "measured_fps": 8.338298590068625
+    },
+    {
+      "file": "Videos/TraversalFormal06/A-formal-ladder.mp4",
+      "seconds": 2.7215839996933937,
+      "measured_fps": 8.08352782882265
+    },
+    {
+      "file": "Videos/TraversalFormal06/A-formal-mantle.mp4",
+      "seconds": 1.932277999818325,
+      "measured_fps": 8.280382016202813
+    },
+    {
+      "file": "Videos/TraversalFormal06/A-formal-vault.mp4",
+      "seconds": 1.7254500016570091,
+      "measured_fps": 8.11382537109468
+    },
+    {
+      "file": "Videos/TraversalFormal06/B-formal-ladder.mp4",
+      "seconds": 2.6310230009257793,
+      "measured_fps": 7.981686208220422
+    },
+    {
+      "file": "Videos/TraversalFormal06/B-formal-mantle.mp4",
+      "seconds": 1.860045999288559,
+      "measured_fps": 8.064316692026587
+    },
+    {
+      "file": "Videos/TraversalFormal06/B-formal-vault.mp4",
+      "seconds": 1.529823001474142,
+      "measured_fps": 7.844044695652219
+    }
+  ],
+  "files": {
+    "Builds/TraversalServer08/Run.json": {
+      "source": "Saved/Extraction/TraversalServer08/Run.json",
+      "source_sha256": "4f8fd201253209750fea2e08e7255713c2d3d04751391796a333b79179befaab",
+      "sha256": "4f8fd201253209750fea2e08e7255713c2d3d04751391796a333b79179befaab",
+      "bytes": 21428
+    },
+    "Builds/TraversalServer08/Build.log.gz": {
+      "source": "Saved/Extraction/TraversalServer08/Build.log",
+      "source_sha256": "4804128c4b4c24210240537c772215430951c147d987cf236fc5154328178e5e",
+      "sha256": "079c8873699b9ca243267183eb43e93893d73ae90cb82c36253ae082ebddc4b4",
+      "bytes": 17036
+    },
+    "Builds/TraversalServer08/Resources.json": {
+      "source": "Saved/Extraction/TraversalServer08-resources/Report.json",
+      "source_sha256": "1d69dc03e6c24f690bcefd33eaacb6887f6374f551082ab1a240d28cf7f77bfd",
+      "sha256": "1d69dc03e6c24f690bcefd33eaacb6887f6374f551082ab1a240d28cf7f77bfd",
+      "bytes": 6050
+    },
+    "Builds/TraversalClient08/Run.json": {
+      "source": "Saved/Extraction/TraversalClient08/Run.json",
+      "source_sha256": "be88060aa9eaf6f983ca78e145eed464482c46a8fcf6189658a8b48f80fb12d6",
+      "sha256": "be88060aa9eaf6f983ca78e145eed464482c46a8fcf6189658a8b48f80fb12d6",
+      "bytes": 21370
+    },
+    "Builds/TraversalClient08/Build.log.gz": {
+      "source": "Saved/Extraction/TraversalClient08/Build.log",
+      "source_sha256": "6e3d7b286b94025b7a9395e82b3ccfb045a0fc7133e63eab9b8a31d5374e1163",
+      "sha256": "887481be3eac2819f042f1fa5767c80f2b5f17ac0619ed935cd3f72453bff290",
+      "bytes": 19248
+    },
+    "Builds/TraversalClient08/Resources.json": {
+      "source": "Saved/Extraction/TraversalClient08-resources/Report.json",
+      "source_sha256": "b5822ed72c7d4bd30b6df9a131b763ce8f432592e0e0d2f9d840158496b36794",
+      "sha256": "b5822ed72c7d4bd30b6df9a131b763ce8f432592e0e0d2f9d840158496b36794",
+      "bytes": 6894
+    },
+    "Runs/TraversalNormal02/A-ladder-paused-pose.json": {
+      "source": "Saved/Extraction/TraversalNormal02/A-ladder-paused-pose.json",
+      "source_sha256": "c270ca085ab8df030ccfe024a7ce7a8f5f09912914d198a2f503a1402def0436",
+      "sha256": "c270ca085ab8df030ccfe024a7ce7a8f5f09912914d198a2f503a1402def0436",
+      "bytes": 12788
+    },
+    "Runs/TraversalNormal02/B-ladder-paused-pose.json": {
+      "source": "Saved/Extraction/TraversalNormal02/B-ladder-paused-pose.json",
+      "source_sha256": "c6d9870ce082b167bb13692fc6295729aba001802313d72abe0a8c78dc0421ed",
+      "sha256": "c6d9870ce082b167bb13692fc6295729aba001802313d72abe0a8c78dc0421ed",
+      "bytes": 6606
+    },
+    "Runs/TraversalNormal02/MotionAnalysis.json": {
+      "source": "Saved/Extraction/TraversalNormal02/MotionAnalysis.json",
+      "source_sha256": "69c3aa3b587fe1bad7f29c082ae71c7de8a355fa9d501b0e0c52beffe6258a6f",
+      "sha256": "69c3aa3b587fe1bad7f29c082ae71c7de8a355fa9d501b0e0c52beffe6258a6f",
+      "bytes": 4093
+    },
+    "Runs/TraversalNormal02/Report.json": {
+      "source": "Saved/Extraction/TraversalNormal02/Report.json",
+      "source_sha256": "c484070ed85f689ba9258a9890c064c56eb0e52855e554627c6bc36d3c624c94",
+      "sha256": "c484070ed85f689ba9258a9890c064c56eb0e52855e554627c6bc36d3c624c94",
+      "bytes": 1559497
+    },
+    "Runs/TraversalNormal02/Resources.json": {
+      "source": "Saved/Extraction/TraversalNormal02-resources/Report.json",
+      "source_sha256": "8034515cbb9ad05f35ba6904a162ab26d765332c6a62329d64be0c49d863d94f",
+      "sha256": "8034515cbb9ad05f35ba6904a162ab26d765332c6a62329d64be0c49d863d94f",
+      "bytes": 7095
+    },
+    "Runs/TraversalNormal02/A.log.gz": {
+      "source": "Saved/Extraction/TraversalNormal02/A.log",
+      "source_sha256": "17df66e211a12898abe0fcac32815158606ba0e2e966bab860c4181b59486ced",
+      "sha256": "9e14f246ca310cf74ef509a12fc3dcb08bec9abb2900064b30a074b6ed21f096",
+      "bytes": 25993
+    },
+    "Runs/TraversalNormal02/B.log.gz": {
+      "source": "Saved/Extraction/TraversalNormal02/B.log",
+      "source_sha256": "2a910892219c9b0e4b4076c4a9f6bc6f0603c024ee15000cf855bc20b1168072",
+      "sha256": "a1afa9cdaabbb0ce9ab72e9c05219761140e0537b10e32edaa046104ea95c809",
+      "bytes": 26140
+    },
+    "Runs/TraversalNormal02/Server.log.gz": {
+      "source": "Saved/Extraction/TraversalNormal02/Server.log",
+      "source_sha256": "57984ed8ff24a8d1db9dccbe5f0c6a602b084d0e52b8825752d8e8b8db662048",
+      "sha256": "9a648ce1f970b1981209f47b413efa060c5a1289beb900c5fe75e88c391a87eb",
+      "bytes": 18170
+    },
+    "Runs/TraversalNormal02/TraversalMotion.jsonl.gz": {
+      "source": "Saved/Extraction/TraversalNormal02/TraversalMotion.jsonl",
+      "source_sha256": "66085abcfc1adde4f1cfb612f7837ddfbb18371b9ff072d756a8a8f4acb0f875",
+      "sha256": "2e4ae776be4a0f3e248f2b6a9ca561f16e7765a815caee3af8bdac056231cf92",
+      "bytes": 49657
+    },
+    "Runs/TraversalNormal03/A-ladder-paused-pose.json": {
+      "source": "Saved/Extraction/TraversalNormal03/A-ladder-paused-pose.json",
+      "source_sha256": "324272673451caef49497e6abb473ee5b28992a2cfaaa52c26ae05ba9fd25904",
+      "sha256": "324272673451caef49497e6abb473ee5b28992a2cfaaa52c26ae05ba9fd25904",
+      "bytes": 12794
+    },
+    "Runs/TraversalNormal03/B-ladder-paused-pose.json": {
+      "source": "Saved/Extraction/TraversalNormal03/B-ladder-paused-pose.json",
+      "source_sha256": "d131b22fbdde5c96290f2b0c8a8bbcc4991457495f63f5190ee5204e210f36f1",
+      "sha256": "d131b22fbdde5c96290f2b0c8a8bbcc4991457495f63f5190ee5204e210f36f1",
+      "bytes": 6612
+    },
+    "Runs/TraversalNormal03/MotionAnalysis.json": {
+      "source": "Saved/Extraction/TraversalNormal03/MotionAnalysis.json",
+      "source_sha256": "e7c17484014f1887aa03865472fa1414e0ccb575b3541660496f60010c76c69d",
+      "sha256": "e7c17484014f1887aa03865472fa1414e0ccb575b3541660496f60010c76c69d",
+      "bytes": 4098
+    },
+    "Runs/TraversalNormal03/Report.json": {
+      "source": "Saved/Extraction/TraversalNormal03/Report.json",
+      "source_sha256": "5be8d2aaa3ac0711e3b2c2261eeec0e1759dff619337434381f283bcc4279ec9",
+      "sha256": "5be8d2aaa3ac0711e3b2c2261eeec0e1759dff619337434381f283bcc4279ec9",
+      "bytes": 1555540
+    },
+    "Runs/TraversalNormal03/Resources.json": {
+      "source": "Saved/Extraction/TraversalNormal03-resources/Report.json",
+      "source_sha256": "15c646a4260c752e1c6c3ec2edf330fa6fb22f20744c3d2a71f3d133bcd0d719",
+      "sha256": "15c646a4260c752e1c6c3ec2edf330fa6fb22f20744c3d2a71f3d133bcd0d719",
+      "bytes": 7082
+    },
+    "Runs/TraversalNormal03/A.log.gz": {
+      "source": "Saved/Extraction/TraversalNormal03/A.log",
+      "source_sha256": "33d8b5d204b5fa072e0272883a65f5a90d2c76a6b4dbc85f371dbe34467a1ea6",
+      "sha256": "902a68e493c3bcda431c5013f01a28d6da513b25d312bb9b7c217c024a6a06ec",
+      "bytes": 26048
+    },
+    "Runs/TraversalNormal03/B.log.gz": {
+      "source": "Saved/Extraction/TraversalNormal03/B.log",
+      "source_sha256": "d7c37dd9dfd058330e09080b745760de93d710601e819f8e06cfef2dde52c319",
+      "sha256": "8a114bba285c1105dfc599ce90c705e51b429a5311c5871c97742653fea01aaa",
+      "bytes": 26034
+    },
+    "Runs/TraversalNormal03/Server.log.gz": {
+      "source": "Saved/Extraction/TraversalNormal03/Server.log",
+      "source_sha256": "80f59802888ea43149eabd239c3853d56eb6d1580a59a72b5d8be1421e7c4199",
+      "sha256": "81f0cfabb0084328daac70e69d2183b305b72e5936fc569aa290351347b12f4d",
+      "bytes": 18183
+    },
+    "Runs/TraversalNormal03/TraversalMotion.jsonl.gz": {
+      "source": "Saved/Extraction/TraversalNormal03/TraversalMotion.jsonl",
+      "source_sha256": "5a595e57b466a58ef58ea324efeff00523decb04d2ba7bbe30ec907a09f9ee0d",
+      "sha256": "a3d544ac0b9a701ce9c6b947a309a98d7e2ebe4ff71f3be1cb4de71f44b4ef58",
+      "bytes": 51551
+    },
+    "Runs/TraversalNormal04/A-ladder-paused-pose.json": {
+      "source": "Saved/Extraction/TraversalNormal04/A-ladder-paused-pose.json",
+      "source_sha256": "4566df14c09da0bc7d4639c41ba410b11efafee753e321be4a669341061b8050",
+      "sha256": "4566df14c09da0bc7d4639c41ba410b11efafee753e321be4a669341061b8050",
+      "bytes": 12781
+    },
+    "Runs/TraversalNormal04/B-ladder-paused-pose.json": {
+      "source": "Saved/Extraction/TraversalNormal04/B-ladder-paused-pose.json",
+      "source_sha256": "f818031ba7f4a0cccb08d2b725c02f8b7a72733265d5dbdfceb9aa0264545ccb",
+      "sha256": "f818031ba7f4a0cccb08d2b725c02f8b7a72733265d5dbdfceb9aa0264545ccb",
+      "bytes": 6609
+    },
+    "Runs/TraversalNormal04/MotionAnalysis.json": {
+      "source": "Saved/Extraction/TraversalNormal04/MotionAnalysis.json",
+      "source_sha256": "5bae3cb8dd0e88db4123460f24e5ea8d9b33400a38649359aca5593cc6a91bb9",
+      "sha256": "5bae3cb8dd0e88db4123460f24e5ea8d9b33400a38649359aca5593cc6a91bb9",
+      "bytes": 4097
+    },
+    "Runs/TraversalNormal04/Report.json": {
+      "source": "Saved/Extraction/TraversalNormal04/Report.json",
+      "source_sha256": "2ef542b3d765a01c272812cb2f61e3c36d044d7a6914d3b68a7e4b79971948fd",
+      "sha256": "2ef542b3d765a01c272812cb2f61e3c36d044d7a6914d3b68a7e4b79971948fd",
+      "bytes": 1563465
+    },
+    "Runs/TraversalNormal04/Resources.json": {
+      "source": "Saved/Extraction/TraversalNormal04-resources/Report.json",
+      "source_sha256": "03bee99895a14610c561ec2edaf1bcdb649b2e73933263d0eefe7dffa92fa7f4",
+      "sha256": "03bee99895a14610c561ec2edaf1bcdb649b2e73933263d0eefe7dffa92fa7f4",
+      "bytes": 7089
+    },
+    "Runs/TraversalNormal04/A.log.gz": {
+      "source": "Saved/Extraction/TraversalNormal04/A.log",
+      "source_sha256": "fff0671ea1b4a4d263a44550d81cae4d00d27e1766aa8b5c24961b507fec25ae",
+      "sha256": "f800585790f0ed92050d23e90b6edd08aac9ee056e66a935fd1582738898a5ed",
+      "bytes": 26038
+    },
+    "Runs/TraversalNormal04/B.log.gz": {
+      "source": "Saved/Extraction/TraversalNormal04/B.log",
+      "source_sha256": "4d8a87f6ce4e20d4b3f6aa76bb82449174f20942b9ed108cd65dbba22a60c8ab",
+      "sha256": "3bd08e4fefcf9b6653256e3d393ab2797c4f7f0d9a2407f75d9b40230ebdcfba",
+      "bytes": 26009
+    },
+    "Runs/TraversalNormal04/Server.log.gz": {
+      "source": "Saved/Extraction/TraversalNormal04/Server.log",
+      "source_sha256": "4d7e92b3306e20d34a8c31a11be8b5b386205dfe100228fd21d2089d5594c188",
+      "sha256": "97ea49adb8fcce747819ab5c89d85b928a091e4d234b51de94f5dc221b9dbd49",
+      "bytes": 18159
+    },
+    "Runs/TraversalNormal04/TraversalMotion.jsonl.gz": {
+      "source": "Saved/Extraction/TraversalNormal04/TraversalMotion.jsonl",
+      "source_sha256": "1dda84daec187ec1043f84b1fb394b532e4f2882e59116ecb58e286d99e3b605",
+      "sha256": "33232edcd79b1f6558db394330497bbea17e09691cafb477e4f75cdb1ca02147",
+      "bytes": 46730
+    },
+    "Runs/TraversalWeak01/A-ladder-paused-pose.json": {
+      "source": "Saved/Extraction/TraversalWeak01/A-ladder-paused-pose.json",
+      "source_sha256": "e5836df5d27b7e81fe8daa7b883cc857980c82da119de8870f5d82bcd21ab9ee",
+      "sha256": "e5836df5d27b7e81fe8daa7b883cc857980c82da119de8870f5d82bcd21ab9ee",
+      "bytes": 12781
+    },
+    "Runs/TraversalWeak01/B-ladder-paused-pose.json": {
+      "source": "Saved/Extraction/TraversalWeak01/B-ladder-paused-pose.json",
+      "source_sha256": "9dbf67ba3d859c1a0e15f0b87aa378a2e01972d68fedae0bca5a45c87e1a1843",
+      "sha256": "9dbf67ba3d859c1a0e15f0b87aa378a2e01972d68fedae0bca5a45c87e1a1843",
+      "bytes": 6615
+    },
+    "Runs/TraversalWeak01/Report.json": {
+      "source": "Saved/Extraction/TraversalWeak01/Report.json",
+      "source_sha256": "bb46093c0d8df91b753ac3a55507ee8f05518efb6c6bbf4c954d480ce0bfa0c9",
+      "sha256": "bb46093c0d8df91b753ac3a55507ee8f05518efb6c6bbf4c954d480ce0bfa0c9",
+      "bytes": 1592355
+    },
+    "Runs/TraversalWeak01/Resources.json": {
+      "source": "Saved/Extraction/TraversalWeak01-resources/Report.json",
+      "source_sha256": "9110bbd99ceecbc3c672f0644b73b87f137593a0153ef4e4468895c950fd5dca",
+      "sha256": "9110bbd99ceecbc3c672f0644b73b87f137593a0153ef4e4468895c950fd5dca",
+      "bytes": 7111
+    },
+    "Runs/TraversalWeak01/A.log.gz": {
+      "source": "Saved/Extraction/TraversalWeak01/A.log",
+      "source_sha256": "29d4fc3bd4f73fed1672a0aa0b347f82833b95060b660c28edba221fef5b7a30",
+      "sha256": "9b42d6dd85a4a17f53f6e5bbdecd45c2c5aa5377b34476a3c6ff050710b80439",
+      "bytes": 26027
+    },
+    "Runs/TraversalWeak01/B.log.gz": {
+      "source": "Saved/Extraction/TraversalWeak01/B.log",
+      "source_sha256": "0c1ae34d2424c53771f24cebdfe82ebe4335d5be8de640e6bbeb1f8c7f6b6bb3",
+      "sha256": "2ad37983c00e0164fbca113a324a97cc17e2618f59dfca0c8893e1ad6051089d",
+      "bytes": 25981
+    },
+    "Runs/TraversalWeak01/Server.log.gz": {
+      "source": "Saved/Extraction/TraversalWeak01/Server.log",
+      "source_sha256": "48297e4726dcdecdbaa4bf294c271ee7b014aadbd7f28d1ffbf77dec1e767cd8",
+      "sha256": "aee1f5913edab81e3804748752b1ea3b1b615c72675eef4233da6099bc9addd0",
+      "bytes": 18154
+    },
+    "Runs/TraversalWeak01/TraversalMotion.jsonl.gz": {
+      "source": "Saved/Extraction/TraversalWeak01/TraversalMotion.jsonl",
+      "source_sha256": "172320e7049cbd67221a7f77c362d826a43903a6d586733dcb37ed8052514aec",
+      "sha256": "97948dfeccc0f98f879144c8aeb949aa99cc7606c657b7344a9d3d9660b08caa",
+      "bytes": 47400
+    },
+    "Runs/TraversalLifecycle01/A-ladder-paused-pose.json": {
+      "source": "Saved/Extraction/TraversalLifecycle01/A-ladder-paused-pose.json",
+      "source_sha256": "7601e5f5ebafc77fa115b12f32c37fdff048740406c7d71a0f450130f968745b",
+      "sha256": "7601e5f5ebafc77fa115b12f32c37fdff048740406c7d71a0f450130f968745b",
+      "bytes": 12782
+    },
+    "Runs/TraversalLifecycle01/B-ladder-paused-pose.json": {
+      "source": "Saved/Extraction/TraversalLifecycle01/B-ladder-paused-pose.json",
+      "source_sha256": "669335ad961bd81457d04a328ceda9aaca5c4242a707696818631b19e5e0a0c9",
+      "sha256": "669335ad961bd81457d04a328ceda9aaca5c4242a707696818631b19e5e0a0c9",
+      "bytes": 6610
+    },
+    "Runs/TraversalLifecycle01/Report.json": {
+      "source": "Saved/Extraction/TraversalLifecycle01/Report.json",
+      "source_sha256": "190e590b1023bbaa4b11a0848cf0389b8e2ed1d135a5f70e2944ab46140e5855",
+      "sha256": "190e590b1023bbaa4b11a0848cf0389b8e2ed1d135a5f70e2944ab46140e5855",
+      "bytes": 2961260
+    },
+    "Runs/TraversalLifecycle01/Resources.json": {
+      "source": "Saved/Extraction/TraversalLifecycle01-resources/Report.json",
+      "source_sha256": "0146d3080d01e10e61f4f55d3e828c8107457587b5d9c129ad42e6c8a6e7df8c",
+      "sha256": "0146d3080d01e10e61f4f55d3e828c8107457587b5d9c129ad42e6c8a6e7df8c",
+      "bytes": 10492
+    },
+    "Runs/TraversalLifecycle01/A.log.gz": {
+      "source": "Saved/Extraction/TraversalLifecycle01/A.log",
+      "source_sha256": "1bf0c0ab470a661556b3e24da8752039b02dd7c699c0a793f32a025bf28d3b75",
+      "sha256": "8ad466c0ef34170803f924d357c95b142afbffaba498c5fbebef0f58b0b961c1",
+      "bytes": 26611
+    },
+    "Runs/TraversalLifecycle01/B.log.gz": {
+      "source": "Saved/Extraction/TraversalLifecycle01/B.log",
+      "source_sha256": "44c9c99ae43ed653adcdfa698637dd8aee6f6c84f76ccc1cbe80170d83751ed6",
+      "sha256": "296d2c83533e515838a448ce54c74c3362a1c8339f0a94fb909bff73458eba02",
+      "bytes": 25786
+    },
+    "Runs/TraversalLifecycle01/C.log.gz": {
+      "source": "Saved/Extraction/TraversalLifecycle01/C.log",
+      "source_sha256": "84b09d2b3e6696fdf55a577e7e303942e1d1a68652a042e2114cd85446b2fa04",
+      "sha256": "55d4b2730b03bb4ca4337508a59b1ae4e5a2ea7d3c8c088a3b299bb3ab7f0a25",
+      "bytes": 18955
+    },
+    "Runs/TraversalLifecycle01/Server.log.gz": {
+      "source": "Saved/Extraction/TraversalLifecycle01/Server.log",
+      "source_sha256": "f2ef599469c810db221ff4f205a1405f02a65b63b850cca5095c509f92fc1a9b",
+      "sha256": "420de12db3a9372c3ec20d3b056933a7ab8307b9e2b562c45784d9c7daa593e7",
+      "bytes": 21630
+    },
+    "Runs/TraversalLifecycle01/TraversalMotion.jsonl.gz": {
+      "source": "Saved/Extraction/TraversalLifecycle01/TraversalMotion.jsonl",
+      "source_sha256": "a6d6b992a0cd1a82e2b95b10173fab70627725ff9339ab4902d0cd3f42db354c",
+      "sha256": "1ec426ad7affbd6af46a1851742176ea43fe881433d609a3c8b2805aff2e54e7",
+      "bytes": 100740
+    },
+    "Runs/TraversalVisual02/A-120.json": {
+      "source": "Saved/Extraction/TraversalVisual02/A-120.json",
+      "source_sha256": "26597024eb31b0de581ef239811c74871d787930f5f7612cd196c7e368315d09",
+      "sha256": "26597024eb31b0de581ef239811c74871d787930f5f7612cd196c7e368315d09",
+      "bytes": 1087
+    },
+    "Runs/TraversalVisual02/A-180.json": {
+      "source": "Saved/Extraction/TraversalVisual02/A-180.json",
+      "source_sha256": "81bc2967729c69dcd6c390379d8e7be0b58f8020ea53227a8bf924a80f095154",
+      "sha256": "81bc2967729c69dcd6c390379d8e7be0b58f8020ea53227a8bf924a80f095154",
+      "bytes": 1086
+    },
+    "Runs/TraversalVisual02/A-60.json": {
+      "source": "Saved/Extraction/TraversalVisual02/A-60.json",
+      "source_sha256": "d3e5430182c23194cedbc2d9acdb8d9b5924254470b8809440bb613738864941",
+      "sha256": "d3e5430182c23194cedbc2d9acdb8d9b5924254470b8809440bb613738864941",
+      "bytes": 1083
+    },
+    "Runs/TraversalVisual02/A-90.json": {
+      "source": "Saved/Extraction/TraversalVisual02/A-90.json",
+      "source_sha256": "38a87c5f72dd0a97889f5768aa818962b3ff83e6aeb94b52951443f562b692fd",
+      "sha256": "38a87c5f72dd0a97889f5768aa818962b3ff83e6aeb94b52951443f562b692fd",
+      "bytes": 1084
+    },
+    "Runs/TraversalVisual02/A-ladder-paused-pose.json": {
+      "source": "Saved/Extraction/TraversalVisual02/A-ladder-paused-pose.json",
+      "source_sha256": "a4bd5fd726c533c0928b5a95a2dede5c79f12f3ccb8a7abdbd15a0fd4c1f5418",
+      "sha256": "a4bd5fd726c533c0928b5a95a2dede5c79f12f3ccb8a7abdbd15a0fd4c1f5418",
+      "bytes": 12812
+    },
+    "Runs/TraversalVisual02/A-ladder.json": {
+      "source": "Saved/Extraction/TraversalVisual02/A-ladder.json",
+      "source_sha256": "39f9c96203c0012effe653fd8240afde8f9da9e3757844255c99a3ba2f0ca683",
+      "sha256": "39f9c96203c0012effe653fd8240afde8f9da9e3757844255c99a3ba2f0ca683",
+      "bytes": 1097
+    },
+    "Runs/TraversalVisual02/B-120.json": {
+      "source": "Saved/Extraction/TraversalVisual02/B-120.json",
+      "source_sha256": "9568c7f3e94c192cf864fda4d045f2aa4b4e634392b54545c620a69e9318cbd7",
+      "sha256": "9568c7f3e94c192cf864fda4d045f2aa4b4e634392b54545c620a69e9318cbd7",
+      "bytes": 1087
+    },
+    "Runs/TraversalVisual02/B-180.json": {
+      "source": "Saved/Extraction/TraversalVisual02/B-180.json",
+      "source_sha256": "e7c707a3a673faef870c361fbb839e77d8ffbf9caed00185d13a9815ca423c7a",
+      "sha256": "e7c707a3a673faef870c361fbb839e77d8ffbf9caed00185d13a9815ca423c7a",
+      "bytes": 1085
+    },
+    "Runs/TraversalVisual02/B-60.json": {
+      "source": "Saved/Extraction/TraversalVisual02/B-60.json",
+      "source_sha256": "1aeba1d2585e1b4bb7d5bdc091c0c4de7dabc0dd80464e3cec0dd2c8aa46824e",
+      "sha256": "1aeba1d2585e1b4bb7d5bdc091c0c4de7dabc0dd80464e3cec0dd2c8aa46824e",
+      "bytes": 1084
+    },
+    "Runs/TraversalVisual02/B-90.json": {
+      "source": "Saved/Extraction/TraversalVisual02/B-90.json",
+      "source_sha256": "054b3b3f5c220b232bde5a1ae9c524577e5aa1a5983c3e43702c0163bd1f2cb0",
+      "sha256": "054b3b3f5c220b232bde5a1ae9c524577e5aa1a5983c3e43702c0163bd1f2cb0",
+      "bytes": 1084
+    },
+    "Runs/TraversalVisual02/B-ladder-paused-pose.json": {
+      "source": "Saved/Extraction/TraversalVisual02/B-ladder-paused-pose.json",
+      "source_sha256": "cacde95c67ad7fb8609f1e103bad70b014cd6b0b706a547863f7503f4a69ecfc",
+      "sha256": "cacde95c67ad7fb8609f1e103bad70b014cd6b0b706a547863f7503f4a69ecfc",
+      "bytes": 6659
+    },
+    "Runs/TraversalVisual02/B-ladder.json": {
+      "source": "Saved/Extraction/TraversalVisual02/B-ladder.json",
+      "source_sha256": "7f6dcf2c66cd6079a8ae478b4a6bfa91c60d9d4388953a51d61a0891d9a0954c",
+      "sha256": "7f6dcf2c66cd6079a8ae478b4a6bfa91c60d9d4388953a51d61a0891d9a0954c",
+      "bytes": 1096
+    },
+    "Runs/TraversalVisual02/ContactAnalysis.json": {
+      "source": "Saved/Extraction/TraversalVisual02/ContactAnalysis.json",
+      "source_sha256": "4f9c7e02cf60c82a01c3b414a06c9ae5dd0183ed83d350fc8a893d1ca1c4c30c",
+      "sha256": "4f9c7e02cf60c82a01c3b414a06c9ae5dd0183ed83d350fc8a893d1ca1c4c30c",
+      "bytes": 3071
+    },
+    "Runs/TraversalVisual02/Report.json": {
+      "source": "Saved/Extraction/TraversalVisual02/Report.json",
+      "source_sha256": "df7d103db5555ff7fc15cbd4c8ae7d6fb3d7de8060df8401045673bafc511ac8",
+      "sha256": "df7d103db5555ff7fc15cbd4c8ae7d6fb3d7de8060df8401045673bafc511ac8",
+      "bytes": 1562518
+    },
+    "Runs/TraversalVisual02/Resources.json": {
+      "source": "Saved/Extraction/TraversalVisual02-resources/Report.json",
+      "source_sha256": "1fe9be5c856b3b50beeb00b807c0ec76161819265c20c1a2450c9c4a6012833f",
+      "sha256": "1fe9be5c856b3b50beeb00b807c0ec76161819265c20c1a2450c9c4a6012833f",
+      "bytes": 7398
+    },
+    "Runs/TraversalVisual02/A.log.gz": {
+      "source": "Saved/Extraction/TraversalVisual02/A.log",
+      "source_sha256": "bb267716f20ba2cdee959f4fecbd6f98cc74cfa00c8dc3e40f54a0edaa9753fc",
+      "sha256": "4778b8fe916f83746cd325b32b6bb76070a0f17335a4d10ed6d41781cfe7514e",
+      "bytes": 25957
+    },
+    "Runs/TraversalVisual02/B.log.gz": {
+      "source": "Saved/Extraction/TraversalVisual02/B.log",
+      "source_sha256": "796f2b4f365294015ebf8b5d770551b140fec143ebb4b7bac8468006cd3ec2b4",
+      "sha256": "77accb01fc0f70053b9b4333b4de5477ce1e6e44ab79c78896f60f9091467b88",
+      "bytes": 25986
+    },
+    "Runs/TraversalVisual02/Server.log.gz": {
+      "source": "Saved/Extraction/TraversalVisual02/Server.log",
+      "source_sha256": "e091f588344b2ebdc58635b594cf5fa04cf49371e7f0321cba8e2b6d7a31b99a",
+      "sha256": "6ff2e09251f1837d403c41324757dd4a3ccfc8647664e2c320cd1eb25ca54e7c",
+      "bytes": 18183
+    },
+    "Runs/TraversalVisual02/TraversalMotion.jsonl.gz": {
+      "source": "Saved/Extraction/TraversalVisual02/TraversalMotion.jsonl",
+      "source_sha256": "06cf24ae727fa6e219327be2fa96f2f97d8a7f9d2fda60c24f8097ca2ce2b078",
+      "sha256": "48402943fa91b51e67438d862116d9815ba15abfd1a250d70c767af8a6536f25",
+      "bytes": 50562
+    },
+    "Runs/TraversalFormal06/A-formal-ladder-attached-pose.json": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-ladder-attached-pose.json",
+      "source_sha256": "be72c21c987baa1ee752f2b4557bab15ba3641bb9621a1976a8d744eaf81730b",
+      "sha256": "be72c21c987baa1ee752f2b4557bab15ba3641bb9621a1976a8d744eaf81730b",
+      "bytes": 12748
+    },
+    "Runs/TraversalFormal06/A-formal-ladder.json": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-ladder.json",
+      "source_sha256": "5f43b3534666f72c8d7f78fbbf644bd0d164ac45ae267563ec6716af43521646",
+      "sha256": "5f43b3534666f72c8d7f78fbbf644bd0d164ac45ae267563ec6716af43521646",
+      "bytes": 1116
+    },
+    "Runs/TraversalFormal06/A-formal-mantle.json": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-mantle.json",
+      "source_sha256": "b84df602bb54f0b8b5e9bfa54d132fe953c265d31f49c90ff0ed33aea6bd6264",
+      "sha256": "b84df602bb54f0b8b5e9bfa54d132fe953c265d31f49c90ff0ed33aea6bd6264",
+      "bytes": 1116
+    },
+    "Runs/TraversalFormal06/A-formal-vault.json": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-vault.json",
+      "source_sha256": "496800667e8298530e78596d222a424fd9f23abdc99ba1266758b069cc925784",
+      "sha256": "496800667e8298530e78596d222a424fd9f23abdc99ba1266758b069cc925784",
+      "bytes": 1113
+    },
+    "Runs/TraversalFormal06/B-formal-ladder-attached-pose.json": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-ladder-attached-pose.json",
+      "source_sha256": "b71b24ed06069f69875a907ea2ac55e12e6fec8c5e6d85dde4644c193a3ff62c",
+      "sha256": "b71b24ed06069f69875a907ea2ac55e12e6fec8c5e6d85dde4644c193a3ff62c",
+      "bytes": 6628
+    },
+    "Runs/TraversalFormal06/B-formal-ladder.json": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-ladder.json",
+      "source_sha256": "ff14c0d1b0b82326d2bf68b3ac74ad9f02cc9f1ba2cf4bb3204b2da138e149d0",
+      "sha256": "ff14c0d1b0b82326d2bf68b3ac74ad9f02cc9f1ba2cf4bb3204b2da138e149d0",
+      "bytes": 1117
+    },
+    "Runs/TraversalFormal06/B-formal-mantle.json": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-mantle.json",
+      "source_sha256": "fed795f86e35a51384cfd08bead43001a4155490827068700e7bc1afe8fe7967",
+      "sha256": "fed795f86e35a51384cfd08bead43001a4155490827068700e7bc1afe8fe7967",
+      "bytes": 1116
+    },
+    "Runs/TraversalFormal06/B-formal-vault.json": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-vault.json",
+      "source_sha256": "027491d1495b978a2b2c2ab3e054644c680899ed5cc85e0bb34847984511bdc5",
+      "sha256": "027491d1495b978a2b2c2ab3e054644c680899ed5cc85e0bb34847984511bdc5",
+      "bytes": 1113
+    },
+    "Runs/TraversalFormal06/FormalContactAnalysis.json": {
+      "source": "Saved/Extraction/TraversalFormal06/FormalContactAnalysis.json",
+      "source_sha256": "b149d927c23580d9b0d6bbc1b6dc2e63d4354a4a164deacbdbe821e850199674",
+      "sha256": "b149d927c23580d9b0d6bbc1b6dc2e63d4354a4a164deacbdbe821e850199674",
+      "bytes": 3607
+    },
+    "Runs/TraversalFormal06/Report.json": {
+      "source": "Saved/Extraction/TraversalFormal06/Report.json",
+      "source_sha256": "5f80426c82c4ead516a53500972460c076c6735ed012388c08dbab893a2ff746",
+      "sha256": "5f80426c82c4ead516a53500972460c076c6735ed012388c08dbab893a2ff746",
+      "bytes": 463708
+    },
+    "Runs/TraversalFormal06/Resources.json": {
+      "source": "Saved/Extraction/TraversalFormal06-resources/Report.json",
+      "source_sha256": "b622b6bfcf45ae8d7860e6a7392227bc0f53144f0ccea80ad8b50ef82c8263c1",
+      "sha256": "b622b6bfcf45ae8d7860e6a7392227bc0f53144f0ccea80ad8b50ef82c8263c1",
+      "bytes": 7435
+    },
+    "Runs/TraversalFormal06/A.log.gz": {
+      "source": "Saved/Extraction/TraversalFormal06/A.log",
+      "source_sha256": "765c30dded70cb5787386da9f9367c302f80b7aea5e1978c17cd73c2c5835ed0",
+      "sha256": "3b7706ee15375559d2dbb8915ddea840cc3446856783d879edac0538e7acaefa",
+      "bytes": 25862
+    },
+    "Runs/TraversalFormal06/B.log.gz": {
+      "source": "Saved/Extraction/TraversalFormal06/B.log",
+      "source_sha256": "10bd4721f863b9546c82a4ba164346454d5ff4b78f839923fb666562afaed780",
+      "sha256": "949c821beb1e8a6ad4c30cd4365efa890d5a2d9cc726c5b2376a053603b66fd8",
+      "bytes": 26048
+    },
+    "Runs/TraversalFormal06/Server.log.gz": {
+      "source": "Saved/Extraction/TraversalFormal06/Server.log",
+      "source_sha256": "80d3d0b87c508b2b5f6fda9161eb8d7a7e61d593428625a16017bdba91ee0d67",
+      "sha256": "a624b8f69dcc2c10792c820cd4b8900f8f3b867f311d92b5c057b0553626300e",
+      "bytes": 18174
+    },
+    "Runs/TraversalFormal06/TraversalMotion.jsonl.gz": {
+      "source": "Saved/Extraction/TraversalFormal06/TraversalMotion.jsonl",
+      "source_sha256": "9187272e7bc96bb89e65b79047cfc69b2ee3c66aeb6d5c89bc58d7519ba6b286",
+      "sha256": "7c77d47e2a92b8468679b83b2a5f9221cb2553ab8b658b0333726cb00e5f66c1",
+      "bytes": 60120
+    },
+    "Runs/TraversalCombat01/Report.json": {
+      "source": "Saved/Extraction/TraversalCombat01/Report.json",
+      "source_sha256": "c1c6df3f11aabd10d1339a84dfd9289aaa5cc917f615e5c9c9ad7d0f7bf69c2a",
+      "sha256": "c1c6df3f11aabd10d1339a84dfd9289aaa5cc917f615e5c9c9ad7d0f7bf69c2a",
+      "bytes": 8245638
+    },
+    "Runs/TraversalCombat01/Resources.json": {
+      "source": "Saved/Extraction/TraversalCombat01-resources/Report.json",
+      "source_sha256": "b28d3da210a9c7d25fb03c468453214f20d3d599936fa47908e8909343b17544",
+      "sha256": "b28d3da210a9c7d25fb03c468453214f20d3d599936fa47908e8909343b17544",
+      "bytes": 6810
+    },
+    "Runs/TraversalCombat01/A.log.gz": {
+      "source": "Saved/Extraction/TraversalCombat01/A.log",
+      "source_sha256": "faf6fbe3f36511c9a64f1aaddcbfaa9c5ae3fa454a9bf416cc375d2b4366f6aa",
+      "sha256": "84084d6eda3518698844de3d467fea4e98a42e9b1e365a350d077b67d3d3756e",
+      "bytes": 24146
+    },
+    "Runs/TraversalCombat01/B.log.gz": {
+      "source": "Saved/Extraction/TraversalCombat01/B.log",
+      "source_sha256": "a09b926ade836f1babc674d924d3b17bdbc71fa797608d8fc71795aad4fc4ce4",
+      "sha256": "e321199beaff4a74edbc9a7c622d247825bc1ae3657ac90d08d7394d98192856",
+      "bytes": 23574
+    },
+    "Runs/TraversalCombat01/C.log.gz": {
+      "source": "Saved/Extraction/TraversalCombat01/C.log",
+      "source_sha256": "0dc9d59e0adddaa4a1caba780c8467fd073f30d5d25892523dea5a3ac1d2b709",
+      "sha256": "2809b064f3b358244d4dfc9266a12b866f7a68bb4e2e06e72f464801ab285f14",
+      "bytes": 18199
+    },
+    "Runs/TraversalCombat01/Server.log.gz": {
+      "source": "Saved/Extraction/TraversalCombat01/Server.log",
+      "source_sha256": "b6ac81f4416777d717c6c1fc6711162df1ce3a8612d3c689ab6fd80fc4091282",
+      "sha256": "5f79de6541821cf85aee84b477ae090a27878461e59481c3faa747a51244fa2c",
+      "bytes": 20642
+    },
+    "Runs/TraversalInventory01/Report.json": {
+      "source": "Saved/Extraction/TraversalInventory01/Report.json",
+      "source_sha256": "0a57735e3b559cca2fae02cdd86f4779b8259469ce53905110ed266935e0c7a4",
+      "sha256": "0a57735e3b559cca2fae02cdd86f4779b8259469ce53905110ed266935e0c7a4",
+      "bytes": 12741869
+    },
+    "Runs/TraversalInventory01/Resources.json": {
+      "source": "Saved/Extraction/TraversalInventory01-resources/Report.json",
+      "source_sha256": "988739e6579c8d45fdac9d41cef9bcb2b51960fdd3b5a088ca9fd67bea07a2a1",
+      "sha256": "988739e6579c8d45fdac9d41cef9bcb2b51960fdd3b5a088ca9fd67bea07a2a1",
+      "bytes": 10695
+    },
+    "Runs/TraversalInventory01/A.log.gz": {
+      "source": "Saved/Extraction/TraversalInventory01/A.log",
+      "source_sha256": "919025087942163e6735b75ca099a9491f45ad2c91238381afcafaffed3fb13c",
+      "sha256": "c8d809c21e9e9e250f99586be754d6441046e6719f632a1ec8e97253a413b441",
+      "bytes": 25902
+    },
+    "Runs/TraversalInventory01/B.log.gz": {
+      "source": "Saved/Extraction/TraversalInventory01/B.log",
+      "source_sha256": "5903b0108bfc04502e557954ada78d01739980322fd300d581910fffd675a61c",
+      "sha256": "d72883883d2aa44cedaa4174a0ab55a08f80d22324a83b5802a8781d8d7a90ae",
+      "bytes": 24736
+    },
+    "Runs/TraversalInventory01/Server.log.gz": {
+      "source": "Saved/Extraction/TraversalInventory01/Server.log",
+      "source_sha256": "8406f347bea61158b590262592632120a99f9231f695252bc2955073591ad91a",
+      "sha256": "a2552db5c4b027f91e8e78ffa40b14a8b6051e0cbe07470ee648b2852f27bb93",
+      "bytes": 21422
+    },
+    "Runs/TraversalSwap01/Report.json": {
+      "source": "Saved/Extraction/TraversalSwap01/Report.json",
+      "source_sha256": "d2d0ac7d34006d59f3d708c5a02f98f7f3bc4ecbbea860c450cbec604197f119",
+      "sha256": "d2d0ac7d34006d59f3d708c5a02f98f7f3bc4ecbbea860c450cbec604197f119",
+      "bytes": 2644364
+    },
+    "Runs/TraversalSwap01/Resources.json": {
+      "source": "Saved/Extraction/TraversalSwap01-resources/Report.json",
+      "source_sha256": "493b732303bed5e286214aa342baa42805631e3fe5300c58be0a616d241f6958",
+      "sha256": "493b732303bed5e286214aa342baa42805631e3fe5300c58be0a616d241f6958",
+      "bytes": 4025
+    },
+    "Runs/TraversalSwap01/A.log.gz": {
+      "source": "Saved/Extraction/TraversalSwap01/A.log",
+      "source_sha256": "719d7dc9cac2180482646e3b27123159dad5880dd5ad7232e6e4deba94306b3b",
+      "sha256": "9a995ceb1117431d02fc4b60fb8fd1799c0c2f01c65182f9aa2470ba3a904e74",
+      "bytes": 23998
+    },
+    "Runs/TraversalSwap01/B.log.gz": {
+      "source": "Saved/Extraction/TraversalSwap01/B.log",
+      "source_sha256": "84ebd46109210fcabd8af497e8c97a5b0350fe334e6580f9c553489ffcfdc8ea",
+      "sha256": "de436bc33dd0eade655d901348a17ea06c6d1230623f6fa6d202f66e406fc557",
+      "bytes": 23399
+    },
+    "Runs/TraversalSwap01/Server.log.gz": {
+      "source": "Saved/Extraction/TraversalSwap01/Server.log",
+      "source_sha256": "d0ff903f9e9c5e81b0521300d18efcb5d1e1bea1bbc888238a30a7cd75d85bb8",
+      "sha256": "df32127b599c9030a029d5138de3b241d08511632fef63346271b0106e9781ab",
+      "bytes": 19182
+    },
+    "Runs/TraversalTimeout01/Report.json": {
+      "source": "Saved/Extraction/TraversalTimeout01/Report.json",
+      "source_sha256": "428ed457e1bf6ad9edd090edac24e078829f92fd073d5f44592d5ae481b13eab",
+      "sha256": "428ed457e1bf6ad9edd090edac24e078829f92fd073d5f44592d5ae481b13eab",
+      "bytes": 3024526
+    },
+    "Runs/TraversalTimeout01/Resources.json": {
+      "source": "Saved/Extraction/TraversalTimeout01-resources/Report.json",
+      "source_sha256": "2c546d299e53c575359fec025253fa31ffe44df01e2a94c60ab1afc053114843",
+      "sha256": "2c546d299e53c575359fec025253fa31ffe44df01e2a94c60ab1afc053114843",
+      "bytes": 5416
+    },
+    "Runs/TraversalTimeout01/A.log.gz": {
+      "source": "Saved/Extraction/TraversalTimeout01/A.log",
+      "source_sha256": "ff2e84ffe2d9ab48dbdabcd05d7107143a3d7338538568625424138515af34b1",
+      "sha256": "a3c92d1e985fc7a8571d63f60c79236152c5d75f7f759130609816ca068dd0f5",
+      "bytes": 23926
+    },
+    "Runs/TraversalTimeout01/B.log.gz": {
+      "source": "Saved/Extraction/TraversalTimeout01/B.log",
+      "source_sha256": "7221ddb6f065bc61a4539a3d9ac541e4d7a775287cf3c3e240a8a57b28846134",
+      "sha256": "d9aaf4f10cafc72aedf3e5503d6545735022cbad7e9506e9e4af936e5910a3c3",
+      "bytes": 24048
+    },
+    "Runs/TraversalTimeout01/Server.log.gz": {
+      "source": "Saved/Extraction/TraversalTimeout01/Server.log",
+      "source_sha256": "7acb3fcb9d5c64d8192de42e23e2ee7dd9889a349e5b24096bd7116fc7e8c402",
+      "sha256": "3ed41573fccbb8da2d5d16997febd0f41bcdb8ec28abd35a62fe897b3dc67dae",
+      "bytes": 18975
+    },
+    "Runs/TraversalLegacy02/Report.json": {
+      "source": "Saved/Extraction/TraversalLegacy02/Report.json",
+      "source_sha256": "60c8f4b322d665b0ab01955a2270a8c4cd40e99ee2ac6de8fee96b6454fb65da",
+      "sha256": "60c8f4b322d665b0ab01955a2270a8c4cd40e99ee2ac6de8fee96b6454fb65da",
+      "bytes": 1766
+    },
+    "Runs/TraversalLegacy02/Resources.json": {
+      "source": "Saved/Extraction/TraversalLegacy02-resources/Report.json",
+      "source_sha256": "733b13e1f8caf34bef92ca39d8b689317e5863145f35ad6c8bbc39e275629bf9",
+      "sha256": "733b13e1f8caf34bef92ca39d8b689317e5863145f35ad6c8bbc39e275629bf9",
+      "bytes": 5832
+    },
+    "Runs/TraversalLegacy02/Client1-FreeForAll.log.gz": {
+      "source": "Saved/Extraction/TraversalLegacy02/Client1-FreeForAll.log",
+      "source_sha256": "ad0da96541d3fae6b7562c772fc3620306b36814956409a6c391e5c85552c9bb",
+      "sha256": "d79f4e41ebff14984ca53f36ea1bf26c5a60fc0f3df7e5022a4c5bf78e4574b0",
+      "bytes": 19297
+    },
+    "Runs/TraversalLegacy02/Client1-Teams.log.gz": {
+      "source": "Saved/Extraction/TraversalLegacy02/Client1-Teams.log",
+      "source_sha256": "0d88f95360f332f20d653f751f65ec97e21f5aab9c1b5dc25c66f4cfecfafe18",
+      "sha256": "6d3b0659930c375573d43f60c71e98b5f774520e06691b7397d75d395b0be34b",
+      "bytes": 19327
+    },
+    "Runs/TraversalLegacy02/Client2-FreeForAll.log.gz": {
+      "source": "Saved/Extraction/TraversalLegacy02/Client2-FreeForAll.log",
+      "source_sha256": "8d738ee2df715ea09d2ad20a1270da7e8585a3c1a3026bbefa26b853d8de1d10",
+      "sha256": "cd085295eac76c580545861397c1d69f41568b9c5111c36011348616d3948d19",
+      "bytes": 19331
+    },
+    "Runs/TraversalLegacy02/Client2-Teams.log.gz": {
+      "source": "Saved/Extraction/TraversalLegacy02/Client2-Teams.log",
+      "source_sha256": "4080dc842ac9619e9f4ce91d1113d264ce057e6698334d6dec9e63873e8e6470",
+      "sha256": "454f2e2e8b11d5b7c7efaf1b0c69c746cb84758f11ea78b9a5187c69960ca774",
+      "bytes": 19408
+    },
+    "Runs/TraversalLegacy02/Console.log.gz": {
+      "source": "Saved/Extraction/TraversalLegacy02/Console.log",
+      "source_sha256": "b3731b968de98365c514c5069b0a112d262093055ef7571dc47c305ceee47706",
+      "sha256": "46afb5320d572771024557d4fe0e3f01b498e9cf34bf68108aac065484e308b9",
+      "bytes": 193
+    },
+    "Runs/TraversalLegacy02/Empty.log.gz": {
+      "source": "Saved/Extraction/TraversalLegacy02/Empty.log",
+      "source_sha256": "1fd566a6174c46adca5350dc67543c6f3de45e323ec6aba17dcc60d14fdd69b6",
+      "sha256": "513c1e56624cf2ade8b591de8311f2eb4d581452ef3956036906de5a68d341bf",
+      "bytes": 16787
+    },
+    "Runs/TraversalLegacy02/Other-FreeForAll.log.gz": {
+      "source": "Saved/Extraction/TraversalLegacy02/Other-FreeForAll.log",
+      "source_sha256": "215176c1924f1a2aba8f484180bbb04f2f3f232571a7034a0aea889a63b49986",
+      "sha256": "664c3c1f62676bfbe951546c7b55ec8c4de4dc6fa5234c491917813b3d24a1ac",
+      "bytes": 15459
+    },
+    "Runs/TraversalLegacy02/Other-Teams.log.gz": {
+      "source": "Saved/Extraction/TraversalLegacy02/Other-Teams.log",
+      "source_sha256": "61c1e28c99241e14ad16038584e4fc126fac8cda265a50a36d059e5f995a9633",
+      "sha256": "e5e314caa4a2826379b80c7982a06a74a3ab36e279585ce68d581084b85de2c6",
+      "bytes": 15488
+    },
+    "Runs/TraversalLegacy02/Server-FreeForAll.log.gz": {
+      "source": "Saved/Extraction/TraversalLegacy02/Server-FreeForAll.log",
+      "source_sha256": "850bb6803c1ce244f56f97cfdd3dd6c475c4499425e04e0b65bfe7d8e5d55beb",
+      "sha256": "0faaf4462c45100c0a03a73231cbdf595fb152fead8a5f80bdaafccf3c4435c4",
+      "bytes": 17733
+    },
+    "Runs/TraversalLegacy02/Server-Teams.log.gz": {
+      "source": "Saved/Extraction/TraversalLegacy02/Server-Teams.log",
+      "source_sha256": "c0d56c2d890d39f50deb47357652e518bed9cf2a082b333cf43341aecab04b4b",
+      "sha256": "7faf95349874f838bf854b0315393766a1f54b4464ec1a24153cad6132a004af",
+      "bytes": 17728
+    },
+    "Videos/TraversalVisual02/A-120.mp4": {
+      "source": "Saved/Extraction/TraversalVisual02/A-120.mp4",
+      "source_sha256": "fd13b944b3c0baaa36deda838b695dd5429834184c0f7171573f6d3c6aa3315d",
+      "sha256": "fd13b944b3c0baaa36deda838b695dd5429834184c0f7171573f6d3c6aa3315d",
+      "bytes": 264394
+    },
+    "Videos/TraversalVisual02/A-120.json": {
+      "source": "Saved/Extraction/TraversalVisual02/A-120.json",
+      "source_sha256": "26597024eb31b0de581ef239811c74871d787930f5f7612cd196c7e368315d09",
+      "sha256": "26597024eb31b0de581ef239811c74871d787930f5f7612cd196c7e368315d09",
+      "bytes": 1087
+    },
+    "Videos/TraversalVisual02/A-120.frames.csv": {
+      "source": "Saved/Extraction/TraversalVisual02/A-120/Frames.csv",
+      "source_sha256": "d2acfdbb0a05fa5d9b1f44cfe03c6bb2dd7ef5ba33834bdd2fb7605f22fe210c",
+      "sha256": "d2acfdbb0a05fa5d9b1f44cfe03c6bb2dd7ef5ba33834bdd2fb7605f22fe210c",
+      "bytes": 378
+    },
+    "Videos/TraversalVisual02/A-180.mp4": {
+      "source": "Saved/Extraction/TraversalVisual02/A-180.mp4",
+      "source_sha256": "d6e222f282f10b5a1c759baffbfa1646c95afeb485b5491b6c9e15d1d56c4521",
+      "sha256": "d6e222f282f10b5a1c759baffbfa1646c95afeb485b5491b6c9e15d1d56c4521",
+      "bytes": 477615
+    },
+    "Videos/TraversalVisual02/A-180.json": {
+      "source": "Saved/Extraction/TraversalVisual02/A-180.json",
+      "source_sha256": "81bc2967729c69dcd6c390379d8e7be0b58f8020ea53227a8bf924a80f095154",
+      "sha256": "81bc2967729c69dcd6c390379d8e7be0b58f8020ea53227a8bf924a80f095154",
+      "bytes": 1086
+    },
+    "Videos/TraversalVisual02/A-180.frames.csv": {
+      "source": "Saved/Extraction/TraversalVisual02/A-180/Frames.csv",
+      "source_sha256": "44d6a17c1d9cca8394b45abea6d38d705c25d5ad16d5935fa3b48c9be456f8f0",
+      "sha256": "44d6a17c1d9cca8394b45abea6d38d705c25d5ad16d5935fa3b48c9be456f8f0",
+      "bytes": 540
+    },
+    "Videos/TraversalVisual02/A-60.mp4": {
+      "source": "Saved/Extraction/TraversalVisual02/A-60.mp4",
+      "source_sha256": "541114524f40703da748a202ebee759c7ea0e918d1fac185ed4b29e65df0f5de",
+      "sha256": "541114524f40703da748a202ebee759c7ea0e918d1fac185ed4b29e65df0f5de",
+      "bytes": 339377
+    },
+    "Videos/TraversalVisual02/A-60.json": {
+      "source": "Saved/Extraction/TraversalVisual02/A-60.json",
+      "source_sha256": "d3e5430182c23194cedbc2d9acdb8d9b5924254470b8809440bb613738864941",
+      "sha256": "d3e5430182c23194cedbc2d9acdb8d9b5924254470b8809440bb613738864941",
+      "bytes": 1083
+    },
+    "Videos/TraversalVisual02/A-60.frames.csv": {
+      "source": "Saved/Extraction/TraversalVisual02/A-60/Frames.csv",
+      "source_sha256": "5cfb60ea76c09846638fef21f0b1c686f34f9e216bd1a8cb3c9422ac45c9170b",
+      "sha256": "5cfb60ea76c09846638fef21f0b1c686f34f9e216bd1a8cb3c9422ac45c9170b",
+      "bytes": 405
+    },
+    "Videos/TraversalVisual02/A-90.mp4": {
+      "source": "Saved/Extraction/TraversalVisual02/A-90.mp4",
+      "source_sha256": "ca4414db954f06649ed5010d2824c22925a4a1456cff85ef201fe8275ab53a82",
+      "sha256": "ca4414db954f06649ed5010d2824c22925a4a1456cff85ef201fe8275ab53a82",
+      "bytes": 339672
+    },
+    "Videos/TraversalVisual02/A-90.json": {
+      "source": "Saved/Extraction/TraversalVisual02/A-90.json",
+      "source_sha256": "38a87c5f72dd0a97889f5768aa818962b3ff83e6aeb94b52951443f562b692fd",
+      "sha256": "38a87c5f72dd0a97889f5768aa818962b3ff83e6aeb94b52951443f562b692fd",
+      "bytes": 1084
+    },
+    "Videos/TraversalVisual02/A-90.frames.csv": {
+      "source": "Saved/Extraction/TraversalVisual02/A-90/Frames.csv",
+      "source_sha256": "7057ea0dc1a609782c44f326286ee37407835daa920d92846042c8221dfc91c1",
+      "sha256": "7057ea0dc1a609782c44f326286ee37407835daa920d92846042c8221dfc91c1",
+      "bytes": 486
+    },
+    "Videos/TraversalVisual02/A-ladder.mp4": {
+      "source": "Saved/Extraction/TraversalVisual02/A-ladder.mp4",
+      "source_sha256": "d234a9f981fbbb35e311dcc92060e2ad2f0404ade3e0962dda642178fd7c839b",
+      "sha256": "d234a9f981fbbb35e311dcc92060e2ad2f0404ade3e0962dda642178fd7c839b",
+      "bytes": 4088347
+    },
+    "Videos/TraversalVisual02/A-ladder.json": {
+      "source": "Saved/Extraction/TraversalVisual02/A-ladder.json",
+      "source_sha256": "39f9c96203c0012effe653fd8240afde8f9da9e3757844255c99a3ba2f0ca683",
+      "sha256": "39f9c96203c0012effe653fd8240afde8f9da9e3757844255c99a3ba2f0ca683",
+      "bytes": 1097
+    },
+    "Videos/TraversalVisual02/A-ladder.frames.csv": {
+      "source": "Saved/Extraction/TraversalVisual02/A-ladder/Frames.csv",
+      "source_sha256": "1b7dccf3cd4d79cb29833417c6258059f53a319dc4e19338dfe630833b4fa31c",
+      "sha256": "1b7dccf3cd4d79cb29833417c6258059f53a319dc4e19338dfe630833b4fa31c",
+      "bytes": 2808
+    },
+    "Videos/TraversalVisual02/B-120.mp4": {
+      "source": "Saved/Extraction/TraversalVisual02/B-120.mp4",
+      "source_sha256": "bcb438ea6203f13088ccc129f5ef6b650d9fe8908d147a067317554e18229dab",
+      "sha256": "bcb438ea6203f13088ccc129f5ef6b650d9fe8908d147a067317554e18229dab",
+      "bytes": 220799
+    },
+    "Videos/TraversalVisual02/B-120.json": {
+      "source": "Saved/Extraction/TraversalVisual02/B-120.json",
+      "source_sha256": "9568c7f3e94c192cf864fda4d045f2aa4b4e634392b54545c620a69e9318cbd7",
+      "sha256": "9568c7f3e94c192cf864fda4d045f2aa4b4e634392b54545c620a69e9318cbd7",
+      "bytes": 1087
+    },
+    "Videos/TraversalVisual02/B-120.frames.csv": {
+      "source": "Saved/Extraction/TraversalVisual02/B-120/Frames.csv",
+      "source_sha256": "80ec6284c4df9529d853db6651036b66e1a7c666d185acf4a99e886b8f3e020b",
+      "sha256": "80ec6284c4df9529d853db6651036b66e1a7c666d185acf4a99e886b8f3e020b",
+      "bytes": 378
+    },
+    "Videos/TraversalVisual02/B-180.mp4": {
+      "source": "Saved/Extraction/TraversalVisual02/B-180.mp4",
+      "source_sha256": "2d1d99f3ef75cc55cdb195efd45df08504526e3a1e7e786e44c34939a9c0c82a",
+      "sha256": "2d1d99f3ef75cc55cdb195efd45df08504526e3a1e7e786e44c34939a9c0c82a",
+      "bytes": 324100
+    },
+    "Videos/TraversalVisual02/B-180.json": {
+      "source": "Saved/Extraction/TraversalVisual02/B-180.json",
+      "source_sha256": "e7c707a3a673faef870c361fbb839e77d8ffbf9caed00185d13a9815ca423c7a",
+      "sha256": "e7c707a3a673faef870c361fbb839e77d8ffbf9caed00185d13a9815ca423c7a",
+      "bytes": 1085
+    },
+    "Videos/TraversalVisual02/B-180.frames.csv": {
+      "source": "Saved/Extraction/TraversalVisual02/B-180/Frames.csv",
+      "source_sha256": "a1e673cede2248bec0bffb5f759eba56885e2af106cf8133a6435345c0d5d39a",
+      "sha256": "a1e673cede2248bec0bffb5f759eba56885e2af106cf8133a6435345c0d5d39a",
+      "bytes": 513
+    },
+    "Videos/TraversalVisual02/B-60.mp4": {
+      "source": "Saved/Extraction/TraversalVisual02/B-60.mp4",
+      "source_sha256": "8a463abf13e8fb16ef13fc02ba0eae00351401ee118c8b88f41cb26566fc280b",
+      "sha256": "8a463abf13e8fb16ef13fc02ba0eae00351401ee118c8b88f41cb26566fc280b",
+      "bytes": 262954
+    },
+    "Videos/TraversalVisual02/B-60.json": {
+      "source": "Saved/Extraction/TraversalVisual02/B-60.json",
+      "source_sha256": "1aeba1d2585e1b4bb7d5bdc091c0c4de7dabc0dd80464e3cec0dd2c8aa46824e",
+      "sha256": "1aeba1d2585e1b4bb7d5bdc091c0c4de7dabc0dd80464e3cec0dd2c8aa46824e",
+      "bytes": 1084
+    },
+    "Videos/TraversalVisual02/B-60.frames.csv": {
+      "source": "Saved/Extraction/TraversalVisual02/B-60/Frames.csv",
+      "source_sha256": "8f3747956a9c26f504e7b14b0094f26e3519775de93122a6c5c4da01f20d8109",
+      "sha256": "8f3747956a9c26f504e7b14b0094f26e3519775de93122a6c5c4da01f20d8109",
+      "bytes": 405
+    },
+    "Videos/TraversalVisual02/B-90.mp4": {
+      "source": "Saved/Extraction/TraversalVisual02/B-90.mp4",
+      "source_sha256": "b89ad9158269c15cb7894e07bf6ec7056ed840886b97cf805152475a008197c6",
+      "sha256": "b89ad9158269c15cb7894e07bf6ec7056ed840886b97cf805152475a008197c6",
+      "bytes": 249446
+    },
+    "Videos/TraversalVisual02/B-90.json": {
+      "source": "Saved/Extraction/TraversalVisual02/B-90.json",
+      "source_sha256": "054b3b3f5c220b232bde5a1ae9c524577e5aa1a5983c3e43702c0163bd1f2cb0",
+      "sha256": "054b3b3f5c220b232bde5a1ae9c524577e5aa1a5983c3e43702c0163bd1f2cb0",
+      "bytes": 1084
+    },
+    "Videos/TraversalVisual02/B-90.frames.csv": {
+      "source": "Saved/Extraction/TraversalVisual02/B-90/Frames.csv",
+      "source_sha256": "8d6a99222546e530cff28d0f2911be33284a6c04f9329fff27de9e824b485aa4",
+      "sha256": "8d6a99222546e530cff28d0f2911be33284a6c04f9329fff27de9e824b485aa4",
+      "bytes": 432
+    },
+    "Videos/TraversalVisual02/B-ladder.mp4": {
+      "source": "Saved/Extraction/TraversalVisual02/B-ladder.mp4",
+      "source_sha256": "c490158f4bede2daf19d6780dcc91e60b34b5718d6915619d10240b665b9c7fe",
+      "sha256": "c490158f4bede2daf19d6780dcc91e60b34b5718d6915619d10240b665b9c7fe",
+      "bytes": 1205513
+    },
+    "Videos/TraversalVisual02/B-ladder.json": {
+      "source": "Saved/Extraction/TraversalVisual02/B-ladder.json",
+      "source_sha256": "7f6dcf2c66cd6079a8ae478b4a6bfa91c60d9d4388953a51d61a0891d9a0954c",
+      "sha256": "7f6dcf2c66cd6079a8ae478b4a6bfa91c60d9d4388953a51d61a0891d9a0954c",
+      "bytes": 1096
+    },
+    "Videos/TraversalVisual02/B-ladder.frames.csv": {
+      "source": "Saved/Extraction/TraversalVisual02/B-ladder/Frames.csv",
+      "source_sha256": "9f930722fd1fa87de0bca36c2bc5f4d13ed8829cf1eaf1554ba1be282c33c6e3",
+      "sha256": "9f930722fd1fa87de0bca36c2bc5f4d13ed8829cf1eaf1554ba1be282c33c6e3",
+      "bytes": 2862
+    },
+    "Videos/TraversalFormal06/A-formal-ladder.mp4": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-ladder.mp4",
+      "source_sha256": "ce700ed36168f5c87195532d26433303b452ac21cd37da66b5ee8badf9f3396c",
+      "sha256": "ce700ed36168f5c87195532d26433303b452ac21cd37da66b5ee8badf9f3396c",
+      "bytes": 1474220
+    },
+    "Videos/TraversalFormal06/A-formal-ladder.json": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-ladder.json",
+      "source_sha256": "5f43b3534666f72c8d7f78fbbf644bd0d164ac45ae267563ec6716af43521646",
+      "sha256": "5f43b3534666f72c8d7f78fbbf644bd0d164ac45ae267563ec6716af43521646",
+      "bytes": 1116
+    },
+    "Videos/TraversalFormal06/A-formal-ladder.frames.csv": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-ladder/Frames.csv",
+      "source_sha256": "55168c24d843d5d5d70dcdce7532747508de240b6651e09f0bb03e559827bd76",
+      "sha256": "55168c24d843d5d5d70dcdce7532747508de240b6651e09f0bb03e559827bd76",
+      "bytes": 621
+    },
+    "Videos/TraversalFormal06/A-formal-mantle.mp4": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-mantle.mp4",
+      "source_sha256": "c63cbb252f55aaca35f80bee84c4cc482d14d7e2f69f9e785dd5661d807fa8a2",
+      "sha256": "c63cbb252f55aaca35f80bee84c4cc482d14d7e2f69f9e785dd5661d807fa8a2",
+      "bytes": 1028095
+    },
+    "Videos/TraversalFormal06/A-formal-mantle.json": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-mantle.json",
+      "source_sha256": "b84df602bb54f0b8b5e9bfa54d132fe953c265d31f49c90ff0ed33aea6bd6264",
+      "sha256": "b84df602bb54f0b8b5e9bfa54d132fe953c265d31f49c90ff0ed33aea6bd6264",
+      "bytes": 1116
+    },
+    "Videos/TraversalFormal06/A-formal-mantle.frames.csv": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-mantle/Frames.csv",
+      "source_sha256": "7dec74518f1390db858c8d18e76436249e747ab7204cb18d4b2dcc6a449dbda0",
+      "sha256": "7dec74518f1390db858c8d18e76436249e747ab7204cb18d4b2dcc6a449dbda0",
+      "bytes": 459
+    },
+    "Videos/TraversalFormal06/A-formal-vault.mp4": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-vault.mp4",
+      "source_sha256": "faf8302fa5c7f7c21a29ad199cd8759820f8a10204ac0dc205c0391b6bd971e1",
+      "sha256": "faf8302fa5c7f7c21a29ad199cd8759820f8a10204ac0dc205c0391b6bd971e1",
+      "bytes": 804974
+    },
+    "Videos/TraversalFormal06/A-formal-vault.json": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-vault.json",
+      "source_sha256": "496800667e8298530e78596d222a424fd9f23abdc99ba1266758b069cc925784",
+      "sha256": "496800667e8298530e78596d222a424fd9f23abdc99ba1266758b069cc925784",
+      "bytes": 1113
+    },
+    "Videos/TraversalFormal06/A-formal-vault.frames.csv": {
+      "source": "Saved/Extraction/TraversalFormal06/A-formal-vault/Frames.csv",
+      "source_sha256": "c5b66c6969da05819c1a73c5e9743c460261dae2b94dcc51666eb6673e510520",
+      "sha256": "c5b66c6969da05819c1a73c5e9743c460261dae2b94dcc51666eb6673e510520",
+      "bytes": 405
+    },
+    "Videos/TraversalFormal06/B-formal-ladder.mp4": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-ladder.mp4",
+      "source_sha256": "adb524fd4561ed529b633f4392b081ca39527f552cf2905df67822e79d4c0414",
+      "sha256": "adb524fd4561ed529b633f4392b081ca39527f552cf2905df67822e79d4c0414",
+      "bytes": 637476
+    },
+    "Videos/TraversalFormal06/B-formal-ladder.json": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-ladder.json",
+      "source_sha256": "ff14c0d1b0b82326d2bf68b3ac74ad9f02cc9f1ba2cf4bb3204b2da138e149d0",
+      "sha256": "ff14c0d1b0b82326d2bf68b3ac74ad9f02cc9f1ba2cf4bb3204b2da138e149d0",
+      "bytes": 1117
+    },
+    "Videos/TraversalFormal06/B-formal-ladder.frames.csv": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-ladder/Frames.csv",
+      "source_sha256": "d475142f8328e4cf9107a62bd0f2f7098a47a8f21c51eddf85e1b9cac9a031f8",
+      "sha256": "d475142f8328e4cf9107a62bd0f2f7098a47a8f21c51eddf85e1b9cac9a031f8",
+      "bytes": 594
+    },
+    "Videos/TraversalFormal06/B-formal-mantle.mp4": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-mantle.mp4",
+      "source_sha256": "2d1ae14f1d1352c33b8a9217ddaa14964ef836dd0e782bdc98ddb660146c7d02",
+      "sha256": "2d1ae14f1d1352c33b8a9217ddaa14964ef836dd0e782bdc98ddb660146c7d02",
+      "bytes": 539224
+    },
+    "Videos/TraversalFormal06/B-formal-mantle.json": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-mantle.json",
+      "source_sha256": "fed795f86e35a51384cfd08bead43001a4155490827068700e7bc1afe8fe7967",
+      "sha256": "fed795f86e35a51384cfd08bead43001a4155490827068700e7bc1afe8fe7967",
+      "bytes": 1116
+    },
+    "Videos/TraversalFormal06/B-formal-mantle.frames.csv": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-mantle/Frames.csv",
+      "source_sha256": "b24c80059d406ebee11d93f9c60f27b22224246b7abc3c261a35dd01315903c8",
+      "sha256": "b24c80059d406ebee11d93f9c60f27b22224246b7abc3c261a35dd01315903c8",
+      "bytes": 432
+    },
+    "Videos/TraversalFormal06/B-formal-vault.mp4": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-vault.mp4",
+      "source_sha256": "c5cdf2e3aec9dbc2d50cdd03761c044b4933fc157caf8ec4fc07d521af134dc3",
+      "sha256": "c5cdf2e3aec9dbc2d50cdd03761c044b4933fc157caf8ec4fc07d521af134dc3",
+      "bytes": 385921
+    },
+    "Videos/TraversalFormal06/B-formal-vault.json": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-vault.json",
+      "source_sha256": "027491d1495b978a2b2c2ab3e054644c680899ed5cc85e0bb34847984511bdc5",
+      "sha256": "027491d1495b978a2b2c2ab3e054644c680899ed5cc85e0bb34847984511bdc5",
+      "bytes": 1113
+    },
+    "Videos/TraversalFormal06/B-formal-vault.frames.csv": {
+      "source": "Saved/Extraction/TraversalFormal06/B-formal-vault/Frames.csv",
+      "source_sha256": "1d0ca1adcffbd759f2070c8d9b6b493487f6442b12164e66384275916dc3119e",
+      "sha256": "1d0ca1adcffbd759f2070c8d9b6b493487f6442b12164e66384275916dc3119e",
+      "bytes": 351
+    }
+  },
+  "checks_including_repeated_runs": 750
+}

@@ -676,6 +676,7 @@ void UCombatComponent::EquipSecondaryWeapon(AWeapon* WeaponToEquip)
 
 void UCombatComponent::SetAiming(bool bIsAiming)
 {
+	if (bIsAiming && Character && Character->IsTraversing()) return;
 	if (Character == nullptr || EquippedWeapon == nullptr) return;
 	bAiming = bIsAiming;
 	ServerSetAiming(bIsAiming);
@@ -854,6 +855,7 @@ void UCombatComponent::HandleReload()
 
 void UCombatComponent::ServerSetAiming_Implementation(bool bIsAiming)
 {
+	if (bIsAiming && Character && Character->IsTraversing()) return;
 	bAiming = bIsAiming;
 	if (Character)
 	{

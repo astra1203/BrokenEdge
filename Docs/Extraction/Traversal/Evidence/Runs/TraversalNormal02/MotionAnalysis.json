@@ -1,0 +1,167 @@
+{
+  "result": "measured",
+  "capture_boundary": "Snapshots sample engine frames, not every present. Completion estimates have snapshot and movement-timestamp uncertainty (about 0.15 s). Frame cap is not proof of achieved frame rate.",
+  "frame_samples": {
+    "30": {
+      "samples": 31,
+      "median_fps": 29.99993808580302,
+      "p95_frame_ms": 33.33350270986557
+    },
+    "60": {
+      "samples": 33,
+      "median_fps": 59.99988287710165,
+      "p95_frame_ms": 18.21339875459671
+    },
+    "120": {
+      "samples": 55,
+      "median_fps": 117.4922379577609,
+      "p95_frame_ms": 17.261799424886703
+    }
+  },
+  "runs": [
+    {
+      "fps_cap": 30,
+      "height": 60,
+      "end": [
+        30075,
+        30000,
+        6094.149999166845
+      ],
+      "observed_completion_seconds": 0.9002391062676907,
+      "last_active_elapsed": 0.7666658163070679,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 30,
+      "height": 90,
+      "end": [
+        30075,
+        30350,
+        6094.149998464064
+      ],
+      "observed_completion_seconds": 0.9666882492601871,
+      "last_active_elapsed": 0.833332896232605,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 30,
+      "height": 120,
+      "end": [
+        30075,
+        30700,
+        6094.149998013642
+      ],
+      "observed_completion_seconds": 0.899833370000124,
+      "last_active_elapsed": 0.7999995946884155,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 30,
+      "height": 180,
+      "end": [
+        29997,
+        31050,
+        6274.150004745961
+      ],
+      "observed_completion_seconds": 1.3003705404698849,
+      "last_active_elapsed": 1.199999213218689,
+      "configured_duration": 1.25
+    },
+    {
+      "fps_cap": 60,
+      "height": 60,
+      "end": [
+        30075,
+        30000,
+        6094.14999970374
+      ],
+      "observed_completion_seconds": 0.9196699447929859,
+      "last_active_elapsed": 0.8170053958892822,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 60,
+      "height": 90,
+      "end": [
+        30075,
+        30350,
+        6094.15000003934
+      ],
+      "observed_completion_seconds": 0.9360146597027779,
+      "last_active_elapsed": 0.8347472548484802,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 60,
+      "height": 120,
+      "end": [
+        30075,
+        30700,
+        6094.14999685257
+      ],
+      "observed_completion_seconds": 0.850963618606329,
+      "last_active_elapsed": 0.7178210616111755,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 60,
+      "height": 180,
+      "end": [
+        29997,
+        31050,
+        6274.150001289582
+      ],
+      "observed_completion_seconds": 1.3643054217100143,
+      "last_active_elapsed": 1.2284142971038818,
+      "configured_duration": 1.25
+    },
+    {
+      "fps_cap": 120,
+      "height": 60,
+      "end": [
+        30075,
+        30000,
+        6094.149999702393
+      ],
+      "observed_completion_seconds": 0.9194263536483049,
+      "last_active_elapsed": 0.8144702911376953,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 120,
+      "height": 90,
+      "end": [
+        30075,
+        30350,
+        6094.150000069681
+      ],
+      "observed_completion_seconds": 0.8790277689695358,
+      "last_active_elapsed": 0.7342014312744141,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 120,
+      "height": 120,
+      "end": [
+        30075,
+        30700,
+        6094.149998074309
+      ],
+      "observed_completion_seconds": 0.8483958393335342,
+      "last_active_elapsed": 0.7132968902587891,
+      "configured_duration": 0.85
+    },
+    {
+      "fps_cap": 120,
+      "height": 180,
+      "end": [
+        29997,
+        31050,
+        6274.149994843392
+      ],
+      "observed_completion_seconds": 1.3225731402635574,
+      "last_active_elapsed": 1.189203143119812,
+      "configured_duration": 1.25
+    }
+  ]
+}

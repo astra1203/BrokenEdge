@@ -1,0 +1,35 @@
+{
+  "run": "TraversalDebug06",
+  "package": "Traversal06",
+  "paused_file": "Source/BrokenEdge/Traversal/TraversalMovementComponent.cpp",
+  "paused_line_before_fix": 498,
+  "stack": [
+    "PhysCustom",
+    "StartNewPhysics",
+    "PerformMovement",
+    "MoveAutonomous"
+  ],
+  "values": {
+    "kind": "LadderExit",
+    "elapsed": 0.708038,
+    "State.Facing": [
+      -2.22e-16,
+      0,
+      1
+    ],
+    "ladder_rotation": {
+      "pitch": 90,
+      "yaw": 0,
+      "roll": 0
+    },
+    "capsule_rotation": {
+      "pitch": 90,
+      "yaw": 180,
+      "roll": 0
+    }
+  },
+  "finding": "Python positional Rotator arguments put the intended yaw in pitch. Inverse-transformed endpoints still matched world positions, hiding the mistake from endpoint scans. Movement used the resulting vertical facing to pitch the capsule, invalidating the upright sweep precheck.",
+  "fix": "Use named pitch/yaw/roll arguments and assert the binding forward vector. Project ladder facing into XY and keep movement capsule rotation yaw-only.",
+  "limits": "Optimized Hit local could not be materialized; the recorded state and both component rotations were read directly from live members.",
+  "cleanup": "Agent breakpoints and owned debugger session removed; only the owned run process tree was stopped."
+}

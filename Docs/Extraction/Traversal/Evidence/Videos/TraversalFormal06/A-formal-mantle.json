@@ -1,0 +1,33 @@
+{
+  "file": "Saved\\Extraction\\TraversalFormal06\\A-formal-mantle.mp4",
+  "sha256": "c63cbb252f55aaca35f80bee84c4cc482d14d7e2f69f9e785dd5661d807fa8a2",
+  "frames": 17,
+  "seconds": 1.932277999818325,
+  "measured_fps": 8.280382016202813,
+  "max_frame_interval": 0.13855000212788582,
+  "boundary": "Rendered viewport frames timed by capture requests; no audio. Captures add readback overhead, separate from performance runs.",
+  "command": [
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\Tools\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+    "-hide_banner",
+    "-loglevel",
+    "error",
+    "-f",
+    "concat",
+    "-safe",
+    "0",
+    "-i",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\TraversalFormal06\\A-formal-mantle\\Concat.txt",
+    "-fps_mode",
+    "vfr",
+    "-c:v",
+    "libx264",
+    "-crf",
+    "18",
+    "-pix_fmt",
+    "yuv420p",
+    "-movflags",
+    "+faststart",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\TraversalFormal06\\A-formal-mantle.partial.mp4"
+  ],
+  "result": "passed"
+}

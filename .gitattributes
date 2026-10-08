@@ -91,3 +91,8 @@ Docs/Extraction/OpticCalibrationEvidence/**/*.json whitespace=blank-at-eol,blank
 # Experience phase A evidence retains original bytes for SHA-256 verification.
 Docs/Extraction/ExperiencePhaseA/Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 Docs/Extraction/ExperiencePhaseA/Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+
+# Traversal evidence retains exact source/report bytes.
+Docs/Extraction/Traversal/Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Docs/Extraction/Traversal/Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+Docs/Extraction/Traversal/Evidence/**/*.mp4 filter=lfs diff=lfs merge=lfs -text

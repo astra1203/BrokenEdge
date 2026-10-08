@@ -23,7 +23,7 @@ bool UExtractionCombatComponent::CanAct() const
 	const auto* GS = GetWorld() ? GetWorld()->GetGameState<AExtractionGameState>() : nullptr;
 	const auto* PS = C ? C->GetPlayerState<AExtractionPlayerState>() : nullptr;
 	return C && GS && GS->Phase == EExtractionPhase::Active && (C->bExtractionGuard || (PS && PS->Life == EExtractionLife::Alive))
-		&& !C->IsDefeated() && !C->bDisableGameplay;
+		&& !C->IsDefeated() && !C->bDisableGameplay && !C->IsTraversing();
 }
 
 void UExtractionCombatComponent::FireGuard(const FVector& Target)
