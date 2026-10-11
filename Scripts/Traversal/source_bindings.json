@@ -1,7 +1,9 @@
 {
-  "source_manifest_sha256": "b34d9d9897db2e9d9d9c7265276b9cec5a844d0293b2fc9fe67cf7a1c67c705a",
-  "map_sha256": "583e774cfd36643c5af55d07fc69003afe4fd11217bc03c406f5ba6dc773e871",
-  "editor_report": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\EditorRuns\\LadderSourceBind10\\Report.json",
+  "schema": 3,
+  "interaction": "walk_toward_entry",
+  "source_manifest_sha256": "746113183de86f62a6bb3c44937d0c0a7c618e8c048fbdf25c88a8eb8f409443",
+  "map_sha256": "65546b13447fce8e08c45d34c7c732f0a39bc800b4e424b43b2d454afdc105bf",
+  "editor_report": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\EditorRuns\\LadderDemo20261011Bind02\\Report.json",
   "candidates": [
     {
       "id": "a2a2a227017b5672",
@@ -29,14 +31,51 @@
         ]
       },
       "capsule_top_stand_offset": [
-        36.43790872797523,
-        6.424858561225073,
+        75.77418051828317,
+        13.360784641383361,
         0.0
       ],
+      "source_top_trigger": {
+        "source_reference": {
+          "ObjectName": "InteractorBoxComponent'Gameplay_x25_y17_2:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew4.TopBox'",
+          "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x25_y17_2.13"
+        },
+        "transform": [
+          [
+            0.17364542756420717,
+            0.9848082379255588,
+            0.0,
+            -11729.359584253049
+          ],
+          [
+            -0.9848082379255588,
+            0.17364542756420717,
+            0.0,
+            11089.71224953956
+          ],
+          [
+            0.0,
+            0.0,
+            0.947088,
+            -326.1010406387177
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "extent": [
+          125.0,
+          100.0,
+          90.0
+        ]
+      },
       "bottom_floor": null,
       "top_floor": [
-        -11706.652921268233,
-        11093.715933957132,
+        -11667.316649035789,
+        11100.65186011525,
         -313.2584899730682
       ],
       "errors": [
@@ -71,10 +110,47 @@
         ]
       },
       "capsule_top_stand_offset": [
-        26.162846335506806,
-        -26.163055471879776,
+        54.406766195572345,
+        -54.4071759200815,
         0.0
       ],
+      "source_top_trigger": {
+        "source_reference": {
+          "ObjectName": "InteractorBoxComponent'Gameplay_x25_y17_3:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew6.TopBox'",
+          "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x25_y17_3.13"
+        },
+        "transform": [
+          [
+            -0.7071091754027444,
+            0.7071043869622442,
+            0.0,
+            -10107.044796332484
+          ],
+          [
+            -0.7071043869622442,
+            -0.7071091754027444,
+            0.0,
+            9579.644525549433
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            144.07700000000114
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "extent": [
+          125.0,
+          100.0,
+          90.0
+        ]
+      },
       "bottom_floor": [
         -10189.775957106645,
         9662.376346645378,
@@ -84,7 +160,7 @@
       "errors": [
         "source_endpoint_capsule"
       ],
-      "top_clearance": 35.477999999999156,
+      "top_clearance": 32.477999999999156,
       "classification": "unresolved_collision"
     },
     {
@@ -113,21 +189,260 @@
         ]
       },
       "capsule_top_stand_offset": [
-        26.162795649365613,
-        -26.163106157517614,
+        54.4066607916605,
+        -54.40728132301956,
         0.0
       ],
+      "source_top_trigger": {
+        "source_reference": {
+          "ObjectName": "InteractorBoxComponent'Gameplay_x26_y17_0:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew10.TopBox'",
+          "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y17_0.103"
+        },
+        "transform": [
+          [
+            -0.7071105452856848,
+            0.7071030170673731,
+            0.0,
+            -397.20486482721753
+          ],
+          [
+            -0.7071030170673731,
+            -0.7071105452856848,
+            0.0,
+            13223.584457055316
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            677.6549999999988
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "extent": [
+          125.0,
+          100.0,
+          90.0
+        ]
+      },
       "bottom_floor": [
         -479.93580068712527,
         13306.316445934628,
         48.83690153241457
       ],
-      "top_floor": null,
-      "errors": [
-        "source_endpoint_capsule"
+      "top_floor": [
+        -352.65746590441813,
+        13179.036354632264,
+        543.1238658225382
       ],
-      "top_clearance": 35.477999999999156,
-      "classification": "unresolved_collision"
+      "errors": [],
+      "top_clearance": 138.53113417746067,
+      "classification": "usable",
+      "approaches": {
+        "bottom": [
+          -513.1696418730853,
+          13339.5506678511,
+          48.83689872783833
+        ],
+        "top": [
+          -288.3110126506102,
+          13114.689311812443,
+          543.8171897856795
+        ]
+      },
+      "approach_errors": {},
+      "points": {
+        "bottom": [
+          -468.38887860788964,
+          13294.769322596258,
+          63.21099999999933
+        ],
+        "top": [
+          -469.2755850175163,
+          13295.656039993803,
+          593.4879999999976
+        ],
+        "bottom_exit": [
+          -479.93580068712527,
+          13306.316445934628,
+          48.83690153241457
+        ],
+        "top_exit": [
+          -352.65746590441813,
+          13179.036354632264,
+          543.1238658225382
+        ]
+      },
+      "entries": {
+        "bottom_entry": {
+          "source_reference": {
+            "ObjectName": "InteractorBoxComponent'Gameplay_x26_y17_0:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew10.BottomBox'",
+            "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y17_0.101"
+          },
+          "transform": [
+            [
+              0.707111288788916,
+              -0.7071022735554441,
+              0.0,
+              -453.77307200001087
+            ],
+            [
+              0.7071022735554441,
+              0.707111288788916,
+              0.0,
+              13280.153334870469
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              56.870999999999185
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "extent": [
+            40.0,
+            30.0,
+            30.0
+          ]
+        },
+        "top_entry": {
+          "source_reference": {
+            "ObjectName": "InteractorBoxComponent'Gameplay_x26_y17_0:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew10.TopBox'",
+            "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y17_0.103"
+          },
+          "transform": [
+            [
+              -0.7071105452856848,
+              0.7071030170673731,
+              0.0,
+              -397.20486482721753
+            ],
+            [
+              -0.7071030170673731,
+              -0.7071105452856848,
+              0.0,
+              13223.584457055316
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              677.6549999999988
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "extent": [
+            125.0,
+            100.0,
+            90.0
+          ]
+        }
+      },
+      "facing": [
+        0.7071025851179895,
+        -0.7071109772302058,
+        0.0
+      ],
+      "contact_rungs": [
+        [
+          -434.0897280230836,
+          13260.450831356477,
+          73.87099892711558
+        ],
+        [
+          -434.0897280230836,
+          13260.450831356477,
+          111.87099547004618
+        ],
+        [
+          -434.0897280230836,
+          13260.450831356477,
+          149.8710009536735
+        ],
+        [
+          -434.0897280230836,
+          13260.450831356477,
+          187.87100047683634
+        ],
+        [
+          -434.0897280230836,
+          13260.450831356477,
+          225.87099999999919
+        ],
+        [
+          -434.08972854991595,
+          13260.450831883316,
+          263.8709876022331
+        ],
+        [
+          -434.08990240674325,
+          13260.450658028643,
+          301.6549995231617
+        ],
+        [
+          -434.08990240674325,
+          13260.450658028643,
+          339.6549995231617
+        ],
+        [
+          -434.08990240674325,
+          13260.450658028643,
+          377.6549995231617
+        ],
+        [
+          -434.08990240674325,
+          13260.450658028643,
+          415.6549995231617
+        ],
+        [
+          -434.08990240674325,
+          13260.450658028643,
+          453.6549995231617
+        ],
+        [
+          -434.08990240674325,
+          13260.450658028643,
+          491.6549995231617
+        ],
+        [
+          -434.08990240674325,
+          13260.450658028643,
+          529.6549995231617
+        ],
+        [
+          -434.08990240674325,
+          13260.450658028643,
+          567.6549995231617
+        ],
+        [
+          -434.08990240674325,
+          13260.450658028643,
+          605.6549995231617
+        ],
+        [
+          -434.09369670028934,
+          13260.446863782116,
+          643.6549995231617
+        ]
+      ],
+      "grip_half_width": 29.931509733200137,
+      "actor": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.ExtractionLadder_0"
     },
     {
       "id": "670af423419e21d8",
@@ -155,10 +470,47 @@
         ]
       },
       "capsule_top_stand_offset": [
-        0.0001097631606332611,
-        -36.99999999983719,
+        0.0002460645559949626,
+        -76.94307635777068,
         0.0
       ],
+      "source_top_trigger": {
+        "source_reference": {
+          "ObjectName": "InteractorBoxComponent'Gameplay_x26_y17_1:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew11.TopBox'",
+          "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y17_1.310"
+        },
+        "transform": [
+          [
+            -0.9999999999936012,
+            3.5774371470750827e-06,
+            0.0,
+            3465.3001566963503
+          ],
+          [
+            -3.5774371470750827e-06,
+            -0.9999999999936012,
+            0.0,
+            -2596.6599999997416
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            3051.3070000000007
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "extent": [
+          125.0,
+          100.0,
+          90.0
+        ]
+      },
       "bottom_floor": [
         3465.299818780273,
         -2479.660000000207,
@@ -168,7 +520,7 @@
       "errors": [
         "source_endpoint_capsule"
       ],
-      "top_clearance": 35.477999999999156,
+      "top_clearance": 32.477999999999156,
       "classification": "unresolved_collision"
     },
     {
@@ -197,25 +549,260 @@
         ]
       },
       "capsule_top_stand_offset": [
-        26.163039946529626,
-        26.162861860971844,
+        54.40714363448296,
+        54.40679848136642,
         0.0
       ],
+      "source_top_trigger": {
+        "source_reference": {
+          "ObjectName": "InteractorBoxComponent'Gameplay_x26_y17_1:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew9.TopBox'",
+          "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y17_1.313"
+        },
+        "transform": [
+          [
+            0.7071048065691511,
+            0.7071087557984299,
+            0.0,
+            -4523.944546529674
+          ],
+          [
+            -0.7071087557984299,
+            0.7071048065691511,
+            0.0,
+            9838.015224647883
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            1177.7609999999986
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "extent": [
+          125.0,
+          100.0,
+          90.0
+        ]
+      },
       "bottom_floor": [
         -4606.676316544959,
         9755.2840151429,
         543.8088525081882
       ],
       "top_floor": [
-        -4507.640705261218,
-        9854.318914159307,
-        1062.0342955973601
+        -4479.396601374176,
+        9882.562850978788,
+        1062.0211053098553
       ],
-      "errors": [
-        "original_climb_or_exit_path_blocked"
+      "errors": [],
+      "top_clearance": 119.73989469014327,
+      "classification": "usable",
+      "approaches": {
+        "bottom": [
+          -4639.910454216311,
+          9722.050089989634,
+          543.8096382264546
+        ],
+        "top": [
+          -4415.049664835896,
+          9946.909349522855,
+          1061.990999418686
+        ]
+      },
+      "approach_errors": {},
+      "points": {
+        "bottom": [
+          -4595.129231923027,
+          9766.831030717993,
+          563.3169999999991
+        ],
+        "top": [
+          -4596.015947076608,
+          9765.944322064344,
+          1093.5939999999973
+        ],
+        "bottom_exit": [
+          -4606.676316544959,
+          9755.2840151429,
+          543.8088525081882
+        ],
+        "top_exit": [
+          -4479.396601374176,
+          9882.562850978788,
+          1062.0211053098553
+        ]
+      },
+      "entries": {
+        "bottom_entry": {
+          "source_reference": {
+            "ObjectName": "InteractorBoxComponent'Gameplay_x26_y17_1:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew9.BottomBox'",
+            "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y17_1.311"
+          },
+          "transform": [
+            [
+              -0.7071040630591037,
+              -0.7071094993035427,
+              0.0,
+              -4580.513281185995
+            ],
+            [
+              0.7071094993035427,
+              -0.7071040630591037,
+              0.0,
+              9781.446874314977
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              556.976999999999
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "extent": [
+            40.0,
+            30.0,
+            30.0
+          ]
+        },
+        "top_entry": {
+          "source_reference": {
+            "ObjectName": "InteractorBoxComponent'Gameplay_x26_y17_1:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew9.TopBox'",
+            "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y17_1.313"
+          },
+          "transform": [
+            [
+              0.7071048065691511,
+              0.7071087557984299,
+              0.0,
+              -4523.944546529674
+            ],
+            [
+              -0.7071087557984299,
+              0.7071048065691511,
+              0.0,
+              9838.015224647883
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              1177.7609999999986
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "extent": [
+            125.0,
+            100.0,
+            90.0
+          ]
+        }
+      },
+      "facing": [
+        0.707109187744044,
+        0.7071043746208606,
+        0.0
       ],
-      "top_clearance": 122.72670440263846,
-      "classification": "unresolved_collision"
+      "contact_rungs": [
+        [
+          -4560.810827485192,
+          9801.130268153449,
+          573.9769989271153
+        ],
+        [
+          -4560.810827485192,
+          9801.130268153449,
+          611.976995470046
+        ],
+        [
+          -4560.810827485192,
+          9801.130268153449,
+          649.9770009536733
+        ],
+        [
+          -4560.810827485192,
+          9801.130268153449,
+          687.9770004768361
+        ],
+        [
+          -4560.810827485192,
+          9801.130268153449,
+          725.976999999999
+        ],
+        [
+          -4560.81082801203,
+          9801.130267626615,
+          763.9769876022328
+        ],
+        [
+          -4560.810654156917,
+          9801.130093770229,
+          801.7609995231614
+        ],
+        [
+          -4560.810654156917,
+          9801.130093770229,
+          839.7609995231614
+        ],
+        [
+          -4560.810654156917,
+          9801.130093770229,
+          877.7609995231614
+        ],
+        [
+          -4560.810654156917,
+          9801.130093770229,
+          915.7609995231614
+        ],
+        [
+          -4560.810654156917,
+          9801.130093770229,
+          953.7609995231614
+        ],
+        [
+          -4560.810654156917,
+          9801.130093770229,
+          991.7609995231614
+        ],
+        [
+          -4560.810654156917,
+          9801.130093770229,
+          1029.7609995231614
+        ],
+        [
+          -4560.810654156917,
+          9801.130093770229,
+          1067.7609995231614
+        ],
+        [
+          -4560.810654156917,
+          9801.130093770229,
+          1105.7609995231614
+        ],
+        [
+          -4560.806859900786,
+          9801.126299486285,
+          1143.7609995231614
+        ]
+      ],
+      "grip_half_width": 29.931509733199647,
+      "actor": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.ExtractionLadder_5"
     },
     {
       "id": "577f28d856f3f159",
@@ -243,23 +830,70 @@
         ]
       },
       "capsule_top_stand_offset": [
-        36.99999999976317,
-        -0.00013238322376147853,
+        76.94307635840141,
+        -8.43972384245717e-05,
         0.0
       ],
+      "source_top_trigger": {
+        "source_reference": {
+          "ObjectName": "InteractorBoxComponent'Gameplay_x26_y17_3:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew3.TopBox'",
+          "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y17_3.100"
+        },
+        "transform": [
+          [
+            -2.967059728458423e-06,
+            0.9999999999955983,
+            0.0,
+            7969.440000000293
+          ],
+          [
+            -0.9999999999955983,
+            -2.967059728458423e-06,
+            0.0,
+            -954.279997436679
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            2444.8094060000003
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "extent": [
+          125.0,
+          100.0,
+          90.0
+        ]
+      },
       "bottom_floor": [
         7852.440006548935,
         -954.2796349486766,
         1034.1976966506518
       ],
       "top_floor": [
-        7992.496999999388,
-        -954.2802708322106,
-        2443.2089597188656
+        8032.440076358026,
+        -954.2802228462251,
+        2443.2089351674085
       ],
       "errors": [],
-      "top_clearance": 6.534040281133002,
+      "top_clearance": 3.5340648325900474,
       "classification": "usable",
+      "approaches": {
+        "bottom": [
+          7805.439992142159,
+          -954.2794764726934,
+          1031.1229184976196
+        ]
+      },
+      "approach_errors": {
+        "top": "no_source_endpoint_floor"
+      },
       "points": {
         "bottom": [
           7868.770000000368,
@@ -277,10 +911,86 @@
           1034.1976966506518
         ],
         "top_exit": [
-          7992.496999999388,
-          -954.2802708322106,
-          2443.2089597188656
+          8032.440076358026,
+          -954.2802228462251,
+          2443.2089351674085
         ]
+      },
+      "entries": {
+        "bottom_entry": {
+          "source_reference": {
+            "ObjectName": "InteractorBoxComponent'Gameplay_x26_y17_3:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew3.BottomBox'",
+            "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y17_3.98"
+          },
+          "transform": [
+            [
+              4.018538231984766e-06,
+              -0.9999999999919256,
+              0.0,
+              7889.440000000177
+            ],
+            [
+              0.9999999999919256,
+              4.018538231984766e-06,
+              0.0,
+              -954.2798848082894
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              1061.958999999999
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "extent": [
+            40.0,
+            30.0,
+            30.0
+          ]
+        },
+        "top_entry": {
+          "source_reference": {
+            "ObjectName": "InteractorBoxComponent'Gameplay_x26_y17_3:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew3.TopBox'",
+            "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y17_3.100"
+          },
+          "transform": [
+            [
+              -2.967059728458423e-06,
+              0.9999999999955983,
+              0.0,
+              7969.440000000293
+            ],
+            [
+              -0.9999999999955983,
+              -2.967059728458423e-06,
+              0.0,
+              -954.279997436679
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              2444.8094060000003
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "extent": [
+            125.0,
+            100.0,
+            90.0
+          ]
+        }
       },
       "facing": [
         0.9999999999935992,
@@ -498,23 +1208,70 @@
         ]
       },
       "capsule_top_stand_offset": [
-        -36.999999999988596,
-        2.9059732037377097e-05,
+        -76.94307635808696,
+        4.2623572880984284e-05,
         0.0
       ],
+      "source_top_trigger": {
+        "source_reference": {
+          "ObjectName": "InteractorBoxComponent'Gameplay_x26_y18_0:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew2_2.TopBox'",
+          "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y18_0.141"
+        },
+        "transform": [
+          [
+            1.7453292510112884e-07,
+            -0.9999999999999849,
+            0.0,
+            1701.3000000000466
+          ],
+          [
+            0.9999999999999849,
+            1.7453292510112884e-07,
+            0.0,
+            -5929.939969097788
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            2443.1539999999986
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "extent": [
+          125.0,
+          100.0,
+          90.0
+        ]
+      },
       "bottom_floor": [
         1818.2999948412646,
         -5929.940162995661,
         1029.750263431829
       ],
       "top_floor": [
-        1678.2430000000281,
-        -5929.939933181485,
-        2443.209058134179
+        1638.29992364193,
+        -5929.939919617644,
+        2443.2089316633337
       ],
       "errors": [],
-      "top_clearance": 6.944941865819601,
+      "top_clearance": 3.9450683366649173,
       "classification": "usable",
+      "approaches": {
+        "bottom": [
+          1865.3000092483724,
+          -5929.94019022284,
+          1029.7504652786472
+        ]
+      },
+      "approach_errors": {
+        "top": "no_source_endpoint_floor"
+      },
       "points": {
         "bottom": [
           1801.969999999972,
@@ -532,10 +1289,86 @@
           1029.750263431829
         ],
         "top_exit": [
-          1678.2430000000281,
-          -5929.939933181485,
-          2443.209058134179
+          1638.29992364193,
+          -5929.939919617644,
+          2443.2089316633337
         ]
+      },
+      "entries": {
+        "bottom_entry": {
+          "source_reference": {
+            "ObjectName": "InteractorBoxComponent'Gameplay_x26_y18_0:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew2_2.BottomBox'",
+            "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y18_0.139"
+          },
+          "transform": [
+            [
+              -1.226011428633628e-06,
+              0.9999999999992484,
+              0.0,
+              1781.3000000000466
+            ],
+            [
+              -0.9999999999992484,
+              -1.226011428633628e-06,
+              0.0,
+              -5929.9400314159575
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              1062.369999999999
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "extent": [
+            40.0,
+            30.0,
+            30.0
+          ]
+        },
+        "top_entry": {
+          "source_reference": {
+            "ObjectName": "InteractorBoxComponent'Gameplay_x26_y18_0:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew2_2.TopBox'",
+            "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y18_0.141"
+          },
+          "transform": [
+            [
+              1.7453292510112884e-07,
+              -0.9999999999999849,
+              0.0,
+              1701.3000000000466
+            ],
+            [
+              0.9999999999999849,
+              1.7453292510112884e-07,
+              0.0,
+              -5929.939969097788
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              2443.1539999999986
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "extent": [
+            125.0,
+            100.0,
+            90.0
+          ]
+        }
       },
       "facing": [
         -0.9999999999996917,
@@ -753,23 +1586,73 @@
         ]
       },
       "capsule_top_stand_offset": [
-        25.70236295868833,
-        -26.615569472394274,
+        53.44917161273219,
+        -55.34819828480704,
         0.0
       ],
+      "source_top_trigger": {
+        "source_reference": {
+          "ObjectName": "InteractorBoxComponent'Gameplay_x26_y18_0:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew7.TopBox'",
+          "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y18_0.144"
+        },
+        "transform": [
+          [
+            -0.7193392911272769,
+            0.694658897762425,
+            0.0,
+            59.98292893636972
+          ],
+          [
+            -0.694658897762425,
+            -0.7193392911272769,
+            0.0,
+            -7137.58697996079
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            541.9660000000003
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "extent": [
+          125.0,
+          100.0,
+          90.0
+        ]
+      },
       "bottom_floor": [
         -21.29210409137886,
         -7053.424226878793,
         -108.78978001213181
       ],
       "top_floor": [
-        75.99965620075545,
-        -7154.172808150434,
-        490.4834131156581
+        103.74646485479934,
+        -7182.9054369628475,
+        490.517186726324
       ],
       "errors": [],
-      "top_clearance": 58.482586884342254,
+      "top_clearance": 55.448813273676365,
       "classification": "usable",
+      "approaches": {
+        "bottom": [
+          -53.94107084444386,
+          -7019.615254302574,
+          -108.78978001213181
+        ],
+        "top": [
+          166.96038456400584,
+          -7248.365351070627,
+          490.59412332201885
+        ]
+      },
+      "approach_errors": {},
       "points": {
         "bottom": [
           -9.948334541870281,
@@ -787,10 +1670,86 @@
           -108.78978001213181
         ],
         "top_exit": [
-          75.99965620075545,
-          -7154.172808150434,
-          490.4834131156581
+          103.74646485479934,
+          -7182.9054369628475,
+          490.517186726324
         ]
+      },
+      "entries": {
+        "bottom_entry": {
+          "source_reference": {
+            "ObjectName": "InteractorBoxComponent'Gameplay_x26_y18_0:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew7.BottomBox'",
+            "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y18_0.142"
+          },
+          "transform": [
+            [
+              0.7193400215457774,
+              -0.6946581413922395,
+              0.0,
+              4.41025189938955
+            ],
+            [
+              0.6946581413922395,
+              0.7193400215457774,
+              0.0,
+              -7080.039803080086
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              -78.8179999999993
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "extent": [
+            40.0,
+            30.0,
+            30.0
+          ]
+        },
+        "top_entry": {
+          "source_reference": {
+            "ObjectName": "InteractorBoxComponent'Gameplay_x26_y18_0:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew7.TopBox'",
+            "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y18_0.144"
+          },
+          "transform": [
+            [
+              -0.7193392911272769,
+              0.694658897762425,
+              0.0,
+              59.98292893636972
+            ],
+            [
+              -0.694658897762425,
+              -0.7193392911272769,
+              0.0,
+              -7137.58697996079
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              541.9660000000003
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "extent": [
+            125.0,
+            100.0,
+            90.0
+          ]
+        }
       },
       "facing": [
         0.6946584583429278,
@@ -908,23 +1867,73 @@
         ]
       },
       "capsule_top_stand_offset": [
-        9.686577354006689e-06,
-        -36.99999999999874,
+        3.795105354953421e-05,
+        -76.94307635816222,
         0.0
       ],
+      "source_top_trigger": {
+        "source_reference": {
+          "ObjectName": "InteractorBoxComponent'Gameplay_x26_y18_0:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew8.TopBox'",
+          "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y18_0.147"
+        },
+        "transform": [
+          [
+            -0.9999999999996194,
+            8.72664626017324e-07,
+            0.0,
+            59.560021457728
+          ],
+          [
+            -8.72664626017324e-07,
+            -0.9999999999996194,
+            0.0,
+            -6247.380000000005
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -56.702000000001135
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "extent": [
+          125.0,
+          100.0,
+          90.0
+        ]
+      },
       "bottom_floor": [
         59.56000000005588,
         -6130.380000000005,
         -679.3439146241641
       ],
       "top_floor": [
-        59.56000968663284,
-        -6270.436999999975,
+        59.560037951109734,
+        -6310.3800763581385,
         -108.78978001213181
       ],
       "errors": [],
-      "top_clearance": 59.08778001213068,
+      "top_clearance": 56.08778001213068,
       "classification": "usable",
+      "approaches": {
+        "bottom": [
+          59.55997800890236,
+          -6083.37998237548,
+          -681.8948411678032
+        ],
+        "top": [
+          59.56006177485415,
+          -6401.380076358136,
+          -108.78978001213181
+        ]
+      },
+      "approach_errors": {},
       "points": {
         "bottom": [
           59.56000000005588,
@@ -942,10 +1951,86 @@
           -679.3439146241641
         ],
         "top_exit": [
-          59.56000968663284,
-          -6270.436999999975,
+          59.560037951109734,
+          -6310.3800763581385,
           -108.78978001213181
         ]
+      },
+      "entries": {
+        "bottom_entry": {
+          "source_reference": {
+            "ObjectName": "InteractorBoxComponent'Gameplay_x26_y18_0:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew8.BottomBox'",
+            "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y18_0.145"
+          },
+          "transform": [
+            [
+              0.999999999999984,
+              1.7881387751536995e-07,
+              0.0,
+              59.56000000005588
+            ],
+            [
+              -1.7881387751536995e-07,
+              0.999999999999984,
+              0.0,
+              -6167.380000000005
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              -677.4860000000008
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "extent": [
+            40.0,
+            30.0,
+            30.0
+          ]
+        },
+        "top_entry": {
+          "source_reference": {
+            "ObjectName": "InteractorBoxComponent'Gameplay_x26_y18_0:PersistentLevel.BP_Interactor_ClimbLadder_TemplateNew8.TopBox'",
+            "ObjectPath": "DeltaForce/Content/Maps/SpaceCenter_Ma1/InterActors/Gameplay/Gameplay_x26_y18_0.147"
+          },
+          "transform": [
+            [
+              -0.9999999999996194,
+              8.72664626017324e-07,
+              0.0,
+              59.560021457728
+            ],
+            [
+              -8.72664626017324e-07,
+              -0.9999999999996194,
+              0.0,
+              -6247.380000000005
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              -56.702000000001135
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "extent": [
+            125.0,
+            100.0,
+            90.0
+          ]
+        }
       },
       "facing": [
         2.617993879461267e-07,

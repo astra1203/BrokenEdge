@@ -1,12 +1,12 @@
 {
   "result": "partial",
-  "updated_utc": "2026-10-11T09:57:32.186078+00:00",
-  "boundary": "Source and Editor evidence only. Latest TopBox adaptation, packaged runtime, route, network, video and original-game comparison are not accepted.",
-  "source_manifest_for_saved_map": "SourceManifest.json",
-  "pending_source_manifest": "PendingSourceManifest.json",
+  "updated_utc": "2026-10-11T12:10:42.167811+00:00",
+  "boundary": "One source ladder in two-client, same-process dedicated-server PIE. Not packaged, weak-network, all-ladder, weapon-restoration or full walking-route acceptance.",
+  "source_manifest_for_saved_map": "PendingSourceManifest.json",
+  "pending_source_manifest": null,
   "inputs": {
-    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "583e774cfd36643c5af55d07fc69003afe4fd11217bc03c406f5ba6dc773e871",
-    "Scripts/Traversal/source_bindings.json": "911ba2a94661d1c518ce49c602f5a037ec33d94f6bddeccc6b29f1c8e0b73be3",
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "65546b13447fce8e08c45d34c7c732f0a39bc800b4e424b43b2d454afdc105bf",
+    "Scripts/Traversal/source_bindings.json": "02fba48e9a4c011e980f28fe843f108b0d50ba48106d266e26fad0cb544e12d1",
     "Scripts/Traversal/formal_route.json": "ee6e5f3767b550b71e5ea56a3b3c7a45ca48bedf5850a9a1e5656da43754ea0b",
     "Content/Extraction/Traversal/SourceLadders/Materials/MI_GEN_Props_stepladder_01.uasset": "787884dd3109ce57f50a2d95c0b1e4113c4d63d1f32dddb68e05809c3f16e46f",
     "Content/Extraction/Traversal/SourceLadders/Meshes/SM_Industrial_Tools_Stepladder_02A/SM_Industrial_Tools_Stepladder_02A/Materials/MI_GEN_Props_stepladder_01.uasset": "989d467d422eca7e7301a8009b57c2521bec069417f6efeba81c6753a1eb0b02",
@@ -16,7 +16,10 @@
     "Content/Extraction/Traversal/SourceLadders/Meshes/SM_Industrial_Tools_Stepladder_02C/SM_Industrial_Tools_Stepladder_02C/Materials/MI_GEN_Props_stepladder_01.uasset": "e56833769d170f2e1cccceb048251a24f118dd535491978c86316c985933d474",
     "Content/Extraction/Traversal/SourceLadders/Meshes/SM_Industrial_Tools_Stepladder_02C/SM_Industrial_Tools_Stepladder_02C/StaticMeshes/SM_Industrial___Stepladder_02C.uasset": "d2ed7ecb9a0d7254b07b3f26a479e0fa42212acc8697703617ada6ca10288c6f",
     "Content/Extraction/Traversal/SourceLadders/Textures/T_GEN_Props_stepladder_01_CA/T_GEN_Props_stepladder_01_CA_MIP0.uasset": "0474775538ca070bb54c01cb02498c266716ddc4baaaad8659f299e4e4fedd9d",
-    "Content/Extraction/Traversal/SourceLadders/Textures/T_GEN_Props_stepladder_01_NRM/T_GEN_Props_stepladder_01_NRM_MIP0.uasset": "780b0f2b10be3ebb56ca9f1b073123acedfd422fb6ee856c29aeb2f687666960"
+    "Content/Extraction/Traversal/SourceLadders/Textures/T_GEN_Props_stepladder_01_NRM/T_GEN_Props_stepladder_01_NRM_MIP0.uasset": "780b0f2b10be3ebb56ca9f1b073123acedfd422fb6ee856c29aeb2f687666960",
+    "Scripts/Traversal/bind_ladders.py": "1310a8cac167325194bdb71fc5f9873f7b962a4765899d268bd240a08dec378c",
+    "Scripts/Traversal/demo_ladder.py": "2fe79b4beac3b633fa7cebd6cfc8107342027d65efc6fc1538e0fca0d0712d98",
+    "Scripts/Traversal/encode_recording.py": "b8ccb8a0d508c36c09bb74cf292b870f318b1a610bef4f601cfa181f91f45b19"
   },
   "files": [
     {
@@ -106,7 +109,18 @@
     {
       "file": "Resume20261011.json",
       "sha256": "756381699c309309aa0787a635fe5a8e19dc09fd9b14c3d87d0850c83e70565a"
+    },
+    {
+      "file": "LadderDemo20261011.json",
+      "sha256": "46c617fd9a3baaacc9f47e5e58704be7788b9e4c35dfc7de8d63f6be1829d81a"
     }
   ],
-  "latest_resume": "Resume20261011.json"
+  "latest_resume": "Resume20261011.json",
+  "current_binding_and_pie_evidence": "LadderDemo20261011.json",
+  "historical_binding_evidence": [
+    "BindingRun.json",
+    "Bindings.json",
+    "BindingState.json",
+    "SourceManifest.json"
+  ]
 }

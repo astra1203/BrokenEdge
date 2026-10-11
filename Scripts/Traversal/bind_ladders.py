@@ -22,6 +22,7 @@ rung_data = read(ROOT/'Saved/Traversal/Rungs.json')
 MAIN = '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction'
 DEST = '/Game/Extraction/Traversal/SourceLadders'
 OWNER = 'TraversalSourceV2'
+BINDINGS_ONLY = os.environ.get('TRAVERSAL_BINDINGS_ONLY') == '1'
 actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 levels = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
 lib = unreal.EditorAssetLibrary
@@ -30,6 +31,7 @@ edit = unreal.MaterialEditingLibrary
 state_path = ROOT/'Saved/Traversal/SourceCorrection/NativeAssets.json'
 state = read(state_path) if state_path.exists() else {}
 report = dict(result='running', source_manifest_sha256=data['source_manifest_sha256'], candidates=[], removed=[], geometry=[], blocked_queries=[], floor_queries=[],
+              bindings_only=BINDINGS_ONLY,
               boundary='Source geometry and editor collision audit; rendered traversal and network tests remain separate.')
 
 
@@ -141,8 +143,11 @@ try:
     mapfile = ROOT/'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap'
     shutil.copy2(mapfile, OUT/'L_SpaceCenterExtraction.before.umap')
     report['map_sha256_before'] = sha(mapfile)
-    assert levels.load_level(MAIN)
+    if not BINDINGS_ONLY:
+        assert levels.load_level(MAIN)
     world = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()
+    assert world and world.get_path_name().split('.')[0] == MAIN, 'Open the source map outside PIE before rebinding'
+    assert not unreal.EditorLoadingAndSavingUtils.get_dirty_map_packages(), 'Save existing map edits before rebinding'
     stream = unreal.GameplayStatics.get_streaming_level(world, '/Game/Maps/SpaceCenter/L_SpaceCenterNorth')
     if stream and stream.get_loaded_level():
         unreal.EditorLevelUtils.set_level_visibility(stream.get_loaded_level(), True, False)
@@ -157,16 +162,27 @@ try:
     assert roof_reach > 0
     report['game_config_sha256'] = sha(ROOT/'Config/DefaultGame.ini')
     report.update(radius=radius, half_height=half, roof_reach=roof_reach)
-    materials = material_assets()
+    materials = {} if BINDINGS_ONLY else material_assets()
     meshes = {}
     for path, entry in data['meshes'].items():
-        mesh = import_asset(entry, DEST+'/Meshes/'+path.rsplit('/',1)[-1], unreal.StaticMesh)
+        if BINDINGS_ONLY:
+            previous = state[entry['source']]
+            assert previous['sha256'] == entry['sha256'] == sha(entry['file'])
+            mesh = lib.load_asset(previous['asset'])
+            assert isinstance(mesh, unreal.StaticMesh)
+        else:
+            mesh = import_asset(entry, DEST+'/Meshes/'+path.rsplit('/',1)[-1], unreal.StaticMesh)
         body = mesh.get_editor_property('body_setup')
-        body.set_editor_property('collision_trace_flag', unreal.CollisionTraceFlag.CTF_USE_COMPLEX_AS_SIMPLE)
-        body.set_editor_property('double_sided_geometry', True)
-        for i, slot in enumerate(entry['source_mesh']['Properties']['StaticMaterials']):
-            mesh.set_material(i, materials[canonical(slot['MaterialInterface']['ObjectPath'])])
-        lib.save_loaded_asset(mesh); meshes[path] = mesh
+        if BINDINGS_ONLY:
+            assert body.get_editor_property('collision_trace_flag') == unreal.CollisionTraceFlag.CTF_USE_COMPLEX_AS_SIMPLE
+            assert body.get_editor_property('double_sided_geometry')
+        else:
+            body.set_editor_property('collision_trace_flag', unreal.CollisionTraceFlag.CTF_USE_COMPLEX_AS_SIMPLE)
+            body.set_editor_property('double_sided_geometry', True)
+            for i, slot in enumerate(entry['source_mesh']['Properties']['StaticMaterials']):
+                mesh.set_material(i, materials[canonical(slot['MaterialInterface']['ObjectPath'])])
+            lib.save_loaded_asset(mesh)
+        meshes[path] = mesh
         vertices = json.loads(unreal.StingerAssetLibrary.describe_ladder_vertices(mesh))
         bounds = entry['source_mesh']['Properties']['ExtendedBounds']
         assert vertices and max(abs(actual-(bounds['Origin'][axis]+sign*bounds['BoxExtent'][axis]))
@@ -182,15 +198,25 @@ try:
             if actor:
                 assert OWNER in [str(t) for t in actor.tags] and isinstance(actor, unreal.StaticMeshActor)
             else:
+                assert not BINDINGS_ONLY, 'Missing source geometry: '+label
                 actor = actors.spawn_actor_from_class(unreal.StaticMeshActor, unreal.Vector())
                 actor.set_actor_label(label); actor.tags = [OWNER]
-            actor.static_mesh_component.set_static_mesh(meshes[component['mesh']])
-            actor.static_mesh_component.set_collision_profile_name('BlockAll')
-            actor.set_actor_transform(source_transform(component['transform']), False, True)
+            expected = source_transform(component['transform'])
+            if BINDINGS_ONLY:
+                assert actor.static_mesh_component.static_mesh == meshes[component['mesh']], label
+                assert str(actor.static_mesh_component.get_collision_profile_name()) == 'BlockAll', label
+                actual = actor.get_actor_transform()
+                for p in (unreal.Vector(), unreal.Vector(100,0,0), unreal.Vector(0,100,0), unreal.Vector(0,0,100)):
+                    assert (unreal.MathLibrary.transform_location(actual,p)-unreal.MathLibrary.transform_location(expected,p)).length()<.1, label
+            else:
+                actor.static_mesh_component.set_static_mesh(meshes[component['mesh']])
+                actor.static_mesh_component.set_collision_profile_name('BlockAll')
+                actor.set_actor_transform(expected, False, True)
             report['geometry'].append(dict(label=label, source=component['source_reference'], instance=component['instance'],
                                            location=array(actor.get_actor_location())))
     for label, actor in existing.items():
         if OWNER in [str(t) for t in actor.tags] and isinstance(actor, unreal.StaticMeshActor) and label not in expected_geometry:
+            assert not BINDINGS_ONLY, 'Unexpected source geometry: '+label
             actors.destroy_actor(actor); report['removed'].append(label)
     bindings = {a.get_editor_property('source_id'):a for a in actors.get_all_level_actors() if isinstance(a, unreal.ExtractionLadder)}
     for old_id in data['legacy_binding_ids']:
@@ -199,12 +225,14 @@ try:
             assert old.get_actor_label() == 'Traversal_Ladder_'+old_id
             report['removed'].append(old.get_actor_label()); actors.destroy_actor(old)
     unreal.GameplayStatics.flush_level_streaming(world)
-    unreal.SystemLibrary.execute_console_command(world, 'Editor.AsyncAssetCompilationFinishAll')
+    if not BINDINGS_ONLY:
+        unreal.SystemLibrary.execute_console_command(world, 'Editor.AsyncAssetCompilationFinishAll')
     # Asset imports/rebuilds invalidate editor physics bodies. Audit a freshly
     # loaded saved level, rather than querying the scene in the mutation frame.
-    assert levels.save_current_level()
-    assert levels.load_level('/Game/Maps/Lobby')
-    assert levels.load_level(MAIN)
+    if not BINDINGS_ONLY:
+        assert levels.save_current_level()
+        assert levels.load_level('/Game/Maps/Lobby')
+        assert levels.load_level(MAIN)
     world = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()
     stream = unreal.GameplayStatics.get_streaming_level(world, '/Game/Maps/SpaceCenter/L_SpaceCenterNorth')
     if stream and stream.get_loaded_level():
@@ -263,7 +291,9 @@ try:
         # to move the source trigger or silently teleport into it.
         approaches, approach_errors = {}, {}
         for name, trigger_name, exit_point, direction in (
-                ('bottom','BottomBox',bottom_exit,facing), ('top','TopBox',top_exit,-facing)):
+                # Unreal Python Vector.__neg__ mutates its operand. Multiplication
+                # returns a new vector, keeping the bottom approach and actor yaw intact.
+                ('bottom','BottomBox',bottom_exit,facing), ('top','TopBox',top_exit,facing * -1.)):
             trigger = source['triggers'][trigger_name]; t = trigger['transform']
             extent = sum(abs(sum(t[i][j]*array(direction)[i] for i in range(3)))*trigger['extent'][j] for j in range(3))
             p = array(vector(point(t))-direction*(extent+radius+20))
@@ -275,6 +305,8 @@ try:
             if error: approach_errors[name] = error
             else: approaches[name] = ground
         row.update(approaches=approaches, approach_errors=approach_errors)
+        source_approach = vector(endpoint['LadderBottomEndTransform'])-vector(endpoint['LadderBottomStartTransform'])
+        assert source_approach.x*facing.x+source_approach.y*facing.y > 0, 'Facing reversed relative to source entry: '+source['id']
         rotation = unreal.Rotator(pitch=0, yaw=math.degrees(math.atan2(facing.y, facing.x)), roll=0)
         actor = bindings.get(source['id'])
         if actor: assert OWNER in [str(t) for t in actor.tags]

@@ -31,7 +31,7 @@ output=folder.with_suffix('.mp4')
 partial=output.with_suffix('.partial.mp4')
 assert not output.exists() and not partial.exists()
 command=[ffmpeg,'-hide_banner','-loglevel','error','-f','concat','-safe','0','-i',str(folder/'Concat.txt'),
-         '-fps_mode','vfr','-c:v','libx264','-crf','18','-pix_fmt','yuv420p','-movflags','+faststart',str(partial)]
+         '-fps_mode','vfr','-c:v','libx264','-threads','2','-crf','18','-pix_fmt','yuv420p','-movflags','+faststart',str(partial)]
 subprocess.run(command,check=True)
 subprocess.run([ffmpeg,'-hide_banner','-v','error','-i',str(partial),'-f','null','-'],check=True)
 partial.replace(output)

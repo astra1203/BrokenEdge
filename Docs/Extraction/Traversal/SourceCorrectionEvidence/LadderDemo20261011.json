@@ -1,0 +1,419 @@
+{
+  "result": "passed_for_target_pie_demo",
+  "updated_utc": "2026-10-11T12:10:42.167811+00:00",
+  "boundary": "One source ladder in two-client, same-process dedicated-server PIE. Not packaged, weak-network, all-ladder, weapon-restoration or full walking-route acceptance.",
+  "inputs": {
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "65546b13447fce8e08c45d34c7c732f0a39bc800b4e424b43b2d454afdc105bf",
+    "Scripts/Traversal/source_bindings.json": "02fba48e9a4c011e980f28fe843f108b0d50ba48106d266e26fad0cb544e12d1",
+    "Scripts/Traversal/bind_ladders.py": "1310a8cac167325194bdb71fc5f9873f7b962a4765899d268bd240a08dec378c",
+    "Scripts/Traversal/demo_ladder.py": "2fe79b4beac3b633fa7cebd6cfc8107342027d65efc6fc1538e0fca0d0712d98",
+    "Scripts/Traversal/encode_recording.py": "b8ccb8a0d508c36c09bb74cf292b870f318b1a610bef4f601cfa181f91f45b19"
+  },
+  "binding_report": {
+    "path": "Saved/Traversal/EditorRuns/LadderDemo20261011Bind02/Report.json",
+    "sha256": "ce4db2ed96e789efc28978c141a1a4d1b54c5b54093eae58dd9b0c0c02c2a05b"
+  },
+  "source_manifest_sha256": "746113183de86f62a6bb3c44937d0c0a7c618e8c048fbdf25c88a8eb8f409443",
+  "candidates": [
+    {
+      "id": "a2a2a227017b5672",
+      "classification": "unresolved_collision",
+      "errors": [
+        "no_source_endpoint_floor"
+      ],
+      "approach_errors": null
+    },
+    {
+      "id": "ae7a89bd071bffda",
+      "classification": "unresolved_collision",
+      "errors": [
+        "source_endpoint_capsule"
+      ],
+      "approach_errors": null
+    },
+    {
+      "id": "bfd9aa0f4d20e855",
+      "classification": "usable",
+      "errors": [],
+      "approach_errors": {}
+    },
+    {
+      "id": "670af423419e21d8",
+      "classification": "unresolved_collision",
+      "errors": [
+        "source_endpoint_capsule"
+      ],
+      "approach_errors": null
+    },
+    {
+      "id": "370921801e3e15fd",
+      "classification": "usable",
+      "errors": [],
+      "approach_errors": {}
+    },
+    {
+      "id": "577f28d856f3f159",
+      "classification": "usable",
+      "errors": [],
+      "approach_errors": {
+        "top": "no_source_endpoint_floor"
+      }
+    },
+    {
+      "id": "14fd6a616d4f8738",
+      "classification": "usable",
+      "errors": [],
+      "approach_errors": {
+        "top": "no_source_endpoint_floor"
+      }
+    },
+    {
+      "id": "9cf77452749b621c",
+      "classification": "usable",
+      "errors": [],
+      "approach_errors": {}
+    },
+    {
+      "id": "a3fd9163e28c7e90",
+      "classification": "usable",
+      "errors": [],
+      "approach_errors": {}
+    }
+  ],
+  "run": {
+    "path": "Saved/Extraction/LadderDemo20261011/Run01/Report.json",
+    "sha256": "85b3e4b445034bfbfb8729ae25be1d88ed5d8dd8966ecaa5807dde088c869e19",
+    "result": "passed",
+    "events": [
+      {
+        "wall_seconds": 0.0,
+        "world_seconds": 842.7175109423697,
+        "phase": "settle",
+        "client": [
+          -120.3884937151879,
+          -6950.809264931472,
+          -14.63978157995208
+        ],
+        "server": [
+          -53.94107084444386,
+          -7019.615254302574,
+          -13.789780012131814
+        ],
+        "client_mode": "<MovementMode.MOVE_WALKING: 1>",
+        "server_mode": "<MovementMode.MOVE_WALKING: 1>"
+      },
+      {
+        "wall_seconds": 2.2189999999973224,
+        "world_seconds": 844.8378946408629,
+        "phase": "walk_into_bottom",
+        "client": [
+          -53.94107084444386,
+          -7019.615254302574,
+          -14.639781824113015
+        ],
+        "server": [
+          -53.94107084444386,
+          -7019.615254302574,
+          -14.639781824113015
+        ],
+        "client_mode": "<MovementMode.MOVE_WALKING: 1>",
+        "server_mode": "<MovementMode.MOVE_WALKING: 1>"
+      },
+      {
+        "wall_seconds": 2.5939999999973224,
+        "world_seconds": 845.3383487388492,
+        "phase": "climb_to_pause",
+        "client": [
+          -38.17441121764806,
+          -7035.941573533552,
+          25.522000000000844
+        ],
+        "server": [
+          -38.687693387745654,
+          -7035.410044910958,
+          -14.639781824113015
+        ],
+        "client_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+        "server_mode": "<MovementMode.MOVE_WALKING: 1>"
+      },
+      {
+        "wall_seconds": 4.327999999994063,
+        "world_seconds": 847.0738313533366,
+        "phase": "pause_on_ladder",
+        "client": [
+          -9.948334541870281,
+          -7065.171047402197,
+          156.95624576008777
+        ],
+        "server": [
+          -9.948334541870281,
+          -7065.171047402197,
+          146.72324789560298
+        ],
+        "client_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+        "server_mode": "<MovementMode.MOVE_CUSTOM: 6>"
+      },
+      {
+        "wall_seconds": 6.3439999999973224,
+        "world_seconds": 849.0869424790144,
+        "phase": "climb_to_top",
+        "client": [
+          -9.948334541870281,
+          -7065.171047402197,
+          156.95624576008777
+        ],
+        "server": [
+          -9.948334541870281,
+          -7065.171047402197,
+          158.31574169791202
+        ],
+        "client_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+        "server_mode": "<MovementMode.MOVE_CUSTOM: 6>"
+      },
+      {
+        "wall_seconds": 10.452999999994063,
+        "world_seconds": 853.0786259025335,
+        "phase": "stand_on_roof",
+        "client": [
+          109.45914726861892,
+          -7188.820900863474,
+          584.667467303512
+        ],
+        "server": [
+          103.7938856305278,
+          -7182.954541020563,
+          584.9727588968786
+        ],
+        "client_mode": "<MovementMode.MOVE_WALKING: 1>",
+        "server_mode": "<MovementMode.MOVE_FALLING: 3>"
+      },
+      {
+        "wall_seconds": 12.468999999997322,
+        "world_seconds": 855.2042626850307,
+        "phase": "clear_top_entry",
+        "client": [
+          111.39028780596243,
+          -7190.820590555318,
+          584.667425721937
+        ],
+        "server": [
+          111.39028780596243,
+          -7190.820590555318,
+          584.667425721937
+        ],
+        "client_mode": "<MovementMode.MOVE_WALKING: 1>",
+        "server_mode": "<MovementMode.MOVE_WALKING: 1>"
+      },
+      {
+        "wall_seconds": 13.765999999988708,
+        "world_seconds": 856.499357894063,
+        "phase": "return_to_top_entry",
+        "client": [
+          261.1095225922572,
+          -7345.861618817856,
+          585.1558610752901
+        ],
+        "server": [
+          254.85827129734741,
+          -7339.3870379844175,
+          585.1558610752901
+        ],
+        "client_mode": "<MovementMode.MOVE_WALKING: 1>",
+        "server_mode": "<MovementMode.MOVE_WALKING: 1>"
+      },
+      {
+        "wall_seconds": 14.85899999999674,
+        "world_seconds": 857.4836994968355,
+        "phase": "descend",
+        "client": [
+          151.26795523876302,
+          -7232.115447669516,
+          600.5476699337158
+        ],
+        "server": [
+          148.0427905524975,
+          -7228.775630613403,
+          584.6434722238106
+        ],
+        "client_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+        "server_mode": "<MovementMode.MOVE_WALKING: 1>"
+      },
+      {
+        "wall_seconds": 19.921999999991385,
+        "world_seconds": 862.6531432904303,
+        "phase": "stand_at_bottom",
+        "client": [
+          -27.004168016495207,
+          -7047.50940342119,
+          -14.639779133638775
+        ],
+        "server": [
+          -21.339524867106984,
+          -7053.375122821077,
+          -14.334207841577154
+        ],
+        "client_mode": "<MovementMode.MOVE_WALKING: 1>",
+        "server_mode": "<MovementMode.MOVE_FALLING: 3>"
+      },
+      {
+        "wall_seconds": 22.030999999988126,
+        "world_seconds": 864.7660449109972,
+        "phase": "clear_bottom_entry",
+        "client": [
+          -27.004168016495207,
+          -7047.50940342119,
+          -14.639779133638775
+        ],
+        "server": [
+          -28.184377317001996,
+          -7046.287300561865,
+          -14.639779162970285
+        ],
+        "client_mode": "<MovementMode.MOVE_WALKING: 1>",
+        "server_mode": "<MovementMode.MOVE_WALKING: 1>"
+      },
+      {
+        "wall_seconds": 23.015999999988708,
+        "world_seconds": 865.7468754053116,
+        "phase": "reenter_bottom",
+        "client": [
+          -110.4865454056636,
+          -6961.059311359808,
+          -14.639779162970285
+        ],
+        "server": [
+          -105.36275056818032,
+          -6966.366132225475,
+          -14.639779162970285
+        ],
+        "client_mode": "<MovementMode.MOVE_WALKING: 1>",
+        "server_mode": "<MovementMode.MOVE_WALKING: 1>"
+      },
+      {
+        "wall_seconds": 23.827999999994063,
+        "world_seconds": 866.4571342095733,
+        "phase": "climb_to_jump",
+        "client": [
+          -31.09703741388514,
+          -7043.266269373596,
+          -3.6290270768704413
+        ],
+        "server": [
+          -28.30364293846316,
+          -7046.158814382147,
+          -14.639779162970285
+        ],
+        "client_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+        "server_mode": "<MovementMode.MOVE_WALKING: 1>"
+      },
+      {
+        "wall_seconds": 25.5,
+        "world_seconds": 868.2398789003491,
+        "phase": "jump_off",
+        "client": [
+          -9.948334541870281,
+          -7065.171047402197,
+          153.33945119392956
+        ],
+        "server": [
+          -9.948334541870281,
+          -7065.171047402197,
+          142.08954399836148
+        ],
+        "client_mode": "<MovementMode.MOVE_CUSTOM: 6>",
+        "server_mode": "<MovementMode.MOVE_CUSTOM: 6>"
+      },
+      {
+        "wall_seconds": 26.73399999999674,
+        "world_seconds": 869.3574554845691,
+        "phase": "return_near_ladder",
+        "client": [
+          -141.7960496374628,
+          -6928.638777999602,
+          -14.639782558262219
+        ],
+        "server": [
+          -141.57460122588344,
+          -6928.868094481625,
+          -14.639781939140676
+        ],
+        "client_mode": "<MovementMode.MOVE_WALKING: 1>",
+        "server_mode": "<MovementMode.MOVE_WALKING: 1>"
+      },
+      {
+        "wall_seconds": 27.437999999994645,
+        "world_seconds": 870.0543881878257,
+        "phase": "finished",
+        "client": [
+          -120.54290399614226,
+          -6950.647818907156,
+          -14.639781939140676
+        ],
+        "server": [
+          -121.05880479478016,
+          -6950.113530878166,
+          -14.639781939140676
+        ],
+        "client_mode": "<MovementMode.MOVE_WALKING: 1>",
+        "server_mode": "<MovementMode.MOVE_WALKING: 1>"
+      }
+    ],
+    "checks": {
+      "climb_to_pause_both_custom": true,
+      "pause_on_ladder_both_custom": true,
+      "climb_to_top_both_custom": true,
+      "descend_both_custom": true,
+      "climb_to_jump_both_custom": true,
+      "stand_on_roof_both_walking": true,
+      "stand_at_bottom_both_walking": true,
+      "finished_both_walking": true,
+      "server_jump_falling": true,
+      "server_pause_drift_cm": 0.0,
+      "client_pause_drift_cm": 0.0,
+      "final_client_server_distance_cm": 1.6572292582737194,
+      "final_position_tolerance_cm": 3
+    }
+  },
+  "video": {
+    "file": "Saved\\Extraction\\LadderDemo20261011\\Run01.mp4",
+    "sha256": "73d19bfd8dec7afabeecb0584f603f2993c76793ba6509494410491eb7dcb77d",
+    "frames": 180,
+    "seconds": 29.281999999999996,
+    "measured_fps": 6.112970425517383,
+    "max_frame_interval": 0.18800000000000017,
+    "boundary": "Rendered viewport frames timed by capture requests; no audio. Captures add readback overhead, separate from performance runs.",
+    "command": [
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\Tools\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-f",
+      "concat",
+      "-safe",
+      "0",
+      "-i",
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\LadderDemo20261011\\Run01\\Concat.txt",
+      "-fps_mode",
+      "vfr",
+      "-c:v",
+      "libx264",
+      "-threads",
+      "2",
+      "-crf",
+      "18",
+      "-pix_fmt",
+      "yuv420p",
+      "-movflags",
+      "+faststart",
+      "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\LadderDemo20261011\\Run01.partial.mp4"
+    ],
+    "result": "passed"
+  },
+  "validation": [
+    "Four source-transform regression tests passed",
+    "Python syntax parsed",
+    "Video fully decoded",
+    "Entry, climbing, rooftop, descent and final rendered frames inspected"
+  ],
+  "visual_note": "PIE frames retain existing Lumen surface-cache budget warning; no lighting or rendering setting was changed for the recording."
+}

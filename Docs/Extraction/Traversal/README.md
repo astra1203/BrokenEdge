@@ -1,13 +1,15 @@
 # 航天基地移动交互阶段
 
-本阶段实现普通楼梯、竖梯、翻越和攀上平台。它是用户确认的独立玩法阶段；体验方案 A 的源游戏参考采集仍单独记账。2026-10-07 的机制验收包为 `Packaged/Traversal08`。**该包的 3 个地图梯子交互来自家具模型筛选，不能证明原版爬梯点位已还原。** 2026-10-08 正在按用户确认的当前解包版本修正，见 [原版梯子来源修正](SourceCorrection.md)；新地图的验收状态与历史包分开记录。
+本阶段实现普通楼梯、竖梯、翻越和攀上平台。它是用户确认的独立玩法阶段；体验方案 A 的源游戏参考采集仍单独记账。2026-10-07
+的机制验收包为 `Packaged/Traversal08`。 **该包的 3 个地图梯子交互来自家具模型筛选，不能证明原版爬梯点位已还原。**
+2026-10-08 正在按用户确认的当前解包版本修正，见 [原版梯子来源修正](SourceCorrection.md)；新地图的验收状态与历史包分开记录。
 
 ## 操作和边界
 
 - WASD 走楼梯，保留 CharacterMovement 的行走与跨阶规则。
 - 空格面对可用障碍时翻越或攀上；没有可用目标时按原逻辑跳跃。
-- E 从梯子上下入口附着，W/S 上下爬，松开暂停；出口可用时自动离梯。
-- 梯子中空格蹬离，E 松手。服务器按梯子限制一个占用者。
+- 面向梯子下入口按 W 走近会自动附着；从顶部下梯时，朝梯子边缘走近入口。W/S 上下爬，松开暂停；出口可用时自动离梯。
+- 梯子中空格蹬离；E 保持普通交互／切枪用途。服务器按梯子限制一个占用者。
 - 动作期间阻止射击、瞄准、换弹、换枪、医疗和背包操作。死亡、失去角色控制或失效路径释放占用。
 - 不包含悬挂横移、自由攀岩、滑索、滑铲、趴下。
 
@@ -22,9 +24,11 @@
 路径预检覆盖前表面、顶面、完整胶囊路径及落脚足迹，移动时继续 sweep。仅允许静态障碍攀越；被阻挡时停在最后安全位置。动画是视觉表现，不驱动权威胶囊。
 
 `ExtractionTraversalComponent` 同步远端动作并控制第一、第三人称蒙太奇；动作期间收起武器，禁用原持枪 IK。源动作通过已有 PSA
-修复解码器导入，保存来源及哈希。第三人称翻越暂用对应高度的 ClimbRun，下降按梯子高度反向采样 UP；本阶段实机记录见下方双视角录像与接触测量；不声明源游逐帧一致。
+修复解码器导入，保存来源及哈希。第三人称翻越暂用对应高度的 ClimbRun，下降按梯子高度反向采样
+UP；本阶段实机记录见下方双视角录像与接触测量；不声明源游逐帧一致。
 
-`ExtractionLadder` 为模型的隐形交互绑定。当前 `prepare_sources.py --tag <新标签>` 扫描原始 Gameplay 包，按原版爬梯 Actor 类型确认身份，
+`ExtractionLadder` 为模型的隐形交互绑定。当前 `prepare_sources.py --tag <新标签>` 扫描原始 Gameplay 包，按原版爬梯 Actor
+类型确认身份，
 恢复组件模板、模型插槽和已保存的中段实例变换。`bind_ladders.py` 按这些数据补入工业梯模型、材质和交互；旧家具梯仅移除误绑的交互。
 原始入口、胶囊适配、碰撞失败和地图备份都分别记录。旧版按模型名扫描 39 个候选的方式已停用。
 
@@ -39,47 +43,56 @@ Actor，供第一、第三人称接触修正使用。旧包的骨骼坐标和双
 与直立预检不一致。绑定改用显式 `pitch/yaw/roll` 参数并校验水平前向，移动组件只应用 yaw；证据见
 `Evidence/SourceLadderOrientationDebugger.json`。
 
-TraversalFormal04 的旧家具梯骨骼测量发现部分手腕离横档 23–38 cm。原生调试实测左臂长 55.89 cm、目标距肩 69.33 cm，超出不拉伸的可达范围。现按双臂实际距离调整视觉前移量，保留胶囊位置；见 `Evidence/SourceLadderContactDebugger.json`。Traversal08 已复验：该家具梯附着采样的双手和双脚误差均小于 0.01 cm。
+TraversalFormal04 的旧家具梯骨骼测量发现部分手腕离横档 23–38 cm。原生调试实测左臂长 55.89 cm、目标距肩 69.33
+cm，超出不拉伸的可达范围。现按双臂实际距离调整视觉前移量，保留胶囊位置；见 `Evidence/SourceLadderContactDebugger.json`
+。Traversal08 已复验：该家具梯附着采样的双手和双脚误差均小于 0.01 cm。
 
 ## 2026-10-07 历史机制验收
 
-[证据清单与 SHA-256](Evidence/Manifest.json) 收录 12 轮通过的测试、165 个归档文件、16 段视频。共 750 项检查，包含重复轮次；每轮可执行文件哈希均与当时最终双端包一致。当时归档前核对了玩法 C++、地图文件与打包输入的哈希。这些哈希不覆盖本轮来源修正后的地图和代码。
+[证据清单与 SHA-256](Evidence/Manifest.json) 收录 12 轮通过的测试、165 个归档文件、16 段视频。共 750
+项检查，包含重复轮次；每轮可执行文件哈希均与当时最终双端包一致。当时归档前核对了玩法 C++、地图文件与打包输入的哈希。这些哈希不覆盖本轮来源修正后的地图和代码。
 
-| 项目 | 结果与证据 |
-| --- | --- |
-| Editor 与完整双端构建 | [Server08](Evidence/Builds/TraversalServer08/Run.json)、[Client08](Evidence/Builds/TraversalClient08/Run.json) Build/Cook/Stage 通过；PE/AMD64/文件边界校验通过 |
-| 源动作 | [25 个源片段导入](Evidence/Animations-Report.json)，动画集装配通过 |
-| 历史家具梯筛选 | [Ladders11](Evidence/LaddersReport.json)：39 个模型中绑定了 3 个；此结果仅证明该原型机制可运行，不是原版交互位置验收 |
-| 两渲染客户端 + 专服，正常网络连续三轮 | [Normal02](Evidence/Runs/TraversalNormal02/Report.json)、[Normal03](Evidence/Runs/TraversalNormal03/Report.json)、[Normal04](Evidence/Runs/TraversalNormal04/Report.json)，各 82 项通过 |
-| 边界及拒绝路径 | 三轮均覆盖 60/90/120 cm 翻越、180/121 cm 攀上、181/220 cm 拒绝、窄顶、低顶、占位、重复输入、普通跳跃、抢梯与出口受阻 |
-| 双向各 50 ms、2% 丢包 | [Weak01](Evidence/Runs/TraversalWeak01/Report.json)，83 项通过 |
-| 非致命伤、倒地、救援、死亡、断线、撤离 | [Lifecycle01](Evidence/Runs/TraversalLifecycle01/Report.json)，三人场景 100 项通过；两个渲染客户端，第三人使用 NullRHI |
-| 历史地图连续路线 | [Formal06](Evidence/Runs/TraversalFormal06/Report.json)，27 项通过；一次起点布置，楼梯上下、源栏杆、源平台和旧家具梯绑定之间无传送 |
-| 双视角与武器恢复 | [Visual02](Evidence/Runs/TraversalVisual02/Report.json)，82 项通过；16 段视频编码、完整解码和哈希校验通过 |
-| 战斗 | [Combat01](Evidence/Runs/TraversalCombat01/Report.json)，62 项通过 |
-| 背包、医疗、物品唯一性、下一局配装 | [Inventory01](Evidence/Runs/TraversalInventory01/Report.json)，93 项通过 |
-| 换枪 | [Swap01](Evidence/Runs/TraversalSwap01/Report.json)，22 项通过 |
-| 超时结算与同房间第二局 | [Timeout01](Evidence/Runs/TraversalTimeout01/Report.json)，28 项通过 |
-| FreeForAll / Teams 联机回归 | [Legacy02](Evidence/Runs/TraversalLegacy02/Report.json)，7 个用例通过；NullRHI 功能回归 |
+| 项目                                   | 结果与证据                                                                                                                                                                              |
+|----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Editor 与完整双端构建                  | [Server08](Evidence/Builds/TraversalServer08/Run.json)、[Client08](Evidence/Builds/TraversalClient08/Run.json) Build/Cook/Stage 通过；PE/AMD64/文件边界校验通过                         |
+| 源动作                                 | [25 个源片段导入](Evidence/Animations-Report.json)，动画集装配通过                                                                                                                      |
+| 历史家具梯筛选                         | [Ladders11](Evidence/LaddersReport.json)：39 个模型中绑定了 3 个；此结果仅证明该原型机制可运行，不是原版交互位置验收                                                                    |
+| 两渲染客户端 + 专服，正常网络连续三轮  | [Normal02](Evidence/Runs/TraversalNormal02/Report.json)、[Normal03](Evidence/Runs/TraversalNormal03/Report.json)、[Normal04](Evidence/Runs/TraversalNormal04/Report.json)，各 82 项通过 |
+| 边界及拒绝路径                         | 三轮均覆盖 60/90/120 cm 翻越、180/121 cm 攀上、181/220 cm 拒绝、窄顶、低顶、占位、重复输入、普通跳跃、抢梯与出口受阻                                                                    |
+| 双向各 50 ms、2% 丢包                  | [Weak01](Evidence/Runs/TraversalWeak01/Report.json)，83 项通过                                                                                                                          |
+| 非致命伤、倒地、救援、死亡、断线、撤离 | [Lifecycle01](Evidence/Runs/TraversalLifecycle01/Report.json)，三人场景 100 项通过；两个渲染客户端，第三人使用 NullRHI                                                                  |
+| 历史地图连续路线                       | [Formal06](Evidence/Runs/TraversalFormal06/Report.json)，27 项通过；一次起点布置，楼梯上下、源栏杆、源平台和旧家具梯绑定之间无传送                                                      |
+| 双视角与武器恢复                       | [Visual02](Evidence/Runs/TraversalVisual02/Report.json)，82 项通过；16 段视频编码、完整解码和哈希校验通过                                                                               |
+| 战斗                                   | [Combat01](Evidence/Runs/TraversalCombat01/Report.json)，62 项通过                                                                                                                      |
+| 背包、医疗、物品唯一性、下一局配装     | [Inventory01](Evidence/Runs/TraversalInventory01/Report.json)，93 项通过                                                                                                                |
+| 换枪                                   | [Swap01](Evidence/Runs/TraversalSwap01/Report.json)，22 项通过                                                                                                                          |
+| 超时结算与同房间第二局                 | [Timeout01](Evidence/Runs/TraversalTimeout01/Report.json)，28 项通过                                                                                                                    |
+| FreeForAll / Teams 联机回归            | [Legacy02](Evidence/Runs/TraversalLegacy02/Report.json)，7 个用例通过；NullRHI 功能回归                                                                                                 |
 
-三轮无录像测试的采样中位帧率为 30 / 60 / 117.49–120.00 FPS，四档障碍跨帧率上限的落点差异均小于 3 cm。[Normal04 时长与帧间隔报告](Evidence/Runs/TraversalNormal04/MotionAnalysis.json) 同时保留其余轮次的测量。时长来自状态快照，约有 0.15 s 的采样与移动时间戳误差，不应解释为逐帧延迟上限。
+三轮无录像测试的采样中位帧率为 30 / 60 / 117.49–120.00 FPS，四档障碍跨帧率上限的落点差异均小于 3
+cm。[Normal04 时长与帧间隔报告](Evidence/Runs/TraversalNormal04/MotionAnalysis.json) 同时保留其余轮次的测量。时长来自状态快照，约有
+0.15 s 的采样与移动时间戳误差，不应解释为逐帧延迟上限。
 
-[旧家具梯接触测量](Evidence/Runs/TraversalFormal06/FormalContactAnalysis.json) 的附着采样中，第一人称双手及双方第三人称双手/双脚均贴合对应目标，误差小于 0.01 cm。[测试梯子暂停采样](Evidence/Runs/TraversalVisual02/ContactAnalysis.json) 中双手及支撑脚贴合，摆动脚处于换档过程。测量对象是腕/踝骨骼目标，不是逐帧指尖或鞋底碰撞。
+[旧家具梯接触测量](Evidence/Runs/TraversalFormal06/FormalContactAnalysis.json) 的附着采样中，第一人称双手及双方第三人称双手/双脚均贴合对应目标，误差小于
+0.01 cm。[测试梯子暂停采样](Evidence/Runs/TraversalVisual02/ContactAnalysis.json)
+中双手及支撑脚贴合，摆动脚处于换档过程。测量对象是腕/踝骨骼目标，不是逐帧指尖或鞋底碰撞。
 
 ## 历史双视角录像
 
-| 动作 | 第一人称 A | 第三人称观察者 B |
-| --- | --- | --- |
-| 60 cm 翻越 | [视频](Evidence/Videos/TraversalVisual02/A-60.mp4) | [视频](Evidence/Videos/TraversalVisual02/B-60.mp4) |
-| 90 cm 翻越 | [视频](Evidence/Videos/TraversalVisual02/A-90.mp4) | [视频](Evidence/Videos/TraversalVisual02/B-90.mp4) |
-| 120 cm 翻越 | [视频](Evidence/Videos/TraversalVisual02/A-120.mp4) | [视频](Evidence/Videos/TraversalVisual02/B-120.mp4) |
-| 180 cm 攀上 | [视频](Evidence/Videos/TraversalVisual02/A-180.mp4) | [视频](Evidence/Videos/TraversalVisual02/B-180.mp4) |
-| 梯子附着、上/下爬、暂停、离梯 | [视频](Evidence/Videos/TraversalVisual02/A-ladder.mp4) | [视频](Evidence/Videos/TraversalVisual02/B-ladder.mp4) |
-| 正式地图源栏杆 | [视频](Evidence/Videos/TraversalFormal06/A-formal-vault.mp4) | [视频](Evidence/Videos/TraversalFormal06/B-formal-vault.mp4) |
-| 正式地图源平台 | [视频](Evidence/Videos/TraversalFormal06/A-formal-mantle.mp4) | [视频](Evidence/Videos/TraversalFormal06/B-formal-mantle.mp4) |
-| 旧家具梯交互 | [视频](Evidence/Videos/TraversalFormal06/A-formal-ladder.mp4) | [视频](Evidence/Videos/TraversalFormal06/B-formal-ladder.mp4) |
+| 动作                          | 第一人称 A                                                    | 第三人称观察者 B                                              |
+|-------------------------------|---------------------------------------------------------------|---------------------------------------------------------------|
+| 60 cm 翻越                    | [视频](Evidence/Videos/TraversalVisual02/A-60.mp4)            | [视频](Evidence/Videos/TraversalVisual02/B-60.mp4)            |
+| 90 cm 翻越                    | [视频](Evidence/Videos/TraversalVisual02/A-90.mp4)            | [视频](Evidence/Videos/TraversalVisual02/B-90.mp4)            |
+| 120 cm 翻越                   | [视频](Evidence/Videos/TraversalVisual02/A-120.mp4)           | [视频](Evidence/Videos/TraversalVisual02/B-120.mp4)           |
+| 180 cm 攀上                   | [视频](Evidence/Videos/TraversalVisual02/A-180.mp4)           | [视频](Evidence/Videos/TraversalVisual02/B-180.mp4)           |
+| 梯子附着、上/下爬、暂停、离梯 | [视频](Evidence/Videos/TraversalVisual02/A-ladder.mp4)        | [视频](Evidence/Videos/TraversalVisual02/B-ladder.mp4)        |
+| 正式地图源栏杆                | [视频](Evidence/Videos/TraversalFormal06/A-formal-vault.mp4)  | [视频](Evidence/Videos/TraversalFormal06/B-formal-vault.mp4)  |
+| 正式地图源平台                | [视频](Evidence/Videos/TraversalFormal06/A-formal-mantle.mp4) | [视频](Evidence/Videos/TraversalFormal06/B-formal-mantle.mp4) |
+| 旧家具梯交互                  | [视频](Evidence/Videos/TraversalFormal06/A-formal-ladder.mp4) | [视频](Evidence/Videos/TraversalFormal06/B-formal-ladder.mp4) |
 
-录像为 1280×720、H.264、无音频，关闭运动模糊以便检查姿态。视口 PNG 读回使实际采集频率约为 7.84–8.74 FPS；编码使用原始时间间隔，没有补帧。这些录像用于姿态、动作阶段和收枪/恢复检查，性能结果使用上面的无录像轮次。各视频旁的 JSON 和 CSV 记录时长、采集频率、帧名、编码命令与哈希。
+录像为 1280×720、H.264、无音频，关闭运动模糊以便检查姿态。视口 PNG 读回使实际采集频率约为 7.84–8.74
+FPS；编码使用原始时间间隔，没有补帧。这些录像用于姿态、动作阶段和收枪/恢复检查，性能结果使用上面的无录像轮次。各视频旁的 JSON
+和 CSV 记录时长、采集频率、帧名、编码命令与哈希。
 
 ## 包与复现
 
@@ -90,16 +103,25 @@ TraversalFormal04 的旧家具梯骨骼测量发现部分手腕离横档 23–38
 & '.\Packaged\Traversal08\Client\Windows\StartClient.bat' '127.0.0.1:28777' Extraction
 ```
 
-原游玩专服 PID 69528、旧 `Packaged/Client` 和 `Packaged/Server` 保留。测试使用 28777 端口、独立房间及存档目录；旧模式回归用独立 `LANSession.LanGameUniqueId` 隔离广播，因此无需停止原专服。本阶段改动保留在工作区，未提交或推送。
+原游玩专服 PID 69528、旧 `Packaged/Client` 和 `Packaged/Server` 保留。测试使用 28777 端口、独立房间及存档目录；旧模式回归用独立
+`LANSession.LanGameUniqueId` 隔离广播，因此无需停止原专服。本阶段改动保留在工作区，未提交或推送。
 
-通过 `Scripts/Extraction/resource_guard.py --tag <新标签> --timeout 1000 -- <Python> Scripts/Extraction/run_network.py --tag <新标签> --packaged --package-root Packaged/Traversal08 --scenario traversal --rendered-clients 2 --port 28777 --isolated-room` 可复跑基础场景。额外参数：`--lag` 弱网、`--traversal-record` 录像、`--traversal-lifecycle --players 3` 生命周期。当前 `--traversal-route-only` 已改为新原版点位路线，连接未验证时会拒绝执行，不能用于重放旧家具梯路线。
+通过
+`Scripts/Extraction/resource_guard.py --tag <新标签> --timeout 1000 -- <Python> Scripts/Extraction/run_network.py --tag <新标签> --packaged --package-root Packaged/Traversal08 --scenario traversal --rendered-clients 2 --port 28777 --isolated-room`
+可复跑基础场景。额外参数：`--lag` 弱网、`--traversal-record` 录像、`--traversal-lifecycle --players 3` 生命周期。当前
+`--traversal-route-only` 已改为新原版点位路线，连接未验证时会拒绝执行，不能用于重放旧家具梯路线。
 
-动作/绑定工具为 `Scripts/Traversal/prepare_sources.py`、`run_editor.py animations|ladders`、`measure_rungs.py`。录像使用 `encode_recording.py`，分析使用 `analyze_motion.py` / `analyze_contacts.py`，归档使用 `archive_evidence.py`。原始运行记录保留在 `Saved/Extraction/<标签>`。
+动作/绑定工具为 `Scripts/Traversal/prepare_sources.py`、`run_editor.py animations|ladders`、`measure_rungs.py`。录像使用
+`encode_recording.py`，分析使用 `analyze_motion.py` / `analyze_contacts.py`，归档使用 `archive_evidence.py`。原始运行记录保留在
+`Saved/Extraction/<标签>`。
 
 ## 资源与证据边界
 
-重任务串行运行，资源守卫的启动阈值保持 C 盘 40 GiB、D 盘 100 GiB、可用内存 8 GiB；内存低于 3 GiB 持续 15 秒即停止本任务树。编译/链接分开运行，并保留中断的 EXE，最终候选包来自成功的完整构建。
+重任务串行运行，资源守卫的启动阈值保持 C 盘 40 GiB、D 盘 100 GiB、可用内存 8 GiB；内存低于 3 GiB 持续 15
+秒即停止本任务树。编译/链接分开运行，并保留中断的 EXE，最终候选包来自成功的完整构建。
 
-早期任务产物未删除，采用 NTFS/LZX 无损压缩并验证 EXE/PAK 哈希；最终打包使用独立 cook 目录与 `--direct-stage`，减少重复归档。`pe_validation.py` 防止中断链接残留的损坏 EXE 被当作成功产物。
+早期任务产物未删除，采用 NTFS/LZX 无损压缩并验证 EXE/PAK 哈希；最终打包使用独立 cook 目录与 `--direct-stage`，减少重复归档。
+`pe_validation.py` 防止中断链接残留的损坏 EXE 被当作成功产物。
 
-源动画的复用方式见“实现约束”；本阶段通过不替代体验方案 A 的源游戏参考采集。历史双渲染守卫测试 `guard acquires player` 超时也继续单独记账，没有通过降低守卫参数或关闭碰撞绕过。
+源动画的复用方式见“实现约束”；本阶段通过不替代体验方案 A 的源游戏参考采集。历史双渲染守卫测试 `guard acquires player`
+超时也继续单独记账，没有通过降低守卫参数或关闭碰撞绕过。
