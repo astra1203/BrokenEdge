@@ -24,13 +24,12 @@ public:
 	bool Active() const { return State.Kind != EExtractionTraversal::None; }
 	bool OnLadder() const { return State.Ladder != nullptr && Active(); }
 	bool CanTraverse() const;
-	bool RequestInteract();
 	void RequestDetach(bool bJump);
 	AExtractionLadder* FindLadder() const;
 	UPROPERTY(Transient)
 	FExtractionTraversalState State;
 	FString LastRejection;
-	bool bInteractRequested = false, bDetachRequested = false, bJumpDetachRequested = false;
+	bool bLadderInputBlocked = false, bDetachRequested = false, bJumpDetachRequested = false;
 	bool bObstacleRequested = false;
 	virtual bool DoJump(bool bReplayingMoves, float DeltaTime) override;
 	virtual void UpdateCharacterStateBeforeMovement(float DeltaSeconds) override;
@@ -48,6 +47,8 @@ private:
 	FTraversalMoveResponse ResponseData;
 	bool TryObstacle();
 	bool TryLadder();
+	AExtractionLadder* FindLadderEntry(bool& bTop, bool bRequireMovement) const;
+	void UpdateLadderReentry();
 	bool StartPath(FExtractionTraversalState Candidate);
 	void Publish();
 	void CancelActions();

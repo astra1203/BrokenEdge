@@ -1,5 +1,4 @@
 #include "ExtractionPlayerController.h"
-#include "BrokenEdge/Traversal/TraversalMovementComponent.h"
 #include "BrokenEdge/Traversal/ExtractionTraversalComponent.h"
 #include "ExtractionRegionStream.h"
 #include "ExtractionHealth.h"
@@ -110,8 +109,6 @@ void AExtractionPlayerController::SmokeAbility()
 
 void AExtractionPlayerController::Interact()
 {
-	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
-		if (CastChecked<UTraversalMovementComponent>(C->GetCharacterMovement())->RequestInteract()) return;
 	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
 		if (auto* Other = C->GetExtractionAbilities()->RescueFocus())
 		{

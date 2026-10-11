@@ -10,13 +10,13 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
-parser.add_argument('stage', choices=['animations', 'ladders', 'route', 'visuals', 'geometry', 'obstacles'])
+parser.add_argument('stage', choices=['animations', 'ladders', 'ladder-audit', 'source-route', 'route', 'visuals', 'geometry', 'obstacles'])
 parser.add_argument('--tag', required=True)
 args = parser.parse_args()
 assert args.tag and all(c.isalnum() or c in '-_' for c in args.tag)
 out = ROOT/'Saved/Traversal/EditorRuns'/args.tag
 out.mkdir(parents=True, exist_ok=False)
-script = ROOT/'Scripts/Traversal'/dict(animations='import_animations.py',ladders='bind_ladders.py',route='probe_route.py',visuals='configure_visuals.py',geometry='inspect_ladder_mesh.py',obstacles='probe_obstacles.py')[args.stage]
+script = ROOT/'Scripts/Traversal'/dict(animations='import_animations.py',ladders='bind_ladders.py',**{'ladder-audit':'audit_source_ladders.py','source-route':'probe_source_route.py'},route='probe_route.py',visuals='configure_visuals.py',geometry='inspect_ladder_mesh.py',obstacles='probe_obstacles.py')[args.stage]
 command = ['C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Binaries/Win64/UnrealEditor-Cmd.exe',
            str(ROOT/'BrokenEdge.uproject'), '-run=pythonscript', '-script='+str(script), '-NullRHI',
            '-unattended', '-nosplash', '-nosound', '-abslog='+str(out/'Editor.log')]

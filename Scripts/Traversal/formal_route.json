@@ -1,6 +1,6 @@
 {
   "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
-  "basis": "TraversalObstacles02 source-map probes and TraversalLadders11 bindings with verified horizontal facing",
+  "basis": "Original gameplay climb actor; source-route collision probe and actual-input acceptance pending",
   "vault": {
     "start": [
       1700,
@@ -28,18 +28,8 @@
     ]
   },
   "ladder": {
-    "source_id": "29eeffe2c3f7d69c",
-    "bottom": [
-      -4003.65,
-      -2196.24,
-      360.33
-    ],
-    "top_exit": [
-      -3913.65,
-      -2051.24,
-      555.11
-    ],
-    "yaw": 90
+    "source_id": "9cf77452749b621c",
+    "entry": "top"
   },
   "to_vault": [
     [
@@ -155,21 +145,6 @@
       360
     ]
   ],
-  "to_ladder": [
-    [
-      -3700,
-      -2050,
-      360
-    ],
-    [
-      -3800,
-      -2180,
-      360
-    ],
-    [
-      -4003.65,
-      -2250,
-      360
-    ]
-  ]
+  "to_ladder": [],
+  "status": "pending_source_connection"
 }

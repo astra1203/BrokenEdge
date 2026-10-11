@@ -1,0 +1,47 @@
+{
+  "result": "passed",
+  "utc": "2026-10-08T16:42:24.160150+00:00",
+  "unit_command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+    "-B",
+    "Scripts/Traversal/test_source_ladders.py"
+  ],
+  "unit_exit_code": 0,
+  "unit_output": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.000s\n\nOK\n",
+  "syntax_checked": [
+    "Scripts/Extraction/run_network.py",
+    "Scripts/Extraction/source_ladder_scenarios.py",
+    "Scripts/Extraction/traversal_route.py",
+    "Scripts/Extraction/traversal_scenarios.py",
+    "Scripts/Traversal/analyze_contacts.py",
+    "Scripts/Traversal/audit_source_ladders.py",
+    "Scripts/Traversal/bind_ladders.py",
+    "Scripts/Traversal/inspect_ladder_mesh.py",
+    "Scripts/Traversal/measure_rungs.py",
+    "Scripts/Traversal/prepare_sources.py",
+    "Scripts/Traversal/probe_source_route.py",
+    "Scripts/Traversal/run_editor.py",
+    "Scripts/Traversal/source_ladders.py",
+    "Scripts/Traversal/test_source_ladders.py"
+  ],
+  "diff_check_exit_code": 0,
+  "current_map_sha256": "583e774cfd36643c5af55d07fc69003afe4fd11217bc03c406f5ba6dc773e871",
+  "source_manifest_sha256": "b34d9d9897db2e9d9d9c7265276b9cec5a844d0293b2fc9fe67cf7a1c67c705a",
+  "inputs": {
+    "Scripts/Extraction/run_network.py": "d74f48e672a03d5fe47b57c19a3f54eba3bb112db9bb47b8e9b9c0ce2019873a",
+    "Scripts/Extraction/source_ladder_scenarios.py": "2b76f6682f4b272065b44c5b29fbc46105984db2bfc226829233003028a381f4",
+    "Scripts/Extraction/traversal_route.py": "f54cb4539bee4d795e2ebbe0b69a3ad9aabddd13609c675812782b96cb9e6056",
+    "Scripts/Extraction/traversal_scenarios.py": "878d12d053602f8c5bd92a644a4ae7bf60b2bf55fe7132b17633cf79164fa4ed",
+    "Scripts/Traversal/analyze_contacts.py": "e4587b9e4ae539873611b9147c645a3b210fa365600e2da658584dddd256e05c",
+    "Scripts/Traversal/audit_source_ladders.py": "d7486b380861e9b3854dc99fb2199b210c842f375a504448c00ee545a999bcd4",
+    "Scripts/Traversal/bind_ladders.py": "976aa7ae7c39d6238248f8fb09cb6aacb6ce4f89d6410a2975f1e832ff073039",
+    "Scripts/Traversal/inspect_ladder_mesh.py": "7f29c78e8c82938b6e63ee1b966fd0072488913f0295023eacce732f83eab720",
+    "Scripts/Traversal/measure_rungs.py": "060ec73829c9d24b3b8188f6c2869c1b40c3c0aa62ae148510a33fca683510ad",
+    "Scripts/Traversal/prepare_sources.py": "dc1b3387cce6ccfe7b81cc281b72db663922bb500844975b481782f9c2b10c70",
+    "Scripts/Traversal/probe_source_route.py": "e81c54b25fa2a2fef8c86341f6945280d291fe69f35881979cf4f5cb562a7877",
+    "Scripts/Traversal/run_editor.py": "d1f2f2d55bf984020fa8dcc681e31cb30d8ec6daf520b939134e981a80d937ac",
+    "Scripts/Traversal/source_ladders.py": "e182d11bb8ebd2cef56321ab691db5f53c06b3a3e14bbb50421293a33d2c6413",
+    "Scripts/Traversal/test_source_ladders.py": "df51487262ea95ca879acb815ea697c3d728f968ef6f68a165eee1ce50024599"
+  },
+  "diff_check_output": ""
+}

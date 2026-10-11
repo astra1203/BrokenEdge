@@ -1,154 +1,330 @@
-"""Classify every restored ladder and bind only capsule-clear, supported entries/exits."""
-import hashlib
+"""Restore saved climb geometry and validate its original endpoints, without moving exits."""
+import configparser
 import json
 import math
 import os
 from pathlib import Path
 import shutil
+import statistics
+import sys
+import traceback
 import unreal
 
 ROOT = Path(unreal.Paths.project_dir()).resolve()
+sys.path.insert(0, str(ROOT/'Scripts/Traversal'))
+from source_ladders import point, read, sha, write_json, canonical
+
 OUT = Path(os.environ['TRAVERSAL_EDITOR_OUT'])
-data = json.loads((ROOT/'Saved/Traversal/Sources.json').read_text(encoding='utf-8'))
-rung_data = json.loads((ROOT/'Saved/Traversal/Rungs.json').read_text(encoding='utf-8'))
+data = read(ROOT/'Saved/Traversal/Sources.json')
+assert data['schema'] == 2 and not data['unresolved']
+assert sha(data['source_manifest']) == data['source_manifest_sha256']
+rung_data = read(ROOT/'Saved/Traversal/Rungs.json')
 MAIN = '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction'
-NORTH = '/Game/Maps/SpaceCenter/L_SpaceCenterNorth'
+DEST = '/Game/Extraction/Traversal/SourceLadders'
+OWNER = 'TraversalSourceV2'
 actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 levels = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
-assert levels.load_level(MAIN)
-world = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()
-stream = unreal.GameplayStatics.get_streaming_level(world,NORTH)
-if stream and stream.get_loaded_level():
-    unreal.EditorLevelUtils.set_level_visibility(stream.get_loaded_level(),True,False)
-trace = unreal.TraceTypeQuery.TRACE_TYPE_QUERY1
-pawn_class=unreal.load_class(None,'/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C')
-capsule=unreal.get_default_object(pawn_class).get_editor_property('capsule_component')
-radius,half=capsule.get_scaled_capsule_radius(),capsule.get_scaled_capsule_half_height()
-last_ground={}
+lib = unreal.EditorAssetLibrary
+tools = unreal.AssetToolsHelpers.get_asset_tools()
+edit = unreal.MaterialEditingLibrary
+state_path = ROOT/'Saved/Traversal/SourceCorrection/NativeAssets.json'
+state = read(state_path) if state_path.exists() else {}
+report = dict(result='running', source_manifest_sha256=data['source_manifest_sha256'], candidates=[], removed=[], geometry=[], blocked_queries=[], floor_queries=[],
+              boundary='Source geometry and editor collision audit; rendered traversal and network tests remain separate.')
+
+
 def vector(v): return unreal.Vector(*v)
-def array(v): return [v.x,v.y,v.z]
-def line(a,b):
-    hit = unreal.StingerAssetLibrary.trace_traversal_surface(world,a,b)
-    return [None,None,None,None,None,hit[0],None,hit[1],None,None] if hit else None
-def clear(a,b):
-    return unreal.StingerAssetLibrary.traversal_capsule_clear(world,a,b,radius,half)
-def ground(point, above, below):
-    global last_ground
-    last_ground={'requested':array(point)}
-    hit = line(point+unreal.Vector(0,0,above),point-unreal.Vector(0,0,below))
-    if not hit or hit[7].z < .71:
-        last_ground['failure']='no_floor';return None
-    foot = hit[5]
-    last_ground['foot']=array(foot)
+def array(v): return [v.x, v.y, v.z]
+
+
+def import_asset(entry, folder, cls):
+    digest = sha(entry['file'])
+    assert digest == entry['sha256']
+    previous = state.get(entry['source'])
+    if previous:
+        assert previous['sha256'] == digest, 'Changed geometry needs a new explicit revision'
+        obj = lib.load_asset(previous['asset'])
+        assert isinstance(obj, cls)
+        return obj
+    task = unreal.AssetImportTask()
+    task.filename = entry['file']; task.destination_path = folder
+    task.automated = True; task.save = True; task.replace_existing = False
+    assert not lib.does_directory_exist(folder), 'Untracked import folder: ' + folder
+    tools.import_asset_tasks([task])
+    assets = [lib.load_asset(p) for p in lib.list_assets(folder, recursive=True)]
+    matches = [obj for obj in assets if isinstance(obj, cls)]
+    assert len(matches) == 1, folder
+    obj = matches[0]
+    state[entry['source']] = dict(sha256=digest, asset=obj.get_path_name())
+    write_json(state_path, state)
+    return obj
+
+
+def source_transform(m):
+    # Current source instances are upright. Fail explicitly if this changes.
+    scale = [math.sqrt(sum(m[i][j]**2 for i in range(3))) for j in range(3)]
+    assert min(scale) > 0 and abs(m[2][0])+abs(m[2][1])+abs(m[0][2])+abs(m[1][2]) < .001
+    yaw = math.degrees(math.atan2(m[1][0], m[0][0]))
+    return unreal.Transform(location=vector(point(m)), rotation=unreal.Rotator(pitch=0, yaw=yaw, roll=0), scale=vector(scale))
+
+
+def material_assets():
+    textures = {}
+    for path, entry in data['textures'].items():
+        obj = import_asset(entry, DEST+'/Textures/'+path.rsplit('/', 1)[-1], unreal.Texture2D)
+        obj.set_editor_property('srgb', entry['srgb'])
+        obj.set_editor_property('compression_settings', unreal.TextureCompressionSettings.TC_BC7)
+        lib.save_loaded_asset(obj)
+        textures[path] = obj
+    active = read(ROOT/'Scripts/SpaceCenter/restoration_active.json')
+    profile = read(ROOT/active['profile_file'])
+    native = read(ROOT/profile['work_directory']/'NativeAssets.json')
+    master_name = 'M_SC_R'+str(profile['material_revision'])+'_1_opaque'
+    parent = lib.load_asset(native['restoration_master:'+master_name]['asset'])
+    assert parent
+    materials = {}
+    for path, entry in data['materials'].items():
+        asset_path = DEST+'/Materials/'+path.rsplit('/', 1)[-1]
+        mi = lib.load_asset(asset_path) if lib.does_asset_exist(asset_path) else tools.create_asset(
+            path.rsplit('/', 1)[-1], DEST+'/Materials', unreal.MaterialInstanceConstant, unreal.MaterialInstanceConstantFactoryNew())
+        edit.set_material_instance_parent(mi, parent)
+        edit.set_material_instance_texture_parameter_value(mi, 'Base0', textures[entry['textures']['BaseColorMap']])
+        edit.set_material_instance_texture_parameter_value(mi, 'Normal0', textures[entry['textures']['NRMap']])
+        edit.set_material_instance_vector_parameter_value(mi, 'Layer0', unreal.LinearColor(3, 1, 1, 1))
+        edit.update_material_instance(mi); lib.save_loaded_asset(mi)
+        materials[path] = mi
+    return materials
+
+
+def clear(a, b):
+    result = unreal.StingerAssetLibrary.traversal_capsule_clear(world, vector(a), vector(b), radius, half)
+    if not result:
+        hit = unreal.SystemLibrary.capsule_trace_single_by_profile(world, vector(a), vector(b), radius, half, 'Pawn', False, [], unreal.DrawDebugTrace.NONE, True)
+        values = hit.to_tuple() if hit else None
+        report['blocked_queries'].append(dict(start=a,end=b,actor=values[9].get_actor_label() if values and values[9] else None,
+            impact=array(values[5]) if values else None,normal=array(values[7]) if values else None))
+    return result
+
+
+def floor_at(requested, below=90):
+    # Snap vertically at the saved XY; never hunt for an alternate exit.
+    hit = unreal.StingerAssetLibrary.trace_traversal_surface(world, vector(requested)+unreal.Vector(0,0,60), vector(requested)-unreal.Vector(0,0,below))
+    report['floor_queries'].append(dict(requested=requested,hit=[array(v) for v in hit] if hit else None))
+    if not hit or hit[1].z < .71:
+        return None, 'no_source_endpoint_floor'
+    foot = hit[0]
     for x,y in ((radius*.8,0),(-radius*.8,0),(0,radius*.8),(0,-radius*.8)):
-        edge = line(foot+unreal.Vector(x,y,12),foot+unreal.Vector(x,y,-12))
-        if not edge or edge[7].z < .71 or abs(edge[5].z-foot.z) > 8:
-            last_ground['failure']='footprint';return None
-    center=foot+unreal.Vector(0,0,half+3)
-    if not clear(center,center+unreal.Vector(0,0,.1)):
-        last_ground.update(failure='capsule',point=array(center))
-        return None
-    return foot
+        edge = unreal.StingerAssetLibrary.trace_traversal_surface(world, foot+unreal.Vector(x,y,12), foot+unreal.Vector(x,y,-12))
+        if not edge or edge[1].z < .71 or abs(edge[0].z-foot.z)>8:
+            return None, 'source_endpoint_footprint'
+    # A line can hit below small rubble under the rounded capsule. Sweep down
+    # at the same XY to obtain the actual standing centre on that surface.
+    support = unreal.SystemLibrary.capsule_trace_single_by_profile(world, foot+unreal.Vector(0,0,half+30),
+        foot+unreal.Vector(0,0,half-12), radius, half, 'Pawn', False, [], unreal.DrawDebugTrace.NONE, True)
+    if support:
+        values = support.to_tuple()
+        if not values[1] and values[7].z >= .71:
+            foot = values[4]-unreal.Vector(0,0,half)
+    center = array(foot+unreal.Vector(0,0,half+3))
+    if not clear(center, [center[0],center[1],center[2]+.1]):
+        return None, 'source_endpoint_capsule'
+    return array(foot), None
 
-report = dict(result='running', manifest_sha256=data['manifest_sha256'], candidates=[], radius=radius, half_height=half,
-              boundary='Editor collision audit and bindings only; input-driven runtime and network acceptance are separate.')
-control=line(unreal.Vector(-1500,-300,1000),unreal.Vector(-1500,-300,0))
-assert control and abs(control[5].z-362)<15, 'Known formal-map floor did not trace correctly'
-report['control_floor']=array(control[5])
-for source in data['ladders']:
-    t=source['transform'];q=unreal.Quat(*[t['Rotation'][k] for k in 'XYZW'])
-    up=q.rotate_vector(unreal.Vector(0,0,1))
-    row=dict(id=source['id'], source_object=source['source_object'], mesh=source['mesh'], region=source['region'], up=array(up))
-    report['candidates'].append(row)
-    if up.z < .85:
-        row.update(classification='decoration',reason='horizontal_or_strongly_tilted');continue
-    low=source['bounds']['min'][2]-data['origin'][2]
-    high=source['bounds']['max'][2]-data['origin'][2]
-    center=vector([(a+b)/2-o for a,b,o in zip(source['bounds']['min'],source['bounds']['max'],data['origin'])])
-    # Source B is 28.6 cm deep on local X and 79.8 cm wide on local Y.
-    # A is the folding version of the same ladder; its climbing faces also face +/- X.
-    normal=q.rotate_vector(unreal.Vector(1,0,0));normal.z=0;normal=normal.normal()
-    row['floor_samples']=[]
-    for angle in range(0,360,45):
-        for distance in (80,160,240):
-            point=center+unreal.Vector(math.cos(math.radians(angle))*distance,math.sin(math.radians(angle))*distance,0)
-            hit=line(unreal.Vector(point.x,point.y,high+180),unreal.Vector(point.x,point.y,low-180))
-            row['floor_samples'].append(dict(x=point.x,y=point.y,hit=array(hit[5]) if hit else None,
-                                            normal=array(hit[7]) if hit else None,
-                                            actor=hit[9].get_actor_label() if hit and hit[9] else None))
-    selected=None;failures={};row['endpoint_probes']=[]
-    for side in (1,-1):
-        facing=normal*side
-        for offset in (75.,95.,115.):
-            climb=center-facing*offset
-            bottom=ground(unreal.Vector(climb.x,climb.y,low),60,120)
-            row['endpoint_probes'].append({'end':'bottom',**last_ground})
-            if bottom is None:
-                failures['bottom_unsupported_or_blocked']=failures.get('bottom_unsupported_or_blocked',0)+1;continue
-            tangent=unreal.Vector(-facing.y,facing.x,0)
-            exit_offsets=[(d,l) for d in (50.,70.,90.,110.,150.) for l in (0.,-45.,45.,-90.,90.)]
-            for exit_distance,lateral in exit_offsets:
-                target=center+facing*exit_distance+tangent*lateral
-                top=ground(unreal.Vector(target.x,target.y,high),65,90)
-                row['endpoint_probes'].append({'end':'top',**last_ground})
-                if top is None or top.z-bottom.z < 150:
-                    failures['top_unsupported_or_blocked']=failures.get('top_unsupported_or_blocked',0)+1;continue
-                b=unreal.Vector(climb.x,climb.y,bottom.z)
-                e=unreal.Vector(climb.x,climb.y,top.z)
-                if not clear(b+unreal.Vector(0,0,half+3),e+unreal.Vector(0,0,half+8)) or not clear(e+unreal.Vector(0,0,half+8),top+unreal.Vector(0,0,half+8)):
-                    failures['climb_or_exit_path_blocked']=failures.get('climb_or_exit_path_blocked',0)+1;continue
-                selected=dict(bottom=array(b),top=array(e),bottom_exit=array(bottom),top_exit=array(top),facing=array(facing),
-                              source_side=side,grip_origin=array(unreal.Vector(center.x,center.y,low+15)-facing*14));break
-            if selected:break
-        if selected:break
-    if selected:
-        row.update(classification='usable',points=selected)
-    else:
-        row.update(classification='unusable',reason='no_safe_connected_endpoints',failures=failures)
-    print('TRAVERSAL_LADDER',row['id'],row['classification'],flush=True)
 
-# Save an exact backup before adding only our invisible interaction actors.
-mapfile=ROOT/'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap'
-shutil.copy2(mapfile,OUT/'L_SpaceCenterExtraction.before.umap')
-report['map_sha256_before']=hashlib.sha256(mapfile.read_bytes()).hexdigest()
-existing={a.get_editor_property('source_id'):a for a in actors.get_all_level_actors() if isinstance(a,unreal.ExtractionLadder)}
-for row in report['candidates']:
-    if row['classification']!='usable':continue
-    p=row['points'];facing=vector(p['facing']);yaw=math.degrees(math.atan2(facing.y,facing.x))
-    rotation=unreal.Rotator(pitch=0.,yaw=yaw,roll=0.)
-    actor=existing.pop(row['id'],None) or actors.spawn_actor_from_class(unreal.ExtractionLadder,vector(p['bottom']),rotation)
-    actor.set_actor_location_and_rotation(vector(p['bottom']),rotation,False,True)
-    actual=actor.get_actor_forward_vector()
-    assert abs(actual.z)<.001 and actual.dot(facing)>.999, 'Binding must face horizontally along the climbing surface'
-    row['binding_forward']=array(actual)
-    actor.set_actor_label('Traversal_Ladder_'+row['id'])
-    actor.set_editor_property('source_id',row['id'])
-    inverse=actor.get_actor_transform().inverse()
-    for key in ('bottom','top','bottom_exit','top_exit','grip_origin'):
-        actor.set_editor_property(key,unreal.MathLibrary.transform_location(inverse,vector(p[key])))
-    source=next(s for s in data['ladders'] if s['id']==row['id'])
-    t=source['transform'];q=unreal.Quat(*[t['Rotation'][k] for k in 'XYZW'])
-    scale=vector([t['Scale3D'][k] for k in 'XYZ'])
-    translation=vector([t['Translation'][k]-o for k,o in zip('XYZ',data['origin'])])
-    geometry=rung_data[source['mesh']]
-    rungs=[]
-    for rung in geometry['rungs']:
-        x=rung['min'][0] if p['source_side']>0 else rung['max'][0]
-        local=unreal.Vector(x,(rung['min'][1]+rung['max'][1])/2,rung['z'])
-        point=q.rotate_vector(local*scale)+translation
-        rungs.append(point)
-    rungs.sort(key=lambda p:p.z)
-    actor.set_editor_property('rungs',[unreal.MathLibrary.transform_location(inverse,p) for p in rungs])
-    actor.set_editor_property('grip_origin',unreal.MathLibrary.transform_location(inverse,rungs[0]))
-    actor.set_editor_property('rung_spacing',geometry['median_spacing']*abs(t['Scale3D']['Z'])*abs(q.rotate_vector(unreal.Vector(0,0,1)).z))
-    actor.set_editor_property('grip_half_width',min(22.,min((r['max'][1]-r['min'][1])/2-6 for r in geometry['rungs'])))
-    row['contact_rungs']=[array(p) for p in rungs]
-    row['actor']=actor.get_path_name()
-for obsolete in existing.values():actors.destroy_actor(obsolete)
-if existing or any(r['classification']=='usable' for r in report['candidates']):
+def path_clear(a, b, margin):
+    height = max(a[2], b[2])+margin
+    raised, across = [a[0],a[1],height], [b[0],b[1],height]
+    return clear(a, raised) and clear(raised, across) and clear(across, b)
+
+
+try:
+    mapfile = ROOT/'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap'
+    shutil.copy2(mapfile, OUT/'L_SpaceCenterExtraction.before.umap')
+    report['map_sha256_before'] = sha(mapfile)
+    assert levels.load_level(MAIN)
+    world = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()
+    stream = unreal.GameplayStatics.get_streaming_level(world, '/Game/Maps/SpaceCenter/L_SpaceCenterNorth')
+    if stream and stream.get_loaded_level():
+        unreal.EditorLevelUtils.set_level_visibility(stream.get_loaded_level(), True, False)
+    pawn_class = unreal.load_class(None, '/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter_C')
+    capsule = unreal.get_default_object(pawn_class).get_editor_property('capsule_component')
+    radius, half = capsule.get_scaled_capsule_radius(), capsule.get_scaled_capsule_half_height()
+    # Config-only UPROPERTY is not exposed to editor Python. Read the packaged
+    # project setting explicitly and record it with the binding evidence.
+    config = configparser.ConfigParser(strict=False, interpolation=None)
+    config.read(ROOT/'Config/DefaultGame.ini', encoding='utf-8')
+    roof_reach = config.getfloat('/Script/BrokenEdge.ExtractionTraversalRules', 'LadderRoofReach')
+    assert roof_reach > 0
+    report['game_config_sha256'] = sha(ROOT/'Config/DefaultGame.ini')
+    report.update(radius=radius, half_height=half, roof_reach=roof_reach)
+    materials = material_assets()
+    meshes = {}
+    for path, entry in data['meshes'].items():
+        mesh = import_asset(entry, DEST+'/Meshes/'+path.rsplit('/',1)[-1], unreal.StaticMesh)
+        body = mesh.get_editor_property('body_setup')
+        body.set_editor_property('collision_trace_flag', unreal.CollisionTraceFlag.CTF_USE_COMPLEX_AS_SIMPLE)
+        body.set_editor_property('double_sided_geometry', True)
+        for i, slot in enumerate(entry['source_mesh']['Properties']['StaticMaterials']):
+            mesh.set_material(i, materials[canonical(slot['MaterialInterface']['ObjectPath'])])
+        lib.save_loaded_asset(mesh); meshes[path] = mesh
+        vertices = json.loads(unreal.StingerAssetLibrary.describe_ladder_vertices(mesh))
+        bounds = entry['source_mesh']['Properties']['ExtendedBounds']
+        assert vertices and max(abs(actual-(bounds['Origin'][axis]+sign*bounds['BoxExtent'][axis]))
+            for sign in (-1,1) for i,axis in enumerate('XYZ')
+            for actual in [(min if sign<0 else max)(p[i] for p in vertices)]) < 1., 'Native mesh differs from source bounds'
+    existing = {a.get_actor_label(): a for a in actors.get_all_level_actors()}
+    expected_geometry = set()
+    for source in data['ladders']:
+        for component in source['components']:
+            label = 'Traversal_SourceMesh_'+source['id']+'_'+component['name']+'_'+str(component['instance'])
+            expected_geometry.add(label)
+            actor = existing.get(label)
+            if actor:
+                assert OWNER in [str(t) for t in actor.tags] and isinstance(actor, unreal.StaticMeshActor)
+            else:
+                actor = actors.spawn_actor_from_class(unreal.StaticMeshActor, unreal.Vector())
+                actor.set_actor_label(label); actor.tags = [OWNER]
+            actor.static_mesh_component.set_static_mesh(meshes[component['mesh']])
+            actor.static_mesh_component.set_collision_profile_name('BlockAll')
+            actor.set_actor_transform(source_transform(component['transform']), False, True)
+            report['geometry'].append(dict(label=label, source=component['source_reference'], instance=component['instance'],
+                                           location=array(actor.get_actor_location())))
+    for label, actor in existing.items():
+        if OWNER in [str(t) for t in actor.tags] and isinstance(actor, unreal.StaticMeshActor) and label not in expected_geometry:
+            actors.destroy_actor(actor); report['removed'].append(label)
+    bindings = {a.get_editor_property('source_id'):a for a in actors.get_all_level_actors() if isinstance(a, unreal.ExtractionLadder)}
+    for old_id in data['legacy_binding_ids']:
+        old = bindings.pop(old_id, None)
+        if old:
+            assert old.get_actor_label() == 'Traversal_Ladder_'+old_id
+            report['removed'].append(old.get_actor_label()); actors.destroy_actor(old)
+    unreal.GameplayStatics.flush_level_streaming(world)
+    unreal.SystemLibrary.execute_console_command(world, 'Editor.AsyncAssetCompilationFinishAll')
+    # Asset imports/rebuilds invalidate editor physics bodies. Audit a freshly
+    # loaded saved level, rather than querying the scene in the mutation frame.
     assert levels.save_current_level()
-report['map_sha256_after']=hashlib.sha256(mapfile.read_bytes()).hexdigest()
-report['counts']={kind:sum(r['classification']==kind for r in report['candidates']) for kind in ('usable','unusable','decoration')}
-report['result']='passed'
-(OUT/'Report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-assert sum(report['counts'].values())==39
+    assert levels.load_level('/Game/Maps/Lobby')
+    assert levels.load_level(MAIN)
+    world = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()
+    stream = unreal.GameplayStatics.get_streaming_level(world, '/Game/Maps/SpaceCenter/L_SpaceCenterNorth')
+    if stream and stream.get_loaded_level():
+        unreal.EditorLevelUtils.set_level_visibility(stream.get_loaded_level(), True, False)
+    unreal.GameplayStatics.flush_level_streaming(world)
+    bindings = {a.get_editor_property('source_id'):a for a in actors.get_all_level_actors() if isinstance(a, unreal.ExtractionLadder)}
+    for source in data['ladders']:
+        endpoint = {name:point(value['transform']) for name,value in source['endpoints'].items()}
+        row = dict(id=source['id'], source_object=source['source_object'], original_endpoints=endpoint)
+        report['candidates'].append(row)
+        facing_matrix = source['endpoints']['LadderBottomEndTransform']['transform']
+        facing = vector([facing_matrix[i][0] for i in range(3)]).normal()
+        assert abs(facing.z)<.001
+        # Roof_Start is an animation anchor at the edge. Use the original top
+        # interaction box's inner side, inset by the actual capsule radius.
+        # This remains within the source trigger; no nearby platform is searched.
+        trigger = source['triggers']['TopBox']; t = trigger['transform']
+        extent = sum(abs(sum(t[i][j]*array(facing)[i] for i in range(3)))*trigger['extent'][j] for j in range(3))
+        assert extent > radius+3
+        top_stand = array(vector(point(t))+facing*(extent-radius-3))
+        top_stand[2] = endpoint['LadderTopStartTransform'][2]
+        row['capsule_top_stand_offset'] = array(vector(top_stand)-vector(endpoint['LadderTopStartTransform']))
+        row['source_top_trigger'] = trigger
+        bottom_exit, bottom_error = floor_at(endpoint['LadderBottomStartTransform'])
+        top_exit, top_error = floor_at(top_stand, max(90, top_stand[2]-endpoint['LadderTopEndTransform'][2]))
+        bottom = endpoint['LadderBottomEndTransform']; top_end = endpoint['LadderTopEndTransform']
+        # Runtime subtracts LadderRoofReach from Top. Adapt that representation
+        # to the original attachment point; this is not a source geometry offset.
+        top = [top_end[0], top_end[1], top_end[2]+roof_reach]
+        row.update(bottom_floor=bottom_exit, top_floor=top_exit, errors=[e for e in (bottom_error,top_error) if e])
+        highest = -math.inf
+        for component in source['components']:
+            bounds = data['meshes'][component['mesh']]['source_mesh']['Properties']['ExtendedBounds']
+            for x in (-1,1):
+                for y in (-1,1):
+                    for z in (-1,1):
+                        local = [bounds['Origin'][k]+sign*bounds['BoxExtent'][k] for k,sign in zip('XYZ',(x,y,z))]
+                        highest = max(highest, point(component['transform'],local)[2])
+        # StartPath already adds 3/5 cm clearance above this source envelope.
+        clearance = max(0.,highest-(top_exit or top_stand)[2])
+        row['top_clearance'] = clearance
+        if not row['errors']:
+            centers = [[p[0],p[1],p[2]+half+3] for p in (bottom_exit,bottom,top_end,top_exit)]
+            if not (path_clear(centers[0], centers[1],3) and clear(centers[1],centers[2])
+                    and path_clear(centers[2],centers[3],5+clearance) and path_clear(centers[3],centers[2],3+clearance)):
+                row['errors'].append('original_climb_or_exit_path_blocked')
+        if row['errors']:
+            row['classification'] = 'unresolved_collision'
+            stale = bindings.get(source['id'])
+            if stale and OWNER in [str(t) for t in stale.tags]:
+                report['removed'].append(stale.get_actor_label()); actors.destroy_actor(stale)
+            continue
+        row['classification'] = 'usable'
+        # Record standing positions outside each original trigger for real-input
+        # acceptance. A missing approach is an explicit test gap, not permission
+        # to move the source trigger or silently teleport into it.
+        approaches, approach_errors = {}, {}
+        for name, trigger_name, exit_point, direction in (
+                ('bottom','BottomBox',bottom_exit,facing), ('top','TopBox',top_exit,-facing)):
+            trigger = source['triggers'][trigger_name]; t = trigger['transform']
+            extent = sum(abs(sum(t[i][j]*array(direction)[i] for i in range(3)))*trigger['extent'][j] for j in range(3))
+            p = array(vector(point(t))-direction*(extent+radius+20))
+            p[2] = exit_point[2]
+            ground, error = floor_at(p)
+            if not error:
+                a,b = [[v[0],v[1],v[2]+half+3] for v in (ground,exit_point)]
+                if abs(ground[2]-exit_point[2])>45 or not path_clear(a,b,3): error='walking_approach_blocked'
+            if error: approach_errors[name] = error
+            else: approaches[name] = ground
+        row.update(approaches=approaches, approach_errors=approach_errors)
+        rotation = unreal.Rotator(pitch=0, yaw=math.degrees(math.atan2(facing.y, facing.x)), roll=0)
+        actor = bindings.get(source['id'])
+        if actor: assert OWNER in [str(t) for t in actor.tags]
+        else: actor = actors.spawn_actor_from_class(unreal.ExtractionLadder, vector(bottom), rotation)
+        actor.set_actor_label('Traversal_Ladder_'+source['id']); actor.tags = [OWNER]
+        actor.set_editor_property('source_id', source['id'])
+        actor.set_editor_property('top_clearance', clearance)
+        actor.set_actor_location_and_rotation(vector(bottom), rotation, False, True)
+        inverse = actor.get_actor_transform().inverse()
+        entries = {}
+        for field, name in (('bottom_entry','BottomBox'),('top_entry','TopBox')):
+            trigger = source['triggers'][name]
+            entry = unreal.TraversalLadderEntry()
+            entry.set_editor_property('transform', unreal.MathLibrary.make_relative_transform(
+                source_transform(trigger['transform']), actor.get_actor_transform()))
+            entry.set_editor_property('extent', vector(trigger['extent']))
+            actor.set_editor_property(field, entry)
+            entries[field] = trigger
+        points = dict(bottom=bottom, top=top, bottom_exit=bottom_exit, top_exit=top_exit)
+        for name, value in points.items():
+            actor.set_editor_property(name, unreal.MathLibrary.transform_location(inverse, vector(value)))
+        rungs, widths = [], []
+        for component in source['components']:
+            geometry = rung_data[component['mesh']]
+            assert geometry['source_sha256'] == data['meshes'][component['mesh']]['sha256']
+            for rung in geometry['rungs']:
+                p = point(component['transform'], [(rung['min'][0]+rung['max'][0])/2,rung['max'][1],rung['z']])
+                rungs.append(p)
+                left = vector(point(component['transform'], [rung['min'][0],rung['max'][1],rung['z']]))
+                right = vector(point(component['transform'], [rung['max'][0],rung['max'][1],rung['z']]))
+                widths.append((right-left).length()/2)
+        rungs.sort(key=lambda p:p[2])
+        assert len(rungs)>1 and min(widths)>6
+        actor.set_editor_property('rungs', [unreal.MathLibrary.transform_location(inverse,vector(p)) for p in rungs])
+        actor.set_editor_property('grip_origin', unreal.MathLibrary.transform_location(inverse,vector(rungs[0])))
+        actor.set_editor_property('rung_spacing', statistics.median(b[2]-a[2] for a,b in zip(rungs,rungs[1:])))
+        actor.set_editor_property('grip_half_width', min(widths)-6.)
+        row.update(points=points, entries=entries, facing=array(facing), contact_rungs=rungs, grip_half_width=min(widths)-6., actor=actor.get_path_name())
+    for source_id, actor in bindings.items():
+        if source_id not in {s['id'] for s in data['ladders']} and OWNER in [str(t) for t in actor.tags]:
+            report['removed'].append(actor.get_actor_label()); actors.destroy_actor(actor)
+    assert levels.save_current_level()
+    report['map_sha256_after'] = sha(mapfile)
+    report['counts'] = {kind:sum(row['classification']==kind for row in report['candidates']) for kind in ('usable','unresolved_collision')}
+    write_json(ROOT/'Scripts/Traversal/source_bindings.json', dict(
+        schema=3, interaction='walk_toward_entry', source_manifest_sha256=data['source_manifest_sha256'], map_sha256=report['map_sha256_after'],
+        editor_report=str(OUT/'Report.json'), candidates=report['candidates']))
+    report['result'] = 'passed'  # Audit completed; unresolved rows are not accepted ladders.
+except Exception:
+    report.update(result='failed', error=traceback.format_exc())
+    raise
+finally:
+    write_json(OUT/'Report.json', report)

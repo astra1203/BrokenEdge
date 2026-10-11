@@ -1,0 +1,42 @@
+{
+  "command": [
+    "C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Binaries/ThirdParty/Python3/Win64/python.exe",
+    "Scripts/Extraction/run_build.py",
+    "--target",
+    "Editor",
+    "--no-uba",
+    "--jobs",
+    "1",
+    "--tag",
+    "LadderResume20261011Editor01"
+  ],
+  "result": "failed",
+  "samples": [
+    {
+      "utc": "2026-10-11T09:55:53.354058+00:00",
+      "c_free_gib": 400.104793548584,
+      "d_free_gib": 104.16257858276367,
+      "ram_free_gib": 7.0979461669921875,
+      "commit_used_gib": 32.998226165771484,
+      "commit_limit_gib": 61.614891052246094
+    },
+    {
+      "utc": "2026-10-11T09:55:53.355771+00:00",
+      "c_free_gib": 400.104793548584,
+      "d_free_gib": 104.1625747680664,
+      "ram_free_gib": 7.0979766845703125,
+      "commit_used_gib": 32.998226165771484,
+      "commit_limit_gib": 61.614891052246094
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "error": "RuntimeError(\"Resource preflight failed: {'utc': '2026-10-11T09:55:53.354058+00:00', 'c_free_gib': 400.104793548584, 'd_free_gib': 104.16257858276367, 'ram_free_gib': 7.0979461669921875, 'commit_used_gib': 32.998226165771484, 'commit_limit_gib': 61.614891052246094}\")"
+}

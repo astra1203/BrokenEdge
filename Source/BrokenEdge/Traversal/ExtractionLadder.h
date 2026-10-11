@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "TraversalLadderEntry.h"
 #include "ExtractionLadder.generated.h"
 
 class ACharacter;
@@ -25,6 +26,13 @@ public:
 	FVector BottomExit = FVector(-80, 0, 0);
 	UPROPERTY(EditAnywhere, Replicated)
 	FVector TopExit = FVector(80, 0, 250);
+	UPROPERTY(EditAnywhere, Replicated)
+	FTraversalLadderEntry BottomEntry;
+	UPROPERTY(EditAnywhere, Replicated)
+	FTraversalLadderEntry TopEntry;
+	/** Extra rise needed to pass the original ladder rails before crossing the roof edge. */
+	UPROPERTY(EditAnywhere, Replicated)
+	float TopClearance = 0.f;
 	UPROPERTY(EditAnywhere, Replicated)
 	FVector GripOrigin = FVector(60, 0, 15);
 	UPROPERTY(EditAnywhere, Replicated)

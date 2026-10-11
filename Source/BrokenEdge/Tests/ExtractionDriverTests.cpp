@@ -851,6 +851,7 @@ private:
 		}
 		else if (Op == TEXT("inventory") && PC)
 			PC->RequestOpenInventory(nullptr, Command->GetBoolField(TEXT("open")));
+		else if (Op == TEXT("menu") && PC) PC->ToggleExtractionMenu();
 		else if (Op == TEXT("open_loot") && PC)
 		{
 			const FString Target = Command->GetStringField(TEXT("target"));
@@ -877,7 +878,11 @@ private:
 				Box->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 				Box->SetCollisionResponseToAllChannels(ECR_Block);
 				Box->RegisterComponent();
-				Wall->SetActorLocation(FVector(1450, 4200, 490));
+				FVector Position(1450, 4200, 490);
+				const TArray<TSharedPtr<FJsonValue>>* Coordinates = nullptr;
+				if (Command->TryGetArrayField(TEXT("position"), Coordinates) && Coordinates->Num() == 3)
+					Position = FVector((*Coordinates)[0]->AsNumber(), (*Coordinates)[1]->AsNumber(), (*Coordinates)[2]->AsNumber());
+				Wall->SetActorLocation(Position);
 				TestOccluder = Wall;
 			}
 		}
@@ -1029,7 +1034,7 @@ private:
 		auto* Input = PC->GetLocalPlayer()
 			              ? PC->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>()
 			              : nullptr;
-		const FString ActionName = Name == TEXT("MoveBack") ? TEXT("Move") : Name;
+		const FString ActionName = Name == TEXT("MoveBack") || Name == TEXT("MoveRight") ? TEXT("Move") : Name;
 		const FString Path = ActionName == TEXT("Sprint")
 			                     ? TEXT("/Game/Characters/Stinger/Blueprints/Input/IA_StingerSprint.IA_StingerSprint")
 			                     : TEXT("/Game/Input/Actions/IA_") + ActionName + TEXT(".IA_") + ActionName;
@@ -1037,7 +1042,8 @@ private:
 		if (Input && Action)
 			Input->InjectInputForAction(Action, ActionName == TEXT("Move")
 				                                    ? FInputActionValue(FVector2D(
-					                                    0, Pressed ? (Name == TEXT("MoveBack") ? -1 : 1) : 0))
+					                                    Pressed && Name == TEXT("MoveRight") ? 1 : 0,
+					                                    Pressed && Name != TEXT("MoveRight") ? (Name == TEXT("MoveBack") ? -1 : 1) : 0))
 				                                    : FInputActionValue(Pressed), {}, {});
 	}
 
@@ -1265,6 +1271,13 @@ private:
 						Player->SetArrayField(TEXT("traversal_end"), VectorJson(Traversal.End));
 						Player->SetStringField(TEXT("traversal_rejection"), Movement->LastRejection);
 						Player->SetStringField(TEXT("ladder_focus"), GetNameSafe(Movement->FindLadder()));
+						Player->SetStringField(TEXT("traversal_ladder"), GetNameSafe(Traversal.Ladder));
+						Player->SetStringField(
+							TEXT("ladder_reentry_block"), GetNameSafe(Traversal.ReattachBlockedLadder));
+						Player->SetStringField(TEXT("traversal_prompt"), Character->GetTraversal()->Prompt());
+						Player->SetBoolField(TEXT("crouched"), Character->bIsCrouched);
+						const auto* OwnerPC = Cast<AExtractionPlayerController>(Character->Controller);
+						Player->SetBoolField(TEXT("menu_open"), OwnerPC && OwnerPC->IsMenuOpen());
 						Player->SetNumberField(
 							TEXT("capsule_half"), Character->GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
 						Player->SetNumberField(

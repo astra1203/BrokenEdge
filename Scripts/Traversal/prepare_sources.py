@@ -1,8 +1,16 @@
-"""Bounded read-only extraction of traversal clips and the 39 restored ladder candidates."""
+"""Extract traversal clips and original climb actors, never decorative mesh candidates."""
+import argparse
 import hashlib
 import json
 from pathlib import Path
 import zipfile
+from source_ladders import prepare
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--tag', required=True, help='New source-correction evidence directory')
+args = parser.parse_args()
+if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
+    parser.error('Use an alphanumeric run tag')
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'Saved/Traversal/Source'
@@ -25,13 +33,12 @@ for number in (7, 9):
             target.write_bytes(data)
             clips.append(dict(name=name, archive=archive.name, entry=entry.filename,
                               bytes=len(data), sha256=hashlib.sha256(data).hexdigest(), file=str(target)))
-active = json.loads((ROOT/'Scripts/SpaceCenter/restoration_active.json').read_text(encoding='utf-8'))
-manifest_path = ROOT / active['manifest_file']
-manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
-assert hashlib.sha256(manifest_path.read_bytes()).hexdigest() == active['manifest_sha256']
-ladders = [a for a in manifest['actors'] if 'ladder' in a['mesh'].lower()]
-assert len(ladders) == 39
-report = dict(clips=clips, origin=manifest['origin'], ladders=ladders,
-              manifest_sha256=active['manifest_sha256'], meshes=manifest['meshes'])
+run = OUT.parent/'SourceCorrection'/args.tag
+report = prepare(run)
+report['clips'] = clips
+report['source_manifest'] = str(run/'Manifest.json')
+report['source_manifest_sha256'] = hashlib.sha256((run/'Manifest.json').read_bytes()).hexdigest()
+if (OUT.parent/'Sources.json').exists():
+    (run/'Sources.before.json').write_bytes((OUT.parent/'Sources.json').read_bytes())
 (OUT.parent/'Sources.json').write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
-print('TRAVERSAL_SOURCES', len(clips), 'clips', len(ladders), 'ladders', sum(c['bytes'] for c in clips), 'bytes')
+print('TRAVERSAL_SOURCES', len(clips), 'clips', len(report['ladders']), 'original ladders', len(report['excluded']), 'outside region')

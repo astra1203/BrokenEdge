@@ -6,6 +6,7 @@
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 #include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
+#include "BrokenEdge/Extraction/ExtractionPlayerController.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Animation/AnimInstance.h"
@@ -19,19 +20,20 @@ namespace
 	class FTraversalSavedMove : public FSavedMove_Character
 	{
 	public:
-		bool Interact = false, Detach = false, JumpDetach = false, Traversing = false, Obstacle = false;
+		bool InputBlocked = false, Detach = false, JumpDetach = false, Traversing = false, Obstacle = false;
+		bool LadderSensitive = false;
 
 		virtual void Clear() override
 		{
 			Super::Clear();
-			Interact = Detach = JumpDetach = Traversing = Obstacle = false;
+			InputBlocked = Detach = JumpDetach = Traversing = Obstacle = LadderSensitive = false;
 		}
 
 		using Super = FSavedMove_Character;
 
 		virtual uint8 GetCompressedFlags() const override
 		{
-			return Super::GetCompressedFlags() | (Interact ? FLAG_Custom_0 : 0)
+			return Super::GetCompressedFlags() | (InputBlocked ? FLAG_Custom_0 : 0)
 				| (Detach ? FLAG_Custom_1 : 0) | (JumpDetach ? FLAG_Custom_2 : 0) | (Obstacle ? FLAG_Custom_3 : 0);
 		}
 
@@ -39,8 +41,11 @@ namespace
 		                        FNetworkPredictionData_Client_Character& Data) override
 		{
 			Super::SetMoveFor(C, Dt, Accel, Data);
-			const auto* M = CastChecked<UTraversalMovementComponent>(C->GetCharacterMovement());
-			Interact = M->bInteractRequested;
+			auto* M = CastChecked<UTraversalMovementComponent>(C->GetCharacterMovement());
+			const auto* PC = Cast<AExtractionPlayerController>(C->Controller);
+			InputBlocked = PC && PC->IsMenuOpen();
+			M->bLadderInputBlocked = InputBlocked;
+			LadderSensitive = M->State.ReattachBlockedLadder != nullptr || M->FindLadder() != nullptr;
 			Detach = M->bDetachRequested;
 			JumpDetach = M->bJumpDetachRequested;
 			Traversing = M->Active();
@@ -51,16 +56,27 @@ namespace
 		{
 			const auto* M = static_cast<const FTraversalSavedMove*>(Other.Get());
 			// Preserve one-shot edges and curved sweeps exactly during prediction/replay.
-			return !Traversing && !M->Traversing && !Interact && !Detach && !JumpDetach
-				&& !Obstacle && !M->Obstacle && !M->Interact && !M->Detach && !M->JumpDetach && Super::CanCombineWith(
+			return !Traversing && !M->Traversing && !LadderSensitive && !M->LadderSensitive
+				&& InputBlocked == M->InputBlocked && !Detach && !JumpDetach
+				&& !Obstacle && !M->Obstacle && !M->Detach && !M->JumpDetach && Super::CanCombineWith(
 					Other, C, MaxDelta);
+		}
+
+		virtual void PostUpdate(ACharacter* C, EPostUpdateMode Mode) override
+		{
+			Super::PostUpdate(C, Mode);
+			const auto* M = CastChecked<UTraversalMovementComponent>(C->GetCharacterMovement());
+			// An automatic entry can start during PerformMovement, after SetMoveFor.
+			// Never combine that edge or a move which leaves the re-entry suppression area.
+			Traversing |= M->Active();
+			LadderSensitive |= M->State.ReattachBlockedLadder != nullptr || M->FindLadder() != nullptr;
 		}
 
 		virtual void PrepMoveFor(ACharacter* C) override
 		{
 			Super::PrepMoveFor(C);
 			auto* M = CastChecked<UTraversalMovementComponent>(C->GetCharacterMovement());
-			M->bInteractRequested = Interact;
+			M->bLadderInputBlocked = InputBlocked;
 			M->bDetachRequested = Detach;
 			M->bJumpDetachRequested = JumpDetach;
 			M->bObstacleRequested = Obstacle;
@@ -93,14 +109,18 @@ bool FTraversalMoveResponse::Serialize(UCharacterMovementComponent& Movement, FA
 		Ar << State.Kind << State.Start << State.Raised << State.Across << State.End << State.Facing;
 		Ar << State.Contact;
 		Ar << State.Elapsed << State.Duration << State.Height << State.Serial;
+		Ar << State.bTopEntryInputGuard;
 		UObject* Ladder = State.Ladder.Get();
 		UObject* Support = State.Support.Get();
+		UObject* ReattachBlock = State.ReattachBlockedLadder.Get();
 		Map->SerializeObject(Ar, AExtractionLadder::StaticClass(), Ladder);
 		Map->SerializeObject(Ar, UPrimitiveComponent::StaticClass(), Support);
+		Map->SerializeObject(Ar, AExtractionLadder::StaticClass(), ReattachBlock);
 		if (Ar.IsLoading())
 		{
 			State.Ladder = Cast<AExtractionLadder>(Ladder);
 			State.Support = Cast<UPrimitiveComponent>(Support);
+			State.ReattachBlockedLadder = Cast<AExtractionLadder>(ReattachBlock);
 		}
 	}
 	return Result && !Ar.IsError();
@@ -284,44 +304,68 @@ bool UTraversalMovementComponent::DoJump(bool bReplayingMoves, float DeltaTime)
 
 AExtractionLadder* UTraversalMovementComponent::FindLadder() const
 {
-	if (!CanTraverse() || Active()) return nullptr;
+	bool bTop = false;
+	return FindLadderEntry(bTop, false);
+}
+
+AExtractionLadder* UTraversalMovementComponent::FindLadderEntry(bool& bTop, bool bRequireMovement) const
+{
+	const auto* C = Cast<ABrokenEdgeCharacter>(CharacterOwner);
+	const auto* PC = C ? Cast<AExtractionPlayerController>(C->Controller) : nullptr;
+	if (!CanTraverse() || Active() || !IsMovingOnGround() || bWantsToCrouch || bLadderInputBlocked
+		|| C->GetExtractionInteraction()->InventoryOpen || (PC && PC->IsMenuOpen()))
+		return nullptr;
 	const FVector Here = UpdatedComponent->GetComponentLocation();
-	const float Half = CharacterOwner->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	const auto* Capsule = CharacterOwner->GetCapsuleComponent();
+	const float Half = Capsule->GetScaledCapsuleHalfHeight();
+	const float Radius = Capsule->GetScaledCapsuleRadius();
 	const FVector Up(0, 0, Half + 3);
-	float Best = FMath::Square(GetDefault<UExtractionTraversalRules>()->LadderReach);
-	AExtractionLadder* Result = nullptr;
 	const FVector Look = FRotator(0, CharacterOwner->GetControlRotation().Yaw, 0).Vector();
+	const FVector Move = Acceleration.GetSafeNormal2D();
+	const float Dot = FMath::Clamp(GetDefault<UExtractionTraversalRules>()->LadderApproachDot, .1f, 1.f);
+	if (bRequireMovement && Move.IsNearlyZero()) return nullptr;
+	float Best = MAX_flt;
+	AExtractionLadder* Result = nullptr;
 	for (TActorIterator<AExtractionLadder> It(GetWorld()); It; ++It)
 	{
-		if (It->GetActorForwardVector().GetSafeNormal2D().IsNearlyZero()) continue;
-		if (IsValid(It->Occupant) && It->Occupant != CharacterOwner) continue;
-		const FVector Entry = FVector::DistSquared(Here, It->Point(It->BottomExit) + Up) < FVector::DistSquared(
-			                      Here, It->Point(It->TopExit) + Up)
-			                      ? It->Point(It->BottomExit) + Up
-			                      : It->Point(It->TopExit) + Up;
-		const float Distance = FVector::DistSquared(Here, Entry);
-		if (Distance < Best && FVector::DotProduct(Look, (Entry - Here).GetSafeNormal2D()) > -.25f &&
-			ClearSegment(Here, Entry))
+		if (*It == State.ReattachBlockedLadder || (IsValid(It->Occupant) && It->Occupant != CharacterOwner)) continue;
+		const FVector Facing = It->GetActorForwardVector().GetSafeNormal2D();
+		if (Facing.IsNearlyZero()) continue;
+		for (const bool Top : {false, true})
 		{
-			Best = Distance;
-			Result = *It;
+			const auto& Volume = Top ? It->TopEntry : It->BottomEntry;
+			if (!Volume.OverlapsCapsule(It->GetActorTransform(), Here, Radius, Half)) continue;
+			const FVector Approach = Top ? -Facing : Facing;
+			if (FVector::DotProduct(Look, Approach) < Dot
+				|| (bRequireMovement && FVector::DotProduct(Move, Approach) < Dot))
+				continue;
+			const FVector Entry = It->Point(Top ? It->TopExit : It->BottomExit) + Up;
+			const float Distance = FVector::DistSquared(Here, Entry);
+			if (Distance < Best && ClearSegment(Here, Entry))
+			{
+				Best = Distance;
+				Result = *It;
+				bTop = Top;
+			}
 		}
 	}
 	return Result;
 }
 
-bool UTraversalMovementComponent::RequestInteract()
+void UTraversalMovementComponent::UpdateLadderReentry()
 {
-	if (!Enabled()) return false;
-	if (OnLadder())
+	const auto* Ladder = State.ReattachBlockedLadder.Get();
+	if (!IsValid(Ladder))
 	{
-		RequestDetach(false);
-		return true;
+		State.ReattachBlockedLadder = nullptr;
+		return;
 	}
-	if (Active()) return true;
-	if (!FindLadder()) return false;
-	bInteractRequested = true;
-	return true;
+	const auto* Capsule = CharacterOwner->GetCapsuleComponent();
+	const FVector Here = UpdatedComponent->GetComponentLocation();
+	const float Radius = Capsule->GetScaledCapsuleRadius(), Half = Capsule->GetScaledCapsuleHalfHeight();
+	if (!Ladder->BottomEntry.OverlapsCapsule(Ladder->GetActorTransform(), Here, Radius, Half)
+		&& !Ladder->TopEntry.OverlapsCapsule(Ladder->GetActorTransform(), Here, Radius, Half))
+		State.ReattachBlockedLadder = nullptr;
 }
 
 void UTraversalMovementComponent::RequestDetach(bool bJump)
@@ -332,7 +376,8 @@ void UTraversalMovementComponent::RequestDetach(bool bJump)
 
 bool UTraversalMovementComponent::TryLadder()
 {
-	auto* Ladder = FindLadder();
+	bool Top = false;
+	auto* Ladder = FindLadderEntry(Top, true);
 	if (!Ladder)
 	{
 		LastRejection = TEXT("ladder_unavailable");
@@ -341,10 +386,9 @@ bool UTraversalMovementComponent::TryLadder()
 	const float Half = CharacterOwner->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 	const FVector Up(0, 0, Half + 3);
 	const FVector Here = UpdatedComponent->GetComponentLocation();
-	const bool Top = FVector::DistSquared(Here, Ladder->Point(Ladder->TopExit) + Up) < FVector::DistSquared(
-		Here, Ladder->Point(Ladder->BottomExit) + Up);
 	FExtractionTraversalState Candidate;
 	Candidate.Kind = EExtractionTraversal::LadderEnter;
+	Candidate.bTopEntryInputGuard = Top;
 	Candidate.Ladder = Ladder;
 	Candidate.Start = Here;
 	Candidate.End = Ladder->Point(Top ? Ladder->Top : Ladder->Bottom) + Up;
@@ -352,6 +396,7 @@ bool UTraversalMovementComponent::TryLadder()
 		Candidate.End.Z -= FMath::Min(GetDefault<UExtractionTraversalRules>()->LadderRoofReach,
 		                              Ladder->Point(Ladder->Top).Z - Ladder->Point(Ladder->Bottom).Z - 30.f);
 	Candidate.Raised = FVector(Here.X, Here.Y, FMath::Max(Here.Z, Candidate.End.Z) + 3);
+	if (Top) Candidate.Raised.Z += FMath::Max(0.f, Ladder->TopClearance);
 	Candidate.Across = FVector(Candidate.End.X, Candidate.End.Y, Candidate.Raised.Z);
 	Candidate.Facing = Ladder->GetActorForwardVector().GetSafeNormal2D();
 	Candidate.Duration = .35f;
@@ -390,6 +435,7 @@ bool UTraversalMovementComponent::StartPath(FExtractionTraversalState Candidate)
 		return false;
 	}
 	Candidate.Serial = State.Serial + 1;
+	Candidate.ReattachBlockedLadder = State.ReattachBlockedLadder;
 	State = Candidate;
 	LastRejection.Reset();
 	Velocity = FVector::ZeroVector;
@@ -402,7 +448,7 @@ bool UTraversalMovementComponent::StartPath(FExtractionTraversalState Candidate)
 void UTraversalMovementComponent::UpdateFromCompressedFlags(uint8 Flags)
 {
 	Super::UpdateFromCompressedFlags(Flags);
-	bInteractRequested = (Flags & FSavedMove_Character::FLAG_Custom_0) != 0;
+	bLadderInputBlocked = (Flags & FSavedMove_Character::FLAG_Custom_0) != 0;
 	bDetachRequested = (Flags & FSavedMove_Character::FLAG_Custom_1) != 0;
 	bJumpDetachRequested = (Flags & FSavedMove_Character::FLAG_Custom_2) != 0;
 	bObstacleRequested = (Flags & FSavedMove_Character::FLAG_Custom_3) != 0;
@@ -410,12 +456,19 @@ void UTraversalMovementComponent::UpdateFromCompressedFlags(uint8 Flags)
 
 void UTraversalMovementComponent::UpdateCharacterStateBeforeMovement(float DeltaSeconds)
 {
+	// Remote authority and replay use the saved input flag; a listen-server owner
+	// has no saved-move producer and reads its own menu state directly.
+	if (CharacterOwner->HasAuthority() && CharacterOwner->IsLocallyControlled())
+	{
+		const auto* PC = Cast<AExtractionPlayerController>(CharacterOwner->Controller);
+		bLadderInputBlocked = PC && PC->IsMenuOpen();
+	}
+	UpdateLadderReentry();
 	if (Active() && (!CanTraverse() || (OnLadder() && !IsValid(State.Ladder)))) Finish();
 	if (bDetachRequested && OnLadder()) Finish(bJumpDetachRequested);
-	else if (bInteractRequested && !Active()) TryLadder();
 	else if (bObstacleRequested && !Active()) TryObstacle();
-	bInteractRequested = bDetachRequested = bJumpDetachRequested = false;
-	bObstacleRequested = false;
+	else if (!Active()) TryLadder();
+	bDetachRequested = bJumpDetachRequested = bObstacleRequested = false;
 	Super::UpdateCharacterStateBeforeMovement(DeltaSeconds);
 }
 
@@ -454,8 +507,13 @@ void UTraversalMovementComponent::PhysCustom(float DeltaTime, int32 Iterations)
 				Finish();
 				break;
 			}
-			const float Input = FMath::Clamp(FVector::DotProduct(Acceleration, State.Facing) / GetMaxAcceleration(),
-			                                 -1.f, 1.f);
+			float Input = FMath::Clamp(FVector::DotProduct(Acceleration, State.Facing) / GetMaxAcceleration(),
+			                           -1.f, 1.f);
+			if (State.bTopEntryInputGuard)
+			{
+				if (Input > .1f) Input = 0.f;
+				else State.bTopEntryInputGuard = false;
+			}
 			const float Half = CharacterOwner->GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + 3;
 			const FVector Bottom = State.Ladder->Point(State.Ladder->Bottom) + FVector(0, 0, Half);
 			FVector Top = State.Ladder->Point(State.Ladder->Top) + FVector(0, 0, Half);
@@ -472,6 +530,7 @@ void UTraversalMovementComponent::PhysCustom(float DeltaTime, int32 Iterations)
 					Exit.Start = Before;
 					Exit.End = End;
 					Exit.Raised = FVector(Before.X, Before.Y, FMath::Max(Before.Z, End.Z) + 5);
+					if (Input > 0) Exit.Raised.Z += FMath::Max(0.f, State.Ladder->TopClearance);
 					Exit.Across = FVector(End.X, End.Y, Exit.Raised.Z);
 					Exit.Elapsed = 0;
 					Exit.Duration = Input > 0 ? 1.f : .45f;
@@ -518,10 +577,12 @@ void UTraversalMovementComponent::PhysCustom(float DeltaTime, int32 Iterations)
 void UTraversalMovementComponent::Finish(bool bJumpAway)
 {
 	const FVector Facing = State.Facing;
+	AExtractionLadder* ReattachBlock = State.Ladder ? State.Ladder.Get() : State.ReattachBlockedLadder.Get();
 	if (IsValid(State.Ladder)) State.Ladder->Release(CharacterOwner);
 	const uint16 Serial = State.Serial + 1;
 	State = FExtractionTraversalState();
 	State.Serial = Serial;
+	State.ReattachBlockedLadder = ReattachBlock;
 	SetMovementMode(MOVE_Falling);
 	Velocity = bJumpAway ? -Facing * 220.f + FVector(0, 0, 220) : FVector::ZeroVector;
 	FFindFloorResult Floor;

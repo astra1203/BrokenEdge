@@ -1,0 +1,121 @@
+{
+  "result": "partial_resource_blocked",
+  "updated_utc": "2026-10-11T09:57:32.186078+00:00",
+  "stash": "3816c6ee53d0270aa6370759179022416dbdb87a",
+  "head": "d762483b613349c6da4fb9b349c6ba279667652a",
+  "recovery": {
+    "result": "passed",
+    "files_compared": 65,
+    "lfs_content_hash_and_size_checked": 10,
+    "mismatches": [],
+    "text_comparison": "CRLF normalized to LF",
+    "stash_retained": true,
+    "engine_association_preserved": "{F4B03C37-4D61-2CBC-D581-438897B9DF24}"
+  },
+  "source_transforms": {
+    "command": [
+      "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+      "Scripts/Traversal/test_source_ladders.py"
+    ],
+    "result": "passed",
+    "test_count": 4
+  },
+  "python_syntax": {
+    "result": "passed",
+    "files": [
+      "Scripts/Extraction/auto_ladder_input.py",
+      "Scripts/Extraction/run_network.py",
+      "Scripts/Extraction/source_ladder_scenarios.py",
+      "Scripts/Extraction/traversal_route.py",
+      "Scripts/Extraction/traversal_scenarios.py",
+      "Scripts/Traversal/analyze_contacts.py",
+      "Scripts/Traversal/analyze_motion.py",
+      "Scripts/Traversal/archive_evidence.py",
+      "Scripts/Traversal/audit_source_ladders.py",
+      "Scripts/Traversal/bind_ladders.py",
+      "Scripts/Traversal/configure_visuals.py",
+      "Scripts/Traversal/encode_recording.py",
+      "Scripts/Traversal/import_animations.py",
+      "Scripts/Traversal/inspect_ladder_mesh.py",
+      "Scripts/Traversal/measure_rungs.py",
+      "Scripts/Traversal/prepare_sources.py",
+      "Scripts/Traversal/probe_obstacles.py",
+      "Scripts/Traversal/probe_route.py",
+      "Scripts/Traversal/probe_source_route.py",
+      "Scripts/Traversal/run_editor.py",
+      "Scripts/Traversal/run_entry_tests.py",
+      "Scripts/Traversal/source_ladders.py",
+      "Scripts/Traversal/test_source_ladders.py"
+    ]
+  },
+  "sources": {
+    "manifest": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\SourceCorrection\\Sources04\\Manifest.json",
+    "sha256": "746113183de86f62a6bb3c44937d0c0a7c618e8c048fbdf25c88a8eb8f409443",
+    "in_region": 9,
+    "excluded": 1,
+    "unresolved": 0,
+    "assets": [
+      {
+        "source": "/Game/Environment/Props/Industrial/Tools/SM_Industrial_Tools_Stepladder_02A",
+        "file": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\SourceCorrection\\Sources04\\Geometry\\Parsed\\DeltaForce\\Content\\Environment\\Props\\Industrial\\Tools\\SM_Industrial_Tools_Stepladder_02A.glb",
+        "sha256": "1342f046218ec3ca80405e75cdbea2f6159e8635a24b46fd09487b94194f9659"
+      },
+      {
+        "source": "/Game/Environment/Props/Industrial/Tools/SM_Industrial_Tools_Stepladder_02B",
+        "file": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\SourceCorrection\\Sources04\\Geometry\\Parsed\\DeltaForce\\Content\\Environment\\Props\\Industrial\\Tools\\SM_Industrial_Tools_Stepladder_02B.glb",
+        "sha256": "edb949e413f85416f6f92fcb7b352f3efc5b12e55e36e3a80ce0daa6c98f1341"
+      },
+      {
+        "source": "/Game/Environment/Props/Industrial/Tools/SM_Industrial_Tools_Stepladder_02C",
+        "file": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\SourceCorrection\\Sources04\\Geometry\\Parsed\\DeltaForce\\Content\\Environment\\Props\\Industrial\\Tools\\SM_Industrial_Tools_Stepladder_02C.glb",
+        "sha256": "baeb1d54902309edae555efa6bdae6cb45c5706ead75eace3746b4237d772b3a"
+      },
+      {
+        "source": "/Game/Environment/Props/Industrial/00_Textures/T_GEN_Props_stepladder_01_CA",
+        "file": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\SourceCorrection\\Sources04\\Textures\\Parsed\\T_GEN_Props_stepladder_01_CA_MIP0.png",
+        "sha256": "853d6e18404d2b78fd24ad2f68544dff5507a0a416d832988ae8db2df8df1d53"
+      },
+      {
+        "source": "/Game/Environment/Props/Industrial/00_Textures/T_GEN_Props_stepladder_01_NRM",
+        "file": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\SourceCorrection\\Sources04\\Textures\\Parsed\\T_GEN_Props_stepladder_01_NRM_MIP0.png",
+        "sha256": "9f26b15fa55f8bba0bc8971a9bb6e13d4e37fed749e2150e84b98e4d64705e42"
+      }
+    ]
+  },
+  "rungs": {
+    "result": "passed",
+    "command": [
+      "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+      "Scripts/Traversal/measure_rungs.py"
+    ],
+    "sha256": "c782866e9084dcf1355ce79c61695fe566d2f457c412a19140df3c121b4d5fbe"
+  },
+  "saved_map": {
+    "revision": "Bind10",
+    "sha256": "583e774cfd36643c5af55d07fc69003afe4fd11217bc03c406f5ba6dc773e871",
+    "automatic_entry_rebinding_required": true
+  },
+  "resource_evidence": "Resume20261011-resources.json",
+  "final_resource_sample": {
+    "utc": "2026-10-11T09:57:32.216863+00:00",
+    "c_free_gib": 400.10326766967773,
+    "d_free_gib": 104.16256713867188,
+    "ram_free_gib": 7.097465515136719,
+    "commit_used_gib": 32.95747756958008,
+    "commit_limit_gib": 61.614891052246094
+  },
+  "pending_stages": [
+    "Editor build",
+    "EntryCapsule automation",
+    "TopBox and automatic-entry rebind",
+    "Collision, geometry and idempotence audit",
+    "Continuous-route collision probe",
+    "Fresh Server and Client packages",
+    "Normal and weak-network source-ladder acceptance",
+    "Occupancy, lifecycle and traversal regressions",
+    "Actual-input continuous route",
+    "Dual-view video and contact analysis"
+  ],
+  "background_validation_running": false,
+  "boundary": "Restoration and lightweight checks only; Editor build was not started, and current runtime acceptance remains pending."
+}

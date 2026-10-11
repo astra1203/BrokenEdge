@@ -57,6 +57,10 @@ void ATraversalAcceptanceFixture::BeginPlay()
 		                                                         FRotator::ZeroRotator);
 		Ladder->SourceId = TEXT("automation_fixture");
 		Ladder->TopExit = FVector(150, 0, 250);
+		Ladder->BottomEntry.Transform.SetLocation(FVector(-80, 0, 31));
+		Ladder->BottomEntry.Extent = FVector(40, 45, 30);
+		Ladder->TopEntry.Transform.SetLocation(FVector(150, 0, 300));
+		Ladder->TopEntry.Extent = FVector(45, 60, 80);
 		for (int32 I = 0; I < 10; ++I) Ladder->Rungs.Add(FVector(60, 0, 16.5f + I * 25));
 		Ladder->SetOwner(this);
 	}

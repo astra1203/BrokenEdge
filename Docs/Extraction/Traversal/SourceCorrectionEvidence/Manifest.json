@@ -1,0 +1,112 @@
+{
+  "result": "partial",
+  "updated_utc": "2026-10-11T09:57:32.186078+00:00",
+  "boundary": "Source and Editor evidence only. Latest TopBox adaptation, packaged runtime, route, network, video and original-game comparison are not accepted.",
+  "source_manifest_for_saved_map": "SourceManifest.json",
+  "pending_source_manifest": "PendingSourceManifest.json",
+  "inputs": {
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "583e774cfd36643c5af55d07fc69003afe4fd11217bc03c406f5ba6dc773e871",
+    "Scripts/Traversal/source_bindings.json": "911ba2a94661d1c518ce49c602f5a037ec33d94f6bddeccc6b29f1c8e0b73be3",
+    "Scripts/Traversal/formal_route.json": "ee6e5f3767b550b71e5ea56a3b3c7a45ca48bedf5850a9a1e5656da43754ea0b",
+    "Content/Extraction/Traversal/SourceLadders/Materials/MI_GEN_Props_stepladder_01.uasset": "787884dd3109ce57f50a2d95c0b1e4113c4d63d1f32dddb68e05809c3f16e46f",
+    "Content/Extraction/Traversal/SourceLadders/Meshes/SM_Industrial_Tools_Stepladder_02A/SM_Industrial_Tools_Stepladder_02A/Materials/MI_GEN_Props_stepladder_01.uasset": "989d467d422eca7e7301a8009b57c2521bec069417f6efeba81c6753a1eb0b02",
+    "Content/Extraction/Traversal/SourceLadders/Meshes/SM_Industrial_Tools_Stepladder_02A/SM_Industrial_Tools_Stepladder_02A/StaticMeshes/SM_Industrial___Stepladder_02A.uasset": "9c6b5db1fd81d449d03ef9aeecfe99b7eeb16bce25cd8679cb337b15ae672701",
+    "Content/Extraction/Traversal/SourceLadders/Meshes/SM_Industrial_Tools_Stepladder_02B/SM_Industrial_Tools_Stepladder_02B/Materials/MI_GEN_Props_stepladder_01.uasset": "f1d8a2466205b1a6c7ccb0168183d33585c400a6b5288240a64e472aebcfc96a",
+    "Content/Extraction/Traversal/SourceLadders/Meshes/SM_Industrial_Tools_Stepladder_02B/SM_Industrial_Tools_Stepladder_02B/StaticMeshes/SM_Industrial___Stepladder_02B.uasset": "176be57325d71b0fa07d1939e725b9e20d5537065aab4e147400612329565fbc",
+    "Content/Extraction/Traversal/SourceLadders/Meshes/SM_Industrial_Tools_Stepladder_02C/SM_Industrial_Tools_Stepladder_02C/Materials/MI_GEN_Props_stepladder_01.uasset": "e56833769d170f2e1cccceb048251a24f118dd535491978c86316c985933d474",
+    "Content/Extraction/Traversal/SourceLadders/Meshes/SM_Industrial_Tools_Stepladder_02C/SM_Industrial_Tools_Stepladder_02C/StaticMeshes/SM_Industrial___Stepladder_02C.uasset": "d2ed7ecb9a0d7254b07b3f26a479e0fa42212acc8697703617ada6ca10288c6f",
+    "Content/Extraction/Traversal/SourceLadders/Textures/T_GEN_Props_stepladder_01_CA/T_GEN_Props_stepladder_01_CA_MIP0.uasset": "0474775538ca070bb54c01cb02498c266716ddc4baaaad8659f299e4e4fedd9d",
+    "Content/Extraction/Traversal/SourceLadders/Textures/T_GEN_Props_stepladder_01_NRM/T_GEN_Props_stepladder_01_NRM_MIP0.uasset": "780b0f2b10be3ebb56ca9f1b073123acedfd422fb6ee856c29aeb2f687666960"
+  },
+  "files": [
+    {
+      "file": "BindingRun.json",
+      "sha256": "cf8680d58a1f5e964eeca2647610c675716f9379ff231521e3c4f30ebda4d523"
+    },
+    {
+      "file": "Bindings.json",
+      "sha256": "5363304b1d20743726593bd2100518bfb5846cde4ba97b545f77608723199e8a"
+    },
+    {
+      "file": "BindingState.json",
+      "sha256": "911ba2a94661d1c518ce49c602f5a037ec33d94f6bddeccc6b29f1c8e0b73be3"
+    },
+    {
+      "file": "BuildResourceFailure.json",
+      "sha256": "0756f0d18a63da390392c8a20087c7f29e972c5da099f99e160920fdd02dcca5"
+    },
+    {
+      "file": "CollisionDiagnosis.json",
+      "sha256": "5f790d256dedbf7bd176dd05d3f6b56a462e6c0e2824b18f82e6119c1bb8cfb9"
+    },
+    {
+      "file": "EditorBuild.json",
+      "sha256": "98f40866ba6a53755f6661e27c42a332ee57cf017931ebd12e51cea56ab2dfdc"
+    },
+    {
+      "file": "Idempotence.json",
+      "sha256": "4e87353655843a15f582a04338732b38c3a2390dd8f883294960940ba342f38f"
+    },
+    {
+      "file": "InterruptedServerBuild.json",
+      "sha256": "788cf4757f7db236c69cb8fb54f0ab6cc2cfee5d5ac17baded30af0bc4106504"
+    },
+    {
+      "file": "LadderSourceValidation01-resources.json",
+      "sha256": "59d629f806eca62856dbbc92855593e441b2d2a5ef860a62fd7dacbdad6fdd88"
+    },
+    {
+      "file": "LadderSourceValidation02-resources.json",
+      "sha256": "0756f0d18a63da390392c8a20087c7f29e972c5da099f99e160920fdd02dcca5"
+    },
+    {
+      "file": "NativeAssets.json",
+      "sha256": "50740f9e23b4a5960fbbed49bb19d7f7e136b68dbd355edce79d11e3bf77c056"
+    },
+    {
+      "file": "PackageDiscovery.json",
+      "sha256": "f5c4d859524723373552103b71e1b0fe7d758b447388ded3b6990122b38f6751"
+    },
+    {
+      "file": "PendingSourceManifest.json",
+      "sha256": "746113183de86f62a6bb3c44937d0c0a7c618e8c048fbdf25c88a8eb8f409443"
+    },
+    {
+      "file": "ResourcesAtHandoff.json",
+      "sha256": "cd282a1f3c9664f6243f49a7d101a1c054bfe2e5a62b835e2fee02788f0ce998"
+    },
+    {
+      "file": "RouteResourceFailure.json",
+      "sha256": "59d629f806eca62856dbbc92855593e441b2d2a5ef860a62fd7dacbdad6fdd88"
+    },
+    {
+      "file": "Rungs.json",
+      "sha256": "c782866e9084dcf1355ce79c61695fe566d2f457c412a19140df3c121b4d5fbe"
+    },
+    {
+      "file": "SourceArchives.json",
+      "sha256": "f6ff0759c5e61abab201facf1b52c0d60cdfbbdd39f5acb027975333384e4058"
+    },
+    {
+      "file": "SourceManifest.json",
+      "sha256": "b34d9d9897db2e9d9d9c7265276b9cec5a844d0293b2fc9fe67cf7a1c67c705a"
+    },
+    {
+      "file": "StaticChecks.json",
+      "sha256": "214aae251d296729e00d279ce06d5ab82550337d80f8606fa9c64ee945f195c1"
+    },
+    {
+      "file": "ValidationQueue.json",
+      "sha256": "34ed97525ba64a364ca0077dd797d44a1ba8382c8492868925294fe75cba4161"
+    },
+    {
+      "file": "Resume20261011-resources.json",
+      "sha256": "f842595f5da59e44d278fb6855fc40cee499bb847a8a0600492a5f7bef0b3ee5"
+    },
+    {
+      "file": "Resume20261011.json",
+      "sha256": "756381699c309309aa0787a635fe5a8e19dc09fd9b14c3d87d0850c83e70565a"
+    }
+  ],
+  "latest_resume": "Resume20261011.json"
+}

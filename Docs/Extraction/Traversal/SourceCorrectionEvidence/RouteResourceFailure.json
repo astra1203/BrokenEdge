@@ -1,0 +1,102 @@
+{
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+    "-B",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\SourceCorrection\\Validation01.py",
+    "--child"
+  ],
+  "result": "failed",
+  "samples": [
+    {
+      "utc": "2026-10-08T16:14:30.672343+00:00",
+      "c_free_gib": 42.634857177734375,
+      "d_free_gib": 103.1686019897461,
+      "ram_free_gib": 8.106067657470703,
+      "commit_used_gib": 37.87835693359375,
+      "commit_limit_gib": 54.770530700683594
+    },
+    {
+      "utc": "2026-10-08T16:14:30.681894+00:00",
+      "c_free_gib": 42.634857177734375,
+      "d_free_gib": 103.16859817504883,
+      "ram_free_gib": 8.106040954589844,
+      "commit_used_gib": 37.87835693359375,
+      "commit_limit_gib": 54.770530700683594
+    },
+    {
+      "utc": "2026-10-08T16:14:35.685930+00:00",
+      "c_free_gib": 42.634849548339844,
+      "d_free_gib": 103.16842651367188,
+      "ram_free_gib": 7.390689849853516,
+      "commit_used_gib": 38.61894989013672,
+      "commit_limit_gib": 54.770530700683594
+    },
+    {
+      "utc": "2026-10-08T16:14:40.700942+00:00",
+      "c_free_gib": 42.63482666015625,
+      "d_free_gib": 103.16831970214844,
+      "ram_free_gib": 6.481960296630859,
+      "commit_used_gib": 39.38125991821289,
+      "commit_limit_gib": 54.770530700683594
+    },
+    {
+      "utc": "2026-10-08T16:14:45.716716+00:00",
+      "c_free_gib": 42.634830474853516,
+      "d_free_gib": 103.12771987915039,
+      "ram_free_gib": 4.270954132080078,
+      "commit_used_gib": 40.80894088745117,
+      "commit_limit_gib": 54.770530700683594
+    },
+    {
+      "utc": "2026-10-08T16:14:50.724042+00:00",
+      "c_free_gib": 42.63482666015625,
+      "d_free_gib": 103.12771987915039,
+      "ram_free_gib": 2.5700416564941406,
+      "commit_used_gib": 42.48988723754883,
+      "commit_limit_gib": 54.770530700683594
+    },
+    {
+      "utc": "2026-10-08T16:14:55.733834+00:00",
+      "c_free_gib": 42.634464263916016,
+      "d_free_gib": 103.01510620117188,
+      "ram_free_gib": 1.4466361999511719,
+      "commit_used_gib": 44.07980728149414,
+      "commit_limit_gib": 54.770530700683594
+    },
+    {
+      "utc": "2026-10-08T16:15:00.748476+00:00",
+      "c_free_gib": 42.634403228759766,
+      "d_free_gib": 103.12771987915039,
+      "ram_free_gib": 1.4424095153808594,
+      "commit_used_gib": 44.040069580078125,
+      "commit_limit_gib": 54.770530700683594
+    },
+    {
+      "utc": "2026-10-08T16:15:05.762556+00:00",
+      "c_free_gib": 42.63901138305664,
+      "d_free_gib": 103.12771987915039,
+      "ram_free_gib": 1.1333351135253906,
+      "commit_used_gib": 44.31351852416992,
+      "commit_limit_gib": 54.770530700683594
+    },
+    {
+      "utc": "2026-10-08T16:15:16.408649+00:00",
+      "c_free_gib": 42.63447952270508,
+      "d_free_gib": 103.12737274169922,
+      "ram_free_gib": 7.381019592285156,
+      "commit_used_gib": 38.994163513183594,
+      "commit_limit_gib": 54.770530700683594
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 100,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 60,
+    "stop_ram_gib": 3,
+    "low_ram_seconds": 15
+  },
+  "pid": 75176,
+  "error": "RuntimeError(\"Resource limit reached: {'utc': '2026-10-08T16:15:05.762556+00:00', 'c_free_gib': 42.63901138305664, 'd_free_gib': 103.12771987915039, 'ram_free_gib': 1.1333351135253906, 'commit_used_gib': 44.31351852416992, 'commit_limit_gib': 54.770530700683594}\")"
+}

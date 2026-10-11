@@ -8,17 +8,18 @@ import re
 parser=argparse.ArgumentParser()
 parser.add_argument('directory',type=Path)
 parser.add_argument('--formal',action='store_true')
+parser.add_argument('--source-id',help='Original ladder SourceId from this run SourceBindings.json')
 args=parser.parse_args()
+if args.formal and args.source_id:parser.error('Choose either a formal-route pose or a source round-trip pose')
 folder=args.directory.resolve()
 root=Path(__file__).resolve().parents[2]
-if args.formal:
-    route=json.loads((root/'Scripts/Traversal/formal_route.json').read_text(encoding='utf-8'))
-    bindings=json.loads((root/'Docs/Extraction/Traversal/Evidence/LaddersReport.json').read_text(encoding='utf-8'))
-    ladder=next(p for p in bindings['candidates'] if p['id']==route['ladder']['source_id'])
-    geometry=json.loads((root/'Docs/Extraction/Traversal/Evidence/SourceRungs.json').read_text(encoding='utf-8'))[ladder['mesh']]
-    half_width=min(22.,min((r['max'][1]-r['min'][1])/2-6 for r in geometry['rungs']))
+if args.formal or args.source_id:
+    sid=args.source_id or json.loads((folder/'FormalRoute.json').read_text(encoding='utf-8'))['ladder']['source_id']
+    bindings=json.loads((folder/'SourceBindings.json').read_text(encoding='utf-8'))
+    ladder=next(p for p in bindings['candidates'] if p['id']==sid and p['classification']=='usable')
+    half_width=ladder['grip_half_width']
     rungs=ladder['contact_rungs']
-    facing=ladder['binding_forward']
+    facing=ladder['facing']
 else:
     half_width=22
     rungs=[[29995,29100,6016.5+i*25] for i in range(10)]
@@ -26,7 +27,8 @@ else:
 right=[-facing[1],facing[0],0]
 result={}
 for peer in ('A','B'):
-    source=folder/(peer+('-formal-ladder-attached' if args.formal else '-ladder-paused')+'-pose.json')
+    sample='formal-ladder-attached' if args.formal else 'source-'+args.source_id+'-paused' if args.source_id else 'ladder-paused'
+    source=folder/(peer+'-'+sample+'-pose.json')
     pose=json.loads(source.read_text(encoding='utf-8'))
     meshes={}
     for mesh in ('world','first_person'):
@@ -44,5 +46,6 @@ for peer in ('A','B'):
         meshes[mesh]=bones
     result[peer]=meshes
 report=dict(result='measured',poses=result,boundary='Wrist and ankle targets at a paused sample. A limb in the reach part of its cycle may be between rungs; this does not replace video inspection of transitions and fingers/soles.')
-(folder/('FormalContactAnalysis.json' if args.formal else 'ContactAnalysis.json')).write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+filename='FormalContactAnalysis.json' if args.formal else 'SourceContactAnalysis-'+args.source_id+'.json' if args.source_id else 'ContactAnalysis.json'
+(folder/filename).write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(report,indent=2))

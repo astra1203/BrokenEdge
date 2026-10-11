@@ -30,6 +30,7 @@ parser.add_argument('--unacked', action='store_true', help='Recovery test: kill 
 parser.add_argument('--debug-hold', action='store_true', help='Wait for Continue.txt before combat and extend assertion timeouts')
 parser.add_argument('--traversal-record', action='store_true', help='Record owner and observer traversal clips')
 parser.add_argument('--traversal-route-only', action='store_true', help='Run only the continuous source-map traversal route')
+parser.add_argument('--traversal-source-only', action='store_true', help='Round trips on all enabled original climb actors; reject legacy furniture prompts')
 parser.add_argument('--traversal-top-only', action='store_true', help='Focused top-entry prediction reproducer')
 parser.add_argument('--traversal-debug-point', choices=['vault','ladder'], default='vault')
 parser.add_argument('--traversal-route', action='store_true', help='Also run the continuous source-map traversal route')
@@ -51,6 +52,8 @@ if not 1024 <= args.port <= 65535:
     parser.error('--port must be between 1024 and 65535')
 if args.traversal_lifecycle and (args.scenario!='traversal' or args.players!=3):
     parser.error('--traversal-lifecycle requires --scenario traversal --players 3')
+if args.traversal_source_only and (args.scenario!='traversal' or args.traversal_route_only or args.traversal_lifecycle):
+    parser.error('--traversal-source-only requires a separate traversal round')
 if not args.packaged and args.package_root != 'Packaged':
     parser.error('--package-root requires --packaged')
 package_root = (ROOT / args.package_root).resolve()
@@ -284,6 +287,13 @@ def begin_round():
             revision = account['revision']
             send(role, 'storage', item=item['id'], quantity=item['quantity'], slot=0 if definition == 'AK' else -1)
             wait(lambda r=role, v=revision: state(r)['account']['revision'] > v, 'loadout transfer committed')
+    if args.scenario == 'traversal':
+        # Use an ordinary persisted second weapon to prove E still switches guns.
+        account=state('A')['account']
+        item=next(i for i in account['stash']['items'] if i['definition']=='AK')
+        revision=account['revision']
+        send('A','storage',item=item['id'],quantity=1,slot=1)
+        wait(lambda: state('A')['account']['revision']>revision,'traversal second weapon loadout')
     if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment']:
         from phase5_scenarios import lobby
         lobby(globals())

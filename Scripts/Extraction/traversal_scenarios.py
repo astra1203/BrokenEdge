@@ -5,6 +5,7 @@ from pathlib import Path
 import time
 import json
 import threading
+from auto_ladder_input import approach, walk_to
 
 
 class MotionTrace:
@@ -35,8 +36,14 @@ class MotionTrace:
 
 
 def run(g):
+    helper=g['ROOT']/'Scripts/Extraction/auto_ladder_input.py'
+    g['report']['input_sha256'][helper.relative_to(g['ROOT']).as_posix()]=hashlib.sha256(helper.read_bytes()).hexdigest()
     trace=MotionTrace(g)
     try:
+        if g['args'].traversal_source_only:
+            from source_ladder_scenarios import run as run_sources
+            run_sources(g)
+            return
         if not g['args'].traversal_route_only:run_cases(g)
         if g['args'].traversal_route or g['args'].traversal_route_only:
             from traversal_route import run as run_route
@@ -77,7 +84,7 @@ def run_cases(g):
     if g['args'].traversal_top_only:
         place('A',90,-900,250,yaw=180)
         if g['args'].debug_hold:wait(lambda: (g['OUT']/'Continue.txt').exists(),'top entry debugger prepared',900)
-        press('E')
+        approach(g,'Focused top entry',hold_after_start=.8)
         check('Focused top entry accepted by authority',lambda: player('Server','A')['traversal']==4)
         return
     recording=g['args'].traversal_record
@@ -151,10 +158,49 @@ def run_cases(g):
     check('Space without obstacle performs normal jump',lambda: player('Server','A')['falling'] and player('Server','A')['traversal']==0)
     wait(lambda: not player('Server','A')['falling'],'normal jump lands')
 
+    # These failures must be observed over actual input, not just a stationary snapshot.
     place('A',-160,-900)
-    record('ladder',-900,True)
-    check('Ladder focus',lambda: player('A','A')['ladder_focus']!='None')
+    time.sleep(.5)
+    check('Standing at ladder does not auto attach',lambda: player('Server','A')['traversal']==0)
+    weapon=player('Server','A')['weapon_item']
     press('E')
+    check('E switches weapons beside ladder without attaching',lambda: player('Server','A')['weapon_item']!=weapon and player('Server','A')['traversal']==0)
+    wait(lambda: player('Server','A')['combat_state']==0,'ordinary weapon swap completes')
+    send('A','pulse',action='MoveRight',duration=.15)
+    time.sleep(.4)
+    check('Sideways movement rejects auto entry',lambda: player('Server','A')['traversal']==0)
+    place('A',-160,-900,yaw=180)
+    press('S',.1)
+    check('Backing toward ladder rejects auto entry',lambda: player('Server','A')['traversal']==0)
+    place('A',-160,-900)
+    send('A','pulse',action='Crouch',duration=.05)
+    check('Crouch input reaches authority',lambda: player('Server','A')['crouched'])
+    press('W',.1)
+    check('Crouched approach rejects auto entry',lambda: player('Server','A')['traversal']==0)
+    send('A','pulse',action='Crouch',duration=.05)
+    check('Standing restored',lambda: not player('Server','A')['crouched'])
+    place('A',-160,-900)
+    send('A','inventory',open=True)
+    check('Backpack is open',lambda: player('Server','A')['inventory_open'])
+    press('W',.1)
+    check('Backpack prevents automatic entry',lambda: player('Server','A')['traversal']==0)
+    send('A','inventory',open=False)
+    place('A',-160,-900)
+    send('A','menu')
+    check('Menu is open',lambda: player('A','A')['menu_open'])
+    press('W',.1)
+    check('Menu prevents automatic entry',lambda: player('Server','A')['traversal']==0)
+    send('A','menu')
+    place('A',-210,-900)
+    send('Server','occluder',enabled=True,position=[29830,29100,6110])
+    press('W',.12)
+    check('Wall prevents automatic entry',lambda: player('Server','A')['traversal']==0)
+    send('Server','occluder',enabled=False)
+
+    place('A',-260,-900)
+    record('ladder',-900,True)
+    check('Ladder approach begins outside entry',lambda: player('A','A')['ladder_focus']=='None')
+    approach(g,'Fixture bottom')
     check('Ladder entered on server',lambda: player('Server','A')['traversal']==4)
     check('Authority and both clients evaluate traversal body animation',lambda: all(player(p,'A')['body_montage_active'] for p in peers))
     check('Traversal stows owner and observer weapons',lambda: all(player(p,'A')['weapon_hidden'] for p in ('A','B')) and not player('A','A')['fp_weapon_visible'])
@@ -172,8 +218,8 @@ def run_cases(g):
     time.sleep(.5)
     check('Releasing W pauses on ladder',lambda: abs(player('Server','A')['position'][2]-z)<3)
     for peer in ('A','B'):send(peer,'pose',target='EX_A',name='ladder-paused')
-    place('B',-150,-805)
-    press('E',role='B')
+    place('B',185,-900,250,yaw=180)
+    press('W',.18,role='B')
     check('Occupied ladder rejects second player',lambda: player('Server','B')['traversal']==0 and player('Server','A')['traversal']==4)
     place('B',-550,400)
     press('S',.10)
@@ -181,23 +227,31 @@ def run_cases(g):
     press('SpaceBar')
     check('Space detaches ladder',lambda: player('Server','A')['traversal']==0)
     wait(lambda: not player('Server','A')['falling'],'detach lands')
-    place('A',-160,-900)
-    press('E');check('Reattach after detach',lambda: player('Server','A')['traversal']==4)
+    place('A',-260,-900)
+    approach(g,'Re-entry after leaving area');check('Reattach after detach',lambda: player('Server','A')['traversal']==4)
     climb_to_exit('Move')
     check('Ladder exits at top',lambda: player('Server','A')['traversal']==0 and not player('Server','A')['falling'] and player('Server','A')['position'][2]>6300)
+    check('Top landing retains re-entry suppression',lambda: player('Server','A')['ladder_reentry_block']!='None')
+    walk_to(g,[30184,29100,6250],'Leave fixture top entry')
     send('A','look',yaw=180)
-    press('E');check('Enter ladder from top',lambda: player('Server','A')['traversal']==4)
+    approach(g,'Fixture top',hold_after_start=.8);check('Enter ladder from top',lambda: player('Server','A')['traversal']==4)
     climb_to_exit('MoveBack')
     check('Ladder exits at bottom',lambda: player('Server','A')['traversal']==0 and not player('Server','A')['falling'] and player('Server','A')['position'][2]<6150)
     record('ladder',-900,False)
     send('A','look',yaw=0)
-    press('E');check('Attach before E release',lambda: player('Server','A')['traversal']==4)
-    press('W',.4);press('E')
-    check('E releases ladder',lambda: player('Server','A')['traversal']==0)
-    wait(lambda: not player('Server','A')['falling'],'E release lands')
+    press('W',.12)
+    check('Walking inside exit does not immediately reattach',lambda: player('Server','A')['traversal']==0)
+    walk_to(g,[29740,29100,6000],'Leave fixture bottom entry')
+    send('A','look',yaw=0)
+    approach(g,'Re-entry for E key regression')
+    weapon=player('Server','A')['weapon_item']
+    press('E')
+    check('E does not detach or swap while climbing',lambda: player('Server','A')['traversal']==4 and player('Server','A')['weapon_item']==weapon)
+    press('SpaceBar')
+    wait(lambda: not player('Server','A')['falling'],'Space release lands')
 
-    place('A',-160,-900)
-    press('E');check('Attach before blocked exit',lambda: player('Server','A')['traversal']==4)
+    place('A',-260,-900)
+    approach(g,'Blocked exit fixture');check('Attach before blocked exit',lambda: player('Server','A')['traversal']==4)
     place('B',85,-900,250)
     press('W',2.2)
     check('Blocked top exit keeps safe ladder attachment',lambda: player('Server','A')['traversal']==4)
@@ -216,8 +270,8 @@ def lifecycle(g,place,press):
     send,check,wait,state,player=(g[k] for k in ('send','check','wait','state','player'))
     place('C',-450,-650)
     place('B',-500,-900)
-    place('A',-160,-900)
-    press('E');check('Damage case attaches',lambda: player('Server','A')['traversal']==4)
+    place('A',-260,-900)
+    approach(g,'Damage case');check('Damage case attaches',lambda: player('Server','A')['traversal']==4)
     press('W',.4)
     g['aim']('B','A')
     before=player('Server','A')['health']
@@ -232,7 +286,7 @@ def lifecycle(g,place,press):
     place('B',85,-900,250,yaw=180)
     send('B','aim',target='',head=False)
     send('B','look',yaw=180)
-    press('E',role='B')
+    approach(g,'Lifecycle top entry',role='B')
     check('Downed owner releases ladder occupancy',lambda: player('Server','B')['traversal']==4)
     press('SpaceBar',role='B')
     wait(lambda: not player('Server','B')['falling'],'B detaches before rescue')
@@ -240,8 +294,8 @@ def lifecycle(g,place,press):
     place('C',-175,-1020)
     send('C','ability',kind='revive',target='EX_A')
     check('Traversal casualty can be revived normally',lambda: player('Server','A')['life']==0 and player('Server','A')['health']==30,12)
-    place('A',-160,-900)
-    press('E');check('Revived owner reattaches',lambda: player('Server','A')['traversal']==4)
+    place('A',-260,-900)
+    approach(g,'Revived owner');check('Revived owner reattaches',lambda: player('Server','A')['traversal']==4)
     press('W',.4)
     g['aim']('B','A')
     for _ in range(10):
@@ -251,7 +305,7 @@ def lifecycle(g,place,press):
     check('Fatal damage clears traversal state',lambda: player('Server','A')['life']==1 and player('Server','A')['traversal']==0)
     send('B','aim',target='',head=False)
     place('B',85,-900,250,yaw=180)
-    press('E',role='B')
+    approach(g,'Lifecycle top entry',role='B')
     check('Dead owner releases ladder occupancy',lambda: player('Server','B')['traversal']==4)
     proc=g['processes']['B']
     g['finishing'].add('B')
@@ -260,7 +314,7 @@ def lifecycle(g,place,press):
     g['report']['processes']['B'].update(expected_disconnect=True,exit_code=proc.returncode)
     check('Disconnected climber is removed by authority',lambda: not player('Server','B'),30)
     place('C',85,-900,250,yaw=180)
-    press('E',role='C')
+    approach(g,'Replacement owner top entry',role='C')
     check('Disconnect releases ladder for another player',lambda: player('Server','C')['traversal']==4)
     press('SpaceBar',role='C')
     wait(lambda: not player('Server','C')['falling'],'C detaches before extraction')

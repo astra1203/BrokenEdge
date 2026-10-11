@@ -43,9 +43,9 @@ FString UExtractionTraversalComponent::Prompt() const
 	const auto* C = Cast<ABrokenEdgeCharacter>(GetOwner());
 	const auto* M = C ? Cast<UTraversalMovementComponent>(C->GetCharacterMovement()) : nullptr;
 	if (!M) return {};
-	if (M->OnLadder()) return TEXT("W / S 上下爬梯 · 空格 蹬离 · E 松手");
+	if (M->OnLadder()) return TEXT("W / S 上下爬梯 · 空格 蹬离");
 	if (M->Active()) return TEXT("正在翻越 / 攀上平台");
-	return M->FindLadder() ? TEXT("E 爬梯") : FString();
+	return M->FindLadder() ? TEXT("向前移动攀附梯子") : FString();
 }
 
 void UExtractionTraversalComponent::StopVisuals()

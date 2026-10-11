@@ -1,0 +1,4585 @@
+{
+  "result": "passed",
+  "ladders": [
+    {
+      "id": "a2a2a227017b5672",
+      "samples": [
+        {
+          "endpoint": "LadderBottomStartTransform",
+          "point": [
+            -11844.58216209372,
+            11069.395813933515,
+            -799.4409999999989
+          ],
+          "floor": null,
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": null
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderBottomEndTransform",
+          "point": [
+            -11828.50024109392,
+            11072.231429731532,
+            -764.0767340799975
+          ],
+          "floor": null,
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": null
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopStartTransform",
+          "point": [
+            -11743.090763901244,
+            11087.291102194053,
+            -353.0722127027184
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 30.186277389526367,
+            "location": [
+              -11743.090763901244,
+              11087.291102194053,
+              -313.25849062868656
+            ],
+            "impact": [
+              -11743.09083040577,
+              11087.291075323688,
+              -313.25848925781247
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "actor": "SCR_Group_95177c1b2e0befe0",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5673.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/045dfd5b850a6579/SM_H_Building_FutureTech_Dock_02/StaticMeshes/SM_H_Building_FutureTech_Dock_02.SM_H_Building_FutureTech_Dock_02"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 30.186277389526367,
+                "location": [
+                  -11715.890763901243,
+                  11087.291102194053,
+                  -313.25849062868656
+                ],
+                "impact": [
+                  -11715.890830100043,
+                  11087.29107532369,
+                  -313.25848925781247
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_95177c1b2e0befe0",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5673.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/045dfd5b850a6579/SM_H_Building_FutureTech_Dock_02/StaticMeshes/SM_H_Building_FutureTech_Dock_02.SM_H_Building_FutureTech_Dock_02"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 30.186277389526367,
+                "location": [
+                  -11770.290763901245,
+                  11087.291102194053,
+                  -313.25849062868656
+                ],
+                "impact": [
+                  -11770.2908307115,
+                  11087.29107532369,
+                  -313.25848925781247
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_95177c1b2e0befe0",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5673.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/045dfd5b850a6579/SM_H_Building_FutureTech_Dock_02/StaticMeshes/SM_H_Building_FutureTech_Dock_02.SM_H_Building_FutureTech_Dock_02"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 30.186277389526367,
+                "location": [
+                  -11743.090763901244,
+                  11114.491102194053,
+                  -313.25849062868656
+                ],
+                "impact": [
+                  -11743.09083040577,
+                  11114.491075629418,
+                  -313.25848925781247
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_95177c1b2e0befe0",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5673.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/045dfd5b850a6579/SM_H_Building_FutureTech_Dock_02/StaticMeshes/SM_H_Building_FutureTech_Dock_02.SM_H_Building_FutureTech_Dock_02"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 30.186277389526367,
+                "location": [
+                  -11743.090763901244,
+                  11060.091102194052,
+                  -313.25849062868656
+                ],
+                "impact": [
+                  -11743.09083040577,
+                  11060.091075017961,
+                  -313.25848925781247
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_95177c1b2e0befe0",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5673.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/045dfd5b850a6579/SM_H_Building_FutureTech_Dock_02/StaticMeshes/SM_H_Building_FutureTech_Dock_02.SM_H_Building_FutureTech_Dock_02"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopEndTransform",
+          "point": [
+            -11829.735190814245,
+            11072.013679443044,
+            -547.8777963347165
+          ],
+          "floor": null,
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": null
+            }
+          ]
+        }
+      ],
+      "climb_sweep": null,
+      "climb_column": [
+        {
+          "z": -669,
+          "hit": null
+        },
+        {
+          "z": -569,
+          "hit": null
+        },
+        {
+          "z": -469,
+          "hit": null
+        }
+      ]
+    },
+    {
+      "id": "ae7a89bd071bffda",
+      "samples": [
+        {
+          "endpoint": "LadderBottomStartTransform",
+          "point": [
+            -10189.77595258283,
+            9662.376356095308,
+            -279.7069999999985
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 48.335289001464844,
+            "location": [
+              -10189.77595258283,
+              9662.376356095308,
+              -258.0422902531609
+            ],
+            "impact": [
+              -10189.775957106645,
+              9662.376346645378,
+              -258.042290356443
+            ],
+            "normal": [
+              -3.970776545927249e-06,
+              3.983887055837764e-06,
+              0.9999999999841809
+            ],
+            "actor": "SCR_Group_8549d77bf18474ec",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5675.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/35dbdca5389df12c/SM_H_Building_FutureTech_Dock_02a/StaticMeshes/SM_H_Building_FutureTech_Dock_02a.SM_H_Building_FutureTech_Dock_02a"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 48.335182189941406,
+                "location": [
+                  -10162.575952582829,
+                  9662.376356095308,
+                  -258.04218207073063
+                ],
+                "impact": [
+                  -10162.575956800918,
+                  9662.376346645378,
+                  -258.04218235132095
+                ],
+                "normal": [
+                  -3.970776545927249e-06,
+                  3.983887055837764e-06,
+                  0.9999999999841809
+                ],
+                "actor": "SCR_Group_8549d77bf18474ec",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5675.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/35dbdca5389df12c/SM_H_Building_FutureTech_Dock_02a/StaticMeshes/SM_H_Building_FutureTech_Dock_02a.SM_H_Building_FutureTech_Dock_02a"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 48.33539962768555,
+                "location": [
+                  -10216.97595258283,
+                  9662.376356095308,
+                  -258.04239843559117
+                ],
+                "impact": [
+                  -10216.975957412373,
+                  9662.376346645378,
+                  -258.04239836156506
+                ],
+                "normal": [
+                  -3.970776545927249e-06,
+                  3.983887055837764e-06,
+                  0.9999999999841809
+                ],
+                "actor": "SCR_Group_8549d77bf18474ec",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5675.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/35dbdca5389df12c/SM_H_Building_FutureTech_Dock_02a/StaticMeshes/SM_H_Building_FutureTech_Dock_02a.SM_H_Building_FutureTech_Dock_02a"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 48.33539962768555,
+                "location": [
+                  -10189.77595258283,
+                  9689.57635609531,
+                  -258.04239843559117
+                ],
+                "impact": [
+                  -10189.775957106645,
+                  9689.576346951106,
+                  -258.04239871817094
+                ],
+                "normal": [
+                  -3.970776545927249e-06,
+                  3.983887055837764e-06,
+                  0.9999999999841809
+                ],
+                "actor": "SCR_Group_8549d77bf18474ec",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5675.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/35dbdca5389df12c/SM_H_Building_FutureTech_Dock_02a/StaticMeshes/SM_H_Building_FutureTech_Dock_02a.SM_H_Building_FutureTech_Dock_02a"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 48.335182189941406,
+                "location": [
+                  -10189.77595258283,
+                  9635.176356095308,
+                  -258.04218207073063
+                ],
+                "impact": [
+                  -10189.775957106645,
+                  9635.176346339651,
+                  -258.04218199471507
+                ],
+                "normal": [
+                  -3.970776545927249e-06,
+                  3.983887055837764e-06,
+                  0.9999999999841809
+                ],
+                "actor": "SCR_Group_8549d77bf18474ec",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5675.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/35dbdca5389df12c/SM_H_Building_FutureTech_Dock_02a/StaticMeshes/SM_H_Building_FutureTech_Dock_02a.SM_H_Building_FutureTech_Dock_02a"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderBottomEndTransform",
+          "point": [
+            -10178.228948020493,
+            9650.829253184318,
+            -242.36699999999837
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 85.67520141601562,
+            "location": [
+              -10178.228948020493,
+              9650.829253184318,
+              -258.0422002239211
+            ],
+            "impact": [
+              -10178.22895241452,
+              9650.8292436046,
+              -258.04219850351427
+            ],
+            "normal": [
+              -3.970776545927249e-06,
+              3.983887055837764e-06,
+              0.9999999999841809
+            ],
+            "actor": "SCR_Group_8549d77bf18474ec",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5675.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/35dbdca5389df12c/SM_H_Building_FutureTech_Dock_02a/StaticMeshes/SM_H_Building_FutureTech_Dock_02a.SM_H_Building_FutureTech_Dock_02a"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 85.67508697509766,
+                "location": [
+                  -10151.028948020492,
+                  9650.829253184318,
+                  -258.04208876323537
+                ],
+                "impact": [
+                  -10151.028952108793,
+                  9650.8292436046,
+                  -258.0420904983922
+                ],
+                "normal": [
+                  -3.970776545927249e-06,
+                  3.983887055837764e-06,
+                  0.9999999999841809
+                ],
+                "actor": "SCR_Group_8549d77bf18474ec",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5675.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/35dbdca5389df12c/SM_H_Building_FutureTech_Dock_02a/StaticMeshes/SM_H_Building_FutureTech_Dock_02a.SM_H_Building_FutureTech_Dock_02a"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 85.67530822753906,
+                "location": [
+                  -10205.428948020493,
+                  9650.829253184318,
+                  -258.0423051280959
+                ],
+                "impact": [
+                  -10205.428952720249,
+                  9650.8292436046,
+                  -258.04230650863633
+                ],
+                "normal": [
+                  -3.970776545927249e-06,
+                  3.983887055837764e-06,
+                  0.9999999999841809
+                ],
+                "actor": "SCR_Group_8549d77bf18474ec",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5675.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/35dbdca5389df12c/SM_H_Building_FutureTech_Dock_02a/StaticMeshes/SM_H_Building_FutureTech_Dock_02a.SM_H_Building_FutureTech_Dock_02a"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 85.67530822753906,
+                "location": [
+                  -10178.228948020493,
+                  9678.029253184319,
+                  -258.0423051280959
+                ],
+                "impact": [
+                  -10178.22895241452,
+                  9678.029243910327,
+                  -258.0423068652422
+                ],
+                "normal": [
+                  -3.970776545927249e-06,
+                  3.983887055837764e-06,
+                  0.9999999999841809
+                ],
+                "actor": "SCR_Group_8549d77bf18474ec",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5675.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/35dbdca5389df12c/SM_H_Building_FutureTech_Dock_02a/StaticMeshes/SM_H_Building_FutureTech_Dock_02a.SM_H_Building_FutureTech_Dock_02a"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 85.67508697509766,
+                "location": [
+                  -10178.228948020493,
+                  9623.629253184317,
+                  -258.04208876323537
+                ],
+                "impact": [
+                  -10178.22895241452,
+                  9623.629243298872,
+                  -258.0420901417864
+                ],
+                "normal": [
+                  -3.970776545927249e-06,
+                  3.983887055837764e-06,
+                  0.9999999999841809
+                ],
+                "actor": "SCR_Group_8549d77bf18474ec",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5675.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/35dbdca5389df12c/SM_H_Building_FutureTech_Dock_02a/StaticMeshes/SM_H_Building_FutureTech_Dock_02a.SM_H_Building_FutureTech_Dock_02a"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopStartTransform",
+          "point": [
+            -10116.903959369054,
+            9589.503742213012,
+            115.59900000000198
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 74.03963470458984,
+            "location": [
+              -10116.903959369054,
+              9589.503742213012,
+              111.55936434173782
+            ],
+            "impact": [
+              -10116.904007575515,
+              9589.503698493409,
+              111.55936463092091
+            ],
+            "normal": [
+              4.7960302408022485e-06,
+              -3.675708092538272e-06,
+              0.9999999999817437
+            ],
+            "actor": "SCR_Group_58bb1acec7c73969",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6366.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/1390256959016d0d/SM_H_Building_FutureTech_Dock_01/StaticMeshes/SM_H_Building_FutureTech_Dock_01.SM_H_Building_FutureTech_Dock_01"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 74.0400390625,
+                "location": [
+                  -10089.703959369053,
+                  9589.503742213012,
+                  111.55895783806045
+                ],
+                "impact": [
+                  -10089.704007269786,
+                  9589.503698493409,
+                  111.55895769782116
+                ],
+                "normal": [
+                  9.590118253474527e-05,
+                  -9.294166587868259e-05,
+                  0.9999999910824049
+                ],
+                "actor": "SCR_Group_58bb1acec7c73969",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6366.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/1390256959016d0d/SM_H_Building_FutureTech_Dock_01/StaticMeshes/SM_H_Building_FutureTech_Dock_01.SM_H_Building_FutureTech_Dock_01"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 159.93902587890625,
+                "location": [
+                  -10144.103959369055,
+                  9589.503742213012,
+                  25.65997078323562
+                ],
+                "impact": [
+                  -10144.104007881242,
+                  9589.503698493409,
+                  25.6599748388536
+                ],
+                "normal": [
+                  -0.00759284541694075,
+                  0.0077207210995185425,
+                  0.9999413678632252
+                ],
+                "actor": "SCR_Group_58bb1acec7c73969",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6366.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/1390256959016d0d/SM_H_Building_FutureTech_Dock_01/StaticMeshes/SM_H_Building_FutureTech_Dock_01.SM_H_Building_FutureTech_Dock_01"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 159.9425048828125,
+                "location": [
+                  -10116.903959369054,
+                  9616.703742213012,
+                  25.656495832445216
+                ],
+                "impact": [
+                  -10116.904007575515,
+                  9616.703698799136,
+                  25.65649641634016
+                ],
+                "normal": [
+                  -0.00759284541694075,
+                  0.0077207210995185425,
+                  0.9999413678632252
+                ],
+                "actor": "SCR_Group_58bb1acec7c73969",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6366.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/1390256959016d0d/SM_H_Building_FutureTech_Dock_01/StaticMeshes/SM_H_Building_FutureTech_Dock_01.SM_H_Building_FutureTech_Dock_01"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 74.03996276855469,
+                "location": [
+                  -10116.903959369054,
+                  9562.303742213011,
+                  111.55903651619155
+                ],
+                "impact": [
+                  -10116.904007575515,
+                  9562.303698187681,
+                  111.5590381966749
+                ],
+                "normal": [
+                  9.590118253474527e-05,
+                  -9.294166587868259e-05,
+                  0.9999999910824049
+                ],
+                "actor": "SCR_Group_58bb1acec7c73969",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6366.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/1390256959016d0d/SM_H_Building_FutureTech_Dock_01/StaticMeshes/SM_H_Building_FutureTech_Dock_01.SM_H_Building_FutureTech_Dock_01"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopEndTransform",
+          "point": [
+            -10179.115656147944,
+            9651.715968864097,
+            -90.09000000000015
+          ],
+          "floor": null,
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": null
+            }
+          ]
+        }
+      ],
+      "climb_sweep": null,
+      "climb_column": [
+        {
+          "z": -147,
+          "hit": null
+        },
+        {
+          "z": -47,
+          "hit": null
+        }
+      ]
+    },
+    {
+      "id": "bfd9aa0f4d20e855",
+      "samples": [
+        {
+          "endpoint": "LadderBottomStartTransform",
+          "point": [
+            -479.93586079985835,
+            13306.316447877383,
+            25.870999999999185
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 47.03410339355469,
+            "location": [
+              -479.93586079985835,
+              13306.316447877383,
+              48.83689523553767
+            ],
+            "impact": [
+              -479.93580068712527,
+              13306.316445934628,
+              48.836897240880134
+            ],
+            "normal": [
+              -4.219733858107559e-08,
+              4.219134785786876e-08,
+              0.9999999999999982
+            ],
+            "actor": "SCR_Group_efd31ccd6c8a4f2a",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6370.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/5348b8450e0d8d71/SM_H_Building_FutureTech_Dock_03/StaticMeshes/SM_H_Building_FutureTech_Dock_03.SM_H_Building_FutureTech_Dock_03"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 47.03410339355469,
+                "location": [
+                  -452.73586079985836,
+                  13306.316447877383,
+                  48.83689523553767
+                ],
+                "impact": [
+                  -452.7358003813988,
+                  13306.316445934628,
+                  48.83689838864775
+                ],
+                "normal": [
+                  -4.219733858107559e-08,
+                  4.219134785786876e-08,
+                  0.9999999999999982
+                ],
+                "actor": "SCR_Group_efd31ccd6c8a4f2a",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6370.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/5348b8450e0d8d71/SM_H_Building_FutureTech_Dock_03/StaticMeshes/SM_H_Building_FutureTech_Dock_03.SM_H_Building_FutureTech_Dock_03"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 47.03410339355469,
+                "location": [
+                  -507.13586079985834,
+                  13306.316447877383,
+                  48.83689523553767
+                ],
+                "impact": [
+                  -507.13580099285264,
+                  13306.316445934628,
+                  48.83689609311253
+                ],
+                "normal": [
+                  -4.219733858107559e-08,
+                  4.219134785786876e-08,
+                  0.9999999999999982
+                ],
+                "actor": "SCR_Group_efd31ccd6c8a4f2a",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6370.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/5348b8450e0d8d71/SM_H_Building_FutureTech_Dock_03/StaticMeshes/SM_H_Building_FutureTech_Dock_03.SM_H_Building_FutureTech_Dock_03"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 47.03410339355469,
+                "location": [
+                  -479.93586079985835,
+                  13333.516447877384,
+                  48.83689523553767
+                ],
+                "impact": [
+                  -479.9358006871262,
+                  13333.516446240355,
+                  48.83689609327548
+                ],
+                "normal": [
+                  -4.219733858107559e-08,
+                  4.219134785786876e-08,
+                  0.9999999999999982
+                ],
+                "actor": "SCR_Group_efd31ccd6c8a4f2a",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6370.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/5348b8450e0d8d71/SM_H_Building_FutureTech_Dock_03/StaticMeshes/SM_H_Building_FutureTech_Dock_03.SM_H_Building_FutureTech_Dock_03"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 47.03410339355469,
+                "location": [
+                  -479.93586079985835,
+                  13279.116447877383,
+                  48.83689523553767
+                ],
+                "impact": [
+                  -479.93580068712527,
+                  13279.1164456289,
+                  48.8368983884848
+                ],
+                "normal": [
+                  -4.219733858107559e-08,
+                  4.219134785786876e-08,
+                  0.9999999999999982
+                ],
+                "actor": "SCR_Group_efd31ccd6c8a4f2a",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6370.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/5348b8450e0d8d71/SM_H_Building_FutureTech_Dock_03/StaticMeshes/SM_H_Building_FutureTech_Dock_03.SM_H_Building_FutureTech_Dock_03"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderBottomEndTransform",
+          "point": [
+            -468.38887860788964,
+            13294.769322596258,
+            63.21099999999933
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 84.37409973144531,
+            "location": [
+              -468.38887860788964,
+              13294.769322596258,
+              48.83690003013544
+            ],
+            "impact": [
+              -468.38881836536893,
+              13294.769320523714,
+              48.83689821532084
+            ],
+            "normal": [
+              -4.219733858107559e-08,
+              4.219134785786876e-08,
+              0.9999999999999982
+            ],
+            "actor": "SCR_Group_efd31ccd6c8a4f2a",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6370.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/5348b8450e0d8d71/SM_H_Building_FutureTech_Dock_03/StaticMeshes/SM_H_Building_FutureTech_Dock_03.SM_H_Building_FutureTech_Dock_03"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 84.37409973144531,
+                "location": [
+                  -441.18887860788965,
+                  13294.769322596258,
+                  48.83690003013544
+                ],
+                "impact": [
+                  -441.1888180596434,
+                  13294.769320523712,
+                  48.83689936308845
+                ],
+                "normal": [
+                  -4.219733858107559e-08,
+                  4.219134785786876e-08,
+                  0.9999999999999982
+                ],
+                "actor": "SCR_Group_efd31ccd6c8a4f2a",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6370.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/5348b8450e0d8d71/SM_H_Building_FutureTech_Dock_03/StaticMeshes/SM_H_Building_FutureTech_Dock_03.SM_H_Building_FutureTech_Dock_03"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 84.37409973144531,
+                "location": [
+                  -495.5888786078896,
+                  13294.769322596258,
+                  48.83690003013544
+                ],
+                "impact": [
+                  -495.5888186710954,
+                  13294.769320523714,
+                  48.836897067553224
+                ],
+                "normal": [
+                  -4.219733858107559e-08,
+                  4.219134785786876e-08,
+                  0.9999999999999982
+                ],
+                "actor": "SCR_Group_efd31ccd6c8a4f2a",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6370.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/5348b8450e0d8d71/SM_H_Building_FutureTech_Dock_03/StaticMeshes/SM_H_Building_FutureTech_Dock_03.SM_H_Building_FutureTech_Dock_03"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 84.37409973144531,
+                "location": [
+                  -468.38887860788964,
+                  13321.969322596258,
+                  48.83690003013544
+                ],
+                "impact": [
+                  -468.38881836536984,
+                  13321.969320829441,
+                  48.836897067716166
+                ],
+                "normal": [
+                  -4.219733858107559e-08,
+                  4.219134785786876e-08,
+                  0.9999999999999982
+                ],
+                "actor": "SCR_Group_efd31ccd6c8a4f2a",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6370.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/5348b8450e0d8d71/SM_H_Building_FutureTech_Dock_03/StaticMeshes/SM_H_Building_FutureTech_Dock_03.SM_H_Building_FutureTech_Dock_03"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 84.37409973144531,
+                "location": [
+                  -468.38887860788964,
+                  13267.569322596257,
+                  48.83690003013544
+                ],
+                "impact": [
+                  -468.38881836536984,
+                  13267.569320217985,
+                  48.83689936292549
+                ],
+                "normal": [
+                  -4.219733858107559e-08,
+                  4.219134785786876e-08,
+                  0.9999999999999982
+                ],
+                "actor": "SCR_Group_efd31ccd6c8a4f2a",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6370.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/5348b8450e0d8d71/SM_H_Building_FutureTech_Dock_03/StaticMeshes/SM_H_Building_FutureTech_Dock_03.SM_H_Building_FutureTech_Dock_03"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopStartTransform",
+          "point": [
+            -407.0640087634092,
+            13233.443692819157,
+            649.1769999999997
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 67.43324279785156,
+            "location": [
+              -407.0640087634092,
+              13233.443692819157,
+              651.7437572021481
+            ],
+            "impact": [
+              -407.06396772410335,
+              13233.443713175599,
+              651.7437590114263
+            ],
+            "normal": [
+              0.02191256364045577,
+              -0.02271568815945784,
+              0.9995017944286771
+            ],
+            "actor": "SCR_Group_21f0d5c4771f8adc",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5783.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/666f3882e743f2a3/SM_H_Building_FutureTech_Dock_Rail_02/StaticMeshes/SM_H_Building_FutureTech_Dock_Rail_02.SM_H_Building_FutureTech_Dock_Rail_02"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 176.4991912841797,
+                "location": [
+                  -379.86400876340923,
+                  13233.443692819157,
+                  542.6778108615872
+                ],
+                "impact": [
+                  -379.86412615008703,
+                  13233.443634863419,
+                  542.6778083002538
+                ],
+                "normal": [
+                  2.05168462511121e-07,
+                  -2.0480948219058254e-07,
+                  0.9999999999999581
+                ],
+                "actor": "SCR_Group_4468d19175ee0c79",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5745.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/32e9c00fd6bf2854/SM_H_Building_FutureTech_Dock_06b_01/StaticMeshes/SM_H_Building_FutureTech_Dock_06b_01.SM_H_Building_FutureTech_Dock_06b_01"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 176.49917602539062,
+                "location": [
+                  -434.2640087634092,
+                  13233.443692819157,
+                  542.677823974609
+                ],
+                "impact": [
+                  -434.2641250583656,
+                  13233.443634863419,
+                  542.6778194614182
+                ],
+                "normal": [
+                  2.05168462511121e-07,
+                  -2.0480948219058254e-07,
+                  0.9999999999999581
+                ],
+                "actor": "SCR_Group_4468d19175ee0c79",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5745.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/32e9c00fd6bf2854/SM_H_Building_FutureTech_Dock_06b_01/StaticMeshes/SM_H_Building_FutureTech_Dock_06b_01.SM_H_Building_FutureTech_Dock_06b_01"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 176.49917602539062,
+                "location": [
+                  -407.0640087634092,
+                  13260.643692819158,
+                  542.677823974609
+                ],
+                "impact": [
+                  -407.0641256042254,
+                  13260.64363431756,
+                  542.6778194516539
+                ],
+                "normal": [
+                  2.05168462511121e-07,
+                  -2.0480948219058254e-07,
+                  0.9999999999999581
+                ],
+                "actor": "SCR_Group_4468d19175ee0c79",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5745.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/32e9c00fd6bf2854/SM_H_Building_FutureTech_Dock_06b_01/StaticMeshes/SM_H_Building_FutureTech_Dock_06b_01.SM_H_Building_FutureTech_Dock_06b_01"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 176.4991912841797,
+                "location": [
+                  -407.0640087634092,
+                  13206.243692819156,
+                  542.6778108615872
+                ],
+                "impact": [
+                  -407.0641256042254,
+                  13206.243635409279,
+                  542.677808310018
+                ],
+                "normal": [
+                  2.05168462511121e-07,
+                  -2.0480948219058254e-07,
+                  0.9999999999999581
+                ],
+                "actor": "SCR_Group_4468d19175ee0c79",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5745.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/32e9c00fd6bf2854/SM_H_Building_FutureTech_Dock_06b_01/StaticMeshes/SM_H_Building_FutureTech_Dock_06b_01.SM_H_Building_FutureTech_Dock_06b_01"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopEndTransform",
+          "point": [
+            -469.2755850175163,
+            13295.656039993803,
+            443.48799999999756
+          ],
+          "floor": null,
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": null
+            }
+          ]
+        }
+      ],
+      "climb_sweep": null,
+      "climb_column": [
+        {
+          "z": 158,
+          "hit": null
+        },
+        {
+          "z": 258,
+          "hit": null
+        },
+        {
+          "z": 358,
+          "hit": null
+        },
+        {
+          "z": 458,
+          "hit": null
+        }
+      ]
+    },
+    {
+      "id": "670af423419e21d8",
+      "samples": [
+        {
+          "endpoint": "LadderBottomStartTransform",
+          "point": [
+            3465.299818780273,
+            -2479.660000000207,
+            2551.523000000001
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 61.29690933227539,
+            "location": [
+              3465.299818780273,
+              -2479.660000000207,
+              2560.226087568284
+            ],
+            "impact": [
+              3465.299818780273,
+              -2479.660000000207,
+              2560.226089843749
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "actor": "SCR_Group_28396ea5084b97bf",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 61.29690933227539,
+                "location": [
+                  3492.499818780273,
+                  -2479.660000000207,
+                  2560.226087568284
+                ],
+                "impact": [
+                  3492.499818780273,
+                  -2479.660000000207,
+                  2560.226089843749
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_28396ea5084b97bf",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 61.29690933227539,
+                "location": [
+                  3438.0998187802734,
+                  -2479.660000000207,
+                  2560.226087568284
+                ],
+                "impact": [
+                  3438.0998187802734,
+                  -2479.660000000207,
+                  2560.226089843749
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_28396ea5084b97bf",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 61.29690933227539,
+                "location": [
+                  3465.299818780273,
+                  -2452.4600000002074,
+                  2560.226087568284
+                ],
+                "impact": [
+                  3465.299818780273,
+                  -2452.4600000002074,
+                  2560.226089843749
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_28396ea5084b97bf",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 61.29690933227539,
+                "location": [
+                  3465.299818780273,
+                  -2506.860000000207,
+                  2560.226087568284
+                ],
+                "impact": [
+                  3465.299818780273,
+                  -2506.860000000207,
+                  2560.226089843749
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_28396ea5084b97bf",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderBottomEndTransform",
+          "point": [
+            3465.2998629491776,
+            -2495.9900000001653,
+            2588.863000000001
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 98.63690948486328,
+            "location": [
+              3465.2998629491776,
+              -2495.9900000001653,
+              2560.2260890846264
+            ],
+            "impact": [
+              3465.2998629491776,
+              -2495.9900000001653,
+              2560.226089843749
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "actor": "SCR_Group_28396ea5084b97bf",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 98.63690948486328,
+                "location": [
+                  3492.4998629491774,
+                  -2495.9900000001653,
+                  2560.2260890846264
+                ],
+                "impact": [
+                  3492.4998629491774,
+                  -2495.9900000001653,
+                  2560.226089843749
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_28396ea5084b97bf",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 98.63690948486328,
+                "location": [
+                  3438.099862949178,
+                  -2495.9900000001653,
+                  2560.2260890846264
+                ],
+                "impact": [
+                  3438.099862949178,
+                  -2495.9900000001653,
+                  2560.226089843749
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_28396ea5084b97bf",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 98.63690948486328,
+                "location": [
+                  3465.2998629491776,
+                  -2468.7900000001655,
+                  2560.2260890846264
+                ],
+                "impact": [
+                  3465.2998629491776,
+                  -2468.7900000001655,
+                  2560.226089843749
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_28396ea5084b97bf",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 98.63690948486328,
+                "location": [
+                  3465.2998629491776,
+                  -2523.190000000165,
+                  2560.2260890846264
+                ],
+                "impact": [
+                  3465.2998629491776,
+                  -2523.190000000165,
+                  2560.226089843749
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_28396ea5084b97bf",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopStartTransform",
+          "point": [
+            3465.300097526051,
+            -2582.7169999998296,
+            3022.8290000000015
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 46.90946578979492,
+            "location": [
+              3465.300097526051,
+              -2582.7169999998296,
+              3045.91953450823
+            ],
+            "impact": [
+              3465.300097526051,
+              -2582.7169999998296,
+              3045.9195358080765
+            ],
+            "normal": [
+              1.5793061755043658e-05,
+              0.0,
+              0.9999999998752896
+            ],
+            "actor": "SCR_Group_28396ea5084b97bf",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+          },
+          "capsule": {
+            "block": true,
+            "overlap": true,
+            "distance": 0.0,
+            "location": [
+              3465.300097526051,
+              -2582.7169999998296,
+              3140.9195358080765
+            ],
+            "impact": [
+              3465.300122070359,
+              -2582.7169799804688,
+              3221.802261718749
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              -1.0
+            ],
+            "actor": "SCR_Group_28396ea5084b97bf",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+          },
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 46.9095458984375,
+                "location": [
+                  3492.500097526051,
+                  -2582.7169999998296,
+                  3045.9194525518433
+                ],
+                "impact": [
+                  3492.500097526051,
+                  -2582.7169999998296,
+                  3045.9194558941103
+                ],
+                "normal": [
+                  -9.814091171322187e-06,
+                  4.566577516764885e-05,
+                  0.9999999989091605
+                ],
+                "actor": "SCR_Group_28396ea5084b97bf",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 46.909034729003906,
+                "location": [
+                  3438.1000975260513,
+                  -2582.7169999998296,
+                  3045.9199639596955
+                ],
+                "impact": [
+                  3438.1000975260513,
+                  -2582.7169999998296,
+                  3045.919965379356
+                ],
+                "normal": [
+                  1.5793061755043658e-05,
+                  0.0,
+                  0.9999999998752896
+                ],
+                "actor": "SCR_Group_28396ea5084b97bf",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 46.90946578979492,
+                "location": [
+                  3465.300097526051,
+                  -2555.5169999998297,
+                  3045.91953450823
+                ],
+                "impact": [
+                  3465.300097526051,
+                  -2555.5169999998297,
+                  3045.9195358080765
+                ],
+                "normal": [
+                  1.5793061755043658e-05,
+                  0.0,
+                  0.9999999998752896
+                ],
+                "actor": "SCR_Group_28396ea5084b97bf",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 46.9085693359375,
+                "location": [
+                  3465.300097526051,
+                  -2609.9169999998294,
+                  3045.920429471971
+                ],
+                "impact": [
+                  3465.300097526051,
+                  -2609.9169999998294,
+                  3045.920431059916
+                ],
+                "normal": [
+                  -9.814091171322187e-06,
+                  4.566577516764885e-05,
+                  0.9999999989091605
+                ],
+                "actor": "SCR_Group_28396ea5084b97bf",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5801.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/405af31cd602c37b/SM_H_Building_FutureTech_HBoss_01_InterWall_05C/StaticMeshes/SM_H_Building_FutureT_HBoss_01_InterWall_05C.SM_H_Building_FutureT_HBoss_01_InterWall_05C"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopEndTransform",
+          "point": [
+            3465.299859557417,
+            -2494.73600000015,
+            2817.1399999999994
+          ],
+          "floor": null,
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": null
+            }
+          ]
+        }
+      ],
+      "climb_sweep": null,
+      "climb_column": [
+        {
+          "z": 2683,
+          "hit": null
+        },
+        {
+          "z": 2783,
+          "hit": null
+        },
+        {
+          "z": 2883,
+          "hit": null
+        }
+      ]
+    },
+    {
+      "id": "370921801e3e15fd",
+      "samples": [
+        {
+          "endpoint": "LadderBottomStartTransform",
+          "point": [
+            -4606.67632798187,
+            9755.28401930345,
+            525.976999999999
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 52.16817092895508,
+            "location": [
+              -4606.67632798187,
+              9755.28401930345,
+              543.8088291902532
+            ],
+            "impact": [
+              -4606.676316544959,
+              9755.2840151429,
+              543.8088306928883
+            ],
+            "normal": [
+              2.191598755420013e-05,
+              1.3578135260028792e-05,
+              0.9999999996676618
+            ],
+            "actor": "SCR_Group_37f44f1392f4a7e6",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 52.168766021728516,
+                "location": [
+                  -4579.47632798187,
+                  9755.28401930345,
+                  543.808232547759
+                ],
+                "impact": [
+                  -4579.476316353232,
+                  9755.2840151429,
+                  543.8082345780265
+                ],
+                "normal": [
+                  2.191598755420013e-05,
+                  1.3578135260028792e-05,
+                  0.9999999996676618
+                ],
+                "actor": "SCR_Group_37f44f1392f4a7e6",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 52.167572021484375,
+                "location": [
+                  -4633.8763279818695,
+                  9755.28401930345,
+                  543.8094291110028
+                ],
+                "impact": [
+                  -4633.876316736688,
+                  9755.2840151429,
+                  543.8094268077498
+                ],
+                "normal": [
+                  2.191598755420013e-05,
+                  1.3578135260028792e-05,
+                  0.9999999996676618
+                ],
+                "actor": "SCR_Group_37f44f1392f4a7e6",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 52.16853713989258,
+                "location": [
+                  -4606.67632798187,
+                  9782.48401930345,
+                  543.8084620256413
+                ],
+                "impact": [
+                  -4606.676316544959,
+                  9782.48401533463,
+                  543.808461367609
+                ],
+                "normal": [
+                  2.191598755420013e-05,
+                  1.3578135260028792e-05,
+                  0.9999999996676618
+                ],
+                "actor": "SCR_Group_37f44f1392f4a7e6",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 52.16780090332031,
+                "location": [
+                  -4606.67632798187,
+                  9728.08401930345,
+                  543.8091996331204
+                ],
+                "impact": [
+                  -4606.676316544959,
+                  9728.084014951171,
+                  543.8092000181673
+                ],
+                "normal": [
+                  2.191598755420013e-05,
+                  1.3578135260028792e-05,
+                  0.9999999996676618
+                ],
+                "actor": "SCR_Group_37f44f1392f4a7e6",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderBottomEndTransform",
+          "point": [
+            -4595.129231923027,
+            9766.831030717993,
+            563.3169999999991
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 89.50857543945312,
+            "location": [
+              -4595.129231923027,
+              9766.831030717993,
+              543.8084242029181
+            ],
+            "impact": [
+              -4595.129220404723,
+              9766.831026638836,
+              543.8084208399916
+            ],
+            "normal": [
+              2.191598755420013e-05,
+              1.3578135260028792e-05,
+              0.9999999996676618
+            ],
+            "actor": "SCR_Group_37f44f1392f4a7e6",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 89.5091781616211,
+                "location": [
+                  -4567.929231923027,
+                  9766.831030717993,
+                  543.807821003913
+                ],
+                "impact": [
+                  -4567.929220212995,
+                  9766.831026638836,
+                  543.80782472513
+                ],
+                "normal": [
+                  2.191598755420013e-05,
+                  1.3578135260028792e-05,
+                  0.9999999996676618
+                ],
+                "actor": "SCR_Group_37f44f1392f4a7e6",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 89.50798034667969,
+                "location": [
+                  -4622.329231923027,
+                  9766.831030717993,
+                  543.8090208454123
+                ],
+                "impact": [
+                  -4622.329220596452,
+                  9766.831026638836,
+                  543.8090169548534
+                ],
+                "normal": [
+                  2.191598755420013e-05,
+                  1.3578135260028792e-05,
+                  0.9999999996676618
+                ],
+                "actor": "SCR_Group_37f44f1392f4a7e6",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 89.50894927978516,
+                "location": [
+                  -4595.129231923027,
+                  9794.031030717993,
+                  543.8080504817954
+                ],
+                "impact": [
+                  -4595.129220404723,
+                  9794.031026830566,
+                  543.8080515147125
+                ],
+                "normal": [
+                  2.191598755420013e-05,
+                  1.3578135260028792e-05,
+                  0.9999999996676618
+                ],
+                "actor": "SCR_Group_37f44f1392f4a7e6",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 89.50820922851562,
+                "location": [
+                  -4595.129231923027,
+                  9739.631030717992,
+                  543.8087913675299
+                ],
+                "impact": [
+                  -4595.129220404723,
+                  9739.631026447107,
+                  543.8087901652709
+                ],
+                "normal": [
+                  2.191598755420013e-05,
+                  1.3578135260028792e-05,
+                  0.9999999996676618
+                ],
+                "actor": "SCR_Group_37f44f1392f4a7e6",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopStartTransform",
+          "point": [
+            -4533.803757342743,
+            9828.156055760803,
+            1149.2829999999994
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 157.2369384765625,
+            "location": [
+              -4533.803757342743,
+              9828.156055760803,
+              1062.0460662918085
+            ],
+            "impact": [
+              -4533.803745392166,
+              9828.156052113916,
+              1062.046068399669
+            ],
+            "normal": [
+              9.637986350024897e-05,
+              0.00026835326408791065,
+              0.999999959348723
+            ],
+            "actor": "SCR_Group_37f44f1392f4a7e6",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+          },
+          "capsule": {
+            "block": true,
+            "overlap": true,
+            "distance": 0.0,
+            "location": [
+              -4533.803757342743,
+              9828.156055760803,
+              1157.046068399669
+            ],
+            "impact": [
+              -4544.344942775168,
+              9817.614830074303,
+              1156.9174931030284
+            ],
+            "normal": [
+              0.7071057718201084,
+              0.7071077905515458,
+              0.0
+            ],
+            "actor": "SCR_Group_6d9b4eceebfad22e",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5713.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/0a56bbdd1e13c99a/SM_H_Building_FutureTech_Dock_06_InterWall_Glass_03/StaticMeshes/SM_H_Building_Futur_6_InterWall_Glass_03.SM_H_Building_Futur_6_InterWall_Glass_03"
+          },
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 157.2407989501953,
+                "location": [
+                  -4506.603757342743,
+                  9828.156055760803,
+                  1062.0421979503626
+                ],
+                "impact": [
+                  -4506.6037452004375,
+                  9828.156052113916,
+                  1062.0422011403875
+                ],
+                "normal": [
+                  0.0001590649056103508,
+                  0.00030892217621614887,
+                  0.9999999396327206
+                ],
+                "actor": "SCR_Group_37f44f1392f4a7e6",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 46.539363861083984,
+                "location": [
+                  -4561.003757342743,
+                  9828.156055760803,
+                  1172.7436364369387
+                ],
+                "impact": [
+                  -4561.003745583894,
+                  9828.156052113916,
+                  1172.7436370584355
+                ],
+                "normal": [
+                  0.26683576532641373,
+                  0.2667327688922074,
+                  0.9260951918360031
+                ],
+                "actor": "SCR_Group_4e5c526ea51ebcb6",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5704.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/bef10cfc943a92f2/SM_H_Building_FutureTech_Dock_06_InterWall_02/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall_02.SM_H_Building_FutureTech_Dock_06_InterWall_02"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 157.244873046875,
+                "location": [
+                  -4533.803757342743,
+                  9855.356055760803,
+                  1062.038132913589
+                ],
+                "impact": [
+                  -4533.803745392165,
+                  9855.356052305646,
+                  1062.038125022381
+                ],
+                "normal": [
+                  0.0001590649056103508,
+                  0.00030892217621614887,
+                  0.9999999396327206
+                ],
+                "actor": "SCR_Group_37f44f1392f4a7e6",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5702.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/c75006a062d79a12/SM_H_Building_FutureTech_Dock_06_InterWall/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall.SM_H_Building_FutureTech_Dock_06_InterWall"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 46.542388916015625,
+                "location": [
+                  -4533.803757342743,
+                  9800.956055760802,
+                  1172.7406106071467
+                ],
+                "impact": [
+                  -4533.803745392165,
+                  9800.956051922187,
+                  1172.7406119881891
+                ],
+                "normal": [
+                  0.26683576532641373,
+                  0.2667327688922074,
+                  0.9260951918360031
+                ],
+                "actor": "SCR_Group_4e5c526ea51ebcb6",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5704.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/bef10cfc943a92f2/SM_H_Building_FutureTech_Dock_06_InterWall_02/StaticMeshes/SM_H_Building_FutureTech_Dock_06_InterWall_02.SM_H_Building_FutureTech_Dock_06_InterWall_02"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopEndTransform",
+          "point": [
+            -4596.015947076608,
+            9765.944322064344,
+            943.5939999999973
+          ],
+          "floor": null,
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": null
+            }
+          ]
+        }
+      ],
+      "climb_sweep": null,
+      "climb_column": [
+        {
+          "z": 658,
+          "hit": null
+        },
+        {
+          "z": 758,
+          "hit": null
+        },
+        {
+          "z": 858,
+          "hit": null
+        },
+        {
+          "z": 958,
+          "hit": null
+        }
+      ]
+    },
+    {
+      "id": "577f28d856f3f159",
+      "samples": [
+        {
+          "endpoint": "LadderBottomStartTransform",
+          "point": [
+            7852.44000000041,
+            -954.279742738523,
+            1030.958999999999
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 69.83621215820312,
+            "location": [
+              7852.44000000041,
+              -954.279742738523,
+              1031.1227893915166
+            ],
+            "impact": [
+              7852.440006548935,
+              -954.2796349486766,
+              1031.122784698633
+            ],
+            "normal": [
+              3.7142376730080008e-06,
+              4.243516776056999e-06,
+              0.9999999999840986
+            ],
+            "actor": "SCR_Group_41883397557a69eb",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6119.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/33c1e078d4ec84f2/SM_H_WalkwaySystem_MetalSupport_10/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_10.SM_H_WalkwaySystem_MetalSupport_10"
+          },
+          "capsule": {
+            "block": true,
+            "overlap": true,
+            "distance": 0.0,
+            "location": [
+              7852.44000000041,
+              -954.279742738523,
+              1126.122784698633
+            ],
+            "impact": [
+              7848.764111958931,
+              -949.4355712324186,
+              1034.745909545898
+            ],
+            "normal": [
+              0.10834924452763059,
+              -0.14278507755429223,
+              0.9838052972199869
+            ],
+            "actor": "SCR_Group_02c7dd07f492dd29",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5150.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/343c04c1c7106434/SM_M_Government_Electrical_Wire_02/StaticMeshes/SM_M_Government_Electrical_Wire_02.SM_M_Government_Electrical_Wire_02"
+          },
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 69.83631896972656,
+                "location": [
+                  7879.64000000041,
+                  -954.279742738523,
+                  1031.1226779308308
+                ],
+                "impact": [
+                  7879.640004686926,
+                  -954.2796349486764,
+                  1031.1226836713683
+                ],
+                "normal": [
+                  3.7142376730080008e-06,
+                  4.243516776056999e-06,
+                  0.9999999999840986
+                ],
+                "actor": "SCR_Group_41883397557a69eb",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6119.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/33c1e078d4ec84f2/SM_H_WalkwaySystem_MetalSupport_10/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_10.SM_H_WalkwaySystem_MetalSupport_10"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 69.83611297607422,
+                "location": [
+                  7825.24000000041,
+                  -954.279742738523,
+                  1031.1228877391804
+                ],
+                "impact": [
+                  7825.240008410947,
+                  -954.2796349486766,
+                  1031.1228857258977
+                ],
+                "normal": [
+                  3.7142376730080008e-06,
+                  4.243516776056999e-06,
+                  0.9999999999840986
+                ],
+                "actor": "SCR_Group_41883397557a69eb",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6119.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/33c1e078d4ec84f2/SM_H_WalkwaySystem_MetalSupport_10/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_10.SM_H_WalkwaySystem_MetalSupport_10"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 69.83633422851562,
+                "location": [
+                  7852.44000000041,
+                  -927.079742738523,
+                  1031.122664817809
+                ],
+                "impact": [
+                  7852.440006548935,
+                  -927.0796368106869,
+                  1031.1226692749767
+                ],
+                "normal": [
+                  3.7142376730080008e-06,
+                  4.243516776056999e-06,
+                  0.9999999999840986
+                ],
+                "actor": "SCR_Group_41883397557a69eb",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6119.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/33c1e078d4ec84f2/SM_H_WalkwaySystem_MetalSupport_10/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_10.SM_H_WalkwaySystem_MetalSupport_10"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 69.83609771728516,
+                "location": [
+                  7852.44000000041,
+                  -981.4797427385231,
+                  1031.1229008522023
+                ],
+                "impact": [
+                  7852.440006548936,
+                  -981.4796330866666,
+                  1031.1229001222894
+                ],
+                "normal": [
+                  3.7142376730080008e-06,
+                  4.243516776056999e-06,
+                  0.9999999999840986
+                ],
+                "actor": "SCR_Group_41883397557a69eb",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6119.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/33c1e078d4ec84f2/SM_H_WalkwaySystem_MetalSupport_10/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_10.SM_H_WalkwaySystem_MetalSupport_10"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderBottomEndTransform",
+          "point": [
+            7868.770000000368,
+            -954.2798054412124,
+            1068.298999999999
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 107.17627716064453,
+            "location": [
+              7868.770000000368,
+              -954.2798054412124,
+              1031.1227253427496
+            ],
+            "impact": [
+              7868.770005431003,
+              -954.2796976513614,
+              1031.122724045398
+            ],
+            "normal": [
+              3.7142376730080008e-06,
+              4.243516776056999e-06,
+              0.9999999999840986
+            ],
+            "actor": "SCR_Group_41883397557a69eb",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6119.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/33c1e078d4ec84f2/SM_H_WalkwaySystem_MetalSupport_10/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_10.SM_H_WalkwaySystem_MetalSupport_10"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 107.17637634277344,
+                "location": [
+                  7895.970000000368,
+                  -954.2798054412124,
+                  1031.1226204385748
+                ],
+                "impact": [
+                  7895.970003568993,
+                  -954.2796976513614,
+                  1031.1226230181333
+                ],
+                "normal": [
+                  3.7142376730080008e-06,
+                  4.243516776056999e-06,
+                  0.9999999999840986
+                ],
+                "actor": "SCR_Group_41883397557a69eb",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6119.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/33c1e078d4ec84f2/SM_H_WalkwaySystem_MetalSupport_10/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_10.SM_H_WalkwaySystem_MetalSupport_10"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 103.7190933227539,
+                "location": [
+                  7841.570000000368,
+                  -954.2798054412124,
+                  1034.5799079885473
+                ],
+                "impact": [
+                  7841.5699997417505,
+                  -954.2798029676177,
+                  1034.5799096387195
+                ],
+                "normal": [
+                  -0.266843525634311,
+                  0.3752017508905043,
+                  0.8877038802189336
+                ],
+                "actor": "SCR_Group_02c7dd07f492dd29",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5150.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/343c04c1c7106434/SM_M_Government_Electrical_Wire_02/StaticMeshes/SM_M_Government_Electrical_Wire_02.SM_M_Government_Electrical_Wire_02"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 107.1763916015625,
+                "location": [
+                  7868.770000000368,
+                  -927.0798054412123,
+                  1031.122607325553
+                ],
+                "impact": [
+                  7868.770005431003,
+                  -927.0796995133717,
+                  1031.1226086217416
+                ],
+                "normal": [
+                  3.7142376730080008e-06,
+                  4.243516776056999e-06,
+                  0.9999999999840986
+                ],
+                "actor": "SCR_Group_41883397557a69eb",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6119.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/33c1e078d4ec84f2/SM_H_WalkwaySystem_MetalSupport_10/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_10.SM_H_WalkwaySystem_MetalSupport_10"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 107.17616271972656,
+                "location": [
+                  7868.770000000368,
+                  -981.4798054412124,
+                  1031.1228368034353
+                ],
+                "impact": [
+                  7868.770005431003,
+                  -981.4796957893511,
+                  1031.1228394690543
+                ],
+                "normal": [
+                  3.7142376730080008e-06,
+                  4.243516776056999e-06,
+                  0.9999999999840986
+                ],
+                "actor": "SCR_Group_41883397557a69eb",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6119.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/33c1e078d4ec84f2/SM_H_WalkwaySystem_MetalSupport_10/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_10.SM_H_WalkwaySystem_MetalSupport_10"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopStartTransform",
+          "point": [
+            7955.496999999625,
+            -954.2801384489867,
+            2447.651719999998
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 74.4426498413086,
+            "location": [
+              7955.496999999625,
+              -954.2801384489867,
+              2443.209068728178
+            ],
+            "impact": [
+              7955.496999999625,
+              -954.2801384489867,
+              2443.209066475968
+            ],
+            "normal": [
+              -3.653274978329967e-06,
+              0.0,
+              0.9999999999933269
+            ],
+            "actor": "SCR_Group_4e3f0c884160fc96",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5792.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/af2ce34e9250602a/SM_H_Building_FutureTech_HBlack_01_InterWall_11D/StaticMeshes/SM_H_Building_FutureT_lack_01_InterWall_11D.SM_H_Building_FutureT_lack_01_InterWall_11D"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 74.44258117675781,
+                "location": [
+                  7982.6969999996245,
+                  -954.2801384489867,
+                  2443.209140849798
+                ],
+                "impact": [
+                  7982.6969999996245,
+                  -954.2801384489867,
+                  2443.2091393711507
+                ],
+                "normal": [
+                  -1.155212543969942e-06,
+                  -6.521089856699833e-07,
+                  0.9999999999991201
+                ],
+                "actor": "SCR_Group_4e3f0c884160fc96",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5792.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/af2ce34e9250602a/SM_H_Building_FutureTech_HBlack_01_InterWall_11D/StaticMeshes/SM_H_Building_FutureT_lack_01_InterWall_11D.SM_H_Building_FutureT_lack_01_InterWall_11D"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 74.4426498413086,
+                "location": [
+                  7955.496999999625,
+                  -927.0801384489866,
+                  2443.209068728178
+                ],
+                "impact": [
+                  7955.496999999625,
+                  -927.0801384489869,
+                  2443.209066475968
+                ],
+                "normal": [
+                  -3.653274978329967e-06,
+                  0.0,
+                  0.9999999999933269
+                ],
+                "actor": "SCR_Group_4e3f0c884160fc96",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5792.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/af2ce34e9250602a/SM_H_Building_FutureTech_HBlack_01_InterWall_11D/StaticMeshes/SM_H_Building_FutureT_lack_01_InterWall_11D.SM_H_Building_FutureT_lack_01_InterWall_11D"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 74.4426498413086,
+                "location": [
+                  7955.496999999625,
+                  -981.4801384489867,
+                  2443.209068728178
+                ],
+                "impact": [
+                  7955.496999999625,
+                  -981.4801384489865,
+                  2443.209066475968
+                ],
+                "normal": [
+                  -3.653274978329967e-06,
+                  0.0,
+                  0.9999999999933269
+                ],
+                "actor": "SCR_Group_4e3f0c884160fc96",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5792.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/af2ce34e9250602a/SM_H_Building_FutureTech_HBlack_01_InterWall_11D/StaticMeshes/SM_H_Building_FutureT_lack_01_InterWall_11D.SM_H_Building_FutureT_lack_01_InterWall_11D"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopEndTransform",
+          "point": [
+            7867.516000000294,
+            -954.2798006261582,
+            2208.5759999999973
+          ],
+          "floor": null,
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": null
+            }
+          ]
+        }
+      ],
+      "climb_sweep": null,
+      "climb_column": [
+        {
+          "z": 1163,
+          "hit": null
+        },
+        {
+          "z": 1263,
+          "hit": null
+        },
+        {
+          "z": 1363,
+          "hit": null
+        },
+        {
+          "z": 1463,
+          "hit": null
+        },
+        {
+          "z": 1563,
+          "hit": null
+        },
+        {
+          "z": 1663,
+          "hit": null
+        },
+        {
+          "z": 1763,
+          "hit": null
+        },
+        {
+          "z": 1863,
+          "hit": null
+        },
+        {
+          "z": 1963,
+          "hit": null
+        },
+        {
+          "z": 2063,
+          "hit": null
+        },
+        {
+          "z": 2163,
+          "hit": null
+        },
+        {
+          "z": 2263,
+          "hit": null
+        }
+      ]
+    },
+    {
+      "id": "14fd6a616d4f8738",
+      "samples": [
+        {
+          "endpoint": "LadderBottomStartTransform",
+          "point": [
+            1818.3000000000466,
+            -5929.940070162236,
+            1031.369999999999
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 71.61975860595703,
+            "location": [
+              1818.3000000000466,
+              -5929.940070162236,
+              1029.750241394042
+            ],
+            "impact": [
+              1818.2999948412646,
+              -5929.940162995661,
+              1029.750241616529
+            ],
+            "normal": [
+              -4.773982429413373e-06,
+              4.244903669929786e-06,
+              0.9999999999795951
+            ],
+            "actor": "SCR_Group_59bfb6f0fbe594aa",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6112.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/81e7c1181308047b/SM_H_WalkwaySystem_MetalSupport_07/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_07.SM_H_WalkwaySystem_MetalSupport_07"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 71.61962890625,
+                "location": [
+                  1845.5000000000466,
+                  -5929.940070162236,
+                  1029.7503725242605
+                ],
+                "impact": [
+                  1845.499992979284,
+                  -5929.940162995661,
+                  1029.7503714688512
+                ],
+                "normal": [
+                  -4.773982429413373e-06,
+                  4.244903669929786e-06,
+                  0.9999999999795951
+                ],
+                "actor": "SCR_Group_59bfb6f0fbe594aa",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6112.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/81e7c1181308047b/SM_H_WalkwaySystem_MetalSupport_07/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_07.SM_H_WalkwaySystem_MetalSupport_07"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 71.61988067626953,
+                "location": [
+                  1791.1000000000465,
+                  -5929.940070162236,
+                  1029.7501168203344
+                ],
+                "impact": [
+                  1791.0999967032456,
+                  -5929.940162995661,
+                  1029.750121255403
+                ],
+                "normal": [
+                  -4.243503944037799e-06,
+                  3.714252562207358e-06,
+                  0.9999999999840985
+                ],
+                "actor": "SCR_Group_59bfb6f0fbe594aa",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6112.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/81e7c1181308047b/SM_H_WalkwaySystem_MetalSupport_07/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_07.SM_H_WalkwaySystem_MetalSupport_07"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 71.61986541748047,
+                "location": [
+                  1818.3000000000466,
+                  -5902.740070162236,
+                  1029.7501364898671
+                ],
+                "impact": [
+                  1818.2999948412648,
+                  -5902.7401648576415,
+                  1029.7501356510404
+                ],
+                "normal": [
+                  -4.243503944037799e-06,
+                  3.714252562207358e-06,
+                  0.9999999999840985
+                ],
+                "actor": "SCR_Group_59bfb6f0fbe594aa",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6112.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/81e7c1181308047b/SM_H_WalkwaySystem_MetalSupport_07/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_07.SM_H_WalkwaySystem_MetalSupport_07"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 71.61964416503906,
+                "location": [
+                  1818.3000000000466,
+                  -5957.140070162236,
+                  1029.7503528547277
+                ],
+                "impact": [
+                  1818.2999948412644,
+                  -5957.1401611336805,
+                  1029.750357077909
+                ],
+                "normal": [
+                  -4.773982429413373e-06,
+                  4.244903669929786e-06,
+                  0.9999999999795951
+                ],
+                "actor": "SCR_Group_59bfb6f0fbe594aa",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6112.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/81e7c1181308047b/SM_H_WalkwaySystem_MetalSupport_07/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_07.SM_H_WalkwaySystem_MetalSupport_07"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderBottomEndTransform",
+          "point": [
+            1801.969999999972,
+            -5929.940053061524,
+            1068.7099999999991
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 108.95983123779297,
+            "location": [
+              1801.969999999972,
+              -5929.940053061524,
+              1029.750170788764
+            ],
+            "impact": [
+              1801.969995959063,
+              -5929.940145894951,
+              1029.7501673822271
+            ],
+            "normal": [
+              -4.243503944037799e-06,
+              3.714252562207358e-06,
+              0.9999999999840985
+            ],
+            "actor": "SCR_Group_59bfb6f0fbe594aa",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6112.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/81e7c1181308047b/SM_H_WalkwaySystem_MetalSupport_07/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_07.SM_H_WalkwaySystem_MetalSupport_07"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 108.95970916748047,
+                "location": [
+                  1829.169999999972,
+                  -5929.940053061524,
+                  1029.7502888059607
+                ],
+                "impact": [
+                  1829.1699940970825,
+                  -5929.940145894951,
+                  1029.7502935096454
+                ],
+                "normal": [
+                  -4.773982429413373e-06,
+                  4.244903669929786e-06,
+                  0.9999999999795951
+                ],
+                "actor": "SCR_Group_59bfb6f0fbe594aa",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6112.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/81e7c1181308047b/SM_H_WalkwaySystem_MetalSupport_07/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_07.SM_H_WalkwaySystem_MetalSupport_07"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 108.95994567871094,
+                "location": [
+                  1774.769999999972,
+                  -5929.940053061524,
+                  1029.7500527715674
+                ],
+                "impact": [
+                  1774.7699978210437,
+                  -5929.940145894951,
+                  1029.7500519589198
+                ],
+                "normal": [
+                  -4.243503944037799e-06,
+                  3.714252562207358e-06,
+                  0.9999999999840985
+                ],
+                "actor": "SCR_Group_59bfb6f0fbe594aa",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6112.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/81e7c1181308047b/SM_H_WalkwaySystem_MetalSupport_07/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_07.SM_H_WalkwaySystem_MetalSupport_07"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 108.95993041992188,
+                "location": [
+                  1801.969999999972,
+                  -5902.740053061524,
+                  1029.7500724411002
+                ],
+                "impact": [
+                  1801.9699959590632,
+                  -5902.740147756931,
+                  1029.7500663545575
+                ],
+                "normal": [
+                  -4.243503944037799e-06,
+                  3.714252562207358e-06,
+                  0.9999999999840985
+                ],
+                "actor": "SCR_Group_59bfb6f0fbe594aa",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6112.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/81e7c1181308047b/SM_H_WalkwaySystem_MetalSupport_07/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_07.SM_H_WalkwaySystem_MetalSupport_07"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 108.95972442626953,
+                "location": [
+                  1801.969999999972,
+                  -5957.140053061524,
+                  1029.7502756929389
+                ],
+                "impact": [
+                  1801.9699959590632,
+                  -5957.140144032969,
+                  1029.7502791187032
+                ],
+                "normal": [
+                  -4.773982429413373e-06,
+                  4.244903669929786e-06,
+                  0.9999999999795951
+                ],
+                "actor": "SCR_Group_59bfb6f0fbe594aa",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_6112.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/81e7c1181308047b/SM_H_WalkwaySystem_MetalSupport_07/StaticMeshes/SM_H_WalkwaySystem_MetalSupport_07.SM_H_WalkwaySystem_MetalSupport_07"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopStartTransform",
+          "point": [
+            1715.2430000000168,
+            -5929.939962241217,
+            2446.6740470000004
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 137.4650421142578,
+            "location": [
+              1715.2430000000168,
+              -5929.939962241217,
+              2379.209006316254
+            ],
+            "impact": [
+              1715.2430000000168,
+              -5929.939962241217,
+              2379.208999999999
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "actor": "SC_f394978b86dfcc0e",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.StaticMeshActor_868.StaticMeshComponent0",
+            "item": -1,
+            "mesh": "/Game/Maps/SpaceCenter/Assets/c95c8de831eff4f8/SM_H_Building_FutureTech_HLight_01_InterWall_04H/StaticMeshes/SM_H_Building_FutureTech_HLight_01_InterWall_04H.SM_H_Building_FutureTech_HLight_01_InterWall_04H"
+          },
+          "capsule": {
+            "block": true,
+            "overlap": true,
+            "distance": 0.0,
+            "location": [
+              1715.2430000000168,
+              -5929.939962241217,
+              2474.208999999999
+            ],
+            "impact": [
+              1743.6483886719216,
+              -5929.991484374972,
+              2424.389175781249
+            ],
+            "normal": [
+              -0.9999983690360773,
+              0.00180608006066313,
+              0.0
+            ],
+            "actor": "SC_f394978b86dfcc0e",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.StaticMeshActor_868.StaticMeshComponent0",
+            "item": -1,
+            "mesh": "/Game/Maps/SpaceCenter/Assets/c95c8de831eff4f8/SM_H_Building_FutureTech_HLight_01_InterWall_04H/StaticMeshes/SM_H_Building_FutureTech_HLight_01_InterWall_04H.SM_H_Building_FutureTech_HLight_01_InterWall_04H"
+          },
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 136.97645568847656,
+                "location": [
+                  1742.4430000000168,
+                  -5929.939962241217,
+                  2379.697597510407
+                ],
+                "impact": [
+                  1742.4430000000166,
+                  -5929.939962241217,
+                  2379.697590842837
+                ],
+                "normal": [
+                  -0.9877949401554087,
+                  0.03981680298260991,
+                  0.1505847880883617
+                ],
+                "actor": "SC_f394978b86dfcc0e",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.StaticMeshActor_868.StaticMeshComponent0",
+                "item": -1,
+                "mesh": "/Game/Maps/SpaceCenter/Assets/c95c8de831eff4f8/SM_H_Building_FutureTech_HLight_01_InterWall_04H/StaticMeshes/SM_H_Building_FutureTech_HLight_01_InterWall_04H.SM_H_Building_FutureTech_HLight_01_InterWall_04H"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 137.4650421142578,
+                "location": [
+                  1688.0430000000167,
+                  -5929.939962241217,
+                  2379.209006316254
+                ],
+                "impact": [
+                  1688.043000000017,
+                  -5929.939962241217,
+                  2379.208999999999
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SC_f394978b86dfcc0e",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.StaticMeshActor_868.StaticMeshComponent0",
+                "item": -1,
+                "mesh": "/Game/Maps/SpaceCenter/Assets/c95c8de831eff4f8/SM_H_Building_FutureTech_HLight_01_InterWall_04H/StaticMeshes/SM_H_Building_FutureTech_HLight_01_InterWall_04H.SM_H_Building_FutureTech_HLight_01_InterWall_04H"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 137.4650421142578,
+                "location": [
+                  1715.2430000000168,
+                  -5902.739962241217,
+                  2379.209006316254
+                ],
+                "impact": [
+                  1715.2430000000168,
+                  -5902.739962241217,
+                  2379.208999999999
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SC_f394978b86dfcc0e",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.StaticMeshActor_868.StaticMeshComponent0",
+                "item": -1,
+                "mesh": "/Game/Maps/SpaceCenter/Assets/c95c8de831eff4f8/SM_H_Building_FutureTech_HLight_01_InterWall_04H/StaticMeshes/SM_H_Building_FutureTech_HLight_01_InterWall_04H.SM_H_Building_FutureTech_HLight_01_InterWall_04H"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 137.4650421142578,
+                "location": [
+                  1715.2430000000168,
+                  -5957.139962241216,
+                  2379.209006316254
+                ],
+                "impact": [
+                  1715.2430000000168,
+                  -5957.139962241216,
+                  2379.208999999999
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SC_f394978b86dfcc0e",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.StaticMeshActor_868.StaticMeshComponent0",
+                "item": -1,
+                "mesh": "/Game/Maps/SpaceCenter/Assets/c95c8de831eff4f8/SM_H_Building_FutureTech_HLight_01_InterWall_04H/StaticMeshes/SM_H_Building_FutureTech_HLight_01_InterWall_04H.SM_H_Building_FutureTech_HLight_01_InterWall_04H"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopEndTransform",
+          "point": [
+            1803.2240000000456,
+            -5929.940054374689,
+            2208.9869999999974
+          ],
+          "floor": null,
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": null
+            }
+          ]
+        }
+      ],
+      "climb_sweep": null,
+      "climb_column": [
+        {
+          "z": 1163,
+          "hit": null
+        },
+        {
+          "z": 1263,
+          "hit": null
+        },
+        {
+          "z": 1363,
+          "hit": null
+        },
+        {
+          "z": 1463,
+          "hit": null
+        },
+        {
+          "z": 1563,
+          "hit": null
+        },
+        {
+          "z": 1663,
+          "hit": null
+        },
+        {
+          "z": 1763,
+          "hit": null
+        },
+        {
+          "z": 1863,
+          "hit": null
+        },
+        {
+          "z": 1963,
+          "hit": null
+        },
+        {
+          "z": 2063,
+          "hit": null
+        },
+        {
+          "z": 2163,
+          "hit": null
+        },
+        {
+          "z": 2263,
+          "hit": null
+        }
+      ]
+    },
+    {
+      "id": "9cf77452749b621c",
+      "samples": [
+        {
+          "endpoint": "LadderBottomStartTransform",
+          "point": [
+            -21.29210409137886,
+            -7053.424226878793,
+            -109.8179999999993
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 68.9717788696289,
+            "location": [
+              -21.29210409137886,
+              -7053.424226878793,
+              -108.78978053855826
+            ],
+            "impact": [
+              -21.29210409137886,
+              -7053.424226878793,
+              -108.78977929687608
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "actor": "SCR_Group_2e9fcae81e39e5f7",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 68.9717788696289,
+                "location": [
+                  5.907895908621139,
+                  -7053.424226878793,
+                  -108.78978053855826
+                ],
+                "impact": [
+                  5.907895908620958,
+                  -7053.424226878793,
+                  -108.78977929687608
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 68.9717788696289,
+                "location": [
+                  -48.49210409137886,
+                  -7053.424226878793,
+                  -108.78978053855826
+                ],
+                "impact": [
+                  -48.49210409137868,
+                  -7053.424226878793,
+                  -108.78977929687608
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 68.9717788696289,
+                "location": [
+                  -21.29210409137886,
+                  -7026.224226878793,
+                  -108.78978053855826
+                ],
+                "impact": [
+                  -21.29210409137886,
+                  -7026.224226878793,
+                  -108.78977929687608
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 68.9717788696289,
+                "location": [
+                  -21.29210409137886,
+                  -7080.624226878793,
+                  -108.78978053855826
+                ],
+                "impact": [
+                  -21.29210409137886,
+                  -7080.624226878793,
+                  -108.78977929687608
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderBottomEndTransform",
+          "point": [
+            -9.948334541870281,
+            -7065.171047402197,
+            -72.47799999999916
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 106.31178283691406,
+            "location": [
+              -9.948334541870281,
+              -7065.171047402197,
+              -108.78978557872688
+            ],
+            "impact": [
+              -9.948334541870281,
+              -7065.171047402197,
+              -108.78977929687608
+            ],
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "actor": "SCR_Group_2e9fcae81e39e5f7",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 106.31178283691406,
+                "location": [
+                  17.251665458129718,
+                  -7065.171047402197,
+                  -108.78978557872688
+                ],
+                "impact": [
+                  17.251665458129537,
+                  -7065.171047402197,
+                  -108.78977929687608
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 106.31178283691406,
+                "location": [
+                  -37.148334541870284,
+                  -7065.171047402197,
+                  -108.78978557872688
+                ],
+                "impact": [
+                  -37.1483345418701,
+                  -7065.171047402197,
+                  -108.78977929687608
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 106.31178283691406,
+                "location": [
+                  -9.948334541870281,
+                  -7037.971047402197,
+                  -108.78978557872688
+                ],
+                "impact": [
+                  -9.948334541870281,
+                  -7037.971047402197,
+                  -108.78977929687608
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 106.31178283691406,
+                "location": [
+                  -9.948334541870281,
+                  -7092.371047402196,
+                  -108.78978557872688
+                ],
+                "impact": [
+                  -9.948334541870281,
+                  -7092.371047402196,
+                  -108.78977929687608
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopStartTransform",
+          "point": [
+            50.2972932420671,
+            -7127.55723867804,
+            513.4880000000012
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 92.14130401611328,
+            "location": [
+              50.2972932420671,
+              -7127.55723867804,
+              491.34669657993436
+            ],
+            "impact": [
+              50.2972932420671,
+              -7127.55723867804,
+              491.34669812720153
+            ],
+            "normal": [
+              1.1223892536878753e-05,
+              -1.1812869688613268e-05,
+              0.9999999998672402
+            ],
+            "actor": "SCR_Group_f28abddd18d22c4c",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5603.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/8f209b54c66f6c04/SM_H_Building_FutureTech_HLight_01_InterWall_04C/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04C.SM_H_Building_FutureT_ight_01_InterWall_04C"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 92.98399353027344,
+                "location": [
+                  77.4972932420671,
+                  -7127.55723867804,
+                  490.50400790023923
+                ],
+                "impact": [
+                  77.49729324206692,
+                  -7127.55723867804,
+                  490.50400431307725
+                ],
+                "normal": [
+                  -0.001909145814370711,
+                  -0.000668549185692078,
+                  0.9999979541000302
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 93.08785247802734,
+                "location": [
+                  23.0972932420671,
+                  -7127.55723867804,
+                  490.40014621067166
+                ],
+                "impact": [
+                  23.09729324206728,
+                  -7127.55723867804,
+                  490.40014656829294
+                ],
+                "normal": [
+                  -0.001909145814370711,
+                  -0.000668549185692078,
+                  0.9999979541000302
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 93.01773834228516,
+                "location": [
+                  50.2972932420671,
+                  -7100.357238678041,
+                  490.47026153850675
+                ],
+                "impact": [
+                  50.2972932420671,
+                  -7100.357238678041,
+                  490.4702600157397
+                ],
+                "normal": [
+                  -0.001909145814370711,
+                  -0.000668549185692078,
+                  0.9999979541000302
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 93.05410766601562,
+                "location": [
+                  50.2972932420671,
+                  -7154.75723867804,
+                  490.43389257240415
+                ],
+                "impact": [
+                  50.2972932420671,
+                  -7154.75723867804,
+                  490.4338908656304
+                ],
+                "normal": [
+                  -0.001909145814370711,
+                  -0.000668549185692078,
+                  0.9999979541000302
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopEndTransform",
+          "point": [
+            -10.819436012534425,
+            -7064.268995170947,
+            307.79899999999907
+          ],
+          "floor": null,
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": null
+            }
+          ]
+        }
+      ],
+      "climb_sweep": null,
+      "climb_column": [
+        {
+          "z": 22,
+          "hit": null
+        },
+        {
+          "z": 122,
+          "hit": null
+        },
+        {
+          "z": 222,
+          "hit": null
+        },
+        {
+          "z": 322,
+          "hit": null
+        }
+      ]
+    },
+    {
+      "id": "a3fd9163e28c7e90",
+      "samples": [
+        {
+          "endpoint": "LadderBottomStartTransform",
+          "point": [
+            59.56000000005588,
+            -6130.380000000005,
+            -708.4860000000008
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 45.751243591308594,
+            "location": [
+              59.56000000005588,
+              -6130.380000000005,
+              -684.2372447237976
+            ],
+            "impact": [
+              59.56000000005588,
+              -6130.380000000005,
+              -684.2372451981997
+            ],
+            "normal": [
+              0.0035260186130351046,
+              0.027830026177996566,
+              0.9996064509774198
+            ],
+            "actor": "SCR_Group_7e8e3ab9cef5b946",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5605.Instances",
+            "item": 0,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/41b31c3c7e14299c/SM_H_Building_FutureTech_HLight_01_InterWall_04G/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04G.SM_H_Building_FutureT_ight_01_InterWall_04G"
+          },
+          "capsule": {
+            "block": true,
+            "overlap": true,
+            "distance": 0.0,
+            "location": [
+              59.56000000005588,
+              -6130.380000000005,
+              -589.2372451981997
+            ],
+            "impact": [
+              63.20355225359703,
+              -6137.015721312652,
+              -678.4930878509158
+            ],
+            "normal": [
+              -0.11329619225437321,
+              0.20633760548620567,
+              0.9718995654813717
+            ],
+            "actor": "SCR_Group_7fc6431ea510bc61",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_3800.Instances",
+            "item": 4,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/65d1975f2dfa94e6/SM_H_IceLand_Props_Macadam_01a/StaticMeshes/SM_H_IceLand_Props_Macadam_01a.SM_H_IceLand_Props_Macadam_01a"
+          },
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 45.847190856933594,
+                "location": [
+                  86.76000000005588,
+                  -6130.380000000005,
+                  -684.3331894264229
+                ],
+                "impact": [
+                  86.7600000000557,
+                  -6130.380000000005,
+                  -684.3331906637185
+                ],
+                "normal": [
+                  0.0035260186130351046,
+                  0.027830026177996566,
+                  0.9996064509774198
+                ],
+                "actor": "SCR_Group_7e8e3ab9cef5b946",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5605.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/41b31c3c7e14299c/SM_H_Building_FutureTech_HLight_01_InterWall_04G/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04G.SM_H_Building_FutureT_ight_01_InterWall_04G"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 45.65530014038086,
+                "location": [
+                  32.36000000005588,
+                  -6130.380000000005,
+                  -684.1413000211724
+                ],
+                "impact": [
+                  32.36000000005606,
+                  -6130.380000000005,
+                  -684.141299732681
+                ],
+                "normal": [
+                  0.0035260186130351046,
+                  0.027830026177996566,
+                  0.9996064509774198
+                ],
+                "actor": "SCR_Group_7e8e3ab9cef5b946",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5605.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/41b31c3c7e14299c/SM_H_Building_FutureTech_HLight_01_InterWall_04G/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04G.SM_H_Building_FutureT_ight_01_InterWall_04G"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 44.429107666015625,
+                "location": [
+                  59.56000000005588,
+                  -6103.180000000005,
+                  -682.915107904435
+                ],
+                "impact": [
+                  59.5600000019858,
+                  -6103.180000001737,
+                  -682.9151083571688
+                ],
+                "normal": [
+                  -0.045529708847459,
+                  -0.031025479430371164,
+                  0.9984810790587779
+                ],
+                "actor": "SCR_Group_7fc6431ea510bc61",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_3800.Instances",
+                "item": 4,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/65d1975f2dfa94e6/SM_H_IceLand_Props_Macadam_01a/StaticMeshes/SM_H_IceLand_Props_Macadam_01a.SM_H_IceLand_Props_Macadam_01a"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 44.99396896362305,
+                "location": [
+                  59.56000000005588,
+                  -6157.5800000000045,
+                  -683.4799677119263
+                ],
+                "impact": [
+                  59.56000000005588,
+                  -6157.5800000000045,
+                  -683.4799704614258
+                ],
+                "normal": [
+                  0.0035260186130351046,
+                  0.027830026177996566,
+                  0.9996064509774198
+                ],
+                "actor": "SCR_Group_7e8e3ab9cef5b946",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5605.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/41b31c3c7e14299c/SM_H_Building_FutureTech_HLight_01_InterWall_04G/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04G.SM_H_Building_FutureT_ight_01_InterWall_04G"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderBottomEndTransform",
+          "point": [
+            59.56000000005588,
+            -6146.710000000021,
+            -671.1460000000006
+          ],
+          "floor": {
+            "block": true,
+            "overlap": false,
+            "distance": 80.30988311767578,
+            "location": [
+              59.56000000005588,
+              -6146.710000000021,
+              -681.4558827600486
+            ],
+            "impact": [
+              59.55999999999912,
+              -6146.70999999997,
+              -681.4558805390079
+            ],
+            "normal": [
+              -0.08089301656596998,
+              0.0017820925730638714,
+              0.9967211967330276
+            ],
+            "actor": "SCR_Group_7fc6431ea510bc61",
+            "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_3800.Instances",
+            "item": 4,
+            "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/65d1975f2dfa94e6/SM_H_IceLand_Props_Macadam_01a/StaticMeshes/SM_H_IceLand_Props_Macadam_01a.SM_H_IceLand_Props_Macadam_01a"
+          },
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 82.2322006225586,
+                "location": [
+                  86.76000000005588,
+                  -6146.710000000021,
+                  -683.378199311257
+                ],
+                "impact": [
+                  86.7600000000557,
+                  -6146.710000000021,
+                  -683.3782012740509
+                ],
+                "normal": [
+                  -0.07816007083017144,
+                  0.0700271685018146,
+                  0.9944783552191779
+                ],
+                "actor": "SCR_Group_7e8e3ab9cef5b946",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5605.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/41b31c3c7e14299c/SM_H_Building_FutureTech_HLight_01_InterWall_04G/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04G.SM_H_Building_FutureT_ight_01_InterWall_04G"
+              }
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 82.54065704345703,
+                "location": [
+                  32.36000000005588,
+                  -6146.710000000021,
+                  -683.6866569242484
+                ],
+                "impact": [
+                  32.36000000005606,
+                  -6146.710000000021,
+                  -683.6866564807865
+                ],
+                "normal": [
+                  0.0035260186130351046,
+                  0.027830026177996566,
+                  0.9996064509774198
+                ],
+                "actor": "SCR_Group_7e8e3ab9cef5b946",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5605.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/41b31c3c7e14299c/SM_H_Building_FutureTech_HLight_01_InterWall_04G/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04G.SM_H_Building_FutureT_ight_01_InterWall_04G"
+              }
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 79.49378204345703,
+                "location": [
+                  59.56000000005588,
+                  -6119.510000000021,
+                  -680.6397807321555
+                ],
+                "impact": [
+                  59.560000001240425,
+                  -6119.510000001084,
+                  -680.6397793085339
+                ],
+                "normal": [
+                  0.003936000247701499,
+                  0.04028688274675771,
+                  0.999180401619547
+                ],
+                "actor": "SCR_Group_7fc6431ea510bc61",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_3800.Instances",
+                "item": 4,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/65d1975f2dfa94e6/SM_H_IceLand_Props_Macadam_01a/StaticMeshes/SM_H_IceLand_Props_Macadam_01a.SM_H_IceLand_Props_Macadam_01a"
+              }
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 81.87932586669922,
+                "location": [
+                  59.56000000005588,
+                  -6173.910000000021,
+                  -683.0253278932578
+                ],
+                "impact": [
+                  59.56000000005588,
+                  -6173.910000000021,
+                  -683.0253272095313
+                ],
+                "normal": [
+                  0.0035260186130351046,
+                  0.027830026177996566,
+                  0.9996064509774198
+                ],
+                "actor": "SCR_Group_7e8e3ab9cef5b946",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5605.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/41b31c3c7e14299c/SM_H_Building_FutureTech_HLight_01_InterWall_04G/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04G.SM_H_Building_FutureT_ight_01_InterWall_04G"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopStartTransform",
+          "point": [
+            59.56000000005588,
+            -6233.436999999976,
+            -85.18000000000029
+          ],
+          "floor": null,
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": {
+                "block": true,
+                "overlap": false,
+                "distance": 93.60977935791016,
+                "location": [
+                  59.56000000005588,
+                  -6260.636999999976,
+                  -108.78977828502684
+                ],
+                "impact": [
+                  59.56000000005588,
+                  -6260.636999999976,
+                  -108.78977929687608
+                ],
+                "normal": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "actor": "SCR_Group_2e9fcae81e39e5f7",
+                "component": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_5814.Instances",
+                "item": 0,
+                "mesh": "/Game/Maps/SpaceCenter/Restored/Assets/3798706bd2599659/SM_H_Building_FutureTech_HLight_01_InterWall_04I/StaticMeshes/SM_H_Building_FutureT_ight_01_InterWall_04I.SM_H_Building_FutureT_ight_01_InterWall_04I"
+              }
+            }
+          ]
+        },
+        {
+          "endpoint": "LadderTopEndTransform",
+          "point": [
+            59.56000000005588,
+            -6145.456000000006,
+            -290.8690000000024
+          ],
+          "floor": null,
+          "capsule": null,
+          "footprint": [
+            {
+              "offset": [
+                27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                -27.2,
+                0
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                27.2
+              ],
+              "hit": null
+            },
+            {
+              "offset": [
+                0,
+                -27.2
+              ],
+              "hit": null
+            }
+          ]
+        }
+      ],
+      "climb_sweep": null,
+      "climb_column": [
+        {
+          "z": -576,
+          "hit": null
+        },
+        {
+          "z": -476,
+          "hit": null
+        },
+        {
+          "z": -376,
+          "hit": null
+        },
+        {
+          "z": -276,
+          "hit": null
+        }
+      ]
+    }
+  ],
+  "bindings": []
+}

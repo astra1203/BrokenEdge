@@ -46,6 +46,7 @@ void AExtractionGuard::Tick(float Delta)
 	Super::Tick(Delta);
 	auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
 	const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
+	// 没有受控角色或角色已被击败时，停止移动并清除目标，结束本次 AI 更新。
 	if (!C || C->IsDefeated())
 	{
 		StopMovement();
@@ -54,19 +55,25 @@ void AExtractionGuard::Tick(float Delta)
 		State = EExtractionGuardState::Dead;
 		return;
 	}
+	// 仅在服务端对局进行中且持久化存储可用时决策；其他情况下停止移动。
 	const auto* GM = GetWorld()->GetAuthGameMode<AExtractionGameMode>();
 	if (!GS || GS->Phase != EExtractionPhase::Active || !GM || !GM->Store() || !GM->Store()->IsAvailable())
 	{
 		StopMovement();
 		return;
 	}
+	// 所有反应、射击和移动间隔均使用当前世界时间计算。
 	const double Now = GetWorld()->GetTimeSeconds();
+	// Seen 是本轮选出的可见目标；评分越小，攻击优先级越高。
 	ABrokenEdgeCharacter* Seen = nullptr;
 	float Best = TNumericLimits<float>::Max();
+	// 从玩家列表取得角色，再由 Sees 检查生命状态、距离、视角、烟雾和场景遮挡。
 	for (APlayerState* PS : GS->PlayerArray)
 		if (auto* Other = Cast<ABrokenEdgeCharacter>(PS->GetPawn()); Sees(Other))
 		{
+			// 仅统计可见检查通过次数，不要求累计达到某个次数才发现玩家。
 			++VisibleChecks;
+			// 倒地惩罚高于当前 30 米视野内的最大距离平方：未倒地优先，同类目标选最近的。
 			const float Score = FVector::DistSquared(C->GetActorLocation(), Other->GetActorLocation())
 				+ (Other->GetExtractionAbilities()->IsDowned() ? 10000000.f : 0.f);
 			if (Score < Best)
@@ -78,27 +85,36 @@ void AExtractionGuard::Tick(float Delta)
 	if (Seen)
 	{
 		const auto* Rules = GetDefault<UExtractionRules>();
+		// 首次发现、重新发现或切换目标时才重置反应时间，持续看见同一目标不会延后开枪。
 		if (Target != Seen) ReactAt = Now + FMath::Max(0.f, Rules->GuardReactionSeconds);
 		Target = Seen;
+		// 持续记录目标位置和最后看见的时间；LostAt 并非首次丢失目标的时间。
 		LastKnown = Seen->GetActorLocation();
 		LostAt = Now;
+		// 交战时关注目标并站定；反应时间控制开枪时机，不延迟进入交战状态。
 		State = EExtractionGuardState::Engage;
 		SetFocus(Seen);
 		StopMovement();
+		// 同时满足反应时间和 AI 射击间隔后，才尝试换弹或开枪。
 		if (auto* W = C->GetEquippedWeapon(); W && Now >= ReactAt && Now >= NextFireAt)
 		{
 			if (W->IsEmpty()) C->GetExtractionCombat()->BeginServerReload();
 			else
 			{
+				// 服务端战斗组件会继续校验射速、弹药和战斗状态，调用不一定成功发射。
 				const uint32 Before = C->GetExtractionCombat()->GetAcceptedShots();
+				// 在目标位置上移 10 cm，并添加长度为 20 cm 的随机方向偏移作为瞄准误差。
 				C->GetExtractionCombat()->FireGuard(LastKnown + FVector(0, 0, 10) + FMath::VRand() * 20);
+				// 只统计实际被接受的射击，成功后才推进 AI 的下次开火时间。
 				const uint32 Fired = C->GetExtractionCombat()->GetAcceptedShots() - Before;
 				Shots += Fired;
 				if (Fired) NextFireAt = Now + FMath::Max(.1f, Rules->GuardShotInterval);
 			}
 		}
+		// 有可见目标时，本轮不再执行后面的搜索和巡逻逻辑。
 		return;
 	}
+	// 本轮没有可见目标、上一轮仍有目标：解除关注，进入搜索并允许立即请求移动。
 	if (Target)
 	{
 		Target = nullptr;
@@ -108,29 +124,36 @@ void AExtractionGuard::Tick(float Delta)
 	}
 	if (State == EExtractionGuardState::Search)
 	{
+		// 从最后看见玩家起搜索五秒；位置固定为 LastKnown，不追踪失去视野后的实际位置。
 		if (Now - LostAt < 5)
 		{
 			if (Now >= NextMove)
 			{
+				// 最多每秒提交一次寻路请求，指定到达容差为 80 cm。
 				MoveToLocation(LastKnown, 80);
 				NextMove = Now + 1;
 			}
 			return;
 		}
+		// 搜索超时后返回尚未完成的巡逻目标点；每轮仍会先检查能否重新发现玩家。
 		State = EExtractionGuardState::Return;
 		NextMove = 0;
 	}
+	// 返回和巡逻共用路线移动逻辑，没有有效路线时不再提交移动请求。
 	if (!Route || Route->Points.IsEmpty()) return;
 	const FVector Point = Route->Points[PatrolIndex % Route->Points.Num()];
+	// 水平距离小于 110 cm 即记为到点，循环切换下一点并恢复巡逻状态。
 	if (FVector::DistSquared2D(C->GetActorLocation(), Point) < FMath::Square(110.f))
 	{
 		++PatrolArrivals;
 		PatrolIndex = (PatrolIndex + 1) % Route->Points.Num();
 		State = EExtractionGuardState::Patrol;
+		// 延后 0.6 秒再允许提交移动请求；这里不会主动停止当前移动。
 		NextMove = Now + .6;
 	}
 	if (Now >= NextMove)
 	{
+		// 返回或巡逻途中最多每秒提交一次寻路请求，指定到达容差为 70 cm。
 		MoveToLocation(Point, 70);
 		NextMove = Now + 1;
 	}

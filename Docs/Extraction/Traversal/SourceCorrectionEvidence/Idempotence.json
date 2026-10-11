@@ -1,0 +1,14 @@
+{
+  "runs": [
+    "LadderSourceBind07",
+    "LadderSourceBind08"
+  ],
+  "checks": {
+    "same_geometry": true,
+    "same_instance_ids": true,
+    "same_classification": true,
+    "no_removed_actors": true,
+    "same_bindings": true
+  },
+  "result": "passed"
+}

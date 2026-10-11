@@ -11,11 +11,16 @@ from audit_geometry import glb,accessor
 
 sources=json.loads((ROOT/'Saved/Traversal/Sources.json').read_text(encoding='utf-8'))
 result={}
-for path in sorted(set(row['mesh'] for row in sources['ladders'])):
+assert sources['schema'] == 2, 'Use original interaction sources'
+for path in sorted(sources['meshes']):
     entry=sources['meshes'][path]
     filename=Path(entry['file'])
     doc,binary=glb(filename)
     faces=[]
+    all_vertices=[(p[0]*100,p[2]*100,p[1]*100) for mesh in doc['meshes'] for primitive in mesh['primitives']
+                  for p in accessor(doc,binary,primitive['attributes']['POSITION'])]
+    mesh_width=max(p[0] for p in all_vertices)-min(p[0] for p in all_vertices)
+    mesh_depth=max(p[1] for p in all_vertices)-min(p[1] for p in all_vertices)
     for mesh in doc['meshes']:
         for primitive in mesh['primitives']:
             vertices=[(p[0]*100,p[2]*100,p[1]*100) for p in accessor(doc,binary,primitive['attributes']['POSITION'])]
@@ -24,15 +29,23 @@ for path in sorted(set(row['mesh'] for row in sources['ladders'])):
                 triangle=[vertices[j] for j in indices[i:i+3]]
                 low=[min(p[k] for p in triangle) for k in range(3)]
                 high=[max(p[k] for p in triangle) for k in range(3)]
-                if high[1]-low[1]>35 and high[0]-low[0]>3 and high[2]-low[2]<4:
+                # Original industrial ladder rungs run along local X; +Y is the climbing side.
+                if high[0]-low[0]>1 and mesh_depth*.5 < high[1]-low[1] < mesh_depth*.95 and high[2]-low[2]<.01:
                     faces.append(dict(min=low,max=high,z=(low[2]+high[2])/2))
     groups=[]
     for face in sorted(faces,key=lambda p:p['z']):
         if not groups or face['z']-groups[-1][-1]['z']>15:groups.append([])
         groups[-1].append(face)
-    rungs=[max(group,key=lambda p:p['z']) for group in groups]
-    assert len(rungs)>=4,(path,rungs)
+    rungs=[]
+    for group in groups:
+        height=max(face['z'] for face in group)
+        surface=[face for face in group if abs(face['z']-height)<.01]
+        low=[min(face['min'][i] for face in surface) for i in range(3)]
+        high=[max(face['max'][i] for face in surface) for i in range(3)]
+        if high[0]-low[0] > mesh_width*.7:
+            rungs.append(dict(min=low,max=high,z=height))
+    assert rungs,(path,rungs)
     result[path]=dict(source_sha256=hashlib.sha256(filename.read_bytes()).hexdigest(),rungs=rungs,
-                      median_spacing=statistics.median(b['z']-a['z'] for a,b in zip(rungs,rungs[1:])))
+                      median_spacing=statistics.median(b['z']-a['z'] for a,b in zip(rungs,rungs[1:])) if len(rungs)>1 else None)
 (ROOT/'Saved/Traversal/Rungs.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
 print(json.dumps({k:dict(heights=[round(r['z'],2) for r in v['rungs']],spacing=v['median_spacing']) for k,v in result.items()}))

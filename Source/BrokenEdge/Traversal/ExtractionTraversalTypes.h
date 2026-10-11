@@ -26,7 +26,7 @@ public:
 	UPROPERTY(Config)
 	float LadderSpeed = 150.f;
 	UPROPERTY(Config)
-	float LadderReach = 125.f;
+	float LadderApproachDot = .5f;
 	UPROPERTY(Config)
 	float LadderRoofReach = 150.f;
 	UPROPERTY(Config)
@@ -56,6 +56,12 @@ struct FExtractionTraversalState
 	FVector Contact = FVector::ZeroVector;
 	UPROPERTY()
 	TObjectPtr<AExtractionLadder> Ladder;
+	/** Cleared only after leaving both entry volumes; also carried in movement corrections. */
+	UPROPERTY()
+	TObjectPtr<AExtractionLadder> ReattachBlockedLadder;
+	/** Forward input used to approach the roof must not immediately climb back out. */
+	UPROPERTY()
+	bool bTopEntryInputGuard = false;
 	UPROPERTY()
 	TObjectPtr<UPrimitiveComponent> Support;
 	UPROPERTY()

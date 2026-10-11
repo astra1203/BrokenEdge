@@ -3,6 +3,7 @@ import hashlib
 import json
 import math
 import time
+from auto_ladder_input import approach
 from pathlib import Path
 
 def run(g):
@@ -10,6 +11,15 @@ def run(g):
     root,out=g['ROOT'],g['OUT']
     routefile=root/'Scripts/Traversal/formal_route.json'
     route=json.loads(routefile.read_text(encoding='utf-8'))
+    assert route.get('status')=='ready', 'The original ladder walking connection has not been verified in the editor'
+    bindingfile=root/'Scripts/Traversal/source_bindings.json'
+    bindings=json.loads(bindingfile.read_text(encoding='utf-8'))
+    assert bindings['map_sha256']==hashlib.sha256((root/'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap').read_bytes()).hexdigest(), 'Source map differs from binding audit'
+    assert route['binding_sha256']==hashlib.sha256(bindingfile.read_bytes()).hexdigest(), 'Re-probe the route after rebinding'
+    ladder=next(r for r in bindings['candidates'] if r['id']==route['ladder']['source_id'] and r['classification']=='usable')
+    (out/'SourceBindings.json').write_bytes(bindingfile.read_bytes())
+    (out/'FormalRoute.json').write_bytes(routefile.read_bytes())
+    g['report']['input_sha256'][bindingfile.relative_to(root).as_posix()]=hashlib.sha256(bindingfile.read_bytes()).hexdigest()
     g['report']['input_sha256'][routefile.relative_to(root).as_posix()]=hashlib.sha256(routefile.read_bytes()).hexdigest()
     g['report']['input_sha256']['Scripts/Extraction/traversal_route.py']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     old=json.loads((root/'Scripts/SpaceCenter/route.json').read_text(encoding='utf-8'))
@@ -44,12 +54,18 @@ def run(g):
             send('A','pulse',action='Move',duration=0)
             time.sleep(.06)
         check('Formal precise approach converges',lambda: math.dist(player('Server','A')['position'][:2],target[:2])<4,5)
-    def walk(points,label):
+    def walk(points,label,ladder_name=None):
         send('A','walk',points=points)
         deadline=time.monotonic()+max(60,sum(math.dist(a,b) for a,b in zip(points,points[1:]))/150+30)
         while time.monotonic()<deadline:
             s=state('A')
             if s.get('error'):raise AssertionError(label+': '+s['error'])
+            if ladder_name and player('Server','A')['traversal'] in (3,4):
+                assert player('Server','A')['traversal_ladder']==ladder_name
+                send('A','walk',points=[])
+                send('A','pulse',action='Move',duration=0)
+                check('Formal walking enters original ladder automatically',lambda: player('Server','A')['traversal']==4,5)
+                return True
             if s.get('walk_count')==len(points) and s.get('walk_index')==len(points):break
             time.sleep(.1)
         else:raise TimeoutError(label)
@@ -71,19 +87,24 @@ def run(g):
         if not recording:send('A','screenshot',name='formal-'+name)
         check('Formal source '+name+' lands',lambda: player('Server','A')['traversal']==0 and not player('Server','A')['falling'] and abs(player('Server','A')['position'][2]-(target['end'][2]+half))<8,5)
         record(name,target['start'],False)
-    walk(route['to_ladder'],'walk off platform to source ladder')
-    send('A','look',yaw=route['ladder']['yaw'])
-    check('Formal source ladder is interactable',lambda: player('A','A')['ladder_focus']!='None')
-    record('ladder',route['ladder']['bottom'],True)
-    send('A','pulse',action='Equip',duration=.05)
-    check('Formal source ladder attaches',lambda: player('Server','A')['traversal']==4)
+    top_entry=route['ladder']['entry']=='top'
+    entry=ladder['points']['top_exit' if top_entry else 'bottom_exit']
+    end=ladder['points']['bottom_exit' if top_entry else 'top_exit']
+    facing=ladder['facing']
+    record('ladder',entry,True)
+    expected=ladder['actor'].rsplit('.',1)[-1]
+    attached=walk(route['to_ladder'],'walk off platform to original ladder',expected)
+    if not attached:
+        send('A','look',yaw=math.degrees(math.atan2(facing[1],facing[0]))+(180 if top_entry else 0))
+        approach(g,'Formal original ladder',expected=expected)
     for peer in ('A','B'):send(peer,'pose',target='EX_A',name='formal-ladder-attached')
     if g['args'].debug_hold and g['args'].traversal_debug_point=='ladder':wait(lambda: (out/'Continue.txt').exists(),'source ladder debugger prepared',900)
-    send('A','pulse',action='Move',duration=4)
-    wait(lambda: player('Server','A')['traversal'] in (5,0),'source ladder reaches roof transition',5)
-    send('A','pulse',action='Move',duration=0)
-    end=route['ladder']['top_exit']
-    check('Formal source ladder reaches roof',lambda: player('Server','A')['traversal']==0 and not player('Server','A')['falling'] and math.dist(player('Server','A')['position'],[end[0],end[1],end[2]+half])<15,8)
-    record('ladder',route['ladder']['bottom'],False)
-    send('A','screenshot',name='formal-ladder-top')
+    action='MoveBack' if top_entry else 'Move'
+    duration=(ladder['original_endpoints']['LadderTopEndTransform'][2]-ladder['points']['bottom'][2])/150+4
+    send('A','pulse',action=action,duration=duration)
+    wait(lambda: player('Server','A')['traversal'] in (5,0),'original ladder reaches exit transition',duration+3)
+    send('A','pulse',action=action,duration=0)
+    check('Formal original ladder reaches landing',lambda: player('Server','A')['traversal']==0 and not player('Server','A')['falling'] and math.dist(player('Server','A')['position'],[end[0],end[1],end[2]+half])<15,8)
+    record('ladder',entry,False)
+    send('A','screenshot',name='formal-ladder-landing')
     g['report']['formal_route']=dict(result='passed',ladder=route['ladder']['source_id'],initial_placements=1,teleports_between_segments=0)
