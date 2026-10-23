@@ -28,6 +28,13 @@ bool FWeaponMechanicsSourceTest::RunTest(const FString&)
 	TestEqual(TEXT("No attenuation before boundary"), Scar->Falloff(4000), 1.f);
 	TestEqual(TEXT("Explicit compatibility segment 1"), Scar->Falloff(4001), .9f);
 	TestEqual(TEXT("Explicit compatibility segment 2"), Scar->Falloff(7001), .75f);
+	TestEqual(TEXT("First boundary left"), Scar->Falloff(3999), 1.f);
+	TestEqual(TEXT("Second boundary left"), Scar->Falloff(6999), .9f);
+	TestEqual(TEXT("Second boundary inclusive"), Scar->Falloff(7000), .9f);
+	TestEqual(TEXT("Partial mouse compensation"), WeaponMechanics::CompensatedDebt(4., -1.), 3.);
+	TestEqual(TEXT("Overcompensation never reverses recovery"), WeaponMechanics::CompensatedDebt(4., -8.), 0.);
+	TestEqual(TEXT("Same direction is voluntary input"), WeaponMechanics::CompensatedDebt(4., 2.), 4.);
+	TestEqual(TEXT("Negative yaw compensation"), WeaponMechanics::CompensatedDebt(-4., 1.), -3.);
 	for (uint32 Shot = 0; Shot < 150; ++Shot)
 	{
 		const auto A = Scar->Recoil(Shot, true, 1, Shot + 27);
@@ -95,10 +102,15 @@ bool FWeaponAssemblyTest::RunTest(const FString&)
 	TestNotNull(TEXT("Part is returned, not destroyed"), Container.Find(GripId));
 	// Fixture-only authoring; restore the loaded definition and never save a package.
 	auto* GripDefinition = const_cast<UExtractionItemDefinition*>(UExtractionItemDefinition::Get(TEXT("VerticalGrip")));
-	TGuardValue<TArray<FWeaponAttributeModifier>> RestoreModifiers(GripDefinition->WeaponModifiers, GripDefinition->WeaponModifiers);
-	FWeaponAttributeModifier Capacity; Capacity.Attribute = TEXT("MagazineCapacity"); Capacity.Operation = EWeaponModifierOperation::Replace; Capacity.Value = 10;
+	TGuardValue<TArray<FWeaponAttributeModifier>> RestoreModifiers(GripDefinition->WeaponModifiers,
+	                                                               GripDefinition->WeaponModifiers);
+	FWeaponAttributeModifier Capacity;
+	Capacity.Attribute = TEXT("MagazineCapacity");
+	Capacity.Operation = EWeaponModifierOperation::Replace;
+	Capacity.Value = 10;
 	GripDefinition->WeaponModifiers.Add(Capacity);
-	Request.Op = EExtractionItemOp::Attach; Request.Item = GripId;
+	Request.Op = EExtractionItemOp::Attach;
+	Request.Item = GripId;
 	FJsonObjectConverter::UStructToJsonObjectString(Container, Before);
 	TestFalse(TEXT("Loaded magazine cannot shrink"), ExtractionItems::Configure(Container, Request, Error));
 	FJsonObjectConverter::UStructToJsonObjectString(Container, After);
@@ -113,8 +125,10 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FWeaponFlightTest, "BrokenEdge.Extraction.Weapo
 bool FWeaponFlightTest::RunTest(const FString&)
 {
 	const auto Initialization = UWorld::InitializationValues().AllowAudioPlayback(false).CreatePhysicsScene(true)
-		.CreateNavigation(false).CreateAISystem(false).ShouldSimulatePhysics(false).EnableTraceCollision(true);
-	UWorld* World = UWorld::CreateWorld(EWorldType::Game, false, NAME_None, nullptr, true, ERHIFeatureLevel::Num, &Initialization);
+	                                                          .CreateNavigation(false).CreateAISystem(false).
+	                                                          ShouldSimulatePhysics(false).EnableTraceCollision(true);
+	UWorld* World = UWorld::CreateWorld(EWorldType::Game, false, NAME_None, nullptr, true, ERHIFeatureLevel::Num,
+	                                    &Initialization);
 	const auto* Source = WeaponMechanics::Find(TEXT("SCARH"));
 	if (!Source)
 	{
@@ -151,20 +165,29 @@ bool FWeaponFlightTest::RunTest(const FString&)
 	TestFalse(TEXT("Blocking hit terminates flight"), Bullet->IsActorTickEnabled());
 	auto* Weapon = World->SpawnActor<AWeapon>();
 	FExtractionAttachment Parent, Child;
-	Parent.Id = FGuid::NewGuid(); Parent.Definition = TEXT("RedDot");
-	Child.Id = FGuid::NewGuid(); Child.Definition = TEXT("VerticalGrip"); Child.Parent = Parent.Id;
+	Parent.Id = FGuid::NewGuid();
+	Parent.Definition = TEXT("RedDot");
+	Child.Id = FGuid::NewGuid();
+	Child.Definition = TEXT("VerticalGrip");
+	Child.Parent = Parent.Id;
 	Weapon->ExtractionParts = {Child.Definition, Parent.Definition};
 	Weapon->ExtractionAssembly = {Child, Parent}; // Deliberately reverse topological order.
 	Weapon->ExtractionVisuals->TickComponent(0, LEVELTICK_All, nullptr);
-	TArray<UStaticMeshComponent*> Components; Weapon->GetComponents(Components);
-	UStaticMeshComponent* ParentMesh = nullptr; UStaticMeshComponent* ChildMesh = nullptr;
+	TArray<UStaticMeshComponent*> Components;
+	Weapon->GetComponents(Components);
+	UStaticMeshComponent* ParentMesh = nullptr;
+	UStaticMeshComponent* ChildMesh = nullptr;
 	for (auto* Component : Components)
 	{
-		if (Component->GetStaticMesh() == UExtractionItemDefinition::Get(Parent.Definition)->WorldMesh) ParentMesh = Component;
-		if (Component->GetStaticMesh() == UExtractionItemDefinition::Get(Child.Definition)->WorldMesh) ChildMesh = Component;
+		if (Component->GetStaticMesh() == UExtractionItemDefinition::Get(Parent.Definition)->WorldMesh) ParentMesh =
+			Component;
+		if (Component->GetStaticMesh() == UExtractionItemDefinition::Get(Child.Definition)->WorldMesh) ChildMesh =
+			Component;
 	}
-	TestNotNull(TEXT("Parent visual created"), ParentMesh); TestNotNull(TEXT("Child visual created"), ChildMesh);
-	if (ParentMesh && ChildMesh) TestTrue(TEXT("Child visual follows parent rather than weapon root"), ChildMesh->GetAttachParent() == ParentMesh);
+	TestNotNull(TEXT("Parent visual created"), ParentMesh);
+	TestNotNull(TEXT("Child visual created"), ChildMesh);
+	if (ParentMesh && ChildMesh) TestTrue(
+		TEXT("Child visual follows parent rather than weapon root"), ChildMesh->GetAttachParent() == ParentMesh);
 
 	World->DestroyWorld(false);
 	return true;

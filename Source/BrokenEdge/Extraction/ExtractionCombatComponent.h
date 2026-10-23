@@ -59,7 +59,9 @@ private:
 	float AimAlpha = 0, Breath = 100, BreathResume = 0, VisualKick = 0;
 	double LastMechanicsShot = -100, ReadyAt = 0;
 	uint32 BurstIndex = 0;
-	bool bBreathHeld = false, bWasSprinting = false;
+	bool bBreathHeld = false;
+	void ResetTransientMechanics();
+	bool CanSteadyWeapon() const;
 	UPROPERTY(Replicated)
 	uint32 MechanicsSeed = 0;
 	void RefreshMechanics();
@@ -83,7 +85,8 @@ private:
 	UFUNCTION(Client, Reliable)
 	void ClientShotResult(uint32 ShotId, AWeapon* Weapon, int32 Ammo, bool bAccepted);
 	UFUNCTION(Client, Reliable)
-	void ClientMechanicsResult(uint32 ShotId, AWeapon* Weapon, uint32 Sequence, FVector2D Spread, float InBreath, double ServerTime, double ShotTime);
+	void ClientMechanicsResult(uint32 ShotId, AWeapon* Weapon, uint32 Sequence, FVector2D Spread, float InBreath,
+	                           double ServerTime, double ShotTime);
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastShotEffects(AWeapon* Weapon, FVector_NetQuantize Target, int32 Ammo);
 	UFUNCTION(NetMulticast, Reliable)

@@ -39,6 +39,11 @@ struct BROKENEDGE_API FResolvedWeaponStats
 	FVector2D CrouchRecoil = FVector2D::UnitVector;
 	// Deliberately explicit compatibility tuning until DFM angular units are verified.
 	float SourceRecoilToDegrees = .1f;
+	// Project compatibility policy v2. Values are not official score-curve outputs.
+	float SwayDegrees = .12f, SwayPitchFrequency = 1.7f, SwayYawFrequency = 1.1f;
+	float HeldSwayScale = .15f, HeldRecoilScale = .95f;
+	float KickPerShot = .35f, KickRecovery = 18.f, CameraKickScale = .25f, CameraFrequency = 50.f;
+	float RecoilRecovery = 6.f, BurstGapIntervals = 1.75f;
 	TArray<FString> Sources;
 	bool IsValid() const { return Revision != 0; }
 	float Falloff(float Distance) const;
@@ -50,4 +55,5 @@ namespace WeaponMechanics
 	BROKENEDGE_API const FResolvedWeaponStats* Find(FName Definition);
 	BROKENEDGE_API FResolvedWeaponStats ResolveWeaponStats(const FExtractionItem& Item);
 	BROKENEDGE_API FVector SpreadDirection(const FVector& Direction, FVector2D Degrees, uint32 Seed);
+	BROKENEDGE_API double CompensatedDebt(double Debt, double Input);
 }

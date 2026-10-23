@@ -69,7 +69,7 @@ const FResolvedWeaponStats* WeaponMechanics::Find(FName Definition)
 			const auto Bullet = P->GetObjectField(TEXT("bullet")), Breath = P->GetObjectField(TEXT("breath"));
 			FResolvedWeaponStats S;
 			S.Definition = FName(Entry.Key);
-			S.Revision = Root->GetIntegerField(TEXT("revision"));
+			S.Revision = HashCombine(Root->GetIntegerField(TEXT("revision")), 2u);
 			S.MagazineCapacity = Number(B, TEXT("WeaponClipAmmoCount"));
 			S.Interval = Number(B, TEXT("FireInterval"));
 			S.Reload = Number(B, TEXT("ChangeClipTime"));
@@ -91,7 +91,8 @@ const FResolvedWeaponStats* WeaponMechanics::Find(FName Definition)
 			S.MoveSpread = Number(Stance, TEXT("SpreadScaleByWalkOrRun"));
 			S.CrouchSpread = Number(Stance, TEXT("SpreadScaleByCrouch"));
 			S.JumpSpread = Number(Stance, TEXT("SpreadScaleByJump"));
-			S.CrouchRecoil = FVector2D(1 + Number(Stance, TEXT("RecoilVerticalFactorByCrouch")), 1 + Number(Stance, TEXT("RecoilHorizontalFactorByCrouch")));
+			S.CrouchRecoil = FVector2D(1 + Number(Stance, TEXT("RecoilVerticalFactorByCrouch")),
+			                           1 + Number(Stance, TEXT("RecoilHorizontalFactorByCrouch")));
 			S.StandBreath = Number(Breath, TEXT("StandBreathFactor"));
 			S.CrouchBreath = Number(Breath, TEXT("CrouchBreathFactor"));
 			const auto BC = Breath->GetObjectField(TEXT("WeaponBreathConfig"));
@@ -210,11 +211,20 @@ FResolvedWeaponStats WeaponMechanics::ResolveWeaponStats(const FExtractionItem& 
 			Result.Revision = 0;
 			return Result;
 		}
-	if (Result.MagazineCapacity > 200 || !FMath::IsNearlyEqual(Result.MagazineCapacity, FMath::RoundToFloat(Result.MagazineCapacity))) { Result.Revision = 0; return Result; }
+	if (Result.MagazineCapacity > 200 || !FMath::IsNearlyEqual(Result.MagazineCapacity,
+	                                                           FMath::RoundToFloat(Result.MagazineCapacity)))
+	{
+		Result.Revision = 0;
+		return Result;
+	}
 	if (!Parts.IsEmpty())
 	{
-		TArray<FName> Keys; Attributes.GetKeys(Keys); Keys.Sort(FNameLexicalLess());
-		for (FName Key : Keys) Result.Revision = HashCombine(Result.Revision, FCrc::StrCrc32(*FString::Printf(TEXT("%s:%g"), *Key.ToString(), *Attributes[Key])));
+		TArray<FName> Keys;
+		Attributes.GetKeys(Keys);
+		Keys.Sort(FNameLexicalLess());
+		for (FName Key : Keys) Result.Revision = HashCombine(Result.Revision,
+		                                                     FCrc::StrCrc32(*FString::Printf(
+			                                                     TEXT("%s:%g"), *Key.ToString(), *Attributes[Key])));
 		for (FName Part : Parts) Result.Revision = HashCombine(Result.Revision, FCrc::StrCrc32(*Part.ToString()));
 	}
 
@@ -228,6 +238,11 @@ float FResolvedWeaponStats::Falloff(float Distance) const
 	for (int32 I = 0; I < FMath::Min(FalloffDistances.Num(), FalloffRates.Num()); ++I)
 		if (Distance <= FalloffDistances[I]) return FalloffRates[I];
 	return FalloffRates.IsEmpty() ? 1 : FalloffRates.Last();
+}
+
+double WeaponMechanics::CompensatedDebt(double Debt, double Input)
+{
+	return Debt * Input < 0 ? FMath::Sign(Debt) * FMath::Max(0., FMath::Abs(Debt) - FMath::Abs(Input)) : Debt;
 }
 
 FVector2D FResolvedWeaponStats::Recoil(uint32 Index, bool bContinuous, float ADS, uint32 Seed) const
