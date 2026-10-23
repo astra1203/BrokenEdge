@@ -8,7 +8,57 @@ UENUM(BlueprintType)
 enum class EExtractionItemKind : uint8 { Weapon, Ammo, Medical, Valuable, Armor, Attachment };
 
 UENUM(BlueprintType)
-enum class EExtractionAttachmentSlot : uint8 { None, Optic, Grip, Muzzle };
+enum class EExtractionAttachmentSlot : uint8
+{
+	None, Optic, Grip, Muzzle, Receiver, Barrel, Handguard, Stock, Magazine, Rail, PistolGrip
+};
+
+UENUM()
+enum class EWeaponModifierOperation : uint8 { Add, Multiply, Replace };
+
+USTRUCT(BlueprintType)
+struct FWeaponAttributeModifier
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere)
+	FName Attribute;
+	UPROPERTY(EditAnywhere)
+	EWeaponModifierOperation Operation = EWeaponModifierOperation::Add;
+	UPROPERTY(EditAnywhere)
+	float Value = 0;
+	UPROPERTY(EditAnywhere)
+	int32 Priority = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FWeaponPartTune
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere)
+	FName Id;
+	UPROPERTY(EditAnywhere)
+	float Minimum = 0;
+	UPROPERTY(EditAnywhere)
+	float Maximum = 100;
+	UPROPERTY(EditAnywhere)
+	float Default = 50;
+	UPROPERTY(EditAnywhere)
+	float Step = 1;
+	UPROPERTY(EditAnywhere)
+	FName Attribute;
+	UPROPERTY(EditAnywhere)
+	EWeaponModifierOperation Operation = EWeaponModifierOperation::Add;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UCurveFloat> Curve;
+};
+
+USTRUCT()
+struct FWeaponTuneValue
+{
+	GENERATED_BODY()
+	UPROPERTY() FName Key;
+	UPROPERTY() float Value = 0;
+};
 
 UENUM(BlueprintType)
 enum class EExtractionMedicalEffect : uint8 { Heal, Bandage, Splint };
@@ -74,6 +124,18 @@ public:
 	EExtractionAttachmentSlot AttachmentSlot = EExtractionAttachmentSlot::None;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float ScatterScale = 1;
+	/** Explicit authored compatibility only; unknown source operations must never be enabled. */
+	UPROPERTY(EditAnywhere, Category="Gunsmith")
+	TArray<FName> ChildAttachments;
+	UPROPERTY(EditAnywhere, Category="Gunsmith") TMap<FName, EExtractionAttachmentSlot> MountSockets;
+	UPROPERTY(EditAnywhere, Category="Gunsmith")
+	TArray<FName> ConflictingAttachments;
+	UPROPERTY(EditAnywhere, Category="Gunsmith")
+	bool RequiresParent = false;
+	UPROPERTY(EditAnywhere, Category="Gunsmith")
+	TArray<FWeaponAttributeModifier> WeaponModifiers;
+	UPROPERTY(EditAnywhere, Category="Gunsmith")
+	TArray<FWeaponPartTune> Tunes;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMesh> FirstPersonMesh;
 	/** Optional rail adapter; its dimensions are authored in the AK component frame. */
@@ -112,6 +174,12 @@ struct BROKENEDGE_API FExtractionAttachment
 	FGuid Id;
 	UPROPERTY()
 	FName Definition;
+	/** Invalid parent means weapon root, including migrated legacy saves. */
+	UPROPERTY()
+	FGuid Parent;
+	UPROPERTY() FName Socket;
+	UPROPERTY()
+	TArray<FWeaponTuneValue> TuneValues;
 	UPROPERTY(NotReplicated)
 	TArray<FExtractionOrigin> Origins;
 };
@@ -143,6 +211,9 @@ struct BROKENEDGE_API FExtractionItem
 	float Durability = 0;
 	UPROPERTY()
 	TArray<FExtractionAttachment> Attachments;
+	/** Loose attachments retain precision tuning when detached or traded. */
+	UPROPERTY()
+	TArray<FWeaponTuneValue> TuneValues;
 	/** Server provenance survives splits, merges and loading into magazines. */
 	UPROPERTY(NotReplicated)
 	TArray<FExtractionOrigin> Origins;
@@ -174,7 +245,7 @@ struct BROKENEDGE_API FExtractionContainer
 };
 
 UENUM()
-enum class EExtractionItemOp : uint8 { Transfer, Drop, Use, Attach, Detach, Unload, SelectAmmo };
+enum class EExtractionItemOp : uint8 { Transfer, Drop, Use, Attach, Detach, Unload, SelectAmmo, Tune };
 
 USTRUCT()
 struct BROKENEDGE_API FExtractionItemRequest
@@ -202,6 +273,15 @@ struct BROKENEDGE_API FExtractionItemRequest
 	UPROPERTY()
 	FName AmmoDefinition;
 	UPROPERTY()
+	FGuid ParentAttachment;
+	UPROPERTY() FName AttachmentSocket;
+	UPROPERTY()
+	FGuid MountedAttachment;
+	UPROPERTY()
+	FName TuneId;
+	UPROPERTY()
+	float TuneValue = 0;
+	UPROPERTY()
 	int32 Quantity = 1;
 	UPROPERTY()
 	int32 InventoryRevision = 0;
@@ -220,6 +300,8 @@ struct BROKENEDGE_API FExtractionItemRequest
 /** Copy/validate/commit: a failed operation never changes either container. */
 namespace ExtractionItems
 {
+	BROKENEDGE_API int32 MagazineCapacity(const FExtractionItem& Item);
+	BROKENEDGE_API TArray<FString> WeaponDetails(const FExtractionItem& Item);
 	struct FEquipmentAction
 	{
 		FString Label;

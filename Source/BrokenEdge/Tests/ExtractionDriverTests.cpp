@@ -344,7 +344,8 @@ public:
 					auto* Combat = Pawn->GetExtractionCombat();
 					const FString Kind = Command->GetStringField(TEXT("kind"));
 					FVector End = Pawn->GetActorLocation() + FVector(0, 0, 8000);
-					if (Kind == TEXT("duplicate")) Combat->ServerRequestShot(0, Pawn->GetEquippedWeapon(), End);
+					if (Kind == TEXT("version")) Combat->ServerRequestShotVersioned(++Combat->LocalShotId, Pawn->GetEquippedWeapon(), End, 0);
+					else if (Kind == TEXT("duplicate")) Combat->ServerRequestShot(0, Pawn->GetEquippedWeapon(), End);
 					else if (Kind == TEXT("foreign"))
 					{
 						auto* Other = FindPawn(World, Command->GetStringField(TEXT("target")));
@@ -1309,6 +1310,15 @@ private:
 						                                        ? Character->GetOverlappingWeapon()->GetName()
 						                                        : TEXT(""));
 					Player->SetNumberField(TEXT("accepted"), Character->GetExtractionCombat()->GetAcceptedShots());
+					const auto* Mechanics = Character->GetExtractionCombat();
+					Player->SetNumberField(TEXT("mechanics_revision"), Mechanics->Stats.Revision);
+					Player->SetNumberField(TEXT("mechanics_speed"), Mechanics->Stats.Speed);
+					Player->SetNumberField(TEXT("aim_alpha"), Mechanics->AimAlpha);
+					Player->SetNumberField(TEXT("breath"), Mechanics->Breath);
+					Player->SetNumberField(TEXT("burst_index"), Mechanics->BurstIndex);
+					Player->SetNumberField(TEXT("spread_x"), Mechanics->SpreadAccumulation.X);
+					Player->SetBoolField(TEXT("mechanics_ready"), Mechanics->CanFireMechanics());
+
 					Player->SetNumberField(TEXT("rejected"), Character->GetExtractionCombat()->GetRejectedShots());
 					Player->SetNumberField(TEXT("combat_state"), static_cast<int32>(Character->GetCombatState()));
 					Player->SetNumberField(TEXT("carried_ammo"), Character->GetCombat()->GetCarriedAmmo());

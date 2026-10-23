@@ -1,4 +1,5 @@
 #include "ExtractionInventoryComponent.h"
+#include "BrokenEdge/Weapon/WeaponMechanics.h"
 #include "ExtractionCombatComponent.h"
 #include "ExtractionState.h"
 #include "ExtractionLootActor.h"
@@ -193,6 +194,8 @@ bool UExtractionInventoryComponent::SyncWeapons()
 		const auto* State = Contents.InSlot(Slot);
 		Desired[Slot]->ExtractionAmmoType = State->MagazineAmmo;
 		Desired[Slot]->ExtractionParts.Reset();
+		Desired[Slot]->ExtractionAssembly = State->Attachments;
+		Desired[Slot]->ExtractionConfiguration = WeaponMechanics::ResolveWeaponStats(*State).Revision;
 		for (const auto& Part : State->Attachments) Desired[Slot]->ExtractionParts.Add(Part.Definition);
 		if (Created.Contains(Desired[Slot]) || Desired[Slot]->GetAmmo() != State->Magazine)
 			C->GetExtractionCombat()->EquipmentAmmo(Desired[Slot], State->Magazine);

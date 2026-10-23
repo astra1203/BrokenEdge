@@ -124,6 +124,18 @@ public:
 				Text(Mouse, FString::Printf(TEXT("× %d · R 旋转"), Quantity), 14, 4);
 			}
 		}
+		if (Menu && !Dragging)
+			if (const auto* C = Container(SelectedSide))
+				if (const auto* Item = C->Find(Selected))
+				{
+					const auto Lines = ExtractionItems::WeaponDetails(*Item);
+					if (!Lines.IsEmpty())
+					{
+						const FVector2D At(MenuAt.X > 640 ? 100 : 740, 80);
+						Box(At, FVector2D(440, 22 * Lines.Num() + 20), FLinearColor(.03f, .05f, .07f), 5);
+						for (int32 N = 0; N < Lines.Num(); ++N) Text(At + FVector2D(12, 10 + 22 * N), Lines[N], 14, 6);
+					}
+				}
 		if (Menu)
 		{
 			Box(MenuAt, {250, MenuHeight()}, FLinearColor(.06, .1, .14), 5);

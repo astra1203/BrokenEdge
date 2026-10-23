@@ -1,4 +1,5 @@
 #include "ExtractionItems.h"
+#include "BrokenEdge/Weapon/WeaponMechanics.h"
 
 TArray<ExtractionItems::FEquipmentAction> ExtractionItems::EquipmentActions(const FExtractionContainer& C, FGuid Selected)
 {
@@ -16,7 +17,16 @@ TArray<ExtractionItems::FEquipmentAction> ExtractionItems::EquipmentActions(cons
 	if (D->Kind == EExtractionItemKind::Attachment)
 		for (const auto& Gun : C.Items)
 			if (const auto* GunDef = UExtractionItemDefinition::Get(Gun.Definition); GunDef && GunDef->SupportsAttachment(Item->Definition))
-				Add(FString::Printf(TEXT("安装到 %s · %s"), *GunDef->Label.ToString(), Gun.Slot == 0 ? TEXT("手持") : Gun.Slot == 1 ? TEXT("背负") : *Gun.Id.ToString().Left(6)), EExtractionItemOp::Attach).Weapon = Gun.Id;
+			{
+				if (!D->RequiresParent)
+					Add(FString::Printf(TEXT("安装到 %s"), *GunDef->Label.ToString()), EExtractionItemOp::Attach).Weapon = Gun.Id;
+				for (const auto& Parent : Gun.Attachments)
+					if (const auto* PD = UExtractionItemDefinition::Get(Parent.Definition); PD && PD->ChildAttachments.Contains(Item->Definition))
+					{
+						auto& Request = Add(TEXT("安装到 ") + PD->Label.ToString(), EExtractionItemOp::Attach);
+						Request.Weapon = Gun.Id; Request.ParentAttachment = Parent.Id;
+					}
+			}
 	if (D->Kind == EExtractionItemKind::Weapon)
 	{
 		Add(TEXT("卸出弹匣弹药"), EExtractionItemOp::Unload);
@@ -49,7 +59,7 @@ bool ExtractionItems::ValidateItem(const FExtractionItem& I, bool Provenance, FS
 {
 	const auto* D = UExtractionItemDefinition::Get(I.Definition);
 	if (!D || !I.Id.IsValid() || I.Size != D->Size || I.Quantity <= 0 || I.Quantity > D->MaxStack
-		|| I.Magazine < 0 || I.Magazine > (D->Kind == EExtractionItemKind::Weapon ? D->MagazineCapacity : 0)
+		|| I.Magazine < 0 || I.Magazine > (D->Kind == EExtractionItemKind::Weapon ? MagazineCapacity(I) : 0)
 		|| !FMath::IsFinite(I.Durability) || I.Durability < 0 || I.Durability > D->MaxDurability
 		|| (D->Kind != EExtractionItemKind::Weapon && !I.Attachments.IsEmpty())
 		|| (Provenance && (!OriginsValid(I.Origins, I.Quantity) || !OriginsValid(I.MagazineOrigins, I.Magazine))))
@@ -59,17 +69,52 @@ bool ExtractionItems::ValidateItem(const FExtractionItem& I, bool Provenance, FS
 		const auto* Ammo = UExtractionItemDefinition::Get(I.MagazineAmmo);
 		if (!Ammo || !D->SupportsAmmo(I.MagazineAmmo)) { Error = TEXT("弹匣弹种无效"); return false; }
 	}
-	TSet<EExtractionAttachmentSlot> Slots;
+	if (D->Kind == EExtractionItemKind::Weapon && WeaponMechanics::Find(I.Definition)
+		&& !WeaponMechanics::ResolveWeaponStats(I).IsValid())
+	{ Error = TEXT("Unsupported or invalid weapon modifier"); return false; }
+	TSet<FString> Slots;
 	TSet<FGuid> Ids;
 	Ids.Add(I.Id);
 	for (const auto& P : I.Attachments)
 	{
 		const auto* Part = UExtractionItemDefinition::Get(P.Definition);
 		if (!Part || Part->Kind != EExtractionItemKind::Attachment || Part->AttachmentSlot == EExtractionAttachmentSlot::None
-			|| !D->SupportsAttachment(P.Definition) || Slots.Contains(Part->AttachmentSlot) || !P.Id.IsValid() || Ids.Contains(P.Id)
+			|| !D->SupportsAttachment(P.Definition) || Slots.Contains(P.Parent.ToString() + (P.Socket.IsNone() ? FString::FromInt(int32(Part->AttachmentSlot)) : P.Socket.ToString())) || !P.Id.IsValid() || Ids.Contains(P.Id)
 			|| (Provenance && !OriginsValid(P.Origins, 1)))
 		{ Error = TEXT("附件装配或来源无效"); return false; }
-		Slots.Add(Part->AttachmentSlot); Ids.Add(P.Id);
+		Slots.Add(P.Parent.ToString() + (P.Socket.IsNone() ? FString::FromInt(int32(Part->AttachmentSlot)) : P.Socket.ToString())); Ids.Add(P.Id);
+		if (!P.Parent.IsValid() && Part->RequiresParent) { Error = TEXT("Attachment requires a parent"); return false; }
+		if (!P.Socket.IsNone())
+		{
+			const auto* Host = I.Attachments.FindByPredicate([&](const auto& N) { return N.Id == P.Parent; });
+			const auto* HostDef = P.Parent.IsValid() ? (Host ? UExtractionItemDefinition::Get(Host->Definition) : nullptr) : D;
+			const auto* SocketType = HostDef ? HostDef->MountSockets.Find(P.Socket) : nullptr;
+			if (!SocketType || *SocketType != Part->AttachmentSlot) { Error = TEXT("Unknown or incompatible mount socket"); return false; }
+		}
+		FGuid Parent = P.Parent;
+		TSet<FGuid> Ancestors; Ancestors.Add(P.Id);
+		while (Parent.IsValid())
+		{
+			if (Ancestors.Contains(Parent)) { Error = TEXT("Attachment cycle"); return false; }
+			Ancestors.Add(Parent);
+			const auto* Node = I.Attachments.FindByPredicate([&](const auto& N) { return N.Id == Parent; });
+			if (!Node) { Error = TEXT("Missing attachment parent"); return false; }
+			const auto* ParentDef = UExtractionItemDefinition::Get(Node->Definition);
+			if (!ParentDef || (Parent == P.Parent && !ParentDef->ChildAttachments.Contains(P.Definition)))
+			{ Error = TEXT("Incompatible attachment parent"); return false; }
+			Parent = Node->Parent;
+		}
+		for (const auto& Other : I.Attachments)
+			if (Other.Id != P.Id && Part->ConflictingAttachments.Contains(Other.Definition))
+			{ Error = TEXT("Conflicting attachments"); return false; }
+		for (const auto& Value : P.TuneValues)
+		{
+			const auto* Tune = Part->Tunes.FindByPredicate([&](const auto& T) { return T.Id == Value.Key; });
+			if (!Tune || !Tune->Curve || !FMath::IsFinite(Value.Value) || Value.Value < Tune->Minimum || Value.Value > Tune->Maximum
+				|| (Tune->Step > 0 && !FMath::IsNearlyEqual((Value.Value - Tune->Minimum) / Tune->Step,
+					FMath::RoundToFloat((Value.Value - Tune->Minimum) / Tune->Step), .001f)))
+			{ Error = TEXT("Invalid attachment tuning"); return false; }
+		}
 	}
 	return true;
 }
@@ -77,7 +122,7 @@ bool ExtractionItems::ValidateItem(const FExtractionItem& I, bool Provenance, FS
 FExtractionItem ExtractionItems::Unmount(const FExtractionAttachment& Part)
 {
 	FExtractionItem Item = Make(Part.Definition);
-	Item.Id = Part.Id; Item.Origins = Part.Origins;
+	Item.Id = Part.Id; Item.Origins = Part.Origins; Item.TuneValues = Part.TuneValues;
 	return Item;
 }
 
@@ -89,6 +134,7 @@ bool ExtractionItems::Configure(FExtractionContainer& Container, const FExtracti
 	const auto* Def = Gun ? UExtractionItemDefinition::Get(Gun->Definition) : nullptr;
 	if (!Def || Def->Kind != EExtractionItemKind::Weapon) { Error = TEXT("请选择自己的枪械"); return false; }
 	const FGuid GunId = Gun->Id;
+	const int32 OldCapacity = MagazineCapacity(*Gun);
 	if (R.Op == EExtractionItemOp::Attach)
 	{
 		const auto* Part = Next.Find(R.Item);
@@ -96,20 +142,38 @@ bool ExtractionItems::Configure(FExtractionContainer& Container, const FExtracti
 		if (!D || !Def->SupportsAttachment(Part->Definition) || GunId == R.Item)
 		{ Error = TEXT("附件不兼容"); return false; }
 		for (const auto& Mounted : Gun->Attachments)
-			if (UExtractionItemDefinition::Get(Mounted.Definition)->AttachmentSlot == D->AttachmentSlot)
+			if (Mounted.Parent == R.ParentAttachment && Mounted.Socket == R.AttachmentSocket && UExtractionItemDefinition::Get(Mounted.Definition)->AttachmentSlot == D->AttachmentSlot)
 			{ Error = TEXT("附件槽已占用，请先拆下"); return false; }
-		FExtractionAttachment Mounted; Mounted.Id = Part->Id; Mounted.Definition = Part->Definition; Mounted.Origins = Part->Origins;
+		FExtractionAttachment Mounted; Mounted.Id = Part->Id; Mounted.Definition = Part->Definition; Mounted.Origins = Part->Origins; Mounted.Parent = R.ParentAttachment; Mounted.Socket = R.AttachmentSocket; Mounted.TuneValues = Part->TuneValues;
 		Gun->Attachments.Add(Mounted);
 		Next.Items.RemoveAll([&](const auto& I) { return I.Id == R.Item; });
 	}
 	else if (R.Op == EExtractionItemOp::Detach)
 	{
 		const int32 Index = Gun->Attachments.IndexOfByPredicate([&](const auto& P)
-		{ return UExtractionItemDefinition::Get(P.Definition)->AttachmentSlot == R.AttachmentSlot; });
+		{ return R.MountedAttachment.IsValid() ? P.Id == R.MountedAttachment : !P.Parent.IsValid() && UExtractionItemDefinition::Get(P.Definition)->AttachmentSlot == R.AttachmentSlot; });
 		if (Index == INDEX_NONE) { Error = TEXT("该附件槽为空"); return false; }
-		auto Part = Unmount(Gun->Attachments[Index]);
-		Gun->Attachments.RemoveAt(Index);
-		if (!AutoPlace(Next, Part)) { Error = TEXT("背包空间不足，无法拆下"); return false; }
+		TSet<FGuid> Removed; Removed.Add(Gun->Attachments[Index].Id);
+		bool Added = true;
+		while (Added)
+		{
+			Added = false;
+			for (const auto& P : Gun->Attachments)
+				if (Removed.Contains(P.Parent) && !Removed.Contains(P.Id)) { Removed.Add(P.Id); Added = true; }
+		}
+		TArray<FExtractionItem> Detached;
+		for (const auto& P : Gun->Attachments) if (Removed.Contains(P.Id)) Detached.Add(Unmount(P));
+		Gun->Attachments.RemoveAll([&](const auto& P) { return Removed.Contains(P.Id); });
+		// AutoPlace may reallocate Items; never retain Gun after this point.
+		for (auto& Part : Detached) if (!AutoPlace(Next, Part)) { Error = TEXT("背包空间不足，无法拆下"); return false; }
+	}
+	else if (R.Op == EExtractionItemOp::Tune)
+	{
+		auto* Part = Gun->Attachments.FindByPredicate([&](const auto& P) { return P.Id == R.MountedAttachment; });
+		if (!Part) { Error = TEXT("Missing tuning target"); return false; }
+		Part->TuneValues.RemoveAll([&](const auto& T) { return T.Key == R.TuneId; });
+		FWeaponTuneValue Value; Value.Key = R.TuneId; Value.Value = R.TuneValue;
+		Part->TuneValues.Add(Value);
 	}
 	else if (R.Op == EExtractionItemOp::Unload)
 	{
@@ -127,6 +191,8 @@ bool ExtractionItems::Configure(FExtractionContainer& Container, const FExtracti
 		Gun->MagazineAmmo = R.AmmoDefinition;
 	}
 	else { Error = TEXT("无效装备操作"); return false; }
+	if (const auto* Updated = Next.Find(GunId); Updated && Updated->Magazine > 0 && MagazineCapacity(*Updated) < OldCapacity)
+	{ Error = TEXT("Unload ammunition before reducing magazine capacity"); return false; }
 	if (!Validate(Next, Error)) return false;
 	++Next.Revision; Container = MoveTemp(Next); return true;
 }
@@ -148,7 +214,32 @@ FString ExtractionItems::Details(const FExtractionItem& Item)
 	{
 		const auto* Ammo = UExtractionItemDefinition::Get(Item.MagazineAmmo);
 		return FString::Printf(TEXT("%s %d/%d · 配件%d"), Ammo ? *Ammo->Label.ToString() : TEXT("?"),
-			Item.Magazine, D->MagazineCapacity, Item.Attachments.Num());
+			Item.Magazine, MagazineCapacity(Item), Item.Attachments.Num());
 	}
 	return FString::Printf(TEXT("× %d"), Item.Quantity);
+}
+
+TArray<FString> ExtractionItems::WeaponDetails(const FExtractionItem& Item)
+{
+	const auto S = WeaponMechanics::ResolveWeaponStats(Item);
+	if (!S.IsValid()) return {};
+	TArray<FString> Lines;
+	Lines.Add(Item.Definition == TEXT("AK") ? TEXT("AKM · 枪械参数") : TEXT("SCAR-H · 枪械参数"));
+	Lines.Add(FString::Printf(TEXT("射速 %.1f 发/分    初速 %.0f 米/秒"), 60 / S.Interval, S.Speed / 100));
+	Lines.Add(FString::Printf(TEXT("开镜 %.0f 毫秒    跑射延迟 %.0f 毫秒"), S.AimIn * 1000, S.SprintToFire * 1000));
+	Lines.Add(FString::Printf(TEXT("换弹 %.2f 秒    空仓 %.2f 秒"), S.Reload, S.EmptyReload));
+	Lines.Add(TEXT("装配结构（右键选择配件进行安装/拆卸）"));
+	for (const auto& Part : Item.Attachments)
+	{
+		const auto* D = UExtractionItemDefinition::Get(Part.Definition);
+		Lines.Add((Part.Parent.IsValid() ? TEXT("    └ ") : TEXT("  ├ ")) + (D ? D->Label.ToString() : Part.Definition.ToString()));
+	}
+	return Lines;
+}
+
+int32 ExtractionItems::MagazineCapacity(const FExtractionItem& Item)
+{
+	const auto Stats = WeaponMechanics::ResolveWeaponStats(Item);
+	const auto* Definition = UExtractionItemDefinition::Get(Item.Definition);
+	return Stats.IsValid() ? FMath::RoundToInt(Stats.MagazineCapacity) : Definition ? Definition->MagazineCapacity : 0;
 }

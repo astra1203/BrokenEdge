@@ -24,7 +24,7 @@ cube = unreal.load_asset('/Engine/BasicShapes/Cube')
 if not isinstance(ammo_mesh, unreal.StaticMesh):
     ammo_mesh = cube
 definitions = [
-    ('AK', 'AK 步枪', unreal.ExtractionItemKind.WEAPON, (4, 2), 1, None),
+    ('AK', 'AKM 突击步枪', unreal.ExtractionItemKind.WEAPON, (4, 2), 1, None),
     ('Ammo', '步枪弹药', unreal.ExtractionItemKind.AMMO, (1, 1), 60, ammo_mesh),
     ('Medkit', '医疗包', unreal.ExtractionItemKind.MEDICAL, (2, 1), 1, health_mesh),
     ('Electronics', '电子元件', unreal.ExtractionItemKind.VALUABLE, (1, 1), 5, cube),

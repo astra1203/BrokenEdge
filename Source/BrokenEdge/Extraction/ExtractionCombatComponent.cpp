@@ -9,8 +9,186 @@
 #include "BrokenEdge/Weapon/HitScanWeapon.h"
 #include "Animation/AnimMontage.h"
 #include "TimerManager.h"
+#include "Net/UnrealNetwork.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "GameFramework/PlayerController.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "DrawDebugHelpers.h"
+#include "Camera/CameraComponent.h"
+#include "HAL/IConsoleManager.h"
 
-UExtractionCombatComponent::UExtractionCombatComponent() { SetIsReplicatedByDefault(true); }
+static TAutoConsoleVariable<int32> CVarWeaponStats(
+	TEXT("BrokenEdge.Weapon.DebugStats"), 0, TEXT("Show ADS, breath, spread and source revision."));
+
+void UExtractionCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME_CONDITION(UExtractionCombatComponent, MechanicsSeed, COND_OwnerOnly);
+}
+
+void UExtractionCombatComponent::RefreshMechanics()
+{
+	auto* C = Character();
+	auto* W = C ? C->GetEquippedWeapon() : nullptr;
+	if (W == MechanicsWeapon.Get() && (Stats.IsValid() || !W) && (!W || (MechanicsParts == W->ExtractionParts && Configuration == W->ExtractionConfiguration))) return;
+	MechanicsParts = W ? W->ExtractionParts : TArray<FName>();
+	Configuration = W ? W->ExtractionConfiguration : 0;
+	MechanicsWeapon = W;
+	Stats = {};
+	AimAlpha = 0;
+	BurstIndex = 0;
+	SpreadAccumulation = FVector2D::ZeroVector;
+	LastMechanicsShot = -100;
+	VisualKick = 0; RecoilDebt = FVector2D::ZeroVector; bHaveControl = false;
+	if (W)
+	{
+		FExtractionItem Item;
+		Item.Definition = W->ExtractionDefinition;
+		for (FName Part : W->ExtractionParts)
+		{
+			FExtractionAttachment A;
+			A.Definition = Part;
+			Item.Attachments.Add(A);
+		}
+		if (!W->ExtractionAssembly.IsEmpty()) Item.Attachments = W->ExtractionAssembly;
+		Stats = WeaponMechanics::ResolveWeaponStats(Item);
+		if (Stats.IsValid())
+		{
+			W->FireDelay = Stats.Interval;
+			ReadyAt = GetWorld()->GetTimeSeconds() + Stats.Equip;
+		}
+	}
+	if (C && C->HasAuthority() && !MechanicsSeed) MechanicsSeed = FMath::RandHelper(MAX_int32 - 1) + 1;
+}
+
+bool UExtractionCombatComponent::CanFireMechanics() const
+{
+	const auto* C = Character();
+	return !Stats.IsValid() || (C && !C->IsSprinting() && GetWorld()->GetTimeSeconds() >= ReadyAt);
+}
+
+void UExtractionCombatComponent::HoldBreathPressed()
+{
+	bBreathHeld = true;
+	ServerHoldBreath(true);
+}
+
+void UExtractionCombatComponent::HoldBreathReleased()
+{
+	bBreathHeld = false;
+	ServerHoldBreath(false);
+}
+
+void UExtractionCombatComponent::ServerHoldBreath_Implementation(bool bHeld) { bBreathHeld = bHeld && CanAct(); }
+
+void UExtractionCombatComponent::TickComponent(float Delta, ELevelTick Kind, FActorComponentTickFunction* Tick)
+{
+	Super::TickComponent(Delta, Kind, Tick);
+	if (!IsEnabled()) return;
+	RefreshMechanics();
+	auto* C = Character();
+	if (C && C->IsLocallyControlled() && C->GetFollowCamera()) C->GetFollowCamera()->ClearAdditiveOffset();
+	if (!C || !Stats.IsValid()) return;
+	const double Now = GetWorld()->GetTimeSeconds();
+	AimAlpha = FMath::FInterpConstantTo(AimAlpha, C->IsAiming() ? 1.f : 0.f, Delta,
+	                                    1.f / FMath::Max(.01f, C->IsAiming() ? Stats.AimIn : Stats.AimOut));
+	if (C->IsSprinting()) ReadyAt = Now + Stats.SprintToFire;
+	bWasSprinting = C->IsSprinting();
+	const bool Hold = CanAct() && bBreathHeld && AimAlpha > .99f && Breath > 0 && Now >= BreathResume;
+	Breath = FMath::Clamp(Breath + Delta * (Hold ? -Stats.BreathDrain : Stats.BreathRecovery), 0.f, 100.f);
+	if (Hold && Breath <= 0) BreathResume = Now + Stats.BreathCooldown;
+	const FVector2D Recover = FMath::Lerp(Stats.Spread[0].Recovery, Stats.Spread[1].Recovery, AimAlpha) * Delta;
+	SpreadAccumulation.X = FMath::Max(0., SpreadAccumulation.X - Recover.X);
+	SpreadAccumulation.Y = FMath::Max(0., SpreadAccumulation.Y - Recover.Y);
+	VisualKick *= FMath::Exp(-18.f * Delta);
+	if (C->IsLocallyControlled() && C->GetFollowCamera() && CanAct())
+	{
+		// Compatibility camera impulse, deliberately excluded from the authoritative aim ray.
+		const float CameraPitch = VisualKick * .25f * FMath::Sin((Now - LastMechanicsShot) * 50);
+		C->GetFollowCamera()->AddAdditiveOffset(FTransform(FRotator(CameraPitch, 0, 0)), 0);
+	}
+	if (C->IsLocallyControlled() && C->Controller)
+	{
+		FRotator Control = C->Controller->GetControlRotation();
+		if (bHaveControl)
+		{
+			const auto Input = (Control - PreviousControl).GetNormalized();
+			auto Compensate = [](double Debt, double Movement)
+			{
+				return Debt * Movement < 0 ? FMath::Sign(Debt) * FMath::Max(0., FMath::Abs(Debt) - FMath::Abs(Movement)) : Debt;
+			};
+			RecoilDebt.X = Compensate(RecoilDebt.X, Input.Pitch);
+			RecoilDebt.Y = Compensate(RecoilDebt.Y, Input.Yaw);
+		}
+		if (Now - LastMechanicsShot > Stats.Interval * 1.75)
+		{
+			const FVector2D RecoverDebt = RecoilDebt * (1.f - FMath::Exp(-6.f * Delta));
+			Control.Pitch -= RecoverDebt.X; Control.Yaw -= RecoverDebt.Y;
+			RecoilDebt -= RecoverDebt; C->Controller->SetControlRotation(Control);
+		}
+		PreviousControl = Control; bHaveControl = true;
+	}
+	if (C->IsLocallyControlled() && CanFireMechanics() && C->GetCombat()->bFireButtonPressed
+		&& C->GetCombat()->bCanFire && MechanicsWeapon.IsValid() && MechanicsWeapon->bAutomatic
+		&& !C->GetExtractionInteraction()->InventoryOpen) C->GetCombat()->Fire();
+	if (CVarWeaponStats.GetValueOnGameThread() && C->IsLocallyControlled())
+		DrawDebugString(GetWorld(), C->GetActorLocation() + FVector(0, 0, 100), FString::Printf(
+			                TEXT("%s rev=%u ADS=%.2f Breath=%.1f Spread=%s RPM=%.1f [compatibility]"),
+			                *Stats.Definition.ToString(), Stats.Revision, AimAlpha, Breath,
+			                *SpreadAccumulation.ToString(), 60 / Stats.Interval), nullptr, FColor::Green, 0);
+}
+
+FVector UExtractionCombatComponent::ResolveShot(const FVector& Target, uint32 Id, bool bApplyInput)
+{
+	auto* C = Character();
+	auto* W = MechanicsWeapon.Get();
+	if (!C || !W || !Stats.IsValid()) return Target;
+	const double Now = GetWorld()->GetTimeSeconds();
+	const bool Continuous = Now - LastMechanicsShot < FMath::Max(.2f, Stats.Interval * 1.75f);
+	if (!Continuous) BurstIndex = 0;
+	const FVector Start = W->GetWeaponMesh()->GetSocketLocation(TEXT("MuzzleFlash"));
+	FVector2D Spread = FMath::Lerp(Stats.Spread[0].Base, Stats.Spread[1].Base, AimAlpha) + SpreadAccumulation;
+	Spread *= Stats.SpreadScale;
+	if (C->GetVelocity().SizeSquared2D() > 100) Spread *= Stats.MoveSpread;
+	if (C->bIsCrouched) Spread *= Stats.CrouchSpread;
+	if (C->GetCharacterMovement()->IsFalling()) Spread *= Stats.JumpSpread;
+	const uint32 Seed = HashCombine(MechanicsSeed, Id);
+	const bool Hold = bBreathHeld && AimAlpha > .99f && Breath > 0 && Now >= BreathResume;
+	// Continuous deterministic sway, separate from random spread. Frequency/amplitude are compatibility tuning.
+	const float Phase = GetWorld()->GetGameState()->GetServerWorldTimeSeconds();
+	const float Sway = AimAlpha * (C->bIsCrouched ? Stats.CrouchBreath : Stats.StandBreath) * (Hold ? .15f : 1.f) *
+		.12f;
+	FRotator Aim = (Target - Start).Rotation();
+	Aim.Pitch += FMath::Sin(Phase * 1.7f) * Sway;
+	Aim.Yaw += FMath::Sin(Phase * 1.1f) * Sway;
+	const FVector End = Start + WeaponMechanics::SpreadDirection(Aim.Vector(), Spread, Seed) * Stats.MaxDistance;
+	auto Recoil = Stats.Recoil(BurstIndex++, Continuous, AimAlpha, Seed) * (Hold ? .95f : 1.f);
+	if (C->bIsCrouched) Recoil *= Stats.CrouchRecoil;
+	if (bApplyInput && C->IsLocallyControlled() && C->Controller)
+	{
+		FRotator Control = C->Controller->GetControlRotation();
+		Control.Pitch += Recoil.X;
+		Control.Yaw += Recoil.Y;
+		C->Controller->SetControlRotation(Control);
+		RecoilDebt += Recoil; PreviousControl = Control; bHaveControl = true;
+	}
+	VisualKick += Recoil.X * .35f;
+	SpreadAccumulation += FMath::Lerp(Stats.Spread[0].PerShot, Stats.Spread[1].PerShot, AimAlpha);
+	const auto Max = FMath::Lerp(Stats.Spread[0].Maximum, Stats.Spread[1].Maximum, AimAlpha);
+	SpreadAccumulation.X = FMath::Min(SpreadAccumulation.X, Max.X);
+	SpreadAccumulation.Y = FMath::Min(SpreadAccumulation.Y, Max.Y);
+	Breath = FMath::Max(0.f, Breath - Stats.BreathShot);
+	BreathResume = Now + Stats.BreathCooldown;
+	LastMechanicsShot = Now;
+	return End;
+}
+
+UExtractionCombatComponent::UExtractionCombatComponent()
+{
+	SetIsReplicatedByDefault(true);
+	PrimaryComponentTick.bCanEverTick = true;
+}
+
 ABrokenEdgeCharacter* UExtractionCombatComponent::Character() const { return Cast<ABrokenEdgeCharacter>(GetOwner()); }
 
 bool UExtractionCombatComponent::IsEnabled() const
@@ -32,37 +210,47 @@ void UExtractionCombatComponent::FireGuard(const FVector& Target)
 {
 	auto* C = Character();
 	if (!C || !C->HasAuthority() || !C->bExtractionGuard) return;
-	ServerRequestShot_Implementation(++LocalShotId, C->GetEquippedWeapon(), Target);
+	ServerRequestShot(++LocalShotId, C->GetEquippedWeapon(), Target);
 }
 
 void UExtractionCombatComponent::RequestShot(const FVector& Target)
 {
+	RefreshMechanics();
 	auto* C = Character();
 	auto* W = C ? C->GetEquippedWeapon() : nullptr;
-	if (!CanAct() || C->Melee->Active || !Cast<AHitScanWeapon>(W)) return;
+	if (!CanAct() || !CanFireMechanics() || C->Melee->Active || !Cast<AHitScanWeapon>(W)) return;
 	if (C->GetExtractionInteraction()->InventoryOpen) return;
 	const uint32 Id = ++LocalShotId;
 	if (!C->HasAuthority())
 	{
 		PendingShots.Add(Id, W);
-		C->GetCombat()->LocalFire(Target);
+		C->GetCombat()->LocalFire(ResolveShot(Target, Id, true));
 	}
 	ServerRequestShot(Id, W, Target);
 }
 
-void UExtractionCombatComponent::ServerRequestShot_Implementation(uint32 ShotId, AWeapon* Weapon,
-                                                                  FVector_NetQuantize Target)
+void UExtractionCombatComponent::ServerRequestShot(uint32 ShotId, AWeapon* Weapon, FVector_NetQuantize Target)
+{
+	const auto* Profile = Weapon ? WeaponMechanics::Find(Weapon->ExtractionDefinition) : nullptr;
+	ServerRequestShotVersioned(ShotId, Weapon, Target, Weapon && Weapon->ExtractionConfiguration ? Weapon->ExtractionConfiguration : Profile ? Profile->Revision : 0);
+}
+
+void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint32 ShotId, AWeapon* Weapon,
+                                                                  FVector_NetQuantize Target, uint32 Revision)
 {
 	if (!IsEnabled()) return;
+	RefreshMechanics();
 	auto* C = Character();
 	UCombatComponent* Combat = C ? C->GetCombat().Get() : nullptr;
 	const double Now = GetWorld()->GetTimeSeconds();
 	const bool Fresh = ShotId > LastProcessedShot;
 	if (Fresh) LastProcessedShot = ShotId;
-	const bool Valid = IsEnabled() && Fresh && CanAct() && Combat && IsValid(Weapon)
+	const bool Valid = IsEnabled() && Fresh && CanAct() && CanFireMechanics() && Combat && IsValid(Weapon)
 		&& !C->Melee->Active
 		&& !C->GetExtractionInteraction()->InventoryOpen
 		&& Weapon == C->GetEquippedWeapon() && Weapon->GetOwner() == C && Cast<AHitScanWeapon>(Weapon)
+		&& (!Stats.IsValid() || (Revision == Stats.Revision && (C->bExtractionGuard ||
+			FVector::DotProduct((FVector(Target) - C->GetPawnViewLocation()).GetSafeNormal(), C->GetBaseAimRotation().Vector()) > .7f)))
 		&& Weapon->FireType == EFireType::EFT_HitScan && !Weapon->IsEmpty()
 		&& Combat->CombatState == ECombatState::ECS_Unoccuiped && !ReloadTimer.IsValid()
 		&& FMath::IsFinite(Weapon->FireDelay) && Weapon->FireDelay > 0
@@ -77,7 +265,11 @@ void UExtractionCombatComponent::ServerRequestShot_Implementation(uint32 ShotId,
 		if (const auto* Inventory = C->GetExtractionInteraction()->Inventory())
 			if (const auto* Item = Inventory->Contents.Find(Weapon->ExtractionItemId))
 				Weapon->SphereRadius *= ExtractionItems::ScatterScale(*Item);
-		const FVector End = Weapon->bUseScatter ? Weapon->TraceEndWithScatter(Target) : FVector(Target);
+		const FVector End = Stats.IsValid()
+			                    ? ResolveShot(Target, ShotId, true)
+			                    : Weapon->bUseScatter
+			                    ? Weapon->TraceEndWithScatter(Target)
+			                    : FVector(Target);
 		Weapon->SphereRadius = SavedScatter;
 		C->PlayFireMontage(Combat->bAiming);
 		Weapon->Fire(End);
@@ -88,8 +280,23 @@ void UExtractionCombatComponent::ServerRequestShot_Implementation(uint32 ShotId,
 	else ++RejectedShots;
 	// Never expose or overwrite an unrelated player's weapon from a forged request.
 	AWeapon* OwnedWeapon = IsValid(Weapon) && Weapon->GetOwner() == C ? Weapon : (C ? C->GetEquippedWeapon() : nullptr);
-	if (!C || !C->bExtractionGuard) ClientShotResult(LastProcessedShot, OwnedWeapon,
-	                                                 OwnedWeapon ? OwnedWeapon->GetAmmo() : 0, Valid);
+	if (!C || !C->bExtractionGuard)
+		ClientShotResult(LastProcessedShot, OwnedWeapon,
+		                 OwnedWeapon ? OwnedWeapon->GetAmmo() : 0, Valid);
+	if (C && !C->bExtractionGuard) ClientMechanicsResult(LastProcessedShot, OwnedWeapon, BurstIndex,
+		SpreadAccumulation, Breath, Now, LastMechanicsShot);
+}
+
+void UExtractionCombatComponent::ClientMechanicsResult_Implementation(uint32 ShotId, AWeapon* Weapon, uint32 Sequence,
+	FVector2D Spread, float InBreath, double ServerTime, double ShotTime)
+{
+	if (GetOwner()->HasAuthority() || Weapon != MechanicsWeapon.Get() || ShotId < LastAcknowledgedShot) return;
+	uint32 Pending = 0;
+	for (const auto& Entry : PendingShots) if (Entry.Value.Get() == Weapon) ++Pending;
+	BurstIndex = Sequence + Pending;
+	SpreadAccumulation = Spread + FMath::Lerp(Stats.Spread[0].PerShot, Stats.Spread[1].PerShot, AimAlpha) * Pending;
+	Breath = FMath::Clamp(InBreath - Pending * Stats.BreathShot, 0.f, 100.f);
+	if (!Pending) LastMechanicsShot = GetWorld()->GetTimeSeconds() - FMath::Max(0., ServerTime - ShotTime);
 }
 
 void UExtractionCombatComponent::ClientShotResult_Implementation(uint32 ShotId, AWeapon* Weapon, int32 Ammo,
@@ -162,7 +369,9 @@ void UExtractionCombatComponent::BeginServerReload()
 		Duration = RifleSection != INDEX_NONE ? Montage->GetSectionLength(RifleSection) : Montage->GetPlayLength();
 	}
 	GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &ThisClass::FinishServerReload,
-	                                       FMath::Max(.25f, Duration));
+	                                       FMath::Max(.25f, Stats.IsValid()
+		                                                        ? (W->IsEmpty() ? Stats.EmptyReload : Stats.Reload)
+		                                                        : Duration));
 }
 
 void UExtractionCombatComponent::FinishServerReload()
@@ -234,6 +443,13 @@ void UExtractionCombatComponent::BeginServerSwap()
 			const FString Name = Notify.GetNotifyEventName().ToString();
 			if (Name.Contains(TEXT("AttachWeapons"))) AttachTime = Notify.GetTriggerTime();
 			if (Name.Contains(TEXT("SwapFinished"))) FinishTime = Notify.GetTriggerTime();
+		}
+	RefreshMechanics();
+	if (Stats.IsValid())
+		if (const auto* Next = WeaponMechanics::Find(Combat->SecondaryWeapon->ExtractionDefinition))
+		{
+			AttachTime = Stats.Unequip;
+			FinishTime = AttachTime + Next->Equip;
 		}
 	AttachTime = FMath::Max(.05f, AttachTime);
 	FinishTime = FMath::Max(AttachTime + .05f, FinishTime);

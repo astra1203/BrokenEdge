@@ -73,6 +73,11 @@ void AWeapon::OnRep_ExtractionInitialAmmo()
 
 int32 AWeapon::GetMagCapacity() const
 {
+	if (!ExtractionDefinition.IsNone())
+	{
+		FExtractionItem Item; Item.Definition = ExtractionDefinition; Item.Attachments = ExtractionAssembly;
+		return ExtractionItems::MagazineCapacity(Item);
+	}
 	const auto* Definition = UExtractionItemDefinition::Get(ExtractionDefinition);
 	return Definition && Definition->Kind == EExtractionItemKind::Weapon ? Definition->MagazineCapacity : MagCapacity;
 }
@@ -186,6 +191,8 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 	DOREPLIFETIME_CONDITION(AWeapon, ExtractionInitialAmmo, COND_InitialOnly);
 	DOREPLIFETIME(AWeapon, ExtractionAmmoType);
 	DOREPLIFETIME(AWeapon, ExtractionParts);
+	DOREPLIFETIME(AWeapon, ExtractionAssembly);
+	DOREPLIFETIME(AWeapon, ExtractionConfiguration);
 }
 
 void AWeapon::OnRep_Owner()

@@ -324,7 +324,7 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 	FString Error;
 	AExtractionLootActor* Dropped = nullptr;
 	if (R.Op == EExtractionItemOp::Attach || R.Op == EExtractionItemOp::Detach || R.Op == EExtractionItemOp::Unload || R
-		.Op == EExtractionItemOp::SelectAmmo)
+		.Op == EExtractionItemOp::SelectAmmo || R.Op == EExtractionItemOp::Tune)
 	{
 		if (!ExtractionItems::Configure(Inv->Contents, R, Error)) return Error;
 	}

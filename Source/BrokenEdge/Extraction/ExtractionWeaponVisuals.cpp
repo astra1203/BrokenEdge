@@ -33,19 +33,25 @@ void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActo
 	if (!W || GetNetMode() == NM_DedicatedServer) return;
 	auto* C = Cast<ABrokenEdgeCharacter>(W->GetOwner());
 	auto* View = C && C->GetEquippedWeapon() == W && C->IsLocallyControlled() ? C->GetFirstPersonWeaponMesh() : nullptr;
-	if (Built != W->ExtractionParts || ViewParent.Get() != View)
+	uint32 Layout = W->ExtractionConfiguration;
+	for (const auto& Node : W->ExtractionAssembly)
+	{
+		Layout = HashCombine(Layout, GetTypeHash(Node.Id)); Layout = HashCombine(Layout, GetTypeHash(Node.Parent));
+		Layout = HashCombine(Layout, GetTypeHash(Node.Socket));
+	}
+	if (Built != W->ExtractionParts || ViewParent.Get() != View || BuiltLayout != Layout)
 	{
 		Clear();
-		Built = W->ExtractionParts;
+		Built = W->ExtractionParts; BuiltLayout = Layout;
 		ViewParent = View;
-		auto Create = [&](UStaticMesh* Mesh, USceneComponent* Parent, const FTransform& Mount, bool First)
+		auto Create = [&](UStaticMesh* Mesh, USceneComponent* Parent, const FTransform& Mount, bool First, FName Socket = NAME_None) -> UStaticMeshComponent*
 		{
-			if (!Mesh || !Parent) return;
+			if (!Parent) return nullptr;
 			auto* Part = NewObject<UStaticMeshComponent>(W);
 			Part->SetStaticMesh(Mesh);
 			Part->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			Part->SetCanEverAffectNavigation(false);
-			Part->SetupAttachment(Parent);
+			Part->SetupAttachment(Parent, Socket);
 			Part->SetRelativeTransform(Mount);
 			Part->SetOnlyOwnerSee(First);
 			if (First)
@@ -55,7 +61,31 @@ void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActo
 			}
 			Part->RegisterComponent();
 			(First ? ViewParts : WorldParts).Add(Part);
+			return Part;
 		};
+		if (!W->ExtractionAssembly.IsEmpty())
+		{
+			TMap<FGuid, UStaticMeshComponent*> WorldNodes, ViewNodes;
+			TSet<FGuid> Finished;
+			for (int32 Pass = 0; Pass < W->ExtractionAssembly.Num(); ++Pass)
+				for (const auto& Node : W->ExtractionAssembly)
+				{
+					if (Finished.Contains(Node.Id) || (Node.Parent.IsValid() && !Finished.Contains(Node.Parent))) continue;
+					const auto* D = UExtractionItemDefinition::Get(Node.Definition);
+					if (!D) continue;
+					USceneComponent* WorldHost = Node.Parent.IsValid() ? static_cast<USceneComponent*>(WorldNodes.FindRef(Node.Parent)) : W->GetWeaponMesh();
+					USceneComponent* ViewHost = Node.Parent.IsValid() ? static_cast<USceneComponent*>(ViewNodes.FindRef(Node.Parent)) : View;
+					WorldNodes.Add(Node.Id, Create(D->WorldMesh, WorldHost, D->Mount, false, Node.Socket));
+					ViewNodes.Add(Node.Id, Create(D->FirstPersonMesh, ViewHost, D->FirstPersonMount, true, Node.Socket));
+					if (D->AdapterMesh)
+					{
+						Create(D->AdapterMesh, WorldHost, D->AdapterMount, false, Node.Socket);
+						Create(D->AdapterMesh, ViewHost, D->AdapterMount, true, Node.Socket);
+					}
+					Finished.Add(Node.Id);
+				}
+		}
+		else
 		for (FName Name : Built)
 			if (const auto* D = UExtractionItemDefinition::Get(Name))
 			{

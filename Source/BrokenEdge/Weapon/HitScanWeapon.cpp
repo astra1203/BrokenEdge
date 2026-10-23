@@ -2,6 +2,9 @@
 
 
 #include "HitScanWeapon.h"
+#include "ExtractionBullet.h"
+#include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
+#include "WeaponMechanics.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
 #include "BrokenEdge/Extraction/ExtractionHealth.h"
 
@@ -54,8 +57,31 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 	FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());
 	FVector Start = SocketTransform.GetLocation();
 
+	const auto* Mechanics = GetWorld()->GetGameState<AExtractionGameState>() ? WeaponMechanics::Find(ExtractionDefinition) : nullptr;
+	if (Mechanics && (HasAuthority() || OwnerPawn->IsLocallyControlled()))
+	{
+		// A barrel that protrudes through cover cannot spawn a round beyond the wall.
+		FCollisionQueryParams MuzzleQuery(SCENE_QUERY_STAT(ExtractionMuzzleObstruction), true, this);
+		MuzzleQuery.AddIgnoredActor(OwnerPawn);
+		FHitResult Obstruction;
+		if (GetWorld()->LineTraceSingleByChannel(Obstruction, OwnerPawn->GetPawnViewLocation(), Start, ECC_Visibility, MuzzleQuery))
+			Start = Obstruction.ImpactPoint + Obstruction.ImpactNormal * (Mechanics->Radius + .1f);
+		FActorSpawnParameters Params;
+		Params.Owner = this; Params.Instigator = OwnerPawn;
+		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		if (auto* Bullet = GetWorld()->SpawnActor<AExtractionBullet>(AExtractionBullet::StaticClass(), Start, FRotator::ZeroRotator, Params))
+			{
+			const auto* C = Cast<ABrokenEdgeCharacter>(OwnerPawn);
+			const auto& Effective = C ? C->GetExtractionCombat()->GetWeaponStats() : *Mechanics;
+			Bullet->Initialize(Effective.IsValid() ? Effective : *Mechanics, HitTarget - Start, Damage, HeadShotDamage, ExtractionAmmoType, ImpactParticles, HitSound, BeamParticles);
+			if (auto* ViewMesh = GetLocalFirstPersonMuzzleMesh(this))
+				if (auto* PC = Cast<APlayerController>(OwnerPawn->GetController()); PC && PC->PlayerCameraManager)
+					Bullet->SetVisualOrigin(UGameplayStatics::TransformWorldToFirstPerson(PC->PlayerCameraManager->GetCameraCacheView(),
+						ViewMesh->GetSocketLocation(MuzzleSocketName), false));
+		}
+	}
 	FHitResult FireHit;
-	WeaponTraceHit(Start, HitTarget, FireHit);
+	if (!Mechanics) WeaponTraceHit(Start, HitTarget, FireHit);
 
 	ABrokenEdgeCharacter* HitCharacter = Cast<ABrokenEdgeCharacter>(FireHit.GetActor());
 	AController* InstigatorController = OwnerPawn->GetController();
@@ -111,7 +137,7 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 			}
 		}
 	}
-	if (ImpactParticles)
+	if (!Mechanics && FireHit.bBlockingHit && ImpactParticles)
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(
 			GetWorld(),
@@ -120,7 +146,7 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 			FireHit.ImpactNormal.Rotation()
 		);
 	}
-	if (HitSound)
+	if (!Mechanics && FireHit.bBlockingHit && HitSound)
 	{
 		UGameplayStatics::PlaySoundAtLocation(
 			this,

@@ -203,6 +203,18 @@ public:
 					     FLinearColor::White, 4);
 				}
 		}
+		if (MenuOpen && !Dragging)
+			if (const auto* C = Container(SelectedLoot))
+				if (const auto* Item = C->Find(Selected))
+				{
+					const auto Lines = ExtractionItems::WeaponDetails(*Item);
+					if (!Lines.IsEmpty())
+					{
+						const FVector2D At(MenuPosition.X > 640 ? 100 : 740, 80);
+						Box(At, FVector2D(440, 22 * Lines.Num() + 20), FLinearColor(.03f, .05f, .07f), 5);
+						for (int32 N = 0; N < Lines.Num(); ++N) Text(At + FVector2D(12, 10 + 22 * N), Lines[N], 14, FLinearColor::White, 6);
+					}
+				}
 		if (MenuOpen)
 		{
 			Box(MenuPosition, FVector2D(250, MenuHeight()), FLinearColor(.045f, .065f, .09f), 5);

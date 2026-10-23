@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BrokenEdge/BrokenEdgeTypes/WeaponType.h"
 #include "GameFramework/Actor.h"
+#include "BrokenEdge/Extraction/ExtractionItems.h"
 #include "Weapon.generated.h"
 
 enum class EFirstPersonPrimitiveType : uint8;
@@ -60,6 +61,8 @@ public:
 	FName ExtractionAmmoType = TEXT("Ammo");
 	UPROPERTY(Replicated)
 	TArray<FName> ExtractionParts;
+	UPROPERTY(Replicated) TArray<FExtractionAttachment> ExtractionAssembly;
+	UPROPERTY(Replicated) uint32 ExtractionConfiguration = 0;
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UExtractionWeaponVisuals> ExtractionVisuals;
 	FTransform EquipmentGrip(bool FirstPerson) const;

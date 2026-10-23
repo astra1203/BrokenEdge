@@ -398,7 +398,7 @@ void UCombatComponent::LocalFire(const FVector_NetQuantize& TraceHitTarget)
 bool UCombatComponent::CanFire()
 {
 	if (Character && Character->Melee->Active) return false;
-	if (Character && Character->GetExtractionCombat()->IsEnabled() && !Character->GetExtractionCombat()->CanAct())
+	if (Character && Character->GetExtractionCombat()->IsEnabled() && (!Character->GetExtractionCombat()->CanAct() || !Character->GetExtractionCombat()->CanFireMechanics()))
 		return false;
 	// if (EquippedWeapon == nullptr || bLocallyReloading)return false;
 	if (EquippedWeapon == nullptr)return false;
@@ -717,6 +717,8 @@ void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
 
 	if (bScreenToWorld)
 	{
+		if (Character && Character->GetExtractionCombat()->IsEnabled() && Character->GetExtractionCombat()->GetWeaponStats().IsValid())
+			CrosshairWorldDirection = Character->GetControlRotation().Vector();
 		FVector Start = CrosshairWorldPosition;
 		FCollisionQueryParams QueryParams;
 
@@ -910,7 +912,9 @@ void UCombatComponent::InterpFOV(float DeltaTime)
 	if (Character && Character->FirstPersonMeshAsset && Character->IsFirstPersonView())
 	{
 		const float Target = bAiming ? Character->FirstPersonAimFOV : DefaultFOV;
-		CurrentFOV = FMath::FInterpTo(CurrentFOV, Target, DeltaTime, Character->FirstPersonAimInterpSpeed);
+		CurrentFOV = Character->GetExtractionCombat()->IsEnabled() && Character->GetExtractionCombat()->GetWeaponStats().IsValid()
+			? FMath::Lerp(DefaultFOV, Character->FirstPersonAimFOV, Character->GetExtractionCombat()->GetAimAlpha())
+			: FMath::FInterpTo(CurrentFOV, Target, DeltaTime, Character->FirstPersonAimInterpSpeed);
 		Character->GetFollowCamera()->SetFieldOfView(CurrentFOV);
 		return;
 	}

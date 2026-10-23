@@ -13,6 +13,7 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
 private:
 	TArray<FName> Built;
+	uint32 BuiltLayout = 0;
 	UPROPERTY(Transient) TArray<TObjectPtr<class UStaticMeshComponent>> WorldParts;
 	UPROPERTY(Transient) TArray<TObjectPtr<class UStaticMeshComponent>> ViewParts;
 	TWeakObjectPtr<class USkeletalMeshComponent> ViewParent;
