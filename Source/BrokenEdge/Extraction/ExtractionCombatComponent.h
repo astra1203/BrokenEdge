@@ -40,6 +40,8 @@ public:
 	bool CanFireMechanics() const;
 	const FResolvedWeaponStats& GetWeaponStats() const { return Stats; }
 	float GetAimAlpha() const { return AimAlpha; }
+	float GetBreath() const { return Breath; }
+	double GetBreathResumeTime() const { return BreathResume; }
 	FRotator GetVisualKick() const { return FRotator(-VisualKick, 0, 0); }
 	void HoldBreathPressed();
 	void HoldBreathReleased();

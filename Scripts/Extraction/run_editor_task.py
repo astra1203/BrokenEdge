@@ -11,7 +11,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
-parser.add_argument('task', choices=['gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
+parser.add_argument('task', choices=['weapon-range-assets', 'weapon-pie', 'gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
 parser.add_argument('--tag', required=True)
 parser.add_argument('--store', type=Path, help='Existing store directory; only for recover-existing')
 parser.add_argument('--verify-profile')
@@ -22,7 +22,9 @@ out = ROOT / 'Saved/Extraction' / args.tag
 out.mkdir(parents=True, exist_ok=False)
 command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor-Cmd.exe'), str(ROOT / 'BrokenEdge.uproject'),
            '-unattended', '-nosplash', '-nosound', '-NoLoadingScreen', '-NullRHI', '-abslog=' + str(out / 'Editor.log')]
-if args.task == 'gunsmith-assets':
+if args.task == 'weapon-range-assets':
+    command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/prepare_weapon_range.py')]
+elif args.task == 'gunsmith-assets':
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/configure_gunsmith.py')]
 elif args.task == 'weapon-names':
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/configure_weapon_mechanics.py')]
@@ -41,7 +43,11 @@ elif args.task == 'phase6a-assets':
 elif args.task in ['assets', 'exit', 'phase5-assets']:
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction' / ('prepare_phase5.py' if args.task == 'phase5-assets' else 'prepare_exit.py' if args.task == 'exit' else 'prepare_items.py'))]
 else:
-    test = {'weapon-mechanics': 'WeaponMechanics', 'persistence': 'Persistence', 'inventory': 'Inventory', 'recover-existing': 'RecoverExistingStore', 'equipment': 'Equipment', 'progression': 'Progression'}[args.task]
+    test = {'weapon-pie': 'WeaponPIE', 'weapon-mechanics': 'WeaponMechanics', 'persistence': 'Persistence', 'inventory': 'Inventory', 'recover-existing': 'RecoverExistingStore', 'equipment': 'Equipment', 'progression': 'Progression'}[args.task]
+    if args.task == 'weapon-pie':
+        command[0] = str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe')
+        command.remove('-NullRHI')
+        command += ['-RenderOffscreen', '-ResX=1280', '-ResY=720']
     if args.task == 'recover-existing':
         if not args.store or not (args.store / 'Store.journal').is_file():
             raise ValueError('An explicit existing journal is required')
@@ -74,6 +80,8 @@ passed = metadata['exit_code'] == 0 and 'Fatal error:' not in text and 'Tracebac
 if args.task in ['north-import', 'phase7a-assets', 'phase7a-audit']:
     marker = {'north-import': 'SPACE_REGION_ASSETS_COMPLETE', 'phase7a-assets': 'EXTRACTION_PHASE7A_ASSETS_PREPARED', 'phase7a-audit': 'EXTRACTION_PHASE7A_AUDIT_PASSED'}[args.task]
     passed = passed and marker in text
+elif args.task == 'weapon-range-assets':
+    passed = passed and 'EXTRACTION_WEAPON_RANGE_PREPARED' in text
 elif args.task == 'gunsmith-assets':
     passed = passed and 'EXTRACTION_GUNSMITH_PREPARED' in text
 elif args.task == 'weapon-names':
@@ -89,7 +97,7 @@ elif args.task in ['assets', 'exit', 'phase5-assets']:
 else:
     successes = re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text)
     metadata['successful_tests'] = len(successes)
-    expected = {'weapon-mechanics': 3, 'persistence': 4, 'inventory': 3, 'recover-existing': 1, 'equipment': 4, 'progression': 4}[args.task]
+    expected = {'weapon-pie': 1, 'weapon-mechanics': 4, 'persistence': 4, 'inventory': 3, 'recover-existing': 1, 'equipment': 4, 'progression': 4}[args.task]
     passed = passed and len(successes) == expected and not re.search(r'Test Completed\. Result=\{(?:Fail|Failure|\u5931\u8d25)', text)
 metadata['result'] = 'passed' if passed else 'failed'
 metadata['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()

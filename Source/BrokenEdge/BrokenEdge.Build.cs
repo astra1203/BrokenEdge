@@ -7,6 +7,7 @@ public class BrokenEdge : ModuleRules
 	public BrokenEdge(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		if (Target.bBuildEditor) PrivateDependencyModuleNames.Add("UnrealEd");
 
 		PublicDependencyModuleNames.AddRange(new string[]
 		{

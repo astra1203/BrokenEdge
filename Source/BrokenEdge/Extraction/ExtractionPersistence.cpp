@@ -89,9 +89,13 @@ FString UExtractionPersistence::OutcomeLabel(EExtractionOutcome O)
 
 bool UExtractionPersistence::EnsureLoaded()
 {
-	if (Loaded) return !Faulted;
+	const bool Training = GetWorld() && GetWorld()->GetMapName().Contains(TEXT("L_WeaponRange"));
+	if (Loaded && Training == TrainingStore) return !Faulted;
 	FString Directory = FPaths::ProjectSavedDir() / TEXT("Extraction/Persistence");
 	FParse::Value(FCommandLine::Get(), TEXT("ExtractionStore="), Directory);
+	if (Training)
+		Directory = FPaths::ProjectSavedDir() / TEXT("Extraction/Training") / FGuid::NewGuid().ToString();
+	TrainingStore = Training;
 	return Load(Directory);
 }
 
@@ -218,7 +222,8 @@ bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) co
 		TSet<FGuid> Operations;
 		for (const auto& Receipt : P.EconomyReceipts)
 		{
-			if (!Receipt.Operation.IsValid() || Operations.Contains(Receipt.Operation) || Receipt.Signature.IsEmpty()) return false;
+			if (!Receipt.Operation.IsValid() || Operations.Contains(Receipt.Operation) || Receipt.Signature.IsEmpty())
+				return false;
 			Operations.Add(Receipt.Operation);
 		}
 		FString Why;
@@ -360,8 +365,15 @@ bool UExtractionPersistence::Economy(FGuid Id, const FExtractionEconomyRequest& 
 {
 	if (!EnsureLoaded()) return false;
 	const auto* Existing = ProfileIn(State, Id);
-	if (!Existing || !R.Operation.IsValid()) { Error = TEXT("档案或操作标识无效"); return false; }
-	if (const auto* Receipt = Existing->EconomyReceipts.FindByPredicate([&](const auto& V) { return V.Operation == R.Operation; }))
+	if (!Existing || !R.Operation.IsValid())
+	{
+		Error = TEXT("档案或操作标识无效");
+		return false;
+	}
+	if (const auto* Receipt = Existing->EconomyReceipts.FindByPredicate([&](const auto& V)
+	{
+		return V.Operation == R.Operation;
+	}))
 	{
 		const bool Same = Receipt->Signature == R.Signature();
 		Error = Same ? FString() : TEXT("重复操作标识携带不同请求");
@@ -501,7 +513,7 @@ void UExtractionPersistence::Deposit(FExtractionProfileView& P, TArray<FExtracti
 }
 
 bool UExtractionPersistence::Settle(FGuid RaidId, FGuid Profile, EExtractionOutcome Outcome,
-	                                    const FExtractionContainer& Inventory, const FExtractionRaidProgress& Progress)
+                                    const FExtractionContainer& Inventory, const FExtractionRaidProgress& Progress)
 {
 	if (!EnsureLoaded() || Outcome == EExtractionOutcome::None || Outcome == EExtractionOutcome::Recovered || Outcome ==
 		EExtractionOutcome::Aborted)
@@ -543,8 +555,12 @@ bool UExtractionPersistence::Settle(FGuid RaidId, FGuid Profile, EExtractionOutc
 			const auto& Quest = P->View.Progression.Quests[Index];
 			if (Quest.Accepted && !Quest.Claimed)
 				P->View.Result.ProgressMessage += Index == 2
-					? FString::Printf(TEXT("\n%s：已带出 %d 份合格文件，回大厅提交"), *Rules->Quests[Index].Label, Quest.EligibleFiles.Num())
-					: FString::Printf(TEXT("\n%s：%d / %d"), *Rules->Quests[Index].Label, Quest.Progress, Rules->Quests[Index].Target);
+					                                  ? FString::Printf(
+						                                  TEXT("\n%s：已带出 %d 份合格文件，回大厅提交"), *Rules->Quests[Index].Label,
+						                                  Quest.EligibleFiles.Num())
+					                                  : FString::Printf(
+						                                  TEXT("\n%s：%d / %d"), *Rules->Quests[Index].Label,
+						                                  Quest.Progress, Rules->Quests[Index].Target);
 		}
 		for (const auto& I : Inventory.Items)
 		{

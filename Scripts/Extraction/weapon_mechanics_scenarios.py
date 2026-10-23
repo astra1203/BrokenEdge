@@ -48,6 +48,14 @@ def run(g):
           and player('Server', 'B')['health'] < victim['health'])
     check('Recoil sequence reconciles', lambda: player('A', 'A')['burst_index'] == player('Server', 'A')['burst_index'])
     send('A', 'screenshot', name='mechanics-scar-ads')
+    if 'B' in g['rendered_roles']:
+        send('A', 'aim', target='', head=False)
+        send('A', 'look', yaw=90, pitch=0)
+        send('B', 'aim', target='EX_A', head=False)
+        time.sleep(.5)
+        send('B', 'screenshot', name='mechanics-observer')
+        wait(lambda: (g['OUT'] / 'B-mechanics-observer.png').exists(), 'Rendered observer screenshot')
+        send('B', 'aim', target='', head=False)
     send('A', 'input_key', key='RightMouseButton', pressed=False)
 
     send('A', 'inventory', open=True)
@@ -71,3 +79,46 @@ def run(g):
           and player('A', 'A')['ammo'] == 0)
     send('A', 'screenshot', name='mechanics-gunsmith-applied')
     wait(lambda: (g['OUT'] / 'A-mechanics-gunsmith-applied.png').exists(), 'Applied gunsmith screenshot')
+    for action in ['down', 'up']:
+        send('A', 'mouse', x=900, y=620, action=action, button='left')
+    send('A', 'inventory', open=False)
+    send('A', 'aim', target='', head=False)
+    send('A', 'pulse', action='Reload', duration=0)
+    check('Applied unload can reload in live combat', lambda: player('A', 'A')['ammo'] == 20, 15)
+
+    # Every joined owner submits a real input shot; reset position/health only, never inject damage.
+    for i, role in enumerate(g['ROLES']):
+        target = g['ROLES'][i + 1 if i + 1 < len(g['ROLES']) else i - 1]
+        # Reuse the validated unobstructed comparison lane for every owner.
+        positions = {r: [-2100-160*j, -300, 460] for j, r in enumerate(g['ROLES'])}
+        positions.update({role: [-1500, -300, 460], target: [-1800, -300, 460]})
+        send('Server', 'fixture', players=[dict(name='EX_' + r, position=positions[r],
+                                             health=100, shield=0, clear_trauma=True)
+                                          for j, r in enumerate(g['ROLES'])])
+        send(role, 'aim', target='EX_' + target, head=False)
+        send(role, 'input_key', key='RightMouseButton', pressed=True)
+        wait(lambda r=role: player('Server', r)['aim_alpha'] > .99 and not player('Server', r)['falling'], 'Owner ready to fire')
+        before = player('Server', role)
+        hit = player('Server', target)['bullet_sequence']
+        send(role, 'pulse', action='Fire', duration=0)
+        check(role + ' input shot accepted once', lambda r=role, b=before: player('Server', r)['accepted'] == b['accepted'] + 1)
+        check(role + ' owner ammo and configuration agree', lambda r=role, b=before:
+              player(r, r)['ammo'] == player('Server', r)['ammo'] == b['ammo'] - 1
+              and all(player(p, r)['mechanics_revision'] == player('Server', r)['mechanics_revision'] for p in peers))
+        check(role + ' physical damage sequence advances once', lambda t=target, h=hit: player('Server', t)['bullet_sequence'] == h + 1)
+        send(role, 'input_key', key='RightMouseButton', pressed=False)
+        send(role, 'aim', target='', head=False)
+
+    expected = {r: [i for i in player('Server', r)['inventory']['items'] if i['definition'] in ['AK', 'SCARH']]
+                for r in g['ROLES']}
+    center = g['state']('Server')['exit_position']
+    for role in g['ROLES']:
+        send('Server', 'fixture', players=[dict(name='EX_' + role, position=[center[0], center[1], center[2]+90],
+                                             health=100, shield=0, clear_trauma=True)])
+        check(role + ' weapon loadout exits through normal settlement', lambda r=role:
+              g['state'](r).get('account', {}).get('outcome') == 1, 25)
+        stored = g['state'](role)['account']['stash']['items'] + g['state'](role)['account']['overflow']['items']
+        check(role + ' actual magazines and assemblies persist', lambda r=role, s=stored: all(
+              any(j['id'] == i['id'] and j['magazine'] == i['magazine'] and j['attachments'] == i['attachments'] for j in s)
+              for i in expected[r]))
+    g['report']['scope'] = 'Real input shots for every owner, authoritative damage/ammo/config convergence and normal settlement; position/health fixtures only.'

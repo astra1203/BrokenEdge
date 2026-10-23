@@ -159,6 +159,12 @@ def wait(predicate, message, timeout=45):
         timeout = max(timeout, 300)
     end = time.monotonic() + timeout
     while time.monotonic() < end:
+        if os.name == 'nt' and args.scenario == 'weapon-mechanics':
+            samples = report.setdefault('resources', [])
+            now = time.monotonic()
+            if not samples or now - samples[-1]['monotonic'] >= 1:
+                from resource_guard import sample
+                samples.append(dict(sample(), monotonic=now, waiting_for=message))
         if predicate():
             return
         for role, proc in processes.items():
@@ -278,7 +284,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['knife', 'scar', 'settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
+    phase4 = args.scenario in ['weapon-mechanics', 'knife', 'scar', 'settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:

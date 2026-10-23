@@ -398,7 +398,8 @@ void UCombatComponent::LocalFire(const FVector_NetQuantize& TraceHitTarget)
 bool UCombatComponent::CanFire()
 {
 	if (Character && Character->Melee->Active) return false;
-	if (Character && Character->GetExtractionCombat()->IsEnabled() && (!Character->GetExtractionCombat()->CanAct() || !Character->GetExtractionCombat()->CanFireMechanics()))
+	if (Character && Character->GetExtractionCombat()->IsEnabled() && (!Character->GetExtractionCombat()->CanAct() || !
+		Character->GetExtractionCombat()->CanFireMechanics()))
 		return false;
 	// if (EquippedWeapon == nullptr || bLocallyReloading)return false;
 	if (EquippedWeapon == nullptr)return false;
@@ -701,23 +702,26 @@ void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
 	if (!OwningController || !OwningController->IsLocalController()) return;
 	int32 Width = 0, Height = 0;
 	OwningController->GetViewportSize(Width, Height);
-	if (Width <= 0 || Height <= 0) return;
-	const FVector2D ViewportSize(Width, Height);
-
-	FVector2D CrosshairLocation(ViewportSize.X / 2.f, ViewportSize.Y / 2.f);
-
 	FVector CrosshairWorldPosition;
-	FVector CrosshairWorldDirection;
-	bool bScreenToWorld = UGameplayStatics::DeprojectScreenToWorld(
-		OwningController,
-		CrosshairLocation,
-		CrosshairWorldPosition,
-		CrosshairWorldDirection
-	);
-
-	if (bScreenToWorld)
+	FRotator ViewRotation;
+	OwningController->GetPlayerViewPoint(CrosshairWorldPosition, ViewRotation);
+	FVector CrosshairWorldDirection = ViewRotation.Vector();
+	// A local controller can temporarily have no viewport (including NullRHI).
+	// Never leave HitTarget at its previous/default position in that case.
+	if (Width > 0 && Height > 0)
 	{
-		if (Character && Character->GetExtractionCombat()->IsEnabled() && Character->GetExtractionCombat()->GetWeaponStats().IsValid())
+		FVector ScreenPosition, ScreenDirection;
+		if (UGameplayStatics::DeprojectScreenToWorld(OwningController, FVector2D(Width / 2.f, Height / 2.f),
+		                                             ScreenPosition, ScreenDirection))
+		{
+			CrosshairWorldPosition = ScreenPosition;
+			CrosshairWorldDirection = ScreenDirection;
+		}
+	}
+
+	{
+		if (Character && Character->GetExtractionCombat()->IsEnabled() && Character->GetExtractionCombat()->
+			GetWeaponStats().IsValid())
 			CrosshairWorldDirection = Character->GetControlRotation().Vector();
 		FVector Start = CrosshairWorldPosition;
 		FCollisionQueryParams QueryParams;
@@ -912,9 +916,11 @@ void UCombatComponent::InterpFOV(float DeltaTime)
 	if (Character && Character->FirstPersonMeshAsset && Character->IsFirstPersonView())
 	{
 		const float Target = bAiming ? Character->FirstPersonAimFOV : DefaultFOV;
-		CurrentFOV = Character->GetExtractionCombat()->IsEnabled() && Character->GetExtractionCombat()->GetWeaponStats().IsValid()
-			? FMath::Lerp(DefaultFOV, Character->FirstPersonAimFOV, Character->GetExtractionCombat()->GetAimAlpha())
-			: FMath::FInterpTo(CurrentFOV, Target, DeltaTime, Character->FirstPersonAimInterpSpeed);
+		CurrentFOV = Character->GetExtractionCombat()->IsEnabled() && Character->GetExtractionCombat()->GetWeaponStats()
+		                                                                       .IsValid()
+			             ? FMath::Lerp(DefaultFOV, Character->FirstPersonAimFOV,
+			                           Character->GetExtractionCombat()->GetAimAlpha())
+			             : FMath::FInterpTo(CurrentFOV, Target, DeltaTime, Character->FirstPersonAimInterpSpeed);
 		Character->GetFollowCamera()->SetFieldOfView(CurrentFOV);
 		return;
 	}

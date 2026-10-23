@@ -161,6 +161,7 @@ private:
 	FExtractionStoreState State;
 	FString Journal;
 	bool Loaded = false;
+	bool TrainingStore = false;
 	bool Faulted = false;
 	bool Load(const FString& Directory);
 	bool Commit(FExtractionStoreState Candidate);

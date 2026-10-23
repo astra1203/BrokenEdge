@@ -31,7 +31,8 @@ void AExtractionBullet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 }
 
 void AExtractionBullet::Initialize(const FResolvedWeaponStats& Profile, const FVector& Direction, float Damage,
-                                   float InHeadDamage, FName Ammo, UParticleSystem* InImpact, USoundCue* Sound, UParticleSystem* Trail)
+                                   float InHeadDamage, FName Ammo, UParticleSystem* InImpact, USoundCue* Sound,
+                                   UParticleSystem* Trail)
 {
 	Stats = Profile;
 	Velocity = Direction.GetSafeNormal() * Stats.Speed;
@@ -40,14 +41,19 @@ void AExtractionBullet::Initialize(const FResolvedWeaponStats& Profile, const FV
 	AmmoType = Ammo;
 	ImpactEffect = InImpact;
 	ImpactSound = Sound;
-	TrailEffect = Trail; PreviousVisual = GetActorLocation();
+	TrailEffect = Trail;
+	PreviousVisual = GetActorLocation();
 	bPredicted = GetNetMode() == NM_Client;
 }
 
 void AExtractionBullet::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if ((!HasAuthority() && !bPredicted) || !Stats.IsValid()) { UpdateTrail(); return; }
+	if ((!HasAuthority() && !bPredicted) || !Stats.IsValid())
+	{
+		UpdateTrail();
+		return;
+	}
 	Accumulator += DeltaSeconds;
 	constexpr float Step = 1.f / 120.f;
 	FCollisionQueryParams Query(SCENE_QUERY_STAT(ExtractionBullet), true, this);
@@ -93,6 +99,8 @@ void AExtractionBullet::Tick(float DeltaSeconds)
 void AExtractionBullet::Impact_Implementation(FVector_NetQuantize Point, FVector_NetQuantizeNormal Normal)
 {
 	if (GetNetMode() == NM_DedicatedServer) return;
+	if (CVarWeaponFlight.GetValueOnGameThread())
+		DrawDebugPoint(GetWorld(), Point, 10.f, FColor::Red, false, 30.f);
 	if (ImpactEffect) UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Point, Normal.Rotation());
 	if (ImpactSound) UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, Point);
 }
