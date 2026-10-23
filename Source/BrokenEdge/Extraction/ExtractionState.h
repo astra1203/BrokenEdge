@@ -42,6 +42,7 @@ public:
 	EExtractionLife Life = EExtractionLife::Alive;
 	UPROPERTY(Replicated)
 	double ExtractAt = 0;
+	UPROPERTY(Replicated) FName ExtractExitId;
 	UPROPERTY(Replicated) double BleedAt = 0;
 	UPROPERTY(Replicated) float DownHealth = 0;
 	UPROPERTY(Replicated) FExtractionRaidProgress RaidProgress;

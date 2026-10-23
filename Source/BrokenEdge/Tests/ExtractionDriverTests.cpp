@@ -1,6 +1,7 @@
 // Development-only local process driver. No test RPCs or fixture commands exist in Shipping.
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
+#include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
 #include "Misc/FileHelper.h"
@@ -534,6 +535,12 @@ public:
 					}
 					else Error = TEXT("Camera target has no equipped weapon");
 				}
+				else if (Op == TEXT("retry_loadout") && World->GetNetMode() != NM_Client)
+				{
+					if (auto* Target = FindPawn(World, Command->GetStringField(TEXT("target"))))
+						if (auto* State = Target->GetPlayerState<AExtractionPlayerState>()) State->Inventory->
+							InitializeLoadout();
+				}
 				else if (Op == TEXT("screenshot") && PC)
 				{
 					bool bShowUI = true;
@@ -881,7 +888,8 @@ private:
 				FVector Position(1450, 4200, 490);
 				const TArray<TSharedPtr<FJsonValue>>* Coordinates = nullptr;
 				if (Command->TryGetArrayField(TEXT("position"), Coordinates) && Coordinates->Num() == 3)
-					Position = FVector((*Coordinates)[0]->AsNumber(), (*Coordinates)[1]->AsNumber(), (*Coordinates)[2]->AsNumber());
+					Position = FVector((*Coordinates)[0]->AsNumber(), (*Coordinates)[1]->AsNumber(),
+					                   (*Coordinates)[2]->AsNumber());
 				Wall->SetActorLocation(Position);
 				TestOccluder = Wall;
 			}
@@ -1043,7 +1051,9 @@ private:
 			Input->InjectInputForAction(Action, ActionName == TEXT("Move")
 				                                    ? FInputActionValue(FVector2D(
 					                                    Pressed && Name == TEXT("MoveRight") ? 1 : 0,
-					                                    Pressed && Name != TEXT("MoveRight") ? (Name == TEXT("MoveBack") ? -1 : 1) : 0))
+					                                    Pressed && Name != TEXT("MoveRight")
+						                                    ? (Name == TEXT("MoveBack") ? -1 : 1)
+						                                    : 0))
 				                                    : FInputActionValue(Pressed), {}, {});
 	}
 
@@ -1204,6 +1214,7 @@ private:
 				if (auto* Character = Cast<ABrokenEdgeCharacter>(PS->GetPawn()))
 				{
 					Player->SetNumberField(TEXT("health"), Character->GetHealth());
+					Player->SetBoolField(TEXT("knife_active"), Character->Melee->Active);
 					Player->SetBoolField(TEXT("bleeding"), Character->GetExtractionHealth()->Bleeding);
 					Player->SetBoolField(TEXT("fracture"), Character->GetExtractionHealth()->LegFracture);
 					Player->SetNumberField(

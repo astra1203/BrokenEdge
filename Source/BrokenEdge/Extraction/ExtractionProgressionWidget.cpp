@@ -8,6 +8,11 @@
 
 namespace
 {
+	bool IsGun(FName Id)
+	{
+		const auto* Definition = UExtractionItemDefinition::Get(Id);
+		return Definition && Definition->Kind == EExtractionItemKind::Weapon;
+	}
 	bool Contains(FVector2D P, FVector2D O, FVector2D Size)
 	{
 		return P.X >= O.X && P.Y >= O.Y && P.X < O.X + Size.X && P.Y < O.Y + Size.Y;
@@ -84,7 +89,7 @@ public:
 				{
 					const auto& O = R->Offers[OfferOffset + Row];
 					Box({65, Y}, {550, 40}, !Selling && SelectedOffer == O.Definition ? Selected : FLinearColor(.04, .075, .10));
-					Text({78, Y + 10}, FString::Printf(TEXT("%s%s  ·  %d / 件  ·  Lv.%d%s"), *ItemLabel(O.Definition), O.Definition == TEXT("AK") ? TEXT("（空弹匣）") : TEXT(""),
+					Text({78, Y + 10}, FString::Printf(TEXT("%s%s  ·  %d / 件  ·  Lv.%d%s"), *ItemLabel(O.Definition), IsGun(O.Definition) ? TEXT("（空弹匣）") : TEXT(""),
 						O.Price, O.Level, R->Level(P.Experience) < O.Level ? TEXT("  未解锁") : TEXT("")), 16);
 				}
 				if (A->Profile.Stash.Items.IsValidIndex(SellOffset + Row))
@@ -203,7 +208,7 @@ private:
 			if (!I || (Quote = R->SellPrice(*I, Quantity)) < 0) { LocalMessage = TEXT("请选择可回收物品并检查数量"); return; }
 			Pending.Action = EExtractionEconomyAction::Sell; Pending.Item = I->Id;
 			Detail = ItemLabel(I->Definition) + TEXT(" · ") + ExtractionItems::Details(*I);
-			if (I->Definition == TEXT("AK"))
+			if (IsGun(I->Definition))
 			{
 				Parts = FString::Printf(TEXT("随枪出售：%s × %d"), *ItemLabel(I->MagazineAmmo), I->Magazine);
 				for (const auto& Part : I->Attachments) Parts += TEXT(" · ") + ItemLabel(Part.Definition);
@@ -214,7 +219,7 @@ private:
 			const auto* O = R->Offer(SelectedOffer); if (!O) return;
 			Pending.Definition = SelectedOffer;
 			Quote = int64(O->Price) * Quantity;
-			Detail = ItemLabel(SelectedOffer) + (SelectedOffer == TEXT("AK") ? TEXT(" · 空弹匣，无附件") : TEXT(""));
+			Detail = ItemLabel(SelectedOffer) + (IsGun(SelectedOffer) ? TEXT(" · 空弹匣，无附件") : TEXT(""));
 			Parts = TEXT("物资存入仓库；空间不足时整笔取消");
 		}
 		Confirm = true;

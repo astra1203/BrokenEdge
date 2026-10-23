@@ -17,6 +17,7 @@
 #include "BrokenEdge/UI/BrokenEdgeHUD.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerStart.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/GameSession.h"
 #include "Kismet/GameplayStatics.h"
 #include "MultiplayerSessionsSubsystem.h"
@@ -52,6 +53,11 @@ void AExtractionGameMode::InitGame(const FString& Map, const FString& Options, F
 	float Duration = 600;
 	FParse::Value(FCommandLine::Get(), TEXT("ExtractionRoundSeconds="), Duration);
 	RoundSeconds = FMath::Clamp(static_cast<double>(Duration), 10.0, 3600.0);
+	int32 Seed = FMath::Rand();
+	FParse::Value(FCommandLine::Get(), TEXT("ExtractionSpawnSeed="), Seed);
+	SpawnRandom.Initialize(Seed);
+	LoadedMapDefinition = MapDefinition.LoadSynchronous();
+	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_SPAWN_SEED %d"), Seed);
 }
 
 void AExtractionGameMode::BeginPlay()
@@ -59,12 +65,32 @@ void AExtractionGameMode::BeginPlay()
 	Super::BeginPlay();
 	LoadedAt = GetWorld()->GetTimeSeconds();
 	if (auto* Persistence = Store()) Persistence->EnsureLoaded();
-	FHitResult Floor;
-	// Start below the overhead mesh, inside the verified north-exit walking space.
-	const FVector Above(1400, 2900, 650), Below(1400, 2900, -1000);
-	const bool Hit = GetWorld()->LineTraceSingleByChannel(Floor, Above, Below, ECC_Visibility);
-	Exit = GetWorld()->SpawnActor<AExtractionExit>(FVector(1400, 2900, Hit ? Floor.ImpactPoint.Z + 3 : 365),
-	                                               FRotator::ZeroRotator);
+	LoadedMapDefinition = MapDefinition.LoadSynchronous();
+	if (LoadedMapDefinition)
+	{
+		TSet<FName> Ids;
+		for (const auto& Definition : LoadedMapDefinition->Exits)
+		{
+			if (!Definition.IsValid() || Ids.Contains(Definition.Id))
+			{
+				UE_LOG(LogTemp, Error, TEXT("EXTRACTION_INVALID_EXIT %s"), *Definition.Id.ToString());
+				continue;
+			}
+			Ids.Add(Definition.Id);
+			if (auto* NewExit = GetWorld()->SpawnActor<AExtractionExit>())
+			{
+				NewExit->Configure(Definition);
+				Exits.Add(NewExit);
+			}
+		}
+	}
+	if (Exits.IsEmpty())
+	{
+		if (auto* GS = GetGameState<AExtractionGameState>()) GS->StorageError = TEXT("地图撤离配置缺失或无效，无法开始对局");
+		UE_LOG(LogTemp, Error, TEXT("EXTRACTION_MAP_CONFIGURATION_INVALID"));
+	}
+	bMapConfigurationValid = LoadedMapDefinition && Exits.Num() == LoadedMapDefinition->Exits.Num()
+		&& !Exits.IsEmpty() && LoadedMapDefinition->SpawnGroups.Num() >= 2;
 	if (auto* Instance = GetGameInstance())
 		if (auto* Sessions = Instance->GetSubsystem<UMultiplayerSessionsSubsystem>())
 			Sessions->MultiplayerOnEndSessionComplete.AddUniqueDynamic(this, &ThisClass::SessionEnded);
@@ -89,6 +115,7 @@ void AExtractionGameMode::HandleStartingNewPlayer_Implementation(APlayerControll
 		PS->SetTeam(ETeam::ET_NoTeam);
 	}
 	if (!Player->GetPawn()) RestartPlayer(Player);
+	if (!Player->GetPawn()) return;
 	if (auto* PS = Player->GetPlayerState<AExtractionPlayerState>()) PS->Inventory->InitializeLoadout();
 	FreezePlayer(Player, true);
 	if (auto* Character = Cast<ABrokenEdgeCharacter>(Player->GetPawn()))
@@ -104,28 +131,77 @@ bool AExtractionGameMode::PlayerCanRestart_Implementation(APlayerController* Pla
 		GetPawn();
 }
 
+AActor* AExtractionGameMode::FindPlayerStart_Implementation(AController* Player, const FString& IncomingName)
+{
+	// GameModeBase otherwise falls back to WorldSettings at the world origin.
+	return ChoosePlayerStart(Player);
+}
+
 AActor* AExtractionGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
-	TArray<AActor*> Starts;
-	UGameplayStatics::GetAllActorsOfClass(this, APlayerStart::StaticClass(), Starts);
-	Starts.Sort([](const AActor& A, const AActor& B)
-	{
-		return CastChecked<APlayerStart>(&A)->PlayerStartTag.LexicalLess(CastChecked<APlayerStart>(&B)->PlayerStartTag);
-	});
+	if (const auto* Existing = PlayerStarts.Find(Player); Existing && Existing->IsValid()) return Existing->Get();
+	if (const auto* Region = AExtractionRegionStream::Find(GetWorld()); Region && !Region->IsReady()) return nullptr;
 	const auto* PS = Player ? Player->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	for (AActor* Start : Starts)
+	if (!LoadedMapDefinition || !PS || PS->ExtractionSquad == 0) return nullptr;
+	const auto* Pawn = DefaultPawnClass ? Cast<ACharacter>(DefaultPawnClass->GetDefaultObject()) : nullptr;
+	if (!Pawn) return nullptr;
+	const float Radius = Pawn->GetCapsuleComponent()->GetScaledCapsuleRadius();
+	const float Half = Pawn->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	const auto Ground = [&](const FTransform& Position, FTransform& Resolved)
 	{
-		const FString Tag = CastChecked<APlayerStart>(Start)->PlayerStartTag.ToString();
-		const int32 Index = FCString::Atoi(*Tag.Right(2));
-		const uint8 Squad = (Index == 0 || Index == 2 || Index == 3) ? 1 : 2;
-		if (PS && PS->ExtractionSquad && PS->ExtractionSquad != Squad) continue;
-		if (Start->ActorHasTag(TEXT("ExtractionSpawn")) && !ClaimedStarts.Contains(Start))
+		if (Position.ContainsNaN()) return false;
+		const FVector Center = Position.GetLocation();
+		FHitResult Floor;
+		if (!GetWorld()->LineTraceSingleByChannel(Floor, Center,
+		                                          Center - FVector(0, 0, Half + 500),
+		                                          ECC_Visibility) || Floor.ImpactNormal.Z < .7f)
+			return false;
+		Resolved = Position;
+		Resolved.SetLocation(Floor.ImpactPoint + FVector(0, 0, Half + 3));
+		return !GetWorld()->OverlapBlockingTestByChannel(Resolved.GetLocation(), FQuat::Identity, ECC_Pawn,
+		                                                 FCollisionShape::MakeCapsule(Radius, Half));
+	};
+	int32* Assigned = SquadSpawnGroups.Find(PS->ExtractionSquad);
+	if (!Assigned)
+	{
+		TArray<int32> Candidates;
+		for (int32 I = 0; I < LoadedMapDefinition->SpawnGroups.Num(); ++I)
 		{
-			ClaimedStarts.Add(Start);
-			return Start;
+			const auto& Group = LoadedMapDefinition->SpawnGroups[I];
+			if (ClaimedSpawnGroups.Contains(I) || Group.Id.IsNone() || Group.Positions.Num() < 3) continue;
+			bool Valid = true;
+			FTransform Resolved;
+			for (const auto& Position : Group.Positions) Valid &= Ground(Position, Resolved);
+			for (int32 A = 0; A < Group.Positions.Num(); ++A)
+				for (int32 B = A + 1; B < Group.Positions.Num(); ++B)
+					Valid &= FVector::Dist2D(Group.Positions[A].GetLocation(), Group.Positions[B].GetLocation()) >
+						Radius * 2;
+			if (Valid) Candidates.Add(I);
 		}
+		if (Candidates.IsEmpty())
+		{
+			if (auto* GS = GetGameState<AExtractionGameState>()) GS->StorageError = TEXT("没有已加载且可站立的出生组");
+			return nullptr;
+		}
+		const int32 Index = Candidates[SpawnRandom.RandRange(0, Candidates.Num() - 1)];
+		ClaimedSpawnGroups.Add(Index);
+		Assigned = &SquadSpawnGroups.Add(PS->ExtractionSquad, Index);
 	}
-	return nullptr;
+	const auto& Group = LoadedMapDefinition->SpawnGroups[*Assigned];
+	int32& Slot = SquadSpawnSlots.FindOrAdd(PS->ExtractionSquad);
+	FTransform Resolved;
+	if (!Group.Positions.IsValidIndex(Slot) || !Ground(Group.Positions[Slot], Resolved)) return nullptr;
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	auto* Start = GetWorld()->SpawnActor<APlayerStart>(APlayerStart::StaticClass(), Resolved, Params);
+	if (Start)
+	{
+		Start->PlayerStartTag = Group.Id;
+		ClaimedStarts.Add(Start);
+		PlayerStarts.Add(Player, Start);
+		++Slot;
+	}
+	return Start;
 }
 
 void AExtractionGameMode::FreezePlayer(AController* Player, bool bFreeze)
@@ -177,7 +253,8 @@ bool AExtractionGameMode::SettlePlayer(AController* Player, EExtractionOutcome O
 	PS->Inventory->CaptureWeapons();
 	auto Progress = PS->RaidProgress;
 	for (TActorIterator<AExtractionKeyRoom> It(GetWorld()); It; ++It) Progress.FileLots.Append(It->FileLots);
-	if (!Persistence->Settle(PS->ExtractionRaid, PS->ExtractionProfile, Outcome, PS->Inventory->Contents, Progress)) return false;
+	if (!Persistence->Settle(PS->ExtractionRaid, PS->ExtractionProfile, Outcome, PS->Inventory->Contents, Progress))
+		return false;
 #if WITH_DEV_AUTOMATION_TESTS
 	FString HoldFile;
 	if (Outcome == EExtractionOutcome::Extracted && FParse::Value(FCommandLine::Get(),
@@ -203,19 +280,29 @@ void AExtractionGameMode::UpdateExtraction(double Now)
 		auto* PS = PC ? PC->GetPlayerState<AExtractionPlayerState>() : nullptr;
 		auto* C = PC ? Cast<ABrokenEdgeCharacter>(PC->GetPawn()) : nullptr;
 		if (!PS || PS->Life != EExtractionLife::Alive || !C || C->IsDefeated()) continue;
-		if (!Exit || !Exit->Contains(C->GetActorLocation()))
+		AExtractionExit* Exit = nullptr;
+		for (const auto& Candidate : Exits)
+			if (IsValid(Candidate) && Candidate->Available(Now) && Candidate->Contains(C->GetActorLocation()))
+			{
+				if (!Exit || Candidate->Definition.Id == PS->ExtractExitId) Exit = Candidate;
+			}
+		if (!Exit)
 		{
 			PS->ExtractAt = 0;
+			PS->ExtractExitId = NAME_None;
 			continue;
 		}
-		if (PS->ExtractAt <= 0)
+		if (PS->ExtractAt <= 0 || PS->ExtractExitId != Exit->Definition.Id)
 		{
-			PS->ExtractAt = Now + 10;
+			PS->ExtractExitId = Exit->Definition.Id;
+			PS->ExtractAt = Now + Exit->Definition.HoldSeconds;
 			PS->ForceNetUpdate();
 		}
 		if (Now < PS->ExtractAt) continue;
 		FreezePlayer(PC, true);
 		if (!SettlePlayer(PC, EExtractionOutcome::Extracted)) continue;
+		Exit->Consume();
+		PS->ExtractExitId = NAME_None;
 		PS->Life = EExtractionLife::Extracted;
 		PS->ForceNetUpdate();
 		PS->Inventory->ClearSettled();
@@ -227,7 +314,8 @@ void AExtractionGameMode::UpdateExtraction(double Now)
 float AExtractionGameMode::CalculateDamage(AController* Attacker, AController* Victim, float Damage)
 {
 	const auto* GS = GetGameState<AExtractionGameState>();
-	if (!GS || GS->Phase != EExtractionPhase::Active || !Store() || !Store()->IsAvailable() || !FMath::IsFinite(Damage)) return 0;
+	if (!GS || GS->Phase != EExtractionPhase::Active || !Store() || !Store()->IsAvailable() || !FMath::IsFinite(Damage))
+		return 0;
 	const auto Valid = [](AController* Controller, bool Attacking)
 	{
 		const auto* C = Controller ? Cast<ABrokenEdgeCharacter>(Controller->GetPawn()) : nullptr;
@@ -249,7 +337,8 @@ void AExtractionGameMode::RefreshAliveCount()
 	if (!GS) return;
 	int32 Count = 0;
 	for (APlayerState* State : GS->PlayerArray)
-		if (const auto* PS = Cast<AExtractionPlayerState>(State); PS && (PS->Life == EExtractionLife::Alive || PS->Life == EExtractionLife::Downed) && !PS->
+		if (const auto* PS = Cast<AExtractionPlayerState>(State); PS && (PS->Life == EExtractionLife::Alive || PS->Life
+				== EExtractionLife::Downed) && !PS->
 			IsInactive())
 			++Count;
 	GS->AlivePlayers = Count;
@@ -262,6 +351,11 @@ void AExtractionGameMode::Tick(float Delta)
 	auto* GS = GetGameState<AExtractionGameState>();
 	if (!GS) return;
 	const double Now = GetWorld()->GetTimeSeconds();
+	if (!bMapConfigurationValid)
+	{
+		GS->StorageError = TEXT("地图出生或撤离配置无效，无法开始对局");
+		return;
+	}
 	auto* Persistence = Store();
 	if (!Persistence || !Persistence->IsAvailable())
 	{
@@ -272,12 +366,16 @@ void AExtractionGameMode::Tick(float Delta)
 	RefreshAliveCount();
 	if (GS->Phase == EExtractionPhase::Waiting)
 	{
+		for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+			if (It->Get()->HasClientLoadedCurrentWorld() && !It->Get()->GetPawn())
+				HandleStartingNewPlayer(It->Get());
 		int32 Ready = 0;
 		for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 			if (It->Get()->HasClientLoadedCurrentWorld() && It->Get()->GetPawn()) ++Ready;
 		const auto* Region = AExtractionRegionStream::Find(GetWorld());
 		if (Ready >= ExpectedPlayers && (!Region || Region->IsReady()))
 		{
+			if (GS->StorageError == TEXT("没有已加载且可站立的出生组")) GS->StorageError.Reset();
 			FGuid Raid;
 			bool ValidTickets = true;
 			TSet<FGuid> Profiles;
@@ -295,8 +393,9 @@ void AExtractionGameMode::Tick(float Delta)
 			}
 			const auto* Record = Persistence->FindRaid(Raid);
 			ValidTickets &= Record && !Record->Closed && Record->Players.Num() == Profiles.Num();
-			if (Record) for (const auto& Member : Record->Players)
-				ValidTickets &= Profiles.Contains(Member.Profile) && Member.Outcome == EExtractionOutcome::None;
+			if (Record)
+				for (const auto& Member : Record->Players)
+					ValidTickets &= Profiles.Contains(Member.Profile) && Member.Outcome == EExtractionOutcome::None;
 			if (!ValidTickets || !Raid.IsValid())
 			{
 				FinishRound(TEXT("请从大厅准备后进入对局"));
@@ -309,6 +408,7 @@ void AExtractionGameMode::Tick(float Delta)
 			}
 			// A prepared lobby ticket is the only valid way to enter an active raid.
 			GS->Phase = EExtractionPhase::Active;
+			for (const auto& Exit : Exits) if (IsValid(Exit)) Exit->StartRound(Now);
 			GS->Deadline = Now + RoundSeconds;
 			StartMatch();
 			SpawnGuards();
@@ -392,8 +492,10 @@ bool AExtractionGameMode::HasRescuer(const AExtractionPlayerState* Player) const
 	const auto* GS = GetGameState<AExtractionGameState>();
 	if (!GS || !Player || !Player->ExtractionSquad) return false;
 	for (const APlayerState* State : GS->PlayerArray)
-		if (const auto* PS = Cast<AExtractionPlayerState>(State); PS && PS != Player && PS->ExtractionSquad == Player->ExtractionSquad
-			&& PS->Life == EExtractionLife::Alive && !PS->IsInactive() && PS->GetPawn()) return true;
+		if (const auto* PS = Cast<AExtractionPlayerState>(State); PS && PS != Player && PS->ExtractionSquad == Player->
+			ExtractionSquad
+			&& PS->Life == EExtractionLife::Alive && !PS->IsInactive() && PS->GetPawn())
+			return true;
 	return false;
 }
 
@@ -504,7 +606,8 @@ void AExtractionGameMode::Logout(AController* Player)
 	{
 		const auto* GS = GetGameState<AExtractionGameState>();
 		if (auto* PS = Player ? Player->GetPlayerState<AExtractionPlayerState>() : nullptr;
-			PS && (PS->Life == EExtractionLife::Alive || PS->Life == EExtractionLife::Downed) && GS && GS->Phase == EExtractionPhase::Active)
+			PS && (PS->Life == EExtractionLife::Alive || PS->Life == EExtractionLife::Downed) && GS && GS->Phase ==
+			EExtractionPhase::Active)
 			SettlePlayer(Player, EExtractionOutcome::Disconnected);
 		LeavePlayer(Player);
 	}

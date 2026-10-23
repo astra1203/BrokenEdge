@@ -1,4 +1,5 @@
 #include "ExtractionCombatComponent.h"
+#include "ExtractionMeleeComponent.h"
 #include "ExtractionState.h"
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionInventoryComponent.h"
@@ -22,7 +23,8 @@ bool UExtractionCombatComponent::CanAct() const
 	const auto* C = Character();
 	const auto* GS = GetWorld() ? GetWorld()->GetGameState<AExtractionGameState>() : nullptr;
 	const auto* PS = C ? C->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	return C && GS && GS->Phase == EExtractionPhase::Active && (C->bExtractionGuard || (PS && PS->Life == EExtractionLife::Alive))
+	return C && GS && GS->Phase == EExtractionPhase::Active && (C->bExtractionGuard || (PS && PS->Life ==
+			EExtractionLife::Alive))
 		&& !C->IsDefeated() && !C->bDisableGameplay && !C->IsTraversing();
 }
 
@@ -37,7 +39,7 @@ void UExtractionCombatComponent::RequestShot(const FVector& Target)
 {
 	auto* C = Character();
 	auto* W = C ? C->GetEquippedWeapon() : nullptr;
-	if (!CanAct() || !Cast<AHitScanWeapon>(W)) return;
+	if (!CanAct() || C->Melee->Active || !Cast<AHitScanWeapon>(W)) return;
 	if (C->GetExtractionInteraction()->InventoryOpen) return;
 	const uint32 Id = ++LocalShotId;
 	if (!C->HasAuthority())
@@ -58,6 +60,7 @@ void UExtractionCombatComponent::ServerRequestShot_Implementation(uint32 ShotId,
 	const bool Fresh = ShotId > LastProcessedShot;
 	if (Fresh) LastProcessedShot = ShotId;
 	const bool Valid = IsEnabled() && Fresh && CanAct() && Combat && IsValid(Weapon)
+		&& !C->Melee->Active
 		&& !C->GetExtractionInteraction()->InventoryOpen
 		&& Weapon == C->GetEquippedWeapon() && Weapon->GetOwner() == C && Cast<AHitScanWeapon>(Weapon)
 		&& Weapon->FireType == EFireType::EFT_HitScan && !Weapon->IsEmpty()
@@ -85,7 +88,8 @@ void UExtractionCombatComponent::ServerRequestShot_Implementation(uint32 ShotId,
 	else ++RejectedShots;
 	// Never expose or overwrite an unrelated player's weapon from a forged request.
 	AWeapon* OwnedWeapon = IsValid(Weapon) && Weapon->GetOwner() == C ? Weapon : (C ? C->GetEquippedWeapon() : nullptr);
-	if (!C || !C->bExtractionGuard) ClientShotResult(LastProcessedShot, OwnedWeapon, OwnedWeapon ? OwnedWeapon->GetAmmo() : 0, Valid);
+	if (!C || !C->bExtractionGuard) ClientShotResult(LastProcessedShot, OwnedWeapon,
+	                                                 OwnedWeapon ? OwnedWeapon->GetAmmo() : 0, Valid);
 }
 
 void UExtractionCombatComponent::ClientShotResult_Implementation(uint32 ShotId, AWeapon* Weapon, int32 Ammo,
@@ -112,6 +116,7 @@ void UExtractionCombatComponent::MulticastShotEffects_Implementation(AWeapon* We
 
 void UExtractionCombatComponent::ServerDropWeapon_Implementation()
 {
+	if (Character() && Character()->Melee->Active) return;
 	// Legacy endpoint must still enter the inventory transaction path.
 	if (CanAct())
 		if (auto* PC = Cast<AExtractionPlayerController>(Character()->GetController())) PC->DropEquippedItem();
@@ -119,6 +124,7 @@ void UExtractionCombatComponent::ServerDropWeapon_Implementation()
 
 void UExtractionCombatComponent::RequestReload()
 {
+	if (Character() && Character()->Melee->Active) return;
 	auto* C = Character();
 	UCombatComponent* Combat = C ? C->GetCombat().Get() : nullptr;
 	auto* W = C ? C->GetEquippedWeapon() : nullptr;
@@ -133,6 +139,7 @@ void UExtractionCombatComponent::RequestReload()
 
 void UExtractionCombatComponent::BeginServerReload()
 {
+	if (Character() && Character()->Melee->Active) return;
 	auto* C = Character();
 	UCombatComponent* Combat = C ? C->GetCombat().Get() : nullptr;
 	auto* W = C ? C->GetEquippedWeapon() : nullptr;
@@ -211,6 +218,7 @@ void UExtractionCombatComponent::ClientReloadRejected_Implementation()
 
 void UExtractionCombatComponent::BeginServerSwap()
 {
+	if (Character() && Character()->Melee->Active) return;
 	auto* C = Character();
 	if (!C || !C->HasAuthority() || !CanAct() || C->GetExtractionInteraction()->InventoryOpen) return;
 	auto* Combat = C->GetCombat().Get();

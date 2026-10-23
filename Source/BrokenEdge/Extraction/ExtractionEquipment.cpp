@@ -14,13 +14,15 @@ TArray<ExtractionItems::FEquipmentAction> ExtractionItems::EquipmentActions(cons
 	if (D->Kind == EExtractionItemKind::Armor && C.WeaponSlots)
 		Add(Item->Slot >= 0 ? TEXT("卸下护甲") : TEXT("穿戴护甲"), EExtractionItemOp::Transfer).Slot = Item->Slot >= 0 ? -1 : D->ArmorSlot;
 	if (D->Kind == EExtractionItemKind::Attachment)
-		for (const auto& Gun : C.Items) if (Gun.Definition == TEXT("AK"))
-			Add(FString::Printf(TEXT("安装到 AK · %s"), Gun.Slot == 0 ? TEXT("手持") : Gun.Slot == 1 ? TEXT("背负") : *Gun.Id.ToString().Left(6)), EExtractionItemOp::Attach).Weapon = Gun.Id;
+		for (const auto& Gun : C.Items)
+			if (const auto* GunDef = UExtractionItemDefinition::Get(Gun.Definition); GunDef && GunDef->SupportsAttachment(Item->Definition))
+				Add(FString::Printf(TEXT("安装到 %s · %s"), *GunDef->Label.ToString(), Gun.Slot == 0 ? TEXT("手持") : Gun.Slot == 1 ? TEXT("背负") : *Gun.Id.ToString().Left(6)), EExtractionItemOp::Attach).Weapon = Gun.Id;
 	if (D->Kind == EExtractionItemKind::Weapon)
 	{
 		Add(TEXT("卸出弹匣弹药"), EExtractionItemOp::Unload);
-		Add(TEXT("选择普通弹"), EExtractionItemOp::SelectAmmo).AmmoDefinition = TEXT("Ammo");
-		Add(TEXT("选择穿甲弹"), EExtractionItemOp::SelectAmmo).AmmoDefinition = TEXT("AmmoAP");
+		for (const FName AmmoId : D->CompatibleAmmo)
+			if (D->SupportsAmmo(AmmoId))
+				Add(TEXT("选择 ") + UExtractionItemDefinition::Get(AmmoId)->Label.ToString(), EExtractionItemOp::SelectAmmo).AmmoDefinition = AmmoId;
 		for (const auto& Part : Item->Attachments)
 			if (const auto* Definition = UExtractionItemDefinition::Get(Part.Definition))
 				Add(TEXT("拆下 ") + Definition->Label.ToString(), EExtractionItemOp::Detach).AttachmentSlot = Definition->AttachmentSlot;
@@ -47,7 +49,7 @@ bool ExtractionItems::ValidateItem(const FExtractionItem& I, bool Provenance, FS
 {
 	const auto* D = UExtractionItemDefinition::Get(I.Definition);
 	if (!D || !I.Id.IsValid() || I.Size != D->Size || I.Quantity <= 0 || I.Quantity > D->MaxStack
-		|| I.Magazine < 0 || I.Magazine > (D->Kind == EExtractionItemKind::Weapon ? 30 : 0)
+		|| I.Magazine < 0 || I.Magazine > (D->Kind == EExtractionItemKind::Weapon ? D->MagazineCapacity : 0)
 		|| !FMath::IsFinite(I.Durability) || I.Durability < 0 || I.Durability > D->MaxDurability
 		|| (D->Kind != EExtractionItemKind::Weapon && !I.Attachments.IsEmpty())
 		|| (Provenance && (!OriginsValid(I.Origins, I.Quantity) || !OriginsValid(I.MagazineOrigins, I.Magazine))))
@@ -55,7 +57,7 @@ bool ExtractionItems::ValidateItem(const FExtractionItem& I, bool Provenance, FS
 	if (D->Kind == EExtractionItemKind::Weapon)
 	{
 		const auto* Ammo = UExtractionItemDefinition::Get(I.MagazineAmmo);
-		if (!Ammo || Ammo->Kind != EExtractionItemKind::Ammo) { Error = TEXT("弹匣弹种无效"); return false; }
+		if (!Ammo || !D->SupportsAmmo(I.MagazineAmmo)) { Error = TEXT("弹匣弹种无效"); return false; }
 	}
 	TSet<EExtractionAttachmentSlot> Slots;
 	TSet<FGuid> Ids;
@@ -64,7 +66,7 @@ bool ExtractionItems::ValidateItem(const FExtractionItem& I, bool Provenance, FS
 	{
 		const auto* Part = UExtractionItemDefinition::Get(P.Definition);
 		if (!Part || Part->Kind != EExtractionItemKind::Attachment || Part->AttachmentSlot == EExtractionAttachmentSlot::None
-			|| Slots.Contains(Part->AttachmentSlot) || !P.Id.IsValid() || Ids.Contains(P.Id)
+			|| !D->SupportsAttachment(P.Definition) || Slots.Contains(Part->AttachmentSlot) || !P.Id.IsValid() || Ids.Contains(P.Id)
 			|| (Provenance && !OriginsValid(P.Origins, 1)))
 		{ Error = TEXT("附件装配或来源无效"); return false; }
 		Slots.Add(Part->AttachmentSlot); Ids.Add(P.Id);
@@ -85,13 +87,13 @@ bool ExtractionItems::Configure(FExtractionContainer& Container, const FExtracti
 	FExtractionContainer Next = Container;
 	auto* Gun = Next.Find(R.Weapon.IsValid() ? R.Weapon : R.Item);
 	const auto* Def = Gun ? UExtractionItemDefinition::Get(Gun->Definition) : nullptr;
-	if (!Def || Def->Kind != EExtractionItemKind::Weapon) { Error = TEXT("请选择自己的 AK"); return false; }
+	if (!Def || Def->Kind != EExtractionItemKind::Weapon) { Error = TEXT("请选择自己的枪械"); return false; }
 	const FGuid GunId = Gun->Id;
 	if (R.Op == EExtractionItemOp::Attach)
 	{
 		const auto* Part = Next.Find(R.Item);
 		const auto* D = Part ? UExtractionItemDefinition::Get(Part->Definition) : nullptr;
-		if (!D || D->Kind != EExtractionItemKind::Attachment || GunId == R.Item)
+		if (!D || !Def->SupportsAttachment(Part->Definition) || GunId == R.Item)
 		{ Error = TEXT("附件不兼容"); return false; }
 		for (const auto& Mounted : Gun->Attachments)
 			if (UExtractionItemDefinition::Get(Mounted.Definition)->AttachmentSlot == D->AttachmentSlot)
@@ -120,7 +122,7 @@ bool ExtractionItems::Configure(FExtractionContainer& Container, const FExtracti
 	else if (R.Op == EExtractionItemOp::SelectAmmo)
 	{
 		const auto* Ammo = UExtractionItemDefinition::Get(R.AmmoDefinition);
-		if (!Ammo || Ammo->Kind != EExtractionItemKind::Ammo) { Error = TEXT("弹种不兼容"); return false; }
+		if (!Ammo || !Def->SupportsAmmo(R.AmmoDefinition)) { Error = TEXT("弹种不兼容"); return false; }
 		if (Gun->Magazine && Gun->MagazineAmmo != R.AmmoDefinition) { Error = TEXT("更换弹种前请先卸弹"); return false; }
 		Gun->MagazineAmmo = R.AmmoDefinition;
 	}
@@ -142,7 +144,11 @@ FString ExtractionItems::Details(const FExtractionItem& Item)
 	const auto* D = UExtractionItemDefinition::Get(Item.Definition);
 	if (!D) return TEXT("?");
 	if (D->Kind == EExtractionItemKind::Armor) return FString::Printf(TEXT("%d级 %.0f/%.0f"), D->ArmorLevel, Item.Durability, D->MaxDurability);
-	if (D->Kind == EExtractionItemKind::Weapon) return FString::Printf(TEXT("%s %d/30 · 配件%d"),
-		Item.MagazineAmmo == TEXT("AmmoAP") ? TEXT("穿甲") : TEXT("普通"), Item.Magazine, Item.Attachments.Num());
+	if (D->Kind == EExtractionItemKind::Weapon)
+	{
+		const auto* Ammo = UExtractionItemDefinition::Get(Item.MagazineAmmo);
+		return FString::Printf(TEXT("%s %d/%d · 配件%d"), Ammo ? *Ammo->Label.ToString() : TEXT("?"),
+			Item.Magazine, D->MagazineCapacity, Item.Attachments.Num());
+	}
 	return FString::Printf(TEXT("× %d"), Item.Quantity);
 }

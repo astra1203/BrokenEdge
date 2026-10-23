@@ -31,11 +31,15 @@ public:
 	void ToggleExtractionMenu();
 	class UExtractionInteractionComponent* Interaction() const;
 	void Interact();
-	UFUNCTION(Server, Reliable) void ServerUnlockDoor(class AExtractionKeyRoom* Door, int32 InventoryRevision);
+	UFUNCTION(Server, Reliable)
+	void ServerUnlockDoor(class AExtractionKeyRoom* Door, int32 InventoryRevision);
 	void ReleaseInteract();
 	void HealAbility();
 	void SmokeAbility();
 	void ToggleInventory();
+	void SelectKnife();
+	void SelectHeldGun();
+	void SelectOtherGun();
 	void UseMedical();
 	void DropEquippedItem();
 	void RequestOpenInventory(class AExtractionLootActor* Target, bool bOpen);
@@ -88,9 +92,22 @@ public:
 private:
 	UPROPERTY(Transient)
 	TObjectPtr<class UTextBlock> Status;
-	UPROPERTY(Transient) TObjectPtr<class UBorder> SmokeHaze;
+	UPROPERTY(Transient)
+	TObjectPtr<class UBorder> SmokeHaze;
 	UPROPERTY(Transient)
 	TObjectPtr<class UTextBlock> Vitals;
+	UPROPERTY(Transient)
+	TObjectPtr<class UTextBlock> WeaponStatus;
+	UPROPERTY(Transient)
+	TObjectPtr<class UTextBlock> ExitStatus;
+	UPROPERTY(Transient)
+	TObjectPtr<class UTextBlock> Compass;
+	UPROPERTY(Transient)
+	TObjectPtr<class UTextBlock> ExtractionCountdown;
+	UPROPERTY(Transient)
+	TObjectPtr<class UProgressBar> ExtractionProgress;
+	UPROPERTY(Transient)
+	TObjectPtr<class UProgressBar> HealthProgress;
 	UPROPERTY(Transient)
 	TObjectPtr<class UButton> Previous;
 	UPROPERTY(Transient)

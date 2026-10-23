@@ -4,6 +4,7 @@
 #include "Components/TextRenderComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Materials/MaterialInterface.h"
+#include "Net/UnrealNetwork.h"
 
 AExtractionExit::AExtractionExit()
 {
@@ -34,6 +35,60 @@ AExtractionExit::AExtractionExit()
 
 bool AExtractionExit::Contains(const FVector& Position) const
 {
-	const FVector D = Position - GetActorLocation();
-	return FMath::Abs(D.X) <= 250 && FMath::Abs(D.Y) <= 250 && D.Z >= -15 && D.Z <= 250;
+	const FVector D = GetActorTransform().InverseTransformPosition(Position) - Definition.BoundsOffset;
+	return FMath::Abs(D.X) <= Definition.HalfExtent.X && FMath::Abs(D.Y) <= Definition.HalfExtent.Y
+		&& FMath::Abs(D.Z) <= Definition.HalfExtent.Z;
+}
+
+void AExtractionExit::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AExtractionExit, Definition);
+	DOREPLIFETIME(AExtractionExit, RoundStartedAt);
+	DOREPLIFETIME(AExtractionExit, UsedCapacity);
+}
+
+void AExtractionExit::Configure(const FExtractionExitDefinition& InDefinition)
+{
+	if (!HasAuthority() || !InDefinition.IsValid()) return;
+	Definition = InDefinition;
+	SetActorTransform(Definition.Transform);
+	OnRep_Definition();
+	ForceNetUpdate();
+}
+
+void AExtractionExit::OnRep_Definition()
+{
+	Marker->SetRelativeScale3D(FVector(Definition.HalfExtent.X / 50, Definition.HalfExtent.Y / 50, .03));
+	Label->SetText(FText::Format(NSLOCTEXT("Extraction", "ExitLabel", "{0}\n{1} s"),
+		Definition.Label, FText::AsNumber(Definition.HoldSeconds)));
+}
+
+void AExtractionExit::StartRound(double ServerTime)
+{
+	if (!HasAuthority()) return;
+	RoundStartedAt = ServerTime;
+	UsedCapacity = 0;
+	ForceNetUpdate();
+}
+
+FString AExtractionExit::UnavailableReason(double ServerTime) const
+{
+	if (!Definition.IsValid() || RoundStartedAt < 0) return TEXT("尚未开放");
+	if (Definition.Capacity > 0 && UsedCapacity >= Definition.Capacity) return TEXT("名额已用尽");
+	const double Elapsed = ServerTime - RoundStartedAt;
+	if (Elapsed < Definition.OpensAfterSeconds)
+		return FString::Printf(TEXT("%.0f 秒后开放"), FMath::CeilToDouble(Definition.OpensAfterSeconds - Elapsed));
+	if (Definition.ClosesAfterSeconds > 0 && Elapsed >= Definition.ClosesAfterSeconds) return TEXT("已关闭");
+	return {};
+}
+
+bool AExtractionExit::Available(double ServerTime) const { return UnavailableReason(ServerTime).IsEmpty(); }
+
+bool AExtractionExit::Consume()
+{
+	if (!HasAuthority() || !Available(GetWorld()->GetTimeSeconds())) return false;
+	++UsedCapacity;
+	ForceNetUpdate();
+	return true;
 }

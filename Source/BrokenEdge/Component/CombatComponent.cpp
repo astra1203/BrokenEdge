@@ -2,6 +2,7 @@
 
 
 #include "CombatComponent.h"
+#include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 #include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
 #include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
@@ -396,6 +397,7 @@ void UCombatComponent::LocalFire(const FVector_NetQuantize& TraceHitTarget)
  */
 bool UCombatComponent::CanFire()
 {
+	if (Character && Character->Melee->Active) return false;
 	if (Character && Character->GetExtractionCombat()->IsEnabled() && !Character->GetExtractionCombat()->CanAct())
 		return false;
 	// if (EquippedWeapon == nullptr || bLocallyReloading)return false;

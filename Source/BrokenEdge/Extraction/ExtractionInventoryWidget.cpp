@@ -15,7 +15,11 @@ namespace
 {
 	constexpr float CellSize = 58;
 	FVector2D GridOrigin(bool Loot) { return FVector2D(Loot ? 670 : 140, 240); }
-	FVector2D SlotOrigin(bool Loot, int32 Slot) { return FVector2D((Loot ? 670 : 140) + (Slot % 2) * 182, Slot < 2 ? 165 : 490); }
+
+	FVector2D SlotOrigin(bool Loot, int32 Slot)
+	{
+		return FVector2D((Loot ? 670 : 140) + (Slot % 2) * 182, Slot < 2 ? 165 : 490);
+	}
 
 	bool Inside(FVector2D P, FVector2D Origin, FVector2D Size)
 	{
@@ -115,12 +119,14 @@ public:
 			{
 				FString Label = I->Focus->Label;
 				if (I->Focus->Loose)
-					if (const auto* D = UExtractionItemDefinition::Get(I->Focus->LooseDefinition)) Label = D->Label.
-						ToString();
+					if (const auto* D = UExtractionItemDefinition::Get(I->Focus->LooseDefinition))
+						Label = D->Label.
+						           ToString();
 				Box(FVector2D(450, 505), FVector2D(420, 44), FLinearColor(.015f, .025f, .035f, .9f));
 				Text(FVector2D(465, 518), TEXT("E  ") + Label + (I->Focus->Loose ? TEXT(" · 拾取") : TEXT(" · 搜索")), 17);
 			}
-			Text(FVector2D(425, 680), TEXT("Tab 背包    H 医疗    E 交互 / 切枪"), 14, FLinearColor(.7f, .8f, .85f));
+			Text(FVector2D(320, 680), TEXT("Tab 背包    H 医疗    E 交互    1 当前枪    2 切枪    3 战术刀"), 14,
+			     FLinearColor(.7f, .8f, .85f));
 			if (I->MedicalEnd > 0)
 			{
 				const float Remaining = FMath::Max(0.0, I->MedicalEnd - Now);
@@ -129,8 +135,9 @@ public:
 				    FLinearColor(.15f, .9f, .6f));
 				Text(FVector2D(450, 580), FString::Printf(TEXT("治疗中 %.1f 秒 · H / Esc 取消"), Remaining));
 			}
-			if (!PC()->ItemMessage.IsEmpty()) Text(FVector2D(420, 635), PC()->ItemMessage, 15,
-			                                       FLinearColor(1, .65f, .3f));
+			if (!PC()->ItemMessage.IsEmpty())
+				Text(FVector2D(420, 635), PC()->ItemMessage, 15,
+				     FLinearColor(1, .65f, .3f));
 			return Layer + 2;
 		}
 		Box(FVector2D(60, 75), FVector2D(1160, 570), FLinearColor(.018f, .028f, .042f, .98f));
@@ -147,9 +154,11 @@ public:
 				for (int32 Slot = 0; Slot < 4; ++Slot)
 				{
 					Box(SlotOrigin(Loot, Slot), FVector2D(166, 56), FLinearColor(.08f, .13f, .16f));
-					if (!C->InSlot(Slot)) Text(SlotOrigin(Loot, Slot) + FVector2D(8, 18),
-					                           Slot == 0 ? TEXT("手持武器") : Slot == 1 ? TEXT("背负武器") : Slot == 2 ? TEXT("头盔") : TEXT("胸甲"), 14,
-					                           FLinearColor(.45f, .55f, .6f));
+					if (!C->InSlot(Slot))
+						Text(SlotOrigin(Loot, Slot) + FVector2D(8, 18),
+						     Slot == 0 ? TEXT("手持武器") : Slot == 1 ? TEXT("背负武器") : Slot == 2 ? TEXT("头盔") : TEXT("胸甲"),
+						     14,
+						     FLinearColor(.45f, .55f, .6f));
 				}
 			for (int32 Y = 0; Y < C->Height; ++Y)
 				for (int32 X = 0; X < C->Width; ++X)
@@ -198,10 +207,12 @@ public:
 		{
 			Box(MenuPosition, FVector2D(250, MenuHeight()), FLinearColor(.045f, .065f, .09f), 5);
 			const TCHAR* Labels[] = {TEXT("快捷转移"), TEXT("装备 / 卸下"), TEXT("使用"), TEXT("拆分数量…"), TEXT("丢弃")};
-			for (int32 Row = 0; Row < 5; ++Row) Text(MenuPosition + FVector2D(12, 10 + Row * 32), Labels[Row], 15,
-			                                         FLinearColor::White, 6);
+			for (int32 Row = 0; Row < 5; ++Row)
+				Text(MenuPosition + FVector2D(12, 10 + Row * 32), Labels[Row], 15,
+				     FLinearColor::White, 6);
 			const auto Actions = EquipmentActions();
-			for (int32 N = 0; N < Actions.Num(); ++N) Text(MenuPosition + FVector2D(12, 10 + (N + 5) * 32), Actions[N].Label, 14, FLinearColor::White, 6);
+			for (int32 N = 0; N < Actions.Num(); ++N) Text(MenuPosition + FVector2D(12, 10 + (N + 5) * 32),
+			                                               Actions[N].Label, 14, FLinearColor::White, 6);
 		}
 		if (Splitting)
 		{
@@ -229,7 +240,8 @@ public:
 		{
 			const int32 Row = FMath::FloorToInt((Mouse.Y - MenuPosition.Y - 5) / 32);
 			MenuOpen = false;
-			if (Inside(Mouse, MenuPosition, FVector2D(250, MenuHeight())) && Row >= 0 && Row < 5 + EquipmentActions().Num()) MenuAction(Row);
+			if (Inside(Mouse, MenuPosition, FVector2D(250, MenuHeight())) && Row >= 0 && Row < 5 + EquipmentActions().
+				Num()) MenuAction(Row);
 			return FReply::Handled().SetUserFocus(AsShared());
 		}
 		if (Dragging)
@@ -336,8 +348,11 @@ private:
 	TArray<ExtractionItems::FEquipmentAction> EquipmentActions() const
 	{
 		const auto* C = Container(false);
-		return SelectedLoot || !C ? TArray<ExtractionItems::FEquipmentAction>() : ExtractionItems::EquipmentActions(*C, Selected);
+		return SelectedLoot || !C
+			       ? TArray<ExtractionItems::FEquipmentAction>()
+			       : ExtractionItems::EquipmentActions(*C, Selected);
 	}
+
 	float MenuHeight() const { return 14.f + 32.f * (5 + EquipmentActions().Num()); }
 	TWeakObjectPtr<UExtractionInventoryWidget> Owner;
 	FGuid Selected;
@@ -426,7 +441,8 @@ private:
 		{
 			const auto Actions = EquipmentActions();
 			if (Actions.IsValidIndex(Row - 5)) PC()->RequestItem(Actions[Row - 5].Request);
-			Cancel(); return;
+			Cancel();
+			return;
 		}
 		if (Row == 0)
 		{

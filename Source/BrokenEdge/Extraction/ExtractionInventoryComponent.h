@@ -16,6 +16,8 @@ public:
 	UPROPERTY(ReplicatedUsing=OnRep_Contents)
 	FExtractionContainer Contents;
 	void InitializeLoadout();
+	/** Called once by raid initialization; returns supplies that must be placed beside the spawn. */
+	static FExtractionContainer GrantStartingSupply(FExtractionContainer& Inventory);
 	void InitializeGuard();
 	void Changed();
 	bool SyncWeapons();

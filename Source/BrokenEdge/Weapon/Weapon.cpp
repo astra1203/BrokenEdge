@@ -71,6 +71,12 @@ void AWeapon::OnRep_ExtractionInitialAmmo()
 	if (ExtractionInitialAmmo >= 0) SetExtractionAmmo(ExtractionInitialAmmo);
 }
 
+int32 AWeapon::GetMagCapacity() const
+{
+	const auto* Definition = UExtractionItemDefinition::Get(ExtractionDefinition);
+	return Definition && Definition->Kind == EExtractionItemKind::Weapon ? Definition->MagazineCapacity : MagCapacity;
+}
+
 void AWeapon::SetHUDAmmo()
 {
 	BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr
@@ -176,6 +182,7 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 	DOREPLIFETIME(AWeapon, WeaponState);
 	DOREPLIFETIME_CONDITION(AWeapon, bUseServerSideRewind, COND_OwnerOnly);
 	DOREPLIFETIME(AWeapon, ExtractionItemId);
+	DOREPLIFETIME_CONDITION(AWeapon, ExtractionDefinition, COND_InitialOnly);
 	DOREPLIFETIME_CONDITION(AWeapon, ExtractionInitialAmmo, COND_InitialOnly);
 	DOREPLIFETIME(AWeapon, ExtractionAmmoType);
 	DOREPLIFETIME(AWeapon, ExtractionParts);
@@ -282,7 +289,7 @@ void AWeapon::Fire(const FVector& HitTarget)
 
 void AWeapon::SpendRound()
 {
-	Ammo = FMath::Clamp(Ammo - 1, 0, MagCapacity);
+	Ammo = FMath::Clamp(Ammo - 1, 0, GetMagCapacity());
 	SetHUDAmmo();
 
 	//@TODO
@@ -428,11 +435,11 @@ void AWeapon::OnDropped()
 
 bool AWeapon::IsFull() const
 {
-	if (Ammo > MagCapacity)
+	if (Ammo > GetMagCapacity())
 		UE_LOG(LogTemp, Warning, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
 	       TEXT("当前弹药数大于弹匣最大容量。"));
 
-	return Ammo == MagCapacity;
+	return Ammo == GetMagCapacity();
 }
 
 /**
@@ -441,7 +448,7 @@ bool AWeapon::IsFull() const
  */
 void AWeapon::AddAmmo(int32 AmmoToAdd)
 {
-	Ammo = FMath::Clamp(Ammo + AmmoToAdd, 0, MagCapacity);
+	Ammo = FMath::Clamp(Ammo + AmmoToAdd, 0, GetMagCapacity());
 	SetHUDAmmo();
 	ClientAddAmmo(AmmoToAdd);
 }
@@ -476,7 +483,7 @@ void AWeapon::ClientAddAmmo_Implementation(int32 AmmoToAdd)
 {
 	if (HasAuthority()) return;
 
-	Ammo = FMath::Clamp(Ammo + AmmoToAdd, 0, MagCapacity);
+	Ammo = FMath::Clamp(Ammo + AmmoToAdd, 0, GetMagCapacity());
 	BrokenEdgeOwnerCharacter = BrokenEdgeOwnerCharacter == nullptr
 		                           ? Cast<ABrokenEdgeCharacter>(GetOwner())
 		                           : BrokenEdgeOwnerCharacter;

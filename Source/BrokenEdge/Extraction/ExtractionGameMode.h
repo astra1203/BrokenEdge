@@ -5,7 +5,7 @@
 #include "ExtractionPersistence.h"
 #include "ExtractionGameMode.generated.h"
 
-UCLASS()
+UCLASS(Config=Game)
 class BROKENEDGE_API AExtractionGameMode : public ABrokenEdgeGameMode
 {
 	GENERATED_BODY()
@@ -21,6 +21,7 @@ public:
 	virtual void HandleStartingNewPlayer_Implementation(APlayerController* Player) override;
 	virtual bool PlayerCanRestart_Implementation(APlayerController* Player) override;
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+	virtual AActor* FindPlayerStart_Implementation(AController* Player, const FString& IncomingName) override;
 	virtual void PlayerDefeated(class ABrokenEdgeCharacter* Character, class ABrokenEdgePlayerController* Victim,
 	                            ABrokenEdgePlayerController* Attacker) override;
 	virtual void RequestRespawn(ACharacter* Character, AController* Controller) override;
@@ -36,6 +37,8 @@ public:
 	bool IsCombatActive(AController* Player) const;
 	bool SettlePlayer(AController* Player, EExtractionOutcome Outcome);
 	class UExtractionPersistence* Store() const;
+	UPROPERTY(EditDefaultsOnly, Config, Category="Extraction|Map")
+	TSoftObjectPtr<class UExtractionMapDefinition> MapDefinition;
 
 private:
 	UPROPERTY()
@@ -48,9 +51,16 @@ private:
 	bool bEndRequested = false;
 	bool bEndingPlay = false;
 	UPROPERTY()
-	TObjectPtr<class AExtractionExit> Exit;
+	TArray<TObjectPtr<class AExtractionExit>> Exits;
+	UPROPERTY() TObjectPtr<class UExtractionMapDefinition> LoadedMapDefinition;
 	void UpdateExtraction(double Now);
 	TSet<TWeakObjectPtr<AActor>> ClaimedStarts;
+	TMap<TWeakObjectPtr<AController>, TWeakObjectPtr<AActor>> PlayerStarts;
+	TMap<uint8, int32> SquadSpawnGroups;
+	TSet<int32> ClaimedSpawnGroups;
+	TMap<uint8, int32> SquadSpawnSlots;
+	FRandomStream SpawnRandom;
+	bool bMapConfigurationValid = false;
 	void FreezePlayer(AController* Player, bool bFreeze);
 	void RefreshAliveCount();
 	UFUNCTION()

@@ -1,6 +1,8 @@
 #include "StingerFirstPersonAnimInstance.h"
 #include "BrokenEdgeCharacter.h"
 #include "BrokenEdge/Weapon/Weapon.h"
+#include "BrokenEdge/Weapon/WeaponPresentation.h"
+#include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 #include "Animation/AnimInstanceProxy.h"
 #include "Animation/AnimNode_SequencePlayer.h"
 #include "AnimNodes/AnimNode_Slot.h"
@@ -73,13 +75,13 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 			const FTransform& Component = Character->GetFirstPersonMesh()->GetComponentTransform();
 			RightTarget = Character->GetFirstPersonGripTarget(TEXT("Hand_R")).GetRelativeTransform(Component);
 			LeftTarget = Character->GetFirstPersonGripTarget(TEXT("LeftHandSocket")).GetRelativeTransform(Component);
-			RightReference = Character->FirstPersonWeaponFit.SourceRightHand;
-			LeftReference = Character->FirstPersonWeaponFit.SourceLeftHand;
+			RightReference = Character->GetViewWeaponFit().SourceRightHand;
+			LeftReference = Character->GetViewWeaponFit().SourceLeftHand;
 			bLeftActionMotion = bActionMotion;
 			const float Reload = Character->GetFirstPersonReloadProgress();
 			if (Reload >= 0.f)
 			{
-				const auto& Fit = Character->FirstPersonWeaponFit;
+				const auto& Fit = Character->GetViewWeaponFit();
 				const FTransform Gun = Character->GetFirstPersonGripTarget(TEXT("Hand_R"));
 				const FTransform Grip = Character->GetFirstPersonWeaponMesh()->GetSocketTransform(
 					TEXT("Hand_R"), RTS_Component);
@@ -107,7 +109,8 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 			}
 		}
 		LeftHandIK.Alpha = 0.f;
-		if (Character && !Character->IsTraversing() && Character->GetFirstPersonWeaponMesh() && Character->
+		if (Character && !Character->Melee->Active && !Character->IsTraversing() && Character->
+			GetFirstPersonWeaponMesh() && Character->
 			GetFirstPersonMesh()
 			&& Character->GetFirstPersonWeaponMesh()->DoesSocketExist(TEXT("LeftHandSocket"))
 			&& Character->GetCombatState() == ECombatState::ECS_Unoccuiped)
@@ -237,24 +240,37 @@ void UStingerFirstPersonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	CurrentVisualState = TEXT("Idle");
 	bMissingStateAnimation = false;
 	if (!Character) return;
+	if (Character->Melee->Active && Character->Melee->Idle)
+	{
+		ActiveAnimation = Character->Melee->Idle;
+		CurrentVisualState = TEXT("Knife");
+		return;
+	}
+	const auto* Weapon = Character->GetEquippedWeapon();
+	const auto* Profile = Weapon ? Weapon->Presentation.Get() : nullptr;
+	UAnimSequence* Idle = Profile && Profile->Idle ? Profile->Idle.Get() : IdleAnimation.Get();
+	UAnimSequence* Aim = Profile && Profile->Aim ? Profile->Aim.Get() : AimAnimation.Get();
+	UAnimSequence* Sprint = Profile && Profile->Sprint ? Profile->Sprint.Get() : SprintAnimation.Get();
+	UAnimSequence* Jump = Profile && Profile->Jump ? Profile->Jump.Get() : JumpAnimation.Get();
+	ActiveAnimation = Idle;
 	if (!Character->GetEquippedWeapon()) CurrentVisualState = TEXT("Unarmed");
 	else if (Character->GetCharacterMovement()->IsFalling())
 	{
 		CurrentVisualState = TEXT("Airborne");
-		bMissingStateAnimation = !JumpAnimation;
-		if (JumpAnimation) ActiveAnimation = JumpAnimation;
+		bMissingStateAnimation = !Jump;
+		if (Jump) ActiveAnimation = Jump;
 	}
 	else if (Character->IsSprinting())
 	{
 		CurrentVisualState = TEXT("Sprint");
-		bMissingStateAnimation = !SprintAnimation;
-		if (SprintAnimation) ActiveAnimation = SprintAnimation;
+		bMissingStateAnimation = !Sprint;
+		if (Sprint) ActiveAnimation = Sprint;
 	}
 	else if (const_cast<ABrokenEdgeCharacter*>(Character)->IsAiming())
 	{
 		CurrentVisualState = TEXT("Aim");
-		bMissingStateAnimation = !AimAnimation;
-		if (AimAnimation) ActiveAnimation = AimAnimation;
+		bMissingStateAnimation = !Aim;
+		if (Aim) ActiveAnimation = Aim;
 	}
 	if (Character->GetCombatState() == ECombatState::ECS_Reloading) CurrentVisualState = TEXT("Reload");
 	else if (Character->GetCombatState() == ECombatState::ECS_SwappingWeapon) CurrentVisualState = TEXT("Equip");
@@ -297,7 +313,7 @@ struct FStingerWeaponProxy : FAnimInstanceProxy
 		// Preserve the gameplay weapon's evaluated rest pose (shared weapon skeletons
 		// can have a different reference pose from this mesh's import bind pose).
 		MeshReferencePose = EquippedWeapon->GetWeaponMesh()->GetBoneSpaceTransforms();
-		const auto& Fit = Character->FirstPersonWeaponFit;
+		const auto& Fit = Character->GetViewWeaponFit();
 		Bone = Fit.MagazineBone;
 		const float Progress = Character->GetFirstPersonReloadProgress();
 		if (Progress < Fit.MagazineOut || Progress > Fit.MagazineIn) return;

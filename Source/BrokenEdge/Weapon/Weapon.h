@@ -46,6 +46,11 @@ class BROKENEDGE_API AWeapon : public AActor
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Weapon|Presentation")
+	TObjectPtr<class UWeaponPresentation> Presentation;
+	/** Definition identity is sent with initial spawn so clients use the same capacity. */
+	UPROPERTY(ReplicatedUsing=OnRep_ExtractionInitialAmmo)
+	FName ExtractionDefinition;
 	UPROPERTY(Replicated)
 	FGuid ExtractionItemId;
 	/** Initial actor state travels with the spawn, before any predicted shots. */
@@ -160,7 +165,7 @@ public:
 
 	void SetExtractionAmmo(int32 Value)
 	{
-		Ammo = FMath::Clamp(Value, 0, MagCapacity);
+		Ammo = FMath::Clamp(Value, 0, GetMagCapacity());
 		SetHUDAmmo();
 	}
 
@@ -255,7 +260,7 @@ public:
 	FORCEINLINE EWeaponType GetWeaponType() const { return WeaponType; }
 
 	/** 获取弹匣最大容量。 */
-	FORCEINLINE int32 GetMagCapacity() const { return MagCapacity; }
+	int32 GetMagCapacity() const;
 
 	bool IsFull() const;
 	void AddAmmo(int32 AmmoToAdd);

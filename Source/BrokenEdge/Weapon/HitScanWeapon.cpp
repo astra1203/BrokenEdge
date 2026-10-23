@@ -10,6 +10,8 @@
 #include "BrokenEdge/Component/LagCompensationComponent.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Camera/PlayerCameraManager.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -18,6 +20,25 @@
 
 static TAutoConsoleVariable<int32> CVarHitScanDebug(TEXT("BrokenEdge.Debug.HitScan"), 0,
                                                     TEXT("Draw short-lived hit scan impact markers."));
+
+namespace
+{
+	const FName MuzzleSocketName(TEXT("MuzzleFlash"));
+
+	USkeletalMeshComponent* GetLocalFirstPersonMuzzleMesh(const AWeapon* Weapon)
+	{
+		auto* Character = Cast<ABrokenEdgeCharacter>(Weapon->GetOwner());
+		if (!Character || !Character->IsLocallyControlled() || !Character->IsFirstPersonView()
+			|| Character->GetEquippedWeapon() != Weapon)
+			return nullptr;
+
+		auto* ViewMesh = Character->GetFirstPersonWeaponMesh();
+		return IsValid(ViewMesh) && ViewMesh->IsRegistered() && ViewMesh->IsVisible()
+		       && ViewMesh->DoesSocketExist(MuzzleSocketName)
+			       ? ViewMesh
+			       : nullptr;
+	}
+}
 
 
 void AHitScanWeapon::Fire(const FVector& HitTarget)
@@ -110,11 +131,22 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 
 	if (MuzzleFlash)
 	{
-		UGameplayStatics::SpawnEmitterAtLocation(
-			GetWorld(),
-			MuzzleFlash,
-			SocketTransform
-		);
+		if (auto* ViewMesh = GetLocalFirstPersonMuzzleMesh(this))
+		{
+			// Match the visible view weapon, including first-person FOV/scale and recoil.
+			if (auto* Flash = UGameplayStatics::SpawnEmitterAttached(
+				MuzzleFlash, ViewMesh, MuzzleSocketName, FVector::ZeroVector, FRotator::ZeroRotator,
+				EAttachLocation::SnapToTarget, true, EPSCPoolMethod::None, false))
+			{
+				Flash->SetOnlyOwnerSee(true);
+				Flash->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::FirstPerson);
+				Flash->ActivateSystem();
+			}
+		}
+		else
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
+		}
 	}
 	if (FireSound)
 	{
@@ -164,10 +196,24 @@ void AHitScanWeapon::WeaponTraceHit(const FVector& TraceStart, const FVector& Hi
 
 	if (BeamParticles)
 	{
+		// Only the visual origin changes: tracing, damage and rewind use TraceStart above.
+		FVector VisualStart = TraceStart;
+		if (auto* ViewMesh = GetLocalFirstPersonMuzzleMesh(this))
+		{
+			auto* Pawn = Cast<APawn>(GetOwner());
+			auto* PC = Pawn ? Cast<APlayerController>(Pawn->GetController()) : nullptr;
+			if (PC && PC->PlayerCameraManager)
+			{
+				// The beam remains in world space so its impact endpoint is not FOV-warped.
+				VisualStart = UGameplayStatics::TransformWorldToFirstPerson(
+					PC->PlayerCameraManager->GetCameraCacheView(), ViewMesh->GetSocketLocation(MuzzleSocketName),
+					false);
+			}
+		}
 		UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(
 			World,
 			BeamParticles,
-			TraceStart,
+			VisualStart,
 			FRotator::ZeroRotator,
 			true
 		);

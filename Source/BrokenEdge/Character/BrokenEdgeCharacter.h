@@ -67,7 +67,8 @@ public:
 	TObjectPtr<class UExtractionInteractionComponent> ExtractionInteraction;
 	// Sets default values for this character's properties
 	ABrokenEdgeCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TObjectPtr<class UExtractionTraversalComponent> Traversal;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<class UExtractionTraversalComponent> Traversal;
 	class UExtractionTraversalComponent* GetTraversal() const { return Traversal; }
 	bool IsTraversing() const;
 
@@ -106,8 +107,11 @@ public:
 	void PlayReloadMontage();
 
 	/** 获取换弹动画 */
-	FORCEINLINE UAnimMontage* GetReloadMontage() const { return ReloadMontage; }
-	UAnimMontage* GetSwapMontage() const { return SwapMontage; }
+	UAnimMontage* GetReloadMontage() const;
+	UAnimMontage* GetSwapMontage() const;
+	UAnimMontage* GetViewReloadMontage() const;
+	UAnimMontage* GetViewSwapMontage() const;
+	const FStingerViewWeaponFit& GetViewWeaponFit() const;
 
 	void PlayFireMontage(bool bAiming);
 	void PlayDefeatMontage();
@@ -129,6 +133,8 @@ public:
 	class UExtractionCombatComponent* GetExtractionCombat() const { return ExtractionCombat; }
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UExtractionCombatComponent> ExtractionCombat;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<class UExtractionMeleeComponent> Melee;
 
 	FORCEINLINE TObjectPtr<class UBuffComponent> GetBuff() const { return Buff; }
 

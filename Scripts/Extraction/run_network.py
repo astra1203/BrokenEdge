@@ -38,7 +38,7 @@ parser.add_argument('--traversal-lifecycle', action='store_true', help='Three-pl
 parser.add_argument('--optic-validation', action='store_true', help='Additional mounted-optic visual acceptance in the equipment scenario')
 parser.add_argument('--optic-remote-only', action='store_true', help='Stop equipment acceptance after observer mount captures; not a full combat regression')
 parser.add_argument('--resolution', choices=['1280x720', '1920x1080'], help='Rendered client size for visual acceptance')
-parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
+parser.add_argument('--scenario', choices=['combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
 parser.add_argument('--players', type=int, choices=[2, 3, 6])
 parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
 parser.add_argument('--rendered-role', choices=['A', 'B'], help='Render only this client; the other clients remain connected with NullRHI')
@@ -70,6 +70,8 @@ if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
 OUT = ROOT / 'Saved/Extraction' / args.tag
 OUT.mkdir(parents=True, exist_ok=False)
 ROLES = ['A', 'B', 'C', 'D'] if args.scenario == 'four' else ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
+if args.scenario == 'scar':
+    ROLES = list('ABCDEF')[:args.players or 2]
 if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']:
     ROLES = list('ABCDEF')[:args.players or (6 if args.scenario in ['pvpve', 'lifecycle'] else 2 if args.scenario == 'traversal' else 3)]
 rendered_roles = [args.rendered_role] if args.rendered_role else ROLES[:args.rendered_clients]
@@ -77,7 +79,7 @@ processes, commands, checks = {}, {}, []
 last_states = {}
 finishing = set()
 report = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
-          'options': vars(args), 'checks': checks, 'processes': {}, 'result': 'running'}
+          'options': vars(args), 'roles': ROLES, 'checks': checks, 'processes': {}, 'result': 'running'}
 report['base_commit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
 report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(p.read_bytes()).hexdigest()
                          for p in [Path(__file__).resolve(), ROOT / 'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
@@ -276,7 +278,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
+    phase4 = args.scenario in ['knife', 'scar', 'settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
@@ -314,7 +316,10 @@ def begin_round():
              'equipment authority pawns ready', 120)
         send('Server', 'fixture', players=[{'name': 'EX_'+r, 'position': [5700+150*i, 5000, 180],
                                            'health': 100, 'shield': 0} for i,r in enumerate(ROLES)])
-    check('All players loaded in Extraction', lambda: all(state(r).get('phase') == 1 for r in processes), 120)
+    # Six editor-based processes can page heavily during concurrent cold loads.
+    # Keep the phase assertion; give this harness more wall-clock loading time.
+    check('All players loaded in Extraction', lambda: all(state(r).get('phase') == 1 for r in processes),
+          300 if len(ROLES) == 6 else 120)
     if args.scenario in ['pvpve', 'guard_tuning']:
         send('Server', 'fixture', players=[{'name': 'EX_'+r, 'position': [5700+150*i, 5000, 180], 'health': 100, 'shield': 0} for i,r in enumerate(ROLES)])
     check('Dedicated authority and Stinger pawns', lambda: state('Server').get('net_mode') == 1
@@ -414,6 +419,12 @@ try:
         check('Duplicate cannot mutate authenticated inventory', lambda: state('A')['account']['revision'] == account['revision'] and state('A')['account']['stash'] == account['stash'])
         check('Duplicate login cannot regrant starter kits', lambda: len(state('Server')['stored_results']) == 1 and sum(i['quantity'] for i in state('A')['account']['stash']['items'] if i['definition'] == 'AK') == 3)
         send('B', 'screenshot', name='duplicate-profile-denied')
+    elif args.scenario == 'knife':
+        from knife_scenarios import run
+        run(globals())
+    elif args.scenario == 'scar':
+        from scar_scenarios import run
+        run(globals())
     elif args.scenario == 'traversal':
         from traversal_scenarios import run
         run(globals())

@@ -1,0 +1,51 @@
+"""Knife selection and attacks through actual player inputs, with server scene fixtures."""
+import time
+
+def run(g):
+    send,check,wait,player = (g[k] for k in ('send','check','wait','player'))
+    peers = ['Server']+g['ROLES']
+    def place(distance):
+        send('Server','fixture',players=[{'name':'EX_A','position':[-1500,-600,460],'health':100,'shield':0},
+                                         {'name':'EX_B','position':[-1500+distance,-600,460],'health':100,'shield':0}])
+        send('A','aim',target='EX_B',head=False)
+        time.sleep(.8)
+    def key(name):
+        send('A','input_key',key=name,pressed=True)
+        time.sleep(.1)
+        send('A','input_key',key=name,pressed=False)
+    place(120)
+    guns=[(i['id'],i['slot']) for i in player('Server','A')['inventory']['items'] if i['slot'] in (0,1)]
+    ammo=player('Server','A')['ammo']
+    key('Three')
+    check('Knife slot replicates to owner and observer',lambda: all(player(p,'A').get('knife_active') for p in peers))
+    check('Knife selection preserves firearm slots',lambda: guns==[(i['id'],i['slot']) for i in player('Server','A')['inventory']['items'] if i['slot'] in (0,1)])
+    send('A','screenshot',name='knife-idle')
+    send('A','pulse',action='Fire',duration=0)
+    check('Knife light strike applies 35 server damage',lambda: player('Server','B')['health']==65,5)
+    check('Knife does not spend rifle ammo',lambda: all(player(p,'A')['ammo']==ammo for p in peers))
+    time.sleep(.7)
+    place(120)
+    send('A','pulse',action='Aim',duration=0)
+    check('Knife heavy strike applies 65 server damage',lambda: player('Server','B')['health']==35,5)
+    time.sleep(1.1)
+    place(400)
+    send('A','pulse',action='Fire',duration=0)
+    time.sleep(.8)
+    check('Out-of-range knife cannot hit',lambda: player('Server','B')['health']==100)
+    place(120)
+    send('Server','occluder',enabled=True,position=[-1440,-600,460])
+    send('A','pulse',action='Fire',duration=0)
+    time.sleep(.8)
+    check('Wall blocks knife damage',lambda: player('Server','B')['health']==100)
+    send('Server','occluder',enabled=False)
+    send('A','inventory',open=True)
+    wait(lambda: player('A','A')['inventory_open'],'inventory opens')
+    place(120)
+    send('A','pulse',action='Fire',duration=0)
+    time.sleep(.8)
+    check('Inventory blocks knife damage',lambda: player('Server','B')['health']==100)
+    send('A','inventory',open=False)
+    key('One')
+    check('Key one returns to the preserved gun',lambda: all(not player(p,'A').get('knife_active') for p in peers))
+    check('Returning to gun preserves ammunition',lambda: all(player(p,'A')['ammo']==ammo for p in peers))
+    wait(lambda: (g['OUT']/'A-knife-idle.png').exists(),'knife screenshot written')

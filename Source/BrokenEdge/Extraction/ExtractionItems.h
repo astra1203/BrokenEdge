@@ -36,6 +36,25 @@ public:
 	float HealAmount = 50;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<class AWeapon> WeaponClass;
+	/** Defaults preserve existing AK assets and saved ammunition identities. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Weapon", meta=(ClampMin="1"))
+	int32 MagazineCapacity = 30;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Weapon")
+	FName DefaultAmmo = TEXT("Ammo");
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Weapon")
+	TArray<FName> CompatibleAmmo = {TEXT("Ammo"), TEXT("AmmoAP")};
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Weapon")
+	TArray<FName> CompatibleAttachments = {TEXT("RedDot"), TEXT("VerticalGrip"), TEXT("Compensator")};
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Presentation")
+	TSoftObjectPtr<class UTexture2D> Icon;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Presentation")
+	FText Description;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Presentation")
+	FName DisplayCategory;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Presentation", meta=(ClampMin="0", ClampMax="5"))
+	int32 DisplayRarity = 0;
+	bool SupportsAmmo(FName Id) const;
+	bool SupportsAttachment(FName Id) const;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMesh> WorldMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

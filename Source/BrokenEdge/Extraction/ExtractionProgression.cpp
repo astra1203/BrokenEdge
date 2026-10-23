@@ -8,7 +8,8 @@ UExtractionProgressionRules::UExtractionProgressionRules()
 		{TEXT("Bandage"), 60, 1}, {TEXT("Splint"), 80, 1}, {TEXT("Helmet2"), 400, 1},
 		{TEXT("Vest2"), 600, 1}, {TEXT("Key"), 300, 1}, {TEXT("RedDot"), 300, 2},
 		{TEXT("VerticalGrip"), 300, 2}, {TEXT("Compensator"), 300, 2}, {TEXT("AmmoAP"), 6, 3},
-		{TEXT("Helmet3"), 800, 3}, {TEXT("Vest3"), 1200, 3}
+		{TEXT("Helmet3"), 800, 3}, {TEXT("Vest3"), 1200, 3},
+		{TEXT("SCARH"), 1800, 1}, {TEXT("Ammo76251"), 4, 1}
 	};
 	Quests = {
 		{TEXT("初次撤离"), TEXT("接取后成功撤离一次"), 1, 500, 100},

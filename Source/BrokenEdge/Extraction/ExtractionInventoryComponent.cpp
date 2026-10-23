@@ -27,7 +27,7 @@ ABrokenEdgeCharacter* UExtractionInventoryComponent::Character() const
 
 void UExtractionInventoryComponent::InitializeLoadout()
 {
-	if (!GetOwner()->HasAuthority() || (bInitialized && InitializedWorld == GetWorld())) return;
+	if (!GetOwner()->HasAuthority() || !Character() || (bInitialized && InitializedWorld == GetWorld())) return;
 	const auto* PS = Cast<AExtractionPlayerState>(GetOwner());
 	const auto* Store = GetWorld()->GetGameInstance()->GetSubsystem<UExtractionPersistence>();
 	const auto* Raid = PS ? Store->FindRaid(PS->ExtractionRaid) : nullptr;
@@ -43,8 +43,59 @@ void UExtractionInventoryComponent::InitializeLoadout()
 	bDropped = false;
 	Contents = Member->Original;
 	Contents.Id = FGuid::NewGuid();
+	const FExtractionContainer Overflow = GrantStartingSupply(Contents);
+	if (!Overflow.Items.IsEmpty())
+	{
+		auto* C = Character();
+		FVector Position = C->GetActorLocation() - FVector(0, 0, 70);
+		FCollisionQueryParams Query(SCENE_QUERY_STAT(StartingSupply), false, C);
+		for (TActorIterator<APawn> It(GetWorld()); It; ++It) Query.AddIgnoredActor(*It);
+		for (TActorIterator<AWeapon> It(GetWorld()); It; ++It) Query.AddIgnoredActor(*It);
+		for (TActorIterator<AExtractionLootActor> It(GetWorld()); It; ++It) Query.AddIgnoredActor(*It);
+		for (int32 Side : {1, -1, 0})
+		{
+			const FVector Candidate = C->GetActorLocation() + C->GetActorRightVector() * Side * 100;
+			FHitResult Ground, Wall;
+			if (!GetWorld()->LineTraceSingleByChannel(Wall, C->GetActorLocation(), Candidate, ECC_Visibility, Query)
+				&& GetWorld()->LineTraceSingleByChannel(Ground, Candidate, Candidate - FVector(0, 0, 200),
+				                                        ECC_Visibility, Query)
+				&& Ground.ImpactNormal.Z > .7f)
+			{
+				Position = Ground.ImpactPoint + FVector(0, 0, 20);
+				break;
+			}
+		}
+		if (auto* Supply = AExtractionLootActor::SpawnContainer(GetWorld(), Position, false))
+		{
+			Supply->Label = TEXT("开局补给 · SCAR-H / 7.62×51");
+			Supply->SetContents(Overflow);
+		}
+		else UE_LOG(LogTemp, Error, TEXT("EXTRACTION_STARTING_SUPPLY_SPAWN_FAILED"));
+	}
 	SyncWeapons();
 	Changed();
+}
+
+FExtractionContainer UExtractionInventoryComponent::GrantStartingSupply(FExtractionContainer& Inventory)
+{
+	FExtractionContainer Overflow;
+	Overflow.Id = FGuid::NewGuid();
+	const auto* Secondary = Inventory.InSlot(1);
+	if (!Secondary)
+	{
+		auto Gun = ExtractionItems::Make(TEXT("SCARH"));
+		Gun.Slot = 1;
+		Inventory.Items.Add(Gun);
+	}
+	else if (Secondary->Definition != TEXT("SCARH"))
+		ExtractionItems::AutoPlace(Overflow, ExtractionItems::Make(TEXT("SCARH")));
+	// Fill partial stacks even when no free grid cell can hold the whole grant.
+	int32 Added = 0;
+	for (; Added < 60; ++Added)
+		if (!ExtractionItems::AutoPlace(Inventory, ExtractionItems::Make(TEXT("Ammo76251")))) break;
+	if (Added < 60) ExtractionItems::AutoPlace(Overflow, ExtractionItems::Make(TEXT("Ammo76251"), 60 - Added));
+	++Inventory.Revision;
+	return Overflow;
 }
 
 void UExtractionInventoryComponent::InitializeGuard()
@@ -56,7 +107,6 @@ void UExtractionInventoryComponent::InitializeGuard()
 	Contents.WeaponSlots = true;
 	auto Gun = ExtractionItems::Make(TEXT("AK"));
 	Gun.Slot = 0;
-	Gun.Magazine = 30;
 	ExtractionItems::SeedOrigins(Gun);
 	Contents.Items.Add(Gun);
 	ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(TEXT("Ammo"), 60));
@@ -130,6 +180,7 @@ bool UExtractionInventoryComponent::SyncWeapons()
 				return false;
 			}
 			Desired[Slot]->ExtractionItemId = Item->Id;
+			Desired[Slot]->ExtractionDefinition = Item->Definition;
 			Created.Add(Desired[Slot]);
 		}
 	}

@@ -17,6 +17,8 @@
 #include "BrokenEdge/Traversal/TraversalMovementComponent.h"
 #include "BrokenEdge/Traversal/ExtractionTraversalComponent.h"
 #include "Animation/AnimMontage.h"
+#include "BrokenEdge/Weapon/WeaponPresentation.h"
+#include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -68,6 +70,7 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter(const FObjectInitializer& ObjectIniti
 	Combat = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	Combat->SetIsReplicated(true);
 	ExtractionCombat = CreateDefaultSubobject<UExtractionCombatComponent>(TEXT("ExtractionCombat"));
+	Melee = CreateDefaultSubobject<UExtractionMeleeComponent>(TEXT("Melee"));
 	ExtractionLabel = CreateDefaultSubobject<UTextRenderComponent>(TEXT("ExtractionLabel"));
 	ExtractionLabel->SetupAttachment(GetRootComponent());
 	ExtractionLabel->SetRelativeLocation(FVector(0, 0, 115));
@@ -695,7 +698,7 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 {
 	RefreshFirstPersonWorldWeapons();
 	if (!DedicatedFirstPersonMesh) return;
-	const FVector AimOffset = FirstPersonWeaponFit.bEnabled
+	const FVector AimOffset = GetViewWeaponFit().bEnabled
 		                          ? FVector::ZeroVector
 		                          : (IsAiming() ? FirstPersonAimMeshOffset : FVector::ZeroVector);
 	DedicatedFirstPersonMesh->SetRelativeLocation(FMath::VInterpTo(DedicatedFirstPersonMesh->GetRelativeLocation(),
@@ -714,10 +717,10 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 			if (!FirstPersonWeaponMesh)
 			{
 				FirstPersonWeaponMesh = NewObject<USkeletalMeshComponent>(this);
-				FirstPersonWeaponMesh->SetupAttachment(FirstPersonWeaponFit.bEnabled
+				FirstPersonWeaponMesh->SetupAttachment(GetViewWeaponFit().bEnabled
 					                                       ? static_cast<USceneComponent*>(FollowCamera)
 					                                       : static_cast<USceneComponent*>(DedicatedFirstPersonMesh),
-				                                       FirstPersonWeaponFit.bEnabled
+				                                       GetViewWeaponFit().bEnabled
 					                                       ? NAME_None
 					                                       : FName(TEXT("RightHandSocket")));
 				FirstPersonWeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -730,11 +733,17 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 			}
 			USkeletalMesh* SourceMesh = Weapon->GetWeaponMesh()->GetSkeletalMeshAsset();
 			FirstPersonWeaponMesh->SetSkeletalMeshAsset(
-				FirstPersonWeaponVisualMesh && SourceMesh == FirstPersonWeaponSourceMesh
+				Weapon->Presentation && Weapon->Presentation->ViewMesh
+					? Weapon->Presentation->ViewMesh.Get()
+					: FirstPersonWeaponVisualMesh && SourceMesh == FirstPersonWeaponSourceMesh
 					? FirstPersonWeaponVisualMesh.Get()
 					: SourceMesh);
-			for (int32 Index = 0; Index < Weapon->GetWeaponMesh()->GetNumMaterials(); ++Index)
-				FirstPersonWeaponMesh->SetMaterial(Index, Weapon->GetWeaponMesh()->GetMaterial(Index));
+			FirstPersonWeaponMesh->EmptyOverrideMaterials();
+			if (!(Weapon->Presentation && Weapon->Presentation->ViewMesh))
+			{
+				for (int32 Index = 0; Index < Weapon->GetWeaponMesh()->GetNumMaterials(); ++Index)
+					FirstPersonWeaponMesh->SetMaterial(Index, Weapon->GetWeaponMesh()->GetMaterial(Index));
+			}
 			FirstPersonWeaponMesh->SetRelativeTransform(FirstPersonWeaponTransform);
 			FirstPersonWeaponMesh->AttachToComponent(UsesFirstPersonWeaponFit()
 				                                         ? static_cast<USceneComponent*>(FollowCamera)
@@ -747,12 +756,12 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 				                                            ? UStingerFirstPersonWeaponAnimInstance::StaticClass()
 				                                            : nullptr);
 			FirstPersonWeaponMesh->AddTickPrerequisiteComponent(DedicatedFirstPersonMesh);
-			ViewWeaponTarget = FirstPersonWeaponFit.Hip;
+			ViewWeaponTarget = GetViewWeaponFit().Hip;
 		}
 	}
 	if (UsesFirstPersonWeaponFit())
 	{
-		FTransform Target = IsAiming() ? FirstPersonWeaponFit.Aim : FirstPersonWeaponFit.Hip;
+		FTransform Target = IsAiming() ? GetViewWeaponFit().Aim : GetViewWeaponFit().Hip;
 		if (IsAiming() && Weapon) Target.AddToTranslation(Weapon->EquipmentAimOffset());
 		ViewWeaponTarget.SetLocation(FMath::VInterpTo(ViewWeaponTarget.GetLocation(), Target.GetLocation(),
 		                                              GetWorld()->GetDeltaSeconds(), FirstPersonAimInterpSpeed));
@@ -760,14 +769,17 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 		                                              GetWorld()->GetDeltaSeconds(), FirstPersonAimInterpSpeed));
 	}
 	if (!IsTraversing()) SyncFirstPersonAction();
-	if (FirstPersonWeaponMesh) FirstPersonWeaponMesh->SetVisibility(Weapon && !bDefeated && !IsTraversing(), true);
+	if (FirstPersonWeaponMesh) FirstPersonWeaponMesh->SetVisibility(
+		Weapon && !bDefeated && !IsTraversing() && !Melee->Active, true);
 	DedicatedFirstPersonMesh->SetVisibility((Weapon || IsTraversing()) && !bDefeated, false);
 }
 
 bool ABrokenEdgeCharacter::UsesFirstPersonWeaponFit() const
 {
-	return !IsTraversing() && FirstPersonWeaponFit.bEnabled && FirstPersonSourceWeapon && FirstPersonWeaponMesh &&
-		FirstPersonSourceWeapon->GetWeaponMesh()->GetSkeletalMeshAsset() == FirstPersonWeaponSourceMesh;
+	return !Melee->Active && !IsTraversing() && GetViewWeaponFit().bEnabled && FirstPersonSourceWeapon &&
+		FirstPersonWeaponMesh &&
+		(FirstPersonSourceWeapon->Presentation || FirstPersonSourceWeapon->GetWeaponMesh()->GetSkeletalMeshAsset() ==
+			FirstPersonWeaponSourceMesh);
 }
 
 FTransform ABrokenEdgeCharacter::GetFirstPersonGripTarget(FName Socket) const
@@ -808,9 +820,9 @@ void ABrokenEdgeCharacter::PlayFirstPersonMontage(UAnimMontage* Montage, UAnimMo
 	}
 	if (ThirdPersonMontage)
 	{
-		const FString Finish = Montage == FirstPersonReloadMontage
+		const FString Finish = Montage == GetViewReloadMontage()
 			                       ? TEXT("ReloadFinished")
-			                       : Montage == FirstPersonSwapMontage
+			                       : Montage == GetViewSwapMontage()
 			                       ? TEXT("SwapFinished")
 			                       : TEXT("");
 		for (const FAnimNotifyEvent& Notify : ThirdPersonMontage->Notifies)
@@ -819,7 +831,7 @@ void ABrokenEdgeCharacter::PlayFirstPersonMontage(UAnimMontage* Montage, UAnimMo
 			if (Time <= 0.f || Time > ViewActionSectionLength) continue;
 			const FString Name = Notify.GetNotifyEventName().ToString();
 			if (!Finish.IsEmpty() && Name.Contains(Finish)) ViewActionSectionLength = Time;
-			if (Montage == FirstPersonSwapMontage && Name.Contains(TEXT("AttachWeapons")))
+			if (Montage == GetViewSwapMontage() && Name.Contains(TEXT("AttachWeapons")))
 				ViewActionAttachTime = Time;
 		}
 	}
@@ -849,9 +861,9 @@ void ABrokenEdgeCharacter::SyncFirstPersonAction()
 	{
 		const float Key = ViewActionAttachTime / ViewActionSectionLength;
 		Fraction = Fraction < Key
-			           ? Fraction / Key * FirstPersonWeaponFit.SwapAttachFraction
-			           : FirstPersonWeaponFit.SwapAttachFraction + (Fraction - Key) / (1.f - Key)
-			           * (1.f - FirstPersonWeaponFit.SwapAttachFraction);
+			           ? Fraction / Key * GetViewWeaponFit().SwapAttachFraction
+			           : GetViewWeaponFit().SwapAttachFraction + (Fraction - Key) / (1.f - Key)
+			           * (1.f - GetViewWeaponFit().SwapAttachFraction);
 	}
 	const float Position = Fraction * ViewActionMontage->GetPlayLength();
 	if (!View->Montage_IsPlaying(ViewActionMontage))
@@ -863,7 +875,7 @@ void ABrokenEdgeCharacter::SyncFirstPersonAction()
 
 float ABrokenEdgeCharacter::GetFirstPersonReloadProgress() const
 {
-	if (!ViewActionMontage || ViewActionMontage != FirstPersonReloadMontage || !ViewActionThirdPersonMontage)
+	if (!ViewActionMontage || ViewActionMontage != GetViewReloadMontage() || !ViewActionThirdPersonMontage)
 		return -
 			1.f;
 	const UAnimInstance* Body = GetMesh()->GetAnimInstance();
@@ -1020,10 +1032,10 @@ void ABrokenEdgeCharacter::PostInitializeComponents()
 void ABrokenEdgeCharacter::PlaySwapMontage()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && SwapMontage)
+	if (AnimInstance && GetSwapMontage())
 	{
-		AnimInstance->Montage_Play(SwapMontage);
-		PlayFirstPersonMontage(FirstPersonSwapMontage, SwapMontage);
+		AnimInstance->Montage_Play(GetSwapMontage());
+		PlayFirstPersonMontage(GetViewSwapMontage(), GetSwapMontage());
 	}
 }
 
@@ -1045,12 +1057,12 @@ void ABrokenEdgeCharacter::PlayHitReactMontage()
 
 void ABrokenEdgeCharacter::PlayReloadMontage()
 {
-	if (Combat == nullptr || Combat->EquippedWeapon == nullptr || ReloadMontage == nullptr) return;
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr || GetReloadMontage() == nullptr) return;
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance == nullptr)return;
 
-	AnimInstance->Montage_Play(ReloadMontage);
+	AnimInstance->Montage_Play(GetReloadMontage());
 
 	FName SectionName;
 
@@ -1085,11 +1097,24 @@ void ABrokenEdgeCharacter::PlayReloadMontage()
 	}
 
 	AnimInstance->Montage_JumpToSection(SectionName);
-	PlayFirstPersonMontage(FirstPersonReloadMontage, ReloadMontage, SectionName);
+	PlayFirstPersonMontage(GetViewReloadMontage(), GetReloadMontage(), SectionName);
 }
 
 void ABrokenEdgeCharacter::PlayFireMontage(bool bAiming)
 {
+	if (Combat && Combat->EquippedWeapon && Combat->EquippedWeapon->Presentation)
+	{
+		const auto* Profile = Combat->EquippedWeapon->Presentation.Get();
+		if (Profile->BodyFire)
+		{
+			if (auto* Anim = GetMesh()->GetAnimInstance())
+			{
+				Anim->Montage_Play(Profile->BodyFire);
+				PlayFirstPersonMontage(Profile->ViewFire, Profile->BodyFire);
+			}
+			return;
+		}
+	}
 	if (Combat == nullptr || Combat->EquippedWeapon == nullptr || FireWeaponMontage == nullptr) return;
 
 	if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
@@ -1099,7 +1124,9 @@ void ABrokenEdgeCharacter::PlayFireMontage(bool bAiming)
 		// UE_LOG(LogTemp, Log, TEXT("Oreki [%llu][%s] Line:%d | %s"), GFrameCounter, TEXT(__FUNCTION__), __LINE__,
 		//        TEXT(""));
 		AnimInstance->Montage_JumpToSection(SectionName);
-		PlayFirstPersonMontage(FirstPersonFireMontage, FireWeaponMontage, SectionName);
+		const auto* Profile = Combat->EquippedWeapon->Presentation.Get();
+		PlayFirstPersonMontage(Profile && Profile->ViewFire ? Profile->ViewFire.Get() : FirstPersonFireMontage.Get(),
+		                       FireWeaponMontage, SectionName);
 	}
 }
 
@@ -1278,6 +1305,11 @@ void ABrokenEdgeCharacter::EquipButtonPressed()
 
 void ABrokenEdgeCharacter::AimButtonPressed()
 {
+	if (Melee->Active)
+	{
+		Melee->Attack(true);
+		return;
+	}
 	if (ExtractionInteraction->IsEnabled() && ExtractionInteraction->InventoryOpen) return;
 	if (Combat && Combat->bHoldingTheFlag) return;
 	if (bDisableGameplay) return;
@@ -1302,6 +1334,7 @@ void ABrokenEdgeCharacter::AimButtonReleased()
  */
 void ABrokenEdgeCharacter::ReloadButtonPressed()
 {
+	if (Melee->Active) return;
 	if (Combat && Combat->bHoldingTheFlag) return;
 	if (bDisableGameplay) return;
 	if (Combat)
@@ -1326,6 +1359,11 @@ void ABrokenEdgeCharacter::DropButtonPressed()
  */
 void ABrokenEdgeCharacter::FireButtonPressed()
 {
+	if (Melee->Active)
+	{
+		Melee->Attack(false);
+		return;
+	}
 	if (ExtractionInteraction->IsEnabled() && ExtractionInteraction->InventoryOpen) return;
 	if (Combat && Combat->bHoldingTheFlag) return;
 	if (bDisableGameplay) return;
@@ -1634,4 +1672,42 @@ void ABrokenEdgeCharacter::DropWeapons()
 		Combat->SecondaryWeapon->Dropped();
 		Combat->SecondaryWeapon = nullptr;
 	}
+}
+
+const FStingerViewWeaponFit& ABrokenEdgeCharacter::GetViewWeaponFit() const
+{
+	const auto* Weapon = Combat ? Combat->EquippedWeapon : nullptr;
+	return Weapon && Weapon->Presentation ? Weapon->Presentation->ViewFit : FirstPersonWeaponFit;
+}
+
+UAnimMontage* ABrokenEdgeCharacter::GetReloadMontage() const
+{
+	const auto* Weapon = Combat ? Combat->EquippedWeapon : nullptr;
+	return Weapon && Weapon->Presentation && Weapon->Presentation->BodyReload
+		       ? Weapon->Presentation->BodyReload.Get()
+		       : ReloadMontage;
+}
+
+UAnimMontage* ABrokenEdgeCharacter::GetSwapMontage() const
+{
+	const auto* Weapon = Combat ? Combat->EquippedWeapon : nullptr;
+	return Weapon && Weapon->Presentation && Weapon->Presentation->BodySwap
+		       ? Weapon->Presentation->BodySwap.Get()
+		       : SwapMontage;
+}
+
+UAnimMontage* ABrokenEdgeCharacter::GetViewReloadMontage() const
+{
+	const auto* Weapon = Combat ? Combat->EquippedWeapon : nullptr;
+	return Weapon && Weapon->Presentation && Weapon->Presentation->ViewReload
+		       ? Weapon->Presentation->ViewReload.Get()
+		       : FirstPersonReloadMontage.Get();
+}
+
+UAnimMontage* ABrokenEdgeCharacter::GetViewSwapMontage() const
+{
+	const auto* Weapon = Combat ? Combat->EquippedWeapon : nullptr;
+	return Weapon && Weapon->Presentation && Weapon->Presentation->ViewSwap
+		       ? Weapon->Presentation->ViewSwap.Get()
+		       : FirstPersonSwapMontage.Get();
 }

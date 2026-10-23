@@ -1,11 +1,27 @@
 #include "ExtractionItems.h"
 
+bool UExtractionItemDefinition::SupportsAmmo(FName Id) const
+{
+	const auto* Ammo = Get(Id);
+	return Kind == EExtractionItemKind::Weapon && CompatibleAmmo.Contains(Id)
+		&& Ammo && Ammo->Kind == EExtractionItemKind::Ammo;
+}
+
+bool UExtractionItemDefinition::SupportsAttachment(FName Id) const
+{
+	const auto* Part = Get(Id);
+	return Kind == EExtractionItemKind::Weapon && CompatibleAttachments.Contains(Id)
+		&& Part && Part->Kind == EExtractionItemKind::Attachment
+		&& Part->AttachmentSlot != EExtractionAttachmentSlot::None;
+}
+
 const TArray<FName>& UExtractionItemDefinition::Ids()
 {
 	static const TArray<FName> Names = {
 		TEXT("AK"), TEXT("Ammo"), TEXT("Medkit"), TEXT("Electronics"), TEXT("Tools"),
 		TEXT("AmmoAP"), TEXT("Helmet2"), TEXT("Helmet3"), TEXT("Vest2"), TEXT("Vest3"), TEXT("Bandage"), TEXT("Splint"),
-		TEXT("RedDot"), TEXT("VerticalGrip"), TEXT("Compensator"), TEXT("Key"), TEXT("Document")
+		TEXT("RedDot"), TEXT("VerticalGrip"), TEXT("Compensator"), TEXT("Key"), TEXT("Document"),
+		TEXT("SCARH"), TEXT("Ammo76251")
 	};
 	return Names;
 }
@@ -51,8 +67,12 @@ FExtractionItem ExtractionItems::Make(FName Definition, int32 Quantity)
 	{
 		Item.Size = D->Size;
 		Item.Durability = D->MaxDurability;
+		if (D->Kind == EExtractionItemKind::Weapon)
+		{
+			Item.Magazine = D->MagazineCapacity;
+			Item.MagazineAmmo = D->DefaultAmmo;
+		}
 	}
-	Item.Magazine = Definition == TEXT("AK") ? 30 : 0;
 	SeedOrigins(Item);
 	return Item;
 }

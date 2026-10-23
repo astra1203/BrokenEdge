@@ -118,22 +118,27 @@ def import_file(path):
         result['sequences'].append(entry)
     return result
 
-selected=set(os.environ.get('STINGER_REPAIR_NAMES','AR_M_1P_Idle01,AR_M_1P_AimIdle_Pose,AR_M_1P_Fire,AR_M_1P_ChangeClipFull,AR_M_1P_GetWeapon,AR_M_1P_Jumploop').split(','))
-processed=0
-for path in sorted(SOURCE.rglob('*.psa')):
-    if '*' not in selected and path.stem not in selected: continue
-    rel=path.relative_to(SOURCE).as_posix()
-    previous=manifest['entries'].get(rel,{})
-    if previous.get('status')=='written' and previous.get('mapping_revision')==4 and previous.get('source_sha256')==hashlib.sha256(path.read_bytes()).hexdigest():
-        if all(LIB.does_asset_exist(p) for p in previous.get('assets',[])):
-            continue
-    try: manifest['entries'][rel]=import_file(path)
-    except Exception as error:
-        manifest['entries'][rel]={'status':'failed','error':str(error)}
-        unreal.log_error('STINGER_REPAIR_FAILED '+path.name+' '+str(error))
-    temporary=REPORT.with_suffix('.tmp.json')
-    temporary.write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
-    temporary.replace(REPORT)
-    print('STINGER_REPAIR',path.name,manifest['entries'][rel]['status'])
-    processed+=1
-    if processed%20==0: unreal.SystemLibrary.collect_garbage()
+def main():
+    selected=set(os.environ.get('STINGER_REPAIR_NAMES','AR_M_1P_Idle01,AR_M_1P_AimIdle_Pose,AR_M_1P_Fire,AR_M_1P_ChangeClipFull,AR_M_1P_GetWeapon,AR_M_1P_Jumploop').split(','))
+    processed=0
+    for path in sorted(SOURCE.rglob('*.psa')):
+        if '*' not in selected and path.stem not in selected: continue
+        rel=path.relative_to(SOURCE).as_posix()
+        previous=manifest['entries'].get(rel,{})
+        if previous.get('status')=='written' and previous.get('mapping_revision')==4 and previous.get('source_sha256')==hashlib.sha256(path.read_bytes()).hexdigest():
+            if all(LIB.does_asset_exist(p) for p in previous.get('assets',[])):
+                continue
+        try: manifest['entries'][rel]=import_file(path)
+        except Exception as error:
+            manifest['entries'][rel]={'status':'failed','error':str(error)}
+            unreal.log_error('STINGER_REPAIR_FAILED '+path.name+' '+str(error))
+        temporary=REPORT.with_suffix('.tmp.json')
+        temporary.write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
+        temporary.replace(REPORT)
+        print('STINGER_REPAIR',path.name,manifest['entries'][rel]['status'])
+        processed+=1
+        if processed%20==0: unreal.SystemLibrary.collect_garbage()
+
+
+if __name__ == '__main__':
+    main()
