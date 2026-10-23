@@ -306,9 +306,10 @@ namespace ExtractionItems
 	{
 		FString Label;
 		FExtractionItemRequest Request;
+		bool OpenGunsmith = false;
 	};
 
-	BROKENEDGE_API TArray<FEquipmentAction> EquipmentActions(const FExtractionContainer& Container, FGuid Selected);
+	BROKENEDGE_API TArray<FEquipmentAction> EquipmentActions(const FExtractionContainer& Container, FGuid Selected, bool Detailed = false);
 	BROKENEDGE_API TArray<FExtractionOrigin> TakeOrigins(TArray<FExtractionOrigin>& Source, int32 Quantity);
 	BROKENEDGE_API void MergeOrigins(TArray<FExtractionOrigin>& Target, const TArray<FExtractionOrigin>& Source);
 	BROKENEDGE_API void SeedOrigins(FExtractionItem& Item);

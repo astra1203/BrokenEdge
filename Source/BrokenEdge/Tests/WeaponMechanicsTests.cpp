@@ -97,6 +97,31 @@ bool FWeaponAssemblyTest::RunTest(const FString&)
 	TestFalse(TEXT("Unknown precision function rejected"), ExtractionItems::Configure(Container, Request, Error));
 	FJsonObjectConverter::UStructToJsonObjectString(Container, After);
 	TestEqual(TEXT("Rejected transaction preserves all state"), Before, After);
+	const auto* TunedDefinition = UExtractionItemDefinition::Get(TEXT("VerticalGrip"));
+	if (TestTrue(TEXT("Authored compatibility tuning available"), !TunedDefinition->Tunes.IsEmpty()))
+	{
+		const auto& Tune = TunedDefinition->Tunes[0];
+		Request.TuneId = Tune.Id;
+		Request.TuneValue = Tune.Maximum;
+		TestTrue(TEXT("Valid tuning applies transactionally"), ExtractionItems::Configure(Container, Request, Error));
+		const auto Tuned = WeaponMechanics::ResolveWeaponStats(*Container.Find(GunId));
+		TestTrue(TEXT("Tuning changes resolved recoil"), Tuned.RecoilScale < Stats.RecoilScale);
+		FJsonObjectConverter::UStructToJsonObjectString(Container, After);
+		FExtractionContainer Restored;
+		TestTrue(
+			TEXT("Tuned assembly survives serialization"),
+			FJsonObjectConverter::JsonObjectStringToUStruct(After, &Restored));
+		TestEqual(
+			TEXT("Restored tuning produces same config"),
+			WeaponMechanics::ResolveWeaponStats(*Restored.Find(GunId)).Revision, Tuned.Revision);
+		const auto Menu = ExtractionItems::EquipmentActions(Container, GunId, true);
+		TestTrue(TEXT("Detailed actions expose reset to default"), Menu.ContainsByPredicate([&](const auto& A)
+		{
+			return A.Request.Op == EExtractionItemOp::Tune && A.Request.TuneValue == Tune.Default;
+		}));
+		Request.TuneValue = Tune.Maximum + 1;
+		TestFalse(TEXT("Out of range tuning rejected"), ExtractionItems::Configure(Container, Request, Error));
+	}
 	Request.Op = EExtractionItemOp::Detach;
 	TestTrue(TEXT("Detach by stable instance ID"), ExtractionItems::Configure(Container, Request, Error));
 	TestNotNull(TEXT("Part is returned, not destroyed"), Container.Find(GripId));
@@ -179,15 +204,18 @@ bool FWeaponFlightTest::RunTest(const FString&)
 	UStaticMeshComponent* ChildMesh = nullptr;
 	for (auto* Component : Components)
 	{
-		if (Component->GetStaticMesh() == UExtractionItemDefinition::Get(Parent.Definition)->WorldMesh) ParentMesh =
-			Component;
-		if (Component->GetStaticMesh() == UExtractionItemDefinition::Get(Child.Definition)->WorldMesh) ChildMesh =
-			Component;
+		if (Component->GetStaticMesh() == UExtractionItemDefinition::Get(Parent.Definition)->WorldMesh)
+			ParentMesh =
+				Component;
+		if (Component->GetStaticMesh() == UExtractionItemDefinition::Get(Child.Definition)->WorldMesh)
+			ChildMesh =
+				Component;
 	}
 	TestNotNull(TEXT("Parent visual created"), ParentMesh);
 	TestNotNull(TEXT("Child visual created"), ChildMesh);
-	if (ParentMesh && ChildMesh) TestTrue(
-		TEXT("Child visual follows parent rather than weapon root"), ChildMesh->GetAttachParent() == ParentMesh);
+	if (ParentMesh && ChildMesh)
+		TestTrue(
+			TEXT("Child visual follows parent rather than weapon root"), ChildMesh->GetAttachParent() == ParentMesh);
 
 	World->DestroyWorld(false);
 	return true;

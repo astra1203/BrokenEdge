@@ -1,4 +1,5 @@
 #include "ExtractionStashWidget.h"
+#include "ExtractionGunsmith.h"
 #include "ExtractionAccountComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Widgets/SLeafWidget.h"
@@ -10,7 +11,11 @@ namespace
 {
 	constexpr float Cell = 38;
 	FVector2D Grid(int32 Side) { return Side == 0 ? FVector2D(105, 165) : FVector2D(660, 245); }
-	FVector2D Slot(int32 Index) { return Index < 2 ? FVector2D(660 + Index * 185, 165) : FVector2D(1040, 165 + (Index - 2) * 80); }
+
+	FVector2D Slot(int32 Index)
+	{
+		return Index < 2 ? FVector2D(660 + Index * 185, 165) : FVector2D(1040, 165 + (Index - 2) * 80);
+	}
 
 	bool InsideStash(FVector2D P, FVector2D O, FVector2D S)
 	{
@@ -81,11 +86,13 @@ public:
 			for (int32 Y = 0; Y < C->Height; ++Y)
 				for (int32 X = 0; X < C->Width; ++X)
 					Box(Grid(Side) + FVector2D(X, Y) * Cell, {Cell - 2, Cell - 2}, FLinearColor(.085, .12, .15));
-			if (Side) for (int32 I = 0; I < 4; ++I)
-			{
-				Box(Slot(I), {172, 58}, FLinearColor(.09, .15, .18));
-				Text(Slot(I) + FVector2D(5, 15), I == 0 ? TEXT("手持武器") : I == 1 ? TEXT("背负武器") : I == 2 ? TEXT("头盔") : TEXT("胸甲"));
-			}
+			if (Side)
+				for (int32 I = 0; I < 4; ++I)
+				{
+					Box(Slot(I), {172, 58}, FLinearColor(.09, .15, .18));
+					Text(Slot(I) + FVector2D(5, 15),
+					     I == 0 ? TEXT("手持武器") : I == 1 ? TEXT("背负武器") : I == 2 ? TEXT("头盔") : TEXT("胸甲"));
+				}
 			for (const auto& I : C->Items)
 			{
 				if (Dragging && Selected == I.Id) continue;
@@ -142,7 +149,8 @@ public:
 			const TCHAR* Labels[] = {TEXT("快捷转移"), TEXT("装备到手持槽"), TEXT("装备到背负槽"), TEXT("卸下到背包"), TEXT("拆分数量")};
 			for (int32 I = 0; I < 5; ++I) Text(MenuAt + FVector2D(10, 5 + I * 31), Labels[I], 15, 6);
 			const auto Actions = EquipmentActions();
-			for (int32 I = 0; I < Actions.Num(); ++I) Text(MenuAt + FVector2D(10, 5 + (I + 5) * 31), Actions[I].Label, 14, 6);
+			for (int32 I = 0; I < Actions.Num(); ++I) Text(MenuAt + FVector2D(10, 5 + (I + 5) * 31), Actions[I].Label,
+			                                               14, 6);
 		}
 		if (Splitting)
 		{
@@ -162,8 +170,9 @@ public:
 
 	virtual FReply OnMouseWheel(const FGeometry&, const FPointerEvent& E) override
 	{
-		if (Account()) OverflowOffset = FMath::Clamp(OverflowOffset - FMath::RoundToInt(E.GetWheelDelta()) * 5, 0,
-		                                             FMath::Max(0, Account()->Profile.Overflow.Num() - 5));
+		if (Account())
+			OverflowOffset = FMath::Clamp(OverflowOffset - FMath::RoundToInt(E.GetWheelDelta()) * 5, 0,
+			                              FMath::Max(0, Account()->Profile.Overflow.Num() - 5));
 		return FReply::Handled();
 	}
 
@@ -186,7 +195,35 @@ public:
 				const auto Actions = EquipmentActions();
 				if (Actions.IsValidIndex(Row - 5))
 				{
-					auto R = Request(); R.To = R.From; R.Move = Actions[Row - 5].Request; Send(R);
+					if (Actions[Row - 5].OpenGunsmith)
+					{
+						TWeakPtr<SExtractionStashPanel> Weak = StaticCastSharedRef<SExtractionStashPanel>(AsShared());
+						const int32 Side = SelectedSide;
+						ExtractionGunsmith::Open(AsShared(), Selected,
+						                         [Weak, Side]
+						                         {
+							                         const auto P = Weak.Pin();
+							                         const auto* C = P && P->Owner.IsValid() && P->Owner->IsInViewport() ? P->Container(Side) : nullptr;
+							                         return C ? *C : FExtractionContainer();
+						                         },
+						                         [Weak, Side](const FExtractionItemRequest& Move)
+						                         {
+							                         if (const auto P = Weak.Pin(); P && P->Account())
+							                         {
+								                         FExtractionStorageRequest R;
+								                         R.From = R.To = static_cast<EExtractionStorageSide>(Side);
+								                         R.Move = Move;
+								                         P->Send(R);
+							                         }
+						                         });
+					}
+					else
+					{
+						auto R = Request();
+						R.To = R.From;
+						R.Move = Actions[Row - 5].Request;
+						Send(R);
+					}
 				}
 				return FReply::Handled();
 			}
@@ -249,13 +286,14 @@ public:
 		Mouse = Position(G, E);
 		auto R = Request();
 		R.Move.AutoPlace = false;
-		for (int32 I = 0; I < 4; ++I) if (InsideStash(Mouse, Slot(I), {172, 58}))
-		{
-			R.To = EExtractionStorageSide::Loadout;
-			R.Move.Slot = I;
-			Send(R);
-			return FReply::Handled().ReleaseMouseCapture();
-		}
+		for (int32 I = 0; I < 4; ++I)
+			if (InsideStash(Mouse, Slot(I), {172, 58}))
+			{
+				R.To = EExtractionStorageSide::Loadout;
+				R.Move.Slot = I;
+				Send(R);
+				return FReply::Handled().ReleaseMouseCapture();
+			}
 		int32 TargetSide = 0;
 		const auto* Target = Hit(Mouse, TargetSide);
 		for (int32 Side = 0; Side < 2; ++Side)
@@ -284,8 +322,9 @@ public:
 		if (Splitting)
 		{
 			if (E.GetKey() == EKeys::BackSpace) SplitText.LeftChopInline(1);
-			if (E.GetKey() == EKeys::Up || E.GetKey() == EKeys::Down) SplitText = FString::FromInt(
-				FMath::Clamp(FCString::Atoi(*SplitText) + (E.GetKey() == EKeys::Up ? 1 : -1), 1, Quantity - 1));
+			if (E.GetKey() == EKeys::Up || E.GetKey() == EKeys::Down)
+				SplitText = FString::FromInt(
+					FMath::Clamp(FCString::Atoi(*SplitText) + (E.GetKey() == EKeys::Up ? 1 : -1), 1, Quantity - 1));
 			if (E.GetKey() == EKeys::Enter)
 			{
 				Quantity = FMath::Clamp(FCString::Atoi(*SplitText), 1, Quantity - 1);
@@ -314,6 +353,7 @@ private:
 		const auto* C = Container(SelectedSide);
 		return C ? ExtractionItems::EquipmentActions(*C, Selected) : TArray<ExtractionItems::FEquipmentAction>();
 	}
+
 	float MenuHeight() const { return 5.f + 31.f * (5 + EquipmentActions().Num()); }
 	TWeakObjectPtr<UExtractionStashWidget> Owner;
 	FGuid Selected;
@@ -357,12 +397,15 @@ private:
 
 	const FExtractionItem* Hit(FVector2D P, int32& Side) const
 	{
-		for (int32 S = 0; S < 2; ++S) if (const auto* C = Container(S)) for (const auto& I : C->Items) if (InsideStash(
-			P, Origin(I, S), Size(I)))
-		{
-			Side = S;
-			return &I;
-		}
+		for (int32 S = 0; S < 2; ++S)
+			if (const auto* C = Container(S))
+				for (const auto& I : C->Items)
+					if (InsideStash(
+						P, Origin(I, S), Size(I)))
+					{
+						Side = S;
+						return &I;
+					}
 		return nullptr;
 	}
 };

@@ -1,7 +1,7 @@
 #include "ExtractionItems.h"
 #include "BrokenEdge/Weapon/WeaponMechanics.h"
 
-TArray<ExtractionItems::FEquipmentAction> ExtractionItems::EquipmentActions(const FExtractionContainer& C, FGuid Selected)
+TArray<ExtractionItems::FEquipmentAction> ExtractionItems::EquipmentActions(const FExtractionContainer& C, FGuid Selected, bool Detailed)
 {
 	TArray<FEquipmentAction> Actions;
 	const auto* Item = C.Find(Selected);
@@ -18,24 +18,57 @@ TArray<ExtractionItems::FEquipmentAction> ExtractionItems::EquipmentActions(cons
 		for (const auto& Gun : C.Items)
 			if (const auto* GunDef = UExtractionItemDefinition::Get(Gun.Definition); GunDef && GunDef->SupportsAttachment(Item->Definition))
 			{
-				if (!D->RequiresParent)
-					Add(FString::Printf(TEXT("安装到 %s"), *GunDef->Label.ToString()), EExtractionItemOp::Attach).Weapon = Gun.Id;
+				auto Mount = [&](const UExtractionItemDefinition* Host, FGuid Parent)
+				{
+					TArray<FName> Sockets; Host->MountSockets.GetKeys(Sockets); Sockets.Sort(FNameLexicalLess());
+					if (Sockets.IsEmpty()) Sockets.Add(NAME_None); // Legacy root mounting remains valid.
+					for (FName Socket : Sockets)
+					{
+						if (!Socket.IsNone() && Host->MountSockets[Socket] != D->AttachmentSlot) continue;
+						auto& R = Add(FString::Printf(TEXT("安装 %s → %s %s"), *D->Label.ToString(), *Host->Label.ToString(),
+							Socket.IsNone() ? TEXT("") : *Socket.ToString()), EExtractionItemOp::Attach);
+						R.Weapon = Gun.Id; R.ParentAttachment = Parent; R.AttachmentSocket = Socket;
+					}
+				};
+				if (!D->RequiresParent) Mount(GunDef, {});
 				for (const auto& Parent : Gun.Attachments)
 					if (const auto* PD = UExtractionItemDefinition::Get(Parent.Definition); PD && PD->ChildAttachments.Contains(Item->Definition))
 					{
-						auto& Request = Add(TEXT("安装到 ") + PD->Label.ToString(), EExtractionItemOp::Attach);
-						Request.Weapon = Gun.Id; Request.ParentAttachment = Parent.Id;
+						Mount(PD, Parent.Id);
 					}
 			}
 	if (D->Kind == EExtractionItemKind::Weapon)
 	{
+		if (!Detailed)
+		{
+			Add(TEXT("改装与参数对比…"), EExtractionItemOp::Tune);
+			Actions.Last().OpenGunsmith = true;
+		}
 		Add(TEXT("卸出弹匣弹药"), EExtractionItemOp::Unload);
 		for (const FName AmmoId : D->CompatibleAmmo)
 			if (D->SupportsAmmo(AmmoId))
 				Add(TEXT("选择 ") + UExtractionItemDefinition::Get(AmmoId)->Label.ToString(), EExtractionItemOp::SelectAmmo).AmmoDefinition = AmmoId;
 		for (const auto& Part : Item->Attachments)
 			if (const auto* Definition = UExtractionItemDefinition::Get(Part.Definition))
-				Add(TEXT("拆下 ") + Definition->Label.ToString(), EExtractionItemOp::Detach).AttachmentSlot = Definition->AttachmentSlot;
+			{
+				auto& Remove = Add(TEXT("拆下 ") + Definition->Label.ToString(), EExtractionItemOp::Detach);
+				Remove.AttachmentSlot = Definition->AttachmentSlot; Remove.MountedAttachment = Part.Id;
+				if (Detailed) for (const auto& Tune : Definition->Tunes)
+				{
+					if (!Tune.Curve) continue;
+					const auto* Current = Part.TuneValues.FindByPredicate([&](const auto& V) { return V.Key == Tune.Id; });
+					const float Value = Current ? Current->Value : Tune.Default;
+					const float Step = Tune.Step > 0 ? Tune.Step : (Tune.Maximum - Tune.Minimum) / 20.f;
+					for (int32 Direction : {-1, 0, 1})
+					{
+						const float Next = Direction == 0 ? Tune.Default : FMath::Clamp(Value + Direction * Step, Tune.Minimum, Tune.Maximum);
+						if (FMath::IsNearlyEqual(Next, Value)) continue;
+						auto& R = Add(FString::Printf(TEXT("%s · %s %s %.0f"), *Definition->Label.ToString(), *Tune.Id.ToString(),
+							Direction == 0 ? TEXT("恢复默认") : TEXT("调至"), Next), EExtractionItemOp::Tune);
+						R.MountedAttachment = Part.Id; R.TuneId = Tune.Id; R.TuneValue = Next;
+					}
+				}
+			}
 	}
 	return Actions;
 }
@@ -228,6 +261,8 @@ TArray<FString> ExtractionItems::WeaponDetails(const FExtractionItem& Item)
 	Lines.Add(FString::Printf(TEXT("射速 %.1f 发/分    初速 %.0f 米/秒"), 60 / S.Interval, S.Speed / 100));
 	Lines.Add(FString::Printf(TEXT("开镜 %.0f 毫秒    跑射延迟 %.0f 毫秒"), S.AimIn * 1000, S.SprintToFire * 1000));
 	Lines.Add(FString::Printf(TEXT("换弹 %.2f 秒    空仓 %.2f 秒"), S.Reload, S.EmptyReload));
+	Lines.Add(FString::Printf(TEXT("弹匣 %.0f 发    后座倍率 %.2f    散布倍率 %.2f"), S.MagazineCapacity, S.RecoilScale, S.SpreadScale));
+	Lines.Add(TEXT("项目兼容参数 · 不代表正式服评分"));
 	Lines.Add(TEXT("装配结构（右键选择配件进行安装/拆卸）"));
 	for (const auto& Part : Item.Attachments)
 	{

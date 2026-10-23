@@ -1,4 +1,5 @@
 #include "ExtractionInventoryWidget.h"
+#include "ExtractionGunsmith.h"
 #include "ExtractionPlayerController.h"
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionKeyRoom.h"
@@ -212,7 +213,9 @@ public:
 					{
 						const FVector2D At(MenuPosition.X > 640 ? 100 : 740, 80);
 						Box(At, FVector2D(440, 22 * Lines.Num() + 20), FLinearColor(.03f, .05f, .07f), 5);
-						for (int32 N = 0; N < Lines.Num(); ++N) Text(At + FVector2D(12, 10 + 22 * N), Lines[N], 14, FLinearColor::White, 6);
+						for (int32 N = 0; N < Lines.Num(); ++N)
+							Text(At + FVector2D(12, 10 + 22 * N), Lines[N], 14,
+							     FLinearColor::White, 6);
 					}
 				}
 		if (MenuOpen)
@@ -223,8 +226,9 @@ public:
 				Text(MenuPosition + FVector2D(12, 10 + Row * 32), Labels[Row], 15,
 				     FLinearColor::White, 6);
 			const auto Actions = EquipmentActions();
-			for (int32 N = 0; N < Actions.Num(); ++N) Text(MenuPosition + FVector2D(12, 10 + (N + 5) * 32),
-			                                               Actions[N].Label, 14, FLinearColor::White, 6);
+			for (int32 N = 0; N < Actions.Num(); ++N)
+				Text(MenuPosition + FVector2D(12, 10 + (N + 5) * 32),
+				     Actions[N].Label, 14, FLinearColor::White, 6);
 		}
 		if (Splitting)
 		{
@@ -253,8 +257,9 @@ public:
 			const int32 Row = FMath::FloorToInt((Mouse.Y - MenuPosition.Y - 5) / 32);
 			MenuOpen = false;
 			if (Inside(Mouse, MenuPosition, FVector2D(250, MenuHeight())) && Row >= 0 && Row < 5 + EquipmentActions().
-				Num()) MenuAction(Row);
-			return FReply::Handled().SetUserFocus(AsShared());
+				Num())
+				MenuAction(Row);
+			return FReply::Handled(); // Preserve focus if the action opened the gunsmith popup.
 		}
 		if (Dragging)
 		{
@@ -452,7 +457,26 @@ private:
 		if (Row >= 5)
 		{
 			const auto Actions = EquipmentActions();
-			if (Actions.IsValidIndex(Row - 5)) PC()->RequestItem(Actions[Row - 5].Request);
+			if (Actions.IsValidIndex(Row - 5))
+			{
+				if (Actions[Row - 5].OpenGunsmith)
+				{
+					TWeakPtr<SExtractionInventoryPanel> Weak = StaticCastSharedRef<SExtractionInventoryPanel>(
+						AsShared());
+					ExtractionGunsmith::Open(AsShared(), Selected,
+					                         [Weak]
+					                         {
+						                         const auto P = Weak.Pin();
+						                         const auto* C = P && P->Interaction() && P->Interaction()->InventoryOpen ? P->Container(false) : nullptr;
+						                         return C ? *C : FExtractionContainer();
+					                         },
+					                         [Weak](const FExtractionItemRequest& R)
+					                         {
+						                         if (const auto P = Weak.Pin(); P && P->PC()) P->PC()->RequestItem(R);
+					                         });
+				}
+				else PC()->RequestItem(Actions[Row - 5].Request);
+			}
 			Cancel();
 			return;
 		}

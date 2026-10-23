@@ -57,3 +57,17 @@ def run(g):
     send('A', 'mouse', x=155, y=180, action='up', button='right')
     send('A', 'screenshot', name='mechanics-stats-panel')
     wait(lambda: (g['OUT'] / 'A-mechanics-stats-panel.png').exists(), 'Weapon details screenshot')
+    send('A', 'mouse', x=200, y=355, action='down', button='left')
+    send('A', 'mouse', x=200, y=355, action='up', button='left')
+    time.sleep(.5)
+    send('A', 'screenshot', name='mechanics-gunsmith')
+    wait(lambda: (g['OUT'] / 'A-mechanics-gunsmith.png').exists(), 'Gunsmith panel screenshot')
+    check('Gunsmith production entry opened', lambda: 'EXTRACTION_GUNSMITH_OPEN' in
+          (g['OUT'] / 'A.log').read_text(encoding='utf-8', errors='replace'))
+    for x, y in [(800, 125), (380, 620)]:
+        send('A', 'mouse', x=x, y=y, action='down', button='left')
+        send('A', 'mouse', x=x, y=y, action='up', button='left')
+    check('Gunsmith preview apply unloads through authority', lambda: player('Server', 'A')['ammo'] == 0
+          and player('A', 'A')['ammo'] == 0)
+    send('A', 'screenshot', name='mechanics-gunsmith-applied')
+    wait(lambda: (g['OUT'] / 'A-mechanics-gunsmith-applied.png').exists(), 'Applied gunsmith screenshot')

@@ -11,7 +11,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
-parser.add_argument('task', choices=['weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
+parser.add_argument('task', choices=['gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
 parser.add_argument('--tag', required=True)
 parser.add_argument('--store', type=Path, help='Existing store directory; only for recover-existing')
 parser.add_argument('--verify-profile')
@@ -22,7 +22,9 @@ out = ROOT / 'Saved/Extraction' / args.tag
 out.mkdir(parents=True, exist_ok=False)
 command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor-Cmd.exe'), str(ROOT / 'BrokenEdge.uproject'),
            '-unattended', '-nosplash', '-nosound', '-NoLoadingScreen', '-NullRHI', '-abslog=' + str(out / 'Editor.log')]
-if args.task == 'weapon-names':
+if args.task == 'gunsmith-assets':
+    command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/configure_gunsmith.py')]
+elif args.task == 'weapon-names':
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/configure_weapon_mechanics.py')]
 elif args.task in ['north-import', 'phase7a-assets', 'phase7a-audit']:
     script = {'north-import': 'Scripts/SpaceCenter/import_sample.py', 'phase7a-assets': 'Scripts/Extraction/prepare_phase7a.py', 'phase7a-audit': 'Scripts/Extraction/audit_phase7a.py'}[args.task]
@@ -72,6 +74,8 @@ passed = metadata['exit_code'] == 0 and 'Fatal error:' not in text and 'Tracebac
 if args.task in ['north-import', 'phase7a-assets', 'phase7a-audit']:
     marker = {'north-import': 'SPACE_REGION_ASSETS_COMPLETE', 'phase7a-assets': 'EXTRACTION_PHASE7A_ASSETS_PREPARED', 'phase7a-audit': 'EXTRACTION_PHASE7A_AUDIT_PASSED'}[args.task]
     passed = passed and marker in text
+elif args.task == 'gunsmith-assets':
+    passed = passed and 'EXTRACTION_GUNSMITH_PREPARED' in text
 elif args.task == 'weapon-names':
     passed = passed and 'EXTRACTION_WEAPON_NAMES_PREPARED' in text
 elif args.task == 'phase6b-assets':
