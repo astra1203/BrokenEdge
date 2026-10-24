@@ -2,6 +2,7 @@
 #include "CoreMinimal.h"
 #include "Animation/AnimNodeBase.h"
 #include "BrokenEdge/Traversal/TraversalContactPose.h"
+#include "ExtractionMeleePose.h"
 #include "AnimNode_TraversalContact.generated.h"
 
 USTRUCT(BlueprintInternalUseOnly)
@@ -11,6 +12,7 @@ struct BROKENEDGE_API FAnimNode_TraversalContact : public FAnimNode_Base
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Links)
 	FPoseLink Source;
 	FTraversalContactPose Contacts;
+	FExtractionMeleePose MeleePose;
 
 	virtual void Initialize_AnyThread(const FAnimationInitializeContext& Context) override
 	{
@@ -27,9 +29,15 @@ struct BROKENEDGE_API FAnimNode_TraversalContact : public FAnimNode_Base
 	virtual void Evaluate_AnyThread(FPoseContext& Output) override
 	{
 		Source.Evaluate(Output);
+		MeleePose.Apply(Output.Pose);
 		Contacts.Apply(Output.Pose);
 	}
 
 	virtual bool HasPreUpdate() const override { return true; }
-	virtual void PreUpdate(const UAnimInstance* Instance) override { Contacts.Cache(Instance); }
+
+	virtual void PreUpdate(const UAnimInstance* Instance) override
+	{
+		Contacts.Cache(Instance);
+		MeleePose.Cache(Instance);
+	}
 };

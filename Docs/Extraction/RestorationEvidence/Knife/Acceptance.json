@@ -1,0 +1,180 @@
+{
+  "network_run": "restoration-knife-net03",
+  "result": "passed",
+  "checks": [
+    {
+      "name": "A joined LAN lobby"
+    },
+    {
+      "name": "A name replicated"
+    },
+    {
+      "name": "B joined LAN lobby"
+    },
+    {
+      "name": "B name replicated"
+    },
+    {
+      "name": "A persistent account ready"
+    },
+    {
+      "name": "B persistent account ready"
+    },
+    {
+      "name": "All players loaded in Extraction"
+    },
+    {
+      "name": "Dedicated authority and Stinger pawns"
+    },
+    {
+      "name": "A equipped AK"
+    },
+    {
+      "name": "B equipped AK"
+    },
+    {
+      "name": "First-person backpack section hidden on each owner"
+    },
+    {
+      "name": "Server and owners keep both hands within two cm of weapon grips"
+    },
+    {
+      "name": "Packet simulation applied: 50ms each direction and 2 percent loss"
+    },
+    {
+      "name": "Knife slot replicates to owner and observer"
+    },
+    {
+      "name": "Knife selection preserves firearm slots"
+    },
+    {
+      "name": "Knife view released 0"
+    },
+    {
+      "name": "Knife reattached to new arms 0"
+    },
+    {
+      "name": "Knife view released 1"
+    },
+    {
+      "name": "Knife reattached to new arms 1"
+    },
+    {
+      "name": "Knife view released 2"
+    },
+    {
+      "name": "Knife reattached to new arms 2"
+    },
+    {
+      "name": "Knife view released 3"
+    },
+    {
+      "name": "Knife reattached to new arms 3"
+    },
+    {
+      "name": "Knife view released 4"
+    },
+    {
+      "name": "Knife reattached to new arms 4"
+    },
+    {
+      "name": "Knife view released 5"
+    },
+    {
+      "name": "Knife reattached to new arms 5"
+    },
+    {
+      "name": "Knife view released 6"
+    },
+    {
+      "name": "Knife reattached to new arms 6"
+    },
+    {
+      "name": "Knife view released 7"
+    },
+    {
+      "name": "Knife reattached to new arms 7"
+    },
+    {
+      "name": "Knife view released 8"
+    },
+    {
+      "name": "Knife reattached to new arms 8"
+    },
+    {
+      "name": "Knife view released 9"
+    },
+    {
+      "name": "Knife reattached to new arms 9"
+    },
+    {
+      "name": "Knife view released 10"
+    },
+    {
+      "name": "Knife reattached to new arms 10"
+    },
+    {
+      "name": "Knife view released 11"
+    },
+    {
+      "name": "Knife reattached to new arms 11"
+    },
+    {
+      "name": "Knife view released 12"
+    },
+    {
+      "name": "Knife reattached to new arms 12"
+    },
+    {
+      "name": "Knife view released 13"
+    },
+    {
+      "name": "Knife reattached to new arms 13"
+    },
+    {
+      "name": "Knife view released 14"
+    },
+    {
+      "name": "Knife reattached to new arms 14"
+    },
+    {
+      "name": "Third-person knife view released for capture"
+    },
+    {
+      "name": "First-person knife view restored after capture"
+    },
+    {
+      "name": "Knife light strike applies 35 server damage"
+    },
+    {
+      "name": "Knife does not spend rifle ammo"
+    },
+    {
+      "name": "Knife heavy strike applies 65 server damage"
+    },
+    {
+      "name": "Out-of-range knife cannot hit"
+    },
+    {
+      "name": "Wall blocks knife damage"
+    },
+    {
+      "name": "Inventory blocks knife damage"
+    },
+    {
+      "name": "Key one returns to the preserved gun"
+    },
+    {
+      "name": "Returning to gun preserves ammunition"
+    }
+  ],
+  "rendered_clients": 2,
+  "lag": true,
+  "pie_run": "restoration-knife-pie01",
+  "build_run": "restoration-knife-build04",
+  "source_sha256": {
+    "Source\\BrokenEdge\\Extraction\\ExtractionMeleeComponent.cpp": "95a6f8cbffa8725dd22f8085ae5879abe4df881a7e03ad08cc29902a027b215e",
+    "Source\\BrokenEdge\\Animation\\ExtractionMeleePose.h": "43a0554b344d895a3052935944dcbd0799414c19fb1c00093be1939d8bfe51de",
+    "Scripts\\Extraction\\calibrate_knife.py": "8e8474caecdf2eb9f7d3b9716940fb42083f2c8b0b61158bfca2530efdce19b3"
+  }
+}

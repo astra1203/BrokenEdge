@@ -6,6 +6,7 @@
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Animation/AnimInstance.h"
+#include "Animation/AnimMontage.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "TimerManager.h"
@@ -87,9 +88,51 @@ void UExtractionMeleeComponent::PlayAttack_Implementation(bool Heavy)
 void UExtractionMeleeComponent::TickComponent(float Delta, ELevelTick Type, FActorComponentTickFunction* Function)
 {
 	Super::TickComponent(Delta, Type, Function);
+	RefreshPresentation();
+}
+
+void UExtractionMeleeComponent::ReleaseViewMesh()
+{
+	if (IsValid(ViewMesh)) ViewMesh->DestroyComponent();
+	ViewMesh = nullptr;
+}
+
+bool UExtractionMeleeComponent::IsViewAttached() const
+{
+	const auto* C = Character();
+	return C && IsValid(ViewMesh) && IsValid(C->GetFirstPersonMesh())
+		&& ViewMesh->GetAttachParent() == C->GetFirstPersonMesh()
+		&& ViewMesh->GetAttachSocketName() == TEXT("RightHand");
+}
+
+void UExtractionMeleeComponent::RestoreViewAttack()
+{
+	auto* C = Character();
+	if (!C || !Active || !IsValid(C->GetFirstPersonMesh())) return;
+	auto* Body = C->GetMesh()->GetAnimInstance();
+	auto* View = C->GetFirstPersonMesh()->GetAnimInstance();
+	if (!Body || !View) return;
+	for (bool Heavy : {false, true})
+	{
+		auto* BodyAction = Heavy ? HeavyBody.Get() : LightBody.Get();
+		auto* ViewAction = Heavy ? HeavyView.Get() : LightView.Get();
+		if (!BodyAction || !ViewAction || !Body->Montage_IsPlaying(BodyAction)) continue;
+		const float Scale = ViewAction->GetPlayLength() / FMath::Max(BodyAction->GetPlayLength(), .01f);
+		View->Montage_Play(ViewAction, Scale * Body->Montage_GetPlayRate(BodyAction),
+		                   EMontagePlayReturnType::MontageLength, Body->Montage_GetPosition(BodyAction) * Scale);
+		break;
+	}
+}
+
+void UExtractionMeleeComponent::RefreshPresentation()
+{
 	auto* C = Character();
 	if (!C) return;
-	if (C->HasAuthority() && Active && !C->GetExtractionCombat()->CanAct()) Active = false;
+	if (C->HasAuthority() && Active && !C->GetExtractionCombat()->CanAct())
+	{
+		Active = false;
+		GetWorld()->GetTimerManager().ClearTimer(StrikeTimer);
+	}
 	auto* Gun = C->GetEquippedWeapon();
 	if (HiddenGun.IsValid() && (HiddenGun != Gun || !Active)) HiddenGun->SetActorHiddenInGame(false);
 	HiddenGun = Active ? Gun : nullptr;
@@ -102,12 +145,15 @@ void UExtractionMeleeComponent::TickComponent(float Delta, ELevelTick Type, FAct
 		WorldMesh->SetSkeletalMeshAsset(Mesh);
 		WorldMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		WorldMesh->SetCanEverAffectNavigation(false);
-		WorldMesh->SetRelativeTransform(HandOffset);
+		WorldMesh->SetRelativeTransform(BodyGripCorrection * HandOffset);
 		WorldMesh->RegisterComponent();
 	}
 	WorldMesh->SetVisibility(Active && !C->IsDefeated());
 	WorldMesh->SetOwnerNoSee(C->IsLocallyControlled() && C->IsFirstPersonView());
-	if (!ViewMesh && C->GetFirstPersonMesh())
+	// The dedicated arms are destroyed on every return to third person.
+	// A surviving knife component must never retain that obsolete parent.
+	if (ViewMesh && (!IsViewAttached() || !C->IsFirstPersonView())) ReleaseViewMesh();
+	if (!ViewMesh && IsValid(C->GetFirstPersonMesh()) && C->IsFirstPersonView())
 	{
 		ViewMesh = NewObject<USkeletalMeshComponent>(C);
 		ViewMesh->SetupAttachment(C->GetFirstPersonMesh(), TEXT("RightHand"));
@@ -117,8 +163,10 @@ void UExtractionMeleeComponent::TickComponent(float Delta, ELevelTick Type, FAct
 		ViewMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		ViewMesh->SetCastShadow(false);
 		ViewMesh->SetCanEverAffectNavigation(false);
-		ViewMesh->SetRelativeTransform(HandOffset);
+		ViewMesh->SetRelativeTransform(ViewGripCorrection * HandOffset);
 		ViewMesh->RegisterComponent();
+		ViewMesh->AddTickPrerequisiteComponent(C->GetFirstPersonMesh());
+		RestoreViewAttack();
 	}
 	if (ViewMesh)
 		ViewMesh->SetVisibility(
@@ -130,6 +178,6 @@ void UExtractionMeleeComponent::EndPlay(const EEndPlayReason::Type Reason)
 	GetWorld()->GetTimerManager().ClearTimer(StrikeTimer);
 	if (HiddenGun.IsValid()) HiddenGun->SetActorHiddenInGame(false);
 	if (WorldMesh) WorldMesh->DestroyComponent();
-	if (ViewMesh) ViewMesh->DestroyComponent();
+	ReleaseViewMesh();
 	Super::EndPlay(Reason);
 }

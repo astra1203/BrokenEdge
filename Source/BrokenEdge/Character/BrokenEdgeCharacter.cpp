@@ -457,8 +457,10 @@ void ABrokenEdgeCharacter::NotifyControllerChanged()
 // Called to bind functionality to input
 void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	PlayerInputComponent->BindAction(TEXT("HoldBreath"), IE_Pressed, ExtractionCombat.Get(), &UExtractionCombatComponent::HoldBreathPressed);
-	PlayerInputComponent->BindAction(TEXT("HoldBreath"), IE_Released, ExtractionCombat.Get(), &UExtractionCombatComponent::HoldBreathReleased);
+	PlayerInputComponent->BindAction(TEXT("HoldBreath"), IE_Pressed, ExtractionCombat.Get(),
+	                                 &UExtractionCombatComponent::HoldBreathPressed);
+	PlayerInputComponent->BindAction(TEXT("HoldBreath"), IE_Released, ExtractionCombat.Get(),
+	                                 &UExtractionCombatComponent::HoldBreathReleased);
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 
@@ -565,6 +567,7 @@ void ABrokenEdgeCharacter::SetFirstPersonView(bool bEnabled)
 	else
 	{
 		FirstPersonSourceWeapon = nullptr;
+		Melee->ReleaseViewMesh();
 		if (FirstPersonWeaponMesh)
 		{
 			FirstPersonWeaponMesh->DestroyComponent();
@@ -596,6 +599,7 @@ void ABrokenEdgeCharacter::SetFirstPersonView(bool bEnabled)
 
 	bFirstPersonView = bEnabled;
 	RefreshFirstPersonWorldWeapons();
+	Melee->RefreshPresentation();
 }
 
 void ABrokenEdgeCharacter::TrackFirstPersonWorldWeapon(AWeapon* Weapon)
@@ -770,20 +774,22 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 			FTransform Aim = GetViewWeaponFit().Aim;
 			if (Weapon) Aim.AddToTranslation(Weapon->EquipmentAimOffset());
 			ViewWeaponTarget.Blend(GetViewWeaponFit().Hip, Aim, ExtractionCombat->GetAimAlpha());
-			ViewWeaponTarget.SetRotation(ViewWeaponTarget.GetRotation() * ExtractionCombat->GetVisualKick().Quaternion());
+			ViewWeaponTarget.SetRotation(
+				ViewWeaponTarget.GetRotation() * ExtractionCombat->GetVisualKick().Quaternion());
 		}
 		else
 		{
-		ViewWeaponTarget.SetLocation(FMath::VInterpTo(ViewWeaponTarget.GetLocation(), Target.GetLocation(),
-		                                              GetWorld()->GetDeltaSeconds(), FirstPersonAimInterpSpeed));
-		ViewWeaponTarget.SetRotation(FMath::QInterpTo(ViewWeaponTarget.GetRotation(), Target.GetRotation(),
-		                                              GetWorld()->GetDeltaSeconds(), FirstPersonAimInterpSpeed));
+			ViewWeaponTarget.SetLocation(FMath::VInterpTo(ViewWeaponTarget.GetLocation(), Target.GetLocation(),
+			                                              GetWorld()->GetDeltaSeconds(), FirstPersonAimInterpSpeed));
+			ViewWeaponTarget.SetRotation(FMath::QInterpTo(ViewWeaponTarget.GetRotation(), Target.GetRotation(),
+			                                              GetWorld()->GetDeltaSeconds(), FirstPersonAimInterpSpeed));
 		}
 	}
 	if (!IsTraversing()) SyncFirstPersonAction();
-	if (FirstPersonWeaponMesh) FirstPersonWeaponMesh->SetVisibility(
-		Weapon && !bDefeated && !IsTraversing() && !Melee->Active, true);
-	DedicatedFirstPersonMesh->SetVisibility((Weapon || IsTraversing()) && !bDefeated, false);
+	if (FirstPersonWeaponMesh)
+		FirstPersonWeaponMesh->SetVisibility(
+			Weapon && !bDefeated && !IsTraversing() && !Melee->Active, true);
+	DedicatedFirstPersonMesh->SetVisibility((Weapon || Melee->Active || IsTraversing()) && !bDefeated, false);
 }
 
 bool ABrokenEdgeCharacter::UsesFirstPersonWeaponFit() const
@@ -1049,7 +1055,8 @@ void ABrokenEdgeCharacter::PlaySwapMontage()
 		float Rate = 1;
 		if (ExtractionCombat->IsEnabled() && ExtractionCombat->GetWeaponStats().IsValid() && Combat->SecondaryWeapon)
 			if (const auto* Next = WeaponMechanics::Find(Combat->SecondaryWeapon->ExtractionDefinition))
-				Rate = GetSwapMontage()->GetPlayLength() / FMath::Max(.1f, ExtractionCombat->GetWeaponStats().Unequip + Next->Equip);
+				Rate = GetSwapMontage()->GetPlayLength() / FMath::Max(
+					.1f, ExtractionCombat->GetWeaponStats().Unequip + Next->Equip);
 		AnimInstance->Montage_Play(GetSwapMontage(), Rate);
 		PlayFirstPersonMontage(GetViewSwapMontage(), GetSwapMontage());
 	}
@@ -1117,8 +1124,14 @@ void ABrokenEdgeCharacter::PlayReloadMontage()
 	{
 		const auto& Stats = ExtractionCombat->GetWeaponStats();
 		const int32 Section = GetReloadMontage()->GetSectionIndex(SectionName);
-		const float Length = Section != INDEX_NONE ? GetReloadMontage()->GetSectionLength(Section) : GetReloadMontage()->GetPlayLength();
-		AnimInstance->Montage_SetPlayRate(GetReloadMontage(), Length / FMath::Max(.1f, Combat->EquippedWeapon->IsEmpty() ? Stats.EmptyReload : Stats.Reload));
+		const float Length = Section != INDEX_NONE
+			                     ? GetReloadMontage()->GetSectionLength(Section)
+			                     : GetReloadMontage()->GetPlayLength();
+		AnimInstance->Montage_SetPlayRate(GetReloadMontage(),
+		                                  Length / FMath::Max(
+			                                  .1f, Combat->EquippedWeapon->IsEmpty()
+				                                       ? Stats.EmptyReload
+				                                       : Stats.Reload));
 	}
 
 	PlayFirstPersonMontage(GetViewReloadMontage(), GetReloadMontage(), SectionName);

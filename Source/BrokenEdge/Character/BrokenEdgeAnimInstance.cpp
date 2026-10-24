@@ -4,6 +4,7 @@
 #include "BrokenEdgeAnimInstance.h"
 
 #include "BrokenEdgeCharacter.h"
+#include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 #include "BrokenEdge/BrokenEdgeTypes/CombatState.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -46,8 +47,8 @@ void UBrokenEdgeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	bIsInAir = BrokenEdgeCharacter->GetCharacterMovement()->IsFalling(); // 是否在空中
 	bIsAccelerating = BrokenEdgeCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0.f; // 是否在加速
 
-	bWeaponEquipped = BrokenEdgeCharacter->IsWeaponEquipped(); // 是否装备武器
-	EquippedWeapon = BrokenEdgeCharacter->GetEquippedWeapon(); // 当前装备的武器
+	bWeaponEquipped = BrokenEdgeCharacter->IsWeaponEquipped() && !BrokenEdgeCharacter->Melee->Active;
+	EquippedWeapon = BrokenEdgeCharacter->Melee->Active ? nullptr : BrokenEdgeCharacter->GetEquippedWeapon();
 
 	bIsCrouched = BrokenEdgeCharacter->bIsCrouched; // 是否蹲伏
 	bAiming = BrokenEdgeCharacter->IsAiming(); // 是否瞄准中

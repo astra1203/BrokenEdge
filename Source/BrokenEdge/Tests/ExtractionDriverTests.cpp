@@ -344,7 +344,8 @@ public:
 					auto* Combat = Pawn->GetExtractionCombat();
 					const FString Kind = Command->GetStringField(TEXT("kind"));
 					FVector End = Pawn->GetActorLocation() + FVector(0, 0, 8000);
-					if (Kind == TEXT("version")) Combat->ServerRequestShotVersioned(++Combat->LocalShotId, Pawn->GetEquippedWeapon(), End, 0);
+					if (Kind == TEXT("version")) Combat->ServerRequestShotVersioned(
+						++Combat->LocalShotId, Pawn->GetEquippedWeapon(), End, 0);
 					else if (Kind == TEXT("duplicate")) Combat->ServerRequestShot(0, Pawn->GetEquippedWeapon(), End);
 					else if (Kind == TEXT("foreign"))
 					{
@@ -539,8 +540,9 @@ public:
 				else if (Op == TEXT("retry_loadout") && World->GetNetMode() != NM_Client)
 				{
 					if (auto* Target = FindPawn(World, Command->GetStringField(TEXT("target"))))
-						if (auto* State = Target->GetPlayerState<AExtractionPlayerState>()) State->Inventory->
-							InitializeLoadout();
+						if (auto* State = Target->GetPlayerState<AExtractionPlayerState>())
+							State->Inventory->
+							       InitializeLoadout();
 				}
 				else if (Op == TEXT("screenshot") && PC)
 				{
@@ -1216,6 +1218,7 @@ private:
 				{
 					Player->SetNumberField(TEXT("health"), Character->GetHealth());
 					Player->SetBoolField(TEXT("knife_active"), Character->Melee->Active);
+					Player->SetBoolField(TEXT("knife_view_attached"), Character->Melee->IsViewAttached());
 					Player->SetBoolField(TEXT("bleeding"), Character->GetExtractionHealth()->Bleeding);
 					Player->SetBoolField(TEXT("fracture"), Character->GetExtractionHealth()->LegFracture);
 					Player->SetNumberField(

@@ -32,6 +32,17 @@ public:
 	TObjectPtr<UAnimMontage> HeavyBody;
 	UPROPERTY(EditAnywhere)
 	FTransform HandOffset;
+	/** Additional corrections are independent for each skeleton; preserve existing authored offsets. */
+	UPROPERTY(EditAnywhere)
+	FTransform ViewGripCorrection;
+	UPROPERTY(EditAnywhere)
+	FTransform BodyGripCorrection;
+	/** Local arm/finger transforms sampled from the retargeted third-person knife idle. */
+	UPROPERTY(EditAnywhere)
+	TMap<FName, FTransform> BodyHoldPose;
+	void RefreshPresentation();
+	void ReleaseViewMesh();
+	bool IsViewAttached() const;
 	UFUNCTION(Server, Reliable)
 	void Select(bool Knife, bool SwapGun = false);
 	UFUNCTION(Server, Reliable)
@@ -42,6 +53,7 @@ private:
 	class ABrokenEdgeCharacter* Character() const;
 	bool CanAct() const;
 	void Strike();
+	void RestoreViewAttack();
 	UFUNCTION(NetMulticast, Reliable)
 	void PlayAttack(bool Heavy);
 	UPROPERTY(Transient)

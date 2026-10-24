@@ -13,6 +13,12 @@
 #include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
 #include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
 #include "BrokenEdge/Weapon/Weapon.h"
+#include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Animation/AnimInstance.h"
+#include "Animation/AnimMontage.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputAction.h"
 
 class FWeaponPIESequence : public IAutomationLatentCommand
 {
@@ -35,6 +41,10 @@ public:
 		auto* C = PC ? Cast<ABrokenEdgeCharacter>(PC->GetPawn()) : nullptr;
 		if (!C || !C->GetEquippedWeapon() || !C->GetExtractionCombat()->GetWeaponStats().IsValid()) return false;
 		auto* Mechanics = C->GetExtractionCombat();
+		auto* Input = PC->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+		auto* Toggle = LoadObject<UInputAction>(
+			nullptr, TEXT("/Game/Input/Actions/IA_ToggleCameraView.IA_ToggleCameraView"));
+		Input->InjectInputForAction(Toggle, FInputActionValue(false), {}, {});
 		if (Step == 2 && Mechanics->GetBreathResumeTime() > W->GetTimeSeconds()) SawExhaustion = true;
 		auto Key = [&](FKey K, bool Down)
 		{
@@ -150,7 +160,60 @@ public:
 			                                      true, false);
 			Next();
 		}
-		else if (Step == 10 && Now - StepAt > 2) return true;
+		else if (Step == 10 && Now - StepAt > 2)
+		{
+			Key(EKeys::Three, true);
+			Next();
+		}
+		else if (Step == 11 && Now - StepAt > .3)
+		{
+			Key(EKeys::Three, false);
+			Test->TestTrue(TEXT("PIE knife selected by input"), C->Melee->Active);
+			Next();
+		}
+		else if (Step == 12 && Now - StepAt > .1)
+		{
+			Test->TestEqual(
+				TEXT("PIE knife parent follows recreated arms"), C->Melee->IsViewAttached(), C->IsFirstPersonView());
+			StepAt = Now;
+			if (KnifeSwitches++ == 30) Next();
+			else Input->InjectInputForAction(Toggle, FInputActionValue(true), {}, {});
+		}
+		else if (Step == 13)
+		{
+			Key(EKeys::RightMouseButton, true);
+			Next();
+		}
+		else if (Step == 14 && Now - StepAt > .1)
+		{
+			Key(EKeys::RightMouseButton, false);
+			Input->InjectInputForAction(Toggle, FInputActionValue(true), {}, {});
+			Next();
+		}
+		else if (Step == 15 && Now - StepAt > .1)
+		{
+			Test->TestFalse(TEXT("PIE attack switched to third person"), C->IsFirstPersonView());
+			Input->InjectInputForAction(Toggle, FInputActionValue(true), {}, {});
+			Next();
+		}
+		else if (Step == 16 && Now - StepAt > .1)
+		{
+			Test->TestTrue(TEXT("PIE knife attack remains attached after view recreation"), C->Melee->IsViewAttached());
+			Test->TestTrue(TEXT("PIE recreated arms resume heavy attack"), C->GetFirstPersonMesh()
+			               && C->GetFirstPersonMesh()->GetAnimInstance()->Montage_IsPlaying(C->Melee->HeavyView));
+			Next();
+		}
+		else if (Step == 17 && Now - StepAt > 1.5)
+		{
+			Key(EKeys::One, true);
+			Next();
+		}
+		else if (Step == 18 && Now - StepAt > .3)
+		{
+			Key(EKeys::One, false);
+			Test->TestFalse(TEXT("PIE returns from knife to firearm"), C->Melee->Active);
+			return true;
+		}
 		return false;
 	}
 
@@ -158,6 +221,7 @@ private:
 	FAutomationTestBase* Test;
 	double Started, StepAt;
 	int32 Step = 0;
+	int32 KnifeSwitches = 0;
 	float Breath = 0;
 	bool SawExhaustion = false;
 	uint32 Shots = 0;

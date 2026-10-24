@@ -1,0 +1,24 @@
+{
+  "body_idle": "/Game/Extraction/Weapons/Knife/Animations/Corrected/MappedV4/1c8472c3/Melee_M_Knife_FairbairnSykes_3P_Idle_Pose.Melee_M_Knife_FairbairnSykes_3P_Idle_Pose",
+  "source": "可用资源\\DeltaForce\\Content\\Models\\Weapons\\Melees\\Knife\\Knife_FairbairnSykes_001\\ANI\\3P\\Melee_M_Knife_FairbairnSykes_3P_Idle_Pose.psa",
+  "characters": [
+    {
+      "blueprint": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter.BP_StingerCharacter",
+      "offsets": {
+        "view_grip_correction": "<Struct 'Transform' (address-omitted) {rotation: {x: 0.176278, y: 0.261448, z: 0.710062, w: 0.629590}, translation: {x: -6.956288, y: -2.424084, z: -1.103808}, scale3d: {x: 1.000001, y: 1.000000, z: 0.999999}}>",
+        "body_source": "same-skeleton 1P hand-local grip; 3P IK root is unanimated",
+        "body_grip_correction": "<Struct 'Transform' (address-omitted) {rotation: {x: 0.176278, y: 0.261448, z: 0.710062, w: 0.629590}, translation: {x: -6.956288, y: -2.424084, z: -1.103808}, scale3d: {x: 1.000001, y: 1.000000, z: 0.999999}}>"
+      },
+      "hold_bones": 47
+    },
+    {
+      "blueprint": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired.BP_StingerCharacter_Repaired",
+      "offsets": {
+        "view_grip_correction": "<Struct 'Transform' (address-omitted) {rotation: {x: 0.176278, y: 0.261448, z: 0.710062, w: 0.629590}, translation: {x: -6.956288, y: -2.424084, z: -1.103808}, scale3d: {x: 1.000001, y: 1.000000, z: 0.999999}}>",
+        "body_source": "same-skeleton 1P hand-local grip; 3P IK root is unanimated",
+        "body_grip_correction": "<Struct 'Transform' (address-omitted) {rotation: {x: 0.176278, y: 0.261448, z: 0.710062, w: 0.629590}, translation: {x: -6.956288, y: -2.424084, z: -1.103808}, scale3d: {x: 1.000001, y: 1.000000, z: 0.999999}}>"
+      },
+      "hold_bones": 47
+    }
+  ]
+}
