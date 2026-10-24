@@ -1,4 +1,5 @@
 #include "ExtractionStashWidget.h"
+#include "ExtractionUIStyle.h"
 #include "ExtractionGunsmith.h"
 #include "ExtractionAccountComponent.h"
 #include "GameFramework/PlayerController.h"
@@ -6,6 +7,7 @@
 #include "Rendering/DrawElements.h"
 #include "Styling/CoreStyle.h"
 #include "Input/Reply.h"
+#include "Framework/Application/SlateApplication.h"
 
 namespace
 {
@@ -58,17 +60,18 @@ public:
 	{
 		const auto* A = Account();
 		if (!A) return Layer;
-		const float Scale = FMath::Min(G.GetLocalSize().X / 1280, G.GetLocalSize().Y / 720);
+		const float Scale = ExtractionUIStyle::Scale(G);
+        const FVector2D CanvasOffset = ExtractionUIStyle::Offset(G);
 		auto Box = [&](FVector2D P, FVector2D S, FLinearColor C, int32 Z = 0)
 		{
-			FSlateDrawElement::MakeBox(Draw, Layer + Z, G.ToPaintGeometry(S * Scale, FSlateLayoutTransform(P * Scale)),
+			FSlateDrawElement::MakeBox(Draw, Layer + Z, G.ToPaintGeometry(S * Scale, FSlateLayoutTransform(CanvasOffset + P * Scale)),
 			                           FCoreStyle::Get().GetBrush("WhiteBrush"), ESlateDrawEffect::None, C);
 		};
 		auto Text = [&](FVector2D P, const FString& T, int32 Font = 16, int32 Z = 1)
 		{
 			FSlateDrawElement::MakeText(Draw, Layer + Z,
 			                            G.ToPaintGeometry(FVector2D(1100, 60) * Scale,
-			                                              FSlateLayoutTransform(P * Scale)), T,
+			                                              FSlateLayoutTransform(CanvasOffset + P * Scale)), T,
 			                            FCoreStyle::GetDefaultFontStyle(
 				                            "Regular", FMath::Max(8, FMath::RoundToInt(Font * Scale))),
 			                            ESlateDrawEffect::None, FLinearColor::White);
@@ -98,13 +101,14 @@ public:
 				if (Dragging && Selected == I.Id) continue;
 				const auto* D = UExtractionItemDefinition::Get(I.Definition);
 				const FVector2D P = Origin(I, Side), S = Size(I);
-				Box(P + FVector2D(1, 1), S - FVector2D(3, 3),
-				    I.Definition == TEXT("AK") ? FLinearColor(.30, .31, .24) : FLinearColor(.16, .32, .34));
+				Box(P + FVector2D(1, 1), S - FVector2D(3, 3), FLinearColor(.035f, .055f, .06f));
+				Box(P + FVector2D(1, 1), FVector2D(S.X - 3, 2), ExtractionUIStyle::Rarity(D ? D->DisplayRarity : 0), 1);
+				const bool HasIcon = ExtractionUIStyle::Icon(Draw, Layer + 1, G, P + FVector2D(3, 3),
+				                                             S - FVector2D(6, 17), Scale, D);
 				const FString Label = D ? D->Label.ToString() : I.Definition.ToString();
-				Text(P + FVector2D(4, 4),
-				     S.X < 75 ? (I.Definition == TEXT("Ammo") ? TEXT("弹药") : Label.Left(2)) : Label,
-				     S.X < 75 ? 11 : 13);
-				Text(P + FVector2D(4, 21), ExtractionItems::Details(I), 11);
+				if (!HasIcon) Text(P + FVector2D(4, 4), S.X < 75 ? Label.Left(2) : Label.Left(12), S.X < 75 ? 10 : 12);
+				Text(P + FVector2D(4, S.Y - 15),
+				     I.Slot >= 0 ? Label.Left(12) : FString::Printf(TEXT("×%d"), I.Quantity), S.X < 75 ? 9 : 11, 2);
 			}
 		}
 		Text({660, 425}, FString::Printf(TEXT("溢出领取区 · %d 件（点击领取到仓库，滚轮翻页）"), A->Profile.Overflow.Num()), 14);
@@ -149,8 +153,9 @@ public:
 			const TCHAR* Labels[] = {TEXT("快捷转移"), TEXT("装备到手持槽"), TEXT("装备到背负槽"), TEXT("卸下到背包"), TEXT("拆分数量")};
 			for (int32 I = 0; I < 5; ++I) Text(MenuAt + FVector2D(10, 5 + I * 31), Labels[I], 15, 6);
 			const auto Actions = EquipmentActions();
-			for (int32 I = 0; I < Actions.Num(); ++I) Text(MenuAt + FVector2D(10, 5 + (I + 5) * 31), Actions[I].Label,
-			                                               14, 6);
+			for (int32 I = 0; I < Actions.Num(); ++I)
+				Text(MenuAt + FVector2D(10, 5 + (I + 5) * 31), Actions[I].Label,
+				     14, 6);
 		}
 		if (Splitting)
 		{
@@ -203,7 +208,9 @@ public:
 						                         [Weak, Side]
 						                         {
 							                         const auto P = Weak.Pin();
-							                         const auto* C = P && P->Owner.IsValid() && P->Owner->IsInViewport() ? P->Container(Side) : nullptr;
+							                         const auto* C = P && P->Owner.IsValid() && P->Owner->IsInViewport()
+								                                         ? P->Container(Side)
+								                                         : nullptr;
 							                         return C ? *C : FExtractionContainer();
 						                         },
 						                         [Weak, Side](const FExtractionItemRequest& Move)
@@ -376,8 +383,7 @@ private:
 
 	FVector2D Position(const FGeometry& G, const FPointerEvent& E) const
 	{
-		return G.AbsoluteToLocal(E.GetScreenSpacePosition()) / FMath::Max(
-			.1f, FMath::Min(G.GetLocalSize().X / 1280, G.GetLocalSize().Y / 720));
+		return (G.AbsoluteToLocal(E.GetScreenSpacePosition()) - ExtractionUIStyle::Offset(G)) / ExtractionUIStyle::Scale(G);
 	}
 
 	EExtractionStorageSide OtherSide() const
@@ -418,6 +424,11 @@ UExtractionAccountComponent* UExtractionStashWidget::Account() const
 TSharedRef<SWidget> UExtractionStashWidget::RebuildWidget()
 {
 	return SAssignNew(Panel, SExtractionStashPanel).Owner(this);
+}
+
+void UExtractionStashWidget::FocusPanel()
+{
+	if (Panel.IsValid()) FSlateApplication::Get().SetKeyboardFocus(Panel, EFocusCause::SetDirectly);
 }
 
 void UExtractionStashWidget::ReleaseSlateResources(bool Children)

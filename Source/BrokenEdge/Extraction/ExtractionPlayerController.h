@@ -37,6 +37,7 @@ public:
 	void HealAbility();
 	void SmokeAbility();
 	void ToggleInventory();
+	void ToggleTacticalMap();
 	void SelectKnife();
 	void SelectHeldGun();
 	void SelectOtherGun();
@@ -59,6 +60,8 @@ public:
 	uint32 ItemResultSequence = 0;
 
 private:
+	UPROPERTY(Transient)
+	TObjectPtr<class UExtractionTacticalMap> TacticalMap;
 	bool bMenuOpen = false;
 	bool bLeaving = false;
 	uint32 LocalItemSequence = 0;

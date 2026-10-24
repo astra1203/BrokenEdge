@@ -68,6 +68,13 @@ class BROKENEDGE_API UExtractionMapDefinition : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	/** World-space floor rectangles from restored geometry, two corners per rectangle. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FVector2D> FloorBounds;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector2D OverviewMin = FVector2D(-12000,-12000);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector2D OverviewMax = FVector2D(12000,12000);
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName MapId;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

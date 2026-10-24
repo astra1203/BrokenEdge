@@ -25,6 +25,7 @@
 #include "InputKeyEventArgs.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/Button.h"
+#include "BrokenEdge/UI/LobbyShowcase.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -820,6 +821,15 @@ private:
 				if (!Store->Commit(Candidate)) Error = Store->Error;
 			}
 		}
+		else if (Op == TEXT("lobby_button") && Controller)
+		{
+			TArray<UUserWidget*> Widgets;
+			UWidgetBlueprintLibrary::GetAllWidgetsOfClass(World, Widgets, ULobbyWidget::StaticClass(), true);
+			if (Widgets.Num() == 1)
+				if (auto* Button = Cast<UButton>(
+					Widgets[0]->GetWidgetFromName(FName(*Command->GetStringField(TEXT("name"))))))
+					if (Button->GetIsEnabled()) Button->OnClicked.Broadcast();
+		}
 		else if (Op == TEXT("stash_ui") && Controller)
 		{
 			TArray<UUserWidget*> Widgets;
@@ -996,9 +1006,10 @@ private:
 			const auto Viewport = World->GetGameViewport()->GetGameViewportWidget();
 			if (!Viewport.IsValid()) return true;
 			const FGeometry Geometry = Viewport->GetCachedGeometry();
-			const FVector2D P = Geometry.LocalToAbsolute(FVector2D(
-				Command->GetNumberField(TEXT("x")) / 1280 * Geometry.GetLocalSize().X,
-				Command->GetNumberField(TEXT("y")) / 720 * Geometry.GetLocalSize().Y));
+			const float UIScale = FMath::Min(Geometry.GetLocalSize().X / 1280, Geometry.GetLocalSize().Y / 720);
+			const FVector2D UIOffset = (Geometry.GetLocalSize() - FVector2D(1280, 720) * UIScale) * .5f;
+			const FVector2D P = Geometry.LocalToAbsolute(UIOffset + FVector2D(
+				Command->GetNumberField(TEXT("x")), Command->GetNumberField(TEXT("y"))) * UIScale);
 			FString Action, Button;
 			Command->TryGetStringField(TEXT("action"), Action);
 			Command->TryGetStringField(TEXT("button"), Button);
@@ -1071,6 +1082,20 @@ private:
 	void WriteState(UWorld* World, APlayerController* PC)
 	{
 		auto State = MakeShared<FJsonObject>();
+		TArray<TSharedPtr<FJsonValue>> VisibleWidgets;
+		TArray<UUserWidget*> Widgets;
+		UWidgetBlueprintLibrary::GetAllWidgetsOfClass(World, Widgets, UUserWidget::StaticClass(), true);
+		for (auto* Widget : Widgets)
+			if (Widget->IsInViewport() && Widget->IsVisible())
+				VisibleWidgets.Add(MakeShared<FJsonValueString>(Widget->GetClass()->GetName()));
+		State->SetArrayField(TEXT("visible_widgets"), VisibleWidgets);
+		int32 Showcases = 0;
+		for (TActorIterator<ALobbyShowcase> It(World); It; ++It)
+		{
+			++Showcases;
+			State->SetStringField(TEXT("lobby_weapon"), It->GetHeldDefinition().ToString());
+		}
+		State->SetNumberField(TEXT("lobby_showcases"), Showcases);
 		State->SetStringField(TEXT("role"), Role);
 		State->SetNumberField(TEXT("command"), LastCommand);
 		State->SetNumberField(TEXT("walk_index"), WalkIndex);

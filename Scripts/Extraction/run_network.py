@@ -38,9 +38,9 @@ parser.add_argument('--traversal-route', action='store_true', help='Also run the
 parser.add_argument('--traversal-lifecycle', action='store_true', help='Three-player traversal damage, death and disconnect acceptance')
 parser.add_argument('--optic-validation', action='store_true', help='Additional mounted-optic visual acceptance in the equipment scenario')
 parser.add_argument('--optic-remote-only', action='store_true', help='Stop equipment acceptance after observer mount captures; not a full combat regression')
-parser.add_argument('--resolution', choices=['1280x720', '1920x1080'], help='Rendered client size for visual acceptance')
-parser.add_argument('--scenario', choices=['loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
-parser.add_argument('--players', type=int, choices=[2, 3, 6])
+parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2560x1440', '3440x1440'], help='Rendered client size for visual acceptance')
+parser.add_argument('--scenario', choices=['lobby-ui', 'loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
+parser.add_argument('--players', type=int, choices=[1, 2, 3, 6])
 parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
 parser.add_argument('--rendered-role', choices=['A', 'B'], help='Render only this client; the other clients remain connected with NullRHI')
 parser.add_argument('--performance-route', choices=['old', 'north', 'east'], default='north')
@@ -49,6 +49,8 @@ parser.add_argument('--performance-seconds', type=int, choices=[60, 180], defaul
 parser.add_argument('--network-stats', action='store_true', help='Enable UE network byte-rate collection for a separate bandwidth capture')
 parser.add_argument('--streaming-loops', type=int, choices=[1, 2, 10], default=10)
 args = parser.parse_args()
+if args.players == 1 and args.scenario != 'lobby-ui':
+    parser.error('Single-player acceptance currently supports lobby-ui only')
 if not 1024 <= args.port <= 65535:
     parser.error('--port must be between 1024 and 65535')
 if args.traversal_lifecycle and (args.scenario!='traversal' or args.players!=3):
@@ -71,7 +73,7 @@ if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
 OUT = ROOT / 'Saved/Extraction' / args.tag
 OUT.mkdir(parents=True, exist_ok=False)
 ROLES = ['A', 'B', 'C', 'D'] if args.scenario == 'four' else ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
-if args.scenario in ['scar', 'weapon-mechanics']:
+if args.scenario in ['scar', 'weapon-mechanics', 'lobby-ui']:
     ROLES = list('ABCDEF')[:args.players or 2]
 if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']:
     ROLES = list('ABCDEF')[:args.players or (6 if args.scenario in ['pvpve', 'lifecycle'] else 2 if args.scenario == 'traversal' else 3)]
@@ -287,7 +289,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['weapon-mechanics', 'knife', 'scar', 'settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
+    phase4 = args.scenario in ['lobby-ui', 'weapon-mechanics', 'knife', 'scar', 'settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
@@ -410,7 +412,7 @@ try:
             join(role)
             if args.scenario == 'identity' and role == 'A':
                 check('First profile authenticated before duplicate connection', lambda: state('A').get('account', {}).get('bound'))
-    if args.scenario not in ['load_timeout', 'identity', 'progression']:
+    if args.scenario not in ['lobby-ui', 'load_timeout', 'identity', 'progression']:
         begin_round()
     if args.lag:
         for role in processes:
@@ -428,6 +430,9 @@ try:
         check('Duplicate cannot mutate authenticated inventory', lambda: state('A')['account']['revision'] == account['revision'] and state('A')['account']['stash'] == account['stash'])
         check('Duplicate login cannot regrant starter kits', lambda: len(state('Server')['stored_results']) == 1 and sum(i['quantity'] for i in state('A')['account']['stash']['items'] if i['definition'] == 'AK') == 3)
         send('B', 'screenshot', name='duplicate-profile-denied')
+    elif args.scenario == 'lobby-ui':
+        from lobby_ui_scenarios import run
+        run(globals())
     elif args.scenario == 'loot-layout':
         from loot_layout_scenarios import run
         run(globals())

@@ -1,4 +1,5 @@
 #include "ExtractionInventoryWidget.h"
+#include "ExtractionUIStyle.h"
 #include "ExtractionGunsmith.h"
 #include "ExtractionPlayerController.h"
 #include "ExtractionInteractionComponent.h"
@@ -90,11 +91,12 @@ public:
 	{
 		auto* I = Interaction();
 		if (!I || !I->CanAct()) return Layer;
-		const float Scale = FMath::Min(Geometry.GetLocalSize().X / 1280, Geometry.GetLocalSize().Y / 720);
+		const float Scale = ExtractionUIStyle::Scale(Geometry);
+        const FVector2D CanvasOffset = ExtractionUIStyle::Offset(Geometry);
 		auto Box = [&](FVector2D P, FVector2D Size, FLinearColor Color, int32 Z = 0)
 		{
 			FSlateDrawElement::MakeBox(Draw, Layer + Z,
-			                           Geometry.ToPaintGeometry(Size * Scale, FSlateLayoutTransform(P * Scale)),
+			                           Geometry.ToPaintGeometry(Size * Scale, FSlateLayoutTransform(CanvasOffset + P * Scale)),
 			                           FCoreStyle::Get().GetBrush(TEXT("WhiteBrush")), ESlateDrawEffect::None, Color);
 		};
 		auto Text = [&](FVector2D P, const FString& Label, int32 FontSize = 15,
@@ -102,7 +104,7 @@ public:
 		{
 			FSlateDrawElement::MakeText(Draw, Layer + Z,
 			                            Geometry.ToPaintGeometry(FVector2D(1100, 60) * Scale,
-			                                                     FSlateLayoutTransform(P * Scale)),
+			                                                     FSlateLayoutTransform(CanvasOffset + P * Scale)),
 			                            Label, FCoreStyle::GetDefaultFontStyle(
 				                            "Regular", FMath::Max(8, FMath::RoundToInt(FontSize * Scale))),
 			                            ESlateDrawEffect::None, Color);
@@ -177,11 +179,15 @@ public:
 					                           ? FLinearColor(.23f, .22f, .16f)
 					                           : FLinearColor(.13f, .23f, .29f);
 				Box(P, ItemSize(Item) - FVector2D(5, 5), Color);
-				FString Label = D ? D->Label.ToString() : TEXT("?");
-				Text(P + FVector2D(5, 5), Label, Item.Extent().X == 1 && Item.Slot < 0 ? 9 : 14);
-				if (D)
-					Text(P + FVector2D(5, 29), ExtractionItems::Details(Item), 12,
-					     FLinearColor(.8f, .9f, .95f));
+                Box(P, FVector2D(ItemSize(Item).X-5,2),ExtractionUIStyle::Rarity(D ? D->DisplayRarity : 0),1);
+                const FVector2D Bounds=ItemSize(Item)-FVector2D(5,5);
+                const bool HasIcon=ExtractionUIStyle::Icon(Draw,Layer+1,Geometry,P+FVector2D(4,4),Bounds-FVector2D(8,20),Scale,D);
+                const FString Label=D ? D->Label.ToString() : TEXT("?");
+                if (!HasIcon) Text(P+FVector2D(5,5),Label.Left(Item.Extent().X==1 && Item.Slot<0 ? 4 : 12),Item.Slot>=0 ? 12 : 10);
+                const FString Detail=Item.Slot<0 ? FString::Printf(TEXT("×%d"),Item.Quantity)
+                    : D && D->Kind==EExtractionItemKind::Weapon ? FString::Printf(TEXT("%s  %d/%d"),*Label,Item.Magazine,D->MagazineCapacity)
+                    : Label;
+                Text(P+FVector2D(4,Bounds.Y-16),Detail,Item.Slot>=0 ? 11 : 10,FLinearColor(.85f,.92f,.92f),2);
 			}
 		}
 		if (I->SearchEnd > 0)
@@ -385,8 +391,7 @@ private:
 
 	FVector2D Position(const FGeometry& G, const FPointerEvent& E) const
 	{
-		return G.AbsoluteToLocal(E.GetScreenSpacePosition()) / FMath::Max(
-			.1f, FMath::Min(G.GetLocalSize().X / 1280, G.GetLocalSize().Y / 720));
+		return (G.AbsoluteToLocal(E.GetScreenSpacePosition()) - ExtractionUIStyle::Offset(G)) / ExtractionUIStyle::Scale(G);
 	}
 
 	const FExtractionItem* HitItem(FVector2D P, bool& Loot) const

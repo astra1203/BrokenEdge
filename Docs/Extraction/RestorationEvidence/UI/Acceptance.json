@@ -1,0 +1,456 @@
+[
+  {
+    "run": "restoration-ui-net03",
+    "result": "passed",
+    "options": {
+      "tag": "restoration-ui-net03",
+      "loot_seed": null,
+      "packaged": false,
+      "package_root": "Packaged",
+      "port": 27777,
+      "isolated_room": true,
+      "lag": true,
+      "unacked": false,
+      "debug_hold": false,
+      "traversal_record": false,
+      "traversal_route_only": false,
+      "traversal_source_only": false,
+      "traversal_top_only": false,
+      "traversal_debug_point": "vault",
+      "traversal_route": false,
+      "traversal_lifecycle": false,
+      "optic_validation": false,
+      "optic_remote_only": false,
+      "resolution": null,
+      "scenario": "lobby-ui",
+      "players": null,
+      "rendered_clients": 2,
+      "rendered_role": null,
+      "performance_route": "north",
+      "performance_samples": 3,
+      "performance_seconds": 180,
+      "network_stats": false,
+      "streaming_loops": 10
+    },
+    "checks": [
+      "A joined LAN lobby",
+      "A name replicated",
+      "B joined LAN lobby",
+      "B name replicated",
+      "Packet simulation applied: 50ms each direction and 2 percent loss",
+      "Lobby squad switch replicates",
+      "Each client owns one local showcase and server owns none",
+      "Preview never changes stored inventory",
+      "stash opens from lobby",
+      "Scaled stash drag preserves item identity",
+      "stash closes and lobby remains",
+      "shop opens from lobby",
+      "shop closes and lobby remains",
+      "quests opens from lobby",
+      "quests closes and lobby remains",
+      "Ready state replicates",
+      "Ready cancellation replicates",
+      "Preview follows committed primary weapon",
+      "Unequip clears presentation without losing inventory",
+      "A persistent account ready",
+      "B persistent account ready",
+      "All players loaded in Extraction",
+      "Dedicated authority and Stinger pawns",
+      "A equipped AK",
+      "B equipped AK",
+      "First-person backpack section hidden on each owner",
+      "Server and owners keep both hands within two cm of weapon grips",
+      "Travel destroys presentation actors",
+      "Tactical map opens through input",
+      "Tactical map closes through input",
+      "Raid inventory closes through keyboard",
+      "All players extract through production hold timer",
+      "Returns to lobby with unlocked accounts",
+      "Return recreates exactly one local showcase"
+    ],
+    "report_sha256": "bf96d063747ac9f3fd66ab848a61d1f0ed7d91be463897faaf1f39c604e92418",
+    "screenshots": [
+      {
+        "file": "restoration-ui-net03-A-lobby-equipped.png",
+        "sha256": "3bd8d5bd72bd90a18db9c2e054b9852e788bf594eeb4c8e314b45f03a43d7a90"
+      },
+      {
+        "file": "restoration-ui-net03-A-lobby.png",
+        "sha256": "c99609374b07a480e0d84515c1609e6a8b40a852ed7789b32f8845c278f7ee6c"
+      },
+      {
+        "file": "restoration-ui-net03-A-quests.png",
+        "sha256": "12d7138435e90a176bc42f9a9a557ce5c90c2e3468b687771b40a72108bff872"
+      },
+      {
+        "file": "restoration-ui-net03-A-raid-hud.png",
+        "sha256": "77401e6c7be4ceb921d5cfae6a98e2153e03312d9441f0d18af73d9316d7440d"
+      },
+      {
+        "file": "restoration-ui-net03-A-raid-inventory.png",
+        "sha256": "2d56650b4d36ada4295e9b8723e750a8c0cd4ef423f717b9fefc2aa5e45ece74"
+      },
+      {
+        "file": "restoration-ui-net03-A-return-lobby.png",
+        "sha256": "28610a13a780314e4f56ffe6f685b713c9231a8d15a10e4af8ef74bbc4bb00cf"
+      },
+      {
+        "file": "restoration-ui-net03-A-settlement.png",
+        "sha256": "0371726782c4cb79f58d25a5d759d46273f2443ab839c1558d7fa7e6abbaec64"
+      },
+      {
+        "file": "restoration-ui-net03-A-shop.png",
+        "sha256": "af4c626ae5bf29e9011a7615d53dcac4cfc68c66755428d75a82b3b846d322b3"
+      },
+      {
+        "file": "restoration-ui-net03-A-spawn.png",
+        "sha256": "177aa75bf6cf6ad53d90364de6049179ce1bf97328727bc624b786a8d27cd60c"
+      },
+      {
+        "file": "restoration-ui-net03-A-stash.png",
+        "sha256": "9108de1f7c9c2bd6fc152a371fd4ba08bd6769474e934943b30dcaa9c11c5678"
+      },
+      {
+        "file": "restoration-ui-net03-A-tactical-map.png",
+        "sha256": "065ebf2a13ed054679517d507bff8a50ed0d7c4d9964d9762504dd3a7a53fa17"
+      }
+    ]
+  },
+  {
+    "run": "restoration-ui-1080",
+    "result": "passed",
+    "options": {
+      "tag": "restoration-ui-1080",
+      "loot_seed": null,
+      "packaged": false,
+      "package_root": "Packaged",
+      "port": 27777,
+      "isolated_room": true,
+      "lag": true,
+      "unacked": false,
+      "debug_hold": false,
+      "traversal_record": false,
+      "traversal_route_only": false,
+      "traversal_source_only": false,
+      "traversal_top_only": false,
+      "traversal_debug_point": "vault",
+      "traversal_route": false,
+      "traversal_lifecycle": false,
+      "optic_validation": false,
+      "optic_remote_only": false,
+      "resolution": "1920x1080",
+      "scenario": "lobby-ui",
+      "players": null,
+      "rendered_clients": 2,
+      "rendered_role": null,
+      "performance_route": "north",
+      "performance_samples": 3,
+      "performance_seconds": 180,
+      "network_stats": false,
+      "streaming_loops": 10
+    },
+    "checks": [
+      "A joined LAN lobby",
+      "A name replicated",
+      "B joined LAN lobby",
+      "B name replicated",
+      "Packet simulation applied: 50ms each direction and 2 percent loss",
+      "Lobby squad switch replicates",
+      "Each client owns one local showcase and server owns none",
+      "Preview never changes stored inventory",
+      "stash opens from lobby",
+      "Scaled stash drag preserves item identity",
+      "stash closes and lobby remains",
+      "shop opens from lobby",
+      "shop closes and lobby remains",
+      "quests opens from lobby",
+      "quests closes and lobby remains",
+      "Ready state replicates",
+      "Ready cancellation replicates",
+      "Preview follows committed primary weapon",
+      "Unequip clears presentation without losing inventory",
+      "A persistent account ready",
+      "B persistent account ready",
+      "All players loaded in Extraction",
+      "Dedicated authority and Stinger pawns",
+      "A equipped AK",
+      "B equipped AK",
+      "First-person backpack section hidden on each owner",
+      "Server and owners keep both hands within two cm of weapon grips",
+      "Travel destroys presentation actors",
+      "Tactical map opens through input",
+      "Tactical map closes through input",
+      "Raid inventory closes through keyboard",
+      "All players extract through production hold timer",
+      "Returns to lobby with unlocked accounts",
+      "Return recreates exactly one local showcase"
+    ],
+    "report_sha256": "d7c7874afc173f38c0b9d40bac9c866fd744768fdff3886ba5811463532cf65e",
+    "screenshots": [
+      {
+        "file": "restoration-ui-1080-A-lobby-equipped.png",
+        "sha256": "620280a8f8a877801ff073c69ecf5737a1f17614aeaff439b2c62856ec2d9164"
+      },
+      {
+        "file": "restoration-ui-1080-A-lobby.png",
+        "sha256": "5c2acad734056d1cd7e8c111bdb0786a275da142f0c53dd00b98a389e7c5cc06"
+      },
+      {
+        "file": "restoration-ui-1080-A-quests.png",
+        "sha256": "3cf6ef83303c4de1aa970b6d9340b969515a9bfd6d1d06519bc8cce829a333a7"
+      },
+      {
+        "file": "restoration-ui-1080-A-raid-hud.png",
+        "sha256": "e3f22ef3da36feaf62a0f6e7061ba5b52ec5cf76ab25aa8b923bbf64737e08df"
+      },
+      {
+        "file": "restoration-ui-1080-A-raid-inventory.png",
+        "sha256": "11635b162efe826b484a508fcd6b9f6d991037bb7af88efbda33871a1c74e8d3"
+      },
+      {
+        "file": "restoration-ui-1080-A-return-lobby.png",
+        "sha256": "430cb2b216bc37e8db836a75ec0cc159503d12fdfe4e49ee218f344028c223fe"
+      },
+      {
+        "file": "restoration-ui-1080-A-settlement.png",
+        "sha256": "22ca609c8490bd5690fb4f0a088245c20b11375017f8facee00b56d9aa6e8d61"
+      },
+      {
+        "file": "restoration-ui-1080-A-shop.png",
+        "sha256": "69cd9f2babacc354871c0d67e9bb0590c5f19717a6d0e23af2da12858dd4e1bc"
+      },
+      {
+        "file": "restoration-ui-1080-A-spawn.png",
+        "sha256": "169988bb91dc4bc1436ba32a9c7c67da694197cedf85c9e4ec0b5a5399d066d0"
+      },
+      {
+        "file": "restoration-ui-1080-A-stash.png",
+        "sha256": "dd24bf0589911e57aae5726ef4ef62b3d98828af97f54db27c6660503bcc167a"
+      },
+      {
+        "file": "restoration-ui-1080-A-tactical-map.png",
+        "sha256": "58794eefaaf8c92429647022166f5323a0c8e8a98a7c647f925cc80cdb135caa"
+      }
+    ]
+  },
+  {
+    "run": "restoration-ui-1440",
+    "result": "passed",
+    "options": {
+      "tag": "restoration-ui-1440",
+      "loot_seed": null,
+      "packaged": false,
+      "package_root": "Packaged",
+      "port": 27777,
+      "isolated_room": true,
+      "lag": true,
+      "unacked": false,
+      "debug_hold": false,
+      "traversal_record": false,
+      "traversal_route_only": false,
+      "traversal_source_only": false,
+      "traversal_top_only": false,
+      "traversal_debug_point": "vault",
+      "traversal_route": false,
+      "traversal_lifecycle": false,
+      "optic_validation": false,
+      "optic_remote_only": false,
+      "resolution": "2560x1440",
+      "scenario": "lobby-ui",
+      "players": 1,
+      "rendered_clients": 1,
+      "rendered_role": null,
+      "performance_route": "north",
+      "performance_samples": 3,
+      "performance_seconds": 180,
+      "network_stats": false,
+      "streaming_loops": 10
+    },
+    "checks": [
+      "A joined LAN lobby",
+      "A name replicated",
+      "Packet simulation applied: 50ms each direction and 2 percent loss",
+      "Each client owns one local showcase and server owns none",
+      "Preview never changes stored inventory",
+      "stash opens from lobby",
+      "Scaled stash drag preserves item identity",
+      "stash closes and lobby remains",
+      "shop opens from lobby",
+      "shop closes and lobby remains",
+      "quests opens from lobby",
+      "quests closes and lobby remains",
+      "Preview follows committed primary weapon",
+      "Unequip clears presentation without losing inventory",
+      "A persistent account ready",
+      "All players loaded in Extraction",
+      "Dedicated authority and Stinger pawns",
+      "A equipped AK",
+      "First-person backpack section hidden on each owner",
+      "Server and owners keep both hands within two cm of weapon grips",
+      "Travel destroys presentation actors",
+      "Tactical map opens through input",
+      "Tactical map closes through input",
+      "Raid inventory closes through keyboard",
+      "All players extract through production hold timer",
+      "Returns to lobby with unlocked accounts",
+      "Return recreates exactly one local showcase"
+    ],
+    "report_sha256": "357117cfc6770e64e6e9f01be75bdcc7ac8f1dfac5be2d2ec5e3d3aa6e409724",
+    "screenshots": [
+      {
+        "file": "restoration-ui-1440-A-lobby-equipped.png",
+        "sha256": "c6c47e353f2251ca969a78bac1f9a4d929e03b1df63efd72d82fb3e9a8c6e1be"
+      },
+      {
+        "file": "restoration-ui-1440-A-lobby.png",
+        "sha256": "17bc68f779a3a392f64b5ce22a2c06ee5614e08bb0524797c0c4763847642228"
+      },
+      {
+        "file": "restoration-ui-1440-A-quests.png",
+        "sha256": "7c01dc508f98a8eb452f9e00688874fb411e7e3656e86a0f712f8ca5e142fe49"
+      },
+      {
+        "file": "restoration-ui-1440-A-raid-hud.png",
+        "sha256": "9b5b184fcbccc1eedca1f168aba55fa627208fb2df122fe8124d7a0bb80b3e97"
+      },
+      {
+        "file": "restoration-ui-1440-A-raid-inventory.png",
+        "sha256": "5a3dda160ac6ed55c7042c2724a1641f496a19cd361be0e126b5d176907f084f"
+      },
+      {
+        "file": "restoration-ui-1440-A-return-lobby.png",
+        "sha256": "c4e2455f93d75757bf636779684c31baf86438662027201afe6bfb8d38f72a1c"
+      },
+      {
+        "file": "restoration-ui-1440-A-settlement.png",
+        "sha256": "93d12aca9190d2a3f14c120d3fa9c9a8caff1f0fd4bd4fbdbb773b9f5c2113fc"
+      },
+      {
+        "file": "restoration-ui-1440-A-shop.png",
+        "sha256": "c9b9d2df7514777fc51d5e5e9c2b708a1e5319bb627003cc84e1968baacdd415"
+      },
+      {
+        "file": "restoration-ui-1440-A-spawn.png",
+        "sha256": "dde9c86ebded15a416d63d7b3c15a018fd30bbf16a35e356d7eb1e56423b0eb2"
+      },
+      {
+        "file": "restoration-ui-1440-A-stash.png",
+        "sha256": "372bc738bdbb8cbbf0161b63cfd91ad6ec03cfec2274d68b0ebaf54e32e51545"
+      },
+      {
+        "file": "restoration-ui-1440-A-tactical-map.png",
+        "sha256": "cf94e9f5ea473269c023f40fe02f9633f9bf5f1421f83ca0cba94f2f0e4c049d"
+      }
+    ]
+  },
+  {
+    "run": "restoration-ui-wide",
+    "result": "passed",
+    "options": {
+      "tag": "restoration-ui-wide",
+      "loot_seed": null,
+      "packaged": false,
+      "package_root": "Packaged",
+      "port": 27777,
+      "isolated_room": true,
+      "lag": true,
+      "unacked": false,
+      "debug_hold": false,
+      "traversal_record": false,
+      "traversal_route_only": false,
+      "traversal_source_only": false,
+      "traversal_top_only": false,
+      "traversal_debug_point": "vault",
+      "traversal_route": false,
+      "traversal_lifecycle": false,
+      "optic_validation": false,
+      "optic_remote_only": false,
+      "resolution": "3440x1440",
+      "scenario": "lobby-ui",
+      "players": 1,
+      "rendered_clients": 1,
+      "rendered_role": null,
+      "performance_route": "north",
+      "performance_samples": 3,
+      "performance_seconds": 180,
+      "network_stats": false,
+      "streaming_loops": 10
+    },
+    "checks": [
+      "A joined LAN lobby",
+      "A name replicated",
+      "Packet simulation applied: 50ms each direction and 2 percent loss",
+      "Each client owns one local showcase and server owns none",
+      "Preview never changes stored inventory",
+      "stash opens from lobby",
+      "Scaled stash drag preserves item identity",
+      "stash closes and lobby remains",
+      "shop opens from lobby",
+      "shop closes and lobby remains",
+      "quests opens from lobby",
+      "quests closes and lobby remains",
+      "Preview follows committed primary weapon",
+      "Unequip clears presentation without losing inventory",
+      "A persistent account ready",
+      "All players loaded in Extraction",
+      "Dedicated authority and Stinger pawns",
+      "A equipped AK",
+      "First-person backpack section hidden on each owner",
+      "Server and owners keep both hands within two cm of weapon grips",
+      "Travel destroys presentation actors",
+      "Tactical map opens through input",
+      "Tactical map closes through input",
+      "Raid inventory closes through keyboard",
+      "All players extract through production hold timer",
+      "Returns to lobby with unlocked accounts",
+      "Return recreates exactly one local showcase"
+    ],
+    "report_sha256": "5e3fde7480defc204e28bc8bc24d730a7b31c6f527b38c24d8ae4927a220528b",
+    "screenshots": [
+      {
+        "file": "restoration-ui-wide-A-lobby-equipped.png",
+        "sha256": "0191ced30bd9a793dc238216ea8713178cea68af47d0b59464323ed153fcc5e7"
+      },
+      {
+        "file": "restoration-ui-wide-A-lobby.png",
+        "sha256": "44c7a1cf400fed373f410356e213ef5ab8c5fc64879c4840ed4654bc26f17f9f"
+      },
+      {
+        "file": "restoration-ui-wide-A-quests.png",
+        "sha256": "fc62e3fca940e9f9a35c087d285b38293146f972c01de403d1f862844e6c243b"
+      },
+      {
+        "file": "restoration-ui-wide-A-raid-hud.png",
+        "sha256": "fc637ec81bba27b7b900c49ccbe4836d1deafc0a246492b8e93ccef830315c47"
+      },
+      {
+        "file": "restoration-ui-wide-A-raid-inventory.png",
+        "sha256": "038b0f509401519e8e08c1862b0a509183f754470831bac5a3b8d389250c4ec2"
+      },
+      {
+        "file": "restoration-ui-wide-A-return-lobby.png",
+        "sha256": "ba8b660748d324af44c564b03f3848611f2ae40196551f3bfc18f6ecdb613703"
+      },
+      {
+        "file": "restoration-ui-wide-A-settlement.png",
+        "sha256": "0045d0d72ed41e6a6e266788fc7a03199877305b6f62a33ba3f39b75feb7b65f"
+      },
+      {
+        "file": "restoration-ui-wide-A-shop.png",
+        "sha256": "93ecb70620b51d459fc8c56ba3890ea6acc450a7f22a27bc62c573c5b338dad8"
+      },
+      {
+        "file": "restoration-ui-wide-A-spawn.png",
+        "sha256": "ecacd756b855b66d3227c774131cca1a6ee9bd81e6d75a2d75e728d3b7bb5ba9"
+      },
+      {
+        "file": "restoration-ui-wide-A-stash.png",
+        "sha256": "bc5b04f4a4cba1ca6216a5203ce8122a2763c5e21f0c7bb41442c6c71a04def6"
+      },
+      {
+        "file": "restoration-ui-wide-A-tactical-map.png",
+        "sha256": "ba8aea1ca50169f92caffe595055a66b00231286596e0f99de564af267b65453"
+      }
+    ]
+  }
+]

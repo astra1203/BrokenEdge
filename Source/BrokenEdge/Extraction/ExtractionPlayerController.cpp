@@ -1,4 +1,5 @@
 #include "ExtractionPlayerController.h"
+#include "ExtractionTacticalMap.h"
 #include "BrokenEdge/Traversal/ExtractionTraversalComponent.h"
 #include "ExtractionRegionStream.h"
 #include "ExtractionHealth.h"
@@ -39,6 +40,7 @@ void AExtractionPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 	InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &ThisClass::ToggleExtractionMenu);
 	InputComponent->BindKey(EKeys::Tab, IE_Pressed, this, &ThisClass::ToggleInventory);
+	InputComponent->BindKey(EKeys::M, IE_Pressed, this, &ThisClass::ToggleTacticalMap);
 	InputComponent->BindKey(EKeys::H, IE_Pressed, this, &ThisClass::UseMedical);
 	InputComponent->BindKey(EKeys::Z, IE_Pressed, this, &ThisClass::HealAbility);
 	InputComponent->BindKey(EKeys::X, IE_Pressed, this, &ThisClass::SmokeAbility);
@@ -65,6 +67,11 @@ void AExtractionPlayerController::SelectOtherGun()
 
 void AExtractionPlayerController::ToggleExtractionMenu()
 {
+	if (TacticalMap && TacticalMap->IsInViewport())
+	{
+		TacticalMap->RemoveFromParent();
+		return;
+	}
 	if (InventoryWidget && InventoryWidget->CancelDrag()) return;
 	if (auto* I = Interaction())
 	{
@@ -82,6 +89,23 @@ void AExtractionPlayerController::ToggleExtractionMenu()
 	bMenuOpen = !bMenuOpen;
 }
 
+void AExtractionPlayerController::ToggleTacticalMap()
+{
+	if (TacticalMap && TacticalMap->IsInViewport())
+	{
+		TacticalMap->RemoveFromParent();
+		return;
+	}
+	if (IsMenuOpen()) return;
+	if (auto* I = Interaction(); I && I->InventoryOpen) RequestOpenInventory(nullptr, false);
+	if (!TacticalMap) TacticalMap = CreateWidget<UExtractionTacticalMap>(this);
+	if (TacticalMap)
+	{
+		TacticalMap->SetVisibility(ESlateVisibility::HitTestInvisible);
+		TacticalMap->AddToViewport(80);
+	}
+}
+
 UExtractionInteractionComponent* AExtractionPlayerController::Interaction() const
 {
 	const auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
@@ -90,6 +114,7 @@ UExtractionInteractionComponent* AExtractionPlayerController::Interaction() cons
 
 void AExtractionPlayerController::RequestOpenInventory(AExtractionLootActor* Target, bool bOpen)
 {
+	if (bOpen && TacticalMap && TacticalMap->IsInViewport()) TacticalMap->RemoveFromParent();
 	auto* I = Interaction();
 	if (!I) return;
 	LocalInventorySession = FMath::Max(LocalInventorySession, I->Session) + 1;
@@ -110,6 +135,7 @@ void AExtractionPlayerController::ServerOpenInventory_Implementation(uint32 Sess
 
 void AExtractionPlayerController::ToggleInventory()
 {
+	if (TacticalMap && TacticalMap->IsInViewport()) TacticalMap->RemoveFromParent();
 	if (auto* I = Interaction(); I && I->CanAct() && !bMenuOpen) RequestOpenInventory(nullptr, !I->InventoryOpen);
 }
 
@@ -400,6 +426,7 @@ void AExtractionPlayerController::LocalSessionDestroyed(bool bSuccess)
 
 void AExtractionPlayerController::EndPlay(const EEndPlayReason::Type Reason)
 {
+	if (TacticalMap) TacticalMap->RemoveFromParent();
 	GetWorldTimerManager().ClearTimer(LeaveRetryTimer);
 	if (ExtractionWidget) ExtractionWidget->RemoveFromParent();
 	if (InventoryWidget) InventoryWidget->RemoveFromParent();
@@ -497,8 +524,11 @@ void UExtractionWidget::Refresh()
 	PC->GetPlayerViewPoint(Eye, View);
 	const int32 Heading = FMath::RoundToInt(FRotator::ClampAxis(View.Yaw)) % 360;
 	// Coordinate compass uses world +X as north; source-map georeferencing is separate.
-	const TCHAR* Directions[] = {TEXT("N"), TEXT("NE"), TEXT("E"), TEXT("SE"), TEXT("S"), TEXT("SW"), TEXT("W"), TEXT("NW")};
-	Compass->SetText(FText::FromString(FString::Printf(TEXT("—   %s   %03d°   —"), Directions[((Heading + 22) / 45) % 8], Heading)));
+	const TCHAR* Directions[] = {
+		TEXT("N"), TEXT("NE"), TEXT("E"), TEXT("SE"), TEXT("S"), TEXT("SW"), TEXT("W"), TEXT("NW")
+	};
+	Compass->SetText(
+		FText::FromString(FString::Printf(TEXT("—   %s   %03d°   —"), Directions[((Heading + 22) / 45) % 8], Heading)));
 	SmokeHaze->SetVisibility(AExtractionSmoke::Blocks(GetWorld(), Eye, Eye)
 		                         ? ESlateVisibility::HitTestInvisible
 		                         : ESlateVisibility::Collapsed);
@@ -540,8 +570,9 @@ void UExtractionWidget::Refresh()
 		{
 			const FString Reason = It->UnavailableReason(GS->GetServerWorldTimeSeconds());
 			ExitsText += FString::Printf(TEXT("%s\n%.0f 米 · %s\n\n"), *It->Definition.Label.ToString(),
-			                        FVector::Dist2D(PC->GetPawn()->GetActorLocation(), It->GetActorLocation()) / 100,
-			                        Reason.IsEmpty() ? TEXT("可撤离") : *Reason);
+			                             FVector::Dist2D(PC->GetPawn()->GetActorLocation(), It->GetActorLocation()) /
+			                             100,
+			                             Reason.IsEmpty() ? TEXT("可撤离") : *Reason);
 			if (PS->ExtractAt > 0 && PS->ExtractExitId == It->Definition.Id)
 			{
 				const double Remaining = FMath::Max(0.0, PS->ExtractAt - GS->GetServerWorldTimeSeconds());
@@ -553,7 +584,9 @@ void UExtractionWidget::Refresh()
 	ExitStatus->SetText(FText::FromString(ExitsText));
 	ExtractionCountdown->SetText(FText::FromString(CountdownText));
 	ExtractionProgress->SetPercent(ExitFraction);
-	ExtractionProgress->SetVisibility(CountdownText.IsEmpty() ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
+	ExtractionProgress->SetVisibility(CountdownText.IsEmpty()
+		                                  ? ESlateVisibility::Collapsed
+		                                  : ESlateVisibility::HitTestInvisible);
 	if (PC->ExtractionAccount && PC->ExtractionAccount->Profile.Result.Outcome != EExtractionOutcome::None)
 	{
 		const auto& Result = PC->ExtractionAccount->Profile.Result;
@@ -624,7 +657,8 @@ void UExtractionWidget::Refresh()
 	HealthProgress->SetVisibility(PC->GetPawn() ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
 	if (auto* ControlledCharacter = Cast<ABrokenEdgeCharacter>(PC->GetPawn()))
 	{
-		HealthProgress->SetPercent(ControlledCharacter->GetHealth() / FMath::Max(1.f, ControlledCharacter->GetMaxHealth()));
+		HealthProgress->SetPercent(
+			ControlledCharacter->GetHealth() / FMath::Max(1.f, ControlledCharacter->GetMaxHealth()));
 		VitalText = FString::Printf(TEXT("生命 %d / %d\n"),
 		                            FMath::CeilToInt(ControlledCharacter->GetHealth()),
 		                            FMath::CeilToInt(ControlledCharacter->GetMaxHealth()));

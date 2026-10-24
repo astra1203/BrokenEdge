@@ -14,21 +14,40 @@ public:
 
 protected:
 	virtual bool Initialize() override;
+	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
 private:
-	UFUNCTION() void ShopClicked();
-	UFUNCTION() void QuestsClicked();
-	UPROPERTY(Transient) TObjectPtr<class UButton> ShopButton;
-	UPROPERTY(Transient) TObjectPtr<class UButton> QuestsButton;
-	UPROPERTY(Transient) TObjectPtr<class UExtractionProgressionWidget> ProgressionWidget;
-	UFUNCTION() void StashClicked();
-	UFUNCTION() void SquadOneClicked();
-	UFUNCTION() void SquadTwoClicked();
-	UPROPERTY(Transient) TObjectPtr<class UButton> SquadOne;
-	UPROPERTY(Transient) TObjectPtr<class UButton> SquadTwo;
-	UPROPERTY(Transient) TObjectPtr<class UButton> StashButton;
-	UPROPERTY(Transient) TObjectPtr<class UExtractionStashWidget> StashWidget;
+	UPROPERTY(Transient)
+	TObjectPtr<class ALobbyShowcase> Showcase;
+	UPROPERTY(Transient)
+	TObjectPtr<class UImage> Portrait;
+	UPROPERTY(Transient)
+	TObjectPtr<class UTextBlock> Wallet;
+	UFUNCTION()
+	void ShopClicked();
+	UFUNCTION()
+	void QuestsClicked();
+	UPROPERTY(Transient)
+	TObjectPtr<class UButton> ShopButton;
+	UPROPERTY(Transient)
+	TObjectPtr<class UButton> QuestsButton;
+	UPROPERTY(Transient)
+	TObjectPtr<class UExtractionProgressionWidget> ProgressionWidget;
+	UFUNCTION()
+	void StashClicked();
+	UFUNCTION()
+	void SquadOneClicked();
+	UFUNCTION()
+	void SquadTwoClicked();
+	UPROPERTY(Transient)
+	TObjectPtr<class UButton> SquadOne;
+	UPROPERTY(Transient)
+	TObjectPtr<class UButton> SquadTwo;
+	UPROPERTY(Transient)
+	TObjectPtr<class UButton> StashButton;
+	UPROPERTY(Transient)
+	TObjectPtr<class UExtractionStashWidget> StashWidget;
 	UFUNCTION()
 	void ReadyClicked();
 	UFUNCTION()

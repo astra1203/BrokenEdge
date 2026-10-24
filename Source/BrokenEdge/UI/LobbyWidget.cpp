@@ -1,4 +1,9 @@
 #include "LobbyWidget.h"
+#include "LobbyShowcase.h"
+#include "Components/Image.h"
+#include "Components/Overlay.h"
+#include "Components/OverlaySlot.h"
+#include "Engine/TextureRenderTarget2D.h"
 
 #include "BrokenEdge/GameState/LobbyGameState.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
@@ -14,68 +19,98 @@
 
 bool ULobbyWidget::Initialize()
 {
-	if (!Super::Initialize()) return false;
-	SetIsFocusable(true);
-	UVerticalBox* Content = SessionWidgetStyle::Frame(WidgetTree);
-	SessionWidgetStyle::Line(Content, SessionWidgetStyle::Text(WidgetTree, TEXT("BROKEN EDGE  /  多人游戏"), 15));
-	SessionWidgetStyle::Line(Content, SessionWidgetStyle::Text(WidgetTree, TEXT("准备大厅"), 32));
-	RoomInfo = SessionWidgetStyle::Text(WidgetTree, TEXT("正在同步房间信息…"));
-	SessionWidgetStyle::Line(Content, RoomInfo);
-	UHorizontalBox* Modes = WidgetTree->ConstructWidget<UHorizontalBox>();
-	FreeForAllButton = SessionWidgetStyle::Button(WidgetTree, TEXT("FreeForAllButton"), TEXT("FreeForAll · 自由混战"));
-	TeamsButton = SessionWidgetStyle::Button(WidgetTree, TEXT("TeamsButton"), TEXT("Teams · 团队对抗"));
-	FreeForAllButton->OnClicked.AddUniqueDynamic(this, &ThisClass::FreeForAllClicked);
-	TeamsButton->OnClicked.AddUniqueDynamic(this, &ThisClass::TeamsClicked);
-	UHorizontalBoxSlot* FreeForAllSlot = Modes->AddChildToHorizontalBox(FreeForAllButton);
-	FreeForAllSlot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
-	FreeForAllSlot->SetPadding(FMargin(0.f, 0.f, 12.f, 0.f));
-	Modes->AddChildToHorizontalBox(TeamsButton)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
-	ExtractionButton = SessionWidgetStyle::Button(WidgetTree, TEXT("ExtractionButton"), TEXT("Extraction · 航天行动"));
-	ExtractionButton->OnClicked.AddUniqueDynamic(this, &ThisClass::ExtractionClicked);
-	Modes->AddChildToHorizontalBox(ExtractionButton)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
-	ExtractionButton->SetIsEnabled(false);
-	FreeForAllButton->SetIsEnabled(false);
-	TeamsButton->SetIsEnabled(false);
-	SessionWidgetStyle::Line(Content, Modes);
-	SessionWidgetStyle::Line(Content, SessionWidgetStyle::Text(WidgetTree,
-	                                                           TEXT("未准备的玩家可切换模式 · 切换后所有玩家需要重新准备"), 15));
-	UHorizontalBox* Squads = WidgetTree->ConstructWidget<UHorizontalBox>();
-	SquadOne = SessionWidgetStyle::Button(WidgetTree, TEXT("SquadOne"), TEXT("加入一队 · 最多三人"));
-	SquadTwo = SessionWidgetStyle::Button(WidgetTree, TEXT("SquadTwo"), TEXT("加入二队 · 最多三人"));
-	SquadOne->OnClicked.AddUniqueDynamic(this, &ThisClass::SquadOneClicked);
-	SquadTwo->OnClicked.AddUniqueDynamic(this, &ThisClass::SquadTwoClicked);
-	Squads->AddChildToHorizontalBox(SquadOne)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
-	Squads->AddChildToHorizontalBox(SquadTwo)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
-	SessionWidgetStyle::Line(Content, Squads);
-	UHorizontalBox* Header = WidgetTree->ConstructWidget<UHorizontalBox>();
-	Header->AddChildToHorizontalBox(SessionWidgetStyle::Text(WidgetTree, TEXT("玩家"), 16))->SetSize(
-		FSlateChildSize(ESlateSizeRule::Fill));
-	USizeBox* StateHeader = WidgetTree->ConstructWidget<USizeBox>();
-	StateHeader->SetWidthOverride(160.f);
-	StateHeader->AddChild(SessionWidgetStyle::Text(WidgetTree, TEXT("准备状态"), 16));
-	Header->AddChildToHorizontalBox(StateHeader);
-	SessionWidgetStyle::Line(Content, Header);
-	Roster = WidgetTree->ConstructWidget<UScrollBox>();
-	Content->AddChildToVerticalBox(Roster)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
-	Status = SessionWidgetStyle::Text(WidgetTree, TEXT("等待玩家准备"));
-	Status->SetAutoWrapText(true);
-	SessionWidgetStyle::Line(Content, Status);
-	StashButton = SessionWidgetStyle::Button(WidgetTree, TEXT("StashButton"), TEXT("仓库 / 出战配装"));
-	StashButton->OnClicked.AddUniqueDynamic(this, &ThisClass::StashClicked);
-	UHorizontalBox* Services = WidgetTree->ConstructWidget<UHorizontalBox>();
-	ShopButton = SessionWidgetStyle::Button(WidgetTree, TEXT("ShopButton"), TEXT("商店"));
-	QuestsButton = SessionWidgetStyle::Button(WidgetTree, TEXT("QuestsButton"), TEXT("任务 / 成长"));
-	ShopButton->OnClicked.AddUniqueDynamic(this, &ThisClass::ShopClicked);
-	QuestsButton->OnClicked.AddUniqueDynamic(this, &ThisClass::QuestsClicked);
-	for (auto* Service : {StashButton.Get(), ShopButton.Get(), QuestsButton.Get()})
-		Services->AddChildToHorizontalBox(Service)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
-	SessionWidgetStyle::Line(Content, Services);
-	UTextBlock* Label = nullptr;
-	ReadyButton = SessionWidgetStyle::Button(WidgetTree, TEXT("ReadyButton"), TEXT("准备"), &Label);
-	ReadyLabel = Label;
-	ReadyButton->OnClicked.AddUniqueDynamic(this, &ThisClass::ReadyClicked);
-	SessionWidgetStyle::Line(Content, ReadyButton, 0.f);
-	return true;
+    if (!Super::Initialize()) return false;
+    SetIsFocusable(true);
+    auto* Root = WidgetTree->ConstructWidget<UCanvasPanel>();
+    WidgetTree->RootWidget = Root;
+    auto* Backdrop = WidgetTree->ConstructWidget<UBorder>();
+    Backdrop->SetBrushColor(FLinearColor(.009f, .016f, .018f));
+    auto* BackSlot = Root->AddChildToCanvas(Backdrop);
+    BackSlot->SetAnchors(FAnchors(0,0,1,1)); BackSlot->SetOffsets(FMargin(0));
+    auto* Scale = WidgetTree->ConstructWidget<UScaleBox>();
+    Scale->SetStretch(EStretch::ScaleToFit);
+    auto* ScaleSlot = Root->AddChildToCanvas(Scale);
+    ScaleSlot->SetAnchors(FAnchors(0,0,1,1)); ScaleSlot->SetOffsets(FMargin(20));
+    auto* Size = WidgetTree->ConstructWidget<USizeBox>();
+    Size->SetWidthOverride(1280); Size->SetHeightOverride(720); Scale->AddChild(Size);
+    auto* Stage = WidgetTree->ConstructWidget<UCanvasPanel>(); Size->AddChild(Stage);
+    auto Place = [&](UWidget* W, FVector2D P, FVector2D S)
+    {
+        auto* LayoutSlot = Stage->AddChildToCanvas(W); LayoutSlot->SetPosition(P); LayoutSlot->SetSize(S);
+    };
+    Place(SessionWidgetStyle::Text(WidgetTree,TEXT("烽火地带"),32),FVector2D(0,8),FVector2D(400,45));
+    Wallet = SessionWidgetStyle::Text(WidgetTree,TEXT("正在同步仓库…"),17);
+    Wallet->SetJustification(ETextJustify::Right);
+    Place(Wallet,FVector2D(740,20),FVector2D(540,35));
+    auto* Modes = WidgetTree->ConstructWidget<UHorizontalBox>();
+    FreeForAllButton = SessionWidgetStyle::Button(WidgetTree,TEXT("FreeForAllButton"),TEXT("自由混战"));
+    TeamsButton = SessionWidgetStyle::Button(WidgetTree,TEXT("TeamsButton"),TEXT("团队对抗"));
+    ExtractionButton = SessionWidgetStyle::Button(WidgetTree,TEXT("ExtractionButton"),TEXT("烽火地带 · 航天行动"));
+    FreeForAllButton->OnClicked.AddUniqueDynamic(this,&ThisClass::FreeForAllClicked);
+    TeamsButton->OnClicked.AddUniqueDynamic(this,&ThisClass::TeamsClicked);
+    ExtractionButton->OnClicked.AddUniqueDynamic(this,&ThisClass::ExtractionClicked);
+    for (auto* B : {ExtractionButton.Get(),FreeForAllButton.Get(),TeamsButton.Get()})
+    {
+        auto* LayoutSlot = Modes->AddChildToHorizontalBox(B); LayoutSlot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+        LayoutSlot->SetPadding(FMargin(0,0,8,0)); B->SetIsEnabled(false);
+    }
+    Place(Modes,FVector2D(0,68),FVector2D(1280,42));
+    auto* Hero = WidgetTree->ConstructWidget<UBorder>(); Hero->SetPadding(FMargin(0));
+    Hero->SetBrushColor(FLinearColor(.015f,.028f,.03f));
+    Portrait = WidgetTree->ConstructWidget<UImage>(); Hero->AddChild(Portrait);
+    Place(Hero,FVector2D(0,124),FVector2D(800,440));
+    Place(SessionWidgetStyle::Text(WidgetTree,TEXT("行动小队  /  蜂医"),18),FVector2D(24,142),FVector2D(500,28));
+    auto* Content = WidgetTree->ConstructWidget<UVerticalBox>();
+    Place(Content,FVector2D(830,124),FVector2D(450,440));
+    SessionWidgetStyle::Line(Content,SessionWidgetStyle::Text(WidgetTree,TEXT("行动区域"),14),6);
+    SessionWidgetStyle::Line(Content,SessionWidgetStyle::Text(WidgetTree,TEXT("航天基地"),30),6);
+    SessionWidgetStyle::Line(Content,SessionWidgetStyle::Text(WidgetTree,TEXT("搜索物资 · 完成任务 · 携装撤离"),16),18);
+    RoomInfo = SessionWidgetStyle::Text(WidgetTree,TEXT("正在同步房间…"),14);
+    RoomInfo->SetAutoWrapText(true); SessionWidgetStyle::Line(Content,RoomInfo,12);
+    auto* Squads = WidgetTree->ConstructWidget<UHorizontalBox>();
+    SquadOne = SessionWidgetStyle::Button(WidgetTree,TEXT("SquadOne"),TEXT("加入一队"));
+    SquadTwo = SessionWidgetStyle::Button(WidgetTree,TEXT("SquadTwo"),TEXT("加入二队"));
+    SquadOne->OnClicked.AddUniqueDynamic(this,&ThisClass::SquadOneClicked);
+    SquadTwo->OnClicked.AddUniqueDynamic(this,&ThisClass::SquadTwoClicked);
+    for (auto* B : {SquadOne.Get(),SquadTwo.Get()}) Squads->AddChildToHorizontalBox(B)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+    SessionWidgetStyle::Line(Content,Squads,12);
+    Roster = WidgetTree->ConstructWidget<UScrollBox>();
+    Content->AddChildToVerticalBox(Roster)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+    Status = SessionWidgetStyle::Text(WidgetTree,TEXT("等待玩家准备"),16);
+    Status->SetAutoWrapText(true); Place(Status,FVector2D(0,578),FVector2D(1280,46));
+    auto* Services = WidgetTree->ConstructWidget<UHorizontalBox>();
+    StashButton = SessionWidgetStyle::Button(WidgetTree,TEXT("StashButton"),TEXT("仓库 / 出战配装"));
+    ShopButton = SessionWidgetStyle::Button(WidgetTree,TEXT("ShopButton"),TEXT("商店"));
+    QuestsButton = SessionWidgetStyle::Button(WidgetTree,TEXT("QuestsButton"),TEXT("任务 / 成长"));
+    StashButton->OnClicked.AddUniqueDynamic(this,&ThisClass::StashClicked);
+    ShopButton->OnClicked.AddUniqueDynamic(this,&ThisClass::ShopClicked);
+    QuestsButton->OnClicked.AddUniqueDynamic(this,&ThisClass::QuestsClicked);
+    for (auto* B : {StashButton.Get(),ShopButton.Get(),QuestsButton.Get()})
+    {
+        auto* LayoutSlot=Services->AddChildToHorizontalBox(B); LayoutSlot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+        LayoutSlot->SetPadding(FMargin(0,0,8,0)); B->SetBackgroundColor(FLinearColor(.035f,.065f,.068f));
+    }
+    Place(Services,FVector2D(0,635),FVector2D(800,65));
+    UTextBlock* Label=nullptr;
+    ReadyButton=SessionWidgetStyle::Button(WidgetTree,TEXT("ReadyButton"),TEXT("准备出战"),&Label);
+    ReadyLabel=Label; ReadyButton->SetBackgroundColor(FLinearColor(.16f,.7f,.48f));
+    ReadyButton->OnClicked.AddUniqueDynamic(this,&ThisClass::ReadyClicked);
+    Place(ReadyButton,FVector2D(830,635),FVector2D(450,65));
+    return true;
+}
+
+void ULobbyWidget::NativeConstruct()
+{
+    Super::NativeConstruct();
+    if (!Showcase && GetWorld() && GetWorld()->GetNetMode()!=NM_DedicatedServer)
+    {
+        Showcase=GetWorld()->SpawnActor<ALobbyShowcase>(ALobbyShowcase::StaticClass(),FVector(0,0,-100000),FRotator::ZeroRotator);
+        if (Showcase && Showcase->Portrait)
+        {
+            FSlateBrush Brush; Brush.SetResourceObject(Showcase->Portrait); Brush.ImageSize=FVector2D(1600,880);
+            Portrait->SetBrush(Brush);
+        }
+    }
 }
 
 void ULobbyWidget::SquadOneClicked() { if (auto* PC = GetOwningPlayer<ABrokenEdgePlayerController>()) PC->ServerSetExtractionSquad(1); }
@@ -111,7 +146,15 @@ void ULobbyWidget::Refresh()
 	const APlayerController* PC = GetOwningPlayer();
 	const ABrokenEdgePlayerState* LocalPS = PC ? PC->GetPlayerState<ABrokenEdgePlayerState>() : nullptr;
 	if (!GS) return;
+    if (Wallet && PC)
+    {
+        const auto* AccountView=PC->FindComponentByClass<UExtractionAccountComponent>();
+        Wallet->SetText(FText::FromString(AccountView && AccountView->Bound
+            ? FString::Printf(TEXT("仓库 %d 件   /   资金 %lld"),AccountView->Profile.Stash.Items.Num(),AccountView->Profile.Progression.Credits)
+            : TEXT("正在同步仓库…")));
+    }
 	const auto* Account = PC ? PC->FindComponentByClass<UExtractionAccountComponent>() : nullptr;
+    if (Showcase) { const auto* Held = Account ? Account->Profile.Loadout.InSlot(0) : nullptr; Showcase->SetHeldWeapon(Held ? Held->Definition : NAME_None); }
 	StashButton->SetVisibility(GS->RoomMatchType == TEXT("Extraction") ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 	StashButton->SetIsEnabled(Account && Account->Bound && !GS->bTravelling);
 	for (auto* Service : {ShopButton.Get(), QuestsButton.Get()})
@@ -197,19 +240,20 @@ void ULobbyWidget::Refresh()
 	SquadTwo->SetVisibility(Extraction ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 	SquadOne->SetIsEnabled(Extraction && bCanChooseMode && LocalPS->ExtractionSquad != 1 && SquadCounts[1] < 3);
 	SquadTwo->SetIsEnabled(Extraction && bCanChooseMode && LocalPS->ExtractionSquad != 2 && SquadCounts[2] < 3);
-	const bool bFreeForAll = GS->RoomMatchType == TEXT("FreeForAll");
+	if (Showcase) Showcase->SetSquadSize(Extraction && LocalPS && LocalPS->ExtractionSquad>=1 && LocalPS->ExtractionSquad<=2 ? SquadCounts[LocalPS->ExtractionSquad] : 1);
+    const bool bFreeForAll = GS->RoomMatchType == TEXT("FreeForAll");
 	const bool bTeams = GS->RoomMatchType == TEXT("Teams");
 	FreeForAllButton->SetIsEnabled(bCanChooseMode && !bFreeForAll);
 	TeamsButton->SetIsEnabled(bCanChooseMode && !bTeams);
 	ExtractionButton->SetIsEnabled(bCanChooseMode && GS->RoomMatchType != TEXT("Extraction"));
 	const FLinearColor Selected(0.12f, 0.60f, 0.36f);
-	const FLinearColor Unselected(0.08f, 0.40f, 0.64f);
+	const FLinearColor Unselected(0.035f, 0.065f, 0.068f);
 	FreeForAllButton->SetBackgroundColor(bFreeForAll ? Selected : Unselected);
 	TeamsButton->SetBackgroundColor(bTeams ? Selected : Unselected);
 	ExtractionButton->SetBackgroundColor(GS->RoomMatchType == TEXT("Extraction") ? Selected : Unselected);
 	ReadyButton->SetIsEnabled(LocalPS && !GS->bTravelling && !GS->bModeUpdating);
 	if (GS->RoomMatchType == TEXT("Extraction") && (!Account || !Account->Bound)) ReadyButton->SetIsEnabled(false);
-	ReadyLabel->SetText(FText::FromString(LocalPS && LocalPS->IsLobbyReady() ? TEXT("取消准备") : TEXT("准备")));
+	ReadyLabel->SetText(FText::FromString(LocalPS && LocalPS->IsLobbyReady() ? TEXT("取消准备") : TEXT("准备出战")));
 }
 
 void ULobbyWidget::StashClicked()
@@ -218,12 +262,13 @@ void ULobbyWidget::StashClicked()
 	if (StashWidget)
 	{
 		StashWidget->AddToViewport(150);
-		StashWidget->SetKeyboardFocus();
+		StashWidget->FocusPanel();
 	}
 }
 
 void ULobbyWidget::NativeDestruct()
 {
+    if (Showcase) { Showcase->Destroy(); Showcase=nullptr; }
 	if (ProgressionWidget) ProgressionWidget->RemoveFromParent();
 	if (StashWidget) StashWidget->RemoveFromParent();
 	Super::NativeDestruct();
@@ -234,7 +279,7 @@ void ULobbyWidget::ShopClicked()
 	if (ProgressionWidget) ProgressionWidget->RemoveFromParent();
 	ProgressionWidget = CreateWidget<UExtractionProgressionWidget>(GetOwningPlayer());
 	ProgressionWidget->AddToViewport(160);
-	ProgressionWidget->SetKeyboardFocus();
+	ProgressionWidget->FocusPanel();
 }
 
 void ULobbyWidget::QuestsClicked()
@@ -243,5 +288,5 @@ void ULobbyWidget::QuestsClicked()
 	ProgressionWidget = CreateWidget<UExtractionProgressionWidget>(GetOwningPlayer());
 	ProgressionWidget->TasksInitially = true;
 	ProgressionWidget->AddToViewport(160);
-	ProgressionWidget->SetKeyboardFocus();
+	ProgressionWidget->FocusPanel();
 }
