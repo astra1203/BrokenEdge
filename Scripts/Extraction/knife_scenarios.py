@@ -64,3 +64,29 @@ def run(g):
     check('Key one returns to the preserved gun',lambda: all(not player(p,'A').get('knife_active') for p in peers))
     check('Returning to gun preserves ammunition',lambda: all(player(p,'A')['ammo']==ammo for p in peers))
     wait(lambda: (g['OUT']/'A-knife-idle.png').exists(),'knife screenshot written')
+    # Exercise the knife lifecycle directly; the full traversal suite has its own
+    # frame-cap and top-entry route acceptance, not prerequisites for this check.
+    from auto_ladder_input import approach
+    send('Server','traversal_fixture')
+    half=player('Server','A')['capsule_half']
+    send('Server','fixture',players=[dict(name='EX_A',position=[29740,29100,6000+half+3],health=100,shield=0,yaw=0),
+                                    dict(name='EX_B',position=[29450,29400,6000+half+3],health=100,shield=0)])
+    send('A','aim',target='',head=False)
+    send('A','look',yaw=0)
+    wait(lambda:not player('Server','A')['falling'],'ladder fixture standing')
+    key('Three')
+    check('Knife selected before ladder entry',lambda:all(player(p,'A').get('knife_active') for p in peers))
+    approach(g,'Knife fixture bottom')
+    check('Ladder stows knife on every peer',lambda:all(not player(p,'A').get('knife_active') for p in peers))
+    for _ in range(2):send('A','pulse',action='ToggleCameraView',duration=0)
+    check('Camera changes cannot reactivate climbing knife',lambda:all(not player(p,'A').get('knife_active') for p in peers))
+    send('A','screenshot',name='knife-ladder')
+    send('B','aim',target='EX_A',head=False);send('B','screenshot',name='knife-ladder-observer')
+    send('A','pulse',action='Jump',duration=.12)
+    check('Knife lifecycle detaches through jump input',lambda:player('Server','A')['traversal']==0)
+    wait(lambda:not player('Server','A')['falling'],'ladder detach lands')
+    key('Three')
+    check('Knife reattaches after ladder detach',lambda:all(player(p,'A').get('knife_active') for p in peers) and player('A','A').get('knife_view_attached'))
+    send('A','screenshot',name='knife-after-ladder')
+    key('One')
+    check('Ladder lifecycle returns to preserved gun',lambda:all(not player(p,'A').get('knife_active') and player(p,'A')['ammo']==ammo for p in peers))

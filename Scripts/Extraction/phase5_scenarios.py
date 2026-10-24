@@ -123,9 +123,17 @@ def run(env):
     place({'A': (positions['A'], 20), 'B': (positions['B'], 100), 'C': (positions['C'], 80)})
     inventory = player('Server', 'A')['inventory']
     old_drops = len(state('Server')['loot'])
+    if g['args'].scenario == 'squad':
+        send('A','input_key',key='Three',pressed=True)
+        send('A','input_key',key='Three',pressed=False)
+        check('Knife selected before downing',lambda:all(player(r,'A').get('knife_active') for r in peers))
     hurt('A', 5)
     check('Downed players retain their inventory and do not drop', lambda: player('Server', 'A')['inventory'] == inventory and len(state('Server')['loot']) == old_drops)
     check('Downed state replicates to every peer', lambda: all(player(r, 'A').get('life') == 5 for r in peers))
+    if g['args'].scenario == 'squad':
+        check('Downing clears knife on all peers',lambda:all(not player(r,'A').get('knife_active') for r in peers))
+        for _ in range(2):send('A','pulse',action='ToggleCameraView',duration=0)
+        send('A','screenshot',name='knife-downed')
     accepted = player('Server', 'A')['accepted']
     send('A', 'pulse', action='Fire')
     send('A', 'ability', kind='heal')
@@ -158,6 +166,13 @@ def run(env):
     send('A', 'screenshot', name='being-rescued')
     check('Rescue restores 30 HP and zero shield', lambda: all(player(r, 'A').get('life') == 0 and player(r, 'A').get('health') == 30 and player(r, 'A').get('shield') == 0 for r in peers), 12)
     check('Rescue clears deadline without changing inventory', lambda: player('Server', 'A')['bleed_at'] == 0 and player('Server', 'A')['inventory'] == inventory)
+    if g['args'].scenario == 'squad':
+        send('A','input_key',key='Three',pressed=True)
+        send('A','input_key',key='Three',pressed=False)
+        check('Revived owner can reselect a bound knife',lambda:all(player(r,'A').get('knife_active') for r in peers) and player('A','A').get('knife_view_attached'))
+        send('A','screenshot',name='knife-revived')
+        send('A','input_key',key='One',pressed=True)
+        send('A','input_key',key='One',pressed=False)
 
     send('A', 'aim', target='', head=False)
     send('Server', 'occluder', enabled=True)
@@ -181,12 +196,17 @@ def run(env):
 
     if g['args'].scenario == 'squad':
         place({'A': (positions['A'], 20), 'C': (positions['C'], 20), 'B': (positions['B'], 100)})
+        send('A','input_key',key='Three',pressed=True)
+        send('A','input_key',key='Three',pressed=False)
+        check('Knife selected before squad wipe',lambda:player('Server','A').get('knife_active'))
         hurt('A', 5)
         hurt('C', 5 if len(roles) == 6 else 1)
         if len(roles) == 6:
             place({'E': ([1550, 4500, 500], 20)})
             hurt('E', 1)
         check('Squad wipe finalizes downed teammate', lambda: player('Server', 'A').get('life') == 1)
+        check('Death leaves no active knife on any peer',lambda:all(not player(r,'A').get('knife_active') for r in peers))
+        send('A','screenshot',name='knife-dead')
         check('Wiped squad cannot spectate the enemy', lambda: state('A').get('spectating') and state('C').get('spectating')
               and state('A').get('spectated') == '' and state('C').get('spectated') == '', 15)
     send('Server', 'end')

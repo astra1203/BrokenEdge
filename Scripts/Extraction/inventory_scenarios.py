@@ -64,6 +64,22 @@ def run_inventory_suite(api):
           lambda: all(not box['contents']['items'] for r in ['A', 'B'] for box in state(r)['loot']))
     invariant('Initial identities have exactly one container owner')
 
+    # This grid/secondary-pickup fixture predates the default SCAR loadout.
+    # Drop that extra gear through ordinary requests, preserving unique ownership;
+    # otherwise the intended rotation destination and secondary slot are occupied.
+    for role in ('A','B'):
+        original=player('Server',role)
+        place([(role,[2200 if role=='A' else 2600,4700,500],original['health'],original['shield'])])
+        send(role,'inventory',open=True)
+        wait(lambda role=role:player(role,role).get('inventory_open'),'open normalization inventory')
+        for extra in list(items(role)):
+            if extra['definition'] in ('SCARH','Ammo76251'):
+                assert not action(role,extra['id'],kind='drop',quantity=extra['quantity'])
+        send(role,'inventory',open=False)
+        wait(lambda role=role:not player(role,role).get('inventory_open'),'close normalization inventory')
+        place([(role,original['position'],original['health'],original['shield'])])
+    invariant('Default secondary normalization preserves all item identities')
+
     # Actual Slate mouse routing exercises hit-testing, drag, rotation and context menu.
     send('A', 'inventory', open=True)
     check('Inventory opens through production controller', lambda: player('A', 'A').get('inventory_open'))

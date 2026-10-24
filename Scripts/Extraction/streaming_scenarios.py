@@ -88,6 +88,8 @@ def run(g):
     check('Server owns the loaded north region', lambda: state('Server').get('region', {}).get('visible'))
     check('Distant clients unload north', lambda: all(not state(r).get('region', {}).get('loaded', True) for r in roles), 45)
     loot_before = {box['id']: box for box in state('Server').get('loot', [])}
+    authored_before={box['source_point']:(box['id'],box['contents']) for box in loot_before.values() if box.get('source_point') not in (None,'','None')}
+    check('Streaming round includes seven server-selected source safes',lambda:len(authored_before)==7)
     walk(active, outward, 'old interior and north platform')
     check('Approach preloads north', lambda: state(active)['region']['visible'])
     walk(active, north, 'north route')
@@ -105,6 +107,8 @@ def run(g):
         check('Unloaded loop ' + str(repetition + 1), lambda: not state(active)['region']['loaded'], 45)
     check(str(args.streaming_loops) + ' actual reload and unload transitions', lambda: state(active)['region']['loads'] >= initial['loads'] + args.streaming_loops and state(active)['region']['unloads'] >= initial['unloads'] + args.streaming_loops)
     check('Streaming preserves container identities and items', lambda: {box['id']: box for box in state('Server').get('loot', [])} == loot_before)
+    check('Actual region reload preserves authored safe selection and contents',lambda:
+          {box['source_point']:(box['id'],box['contents']) for box in state('Server').get('loot',[]) if box.get('source_point') not in (None,'','None')}==authored_before)
     send(active, 'region_delay', seconds=60)
     walk(active, outward, 'delayed approach')
     send(active, 'region_delay', seconds=60)

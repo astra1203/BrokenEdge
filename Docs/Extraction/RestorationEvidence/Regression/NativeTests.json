@@ -1,0 +1,34 @@
+[
+  {
+    "run": "restoration-regression-loot-rules",
+    "task": "loot-layout",
+    "result": "passed",
+    "exit_code": 0,
+    "successful_tests": 1,
+    "run_sha256": "b29e9fe2320af95b428561704eabd9b39275e329025501b208b5df31ba9a2a32"
+  },
+  {
+    "run": "restoration-regression-weapon-rules",
+    "task": "weapon-mechanics",
+    "result": "passed",
+    "exit_code": 0,
+    "successful_tests": 4,
+    "run_sha256": "13744d851559676b81935e508716b84033ad0d71efed401ef1023106c6c9f17f"
+  },
+  {
+    "run": "restoration-regression-inventory-rules",
+    "task": "inventory",
+    "result": "passed",
+    "exit_code": 0,
+    "successful_tests": 3,
+    "run_sha256": "98839ab8f932fd1c137bef2bc692ac38c90022a4883261765633b52c956ece77"
+  },
+  {
+    "run": "restoration-regression-pie01",
+    "task": "weapon-pie",
+    "result": "passed",
+    "exit_code": 0,
+    "successful_tests": 1,
+    "run_sha256": "08989de81a8c5155c96c33ac5ad726a49e844618bdb8a36f66f31ed7c15a5d9c"
+  }
+]

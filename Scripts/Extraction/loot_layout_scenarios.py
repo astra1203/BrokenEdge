@@ -76,3 +76,9 @@ def run(g):
     for role in ['A','B']:send(role,'inventory',open=False)
     send('A','open_loot',target=box['id'])
     check('Reopen after taking does not replenish safe',lambda:all(i['id']!=target for i in safes()[point]['contents']['items']))
+    # Active rounds intentionally reject late joins; do not bypass that production policy.
+    final={k:(a['id'],a['contents']) for k,a in safes().items()}
+    g['launch']('C')
+    send('C','direct_join',expect_rejection=True)
+    check('Late join obeys active-round rejection policy',lambda:'MATCH_IN_PROGRESS' in (g['OUT']/'C.log').read_text(encoding='utf-8',errors='replace'),35)
+    check('Rejected late join cannot reroll or replenish authored safes',lambda:final=={k:(a['id'],a['contents']) for k,a in safes().items()})
