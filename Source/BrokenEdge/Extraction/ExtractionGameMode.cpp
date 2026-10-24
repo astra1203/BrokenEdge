@@ -1,4 +1,5 @@
 #include "ExtractionGameMode.h"
+#include "ExtractionLootLayout.h"
 #include "ExtractionRegionStream.h"
 #include "ExtractionKeyRoom.h"
 #include "ExtractionState.h"
@@ -69,6 +70,12 @@ void AExtractionGameMode::BeginPlay()
 	if (LoadedMapDefinition)
 	{
 		TSet<FName> Ids;
+		if (LoadedMapDefinition->LootLayout)
+		{
+			int32 LootSeed = FMath::Rand();
+			FParse::Value(FCommandLine::Get(), TEXT("ExtractionLootSeed="), LootSeed);
+			LoadedMapDefinition->LootLayout->Spawn(GetWorld(), LootSeed);
+		}
 		for (const auto& Definition : LoadedMapDefinition->Exits)
 		{
 			if (!Definition.IsValid() || Ids.Contains(Definition.Id))

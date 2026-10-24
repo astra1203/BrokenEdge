@@ -1,0 +1,189 @@
+{
+  "runs": [
+    {
+      "run": "restoration-loot-net03",
+      "result": "passed",
+      "checks": [
+        "A joined LAN lobby",
+        "A name replicated",
+        "B joined LAN lobby",
+        "B name replicated",
+        "A persistent account ready",
+        "B persistent account ready",
+        "All players loaded in Extraction",
+        "Dedicated authority and Stinger pawns",
+        "A visible reachable pickup focus",
+        "A equipped AK",
+        "B visible reachable pickup focus",
+        "B equipped AK",
+        "First-person backpack section hidden on each owner",
+        "Server and owners keep both hands within two cm of weapon grips",
+        "Packet simulation applied: 50ms each direction and 2 percent loss",
+        "All authored candidates enabled ProjectH3OneOfTwo",
+        "Exactly one safe from ProjectH3OneOfTwo",
+        "All authored candidates enabled ProjectPresidentOneOfThree",
+        "Exactly one safe from ProjectPresidentOneOfThree",
+        "Fixed and grouped safe count",
+        "Authored safe searchable 9fdd0f2bf6da236700eb",
+        "Reopening preserves safe identity 9fdd0f2bf6da236700eb",
+        "Authored safe searchable 43389cf951e1f4d9c716",
+        "Reopening preserves safe identity 43389cf951e1f4d9c716",
+        "Authored safe searchable 4a547c50a554af1041e8",
+        "Reopening preserves safe identity 4a547c50a554af1041e8",
+        "Authored safe searchable 77117d6497015537ce4c",
+        "Reopening preserves safe identity 77117d6497015537ce4c",
+        "Authored safe searchable f100904fb3427f45c14c",
+        "Reopening preserves safe identity f100904fb3427f45c14c",
+        "Authored safe searchable afc8100db1767ce40356",
+        "Reopening preserves safe identity afc8100db1767ce40356",
+        "Authored safe searchable 10e518d0d87ad8d3635e",
+        "Reopening preserves safe identity 10e518d0d87ad8d3635e",
+        "Search and travel never reroll or refill safes"
+      ],
+      "report_sha256": "300341871ec5314100f04ac04d7f5a226171d0a3ad9689b943c8ce626d9f2c82",
+      "seed": 8
+    },
+    {
+      "run": "restoration-loot-net04",
+      "result": "passed",
+      "checks": [
+        "A joined LAN lobby",
+        "A name replicated",
+        "B joined LAN lobby",
+        "B name replicated",
+        "A persistent account ready",
+        "B persistent account ready",
+        "All players loaded in Extraction",
+        "Dedicated authority and Stinger pawns",
+        "A visible reachable pickup focus",
+        "A equipped AK",
+        "B visible reachable pickup focus",
+        "B equipped AK",
+        "First-person backpack section hidden on each owner",
+        "Server and owners keep both hands within two cm of weapon grips",
+        "Packet simulation applied: 50ms each direction and 2 percent loss",
+        "All authored candidates enabled ProjectH3OneOfTwo",
+        "Exactly one safe from ProjectH3OneOfTwo",
+        "All authored candidates enabled ProjectPresidentOneOfThree",
+        "Exactly one safe from ProjectPresidentOneOfThree",
+        "Fixed and grouped safe count",
+        "Authored safe searchable 9fdd0f2bf6da236700eb",
+        "Reopening preserves safe identity 9fdd0f2bf6da236700eb",
+        "Authored safe searchable 43389cf951e1f4d9c716",
+        "Reopening preserves safe identity 43389cf951e1f4d9c716",
+        "Authored safe searchable 4a547c50a554af1041e8",
+        "Reopening preserves safe identity 4a547c50a554af1041e8",
+        "Authored safe searchable 77117d6497015537ce4c",
+        "Reopening preserves safe identity 77117d6497015537ce4c",
+        "Authored safe searchable f100904fb3427f45c14c",
+        "Reopening preserves safe identity f100904fb3427f45c14c",
+        "Authored safe searchable afc8100db1767ce40356",
+        "Reopening preserves safe identity afc8100db1767ce40356",
+        "Authored safe searchable d012cec396f31168aa7a",
+        "Reopening preserves safe identity d012cec396f31168aa7a",
+        "Search and travel never reroll or refill safes"
+      ],
+      "report_sha256": "eb752fe559c6bdace308e220faedb30353a52ddb13d1154ba5854203fda73991",
+      "seed": 9
+    },
+    {
+      "run": "restoration-loot-net07",
+      "result": "passed",
+      "checks": [
+        "A joined LAN lobby",
+        "A name replicated",
+        "B joined LAN lobby",
+        "B name replicated",
+        "A persistent account ready",
+        "B persistent account ready",
+        "All players loaded in Extraction",
+        "Dedicated authority and Stinger pawns",
+        "A visible reachable pickup focus",
+        "A equipped AK",
+        "B visible reachable pickup focus",
+        "B equipped AK",
+        "First-person backpack section hidden on each owner",
+        "Server and owners keep both hands within two cm of weapon grips",
+        "Packet simulation applied: 50ms each direction and 2 percent loss",
+        "All authored candidates enabled ProjectH3OneOfTwo",
+        "Exactly one safe from ProjectH3OneOfTwo",
+        "All authored candidates enabled ProjectPresidentOneOfThree",
+        "Exactly one safe from ProjectPresidentOneOfThree",
+        "Fixed and grouped safe count",
+        "Authored safe searchable 9fdd0f2bf6da236700eb",
+        "Reopening preserves safe identity 9fdd0f2bf6da236700eb",
+        "Authored safe searchable 43389cf951e1f4d9c716",
+        "Reopening preserves safe identity 43389cf951e1f4d9c716",
+        "Authored safe searchable 4a547c50a554af1041e8",
+        "Reopening preserves safe identity 4a547c50a554af1041e8",
+        "Authored safe searchable 77117d6497015537ce4c",
+        "Reopening preserves safe identity 77117d6497015537ce4c",
+        "Authored safe searchable f100904fb3427f45c14c",
+        "Reopening preserves safe identity f100904fb3427f45c14c",
+        "Authored safe searchable ab5d21758ee9f7c6b8c9",
+        "Reopening preserves safe identity ab5d21758ee9f7c6b8c9",
+        "Authored safe searchable ab5dc53ae72028f962b2",
+        "Reopening preserves safe identity ab5dc53ae72028f962b2",
+        "Search and travel never reroll or refill safes",
+        "Two unobstructed viewers can search authored safe",
+        "Authored safe concurrent take has exactly one owner",
+        "Reopen after taking does not replenish safe"
+      ],
+      "report_sha256": "e80efb6faf52f821ac5e62ad0f8f27985cf02ed75095b5ade26136058e217e80",
+      "seed": 0
+    }
+  ],
+  "points": {
+    "9fdd0f2bf6da236700eb": {
+      "run": "restoration-loot-net07",
+      "screenshot": "9fdd0f2bf6da236700eb.png",
+      "sha256": "f92bc873619c0e2b6957765bcd719a29d17be70a842227d10f19675245137524"
+    },
+    "43389cf951e1f4d9c716": {
+      "run": "restoration-loot-net07",
+      "screenshot": "43389cf951e1f4d9c716.png",
+      "sha256": "8bcb06220ccac7e8f56016ac0b877f3da52292fb599e908e1544b621c44db96e"
+    },
+    "4a547c50a554af1041e8": {
+      "run": "restoration-loot-net07",
+      "screenshot": "4a547c50a554af1041e8.png",
+      "sha256": "ec794987c93c79813a31072466cb992fce3a709374fe592628a47347df2f4f21"
+    },
+    "77117d6497015537ce4c": {
+      "run": "restoration-loot-net07",
+      "screenshot": "77117d6497015537ce4c.png",
+      "sha256": "cd517951301df5137fe0b94d86f12b8bbe033928dac3a3cfa4e7f955243e8f97"
+    },
+    "f100904fb3427f45c14c": {
+      "run": "restoration-loot-net07",
+      "screenshot": "f100904fb3427f45c14c.png",
+      "sha256": "a1d5fa19d809ffef26048162f8faf9e3f4cf95dd802285a923a4b6bcf256c967"
+    },
+    "afc8100db1767ce40356": {
+      "run": "restoration-loot-net04",
+      "screenshot": "afc8100db1767ce40356.png",
+      "sha256": "5bb05ef718fbd08d74ce6b54e601e9e65d49fa0e3b6bcc426dbffda1d9430fb0"
+    },
+    "10e518d0d87ad8d3635e": {
+      "run": "restoration-loot-net03",
+      "screenshot": "10e518d0d87ad8d3635e.png",
+      "sha256": "0d94f7c38c37b847ca7625c5bdf1ffca2a8160eb31fa06529b33b69e56ecef0e"
+    },
+    "d012cec396f31168aa7a": {
+      "run": "restoration-loot-net04",
+      "screenshot": "d012cec396f31168aa7a.png",
+      "sha256": "7bfccc75de0d6275ca15810fb274e510cd56b1ddfbc4701f0a26e2091fd2f2a0"
+    },
+    "ab5d21758ee9f7c6b8c9": {
+      "run": "restoration-loot-net07",
+      "screenshot": "ab5d21758ee9f7c6b8c9.png",
+      "sha256": "12a18ee3ac5c721391d63d8b1b3340e61e799ae7c0563fda208a7a104f2590e2"
+    },
+    "ab5dc53ae72028f962b2": {
+      "run": "restoration-loot-net07",
+      "screenshot": "ab5dc53ae72028f962b2.png",
+      "sha256": "250d3d14ac2096be3734d79cbf85ede605d3d44420ce9481db1f84c32c4cc2f5"
+    }
+  },
+  "boundary": "Production search/RPC with server position fixtures; not a continuous walking route or full source key-room restoration."
+}

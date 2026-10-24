@@ -11,7 +11,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
-parser.add_argument('task', choices=['weapon-range-assets', 'weapon-pie', 'gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
+parser.add_argument('task', choices=['loot-layout', 'weapon-range-assets', 'weapon-pie', 'gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
 parser.add_argument('--tag', required=True)
 parser.add_argument('--store', type=Path, help='Existing store directory; only for recover-existing')
 parser.add_argument('--verify-profile')
@@ -43,7 +43,7 @@ elif args.task == 'phase6a-assets':
 elif args.task in ['assets', 'exit', 'phase5-assets']:
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction' / ('prepare_phase5.py' if args.task == 'phase5-assets' else 'prepare_exit.py' if args.task == 'exit' else 'prepare_items.py'))]
 else:
-    test = {'weapon-pie': 'WeaponPIE', 'weapon-mechanics': 'WeaponMechanics', 'persistence': 'Persistence', 'inventory': 'Inventory', 'recover-existing': 'RecoverExistingStore', 'equipment': 'Equipment', 'progression': 'Progression'}[args.task]
+    test = {'loot-layout': 'LootLayout', 'weapon-pie': 'WeaponPIE', 'weapon-mechanics': 'WeaponMechanics', 'persistence': 'Persistence', 'inventory': 'Inventory', 'recover-existing': 'RecoverExistingStore', 'equipment': 'Equipment', 'progression': 'Progression'}[args.task]
     if args.task == 'weapon-pie':
         command[0] = str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe')
         command.remove('-NullRHI')
@@ -97,7 +97,7 @@ elif args.task in ['assets', 'exit', 'phase5-assets']:
 else:
     successes = re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text)
     metadata['successful_tests'] = len(successes)
-    expected = {'weapon-pie': 1, 'weapon-mechanics': 4, 'persistence': 4, 'inventory': 3, 'recover-existing': 1, 'equipment': 4, 'progression': 4}[args.task]
+    expected = {'loot-layout': 1, 'weapon-pie': 1, 'weapon-mechanics': 4, 'persistence': 4, 'inventory': 3, 'recover-existing': 1, 'equipment': 4, 'progression': 4}[args.task]
     passed = passed and len(successes) == expected and not re.search(r'Test Completed\. Result=\{(?:Fail|Failure|\u5931\u8d25)', text)
 metadata['result'] = 'passed' if passed else 'failed'
 metadata['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()

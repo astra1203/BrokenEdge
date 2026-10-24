@@ -38,6 +38,13 @@
 #include "Engine/StaticMesh.h"
 #include "StaticMeshResources.h"
 #include "MeshDescription.h"
+#include "AssetCompilingManager.h"
+
+void UStingerAssetLibrary::FinishValidationAssetCompilation()
+{
+	FlushAsyncLoading();
+	FAssetCompilingManager::Get().FinishAllCompilation();
+}
 
 USkeleton* UStingerAssetLibrary::CreateSourceSkeleton(const FString& PackageName, const TArray<FName>& Names,
                                                       const TArray<int32>& Parents,

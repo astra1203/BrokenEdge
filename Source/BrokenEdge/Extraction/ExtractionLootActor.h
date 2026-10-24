@@ -18,6 +18,8 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UBoxComponent> InteractionBounds;
 	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UBoxComponent> ContainerBounds;
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UStaticMeshComponent> Mesh;
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class USkeletalMeshComponent> WeaponMesh;
@@ -33,7 +35,12 @@ public:
 	bool Empty = false;
 	UPROPERTY(Replicated)
 	FGuid ContainerId;
-	UPROPERTY(Replicated) TObjectPtr<class AExtractionKeyRoom> AccessDoor;
+	UPROPERTY(Replicated)
+	FName SourcePointId;
+	UPROPERTY(ReplicatedUsing=OnRep_Appearance)
+	TObjectPtr<class USkeletalMesh> ContainerAppearance;
+	UPROPERTY(Replicated)
+	TObjectPtr<class AExtractionKeyRoom> AccessDoor;
 	/** Filled only once by authority, never by opening the UI. */
 	UPROPERTY()
 	FExtractionContainer Contents;

@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
+parser.add_argument('--loot-seed', type=int, help='Deterministic authority seed for authored loot validation')
 parser.add_argument('--packaged', action='store_true')
 parser.add_argument('--package-root', default='Packaged', help='Archive root containing the Client/Server packages')
 parser.add_argument('--port', type=int, default=27777, help='Isolated test server port')
@@ -38,7 +39,7 @@ parser.add_argument('--traversal-lifecycle', action='store_true', help='Three-pl
 parser.add_argument('--optic-validation', action='store_true', help='Additional mounted-optic visual acceptance in the equipment scenario')
 parser.add_argument('--optic-remote-only', action='store_true', help='Stop equipment acceptance after observer mount captures; not a full combat regression')
 parser.add_argument('--resolution', choices=['1280x720', '1920x1080'], help='Rendered client size for visual acceptance')
-parser.add_argument('--scenario', choices=['weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
+parser.add_argument('--scenario', choices=['loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
 parser.add_argument('--players', type=int, choices=[2, 3, 6])
 parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
 parser.add_argument('--rendered-role', choices=['A', 'B'], help='Render only this client; the other clients remain connected with NullRHI')
@@ -227,6 +228,8 @@ def launch(role):
                 '-TestExit=Automation Test Queue Empty', '-abslog=' + str(OUT / (role + '.log'))]
     if args.isolated_room:
         command += ['-RoomName=' + args.tag, '-ExtractionTestRoom=' + args.tag]
+    if args.loot_seed is not None:
+        command += ['-ExtractionLootSeed=' + str(args.loot_seed)]
     rendered = role in rendered_roles
     if args.scenario in ['performance', 'traversal']:
         command = [c for c in command if not c.startswith('-ExecCmds=')]
@@ -425,6 +428,9 @@ try:
         check('Duplicate cannot mutate authenticated inventory', lambda: state('A')['account']['revision'] == account['revision'] and state('A')['account']['stash'] == account['stash'])
         check('Duplicate login cannot regrant starter kits', lambda: len(state('Server')['stored_results']) == 1 and sum(i['quantity'] for i in state('A')['account']['stash']['items'] if i['definition'] == 'AK') == 3)
         send('B', 'screenshot', name='duplicate-profile-denied')
+    elif args.scenario == 'loot-layout':
+        from loot_layout_scenarios import run
+        run(globals())
     elif args.scenario == 'knife':
         from knife_scenarios import run
         run(globals())

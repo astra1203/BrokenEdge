@@ -1,0 +1,529 @@
+{
+  "layouts": {
+    "SpaceCenter_Level2": "/Game/Extraction/Loot/DA_SpaceCenter_Level2_Loot.DA_SpaceCenter_Level2_Loot",
+    "SpaceCenter_Level31": "/Game/Extraction/Loot/DA_SpaceCenter_Level31_Loot.DA_SpaceCenter_Level31_Loot",
+    "SpaceCenter_Level51": "/Game/Extraction/Loot/DA_SpaceCenter_Level51_Loot.DA_SpaceCenter_Level51_Loot",
+    "SpaceCenter_Ma1": "/Game/Extraction/Loot/DA_SpaceCenter_Ma1_Loot.DA_SpaceCenter_Ma1_Loot"
+  },
+  "points": [
+    {
+      "id": "4f09ce8e1f334c641fe2",
+      "variant": "SpaceCenter_Level2",
+      "room": "H1二楼监控室",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 1482.2839961102288,
+          "distance": -0.2839961102288271
+        }
+      ]
+    },
+    {
+      "id": "dabbaa4a048b34948f80",
+      "variant": "SpaceCenter_Level2",
+      "room": "总裁室会客室钥匙房",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 2572.877457031249,
+          "distance": -0.3114570312500291
+        }
+      ]
+    },
+    {
+      "id": "266f2883062d43ccef3e",
+      "variant": "SpaceCenter_Level2",
+      "room": "H4合同房",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 362.4743624028027,
+          "distance": 7.525637597197317
+        }
+      ]
+    },
+    {
+      "id": "677cb90672d84a464f30",
+      "variant": "SpaceCenter_Level2",
+      "room": "总裁室",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 2597.7539805622782,
+          "distance": 0.24601943772177037
+        }
+      ]
+    },
+    {
+      "id": "e4ae2373128c9ef571e3",
+      "variant": "SpaceCenter_Level2",
+      "room": "H2一楼合同房",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 363.2546940620482,
+          "distance": 3.745305937951798
+        }
+      ]
+    },
+    {
+      "id": "f0f10e4f7f67a907a25c",
+      "variant": "SpaceCenter_Level2",
+      "room": "H3核心室外",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 1388.0536044921864,
+          "distance": -1.0536044921864232
+        }
+      ]
+    },
+    {
+      "id": "5d477843dcfb31167248",
+      "variant": "SpaceCenter_Level2",
+      "room": "H3核心室",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 1899.2091640810625,
+          "distance": -0.209164081062454
+        }
+      ]
+    },
+    {
+      "id": "37050548f95c1ecaf5e3",
+      "variant": "SpaceCenter_Level2",
+      "room": "北部打印厂一楼大厅",
+      "enabled": false,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": []
+    },
+    {
+      "id": "aa2afb5de50833a166e1",
+      "variant": "SpaceCenter_Level31",
+      "room": "H1二楼监控室",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 1482.2839961102288,
+          "distance": -0.2839961102288271
+        }
+      ]
+    },
+    {
+      "id": "ea37ef0f3fae9763aeed",
+      "variant": "SpaceCenter_Level31",
+      "room": "总裁室会客室钥匙房",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 2572.877457031249,
+          "distance": -0.3114570312500291
+        }
+      ]
+    },
+    {
+      "id": "21ade039cfd42cc78c20",
+      "variant": "SpaceCenter_Level31",
+      "room": "H4合同房",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 362.4743624028027,
+          "distance": 7.525637597197317
+        }
+      ]
+    },
+    {
+      "id": "32afb416687e9543c7a9",
+      "variant": "SpaceCenter_Level31",
+      "room": "总裁室",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 2597.7539805622782,
+          "distance": 0.24601943772177037
+        }
+      ]
+    },
+    {
+      "id": "b5bf526b8ffba81f429b",
+      "variant": "SpaceCenter_Level31",
+      "room": "H2一楼合同房",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 363.2546940620482,
+          "distance": 3.745305937951798
+        }
+      ]
+    },
+    {
+      "id": "f2d0f9f002b826a110fd",
+      "variant": "SpaceCenter_Level31",
+      "room": "H3核心室外",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 1388.0536044921864,
+          "distance": -1.0536044921864232
+        }
+      ]
+    },
+    {
+      "id": "644379a559ecb106d586",
+      "variant": "SpaceCenter_Level31",
+      "room": "H3核心室",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 1899.2091640810625,
+          "distance": -0.209164081062454
+        }
+      ]
+    },
+    {
+      "id": "f133d32e3821b5136b68",
+      "variant": "SpaceCenter_Level31",
+      "room": "北部打印厂一楼大厅",
+      "enabled": false,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": []
+    },
+    {
+      "id": "b2ec1839f1264ab9e363",
+      "variant": "SpaceCenter_Level51",
+      "room": "H1二楼监控室",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 1482.2839961102288,
+          "distance": -0.2839961102288271
+        }
+      ]
+    },
+    {
+      "id": "d4f07e6cc5f2e3556f29",
+      "variant": "SpaceCenter_Level51",
+      "room": "总裁室会客室钥匙房",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 2572.877457031249,
+          "distance": -0.3114570312500291
+        }
+      ]
+    },
+    {
+      "id": "79a2176b2242c49cd681",
+      "variant": "SpaceCenter_Level51",
+      "room": "H4合同房",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 362.4743624028027,
+          "distance": 7.525637597197317
+        }
+      ]
+    },
+    {
+      "id": "114626f2ab2167e0e2fe",
+      "variant": "SpaceCenter_Level51",
+      "room": "总裁室",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 2597.7539805622782,
+          "distance": 0.24601943772177037
+        }
+      ]
+    },
+    {
+      "id": "c7e7d4f0c2719a5ba009",
+      "variant": "SpaceCenter_Level51",
+      "room": "H2一楼合同房",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 363.2546940620482,
+          "distance": 3.745305937951798
+        }
+      ]
+    },
+    {
+      "id": "ce7a8b2f68d6cc1ad726",
+      "variant": "SpaceCenter_Level51",
+      "room": "H3核心室外",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 1388.0536044921864,
+          "distance": -1.0536044921864232
+        }
+      ]
+    },
+    {
+      "id": "5b9a673730a687908115",
+      "variant": "SpaceCenter_Level51",
+      "room": "H3核心室",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 1899.2091640810625,
+          "distance": -0.209164081062454
+        }
+      ]
+    },
+    {
+      "id": "dea98e9c3d82fdc8ff7d",
+      "variant": "SpaceCenter_Level51",
+      "room": "北部打印厂一楼大厅",
+      "enabled": false,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": []
+    },
+    {
+      "id": "10e518d0d87ad8d3635e",
+      "variant": "SpaceCenter_Ma1",
+      "room": "总裁室会客室钥匙房",
+      "enabled": true,
+      "group": "ProjectPresidentOneOfThree",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 2603.835316761312,
+          "distance": 0.000683238687543053
+        }
+      ]
+    },
+    {
+      "id": "ab5dc53ae72028f962b2",
+      "variant": "SpaceCenter_Ma1",
+      "room": "总裁室会客室钥匙房",
+      "enabled": true,
+      "group": "ProjectPresidentOneOfThree",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 2603.835310832985,
+          "distance": 0.0006891670141158102
+        }
+      ]
+    },
+    {
+      "id": "9fdd0f2bf6da236700eb",
+      "variant": "SpaceCenter_Ma1",
+      "room": "H4合同房",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 362.48002869506377,
+          "distance": -0.04602869506265961
+        }
+      ]
+    },
+    {
+      "id": "43389cf951e1f4d9c716",
+      "variant": "SpaceCenter_Ma1",
+      "room": "H2一楼合同房",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 539.1383531893034,
+          "distance": 0.5546468106958855
+        }
+      ]
+    },
+    {
+      "id": "4a547c50a554af1041e8",
+      "variant": "SpaceCenter_Ma1",
+      "room": "H1离心机二楼平台",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 1387.208999999999,
+          "distance": 0.0
+        }
+      ]
+    },
+    {
+      "id": "77117d6497015537ce4c",
+      "variant": "SpaceCenter_Ma1",
+      "room": "H2一楼井区",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 27.69690634419976,
+          "distance": 0.08309365579907535
+        }
+      ]
+    },
+    {
+      "id": "d517958d36f23fe5280f",
+      "variant": "SpaceCenter_Ma1",
+      "room": "H2一楼井区",
+      "enabled": false,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": -5488.4046201087895,
+          "distance": -1.2793798912116472
+        }
+      ]
+    },
+    {
+      "id": "f100904fb3427f45c14c",
+      "variant": "SpaceCenter_Ma1",
+      "room": "H4一楼车间",
+      "enabled": true,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 542.8736955919857,
+          "distance": 0.4253044080134032
+        }
+      ]
+    },
+    {
+      "id": "afc8100db1767ce40356",
+      "variant": "SpaceCenter_Ma1",
+      "room": "H3核心室",
+      "enabled": true,
+      "group": "ProjectH3OneOfTwo",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 1899.2089594607903,
+          "distance": 4.053920861224469e-05
+        }
+      ]
+    },
+    {
+      "id": "ab5d21758ee9f7c6b8c9",
+      "variant": "SpaceCenter_Ma1",
+      "room": "H3破译站免保区",
+      "enabled": true,
+      "group": "ProjectH3OneOfTwo",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": -85.40244256591905,
+          "distance": 0.0004425659208209254
+        }
+      ]
+    },
+    {
+      "id": "d012cec396f31168aa7a",
+      "variant": "SpaceCenter_Ma1",
+      "room": "总裁室外",
+      "enabled": true,
+      "group": "ProjectPresidentOneOfThree",
+      "group_status": "project compatibility",
+      "floor_checks": [
+        {
+          "level": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+          "floor_z": 2442.656021484374,
+          "distance": -2.1484374883584678e-05
+        }
+      ]
+    },
+    {
+      "id": "5e574f814b5b7628e679",
+      "variant": "SpaceCenter_Ma1",
+      "room": "中控室二楼",
+      "enabled": false,
+      "group": "None",
+      "group_status": "project compatibility",
+      "floor_checks": []
+    }
+  ],
+  "runtime_enabled": true,
+  "active_variant": "SpaceCenter_Ma1",
+  "limits": "Group membership and drops are project compatibility. Floor checks are not reachability or visual approval; unsupported and underground points disabled."
+}

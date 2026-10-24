@@ -20,6 +20,12 @@ AExtractionLootActor::AExtractionLootActor()
 	InteractionBounds->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	InteractionBounds->SetCollisionResponseToAllChannels(ECR_Ignore);
 	InteractionBounds->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	ContainerBounds = CreateDefaultSubobject<UBoxComponent>(TEXT("ContainerBounds"));
+	ContainerBounds->SetupAttachment(RootComponent);
+	ContainerBounds->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ContainerBounds->SetCollisionResponseToAllChannels(ECR_Ignore);
+	ContainerBounds->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+	ContainerBounds->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -81,6 +87,8 @@ void AExtractionLootActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(AExtractionLootActor, Label);
 	DOREPLIFETIME(AExtractionLootActor, Empty);
 	DOREPLIFETIME(AExtractionLootActor, ContainerId);
+	DOREPLIFETIME(AExtractionLootActor, SourcePointId);
+	DOREPLIFETIME(AExtractionLootActor, ContainerAppearance);
 	DOREPLIFETIME(AExtractionLootActor, AccessDoor);
 }
 
@@ -88,6 +96,22 @@ void AExtractionLootActor::OnRep_Appearance()
 {
 	WeaponMesh->SetVisibility(false);
 	Mesh->SetVisibility(true);
+	ContainerBounds->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	InteractionBounds->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	if (ContainerAppearance && !Loose)
+	{
+		WeaponMesh->SetSkeletalMeshAsset(ContainerAppearance);
+		WeaponMesh->SetVisibility(true);
+		Mesh->SetVisibility(false);
+		const auto Bounds = ContainerAppearance->GetBounds();
+		// The interaction box is the actor root; changing its location would move the authored point.
+		InteractionBounds->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		ContainerBounds->SetRelativeLocation(Bounds.Origin);
+		ContainerBounds->SetBoxExtent(Bounds.BoxExtent.ComponentMax(FVector(5)));
+		ContainerBounds->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		WeaponMesh->SetRelativeLocation(FVector::ZeroVector);
+		return;
+	}
 	if (Loose) InteractionBounds->SetBoxExtent(FVector(45, 25, 20));
 	if (const auto* Def = Loose ? UExtractionItemDefinition::Get(LooseDefinition) : nullptr)
 	{
@@ -115,7 +139,12 @@ void AExtractionLootActor::OnRep_Appearance()
 	}
 }
 
-FVector AExtractionLootActor::InteractionPoint() const { return InteractionBounds->GetComponentLocation(); }
+FVector AExtractionLootActor::InteractionPoint() const
+{
+	return ContainerAppearance
+		       ? GetActorTransform().TransformPosition(ContainerAppearance->GetBounds().Origin)
+		       : InteractionBounds->GetComponentLocation();
+}
 
 void AExtractionLootActor::Changed()
 {

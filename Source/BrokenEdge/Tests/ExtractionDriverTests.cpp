@@ -344,8 +344,9 @@ public:
 					auto* Combat = Pawn->GetExtractionCombat();
 					const FString Kind = Command->GetStringField(TEXT("kind"));
 					FVector End = Pawn->GetActorLocation() + FVector(0, 0, 8000);
-					if (Kind == TEXT("version")) Combat->ServerRequestShotVersioned(
-						++Combat->LocalShotId, Pawn->GetEquippedWeapon(), End, 0);
+					if (Kind == TEXT("version"))
+						Combat->ServerRequestShotVersioned(
+							++Combat->LocalShotId, Pawn->GetEquippedWeapon(), End, 0);
 					else if (Kind == TEXT("duplicate")) Combat->ServerRequestShot(0, Pawn->GetEquippedWeapon(), End);
 					else if (Kind == TEXT("foreign"))
 					{
@@ -1401,6 +1402,7 @@ private:
 			auto Entry = MakeShared<FJsonObject>();
 			Entry->SetStringField(TEXT("name"), It->GetName());
 			Entry->SetStringField(TEXT("label"), It->Label);
+			Entry->SetStringField(TEXT("source_point"), It->SourcePointId.ToString());
 			Entry->SetStringField(TEXT("id"), It->ContainerId.ToString());
 			Entry->SetBoolField(TEXT("loose"), It->Loose);
 			Entry->SetBoolField(TEXT("empty"), It->Empty);

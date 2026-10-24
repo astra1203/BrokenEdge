@@ -15,6 +15,9 @@ class STINGERTOOLS_API UStingerAssetLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
+	/** Drain async asset compilation before cold commandlet collision audits. */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static void FinishValidationAssetCompilation();
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Import")
 	static class USkeleton* CreateSourceSkeleton(const FString& PackageName, const TArray<FName>& Names,
 	                                             const TArray<int32>& Parents, const TArray<FTransform>& ReferencePose);
