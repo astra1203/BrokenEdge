@@ -15,6 +15,8 @@ class BROKENEDGE_API UWeaponPresentation : public UDataAsset
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<class URifleLocomotionSet> Locomotion;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<USkeletalMesh> ViewMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FStingerViewWeaponFit ViewFit;

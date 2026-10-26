@@ -7,6 +7,7 @@
 #include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 #include "BrokenEdge/BrokenEdgeTypes/CombatState.h"
 #include "BrokenEdge/Weapon/Weapon.h"
+#include "BrokenEdge/Weapon/WeaponPresentation.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -160,5 +161,11 @@ void UBrokenEdgeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		// 右手变换启用条件：空闲状态且游戏未禁用
 		bTransformRightHand = BrokenEdgeCharacter->GetCombatState() == ECombatState::ECS_Unoccuiped
 			&& BrokenEdgeCharacter->IsLocallyControlled() && bHasRightGrip && bHasRightHandBone;
+		if (bRifleLocomotionEnabled && EquippedWeapon->Presentation && EquippedWeapon->Presentation->Locomotion && !
+			bIsInAir)
+		{
+			// The opt-in node already applies the matching original rifle aim poses.
+			bUseAimOffsets = false;
+		}
 	}
 }

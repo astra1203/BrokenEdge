@@ -1,0 +1,26 @@
+{
+  "suite": "grip",
+  "players": 2,
+  "capture": "0",
+  "started_utc": "2026-10-26T03:44:43.006240+00:00",
+  "head": "df2be3cbbec97f8637b505b0288e8d3e46fd3275",
+  "worktree": " M Content/Blueprints/Weapon/BP_AK47.uasset\n M Content/Characters/Stinger/Blueprints/BP_StingerCharacter.uasset\n M Content/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired.uasset\n M Scripts/SpaceCenter/Converter/Program.cs\n M Scripts/Stinger/repair_import.py\n M Source/BrokenEdge/Character/BrokenEdgeAnimInstance.cpp\n M Source/BrokenEdge/Character/BrokenEdgeAnimInstance.h\n M Source/BrokenEdge/Character/StingerFirstPersonAnimInstance.cpp\n M Source/BrokenEdge/Character/StingerFirstPersonAnimInstance.h\n M Source/BrokenEdge/Weapon/WeaponPresentation.h\n M Source/StingerTools/Private/StingerAssetLibrary.cpp\n M Source/StingerTools/Public/StingerAssetLibrary.h\n?? Content/Characters/Stinger/Animations/DeltaForceLocomotion/\n?? Scripts/Stinger/audit_locomotion.py\n?? Scripts/Stinger/configure_locomotion.py\n?? Scripts/Stinger/import_locomotion.py\n?? Scripts/Stinger/prepare_locomotion.py\n?? Scripts/Stinger/rollback_locomotion.py\n?? Scripts/Stinger/run_locomotion.py\n?? Scripts/Stinger/setup_locomotion.py\n?? Scripts/Stinger/validate_locomotion.py\n?? Source/BrokenEdge/Animation/AnimNode_RifleLocomotion.cpp\n?? Source/BrokenEdge/Animation/AnimNode_RifleLocomotion.h\n?? Source/BrokenEdge/Animation/RifleLocomotionSet.h\n?? Source/StingerTools/Public/AnimGraphNode_RifleLocomotion.h\n",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Characters/Stinger/Maps/L_StingerTest",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1280",
+    "-ResY=720",
+    "-ExecCmds=py D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Stinger\\validate_third_person_grip.py",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\Baseline\\locomotion-grip03\\Editor.log"
+  ],
+  "pid": 35504,
+  "exit_code": 0,
+  "finished_utc": "2026-10-26T03:45:30.433431+00:00"
+}

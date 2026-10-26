@@ -1,0 +1,24 @@
+{
+  "task": "weapon-pie",
+  "started_utc": "2026-10-26T03:59:12.960414+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\locomotion-weapon-final\\Editor.log",
+    "-RenderOffscreen",
+    "-ResX=1280",
+    "-ResY=720",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.WeaponPIE",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\locomotion-weapon-final\\Automation"
+  ],
+  "pid": 2424,
+  "exit_code": 0,
+  "successful_tests": 1,
+  "result": "passed",
+  "finished_utc": "2026-10-26T04:00:22.164053+00:00"
+}
