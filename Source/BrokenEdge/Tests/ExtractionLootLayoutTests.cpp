@@ -51,11 +51,13 @@ bool FExtractionLootLayoutTest::RunTest(const FString&)
 	for (int32 Seed = 0; Seed < 1000; ++Seed)
 	{
 		if (!TestTrue(TEXT("Production layout selects"), Authored->Select(Seed, Out, Error))) return false;
-		TestEqual(TEXT("Production raid has five fixed and two grouped safes"), Out.Num(), 7);
+		// 大小保险全部为固定点：每局刷出所有已启用点位，不再有 N 选 1 的分组。
+		TestEqual(TEXT("Production raid spawns every enabled safe"), Out.Num(), 10);
 		for (int32 Index : Out)
 		{
 			const auto& P = Authored->Points[Index];
 			Seen.Add(P.Id);
+			TestTrue(TEXT("Guaranteed point is enabled"), P.Enabled);
 			TestNotNull(TEXT("Source model configured"), P.Appearance.Get());
 			TestNotNull(TEXT("Separate project recipe configured"), P.Recipe.Get());
 		}
