@@ -5,6 +5,8 @@
 // 布局记录点位来源，Recipe 记录项目掉落内容，两者分离以免把兼容调参误称为源游戏规则。
 // 服务器开局按固定种子选择点位；组名为空的固定点全选，有组名的候选按权重每组选一个。
 
+const FName UExtractionLootLayout::LooseKind(TEXT("Loose"));
+
 // 校验唯一 ID、变换和权重后，对组名及点位排序再按种子抽取；排序避免容器遍历顺序影响重现。
 // 输出是 Points 索引，失败时清空选择并返回错误文本。
 bool UExtractionLootLayout::Select(int32 Seed, TArray<int32>& Out, FString& Error) const
@@ -25,6 +27,8 @@ bool UExtractionLootLayout::Select(int32 Seed, TArray<int32>& Out, FString& Erro
 		}
 		Ids.Add(P.Id);
 		if (!P.Enabled) continue;
+		// Loose sites are drawn by SpawnLoose: they must never occupy an authored container slot.
+		if (P.Kind == LooseKind) continue;
 		if (P.Group.IsNone()) Out.Add(I);
 		else Groups.FindOrAdd(P.Group).Add(I);
 	}
@@ -92,4 +96,58 @@ void UExtractionLootLayout::Spawn(UWorld* World, int32 Seed) const
 		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_LOOT_SELECTED seed=%d variant=%s group=%s point=%s"),
 		       Seed, *Variant.ToString(), *P.Group.ToString(), *P.Id.ToString());
 	}
+	SpawnLoose(World, Seed);
+}
+
+void UExtractionLootLayout::SpawnLoose(UWorld* World, int32 Seed) const
+{
+	TArray<int32> Candidates;
+	for (int32 I = 0; I < Points.Num(); ++I)
+		if (Points[I].Enabled && Points[I].Kind == LooseKind) Candidates.Add(I);
+	if (Candidates.IsEmpty() || LooseSpawnCount <= 0) return;
+
+	FRandomStream Random(Seed ^ 0x1F123BB5);
+	for (int32 I = Candidates.Num() - 1; I > 0; --I)
+		Candidates.Swap(I, Random.RandRange(0, I));
+	const int32 Count = FMath::Min(LooseSpawnCount, Candidates.Num());
+	int32 Placed = 0;
+
+	for (int32 N = 0; N < Count; ++N)
+	{
+		const auto& P = Points[Candidates[N]];
+		if (!P.Recipe || P.Recipe->Items.IsEmpty())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_LOOT_LOOSE_INVALID point=%s recipe empty"),
+			       *P.Id.ToString());
+			continue;
+		}
+		const auto& Stack = P.Recipe->Items[Random.RandRange(0, P.Recipe->Items.Num() - 1)];
+		if (Stack.Quantity <= 0 || !UExtractionItemDefinition::Get(Stack.Item))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_LOOT_LOOSE_INVALID point=%s item=%s"),
+			       *P.Id.ToString(), *Stack.Item.ToString());
+			continue;
+		}
+		// Only X/Y move: the authored Z is the ground the site was validated against.
+		const FVector Position = P.Transform.GetLocation();
+		auto* Actor = AExtractionLootActor::SpawnContainer(World, Position, true, Stack.Item);
+		if (!Actor) continue;
+		FExtractionContainer Contents;
+		Contents.Id = FGuid::NewGuid();
+		if (!ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(Stack.Item, Stack.Quantity)))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_LOOT_LOOSE_INVALID point=%s item=%s did not fit"),
+			       *P.Id.ToString(), *Stack.Item.ToString());
+			Actor->Destroy();
+			continue;
+		}
+		// SpawnContainer parks an empty loose actor on a 0.5s lifespan; content must land now.
+		Actor->SetContents(Contents);
+		Actor->SetLifeSpan(0);
+		++Placed;
+		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_LOOT_LOOSE seed=%d point=%s item=%s x%d"),
+		       Seed, *P.Id.ToString(), *Stack.Item.ToString(), Stack.Quantity);
+	}
+	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_LOOT_LOOSE_SUMMARY seed=%d candidates=%d placed=%d"),
+	       Seed, Candidates.Num(), Placed);
 }

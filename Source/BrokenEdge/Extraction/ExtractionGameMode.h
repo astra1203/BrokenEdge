@@ -89,6 +89,8 @@ private:
 	// 出生分配仅由服务器维护：小队共享组号、组内使用不同槽位，弱引用不延长 Actor 生命周期。
 	TMap<uint8, int32> SquadSpawnGroups;
 	TSet<int32> ClaimedSpawnGroups;
+	/** 每类出生失败只打一次日志，避免每帧刷屏。 */
+	TSet<FString> SpawnAttemptWarnings;
 	TMap<uint8, int32> SquadSpawnSlots;
 	FRandomStream SpawnRandom;
 	bool bMapConfigurationValid = false;

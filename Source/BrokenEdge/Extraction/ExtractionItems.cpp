@@ -20,6 +20,13 @@ bool UExtractionItemDefinition::SupportsAttachment(FName Id) const
 		&& Part->AttachmentSlot != EExtractionAttachmentSlot::None;
 }
 
+FTransform UExtractionItemDefinition::Placement(FName WeaponDefinition, bool bFirstPerson) const
+{
+	const auto& Overrides = bFirstPerson ? FirstPersonMountByWeapon : MountByWeapon;
+	if (const FTransform* Explicit = Overrides.Find(WeaponDefinition)) return *Explicit;
+	return bFirstPerson ? FirstPersonMount : Mount;
+}
+
 // 返回可识别的定义白名单，未知名称不会被当作任意资源路径加载。
 const TArray<FName>& UExtractionItemDefinition::Ids()
 {

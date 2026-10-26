@@ -30,5 +30,6 @@ void AExtractionPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	DOREPLIFETIME(AExtractionPlayerState, DownHealth);
 	DOREPLIFETIME_CONDITION(AExtractionPlayerState, ExtractAt, COND_OwnerOnly);
 	DOREPLIFETIME_CONDITION(AExtractionPlayerState, ExtractExitId, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(AExtractionPlayerState, ExtractBlockedReason, COND_OwnerOnly);
 	DOREPLIFETIME_CONDITION(AExtractionPlayerState, RaidProgress, COND_OwnerOnly);
 }

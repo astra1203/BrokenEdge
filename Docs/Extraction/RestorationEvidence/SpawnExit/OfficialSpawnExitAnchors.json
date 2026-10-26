@@ -1,0 +1,671 @@
+{
+  "schema": 1,
+  "source": "Docs/Extraction/SpaceCenterExpansion/SourceGameplayAnchors.json",
+  "source_sha256": "10fc17a1fa8084dd962f743d81d9673f3561da65d9c870924dd29215a5575edc",
+  "decoded_sha256": "e496da1372475b0f945668b6f317b944b405027c65744555c6586aaa57684285",
+  "origin": [
+    -664000.0,
+    451000.0,
+    22400.0
+  ],
+  "conversion": "world = source + (-664000, 451000, 22400)",
+  "variant_used": "/Game/Maps/SpaceCenter_Level1/GameplayConfig/SpaceCenter_Level1_GameplayConfig",
+  "variant_cross_check": {
+    "against": "/Game/Maps/SpaceCenter_Level2/GameplayConfig/SpaceCenter_Level2_GameplayConfig",
+    "max_spawn_xy_drift_cm": 340.21,
+    "worst_spawns": [
+      {
+        "actor": "PlayerStart34",
+        "drift_cm": 340.2
+      },
+      {
+        "actor": "PlayerStart31",
+        "drift_cm": 250.5
+      },
+      {
+        "actor": "PlayerStart33",
+        "drift_cm": 178.0
+      },
+      {
+        "actor": "PlayerStart59",
+        "drift_cm": 5.4
+      },
+      {
+        "actor": "PlayerStart56",
+        "drift_cm": 5.4
+      }
+    ],
+    "exits_identical": true
+  },
+  "spawn_groups": [
+    {
+      "id": "OfficialWestGate",
+      "points": [
+        {
+          "actor": "PlayerStart2",
+          "world": [
+            -21605.2,
+            -3443.06,
+            12.13
+          ],
+          "yaw": -14.000061,
+          "export_index": 215
+        },
+        {
+          "actor": "PlayerStart3",
+          "world": [
+            -21728.8,
+            -3193.06,
+            -17.87
+          ],
+          "yaw": -14.000061,
+          "export_index": 221
+        },
+        {
+          "actor": "PlayerStart4",
+          "world": [
+            -21884.5,
+            -2964.97,
+            -17.87
+          ],
+          "yaw": -14.000061,
+          "export_index": 231
+        },
+        {
+          "actor": "PlayerStart5",
+          "world": [
+            -21971.06,
+            -3405.1,
+            -4.87
+          ],
+          "yaw": -14.000061,
+          "export_index": 242
+        },
+        {
+          "actor": "PlayerStart_1",
+          "world": [
+            -21838.9,
+            -3675.34,
+            -4.87
+          ],
+          "yaw": -14.000061,
+          "export_index": 258
+        }
+      ],
+      "intra_span_cm": 711.8
+    },
+    {
+      "id": "OfficialWestDorm",
+      "points": [
+        {
+          "actor": "PlayerStart6_8",
+          "world": [
+            -22629.56,
+            -20995.22,
+            330.76
+          ],
+          "yaw": 0.0,
+          "export_index": 254
+        },
+        {
+          "actor": "PlayerStart7",
+          "world": [
+            -22629.56,
+            -21381.0,
+            330.76
+          ],
+          "yaw": 0.0,
+          "export_index": 255
+        },
+        {
+          "actor": "PlayerStart8",
+          "world": [
+            -22629.56,
+            -21722.7,
+            330.76
+          ],
+          "yaw": 0.0,
+          "export_index": 256
+        },
+        {
+          "actor": "PlayerStart9",
+          "world": [
+            -22257.56,
+            -21602.62,
+            330.76
+          ],
+          "yaw": 0.0,
+          "export_index": 257
+        },
+        {
+          "actor": "PlayerStart10",
+          "world": [
+            -22257.56,
+            -21321.97,
+            330.76
+          ],
+          "yaw": 0.0,
+          "export_index": 214
+        }
+      ],
+      "intra_span_cm": 727.5
+    },
+    {
+      "id": "OfficialControlNorth",
+      "points": [
+        {
+          "actor": "PlayerStart21",
+          "world": [
+            1390.3,
+            -28538.9,
+            725.83
+          ],
+          "yaw": 87.76209,
+          "export_index": 216
+        },
+        {
+          "actor": "PlayerStart22",
+          "world": [
+            1699.7,
+            -28531.12,
+            705.4
+          ],
+          "yaw": 102.23909,
+          "export_index": 217
+        },
+        {
+          "actor": "PlayerStart23",
+          "world": [
+            1936.2,
+            -28514.66,
+            716.07
+          ],
+          "yaw": 112.81822,
+          "export_index": 218
+        },
+        {
+          "actor": "PlayerStart24",
+          "world": [
+            1075.94,
+            -28515.25,
+            714.79
+          ],
+          "yaw": 137.47414,
+          "export_index": 219
+        },
+        {
+          "actor": "PlayerStart25",
+          "world": [
+            760.06,
+            -28512.8,
+            736.38
+          ],
+          "yaw": 110.80288,
+          "export_index": 220
+        }
+      ],
+      "intra_span_cm": 1176.1
+    },
+    {
+      "id": "OfficialAssembly",
+      "points": [
+        {
+          "actor": "PlayerStart31",
+          "world": [
+            14899.0,
+            -17922.0,
+            167.0
+          ],
+          "yaw": 0.0,
+          "export_index": 222
+        },
+        {
+          "actor": "PlayerStart32",
+          "world": [
+            14921.0,
+            -17619.0,
+            167.0
+          ],
+          "yaw": 2.5063477,
+          "export_index": 223
+        },
+        {
+          "actor": "PlayerStart33",
+          "world": [
+            15137.0,
+            -17844.0,
+            167.0
+          ],
+          "yaw": -2.8246155,
+          "export_index": 224
+        },
+        {
+          "actor": "PlayerStart34",
+          "world": [
+            15134.0,
+            -17676.0,
+            160.0
+          ],
+          "yaw": -0.826355,
+          "export_index": 225
+        },
+        {
+          "actor": "PlayerStart35",
+          "world": [
+            14862.0,
+            -17771.0,
+            167.0
+          ],
+          "yaw": 0.0,
+          "export_index": 226
+        }
+      ],
+      "intra_span_cm": 340.2
+    },
+    {
+      "id": "OfficialSoutheast",
+      "points": [
+        {
+          "actor": "PlayerStart36",
+          "world": [
+            24798.0,
+            -29631.0,
+            -314.0
+          ],
+          "yaw": 94.03123,
+          "export_index": 227
+        },
+        {
+          "actor": "PlayerStart37",
+          "world": [
+            25153.0,
+            -29687.0,
+            -344.0
+          ],
+          "yaw": 98.031364,
+          "export_index": 228
+        },
+        {
+          "actor": "PlayerStart38",
+          "world": [
+            25554.0,
+            -29688.0,
+            -336.0
+          ],
+          "yaw": 88.03096,
+          "export_index": 229
+        },
+        {
+          "actor": "PlayerStart39",
+          "world": [
+            25300.0,
+            -29331.0,
+            -336.0
+          ],
+          "yaw": 96.03138,
+          "export_index": 230
+        },
+        {
+          "actor": "PlayerStart40",
+          "world": [
+            24910.0,
+            -29297.0,
+            -336.0
+          ],
+          "yaw": 96.03127,
+          "export_index": 232
+        }
+      ],
+      "intra_span_cm": 758.1
+    },
+    {
+      "id": "OfficialEastGate",
+      "points": [
+        {
+          "actor": "PlayerStart41",
+          "world": [
+            33247.1,
+            -13868.6,
+            -384.98
+          ],
+          "yaw": 173.9995,
+          "export_index": 233
+        },
+        {
+          "actor": "PlayerStart42",
+          "world": [
+            33253.75,
+            -13552.47,
+            -414.98
+          ],
+          "yaw": 177.9996,
+          "export_index": 234
+        },
+        {
+          "actor": "PlayerStart43",
+          "world": [
+            33266.1,
+            -13188.6,
+            -406.98
+          ],
+          "yaw": 167.99951,
+          "export_index": 235
+        },
+        {
+          "actor": "PlayerStart44",
+          "world": [
+            33046.1,
+            -13305.0,
+            -406.98
+          ],
+          "yaw": 175.9997,
+          "export_index": 236
+        },
+        {
+          "actor": "PlayerStart45",
+          "world": [
+            33057.94,
+            -13692.25,
+            -406.98
+          ],
+          "yaw": 175.99948,
+          "export_index": 237
+        }
+      ],
+      "intra_span_cm": 680.3
+    },
+    {
+      "id": "OfficialNortheast",
+      "points": [
+        {
+          "actor": "PlayerStart46",
+          "world": [
+            23992.0,
+            3138.0,
+            -396.0
+          ],
+          "yaw": -146.00012,
+          "export_index": 238
+        },
+        {
+          "actor": "PlayerStart47",
+          "world": [
+            24099.0,
+            3421.0,
+            -424.0
+          ],
+          "yaw": -141.99997,
+          "export_index": 239
+        },
+        {
+          "actor": "PlayerStart48",
+          "world": [
+            23976.0,
+            3581.0,
+            -424.0
+          ],
+          "yaw": -152.00012,
+          "export_index": 240
+        },
+        {
+          "actor": "PlayerStart49",
+          "world": [
+            23817.0,
+            3360.0,
+            -424.0
+          ],
+          "yaw": -143.99998,
+          "export_index": 241
+        },
+        {
+          "actor": "PlayerStart50",
+          "world": [
+            24257.0,
+            3214.0,
+            -424.0
+          ],
+          "yaw": -143.99998,
+          "export_index": 243
+        }
+      ],
+      "intra_span_cm": 463.6
+    },
+    {
+      "id": "OfficialLaunchSouth",
+      "points": [
+        {
+          "actor": "PlayerStart51",
+          "world": [
+            8157.9,
+            -27555.1,
+            661.83
+          ],
+          "yaw": 131.4311,
+          "export_index": 244
+        },
+        {
+          "actor": "PlayerStart52",
+          "world": [
+            7608.2,
+            -27719.44,
+            663.83
+          ],
+          "yaw": 88.76552,
+          "export_index": 245
+        },
+        {
+          "actor": "PlayerStart53",
+          "world": [
+            8273.06,
+            -27360.5,
+            676.83
+          ],
+          "yaw": 167.00371,
+          "export_index": 246
+        },
+        {
+          "actor": "PlayerStart54",
+          "world": [
+            7809.1,
+            -27740.0,
+            660.83
+          ],
+          "yaw": 90.13605,
+          "export_index": 247
+        },
+        {
+          "actor": "PlayerStart55",
+          "world": [
+            7438.25,
+            -27698.72,
+            673.83
+          ],
+          "yaw": 95.42737,
+          "export_index": 248
+        }
+      ],
+      "intra_span_cm": 900.7
+    },
+    {
+      "id": "OfficialNorthRidge",
+      "points": [
+        {
+          "actor": "PlayerStart56",
+          "world": [
+            -6095.5,
+            33967.12,
+            1790.93
+          ],
+          "yaw": -57.673462,
+          "export_index": 249
+        },
+        {
+          "actor": "PlayerStart57",
+          "world": [
+            -6280.4,
+            33842.25,
+            1790.62
+          ],
+          "yaw": -41.63553,
+          "export_index": 250
+        },
+        {
+          "actor": "PlayerStart58",
+          "world": [
+            -6415.75,
+            33671.62,
+            1790.62
+          ],
+          "yaw": -45.63556,
+          "export_index": 251
+        },
+        {
+          "actor": "PlayerStart59",
+          "world": [
+            -6157.3,
+            33491.9,
+            1790.62
+          ],
+          "yaw": -54.435883,
+          "export_index": 252
+        },
+        {
+          "actor": "PlayerStart60",
+          "world": [
+            -5998.2,
+            33671.6,
+            1790.6
+          ],
+          "yaw": -51.510742,
+          "export_index": 253
+        }
+      ],
+      "intra_span_cm": 479.2
+    }
+  ],
+  "spawn_count": 45,
+  "min_group_separation_cm": 5562.2,
+  "exits": [
+    {
+      "id": "OfficialExitSquare",
+      "actor": "BP_PlayerExit_Square",
+      "label": "广场撤离点",
+      "player_exit_id": 308,
+      "world": [
+        8363.44,
+        9760.78,
+        30.97
+      ],
+      "yaw": 45.013306,
+      "open_type": "Switch",
+      "open_seconds": 900.0,
+      "close_seconds_after_open": 120.0,
+      "capacity": 0,
+      "require_empty_pack": false,
+      "note": "官方为开关式开放：4 个 BP_ExitTriggerDam 里随机 2 个，全部激活才开；本项目无开关逻辑，按 ExpectedOpenTime 折算为定时开放",
+      "export_index": 56,
+      "authored_overrides": {
+        "PlayerExitId": 308,
+        "ExitCutSceneType": "EExitCutSceneType::OutDoor",
+        "RebornPlayerMediaVideoNames": "SOL_Demoulin_Outro_SpaceCenter",
+        "RebornPlayerVideoMaxTime": 23.0
+      }
+    },
+    {
+      "id": "OfficialExitDemoulin",
+      "actor": "BP_PlayerExit_Demoulin_3",
+      "label": "德穆兰撤离点",
+      "player_exit_id": 309,
+      "world": [
+        3828.06,
+        22730.72,
+        883.13
+      ],
+      "yaw": 0.0,
+      "open_type": "Delay",
+      "open_seconds": 900.0,
+      "close_seconds_after_open": 0.0,
+      "capacity": 3,
+      "require_empty_pack": false,
+      "note": "官方另有 ExitConditionType=PayItem（5 个 151104000xx 或通行物 15200000303）与阵营限制；本项目暂无支付交互，未启用",
+      "export_index": 57,
+      "authored_overrides": {
+        "CampLimit": "EExitTriggerCampLimitType::Desmoulin",
+        "EnableMaxEscapedNum": true,
+        "MaxEscapedNum": 3,
+        "PlayerExitId": 309,
+        "RebornPlayerMediaVideoNames": "SOL_Demoulin_Outro_SpaceCenter",
+        "RebornPlayerVideoMaxTime": 23.0
+      }
+    },
+    {
+      "id": "OfficialExitTestrange",
+      "actor": "BP_PlayerExit_Testrange_3",
+      "label": "试验场撤离点",
+      "player_exit_id": 307,
+      "world": [
+        23504.7,
+        23586.16,
+        227.93
+      ],
+      "yaw": 19.999994,
+      "open_type": "Delay",
+      "open_seconds": 540.0,
+      "close_seconds_after_open": 0.0,
+      "capacity": 3,
+      "require_empty_pack": true,
+      "note": "官方条件为背包清空（Bag=Empty）后离开，即丢包撤；容量 Level1=3、Level2=1，这里取 3",
+      "export_index": 58,
+      "authored_overrides": {
+        "bAlwaysQualified": true,
+        "PlayerExitId": 307,
+        "ExitCutSceneType": "EExitCutSceneType::InDoor",
+        "RebornPlayerMediaVideoNames": "SOL_Demoulin_Outro_SpaceCenter",
+        "RebornPlayerVideoMaxTime": 23.0
+      }
+    }
+  ],
+  "exit_triggers": [
+    {
+      "actor": "BP_ExitTriggerSquare",
+      "world": [
+        11141.06,
+        -6289.16,
+        412.53
+      ],
+      "target": "BP_PlayerExitDam_C",
+      "export_index": 47
+    },
+    {
+      "actor": "BP_ExitTriggerSquare2",
+      "world": [
+        -2421.75,
+        2025.34,
+        669.37
+      ],
+      "target": "BP_PlayerExitDam_C",
+      "export_index": 48
+    },
+    {
+      "actor": "BP_ExitTriggerSquare3",
+      "world": [
+        9149.56,
+        -3318.25,
+        591.82
+      ],
+      "target": "BP_PlayerExitDam_C",
+      "export_index": 49
+    },
+    {
+      "actor": "BP_ExitTriggerSquare4",
+      "world": [
+        1961.75,
+        -7334.56,
+        539.41
+      ],
+      "target": "BP_PlayerExitDam_C",
+      "export_index": 50
+    }
+  ],
+  "caveat": "源自解包 GameplayConfig 的 authored 变换，未经运行时地面/通路验收；写资产前必须用碰撞探测复核。"
+}

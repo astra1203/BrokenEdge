@@ -473,7 +473,8 @@ private:
 	{
 		const auto* C = Container(SelectedLoot);
 		const auto* Item = C ? C->Find(Selected) : nullptr;
-		if (!Item || Item->Definition != TEXT("AK"))
+		const auto* Def = Item ? UExtractionItemDefinition::Get(Item->Definition) : nullptr;
+		if (!Def || Def->Kind != EExtractionItemKind::Weapon)
 		{
 			PC()->ShowItemMessage(TEXT("只有武器可以装备"));
 			Cancel();
