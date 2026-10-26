@@ -93,7 +93,7 @@ assert lib.save_loaded_asset(bp,only_if_is_dirty=False)
 gun = duplicate('/Game/Extraction/Items/DA_Item_AK','/Game/Extraction/Items/DA_Item_SCARH')
 for prop,value in {'item_id':'SCARH','label':'SCAR-H','weapon_class':bp.generated_class(),
                    'magazine_capacity':20,'default_ammo':'Ammo76251','compatible_ammo':['Ammo76251'],
-                   'compatible_attachments':[], 'description':'7.62×51 mm，20 发弹匣。基础组装；射速、伤害与握持仍为临时调校。'}.items():
+                   'compatible_attachments':['RedDot','VerticalGrip','Compensator'], 'description':'7.62×51 mm，20 发弹匣。基础组装；射速、伤害与握持仍为临时调校。'}.items():
     gun.set_editor_property(prop,value)
 assert lib.save_loaded_asset(gun)
 ammo = duplicate('/Game/Extraction/Items/DA_Item_Ammo','/Game/Extraction/Items/DA_Item_Ammo76251')

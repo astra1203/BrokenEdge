@@ -51,6 +51,8 @@ public:
 	double ExtractAt = 0;
 	// 记录当前计时所属撤离点，换点不能继承另一处的停留进度。
 	UPROPERTY(Replicated) FName ExtractExitId;
+	/** 站在撤离区内但暂时无法撤离的原因，例如丢包撤要求先清空背包。 */
+	UPROPERTY(Replicated) FString ExtractBlockedReason;
 	// 倒地流血截止时间（秒），与 DownHealth 的再次受伤耗尽条件并行判断。
 	UPROPERTY(Replicated) double BleedAt = 0;
 	UPROPERTY(Replicated) float DownHealth = 0;

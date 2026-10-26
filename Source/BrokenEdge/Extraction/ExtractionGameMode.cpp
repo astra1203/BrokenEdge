@@ -160,57 +160,170 @@ AActor* AExtractionGameMode::FindPlayerStart_Implementation(AController* Player,
 AActor* AExtractionGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
 	if (const auto* Existing = PlayerStarts.Find(Player); Existing && Existing->IsValid()) return Existing->Get();
-	if (const auto* Region = AExtractionRegionStream::Find(GetWorld()); Region && !Region->IsReady()) return nullptr;
+
+	// 出生失败以前是静默 return nullptr，日志里只剩 GameModeBase 的 "Player start not found"，
+	// 完全看不出是哪一步断的。这里对每一种失败只打一次，避免每帧刷屏。
+	const auto Fail = [this](const FString& Key, const FString& Reason)
+	{
+		if (SpawnAttemptWarnings.Contains(Key)) return;
+		SpawnAttemptWarnings.Add(Key);
+		UE_LOG(LogTemp, Error, TEXT("EXTRACTION_SPAWN_FAIL %s | %s"), *Key, *Reason);
+	};
+
+	if (const auto* Region = AExtractionRegionStream::Find(GetWorld()); Region && !Region->IsReady())
+	{
+		// 启动前几秒正常情况，别当错误刷日志。
+		UE_LOG(LogTemp, Verbose, TEXT("EXTRACTION_SPAWN_WAIT_REGION"));
+		return nullptr;
+	}
 	const auto* PS = Player ? Player->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	if (!LoadedMapDefinition || !PS || PS->ExtractionSquad == 0) return nullptr;
+	if (!LoadedMapDefinition)
+	{
+		Fail(TEXT("no_map_definition"), TEXT("MapDefinition 未加载"));
+		return nullptr;
+	}
+	if (!PS)
+	{
+		Fail(TEXT("no_player_state"), TEXT("PlayerState 不是 AExtractionPlayerState"));
+		return nullptr;
+	}
 	const auto* Pawn = DefaultPawnClass ? Cast<ACharacter>(DefaultPawnClass->GetDefaultObject()) : nullptr;
-	if (!Pawn) return nullptr;
+	if (!Pawn)
+	{
+		Fail(TEXT("no_default_pawn"), TEXT("DefaultPawnClass 不是 ACharacter，无法取胶囊尺寸"));
+		return nullptr;
+	}
+	// 未分配小队不再直接拒绝：拒绝等于整局没有 Pawn、阶段永远停在 Waiting。
+	const uint8 Squad = PS->ExtractionSquad;
+	if (Squad == 0) Fail(TEXT("squad_zero"), TEXT("ExtractionSquad=0（未分队），按无小队出生"));
+
 	const float Radius = Pawn->GetCapsuleComponent()->GetScaledCapsuleRadius();
 	const float Half = Pawn->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-	const auto Ground = [&](const FTransform& Position, FTransform& Resolved)
+	// 探测射线从 authored 位置上方起步：点数据里的 Z 是地面高度，从地面本身起探会与地面共面，
+	// 浮点误差一偏就漏检（这是这次「整组被判无效」的主因）。
+	const float ProbeUp = Half + 200.f;
+	const float ProbeDown = Half * 2.f + 700.f;
+	const float MaxDrop = Half + 600.f; // 允许地面比 authored Z 低这么多（本项目地形整体偏低约 1.8m）
+	const auto Ground = [&](const FTransform& Position, FTransform& Resolved, FString& Why)
 	{
-		if (Position.ContainsNaN()) return false;
-		const FVector Center = Position.GetLocation();
-		FHitResult Floor;
-		if (!GetWorld()->LineTraceSingleByChannel(Floor, Center,
-		                                          Center - FVector(0, 0, Half + 500),
-		                                          ECC_Visibility) || Floor.ImpactNormal.Z < .7f)
+		Why.Reset();
+		if (Position.ContainsNaN())
+		{
+			Why = TEXT("transform contains NaN");
 			return false;
+		}
+		const FVector Center = Position.GetLocation();
+		const FVector Start = Center + FVector(0, 0, ProbeUp);
+		const FVector End = Start - FVector(0, 0, ProbeDown);
+		// 两个通道都试：还原资产里有一部分地面只挡 Pawn、不挡 Visibility
+		// （数据脚本正是用 ECC_Pawn 探到的）；只查 Visibility 会把整组判成"无地面"。
+		FHitResult Floor;
+		if (!GetWorld()->LineTraceSingleByChannel(Floor, Start, End, ECC_Pawn) &&
+			!GetWorld()->LineTraceSingleByChannel(Floor, Start, End, ECC_Visibility))
+		{
+			Why = TEXT("probe found no floor");
+			return false;
+		}
+		if (Floor.ImpactNormal.Z < .7f)
+		{
+			Why = FString::Printf(TEXT("floor normal %.2f"), Floor.ImpactNormal.Z);
+			return false;
+		}
+		const float Drop = Center.Z - Floor.ImpactPoint.Z;
+		if (Drop < -ProbeUp || Drop > MaxDrop)
+		{
+			Why = FString::Printf(TEXT("floor out of window drop=%.0f"), Drop);
+			return false;
+		}
 		Resolved = Position;
 		Resolved.SetLocation(Floor.ImpactPoint + FVector(0, 0, Half + 3));
-		return !GetWorld()->OverlapBlockingTestByChannel(Resolved.GetLocation(), FQuat::Identity, ECC_Pawn,
-		                                                 FCollisionShape::MakeCapsule(Radius, Half));
+		if (GetWorld()->OverlapBlockingTestByChannel(Resolved.GetLocation(), FQuat::Identity, ECC_Pawn,
+		                                             FCollisionShape::MakeCapsule(Radius, Half)))
+		{
+			Why = TEXT("capsule blocked");
+			return false;
+		}
+		return true;
 	};
-	int32* Assigned = SquadSpawnGroups.Find(PS->ExtractionSquad);
+	int32* Assigned = SquadSpawnGroups.Find(Squad);
 	if (!Assigned)
 	{
 		TArray<int32> Candidates;
+		TArray<FString> Rejects;
 		for (int32 I = 0; I < LoadedMapDefinition->SpawnGroups.Num(); ++I)
 		{
 			const auto& Group = LoadedMapDefinition->SpawnGroups[I];
 			if (ClaimedSpawnGroups.Contains(I) || Group.Id.IsNone() || Group.Positions.Num() < 3) continue;
 			bool Valid = true;
 			FTransform Resolved;
-			for (const auto& Position : Group.Positions) Valid &= Ground(Position, Resolved);
-			for (int32 A = 0; A < Group.Positions.Num(); ++A)
-				for (int32 B = A + 1; B < Group.Positions.Num(); ++B)
-					Valid &= FVector::Dist2D(Group.Positions[A].GetLocation(), Group.Positions[B].GetLocation()) >
-						Radius * 2;
+			for (int32 P = 0; P < Group.Positions.Num() && Valid; ++P)
+			{
+				FString Why;
+				if (!Ground(Group.Positions[P], Resolved, Why))
+				{
+					Valid = false;
+					Rejects.Add(FString::Printf(TEXT("%s[%d] %s"), *Group.Id.ToString(), P, *Why));
+				}
+			}
+			for (int32 A = 0; Valid && A < Group.Positions.Num(); ++A)
+				for (int32 B = A + 1; Valid && B < Group.Positions.Num(); ++B)
+					if (FVector::Dist2D(Group.Positions[A].GetLocation(), Group.Positions[B].GetLocation()) <=
+						Radius * 2)
+					{
+						Valid = false;
+						Rejects.Add(FString::Printf(TEXT("%s points %d/%d too close"), *Group.Id.ToString(), A, B));
+					}
 			if (Valid) Candidates.Add(I);
 		}
 		if (Candidates.IsEmpty())
 		{
-			if (auto* GS = GetGameState<AExtractionGameState>()) GS->StorageError = TEXT("没有已加载且可站立的出生组");
-			return nullptr;
+			Fail(TEXT("no_valid_group"), FString::Join(Rejects, TEXT(" ; ")));
+			// 兜底：严格校验全挂时，宁可出生在 authored 位置（可能略悬空/贴地，落地即修正），
+			// 也不能让整局卡在 Waiting —— 那会让玩家一直处于冻结状态。
+			int32 Fallback = INDEX_NONE;
+			int32 Best = 0;
+			for (int32 I = 0; I < LoadedMapDefinition->SpawnGroups.Num(); ++I)
+			{
+				const auto& Group = LoadedMapDefinition->SpawnGroups[I];
+				if (Group.Positions.Num() > Best)
+				{
+					Best = Group.Positions.Num();
+					Fallback = I;
+				}
+			}
+			if (Fallback == INDEX_NONE)
+			{
+				if (auto* GS = GetGameState<AExtractionGameState>())
+					GS->StorageError = TEXT("没有已加载且可站立的出生组");
+				return nullptr;
+			}
+			UE_LOG(LogTemp, Error,
+			       TEXT("EXTRACTION_SPAWN_FALLBACK_GROUP group=%s points=%d（严格校验全部失败，按 authored 位置出生）"),
+			       *LoadedMapDefinition->SpawnGroups[Fallback].Id.ToString(), Best);
+			ClaimedSpawnGroups.Add(Fallback);
+			Assigned = &SquadSpawnGroups.Add(Squad, Fallback);
 		}
-		const int32 Index = Candidates[SpawnRandom.RandRange(0, Candidates.Num() - 1)];
-		ClaimedSpawnGroups.Add(Index);
-		Assigned = &SquadSpawnGroups.Add(PS->ExtractionSquad, Index);
+		else
+		{
+			const int32 Index = Candidates[SpawnRandom.RandRange(0, Candidates.Num() - 1)];
+			ClaimedSpawnGroups.Add(Index);
+			Assigned = &SquadSpawnGroups.Add(Squad, Index);
+		}
 	}
 	const auto& Group = LoadedMapDefinition->SpawnGroups[*Assigned];
-	int32& Slot = SquadSpawnSlots.FindOrAdd(PS->ExtractionSquad);
+	if (Group.Positions.IsEmpty()) return nullptr;
+	int32& Slot = SquadSpawnSlots.FindOrAdd(Squad);
+	if (!Group.Positions.IsValidIndex(Slot)) Slot = 0;
 	FTransform Resolved;
-	if (!Group.Positions.IsValidIndex(Slot) || !Ground(Group.Positions[Slot], Resolved)) return nullptr;
+	FString Why;
+	if (!Ground(Group.Positions[Slot], Resolved, Why))
+	{
+		// 单点兜底：这一队已经选定了，不能因为一个点探测失败就让玩家没有 Pawn。
+		Resolved = Group.Positions[Slot];
+		Resolved.SetLocation(Resolved.GetLocation() + FVector(0, 0, Half + 3));
+		UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_SPAWN_UNVERIFIED group=%s slot=%d reason=%s"),
+		       *Group.Id.ToString(), Slot, *Why);
+	}
 	FActorSpawnParameters Params;
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	auto* Start = GetWorld()->SpawnActor<APlayerStart>(APlayerStart::StaticClass(), Resolved, Params);
@@ -219,7 +332,8 @@ AActor* AExtractionGameMode::ChoosePlayerStart_Implementation(AController* Playe
 		Start->PlayerStartTag = Group.Id;
 		ClaimedStarts.Add(Start);
 		PlayerStarts.Add(Player, Start);
-		++Slot;
+		// 人数超过点位数时回绕，避免从第二个之后的人永远拿不到出生点。
+		Slot = (Slot + 1) % Group.Positions.Num();
 	}
 	return Start;
 }
@@ -317,6 +431,32 @@ void AExtractionGameMode::UpdateExtraction(double Now)
 		{
 			PS->ExtractAt = 0;
 			PS->ExtractExitId = NAME_None;
+			if (!PS->ExtractBlockedReason.IsEmpty()) PS->ExtractBlockedReason.Reset();
+			continue;
+		}
+		// 丢包撤：网格里留着任何战利品都不放行，装备槽（Slot>=0）不算背包。
+		FString Blocked;
+		if (Exit->Definition.bRequireEmptyPack && PS->Inventory)
+		{
+			int32 Carried = 0;
+			for (const auto& Item : PS->Inventory->Contents.Items)
+				if (Item.Slot < 0 && Item.Quantity > 0) ++Carried;
+			if (Carried > 0)
+				Blocked = FString::Printf(TEXT("丢包撤：请先丢弃背包内 %d 件物资"), Carried);
+		}
+		if (PS->ExtractBlockedReason != Blocked)
+		{
+			PS->ExtractBlockedReason = Blocked;
+			PS->ForceNetUpdate();
+		}
+		if (!Blocked.IsEmpty())
+		{
+			PS->ExtractExitId = Exit->Definition.Id;
+			if (PS->ExtractAt > 0)
+			{
+				PS->ExtractAt = 0;
+				PS->ForceNetUpdate();
+			}
 			continue;
 		}
 		if (PS->ExtractAt <= 0 || PS->ExtractExitId != Exit->Definition.Id)
