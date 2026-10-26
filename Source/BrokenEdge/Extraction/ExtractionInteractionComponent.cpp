@@ -131,7 +131,8 @@ void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootAct
 		FExtractionItemRequest R;
 		R.Item = Item.Id;
 		R.Quantity = Item.Quantity;
-		if (Item.Definition == TEXT("AK"))
+		const auto* PickDef = UExtractionItemDefinition::Get(Item.Definition);
+		if (PickDef && PickDef->Kind == EExtractionItemKind::Weapon)
 			for (int32 Slot = 0; Slot < 2; ++Slot)
 				if (!Inventory()->Contents.InSlot(Slot))
 				{

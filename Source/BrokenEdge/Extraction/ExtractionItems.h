@@ -147,6 +147,13 @@ public:
 	FTransform Mount = FTransform::Identity;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FTransform FirstPersonMount = FTransform::Identity;
+	/** Placement override keyed by host weapon item id; Mount stays the legacy fallback. */
+	UPROPERTY(EditAnywhere, Category="Gunsmith")
+	TMap<FName, FTransform> MountByWeapon;
+	UPROPERTY(EditAnywhere, Category="Gunsmith")
+	TMap<FName, FTransform> FirstPersonMountByWeapon;
+	/** Host-aware placement: weapon specific values win, Mount covers weapons not listed. */
+	FTransform Placement(FName WeaponDefinition, bool bFirstPerson) const;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FTransform SupportGrip = FTransform::Identity;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

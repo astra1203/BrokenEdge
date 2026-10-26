@@ -15,6 +15,13 @@ bool UExtractionItemDefinition::SupportsAttachment(FName Id) const
 		&& Part->AttachmentSlot != EExtractionAttachmentSlot::None;
 }
 
+FTransform UExtractionItemDefinition::Placement(FName WeaponDefinition, bool bFirstPerson) const
+{
+	const auto& Overrides = bFirstPerson ? FirstPersonMountByWeapon : MountByWeapon;
+	if (const FTransform* Explicit = Overrides.Find(WeaponDefinition)) return *Explicit;
+	return bFirstPerson ? FirstPersonMount : Mount;
+}
+
 const TArray<FName>& UExtractionItemDefinition::Ids()
 {
 	static const TArray<FName> Names = {

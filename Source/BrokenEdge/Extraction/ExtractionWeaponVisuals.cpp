@@ -33,7 +33,7 @@ void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActo
 	if (!W || GetNetMode() == NM_DedicatedServer) return;
 	auto* C = Cast<ABrokenEdgeCharacter>(W->GetOwner());
 	auto* View = C && C->GetEquippedWeapon() == W && C->IsLocallyControlled() ? C->GetFirstPersonWeaponMesh() : nullptr;
-	uint32 Layout = W->ExtractionConfiguration;
+	uint32 Layout = HashCombine(W->ExtractionConfiguration, GetTypeHash(W->ExtractionDefinition));
 	for (const auto& Node : W->ExtractionAssembly)
 	{
 		Layout = HashCombine(Layout, GetTypeHash(Node.Id)); Layout = HashCombine(Layout, GetTypeHash(Node.Parent));
@@ -75,8 +75,8 @@ void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActo
 					if (!D) continue;
 					USceneComponent* WorldHost = Node.Parent.IsValid() ? static_cast<USceneComponent*>(WorldNodes.FindRef(Node.Parent)) : W->GetWeaponMesh();
 					USceneComponent* ViewHost = Node.Parent.IsValid() ? static_cast<USceneComponent*>(ViewNodes.FindRef(Node.Parent)) : View;
-					WorldNodes.Add(Node.Id, Create(D->WorldMesh, WorldHost, D->Mount, false, Node.Socket));
-					ViewNodes.Add(Node.Id, Create(D->FirstPersonMesh, ViewHost, D->FirstPersonMount, true, Node.Socket));
+					WorldNodes.Add(Node.Id, Create(D->WorldMesh, WorldHost, D->Placement(W->ExtractionDefinition, false), false, Node.Socket));
+					ViewNodes.Add(Node.Id, Create(D->FirstPersonMesh, ViewHost, D->Placement(W->ExtractionDefinition, true), true, Node.Socket));
 					if (D->AdapterMesh)
 					{
 						Create(D->AdapterMesh, WorldHost, D->AdapterMount, false, Node.Socket);
@@ -89,8 +89,8 @@ void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActo
 		for (FName Name : Built)
 			if (const auto* D = UExtractionItemDefinition::Get(Name))
 			{
-				Create(D->WorldMesh, W->GetWeaponMesh(), D->Mount, false);
-				Create(D->FirstPersonMesh, View, D->FirstPersonMount, true);
+				Create(D->WorldMesh, W->GetWeaponMesh(), D->Placement(W->ExtractionDefinition, false), false);
+				Create(D->FirstPersonMesh, View, D->Placement(W->ExtractionDefinition, true), true);
 				Create(D->AdapterMesh, W->GetWeaponMesh(), D->AdapterMount, false);
 				Create(D->AdapterMesh, View, D->AdapterMount, true);
 			}
