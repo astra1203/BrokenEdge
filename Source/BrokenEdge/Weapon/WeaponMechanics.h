@@ -27,6 +27,7 @@ struct BROKENEDGE_API FResolvedWeaponStats
 	uint32 Revision = 0;
 	float MagazineCapacity = 30;
 	float Interval = .1f, AimIn = .3f, AimOut = .3f, SprintToFire = .2f;
+	float ReturnSprintInterval = .1f;
 	float Reload = 2, EmptyReload = 2.5f, Equip = .4f, Unequip = .4f;
 	float Speed = 52500, Gravity = 980, GravityFreeDistance = 2500, MaxDistance = 100000, Radius = 1;
 	float RangeStart = 4000;

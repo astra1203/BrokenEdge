@@ -330,12 +330,12 @@ void UStingerFirstPersonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			                     ? TEXT("Run")
 			                     : TEXT("Walk");
 		UAnimSequence* Loop = Target == TEXT("Sprint")
-			                      ? Movement->ViewSprint
+			                      ? Movement->ViewSprint.Get()
 			                      : Target == TEXT("Run")
-			                      ? Movement->ViewRun
+			                      ? Movement->ViewRun.Get()
 			                      : Target == TEXT("Walk")
-			                      ? Movement->ViewWalk
-			                      : Movement->ViewIdle;
+			                      ? Movement->ViewWalk.Get()
+			                      : Idle;
 		UAnimSequence* Transition = nullptr;
 		if (Target != LocomotionTarget)
 		{

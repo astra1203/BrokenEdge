@@ -1298,6 +1298,7 @@ private:
 					Player->SetBoolField(TEXT("disabled"), Character->bDisableGameplay);
 					Player->SetBoolField(TEXT("defeated"), Character->IsDefeated());
 					Player->SetBoolField(TEXT("first_person"), Character->IsFirstPersonView());
+					Player->SetBoolField(TEXT("sprinting"), Character->IsSprinting());
 					Player->SetStringField(TEXT("pawn_class"), Character->GetClass()->GetPathName());
 					if (const auto* Movement = Cast<UTraversalMovementComponent>(Character->GetCharacterMovement()))
 					{

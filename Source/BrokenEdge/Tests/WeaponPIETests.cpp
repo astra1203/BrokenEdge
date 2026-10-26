@@ -13,12 +13,131 @@
 #include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
 #include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
 #include "BrokenEdge/Weapon/Weapon.h"
+#include "BrokenEdge/Weapon/WeaponPresentation.h"
 #include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimMontage.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputAction.h"
+#include "BrokenEdge/Character/StingerFirstPersonAnimInstance.h"
+
+class FWeaponSprintPIESequence : public IAutomationLatentCommand
+{
+public:
+	explicit FWeaponSprintPIESequence(FAutomationTestBase* InTest) : Test(InTest)
+	{
+	}
+
+	virtual bool Update() override
+	{
+		if (FPlatformTime::Seconds() - Started > 60)
+		{
+			Test->AddError(FString::Printf(TEXT("Sprint PIE timed out: weapon %d step %d"), Weapon, Step));
+			return true;
+		}
+		auto* World = GEditor ? GEditor->PlayWorld.Get() : nullptr;
+		auto* PC = World ? World->GetFirstPlayerController() : nullptr;
+		auto* C = PC ? Cast<ABrokenEdgeCharacter>(PC->GetPawn()) : nullptr;
+		if (!C || !C->GetEquippedWeapon()) return false;
+		auto* M = C->GetExtractionCombat();
+		const double Now = World->GetTimeSeconds();
+		auto Key = [&](FKey K, bool Down)
+		{
+			PC->InputKey(FInputKeyEventArgs::CreateSimulated(K, Down ? IE_Pressed : IE_Released, Down ? 1.f : 0.f));
+		};
+		auto Next = [&]
+		{
+			++Step;
+			StepAt = Now;
+		};
+		if (Step == 0 && M->CanAct() && M->CanFireMechanics())
+		{
+			if (Weapon == 1)
+			{
+				const auto* Mesh = C->GetFirstPersonMesh();
+				const auto* Anim = Mesh ? Cast<UStingerFirstPersonAnimInstance>(Mesh->GetAnimInstance()) : nullptr;
+				Test->TestTrue(TEXT("SCAR preserves its own idle animation"), Anim
+				               && C->GetEquippedWeapon()->Presentation && Anim->ActiveAnimation == C->
+				               GetEquippedWeapon()->Presentation->Idle);
+			}
+			Origin = C->GetActorLocation();
+			Key(EKeys::W, true);
+			Key(EKeys::LeftShift, true);
+			Next();
+		}
+		else if (Step == 1 && Now - StepAt > .8)
+		{
+			Test->TestTrue(TEXT("Forward + Shift enters sprint"), C->IsSprinting());
+			const auto* Mesh = C->GetFirstPersonMesh();
+			const auto* Anim = Mesh ? Cast<UStingerFirstPersonAnimInstance>(Mesh->GetAnimInstance()) : nullptr;
+			Test->TestTrue(TEXT("Original first-person sprint animation is active"), Anim
+			               && Anim->CurrentVisualState == TEXT("Sprint") && Anim->bLocomotionMotion && !Anim->
+			               bMissingStateAnimation);
+			FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir() / FString::Printf(
+				                                      TEXT("Extraction/SprintPIE-%d.png"), Weapon), true, false);
+			Shots = M->GetAcceptedShots();
+			Key(EKeys::LeftMouseButton, true);
+			Next();
+		}
+		else if (Step == 2)
+		{
+			Test->TestFalse(TEXT("Fire interrupts sprint with Shift held"), C->IsSprinting());
+			if (Now - StepAt < M->GetWeaponStats().SprintToFire)
+				Test->TestEqual(TEXT("Sprint delay prevents an early shot"), M->GetAcceptedShots(), Shots);
+			if (M->GetAcceptedShots() > Shots)
+			{
+				Test->TestTrue(
+					TEXT("First shot has bounded sprint delay"), Now - StepAt < M->GetWeaponStats().SprintToFire + .25);
+				Next();
+			}
+		}
+		else if (Step == 3 && Now - StepAt > .25)
+		{
+			Test->TestFalse(TEXT("Held fire suppresses resprint"), C->IsSprinting());
+			Key(EKeys::LeftMouseButton, false);
+			Next();
+		}
+		else if (Step == 4 && Now - StepAt > .3)
+		{
+			Test->TestTrue(TEXT("Release fire resumes held Shift sprint"), C->IsSprinting());
+			Shots = M->GetAcceptedShots();
+			Key(EKeys::LeftMouseButton, true);
+			Next();
+		}
+		else if (Step == 5)
+		{
+			Key(EKeys::LeftMouseButton, false);
+			Next();
+		}
+		else if (Step == 6 && Now - StepAt > .4)
+		{
+			Test->TestEqual(TEXT("Released short tap does not fire later"), M->GetAcceptedShots(), Shots);
+			Key(EKeys::W, false);
+			Key(EKeys::LeftShift, false);
+			if (Weapon == 1) return true;
+			C->SetActorLocation(Origin);
+			Key(EKeys::Two, true);
+			Next();
+		}
+		else if (Step == 7 && Now - StepAt > 3)
+		{
+			Key(EKeys::Two, false);
+			Test->TestEqual(TEXT("SCAR selected for second sprint test"), C->GetEquippedWeapon()->ExtractionDefinition,
+			                FName(TEXT("SCARH")));
+			Weapon = 1;
+			Step = 0;
+		}
+		return false;
+	}
+
+private:
+	FAutomationTestBase* Test;
+	double Started = FPlatformTime::Seconds(), StepAt = 0;
+	int32 Step = 0, Weapon = 0;
+	uint32 Shots = 0;
+	FVector Origin;
+};
 
 class FWeaponPIESequence : public IAutomationLatentCommand
 {
@@ -272,6 +391,25 @@ bool FWeaponPIESmokeTest::RunTest(const FString&)
 	ADD_LATENT_AUTOMATION_COMMAND(FEditorLoadMap(TEXT("/Game/Extraction/Training/L_WeaponRange")));
 	ADD_LATENT_AUTOMATION_COMMAND(FStartPIECommand(false));
 	FAutomationTestFramework::Get().EnqueueLatentCommand(MakeShared<FWeaponPIESequence>(this));
+	ADD_LATENT_AUTOMATION_COMMAND(FEndPlayMapCommand());
+	FAutomationTestFramework::Get().EnqueueLatentCommand(Restore);
+	return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FWeaponSprintPIETest, "BrokenEdge.Extraction.WeaponPIE.SprintTransitions",
+                                 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FWeaponSprintPIETest::RunTest(const FString&)
+{
+	const auto Restore = MakeShared<FRestoreWeaponPIESettings>();
+	auto* Settings = GetMutableDefault<ULevelEditorPlaySettings>();
+	Settings->SetPlayNetMode(PIE_Standalone);
+	Settings->SetPlayNumberOfClients(1);
+	Settings->SetRunUnderOneProcess(true);
+	Settings->bLaunchSeparateServer = false;
+	ADD_LATENT_AUTOMATION_COMMAND(FEditorLoadMap(TEXT("/Game/Extraction/Training/L_WeaponRange")));
+	ADD_LATENT_AUTOMATION_COMMAND(FStartPIECommand(false));
+	FAutomationTestFramework::Get().EnqueueLatentCommand(MakeShared<FWeaponSprintPIESequence>(this));
 	ADD_LATENT_AUTOMATION_COMMAND(FEndPlayMapCommand());
 	FAutomationTestFramework::Get().EnqueueLatentCommand(Restore);
 	return true;

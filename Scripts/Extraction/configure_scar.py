@@ -72,6 +72,9 @@ profile.set_editor_property('view_fit',fit)
 profile.set_editor_property('view_mesh',meshes['1P'])
 profile.set_editor_property('idle',idle)
 profile.set_editor_property('aim',sequence('AimIdle'))
+movement = unreal.load_asset('/Game/Characters/Stinger/Animations/DeltaForceLocomotion/DA_RifleLocomotion')
+assert movement, 'Configure the original rifle locomotion set before SCAR'
+profile.set_editor_property('locomotion',movement)
 for prop,suffix in [('view_fire','Fire'),('view_reload','ChangclipFull'),('view_swap','GetWeapon')]:
     montage = unreal.StingerAssetLibrary.create_visual_montage(sequence(suffix),folder+'/Montages/AM_'+suffix)
     assert montage and lib.save_loaded_asset(montage)

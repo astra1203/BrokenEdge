@@ -36,10 +36,12 @@ void UExtractionCombatComponent::RefreshMechanics()
 	auto* C = Character();
 	auto* W = C ? C->GetEquippedWeapon() : nullptr;
 	if (W == MechanicsWeapon.Get() && (Stats.IsValid() || !W) && (!W || (MechanicsParts == W->ExtractionParts &&
-		Configuration == W->ExtractionConfiguration))) return;
+		Configuration == W->ExtractionConfiguration)))
+		return;
 	MechanicsParts = W ? W->ExtractionParts : TArray<FName>();
 	Configuration = W ? W->ExtractionConfiguration : 0;
 	MechanicsWeapon = W;
+	CancelFireInput();
 	Stats = {};
 	ResetTransientMechanics();
 	if (W)
@@ -67,7 +69,49 @@ void UExtractionCombatComponent::RefreshMechanics()
 bool UExtractionCombatComponent::CanFireMechanics() const
 {
 	const auto* C = Character();
-	return !Stats.IsValid() || (C && !C->IsSprinting() && GetWorld()->GetTimeSeconds() >= ReadyAt);
+	return !Stats.IsValid() || (C && !C->IsSprinting() && GetWorld()->GetTimeSeconds() >= ReadyAt
+		&& SprintFire.CanFire(GetWorld()->GetTimeSeconds()));
+}
+
+bool UExtractionCombatComponent::CanSprintWithWeapon() const
+{
+	return SprintFire.CanSprint(GetWorld()->GetTimeSeconds());
+}
+
+void UExtractionCombatComponent::OnSprintEnded()
+{
+	SprintFire.EndSprint(GetWorld()->GetTimeSeconds(), Stats.SprintToFire);
+}
+
+bool UExtractionCombatComponent::ApplyFireInput(bool bHeld)
+{
+	RefreshMechanics();
+	auto* C = Character();
+	bHeld = bHeld && CanAct() && C && C->GetEquippedWeapon() && !C->Melee->Active
+		&& !C->GetExtractionInteraction()->InventoryOpen && !C->GetCombat()->bLocallyReloading
+		&& C->GetCombatState() == ECombatState::ECS_Unoccuiped;
+	SprintFire.SetFireHeld(bHeld, GetWorld()->GetTimeSeconds(), Stats.ReturnSprintInterval);
+	if (C) C->UpdateSprint();
+	return bHeld;
+}
+
+bool UExtractionCombatComponent::SetFireInputHeld(bool bHeld)
+{
+	const bool Accepted = ApplyFireInput(bHeld);
+	if (Character() && Character()->IsLocallyControlled() && !Character()->HasAuthority())
+		ServerSetFireInputHeld(Accepted);
+	return Accepted;
+}
+
+void UExtractionCombatComponent::ServerSetFireInputHeld_Implementation(bool bHeld)
+{
+	if (IsEnabled()) ApplyFireInput(bHeld);
+}
+
+void UExtractionCombatComponent::CancelFireInput()
+{
+	SprintFire.SetFireHeld(false, GetWorld()->GetTimeSeconds(), Stats.ReturnSprintInterval);
+	if (auto* C = Character(); C && C->GetCombat()) C->GetCombat()->bFireButtonPressed = false;
 }
 
 // 清除开镜、连射、散布与镜头冲量，不重置屏息余量及冷却，避免切枪刷资源。
@@ -132,7 +176,10 @@ void UExtractionCombatComponent::TickComponent(float Delta, ELevelTick Kind, FAc
 	if (!Aiming) bBreathHeld = false;
 	AimAlpha = FMath::FInterpConstantTo(AimAlpha, Aiming ? 1.f : 0.f, Delta,
 	                                    1.f / FMath::Max(.01f, Aiming ? Stats.AimIn : Stats.AimOut));
-	if (C->IsSprinting()) ReadyAt = Now + Stats.SprintToFire;
+	// 跑射时间只在退出冲刺时记录；逐帧推迟会让按住 Shift 的射击永远无法就绪。
+	if (!CanAct() || C->Melee->Active || C->GetExtractionInteraction()->InventoryOpen
+		|| C->GetCombatState() != ECombatState::ECS_Unoccuiped || C->GetCombat()->bLocallyReloading)
+		CancelFireInput();
 	const bool Hold = CanAct() && bBreathHeld && AimAlpha > .99f && Breath > 0 && Now >= BreathResume;
 	Breath = FMath::Clamp(Breath + Delta * (Hold ? -Stats.BreathDrain : Stats.BreathRecovery), 0.f, 100.f);
 	if (Hold && Breath <= 0) BreathResume = Now + Stats.BreathCooldown;
@@ -168,7 +215,8 @@ void UExtractionCombatComponent::TickComponent(float Delta, ELevelTick Kind, FAc
 		bHaveControl = true;
 	}
 	if (C->IsLocallyControlled() && CanFireMechanics() && C->GetCombat()->bFireButtonPressed
-		&& C->GetCombat()->bCanFire && MechanicsWeapon.IsValid() && MechanicsWeapon->bAutomatic
+		&& C->GetCombat()->bCanFire && MechanicsWeapon.IsValid()
+		&& (MechanicsWeapon->bAutomatic || SprintFire.PendingShot)
 		&& !C->GetExtractionInteraction()->InventoryOpen)
 		C->GetCombat()->Fire();
 	if (CVarWeaponStats.GetValueOnGameThread() && C->IsLocallyControlled())
@@ -271,6 +319,7 @@ void UExtractionCombatComponent::RequestShot(const FVector& Target)
 	if (!CanAct() || !CanFireMechanics() || C->Melee->Active || !Cast<AHitScanWeapon>(W)) return;
 	if (C->GetExtractionInteraction()->InventoryOpen) return;
 	const uint32 Id = ++LocalShotId;
+	SprintFire.PendingShot = false;
 	if (!C->HasAuthority())
 	{
 		PendingShots.Add(Id, W);
@@ -407,6 +456,7 @@ void UExtractionCombatComponent::RequestReload()
 		|| Combat->CombatState != ECombatState::ECS_Unoccuiped)
 		return;
 	Combat->bLocallyReloading = true;
+	CancelFireInput();
 	Combat->HandleReload();
 	Combat->ServerReload();
 }
@@ -426,6 +476,7 @@ void UExtractionCombatComponent::BeginServerReload()
 		return;
 	}
 	ReloadWeapon = W;
+	CancelFireInput();
 	C->GetExtractionInteraction()->CancelMedical();
 	Combat->CombatState = ECombatState::ECS_Reloading;
 	if (!C->IsLocallyControlled()) Combat->HandleReload();
@@ -507,6 +558,7 @@ void UExtractionCombatComponent::BeginServerSwap()
 	auto* Combat = C->GetCombat().Get();
 	if (Combat->CombatState != ECombatState::ECS_Unoccuiped || !Combat->ShouldSwapWeapons()) return;
 	CancelSwap();
+	CancelFireInput();
 	C->GetExtractionInteraction()->CancelMedical();
 	SwapPrimary = Combat->EquippedWeapon;
 	SwapSecondary = Combat->SecondaryWeapon;
@@ -596,6 +648,7 @@ void UExtractionCombatComponent::CancelSwap()
 // 销毁前清除镜头临时偏移和定时器，防止后续回调访问失效角色。
 void UExtractionCombatComponent::EndPlay(const EEndPlayReason::Type Reason)
 {
+	CancelFireInput();
 	ResetTransientMechanics();
 	CancelSwap();
 	if (GetWorld()) GetWorld()->GetTimerManager().ClearTimer(ReloadTimer);

@@ -283,6 +283,8 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Movement")
 	bool IsSprinting() const { return bSprinting; }
 
+	void UpdateSprint();
+
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	float FirstPersonAimFOV = 65.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
@@ -302,7 +304,6 @@ private:
 	void UpdateFirstPersonWeaponPose();
 	void SprintPressed();
 	void SprintReleased();
-	void UpdateSprint();
 	UFUNCTION(Server, Reliable)
 	void ServerSetSprintRequested(bool bRequested);
 	bool bSprintRequested = false;

@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "BrokenEdge/Weapon/WeaponMechanics.h"
+#include "BrokenEdge/Weapon/WeaponSprintState.h"
 #include "ExtractionCombatComponent.generated.h"
 // 撤离模式专用战斗协议：拥有者预测表现，服务器校验射击与装填并维护弹药，其他客户端只播放效果。
 // Server/Client/NetMulticast RPC 分别对应请求、拥有者回执和远端表现；Reliable 不等于免除服务器参数校验。
@@ -60,6 +61,13 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	// 有有效参数时检查冲刺和举枪/跑射延迟；无参数时允许既有逻辑继续判断。
 	bool CanFireMechanics() const;
+	// 开火意图与射击请求走同一可靠通道；服务器也必须先退出冲刺再接受首发。
+	bool SetFireInputHeld(bool bHeld);
+	bool CanSprintWithWeapon() const;
+	void OnSprintEnded();
+	void CancelFireInput();
+	UFUNCTION(Server, Reliable)
+	void ServerSetFireInputHeld(bool bHeld);
 	const FResolvedWeaponStats& GetWeaponStats() const { return Stats; }
 	float GetAimAlpha() const { return AimAlpha; }
 	float GetBreath() const { return Breath; }
@@ -77,6 +85,8 @@ private:
 	// 组件所属 Actor 应为 BrokenEdgeCharacter，转换失败时返回空指针。
 	ABrokenEdgeCharacter* Character() const;
 	FResolvedWeaponStats Stats;
+	FWeaponSprintState SprintFire;
+	bool ApplyFireInput(bool bHeld);
 	TWeakObjectPtr<AWeapon> MechanicsWeapon;
 	TArray<FName> MechanicsParts;
 	uint32 Configuration = 0;

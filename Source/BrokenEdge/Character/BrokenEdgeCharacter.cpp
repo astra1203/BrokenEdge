@@ -994,10 +994,13 @@ void ABrokenEdgeCharacter::UpdateSprint()
 		return;
 	}
 	const FVector Acceleration = GetCharacterMovement()->GetCurrentAcceleration();
+	const bool bWasSprinting = bSprinting;
 	bSprinting = bSprintRequested && !ExtractionHealth->LegFracture && !bIsCrouched && !IsAiming() && !bDisableGameplay
+		&& (!ExtractionCombat->IsEnabled() || ExtractionCombat->CanSprintWithWeapon())
 		&& !bDefeated
 		&& GetCombatState() == ECombatState::ECS_Unoccuiped
 		&& FVector::DotProduct(Acceleration.GetSafeNormal2D(), GetActorForwardVector()) > 0.5f;
+	if (bWasSprinting && !bSprinting && ExtractionCombat->IsEnabled()) ExtractionCombat->OnSprintEnded();
 	GetCharacterMovement()->MaxWalkSpeed = bSprinting
 		                                       ? SprintSpeed
 		                                       : (IsAiming() ? Combat->AimWalkSpeed : Combat->BaseWalkSpeed);

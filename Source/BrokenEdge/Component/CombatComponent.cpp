@@ -222,6 +222,8 @@ void UCombatComponent::Drop()
  */
 void UCombatComponent::FireButtonPressed(bool bPressed)
 {
+	if (Character && Character->GetExtractionCombat()->IsEnabled())
+		bPressed = Character->GetExtractionCombat()->SetFireInputHeld(bPressed);
 	bFireButtonPressed = bPressed;
 	if (bFireButtonPressed)
 	{
