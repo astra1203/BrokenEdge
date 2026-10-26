@@ -28,6 +28,16 @@ namespace
 		const auto* D = UExtractionItemDefinition::Get(Id);
 		return D ? D->Label.ToString() : Id.ToString();
 	}
+
+	// 商品名后缀：枪械标空弹匣，钥匙卡标可用开门次数；其他物品不加后缀。
+	FString OfferSuffix(FName Id)
+	{
+		const auto* D = UExtractionItemDefinition::Get(Id);
+		if (!D) return {};
+		if (D->Kind == EExtractionItemKind::Weapon) return TEXT("（空弹匣）");
+		if (D->Kind == EExtractionItemKind::Key) return FString::Printf(TEXT("（开门 %d 次）"), D->KeyUses);
+		return {};
+	}
 }
 
 class SExtractionProgressionPanel : public SLeafWidget
@@ -134,7 +144,7 @@ public:
 					    !Selling && SelectedOffer == O.Definition ? Selected : FLinearColor(.04, .075, .10));
 					Text({78, Y + 10}, FString::Printf(
 						     TEXT("%s%s  ·  %d / 件  ·  Lv.%d%s"), *ItemLabel(O.Definition),
-						     IsGun(O.Definition) ? TEXT("（空弹匣）") : TEXT(""),
+						     *OfferSuffix(O.Definition),
 						     O.Price, O.Level, R->Level(P.Experience) < O.Level ? TEXT("  未解锁") : TEXT("")), 16);
 				}
 				if (A->Profile.Stash.Items.IsValidIndex(SellOffset + Row))
@@ -151,8 +161,8 @@ public:
 			Text({65, 538}, FString::Printf(TEXT("数量  %d   ·   数字键输入 / ↑↓调整 / Shift 加减 10"), Quantity), 17);
 			Box({65, 577}, {550, 48}, Button);
 			Text({85, 590}, Selling ? TEXT("查看出售明细") : TEXT("查看购买明细"), 19);
-			Text({650, 548}, TEXT("整枪含弹药和附件 · 护甲按剩余耐久折价"), 16);
-			Text({650, 583}, TEXT("仅操作仓库 · 配装和领取区物品请先移入仓库"), 16);
+			Text({650, 548}, TEXT("整枪含弹药和附件 · 护甲按剩余耐久折价 · 钥匙卡按开门次数"), 16);
+			Text({650, 583}, TEXT("仅操作仓库 · 钥匙卡购入后移入配装即可带入战局"), 16);
 		}
 		Text({65, 661}, A->Locked
 			                ? TEXT("已准备、切换模式或存储不可用 · 当前禁止修改")
@@ -328,8 +338,13 @@ private:
 			if (!O) return;
 			Pending.Definition = SelectedOffer;
 			Quote = int64(O->Price) * Quantity;
-			Detail = ItemLabel(SelectedOffer) + (IsGun(SelectedOffer) ? TEXT(" · 空弹匣，无附件") : TEXT(""));
-			Parts = TEXT("物资存入仓库；空间不足时整笔取消");
+			const auto* D = UExtractionItemDefinition::Get(SelectedOffer);
+			const bool bKey = D && D->Kind == EExtractionItemKind::Key;
+			Detail = ItemLabel(SelectedOffer) + (IsGun(SelectedOffer) ? TEXT(" · 空弹匣，无附件") : TEXT(""))
+				+ (bKey ? FString::Printf(TEXT(" · 可开门 %d 次"), D->KeyUses) : TEXT(""));
+			Parts = bKey
+				        ? TEXT("钥匙卡存入仓库；移入配装后带入战局，每次开门消耗 1 次")
+				        : TEXT("物资存入仓库；空间不足时整笔取消");
 		}
 		Confirm = true;
 	}

@@ -1,10 +1,10 @@
 """Give the Space Center key cards a real source.
 
-The active layout (DA_SpaceCenter_Ma1_Loot) only carries 12 points: four ungrouped
-small safes, plus two compatibility groups that spawn one point each per match
-(ProjectPresidentOneOfThree, ProjectH3OneOfTwo). So the cards are assigned
-explicitly: one card per group, the rest on ungrouped safes. No room holds the card
-that opens it.
+The active layout (DA_SpaceCenter_Ma1_Loot) carries 12 points: 10 are enabled and
+all of them now spawn in every raid (the President and H3 safes are no longer
+one-of-N groups, see ``configure_guaranteed_safes.py``). The cards are therefore
+assigned explicitly, one per point, so every card has a guaranteed container and
+no room holds the card that opens it.
 
 Run with the editor closed:
 
