@@ -461,6 +461,9 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	                                 &UExtractionCombatComponent::HoldBreathPressed);
 	PlayerInputComponent->BindAction(TEXT("HoldBreath"), IE_Released, ExtractionCombat.Get(),
 	                                 &UExtractionCombatComponent::HoldBreathReleased);
+	// F 键开门：独立于 Enhanced Input 的 IA_Equip，避免抢占换枪键位。
+	PlayerInputComponent->BindAction(TEXT("InteractDoor"), IE_Pressed, this,
+	                                 &ABrokenEdgeCharacter::InteractDoorPressed);
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 
@@ -1314,6 +1317,13 @@ void ABrokenEdgeCharacter::CrouchButtonPressed()
 	{
 		Crouch();
 	}
+}
+
+void ABrokenEdgeCharacter::InteractDoorPressed()
+{
+	// 撤离模式里 F 只负责开门：卡与耐久都由服务器校验。
+	if (!ExtractionInteraction->IsEnabled()) return;
+	if (auto* PC = Cast<AExtractionPlayerController>(Controller)) PC->InteractDoor();
 }
 
 void ABrokenEdgeCharacter::EquipButtonPressed()

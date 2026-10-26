@@ -27,7 +27,10 @@ const TArray<FName>& UExtractionItemDefinition::Ids()
 		TEXT("AK"), TEXT("Ammo"), TEXT("Medkit"), TEXT("Electronics"), TEXT("Tools"),
 		TEXT("AmmoAP"), TEXT("Helmet2"), TEXT("Helmet3"), TEXT("Vest2"), TEXT("Vest3"), TEXT("Bandage"), TEXT("Splint"),
 		TEXT("RedDot"), TEXT("VerticalGrip"), TEXT("Compensator"), TEXT("Key"), TEXT("Document"),
-		TEXT("SCARH"), TEXT("Ammo76251")
+		TEXT("SCARH"), TEXT("Ammo76251"),
+		// 航天基地钥匙卡：房号见 AExtractionKeyRoom::RequiredKey
+		TEXT("Key_President"), TEXT("Key_Core"), TEXT("Key_Monitor"), TEXT("Key_Contract"),
+		TEXT("Key_EastBridge"), TEXT("Key_StaffPassage")
 	};
 	return Names;
 }
@@ -78,7 +81,8 @@ FExtractionItem ExtractionItems::Make(FName Definition, int32 Quantity)
 	if (const auto* D = UExtractionItemDefinition::Get(Definition))
 	{
 		Item.Size = D->Size;
-		Item.Durability = D->MaxDurability;
+		// 钥匙卡用 Durability 记录剩余开门次数；护甲沿用原耐久值。
+		Item.Durability = D->Kind == EExtractionItemKind::Key ? float(D->KeyUses) : D->MaxDurability;
 		if (D->Kind == EExtractionItemKind::Weapon)
 		{
 			Item.Magazine = D->MagazineCapacity;

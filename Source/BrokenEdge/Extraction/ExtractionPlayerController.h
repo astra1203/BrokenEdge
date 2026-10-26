@@ -45,6 +45,8 @@ public:
 	class UExtractionInteractionComponent* Interaction() const;
 	// 交互优先救援，其次钥匙门、战利品；没有目标时才尝试切枪，避免同一按键触发多种动作。
 	void Interact();
+	/** F 键：只处理钥匙房门（不换枪、不抢救人）。门由服务器校验钥匙卡并扣耐久。 */
+	void InteractDoor();
 	// 先确认门对象有效且属于同一世界，再由门执行完整权限和库存版本校验。
 	UFUNCTION(Server, Reliable)
 	void ServerUnlockDoor(class AExtractionKeyRoom* Door, int32 InventoryRevision);
@@ -91,6 +93,12 @@ public:
 	virtual void Destroyed() override;
 	FString ItemMessage;
 	uint32 ItemResultSequence = 0;
+	/** 一次性提示（开门结果、物品错误等）的展示时长，到点自动清空。 */
+	static constexpr float ItemMessageSeconds = 3.f;
+	/** 当前提示的过期世界时间；0 表示还没有计时，交给 Tick 按文本变化补上。 */
+	double ItemMessageUntil = 0.0;
+	/** 设置一条会自动消失的提示；重复触发会重新计时。 */
+	void ShowItemMessage(const FString& Message, float Seconds = ItemMessageSeconds);
 
 private:
 	UPROPERTY(Transient)
@@ -100,6 +108,8 @@ private:
 	uint32 LocalItemSequence = 0;
 	// 每次背包开关使用新会话，避免旧容器请求作用到后来打开的容器。
 	uint32 LocalInventorySession = 0;
+	/** 上次参与计时的提示文本，用于捕捉界面里直接赋值 ItemMessage 的情况。 */
+	FString TimedItemMessage;
 	UPROPERTY(Transient)
 	TObjectPtr<class UExtractionInventoryWidget> InventoryWidget;
 	FTimerHandle LeaveRetryTimer;

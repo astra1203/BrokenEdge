@@ -4,6 +4,7 @@
 #include "ExtractionPlayerController.h"
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionKeyRoom.h"
+#include "ExtractionItems.h"
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionLootActor.h"
 #include "ExtractionState.h"
@@ -118,8 +119,37 @@ public:
 		{
 			if (I->DoorFocus)
 			{
-				Box(FVector2D(380, 505), FVector2D(560, 44), FLinearColor(.015f, .025f, .035f, .9f));
-				Text(FVector2D(395, 518), TEXT("E  机密储藏室 · 消耗一把钥匙开门"), 17);
+				// 只有站进门的交互碰撞盒才会走到这里；再按"手上有没有这张卡"切换文案。
+				const FString Room = I->DoorFocus->RoomLabel.IsEmpty()
+					                     ? FString(TEXT("上锁房间"))
+					                     : I->DoorFocus->RoomLabel.ToString();
+				const FText Card = I->DoorFocus->RequiredCardLabel.IsEmpty()
+					                   ? FText::FromString(TEXT("对应钥匙卡"))
+					                   : I->DoorFocus->RequiredCardLabel;
+				int32 Cards = 0;
+				int32 Uses = 0;
+				if (const auto* Inventory = I->Inventory())
+					for (const auto& Item : Inventory->Contents.Items)
+					{
+						const auto* D = UExtractionItemDefinition::Get(Item.Definition);
+						if (!D) continue;
+						const bool bMatch = I->DoorFocus->RequiredKey.IsNone()
+							                    ? Item.Definition == TEXT("Key")
+							                    : D->KeyRoomId == I->DoorFocus->RequiredKey;
+						if (!bMatch) continue;
+						++Cards;
+						Uses += FMath::Max(1, FMath::RoundToInt(Item.Durability));
+					}
+				const FString Prompt = Cards > 0
+					                       ? FString::Printf(TEXT("F  %s · 使用%s 开门   ·   剩余 %d 次"),
+					                                         *Room, *Card.ToString(), Uses)
+					                       : FString::Printf(TEXT("%s · 需要%s   ·   未持有"),
+					                                         *Room, *Card.ToString());
+				const FLinearColor Tint = Cards > 0
+					                          ? FLinearColor::White
+					                          : FLinearColor(.72f, .56f, .32f);
+				Box(FVector2D(360, 505), FVector2D(620, 44), FLinearColor(.015f, .025f, .035f, .9f));
+				Text(FVector2D(375, 518), Prompt, 17, Tint);
 			}
 			if (I->Focus)
 			{
@@ -445,7 +475,7 @@ private:
 		const auto* Item = C ? C->Find(Selected) : nullptr;
 		if (!Item || Item->Definition != TEXT("AK"))
 		{
-			PC()->ItemMessage = TEXT("只有武器可以装备");
+			PC()->ShowItemMessage(TEXT("只有武器可以装备"));
 			Cancel();
 			return;
 		}
@@ -457,7 +487,7 @@ private:
 			R.Slot = !Own->InSlot(0) ? 0 : !Own->InSlot(1) ? 1 : -1;
 			if (R.Slot < 0)
 			{
-				PC()->ItemMessage = TEXT("武器槽已满，请先移出原武器");
+				PC()->ShowItemMessage(TEXT("武器槽已满，请先移出原武器"));
 				Cancel();
 				return;
 			}
@@ -509,7 +539,7 @@ private:
 		{
 			if (Quantity <= 1)
 			{
-				PC()->ItemMessage = TEXT("该物品无法拆分");
+				PC()->ShowItemMessage(TEXT("该物品无法拆分"));
 				Cancel();
 				return;
 			}

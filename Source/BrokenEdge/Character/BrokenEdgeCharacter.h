@@ -219,6 +219,8 @@ public:
 	void Look(const FInputActionValue& Value);
 	void CrouchButtonPressed();
 	void EquipButtonPressed();
+	/** F 键：撤离模式里对着钥匙房门按 F 开门（需要对应钥匙卡）。 */
+	void InteractDoorPressed();
 
 	/**
  * @brief 瞄准按钮按下
