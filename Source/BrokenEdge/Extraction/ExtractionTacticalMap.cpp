@@ -88,12 +88,17 @@ public:
 			Text(P + FVector2D(8, -10), FString::FromInt(Row + 1), 14, C);
 			Text({940, 140.f + Row * 75}, FString::Printf(TEXT("%d  %s"), Row + 1, *It->Definition.Label.ToString()),
 			     16, C);
-			Text({940, 166.f + Row * 75},
-			     Available ? TEXT("可以撤离") : It->UnavailableReason(GS ? GS->GetServerWorldTimeSeconds() : 0), 13);
+			FString Detail = Available
+				                ? TEXT("可以撤离")
+				                : It->UnavailableReason(GS ? GS->GetServerWorldTimeSeconds() : 0);
+			if (It->Definition.bRequireEmptyPack) Detail += TEXT("  ·  需清空背包");
+			Text({940, 166.f + Row * 75}, Detail, 13);
 			++Row;
 		}
 		int32 MemberRow = 0;
-		Text({940, 365},TEXT("小队位置"), 18);
+		// 撤离点数量由数据决定，小队列表必须跟着往下排，否则四个以上出口会压在小队标题上。
+		const float ListBottom = 140.f + Row * 75.f + 28.f;
+		Text({940, ListBottom},TEXT("小队位置"), 18);
 		for (TActorIterator<APawn> It(PC->GetWorld()); It; ++It)
 		{
 			const auto* PS = It->GetPlayerState<AExtractionPlayerState>();
@@ -102,7 +107,7 @@ public:
 			const auto P = Project(FVector2D(World));
 			const FLinearColor C = PS == Local ? FLinearColor::White : FLinearColor(.25f, .7f, 1);
 			Box(P - FVector2D(4), {8, 8}, C, 2);
-			Text({940, 400.f + MemberRow++ * 32},
+			Text({940, ListBottom + 35.f + MemberRow++ * 32},
 			     FString::Printf(TEXT("%s  %+.0fm"), PS == Local ? TEXT("你") : *PS->GetPlayerName().Left(12),
 			                     (World.Z - LocalZ) / 100), 13, C);
 		}

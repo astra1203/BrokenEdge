@@ -46,6 +46,9 @@ struct BROKENEDGE_API FExtractionExitDefinition
 	float ClosesAfterSeconds = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0"))
 	int32 Capacity = 0;
+	/** 丢包撤：网格内不得留有任何物品，装备槽（武器/头盔/护甲）不计。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bRequireEmptyPack = false;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EExtractionReferenceStatus ReferenceStatus = EExtractionReferenceStatus::Temporary;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

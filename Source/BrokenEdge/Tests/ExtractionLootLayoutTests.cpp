@@ -48,19 +48,28 @@ bool FExtractionLootLayoutTest::RunTest(const FString&)
 		                                                         "/Game/Extraction/Loot/DA_SpaceCenter_Ma1_Loot.DA_SpaceCenter_Ma1_Loot"));
 	if (!TestNotNull(TEXT("Production source layout exists"), Authored)) return false;
 	Seen.Reset();
+	// 不硬编码数量：以数据本身为基准，避免每次调点位都要改测试。
+	// 本回合必然全中的 = 启用 + 非散落点 + 不属于任何随机组。
+	const int32 Expected = Authored->Points.FilterByPredicate([](const FExtractionLootPoint& P)
+	{
+		return P.Enabled && P.Kind != UExtractionLootLayout::LooseKind && P.Group.IsNone();
+	}).Num();
+	TestTrue(TEXT("Production layout has fixed containers"), Expected > 0);
 	for (int32 Seed = 0; Seed < 1000; ++Seed)
 	{
 		if (!TestTrue(TEXT("Production layout selects"), Authored->Select(Seed, Out, Error))) return false;
-		TestEqual(TEXT("Production raid has five fixed and two grouped safes"), Out.Num(), 7);
+		TestEqual(TEXT("Every fixed container is selected"), Out.Num(), Expected);
 		for (int32 Index : Out)
 		{
 			const auto& P = Authored->Points[Index];
 			Seen.Add(P.Id);
 			TestNotNull(TEXT("Source model configured"), P.Appearance.Get());
 			TestNotNull(TEXT("Separate project recipe configured"), P.Recipe.Get());
+			if (P.Kind == UExtractionLootLayout::LooseKind)
+				AddError(TEXT("A loose site occupied an authored container slot"));
 		}
 	}
-	TestEqual(TEXT("Every production candidate covered"), Seen.Num(), 10);
+	TestEqual(TEXT("Every production container covered"), Seen.Num(), Expected);
 	return true;
 }
 #endif

@@ -43,6 +43,8 @@ public:
 	UPROPERTY(Replicated)
 	double ExtractAt = 0;
 	UPROPERTY(Replicated) FName ExtractExitId;
+	/** 站在撤离区内但暂时无法撤离的原因，例如丢包撤要求先清空背包。 */
+	UPROPERTY(Replicated) FString ExtractBlockedReason;
 	UPROPERTY(Replicated) double BleedAt = 0;
 	UPROPERTY(Replicated) float DownHealth = 0;
 	UPROPERTY(Replicated) FExtractionRaidProgress RaidProgress;

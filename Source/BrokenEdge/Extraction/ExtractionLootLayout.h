@@ -55,12 +55,21 @@ class BROKENEDGE_API UExtractionLootLayout : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	/** A point whose Kind equals this is a loose-item site: spawn picks one Recipe stack at random. */
+	static const FName LooseKind;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName Variant;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString GroupPolicy;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<FExtractionLootPoint> Points;
+	/** Loose sites filled per raid, drawn at random from every enabled LooseKind point. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0"))
+	int32 LooseSpawnCount = 10;
 	bool Select(int32 Seed, TArray<int32>& Out, FString& Error) const;
 	void Spawn(class UWorld* World, int32 Seed) const;
+
+private:
+	/** Outdoor scatter is sampled separately so it never competes with authored containers. */
+	void SpawnLoose(class UWorld* World, int32 Seed) const;
 };

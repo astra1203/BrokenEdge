@@ -569,15 +569,22 @@ void UExtractionWidget::Refresh()
 		for (TActorIterator<AExtractionExit> It(GetWorld()); It; ++It)
 		{
 			const FString Reason = It->UnavailableReason(GS->GetServerWorldTimeSeconds());
-			ExitsText += FString::Printf(TEXT("%s\n%.0f 米 · %s\n\n"), *It->Definition.Label.ToString(),
+			FString Rule;
+			if (It->Definition.bRequireEmptyPack) Rule = TEXT(" · 需清空背包");
+			ExitsText += FString::Printf(TEXT("%s\n%.0f 米 · %s%s\n\n"), *It->Definition.Label.ToString(),
 			                             FVector::Dist2D(PC->GetPawn()->GetActorLocation(), It->GetActorLocation()) /
 			                             100,
-			                             Reason.IsEmpty() ? TEXT("可撤离") : *Reason);
+			                             Reason.IsEmpty() ? TEXT("可撤离") : *Reason, *Rule);
 			if (PS->ExtractAt > 0 && PS->ExtractExitId == It->Definition.Id)
 			{
 				const double Remaining = FMath::Max(0.0, PS->ExtractAt - GS->GetServerWorldTimeSeconds());
 				CountdownText = FString::Printf(TEXT("正在撤离  %.1f\n请留在撤离区域内"), Remaining);
 				ExitFraction = FMath::Clamp(1.f - Remaining / It->Definition.HoldSeconds, 0., 1.);
+			}
+			else if (!PS->ExtractBlockedReason.IsEmpty() && PS->ExtractExitId == It->Definition.Id)
+			{
+				CountdownText = PS->ExtractBlockedReason;
+				ExitFraction = 0;
 			}
 		}
 	}
