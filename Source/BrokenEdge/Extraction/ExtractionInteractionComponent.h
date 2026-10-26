@@ -4,6 +4,8 @@
 #include "Components/ActorComponent.h"
 #include "ExtractionItems.h"
 #include "ExtractionInteractionComponent.generated.h"
+// 交互把本地选中目标与服务器物品事务分开：焦点用于提示，真正操作仍需服务器重新检查距离、遮挡和版本。
+// 搜索结果按玩家独立保存，LootView 是已脱敏的容器视图，不直接广播服务器完整 Contents。
 
 class AExtractionLootActor;
 class UExtractionInventoryComponent;

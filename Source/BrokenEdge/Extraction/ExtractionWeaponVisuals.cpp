@@ -4,12 +4,16 @@
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+// 武器附件的本地视觉装配：读取已复制的配置，分别创建世界模型与本人第一人称模型。
+// 专服跳过外观创建；这些组件不参与伤害、库存或持久化，销毁表现不会消耗附件物品。
 
+// 逐帧检查配置与第一人称父组件是否变化，仅发生变化时重建。
 UExtractionWeaponVisuals::UExtractionWeaponVisuals()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+// 销毁已生成的两套附件组件并清空缓存，使下一次刷新能按新父对象重建。
 void UExtractionWeaponVisuals::Clear()
 {
 	for (const auto& Part : WorldParts) if (IsValid(Part)) Part->DestroyComponent();
@@ -20,12 +24,14 @@ void UExtractionWeaponVisuals::Clear()
 	ViewParent.Reset();
 }
 
+// 武器结束生命周期时释放全部动态附件，再调用父类清理。
 void UExtractionWeaponVisuals::EndPlay(const EEndPlayReason::Type Reason)
 {
 	Clear();
 	Super::EndPlay(Reason);
 }
 
+// 比较配件列表、装配布局和视角父组件；父件先于子件创建，随后按视角更新可见性。
 void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActorComponentTickFunction* Tick)
 {
 	Super::TickComponent(Delta, Kind, Tick);
@@ -66,6 +72,7 @@ void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActo
 		if (!W->ExtractionAssembly.IsEmpty())
 		{
 			TMap<FGuid, UStaticMeshComponent*> WorldNodes, ViewNodes;
+			// 每轮只处理父件已创建的节点，最多按节点数遍历；非法树应先由服务器装备校验拒绝。
 			TSet<FGuid> Finished;
 			for (int32 Pass = 0; Pass < W->ExtractionAssembly.Num(); ++Pass)
 				for (const auto& Node : W->ExtractionAssembly)
@@ -95,6 +102,7 @@ void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActo
 				Create(D->AdapterMesh, View, D->AdapterMount, true);
 			}
 	}
+	// 世界附件对第一人称拥有者隐藏，本人专用附件只在其第一人称视角显示，防止叠出两套模型。
 	const bool First = C && C->IsLocallyControlled() && C->IsFirstPersonView() && !C->IsDefeated();
 	for (const auto& Part : WorldParts)
 		if (IsValid(Part))
@@ -105,6 +113,7 @@ void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActo
 	for (const auto& Part : ViewParts) if (IsValid(Part)) Part->SetVisibility(First && View && View->IsVisible());
 }
 
+// 有握把配件时使用其支撑手修正，否则回退对应视角武器模型的 LeftHandSocket 组件空间变换。
 FTransform AWeapon::EquipmentGrip(bool FirstPerson) const
 {
 	for (FName Name : ExtractionParts)
@@ -118,6 +127,7 @@ FTransform AWeapon::EquipmentGrip(bool FirstPerson) const
 	return Mesh->GetSocketTransform(TEXT("LeftHandSocket"), RTS_Component);
 }
 
+// 读取光学附件的瞄准偏移；没有瞄具附件时返回零偏移。
 FVector AWeapon::EquipmentAimOffset() const
 {
 	for (FName Name : ExtractionParts)

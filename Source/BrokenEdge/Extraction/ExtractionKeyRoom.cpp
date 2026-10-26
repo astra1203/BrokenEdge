@@ -10,7 +10,10 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Net/UnrealNetwork.h"
+// 一次性钥匙房：服务器验证背包版本并消耗钥匙，先发布解锁，再在开门时刻取消通行阻挡。
+// 门动画是复制时刻驱动的表现；宝箱搜索还会检查 Open，不能仅看门的可见位置。
 
+// 创建权威阻挡盒与无碰撞门模型；门不改导航烘焙，是否可通行由阻挡盒控制。
 AExtractionKeyRoom::AExtractionKeyRoom()
 {
 	bReplicates = true;
@@ -27,6 +30,7 @@ AExtractionKeyRoom::AExtractionKeyRoom()
 	DoorMesh->SetCanEverAffectNavigation(false);
 }
 
+// 记录关门相对位置并刷新表现；服务器生成一次机密宝箱和文件来源批次，供撤离任务核验。
 void AExtractionKeyRoom::BeginPlay()
 {
 	Super::BeginPlay();
@@ -50,6 +54,7 @@ void AExtractionKeyRoom::BeginPlay()
 	Cache->SetContents(Contents);
 }
 
+// 同步解锁、完全打开、开门截止时间和宝箱引用；文件来源批次不向客户端公开。
 void AExtractionKeyRoom::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -59,11 +64,13 @@ void AExtractionKeyRoom::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(AExtractionKeyRoom, Cache);
 }
 
+// 给出门前方的世界参考位置，用于接近该门的调用者，不代表已经通过距离检查。
 FVector AExtractionKeyRoom::Approach() const
 {
 	return GetActorLocation() + GetActorRotation().RotateVector(FVector(0, -120, -55));
 }
 
+// 要求同世界、两米内且视线无遮挡；射线命中门本身允许交互。
 bool AExtractionKeyRoom::CanReach(ABrokenEdgeCharacter* C) const
 {
 	if (!C || C->GetWorld() != GetWorld() || FVector::DistSquared(C->GetActorLocation(), GetActorLocation()) >
@@ -79,6 +86,8 @@ bool AExtractionKeyRoom::CanReach(ABrokenEdgeCharacter* C) const
 		== this;
 }
 
+// 服务器验证行动、存储、动作互斥和背包版本，再在副本中移除钥匙并校验。
+// 成功后递增版本并设定 0.8 秒开门时刻；返回值是反馈文本，成功时也不是空字符串。
 FString AExtractionKeyRoom::Unlock(UExtractionInteractionComponent* I, int32 Revision)
 {
 	if (!HasAuthority() || !I || !I->CanAct() || !CanReach(I->Character())) return TEXT("无法开门：距离、视线或状态不满足");
@@ -110,12 +119,14 @@ FString AExtractionKeyRoom::Unlock(UExtractionInteractionComponent* I, int32 Rev
 	return TEXT("钥匙已消耗 · 门已解锁");
 }
 
+// 以 Open 控制阻挡，并在已打开时直接对齐最终模型位置，支持晚收到状态的客户端。
 void AExtractionKeyRoom::OnRep_Door()
 {
 	Barrier->SetCollisionEnabled(Open ? ECollisionEnabled::NoCollision : ECollisionEnabled::QueryAndPhysics);
 	if (Open) DoorMesh->SetRelativeLocation(ClosedLocation + Slide);
 }
 
+// 使用同步服务器时间插值门模型；仅服务器在到时后发布 Open 并移除阻挡。
 void AExtractionKeyRoom::Tick(float Delta)
 {
 	Super::Tick(Delta);

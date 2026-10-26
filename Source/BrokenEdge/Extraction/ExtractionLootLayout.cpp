@@ -2,7 +2,11 @@
 #include "ExtractionLootActor.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+// 布局记录点位来源，Recipe 记录项目掉落内容，两者分离以免把兼容调参误称为源游戏规则。
+// 服务器开局按固定种子选择点位；组名为空的固定点全选，有组名的候选按权重每组选一个。
 
+// 校验唯一 ID、变换和权重后，对组名及点位排序再按种子抽取；排序避免容器遍历顺序影响重现。
+// 输出是 Points 索引，失败时清空选择并返回错误文本。
 bool UExtractionLootLayout::Select(int32 Seed, TArray<int32>& Out, FString& Error) const
 {
 	Out.Reset();
@@ -50,6 +54,7 @@ bool UExtractionLootLayout::Select(int32 Seed, TArray<int32>& Out, FString& Erro
 	return true;
 }
 
+// 只在服务器生成选中的容器，沿用配置高程并关闭默认落地/种子逻辑；配方异常记录警告。
 void UExtractionLootLayout::Spawn(UWorld* World, int32 Seed) const
 {
 	if (!World || World->GetNetMode() == NM_Client) return;
@@ -67,6 +72,7 @@ void UExtractionLootLayout::Spawn(UWorld* World, int32 Seed) const
 		                                                              nullptr, nullptr,
 		                                                              ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 		if (!Actor) continue;
+		// 保留配置点位的楼层与高度，不执行默认向下射线或额外填充。
 		Actor->SeedContents = false; // Authored floor/elevation must not be replaced by a downward trace.
 		Actor->SourcePointId = P.Id;
 		Actor->ContainerAppearance = P.Appearance;

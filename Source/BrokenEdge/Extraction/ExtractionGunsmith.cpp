@@ -18,11 +18,14 @@
 #include "Dom/JsonObject.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
+// 改枪面板通过 Read/Submit 回调复用局内背包和大厅仓库的数据入口，不持有可直接修改的真实容器。
+// 属性对比在容器副本上执行 Configure；点击应用才发送请求，并等待版本变化或等待提示超时。
 
 namespace
 {
 	TWeakPtr<SWidget> ActivePanel;
 
+	// 从视口移除当前面板并清理弱引用，避免重复打开叠加输入层。
 	void CloseGunsmith()
 	{
 		if (GEngine && GEngine->GameViewport)
@@ -31,6 +34,7 @@ namespace
 		ActivePanel.Reset();
 	}
 
+	// 读取武器机制数据中的固定总成信息，供界面展示；固定件与可操作的物品附件分开处理。
 	TArray<FString> FixedParts(FName Definition)
 	{
 		// Display the explicit snapshot assembly only. These are already part of the base mesh/stats.
@@ -88,6 +92,7 @@ namespace
 			return FReply::Unhandled();
 		}
 
+		// 保存目标武器 ID 及读写回调，初次构建可执行操作和属性预览。
 		void Construct(const FArguments&, FGuid InWeapon, TFunction<FExtractionContainer()> InRead,
 		               TFunction<void(const FExtractionItemRequest&)> InSubmit)
 		{
@@ -97,6 +102,7 @@ namespace
 			Rebuild();
 		}
 
+		// 重新读取快照：武器消失则关闭，版本变化则重建；等待超时只解除界面等待，不证明事务失败。
 		virtual void Tick(const FGeometry& G, double Now, float Delta) override
 		{
 			SCompoundWidget::Tick(G, Now, Delta);
@@ -124,6 +130,7 @@ namespace
 		bool Pending = false, Valid = false;
 		double SentAt = 0;
 
+		// 重新枚举装卸和调校操作，在副本上预演并显示前后属性；等待回执期间禁用重复应用。
 		void Rebuild()
 		{
 			const auto C = Read();
@@ -237,6 +244,7 @@ namespace
 	};
 }
 
+// 关闭已有改枪面板，在游戏视口创建居中的新面板并设置键盘焦点。
 void ExtractionGunsmith::Open(TSharedRef<SWidget> Parent, FGuid Weapon, TFunction<FExtractionContainer()> Read,
                               TFunction<void(const FExtractionItemRequest&)> Submit)
 {

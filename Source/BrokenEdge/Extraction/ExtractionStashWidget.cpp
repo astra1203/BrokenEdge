@@ -8,6 +8,8 @@
 #include "Styling/CoreStyle.h"
 #include "Input/Reply.h"
 #include "Framework/Application/SlateApplication.h"
+// 大厅仓库界面读取 Account 的档案快照，展示仓库、出战装备和溢出物品。
+// 界面负责拖拽与选择，Account 负责带版本号的请求；锁定档案期间禁止编辑，防止与出战结算竞争。
 
 namespace
 {
@@ -55,6 +57,7 @@ public:
 		return !Account() ? nullptr : Side == 0 ? &Account()->Profile.Stash : &Account()->Profile.Loadout;
 	}
 
+	// 从当前档案绘制两侧容器和分页溢出区；拖拽时隐藏原位置仅是视觉反馈。
 	virtual int32 OnPaint(const FPaintArgs&, const FGeometry& G, const FSlateRect&, FSlateWindowElementList& Draw,
 	                      int32 Layer, const FWidgetStyle&, bool) const override
 	{
@@ -173,6 +176,7 @@ public:
 		return FReply::Handled();
 	}
 
+	// 滚轮调整溢出区显示位置，一次按五项移动，不改变溢出物品的存储顺序。
 	virtual FReply OnMouseWheel(const FGeometry&, const FPointerEvent& E) override
 	{
 		if (Account())
@@ -181,6 +185,7 @@ public:
 		return FReply::Handled();
 	}
 
+	// 先处理返回和档案锁，再解析菜单、溢出回收、快捷转移与拖拽。
 	virtual FReply OnMouseButtonDown(const FGeometry& G, const FPointerEvent& E) override
 	{
 		Mouse = Position(G, E);
@@ -287,6 +292,7 @@ public:
 		return FReply::Handled().SetUserFocus(AsShared());
 	}
 
+	// 释放鼠标时根据落点生成移动或合并请求；服务器拒绝时仍以同步档案为准。
 	virtual FReply OnMouseButtonUp(const FGeometry& G, const FPointerEvent& E) override
 	{
 		if (!Dragging || E.GetEffectingButton() != EKeys::LeftMouseButton) return FReply::Unhandled();
@@ -375,12 +381,14 @@ private:
 		Selected.Invalidate();
 	}
 
+	// 通过 Account 提交操作并取消本地选择；请求 ID 和档案版本由账号组件统一设置。
 	void Send(FExtractionStorageRequest R)
 	{
 		Account()->RequestMove(R);
 		Cancel();
 	}
 
+	// 撤销界面缩放与居中偏移，使用与绘制一致的设计坐标做命中测试。
 	FVector2D Position(const FGeometry& G, const FPointerEvent& E) const
 	{
 		return (G.AbsoluteToLocal(E.GetScreenSpacePosition()) - ExtractionUIStyle::Offset(G)) / ExtractionUIStyle::Scale(G);
@@ -416,21 +424,25 @@ private:
 	}
 };
 
+// 从所属玩家控制器查找账号组件，所有仓库操作使用同一份同步档案。
 UExtractionAccountComponent* UExtractionStashWidget::Account() const
 {
 	return GetOwningPlayer() ? GetOwningPlayer()->FindComponentByClass<UExtractionAccountComponent>() : nullptr;
 }
 
+// 创建仓库 Slate 面板，保留 UMG 生命周期管理入口。
 TSharedRef<SWidget> UExtractionStashWidget::RebuildWidget()
 {
 	return SAssignNew(Panel, SExtractionStashPanel).Owner(this);
 }
 
+// 把键盘焦点交给仓库面板，以接收旋转、拆分和退出操作。
 void UExtractionStashWidget::FocusPanel()
 {
 	if (Panel.IsValid()) FSlateApplication::Get().SetKeyboardFocus(Panel, EFocusCause::SetDirectly);
 }
 
+// 释放面板引用，支持关闭或重建界面。
 void UExtractionStashWidget::ReleaseSlateResources(bool Children)
 {
 	Super::ReleaseSlateResources(Children);

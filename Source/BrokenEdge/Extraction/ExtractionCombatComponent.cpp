@@ -16,16 +16,21 @@
 #include "DrawDebugHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "HAL/IConsoleManager.h"
+// 撤离模式专用战斗协议：拥有者预测表现，服务器校验射击与装填并维护弹药，其他客户端只播放效果。
+// Server/Client/NetMulticast RPC 分别对应请求、拥有者回执和远端表现；Reliable 不等于免除服务器参数校验。
+// 权威装填和切枪使用定时器，不依赖专服是否渲染动画或触发 AnimNotify。
 
 static TAutoConsoleVariable<int32> CVarWeaponStats(
 	TEXT("BrokenEdge.Weapon.DebugStats"), 0, TEXT("Show ADS, breath, spread and source revision."));
 
+// 随机种子只同步给拥有者，使本地预测与服务器用相同射击 ID 构造散布。
 void UExtractionCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION(UExtractionCombatComponent, MechanicsSeed, COND_OwnerOnly);
 }
 
+// 武器、附件或配置版本变化时重新解析参数并重置短期枪械状态；切枪不能补满玩家屏息资源。
 void UExtractionCombatComponent::RefreshMechanics()
 {
 	auto* C = Character();
@@ -58,12 +63,14 @@ void UExtractionCombatComponent::RefreshMechanics()
 	if (C && C->HasAuthority() && !MechanicsSeed) MechanicsSeed = FMath::RandHelper(MAX_int32 - 1) + 1;
 }
 
+// 有有效参数时检查冲刺和举枪/跑射延迟；无参数时允许既有逻辑继续判断。
 bool UExtractionCombatComponent::CanFireMechanics() const
 {
 	const auto* C = Character();
 	return !Stats.IsValid() || (C && !C->IsSprinting() && GetWorld()->GetTimeSeconds() >= ReadyAt);
 }
 
+// 清除开镜、连射、散布与镜头冲量，不重置屏息余量及冷却，避免切枪刷资源。
 void UExtractionCombatComponent::ResetTransientMechanics()
 {
 	AimAlpha = 0;
@@ -79,6 +86,7 @@ void UExtractionCombatComponent::ResetTransientMechanics()
 		C->GetFollowCamera()->ClearAdditiveOffset();
 }
 
+// 只有能行动、非冲刺持刀、未开背包且未装填时，才允许稳定瞄准相关状态。
 bool UExtractionCombatComponent::CanSteadyWeapon() const
 {
 	const auto* C = Character();
@@ -88,23 +96,27 @@ bool UExtractionCombatComponent::CanSteadyWeapon() const
 		&& C->GetCombat()->CombatState == ECombatState::ECS_Unoccuiped;
 }
 
+// 本地检查开镜资格并发出屏息请求；服务器仍会重新校验当前状态。
 void UExtractionCombatComponent::HoldBreathPressed()
 {
 	bBreathHeld = CanSteadyWeapon() && Character()->IsAiming();
 	ServerHoldBreath(bBreathHeld);
 }
 
+// 本地和服务器同时解除屏息输入，资源恢复仍按 Tick 规则执行。
 void UExtractionCombatComponent::HoldBreathReleased()
 {
 	bBreathHeld = false;
 	ServerHoldBreath(false);
 }
 
+// 服务器只接受当前可稳定瞄准且已开镜的屏息请求。
 void UExtractionCombatComponent::ServerHoldBreath_Implementation(bool bHeld)
 {
 	bBreathHeld = bHeld && CanSteadyWeapon() && Character()->IsAiming();
 }
 
+// 推进开镜插值、屏息消耗恢复、散布回落和后座偿还；本地额外更新镜头表现及自动连射。
 void UExtractionCombatComponent::TickComponent(float Delta, ELevelTick Kind, FActorComponentTickFunction* Tick)
 {
 	Super::TickComponent(Delta, Kind, Tick);
@@ -166,6 +178,8 @@ void UExtractionCombatComponent::TickComponent(float Delta, ELevelTick Kind, FAc
 			                *SpreadAccumulation.ToString(), 60 / Stats.Interval), nullptr, FColor::Green, 0);
 }
 
+// 以共享种子和射击 ID 计算散布，叠加姿态与屏息影响，再推进连射、后座和资源状态。
+// bApplyInput 只控制是否给本地控制旋转施加后座，镜头附加冲量与权威瞄准射线分开。
 FVector UExtractionCombatComponent::ResolveShot(const FVector& Target, uint32 Id, bool bApplyInput)
 {
 	auto* C = Character();
@@ -213,19 +227,23 @@ FVector UExtractionCombatComponent::ResolveShot(const FVector& Target, uint32 Id
 	return End;
 }
 
+// 启用复制与逐帧更新，服务器规则和本地预测共用同一个组件类型。
 UExtractionCombatComponent::UExtractionCombatComponent()
 {
 	SetIsReplicatedByDefault(true);
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+// 组件所属 Actor 应为 BrokenEdgeCharacter，转换失败时返回空指针。
 ABrokenEdgeCharacter* UExtractionCombatComponent::Character() const { return Cast<ABrokenEdgeCharacter>(GetOwner()); }
 
+// 通过当前 GameState 判断是否启用撤离协议，其他模式保持原战斗入口。
 bool UExtractionCombatComponent::IsEnabled() const
 {
 	return GetWorld() && GetWorld()->GetGameState<AExtractionGameState>();
 }
 
+// 要求活动对局、存活或守卫身份、未失能且未攀爬；这是多种战斗交互共用的前置条件。
 bool UExtractionCombatComponent::CanAct() const
 {
 	const auto* C = Character();
@@ -236,6 +254,7 @@ bool UExtractionCombatComponent::CanAct() const
 		&& !C->IsDefeated() && !C->bDisableGameplay && !C->IsTraversing();
 }
 
+// 服务器 AI 走同一射击请求校验链路，不能绕过弹药和射速规则。
 void UExtractionCombatComponent::FireGuard(const FVector& Target)
 {
 	auto* C = Character();
@@ -243,6 +262,7 @@ void UExtractionCombatComponent::FireGuard(const FVector& Target)
 	ServerRequestShot(++LocalShotId, C->GetEquippedWeapon(), Target);
 }
 
+// 本地验证基础条件，非权威拥有者先预测开火并登记待确认射击，再向服务器发送目标。
 void UExtractionCombatComponent::RequestShot(const FVector& Target)
 {
 	RefreshMechanics();
@@ -259,6 +279,7 @@ void UExtractionCombatComponent::RequestShot(const FVector& Target)
 	ServerRequestShot(Id, W, Target);
 }
 
+// 补齐当前武器配置版本并转发到版本化 RPC；旧调用入口仍接受同一套服务器检查。
 void UExtractionCombatComponent::ServerRequestShot(uint32 ShotId, AWeapon* Weapon, FVector_NetQuantize Target)
 {
 	const auto* Profile = Weapon ? WeaponMechanics::Find(Weapon->ExtractionDefinition) : nullptr;
@@ -270,6 +291,8 @@ void UExtractionCombatComponent::ServerRequestShot(uint32 ShotId, AWeapon* Weapo
 		                           : 0);
 }
 
+// 按序号去重，核验武器归属、装配版本、瞄准方向、射速、弹药和动作互斥，再执行服务端命中。
+// 无论接受或拒绝都给拥有者回执，但绝不回传伪造请求指定的他人物品状态。
 void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint32 ShotId, AWeapon* Weapon,
                                                                            FVector_NetQuantize Target, uint32 Revision)
 {
@@ -278,6 +301,7 @@ void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint3
 	auto* C = Character();
 	UCombatComponent* Combat = C ? C->GetCombat().Get() : nullptr;
 	const double Now = GetWorld()->GetTimeSeconds();
+	// 先推进已处理水位，再核验请求；被拒绝的序号也不能重复提交获利。
 	const bool Fresh = ShotId > LastProcessedShot;
 	if (Fresh) LastProcessedShot = ShotId;
 	const bool Valid = IsEnabled() && Fresh && CanAct() && CanFireMechanics() && Combat && IsValid(Weapon)
@@ -324,6 +348,7 @@ void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint3
 		                      SpreadAccumulation, Breath, Now, LastMechanicsShot);
 }
 
+// 拥有者收到服务器枪械状态后叠加尚未确认的本地射击，避免校正抹掉后续预测。
 void UExtractionCombatComponent::ClientMechanicsResult_Implementation(uint32 ShotId, AWeapon* Weapon, uint32 Sequence,
                                                                       FVector2D Spread, float InBreath,
                                                                       double ServerTime, double ShotTime)
@@ -337,6 +362,7 @@ void UExtractionCombatComponent::ClientMechanicsResult_Implementation(uint32 Sho
 	if (!Pending) LastMechanicsShot = GetWorld()->GetTimeSeconds() - FMath::Max(0., ServerTime - ShotTime);
 }
 
+// 清除已确认序号及更早请求，用服务器弹药减去剩余预测发数恢复本地显示。
 void UExtractionCombatComponent::ClientShotResult_Implementation(uint32 ShotId, AWeapon* Weapon, int32 Ammo,
                                                                  bool bAccepted)
 {
@@ -349,6 +375,7 @@ void UExtractionCombatComponent::ClientShotResult_Implementation(uint32 ShotId, 
 	if (IsValid(Weapon)) Weapon->SetExtractionAmmo(Ammo - Predicted);
 }
 
+// 仅远端非拥有者播放射击；服务器已执行命中、拥有者已预测，二者不能再重复播放或扣弹。
 void UExtractionCombatComponent::MulticastShotEffects_Implementation(AWeapon* Weapon, FVector_NetQuantize Target,
                                                                      int32 Ammo)
 {
@@ -359,6 +386,7 @@ void UExtractionCombatComponent::MulticastShotEffects_Implementation(AWeapon* We
 	Weapon->SetExtractionAmmo(Ammo);
 }
 
+// 旧丢枪入口也转入背包事务，防止仅销毁 Actor 而保留可再次使用的物品。
 void UExtractionCombatComponent::ServerDropWeapon_Implementation()
 {
 	if (Character() && Character()->Melee->Active) return;
@@ -367,6 +395,7 @@ void UExtractionCombatComponent::ServerDropWeapon_Implementation()
 		if (auto* PC = Cast<AExtractionPlayerController>(Character()->GetController())) PC->DropEquippedItem();
 }
 
+// 拥有者先播放装填表现并请求服务器；此时不真正从背包转移弹药。
 void UExtractionCombatComponent::RequestReload()
 {
 	if (Character() && Character()->Melee->Active) return;
@@ -382,6 +411,7 @@ void UExtractionCombatComponent::RequestReload()
 	Combat->ServerReload();
 }
 
+// 服务器重验武器归属和动作条件，记录目标武器并按空仓/普通装填时长安排完成回调。
 void UExtractionCombatComponent::BeginServerReload()
 {
 	if (Character() && Character()->Melee->Active) return;
@@ -412,6 +442,7 @@ void UExtractionCombatComponent::BeginServerReload()
 		                                                        : Duration));
 }
 
+// 到时再次确认仍持有原武器且处于装填状态，再把背包子弹转入弹匣并同步回执。
 void UExtractionCombatComponent::FinishServerReload()
 {
 	ReloadTimer.Invalidate();
@@ -431,11 +462,13 @@ void UExtractionCombatComponent::FinishServerReload()
 	CancelReload();
 }
 
+// 在客户端应用服务器弹药快照，与射击回执保持同组件可靠通道的顺序。
 void UExtractionCombatComponent::MulticastReloadAmmo_Implementation(AWeapon* Weapon, int32 Ammo)
 {
 	if (!GetOwner()->HasAuthority() && IsValid(Weapon)) Weapon->SetExtractionAmmo(Ammo);
 }
 
+// 服务器装备同步时设置弹药，并通过同一回执通道更新客户端，防止旧预测覆盖新装备状态。
 void UExtractionCombatComponent::EquipmentAmmo(AWeapon* Weapon, int32 Ammo)
 {
 	if (!GetOwner()->HasAuthority() || !Weapon) return;
@@ -445,6 +478,7 @@ void UExtractionCombatComponent::EquipmentAmmo(AWeapon* Weapon, int32 Ammo)
 	ClientShotResult(LastProcessedShot, Weapon, Ammo, true);
 }
 
+// 清除定时器与弱引用，退出装填状态并撤销拥有者预测标记；取消本身不补弹。
 void UExtractionCombatComponent::CancelReload()
 {
 	if (GetWorld()) GetWorld()->GetTimerManager().ClearTimer(ReloadTimer);
@@ -458,11 +492,13 @@ void UExtractionCombatComponent::CancelReload()
 	}
 }
 
+// 撤销本地装填预测标记；真实弹药以服务器快照为准。
 void UExtractionCombatComponent::ClientReloadRejected_Implementation()
 {
 	if (auto* C = Character()) C->GetCombat()->bLocallyReloading = false;
 }
 
+// 记录原主副武器，用参数或通知时刻确定挂接和结束时间；广播蒙太奇后由服务器定时器推进。
 void UExtractionCombatComponent::BeginServerSwap()
 {
 	if (Character() && Character()->Melee->Active) return;
@@ -497,16 +533,19 @@ void UExtractionCombatComponent::BeginServerSwap()
 	MulticastSwapStarted();
 	C->ForceNetUpdate();
 	// Authority does not depend on a rendered montage firing every notify.
+	// 服务器拥有挂接时刻，专服即使不评估蒙太奇通知也能完成切枪。
 	GetWorld()->GetTimerManager().SetTimer(SwapAttachTimer, this, &ThisClass::CommitServerSwap, AttachTime);
 	GetWorld()->GetTimerManager().SetTimer(SwapFinishTimer, this, &ThisClass::FinishServerSwap, FinishTime);
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_SWAP_SCHEDULE Attach=%.3f Finish=%.3f"), AttachTime, FinishTime);
 }
 
+// 在各端播放切枪动作，表现通知不承担服务器最终状态提交。
 void UExtractionCombatComponent::MulticastSwapStarted_Implementation()
 {
 	if (auto* C = Character()) C->PlaySwapMontage();
 }
 
+// 挂接时再检查两把枪与开始时一致，避免期间丢弃或更换后把过期对象重新挂回。
 void UExtractionCombatComponent::CommitServerSwap()
 {
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_SWAP_COMMIT"));
@@ -531,8 +570,10 @@ void UExtractionCombatComponent::CommitServerSwap()
 	C->ForceNetUpdate();
 }
 
+// 结束计时后统一进入切枪清理，解除动作锁并恢复副武器轮廓。
 void UExtractionCombatComponent::FinishServerSwap() { CancelSwap(); }
 
+// 取消挂接/结束计时器并清空快照；已完成的挂接不会被此函数反向交换。
 void UExtractionCombatComponent::CancelSwap()
 {
 	if (GetWorld())
@@ -552,6 +593,7 @@ void UExtractionCombatComponent::CancelSwap()
 	}
 }
 
+// 销毁前清除镜头临时偏移和定时器，防止后续回调访问失效角色。
 void UExtractionCombatComponent::EndPlay(const EEndPlayReason::Type Reason)
 {
 	ResetTransientMechanics();

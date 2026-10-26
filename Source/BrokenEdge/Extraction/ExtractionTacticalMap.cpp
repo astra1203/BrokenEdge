@@ -9,6 +9,8 @@
 #include "Widgets/SLeafWidget.h"
 #include "Rendering/DrawElements.h"
 #include "Styling/CoreStyle.h"
+// 战术地图是地图定义与对局复制状态的只读投影，显示楼层、撤离点和同队玩家。
+// 地图绘制不驱动撤离判定；开放时间和玩家位置来自实际对局状态。
 
 class SExtractionTacticalMap : public SLeafWidget
 {
@@ -21,9 +23,11 @@ public:
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& A) { Owner = A._Owner; }
+	// 每帧标记绘制失效，使队友位置和撤离点倒计时随状态刷新。
 	virtual void Tick(const FGeometry&, double, float) override { Invalidate(EInvalidateWidgetReason::Paint); }
 	virtual FVector2D ComputeDesiredSize(float) const override { return {1280, 720}; }
 
+	// 将世界坐标投影到地图：X 轴朝北、Y 轴向右；撤离状态使用服务器时间，同队标记要求非零队伍 ID。
 	virtual int32 OnPaint(const FPaintArgs&, const FGeometry& G, const FSlateRect&, FSlateWindowElementList& Draw,
 	                      int32 Layer, const FWidgetStyle&, bool) const override
 	{
@@ -113,6 +117,7 @@ private:
 	TWeakObjectPtr<UExtractionTacticalMap> Owner;
 };
 
+// 加载当前实现固定指定的地图数据资产，再创建 Slate 绘图面板；资产引用由 UPROPERTY 持有。
 TSharedRef<SWidget> UExtractionTacticalMap::RebuildWidget()
 {
 	Definition = LoadObject<UExtractionMapDefinition>(

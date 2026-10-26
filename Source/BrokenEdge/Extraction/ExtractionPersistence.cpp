@@ -7,6 +7,9 @@
 #include "Misc/Paths.h"
 #include "Misc/SecureHash.h"
 #include "Misc/Crc.h"
+// 服务器仓库的单写入者：每条日志保存完整候选状态，包含受影响档案、出战记录和带出批次数量。
+// 先校验候选副本，再追加带长度与 CRC 的记录并 Flush，成功后才替换内存 State。
+// GameInstanceSubsystem 跨关卡存活；它不是可复制 Actor，客户端通过 AccountComponent 获取自己的快照。
 
 namespace
 {
@@ -72,6 +75,7 @@ namespace
 	}
 }
 
+// 将持久化结果转换为展示文本；未知或 None 返回空，不改变结算状态。
 FString UExtractionPersistence::OutcomeLabel(EExtractionOutcome O)
 {
 	switch (O)
@@ -87,6 +91,7 @@ FString UExtractionPersistence::OutcomeLabel(EExtractionOutcome O)
 	}
 }
 
+// 按需加载仓库；训练地图使用独立随机目录，避免测试消耗正式档案。
 bool UExtractionPersistence::EnsureLoaded()
 {
 	const bool Training = GetWorld() && GetWorld()->GetMapName().Contains(TEXT("L_WeaponRange"));
@@ -100,9 +105,12 @@ bool UExtractionPersistence::EnsureLoaded()
 }
 
 #if WITH_DEV_AUTOMATION_TESTS
+// 自动化测试专用入口，显式指定隔离目录，避免访问玩家仓库。
 bool UExtractionPersistence::LoadForTest(const FString& Directory) { return Load(Directory); }
 #endif
 
+// 顺序读取日志，检查帧头、长度、CRC、序号和内容；完整损坏记录直接报错，不静默丢弃。
+// 只有末尾未写完整的记录可截断；旧版先保留原始备份，再迁移并恢复未结算对局。
 bool UExtractionPersistence::Load(const FString& Directory)
 {
 	Loaded = true;
@@ -208,6 +216,7 @@ bool UExtractionPersistence::Load(const FString& Directory)
 	return Recover();
 }
 
+// 检查存储版本、档案与出战身份唯一性、容器合法性及物品来源；不接受客户端自行拼出的结果状态。
 bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) const
 {
 	if (Candidate.Version < 1 || Candidate.Version > 3 || !Candidate.Id.IsValid()) return false;
@@ -258,6 +267,7 @@ bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) co
 	return true;
 }
 
+// 按值接收候选快照，成功刷盘后才发布为当前 State；写入失败锁定 Faulted，需恢复存储并重启。
 bool UExtractionPersistence::Commit(FExtractionStoreState Candidate)
 {
 	if (Faulted) return false;
@@ -288,23 +298,27 @@ bool UExtractionPersistence::Commit(FExtractionStoreState Candidate)
 		UE_LOG(LogTemp, Error, TEXT("EXTRACTION_STORE_WRITE_FAILED Sequence=%lld"), Candidate.Sequence);
 		return false;
 	}
+	// 只有完整记录刷盘成功才更新权威内存快照，不能先让 UI 看见尚未保存的数据。
 	State = MoveTemp(Candidate);
 	Error.Reset();
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_COMMIT Sequence=%lld"), State.Sequence);
 	return true;
 }
 
+// 返回当前内存状态中的档案只读指针；找不到返回空，后续 Commit 替换状态后不能继续持有旧指针。
 const FExtractionProfileView* UExtractionPersistence::View(FGuid Id) const
 {
 	const auto* P = State.Profiles.FindByPredicate([&](const auto& V) { return V.View.Profile == Id; });
 	return P ? &P->View : nullptr;
 }
 
+// 按出战 ID 查找记录；返回值指向内部状态，调用方应在当前操作内使用。
 const FExtractionRaidRecord* UExtractionPersistence::FindRaid(FGuid Id) const
 {
 	return State.Raids.FindByPredicate([&](const auto& R) { return R.Id == Id; });
 }
 
+// 未关闭记录中仍未结算的成员视为正在出战，用于阻止同时整理仓库或重复入局。
 bool UExtractionPersistence::IsInRaid(FGuid Id) const
 {
 	for (const auto& R : State.Raids)
@@ -315,6 +329,7 @@ bool UExtractionPersistence::IsInRaid(FGuid Id) const
 	return false;
 }
 
+// 已有档案必须校验凭据哈希；空身份请求才创建新档案，并通过输出参数返回新凭据。
 bool UExtractionPersistence::OpenProfile(FGuid Requested, const FString& Credential, FGuid& Id, FString& Issued)
 {
 	if (!EnsureLoaded()) return false;
@@ -361,6 +376,7 @@ bool UExtractionPersistence::OpenProfile(FGuid Requested, const FString& Credent
 	return Commit(MoveTemp(Candidate));
 }
 
+// 先按 Operation 与请求签名识别重试，再检查版本和出战锁；成功交易与回执一起持久化。
 bool UExtractionPersistence::Economy(FGuid Id, const FExtractionEconomyRequest& R)
 {
 	if (!EnsureLoaded()) return false;
@@ -392,6 +408,7 @@ bool UExtractionPersistence::Economy(FGuid Id, const FExtractionEconomyRequest& 
 	return Commit(MoveTemp(Candidate));
 }
 
+// 仓库整理只在候选副本上执行；校验档案版本、操作 ID 和来源/目标，溢出物资只能先领取到仓库。
 bool UExtractionPersistence::Move(FGuid Id, const FExtractionStorageRequest& R)
 {
 	if (!EnsureLoaded()) return false;
@@ -459,6 +476,8 @@ bool UExtractionPersistence::Move(FGuid Id, const FExtractionStorageRequest& R)
 	return Commit(MoveTemp(Candidate));
 }
 
+// 为所有成员原子准备出战：保存携带装备原件、重新标记来源批次并清空大厅携行栏。
+// 返回的 Raid ID 是待激活票据，此处尚未开始战斗。
 bool UExtractionPersistence::BeginRaid(const TArray<FGuid>& Profiles, FGuid& Id)
 {
 	if (!EnsureLoaded() || Profiles.IsEmpty()) return false;
@@ -490,6 +509,7 @@ bool UExtractionPersistence::BeginRaid(const TArray<FGuid>& Profiles, FGuid& Id)
 	return Commit(MoveTemp(Candidate));
 }
 
+// 将已准备记录标记为活动并持久化；重复激活同一活动记录视为成功。
 bool UExtractionPersistence::ActivateRaid(FGuid Id)
 {
 	if (!EnsureLoaded()) return false;
@@ -501,6 +521,7 @@ bool UExtractionPersistence::ActivateRaid(FGuid Id)
 	return Commit(MoveTemp(Candidate));
 }
 
+// 将物品尽量自动放入仓库，放不下则放入 Overflow；这是内存修改，调用方负责最终 Commit。
 void UExtractionPersistence::Deposit(FExtractionProfileView& P, TArray<FExtractionItem> Items)
 {
 	for (auto I : Items)
@@ -512,6 +533,8 @@ void UExtractionPersistence::Deposit(FExtractionProfileView& P, TArray<FExtracti
 	++P.Revision;
 }
 
+// 校验活动记录、成员和背包；已结算成员直接返回成功，避免网络重试重复发放。
+// 只有 Extracted 才入库和积累任务，其他结果记录损失；结果与带出批次在同一事务中提交。
 bool UExtractionPersistence::Settle(FGuid RaidId, FGuid Profile, EExtractionOutcome Outcome,
                                     const FExtractionContainer& Inventory, const FExtractionRaidProgress& Progress)
 {
@@ -576,6 +599,8 @@ bool UExtractionPersistence::Settle(FGuid RaidId, FGuid Profile, EExtractionOutc
 	return Commit(MoveTemp(Candidate));
 }
 
+// 重启时处理未关闭对局：从入局原物资扣除已被任何成员带出的来源批次，只返还剩余部分。
+// 数量拆分后必要时更换实例 ID，避免与已经进入其他仓库的物品身份冲突。
 bool UExtractionPersistence::Recover()
 {
 	FExtractionStoreState Candidate = State;
@@ -647,6 +672,7 @@ bool UExtractionPersistence::Recover()
 	return !Changed || Commit(MoveTemp(Candidate));
 }
 
+// 仅取消尚未激活的出战记录；已经关闭视为成功，活动对局不能走准备取消路径。
 bool UExtractionPersistence::AbortRaid(FGuid Id)
 {
 	if (!EnsureLoaded()) return false;
@@ -658,6 +684,7 @@ bool UExtractionPersistence::AbortRaid(FGuid Id)
 	return Commit(MoveTemp(Candidate));
 }
 
+// 在候选状态中返还尚未结算成员的原装备并标记 Aborted；此辅助函数本身不刷盘。
 void UExtractionPersistence::AbortPreparedRecord(FExtractionStoreState& Candidate, FExtractionRaidRecord& Raid)
 {
 	for (auto& Member : Raid.Players)
@@ -674,6 +701,7 @@ void UExtractionPersistence::AbortPreparedRecord(FExtractionStoreState& Candidat
 	Raid.Closed = true;
 }
 
+// 批量取消所有未激活且未关闭记录，供加载失败或开局中止使用；统一提交一次。
 bool UExtractionPersistence::AbortPreparedRaids()
 {
 	if (!EnsureLoaded()) return false;

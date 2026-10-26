@@ -15,12 +15,16 @@
 #include "EngineUtils.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
+// 守卫使用服务器 AIController 的轻量状态机，不依赖玩家 PlayerState，也不在此使用行为树。
+// 已有 Tick 注释说明巡逻、交战、丢失目标搜索及返回的具体顺序；开火仍通过撤离战斗组件校验。
 
+// 提供编辑器可配置的世界坐标路线容器，路线本身不执行寻路。
 AExtractionPatrolRoute::AExtractionPatrolRoute()
 {
 	SetRootComponent(CreateDefaultSubobject<USceneComponent>(TEXT("Route")));
 }
 
+// 以 0.1 秒间隔决策，不为 AI 创建玩家状态。
 AExtractionGuard::AExtractionGuard()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -28,6 +32,7 @@ AExtractionGuard::AExtractionGuard()
 	bWantsPlayerState = false;
 }
 
+// 先检查目标生命、30 米距离与前向视锥，再检查烟雾和场景视线，不能隔烟锁定玩家。
 bool AExtractionGuard::Sees(const ABrokenEdgeCharacter* Other) const
 {
 	const auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
@@ -41,6 +46,7 @@ bool AExtractionGuard::Sees(const ABrokenEdgeCharacter* Other) const
 	return LineOfSightTo(Other);
 }
 
+// 每轮先尝试发现玩家，有目标则交战；失去目标后搜索最后位置，超时回到巡逻路线。
 void AExtractionGuard::Tick(float Delta)
 {
 	Super::Tick(Delta);
@@ -159,6 +165,7 @@ void AExtractionGuard::Tick(float Delta)
 	}
 }
 
+// 服务器按配置数量选择已烘焙路线，投影到导航网格后延迟生成角色、标记守卫并初始化库存。
 void AExtractionGameMode::SpawnGuards()
 {
 	int32 Count = FMath::Clamp(GetDefault<UExtractionRules>()->Guards, 0, 4);
@@ -202,6 +209,7 @@ void AExtractionGameMode::SpawnGuards()
 	}
 }
 
+// 结束对局时清空守卫库存再销毁角色与 AI，同时移除烟雾，避免清场产生额外掉落。
 void AExtractionGameMode::RemoveGuards()
 {
 	for (TActorIterator<AExtractionGuard> It(GetWorld()); It; ++It)

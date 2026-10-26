@@ -1,5 +1,8 @@
 #include "ExtractionProgression.h"
+// 长期成长与局内进度分离：服务器只在成功撤离时累积个人任务进度，交易和领奖由仓库事务保存。
+// 本文件的 Execute 修改调用者提供的候选对象，不自行回滚或写盘；Persistence 必须在副本上调用并统一提交。
 
+// 初始化三段等级、商品和三步任务链；Game 配置可覆盖默认调参，但仍需满足配置校验。
 UExtractionProgressionRules::UExtractionProgressionRules()
 {
 	LevelExperience = {0, 100, 300};
@@ -18,11 +21,13 @@ UExtractionProgressionRules::UExtractionProgressionRules()
 	};
 }
 
+// 按定义 ID 查找商品，返回空表示不在当前商品表中。
 const FExtractionOffer* UExtractionProgressionRules::Offer(FName Id) const
 {
 	return Offers.FindByPredicate([&](const auto& O) { return O.Definition == Id; });
 }
 
+// 按累计经验阈值计算等级，经验不在升级时扣除。
 int32 UExtractionProgressionRules::Level(int64 XP) const
 {
 	int32 Result = 1;
@@ -30,6 +35,7 @@ int32 UExtractionProgressionRules::Level(int64 XP) const
 	return Result;
 }
 
+// 检查三等级三任务结构、单价与奖励范围、定义白名单和唯一商品；任务文件不允许作为商品。
 bool UExtractionProgressionRules::IsValidConfiguration() const
 {
 	if (StartingCredits < 0 || Quests.Num() != 3 || LevelExperience.Num() != 3 || LevelExperience[0] != 0
@@ -52,6 +58,7 @@ bool UExtractionProgressionRules::IsValidConfiguration() const
 	return true;
 }
 
+// 计算指定数量的回收报价；护甲按耐久折价，整枪包括弹匣和附件，负数表示不允许出售。
 int64 UExtractionProgressionRules::SellPrice(const FExtractionItem& I, int32 Quantity) const
 {
 	if (Quantity <= 0 || Quantity > I.Quantity) return -1;
@@ -79,6 +86,7 @@ int64 UExtractionProgressionRules::SellPrice(const FExtractionItem& I, int32 Qua
 	return Value;
 }
 
+// 新档案或版本迁移时设置初始货币、经验和三个任务槽，不是每次进入大厅都重置。
 void FExtractionProgression::Initialize()
 {
 	Credits = GetDefault<UExtractionProgressionRules>()->StartingCredits;
@@ -86,6 +94,7 @@ void FExtractionProgression::Initialize()
 	Quests.SetNum(3);
 }
 
+// 校验余额经验范围和任务前置关系，保证未接任务不含进度、文件资格不重复。
 bool FExtractionProgression::Validate() const
 {
 	if (Credits < 0 || Credits > 1000000000000LL || Experience < 0 || Experience > 1000000000LL || Quests.Num() != 3)
@@ -108,12 +117,15 @@ bool FExtractionProgression::Validate() const
 	return true;
 }
 
+// 把请求版本、操作类型及参数编码成回执签名；相同操作 ID 携带不同内容必须被拒绝。
 FString FExtractionEconomyRequest::Signature() const
 {
 	return FString::Printf(TEXT("%d:%d:%s:%s:%d:%d"), Revision, int32(Action), *Definition.ToString(),
 	                       *Item.ToString(EGuidFormats::Digits), Quantity, Quest);
 }
 
+// 处理购买、出售、接任务、提交文件和领奖；返回 false 时调用者丢弃整个候选状态。
+// 购买分堆放入且枪械为空弹匣，出售同时扣来源，任务文件必须匹配本人接取后成功带出的批次。
 bool ExtractionProgression::Execute(FExtractionProgression& P, FExtractionContainer& Stash,
                                     const FExtractionEconomyRequest& R, FString& Error)
 {
@@ -131,6 +143,7 @@ bool ExtractionProgression::Execute(FExtractionProgression& P, FExtractionContai
 		const auto* D = UExtractionItemDefinition::Get(R.Definition);
 		if (!O || !D || R.Quest != INDEX_NONE || R.Item.IsValid()) return Reject(TEXT("商品请求无效"));
 		if (Rules->Level(P.Experience) < O->Level) return Reject(TEXT("等级不足，商品未解锁"));
+		// 用 64 位金额计算总价；最终提交发生在外层持久化事务，不在此逐件落盘。
 		const int64 Cost = int64(O->Price) * R.Quantity;
 		if (P.Credits < Cost) return Reject(TEXT("余额不足"));
 		for (int32 Remaining = R.Quantity; Remaining > 0;)
@@ -175,6 +188,7 @@ bool ExtractionProgression::Execute(FExtractionProgression& P, FExtractionContai
 		}
 		else if (R.Action == EExtractionEconomyAction::DeliverQuest)
 		{
+			// 只有第三步文件任务接受物品提交，已提交或已领奖不能再次消耗文件。
 			if (R.Quest != 2 || !Q.Accepted || Q.Claimed || Q.Delivered) return Reject(TEXT("当前任务无需提交物品"));
 			const int32 Index = Stash.Items.IndexOfByPredicate([&](const auto& I)
 			{
@@ -203,6 +217,7 @@ bool ExtractionProgression::Execute(FExtractionProgression& P, FExtractionContai
 	return P.Validate() || Reject(TEXT("余额或经验超出允许范围"));
 }
 
+// 只由成功撤离结算调用：累计本人守卫击杀，并登记本局钥匙房文件批次，不替其他队员共享任务。
 void ExtractionProgression::Extract(FExtractionProgression& P, const FExtractionContainer& Inventory,
                                     const FExtractionRaidProgress& Raid)
 {
@@ -219,6 +234,7 @@ void ExtractionProgression::Extract(FExtractionProgression& P, const FExtraction
 				for (const auto& O : I.Origins) if (Raid.FileLots.Contains(O.Lot)) Files.EligibleFiles.AddUnique(O.Lot);
 }
 
+// 生成货币、等级和经验摘要；展示文本不参与金额或等级判定。
 FString ExtractionProgression::Summary(const FExtractionProgression& P)
 {
 	const auto* R = GetDefault<UExtractionProgressionRules>();

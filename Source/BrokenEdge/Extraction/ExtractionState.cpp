@@ -1,12 +1,16 @@
 #include "ExtractionState.h"
 #include "ExtractionInventoryComponent.h"
 #include "Net/UnrealNetwork.h"
+// 对局状态与玩家状态是服务器到客户端的可复制读模型；实际规则由 GameMode 等服务器逻辑执行。
+// GameState 描述整局，PlayerState 描述单人结果和背包，不把对局状态绑定在可销毁的角色 Pawn 上。
 
+// 创建玩家背包默认子对象，使物品状态随 PlayerState 管理。
 AExtractionPlayerState::AExtractionPlayerState()
 {
 	Inventory = CreateDefaultSubobject<UExtractionInventoryComponent>(TEXT("ExtractionInventory"));
 }
 
+// 注册本类需要同步的属性并保留父类复制项；客户端读取状态，不在复制回调中做仓库结算。
 void AExtractionGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -17,6 +21,7 @@ void AExtractionGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(AExtractionGameState, StorageError);
 }
 
+// 注册本类需要同步的属性并保留父类复制项；客户端读取状态，不在复制回调中做仓库结算。
 void AExtractionPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
