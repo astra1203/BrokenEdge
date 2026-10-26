@@ -104,11 +104,12 @@ void UExtractionInteractionComponent::UpdateFocus()
 	}
 	for (TActorIterator<AExtractionKeyRoom> It(GetWorld()); It; ++It)
 	{
+		// 距离由门自己的交互碰撞盒决定；站进盒子就算够得着，只要求不是背对门。
 		if (It->Unlocked || !It->CanReach(C)) continue;
 		const FVector Delta = It->GetActorLocation() - C->GetActorLocation();
 		const float Dot = FVector::DotProduct(Forward, Delta.GetSafeNormal2D());
-		const float Score = Delta.Size() + (1 - Dot) * 100;
-		if (Dot >= -.1f && Score < Best)
+		const float Score = Delta.Size();
+		if (Dot >= -.5f && Score < Best)
 		{
 			DoorFocus = *It;
 			Focus = nullptr;

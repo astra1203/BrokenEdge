@@ -9,7 +9,7 @@
 
 // 物品类别决定能否装备、堆叠、治疗或装配；不能用 UI 分类替代这些规则。
 UENUM(BlueprintType)
-enum class EExtractionItemKind : uint8 { Weapon, Ammo, Medical, Valuable, Armor, Attachment };
+enum class EExtractionItemKind : uint8 { Weapon, Ammo, Medical, Valuable, Armor, Attachment, Key };
 
 UENUM(BlueprintType)
 enum class EExtractionAttachmentSlot : uint8
@@ -130,6 +130,12 @@ public:
 	EExtractionMedicalEffect MedicalEffect = EExtractionMedicalEffect::Heal;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EExtractionAttachmentSlot AttachmentSlot = EExtractionAttachmentSlot::None;
+	/** 钥匙房房号；与 AExtractionKeyRoom::RequiredKey 对应，为空表示这张卡不开任何门。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Key")
+	FName KeyRoomId;
+	/** 一张钥匙卡能开门的总次数；实例用 Durability 记录剩余次数。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Key", meta=(ClampMin="1", ClampMax="20"))
+	int32 KeyUses = 1;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float ScatterScale = 1;
 	/** Explicit authored compatibility only; unknown source operations must never be enabled. */

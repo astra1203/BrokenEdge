@@ -190,6 +190,17 @@ void AExtractionPlayerController::Interact()
 	else if (C) ServerSwapExtractionWeapons();
 }
 
+void AExtractionPlayerController::InteractDoor()
+{
+	// F 键专用入口：只开门，不做换枪/救人，避免和现有 Interact 语义互相干扰。
+	auto* I = Interaction();
+	if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen) return;
+	auto* Inventory = I->Inventory();
+	if (!Inventory || !I->DoorFocus) return;
+	if (!I->DoorFocus->IsInInteractionRange(GetPawn())) return;
+	ServerUnlockDoor(I->DoorFocus, Inventory->Contents.Revision);
+}
+
 // 先确认门对象有效且属于同一世界，再由门执行完整权限和库存版本校验。
 void AExtractionPlayerController::ServerUnlockDoor_Implementation(AExtractionKeyRoom* Door, int32 Revision)
 {
@@ -216,10 +227,18 @@ void AExtractionPlayerController::ServerItemOperation_Implementation(FExtraction
 	if (auto* I = Interaction()) ClientItemResult(Request.Sequence, I->Execute(Request));
 }
 
+void AExtractionPlayerController::ShowItemMessage(const FString& Message, float Seconds)
+{
+	ItemMessage = Message;
+	TimedItemMessage = Message;
+	// 空文本表示"清空提示"，不需要计时。
+	ItemMessageUntil = Message.IsEmpty() ? 0.0 : GetWorld()->GetTimeSeconds() + FMath::Max(0.f, Seconds);
+}
+
 // 拥有者记录结果消息和已回执水位；库存本身仍等待属性复制更新。
 void AExtractionPlayerController::ClientItemResult_Implementation(uint32 Sequence, const FString& Error)
 {
-	ItemMessage = Error;
+	ShowItemMessage(Error);
 	ItemResultSequence = FMath::Max(ItemResultSequence, Sequence);
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_ITEM_RESULT Sequence=%u Error=%s"), Sequence, *Error);
 }
@@ -260,7 +279,7 @@ void AExtractionPlayerController::UseMedical()
 			RequestItem(R);
 			return;
 		}
-	ItemMessage = TEXT("没有医疗包");
+	ShowItemMessage(TEXT("没有医疗包"));
 }
 
 // 把手持槽物品转换为 Drop 请求，复用背包事务而非直接销毁武器 Actor。
@@ -350,6 +369,27 @@ void AExtractionPlayerController::GetPlayerViewPoint(FVector& OutLocation, FRota
 void AExtractionPlayerController::Tick(float Delta)
 {
 	Super::Tick(Delta);
+	// 一次性提示到点自动消失；界面里直接给 ItemMessage 赋值的也按文本变化重新计时。
+	const double Now = GetWorld()->GetTimeSeconds();
+	if (ItemMessage.IsEmpty())
+	{
+		ItemMessageUntil = 0.0;
+		TimedItemMessage.Empty();
+	}
+	else
+	{
+		if (ItemMessage != TimedItemMessage)
+		{
+			TimedItemMessage = ItemMessage;
+			ItemMessageUntil = Now + ItemMessageSeconds;
+		}
+		if (Now >= ItemMessageUntil)
+		{
+			ItemMessage.Empty();
+			TimedItemMessage.Empty();
+			ItemMessageUntil = 0.0;
+		}
+	}
 	auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
 	if (!GS) return;
 	if (HasAuthority() && bExtractionSpectating && (!SpectatedPlayer || SpectatedPlayer->Life != EExtractionLife::Alive

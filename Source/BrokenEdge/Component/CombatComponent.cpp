@@ -781,9 +781,11 @@ void UCombatComponent::SetHUDCrosshairs(float DeltaTime)
 	HUD = HUD == nullptr ? Cast<ABrokenEdgeHUD>(Controller->GetHUD()) : HUD;
 	if (HUD == nullptr)return;
 
-	const bool OpticalSight = EquippedWeapon && Character->GetExtractionCombat()->IsEnabled()
-		&& Character->IsFirstPersonView() && bAiming && EquippedWeapon->ExtractionParts.Contains(TEXT("RedDot"));
-	if (EquippedWeapon && !OpticalSight)
+	// 举枪瞄准时隐藏屏幕准星：机械瞄具和红点已经把瞄准基准放到枪上，
+	// 叠加的屏幕十字会盖住照门缺口与前准星，反而看不清瞄准关系。
+	const bool AimDownSights = EquippedWeapon && Character->GetExtractionCombat()->IsEnabled()
+		&& Character->IsFirstPersonView() && bAiming && !Character->Melee->Active;
+	if (EquippedWeapon && !AimDownSights)
 	{
 		HUDPackage.CrosshairsCenter = EquippedWeapon->CrosshairsCenter;
 		HUDPackage.CrosshairsLeft = EquippedWeapon->CrosshairsLeft;
