@@ -19,6 +19,12 @@ class BROKENEDGE_API UBrokenEdgeAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Movement|Validation")
+	bool bRifleLocomotionEnabled = false;
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Movement|Validation")
+	FString RifleLocomotionAsset;
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Movement|Validation")
+	FVector RifleLocomotionCoordinates = FVector::ZeroVector;
 	/** 初始化动画实例 */
 	virtual void NativeInitializeAnimation() override;
 

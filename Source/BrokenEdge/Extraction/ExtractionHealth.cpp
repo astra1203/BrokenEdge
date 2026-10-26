@@ -7,7 +7,10 @@
 #include "ExtractionState.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "Net/UnrealNetwork.h"
+// 当前角色的创伤组件：处理弹药倍率、护甲吸收、出血与腿部骨折；护甲耐久仍保存在物品实例。
+// 命中由服务器执行，复制只传创伤状态；死亡/倒地的最终分流交给 ExtractionGameMode。
 
+// 启用复制并每 0.1 秒检查出血时间门槛。
 UExtractionHealth::UExtractionHealth()
 {
 	SetIsReplicatedByDefault(true);
@@ -15,8 +18,10 @@ UExtractionHealth::UExtractionHealth()
 	PrimaryComponentTick.TickInterval = .1f;
 }
 
+// 获取当前受伤角色，组件不管理跨关卡的账号生命状态。
 ABrokenEdgeCharacter* UExtractionHealth::Character() const { return Cast<ABrokenEdgeCharacter>(GetOwner()); }
 
+// 同步出血与骨折布尔状态，供 UI 和角色表现读取。
 void UExtractionHealth::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -24,6 +29,7 @@ void UExtractionHealth::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(UExtractionHealth, LegFracture);
 }
 
+// 兼容项目骨架的腿部骨名，用于决定有效创伤是否附带骨折。
 bool UExtractionHealth::IsLeg(FName Bone)
 {
 	const FString Name = Bone.ToString();
@@ -35,12 +41,14 @@ bool UExtractionHealth::IsLeg(FName Bone)
 			"RightToeBase");
 }
 
+// 头部映射头盔槽 2，骨盆/脊柱映射护甲槽 3；其余部位返回 -1 不套用护甲。
 int32 UExtractionHealth::ArmorSlotForBone(FName Bone)
 {
 	if (Bone == TEXT("head")) return 2;
 	return Bone == TEXT("pelvis") || Bone == TEXT("Hips") || Bone.ToString().StartsWith(TEXT("spine")) ? 3 : -1;
 }
 
+// 按穿透等级选择吸收率，并受剩余耐久限制；引用参数扣耐久，返回未被吸收的伤害。
 float UExtractionHealth::Absorb(float Damage, int32 Penetration, int32 ArmorLevel, float& Durability)
 {
 	const auto* Rules = GetDefault<UExtractionEquipmentRules>();
@@ -52,6 +60,7 @@ float UExtractionHealth::Absorb(float Damage, int32 Penetration, int32 ArmorLeve
 	return FMath::Max(0.f, Damage - Absorbed);
 }
 
+// 服务器先过滤友军等无效伤害，再应用弹药/守卫倍率、护甲和生命损失，最后依据实际掉血产生创伤。
 void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController* Attacker, AActor* Causer)
 {
 	auto* C = Character();
@@ -88,6 +97,7 @@ void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController
 				}
 				break;
 			}
+	// 记录护甲后的实际生命变化，创伤判定不使用被护甲吸收的部分。
 	const float Before = C->GetHealth();
 	C->ReceiveDamage(C, Damage, nullptr, Attacker, Causer);
 	const float Lost = Before - C->GetHealth();
@@ -111,6 +121,7 @@ void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController
 	       *C->GetName(), *Bone.ToString(), *Ammo.ToString(), Lost, Bleeding, LegFracture);
 }
 
+// 按治疗类型检查是否缺血、出血或骨折，供医疗开始与完成时复核。
 bool UExtractionHealth::Needs(EExtractionMedicalEffect Effect) const
 {
 	const auto* C = Character();
@@ -121,6 +132,7 @@ bool UExtractionHealth::Needs(EExtractionMedicalEffect Effect) const
 		             : LegFracture);
 }
 
+// 服务器应用对应治疗并复制结果；返回 false 时上层不应消耗物品。
 bool UExtractionHealth::Treat(const UExtractionItemDefinition* D)
 {
 	auto* C = Character();
@@ -137,6 +149,7 @@ bool UExtractionHealth::Treat(const UExtractionItemDefinition* D)
 	return true;
 }
 
+// 救起时清除出血与计时；这里没有清除骨折，避免注释误写为恢复全部创伤。
 void UExtractionHealth::Revived()
 {
 	Bleeding = false;
@@ -144,6 +157,7 @@ void UExtractionHealth::Revived()
 	GetOwner()->ForceNetUpdate();
 }
 
+// 服务器按间隔直接扣出血生命，不再经过护甲也不重新施加创伤；不能行动时推迟下一次扣血。
 void UExtractionHealth::TickComponent(float Delta, ELevelTick Kind, FActorComponentTickFunction* Tick)
 {
 	Super::TickComponent(Delta, Kind, Tick);

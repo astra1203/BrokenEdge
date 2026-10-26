@@ -29,7 +29,11 @@
 #include "Misc/FileHelper.h"
 #include "HAL/PlatformProcess.h"
 #endif
+// 撤离对局的服务器调度中心：地图配置和出战凭据就绪后才进入 Active。
+// GameMode 不复制到客户端；需要显示的阶段、截止时间和玩家结果写入 GameState/PlayerState。
+// 结算遵循先持久化、后清理角色的顺序，避免客户端看到成功但仓库尚未保存。
 
+// 配置本模式的状态、控制器和角色类型；延迟开局，等待大厅票据及地图加载校验。
 AExtractionGameMode::AExtractionGameMode()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -47,6 +51,7 @@ AExtractionGameMode::AExtractionGameMode()
 			ItemDefinitions.Add(const_cast<UExtractionItemDefinition*>(Definition));
 }
 
+// 读取人数、时长与出生随机种子；这里只准备参数，不代表对局已经激活。
 void AExtractionGameMode::InitGame(const FString& Map, const FString& Options, FString& Error)
 {
 	Super::InitGame(Map, Options, Error);
@@ -61,6 +66,8 @@ void AExtractionGameMode::InitGame(const FString& Map, const FString& Options, F
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_SPAWN_SEED %d"), Seed);
 }
 
+// 加载仓库和地图数据，生成战利品与撤离点，并绑定会话结束回调。
+// 出生组或撤离点配置不足时保持阻塞，不能用无效地图启动正式对局。
 void AExtractionGameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -103,6 +110,7 @@ void AExtractionGameMode::BeginPlay()
 			Sessions->MultiplayerOnEndSessionComplete.AddUniqueDynamic(this, &ThisClass::SessionEnded);
 }
 
+// 连接准入：仅 Waiting 接受新玩家；活动中或已结束的对局返回 MATCH_IN_PROGRESS。
 void AExtractionGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& Id,
                                    FString& Error)
 {
@@ -111,6 +119,7 @@ void AExtractionGameMode::PreLogin(const FString& Options, const FString& Addres
 	if (State && State->Phase != EExtractionPhase::Waiting) Error = TEXT("MATCH_IN_PROGRESS");
 }
 
+// 等待阶段创建角色、从出战记录恢复携带物品并冻结操作；未生成 Pawn 时允许后续 Tick 重试。
 void AExtractionGameMode::HandleStartingNewPlayer_Implementation(APlayerController* Player)
 {
 	const auto* State = GetGameState<AExtractionGameState>();
@@ -130,6 +139,7 @@ void AExtractionGameMode::HandleStartingNewPlayer_Implementation(APlayerControll
 			EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 }
 
+// 只有等待阶段、存活且没有 Pawn 的玩家可生成角色；撤离模式不提供战斗中复活。
 bool AExtractionGameMode::PlayerCanRestart_Implementation(APlayerController* Player)
 {
 	const auto* GS = GetGameState<AExtractionGameState>();
@@ -138,12 +148,15 @@ bool AExtractionGameMode::PlayerCanRestart_Implementation(APlayerController* Pla
 		GetPawn();
 }
 
+// 将出生入口统一到自定义分组选择，避免默认实现退回世界原点。
 AActor* AExtractionGameMode::FindPlayerStart_Implementation(AController* Player, const FString& IncomingName)
 {
 	// GameModeBase otherwise falls back to WorldSettings at the world origin.
 	return ChoosePlayerStart(Player);
 }
 
+// 按小队分配不重复的出生组，再为组员依次分配位置；返回空指针表示暂时无法安全出生。
+// 候选位置必须已加载、可落地、坡度合适且胶囊无阻挡；已有分配优先复用。
 AActor* AExtractionGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
 	if (const auto* Existing = PlayerStarts.Find(Player); Existing && Existing->IsValid()) return Existing->Get();
@@ -325,6 +338,7 @@ AActor* AExtractionGameMode::ChoosePlayerStart_Implementation(AController* Playe
 	return Start;
 }
 
+// 冻结时同时停止移动、射击、装填、切枪和交互；解冻只恢复 Walking 移动模式。
 void AExtractionGameMode::FreezePlayer(AController* Player, bool bFreeze)
 {
 	if (auto* Character = Player ? Cast<ABrokenEdgeCharacter>(Player->GetPawn()) : nullptr)
@@ -346,6 +360,7 @@ void AExtractionGameMode::FreezePlayer(AController* Player, bool bFreeze)
 	}
 }
 
+// 统一检查活动阶段、玩家存活和仓库可用性；存储故障期间不允许继续有效战斗。
 bool AExtractionGameMode::IsCombatActive(AController* Player) const
 {
 	const auto* GS = GetGameState<AExtractionGameState>();
@@ -355,6 +370,7 @@ bool AExtractionGameMode::IsCombatActive(AController* Player) const
 		Persistence && Persistence->IsAvailable();
 }
 
+// 从 GameInstance 获取服务器仓库子系统；世界销毁期间返回空，防止访问已反初始化的子系统。
 UExtractionPersistence* AExtractionGameMode::Store() const
 {
 	const auto* World = GetWorld();
@@ -363,6 +379,8 @@ UExtractionPersistence* AExtractionGameMode::Store() const
 	return Instance ? Instance->GetSubsystem<UExtractionPersistence>() : nullptr;
 }
 
+// 将当前枪械弹药捕获到背包后提交仓库结算；返回 false 时调用者不得销毁角色或清空物品。
+// 已离开存活/倒地状态的玩家直接视为处理完毕，持久化层还会按出战成员结果防止重复入库。
 bool AExtractionGameMode::SettlePlayer(AController* Player, EExtractionOutcome Outcome)
 {
 	auto* Persistence = Store();
@@ -393,6 +411,8 @@ bool AExtractionGameMode::SettlePlayer(AController* Player, EExtractionOutcome O
 	return true;
 }
 
+// 逐玩家检测可用撤离区域，以服务器世界时间推进停留倒计时。
+// 离开区域会清空进度，换撤离点会重新计时；成功写入仓库后才消耗名额、清空背包并转为观战。
 void AExtractionGameMode::UpdateExtraction(double Now)
 {
 	for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
@@ -445,6 +465,7 @@ void AExtractionGameMode::UpdateExtraction(double Now)
 			PS->ExtractAt = Now + Exit->Definition.HoldSeconds;
 			PS->ForceNetUpdate();
 		}
+		// 倒计时结束也不能立即宣布成功：先冻结并提交存档，失败时保留角色等待后续处理。
 		if (Now < PS->ExtractAt) continue;
 		FreezePlayer(PC, true);
 		if (!SettlePlayer(PC, EExtractionOutcome::Extracted)) continue;
@@ -458,6 +479,7 @@ void AExtractionGameMode::UpdateExtraction(double Now)
 	}
 }
 
+// 仅活动对局允许有效伤害；过滤无效数值、失能攻击者、友军和守卫之间的伤害。
 float AExtractionGameMode::CalculateDamage(AController* Attacker, AController* Victim, float Damage)
 {
 	const auto* GS = GetGameState<AExtractionGameState>();
@@ -478,6 +500,7 @@ float AExtractionGameMode::CalculateDamage(AController* Attacker, AController* V
 	return FMath::Max(0.f, Damage);
 }
 
+// 统计仍在线的存活和倒地成员；倒地玩家仍可能被救援，因此计入未结束人数。
 void AExtractionGameMode::RefreshAliveCount()
 {
 	auto* GS = GetGameState<AExtractionGameState>();
@@ -491,6 +514,8 @@ void AExtractionGameMode::RefreshAliveCount()
 	GS->AlivePlayers = Count;
 }
 
+// 服务器状态机入口：等待加载与票据 → 激活对局 → 处理倒地、超时和撤离 → 结束会话并回大厅。
+// 仓库不可用时冻结玩家并提前返回，不让未持久化的物资变化继续扩大。
 void AExtractionGameMode::Tick(float Delta)
 {
 	Super::Tick(Delta);
@@ -524,6 +549,7 @@ void AExtractionGameMode::Tick(float Delta)
 		{
 			if (GS->StorageError == TEXT("没有已加载且可站立的出生组")) GS->StorageError.Reset();
 			FGuid Raid;
+			// 核对所有在线成员必须来自同一份未关闭出战记录，且档案不重复、人数与记录一致。
 			bool ValidTickets = true;
 			TSet<FGuid> Profiles;
 			for (APlayerState* State : GS->PlayerArray)
@@ -583,6 +609,8 @@ void AExtractionGameMode::Tick(float Delta)
 	}
 }
 
+// 等待阶段取消尚未激活的出战记录；活动阶段将剩余成员按超时结算。
+// 只有全部必要写入成功后才发布 Ended，并安排十秒后的会话结束。
 void AExtractionGameMode::FinishRound(const FString& Reason)
 {
 	auto* Persistence = Store();
@@ -613,6 +641,7 @@ void AExtractionGameMode::FinishRound(const FString& Reason)
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_ENDED Reason=%s"), *Reason);
 }
 
+// 异步会话结束后的旅行入口；失败时延后两秒重试，标志位阻止重复旅行请求。
 void AExtractionGameMode::SessionEnded(bool bSuccess)
 {
 	if (bEndingPlay || !GetWorld() || GetWorld()->bIsTearingDown) return;
@@ -628,12 +657,14 @@ void AExtractionGameMode::SessionEnded(bool bSuccess)
 	if (!bTravelRequested) ReturnAt = GetWorld()->GetTimeSeconds() + 2;
 }
 
+// 接入既有死亡回调，交由撤离模式决定进入倒地还是最终死亡。
 void AExtractionGameMode::PlayerDefeated(ABrokenEdgeCharacter* Character, ABrokenEdgePlayerController* Victim,
                                          ABrokenEdgePlayerController* Attacker)
 {
 	DefeatCombatant(Character, Attacker);
 }
 
+// 判断是否仍有在线、存活且有 Pawn 的同小队成员；不等同于当前已在救援距离内。
 bool AExtractionGameMode::HasRescuer(const AExtractionPlayerState* Player) const
 {
 	const auto* GS = GetGameState<AExtractionGameState>();
@@ -646,6 +677,7 @@ bool AExtractionGameMode::HasRescuer(const AExtractionPlayerState* Player) const
 	return false;
 }
 
+// 伤害作用于独立的倒地生命；降至零时强制最终死亡，返回值表示是否处理了倒地伤害。
 bool AExtractionGameMode::DamageDowned(ABrokenEdgeCharacter* C, float Damage)
 {
 	auto* PS = C ? C->GetPlayerState<AExtractionPlayerState>() : nullptr;
@@ -656,6 +688,7 @@ bool AExtractionGameMode::DamageDowned(ABrokenEdgeCharacter* C, float Damage)
 	return true;
 }
 
+// 先取消动作；守卫走击杀统计和尸体回收，玩家则依据救援条件选择倒地或持久化死亡。
 void AExtractionGameMode::DefeatCombatant(ABrokenEdgeCharacter* C, AController* Attacker, bool bFinal)
 {
 	if (!C || C->IsDefeated()) return;
@@ -701,6 +734,7 @@ void AExtractionGameMode::DefeatCombatant(ABrokenEdgeCharacter* C, AController* 
 	RefreshAliveCount();
 }
 
+// 服务器检测流血截止时间和救援资格；超时或已无救援者则结束倒地状态。
 void AExtractionGameMode::UpdateDowned(double Now)
 {
 	for (APlayerState* State : GetGameState<AExtractionGameState>()->PlayerArray)
@@ -709,6 +743,7 @@ void AExtractionGameMode::UpdateDowned(double Now)
 			DefeatCombatant(Cast<ABrokenEdgeCharacter>(PS->GetPawn()), nullptr, true);
 }
 
+// 覆写基础复活请求：终态玩家进入观战并销毁旧角色，不生成新的战斗 Pawn。
 void AExtractionGameMode::RequestRespawn(ACharacter* Character, AController* Controller)
 {
 	auto* PC = Cast<AExtractionPlayerController>(Controller);
@@ -718,6 +753,7 @@ void AExtractionGameMode::RequestRespawn(ACharacter* Character, AController* Con
 	if (Character) Character->Destroy();
 }
 
+// 主动离开按票据与阶段分流：无票据测试角色只清理、未开局返还、已开局按退出结算。
 void AExtractionGameMode::LeavePlayer(AController* Player)
 {
 	if (bEndingPlay || !GetWorld() || GetWorld()->bIsTearingDown) return;
@@ -746,6 +782,7 @@ void AExtractionGameMode::LeavePlayer(AController* Player)
 	RefreshAliveCount();
 }
 
+// 断线时尝试记录 Disconnected，再执行离开清理；世界拆卸阶段跳过仓库访问。
 void AExtractionGameMode::Logout(AController* Player)
 {
 	// PIE deinitializes GameInstance subsystems before the net driver destroys its controllers.
@@ -761,6 +798,7 @@ void AExtractionGameMode::Logout(AController* Player)
 	Super::Logout(Player);
 }
 
+// 先标记退出以阻断后续 Tick/回调，清理守卫并解绑会话委托，再交给父类销毁。
 void AExtractionGameMode::EndPlay(const EEndPlayReason::Type Reason)
 {
 	bEndingPlay = true;

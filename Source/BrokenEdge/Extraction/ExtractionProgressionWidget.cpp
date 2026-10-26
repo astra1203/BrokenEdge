@@ -7,6 +7,8 @@
 #include "Styling/CoreStyle.h"
 #include "Input/Reply.h"
 #include "Framework/Application/SlateApplication.h"
+// 商店与任务页共用一个 Slate 面板，读取账号快照和成长规则展示报价、等级及任务状态。
+// 确认窗保存预览时的档案版本，服务器仍会重新校验价格、库存、任务条件并持久化事务。
 
 namespace
 {
@@ -48,6 +50,7 @@ public:
 	virtual FVector2D ComputeDesiredSize(float) const override { return {1280, 720}; }
 	UExtractionAccountComponent* Account() const { return Owner.IsValid() ? Owner->Account() : nullptr; }
 
+	// 从规则与档案绘制商品、回收列表或任务；确认报价只用于展示，不是扣款依据。
 	virtual int32 OnPaint(const FPaintArgs&, const FGeometry& G, const FSlateRect&, FSlateWindowElementList& Draw,
 	                      int32 Layer, const FWidgetStyle&, bool) const override
 	{
@@ -176,6 +179,7 @@ public:
 		return (G.AbsoluteToLocal(E.GetScreenSpacePosition()) - ExtractionUIStyle::Offset(G)) / ExtractionUIStyle::Scale(G);
 	}
 
+	// 在非确认状态下分别滚动商品与回收列表，任务页不复用商店滚动行为。
 	virtual FReply OnMouseWheel(const FGeometry& G, const FPointerEvent& E) override
 	{
 		if (!Tasks && !Confirm && Account())
@@ -191,6 +195,7 @@ public:
 		return FReply::Handled();
 	}
 
+	// 确认前比较预览版本与当前档案，过期预览不能直接提交；其他点击切换标签或生成任务请求。
 	virtual FReply OnMouseButtonDown(const FGeometry& G, const FPointerEvent& E) override
 	{
 		auto* A = Account();
@@ -252,6 +257,7 @@ public:
 		return FReply::Handled().SetUserFocus(AsShared());
 	}
 
+	// 处理取消和数量调整，避免确认窗与底层页面同时响应退出。
 	virtual FReply OnKeyDown(const FGeometry&, const FKeyEvent& E) override
 	{
 		if (E.GetKey() == EKeys::Escape)
@@ -290,6 +296,7 @@ private:
 	int64 Quote = 0;
 	FString LocalMessage, Detail, Parts;
 
+	// 基于当前档案保存待确认请求和版本，并计算显示报价；整枪回收包含弹药和附件价值。
 	void Preview()
 	{
 		const auto* A = Account();
@@ -328,21 +335,25 @@ private:
 	}
 };
 
+// 取得本地玩家的账号组件，用于读取档案和发送经济请求。
 UExtractionAccountComponent* UExtractionProgressionWidget::Account() const
 {
 	return GetOwningPlayer() ? GetOwningPlayer()->FindComponentByClass<UExtractionAccountComponent>() : nullptr;
 }
 
+// 创建面板并传入初始标签页选择。
 TSharedRef<SWidget> UExtractionProgressionWidget::RebuildWidget()
 {
 	return SAssignNew(Panel, SExtractionProgressionPanel).Owner(this);
 }
 
+// 设置面板键盘焦点，支持数量输入和取消确认。
 void UExtractionProgressionWidget::FocusPanel()
 {
 	if (Panel.IsValid()) FSlateApplication::Get().SetKeyboardFocus(Panel, EFocusCause::SetDirectly);
 }
 
+// 释放 Slate 面板的共享引用。
 void UExtractionProgressionWidget::ReleaseSlateResources(bool Children)
 {
 	Super::ReleaseSlateResources(Children);

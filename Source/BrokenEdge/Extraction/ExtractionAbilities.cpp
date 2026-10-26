@@ -10,7 +10,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "EngineUtils.h"
+// 救援、治疗能力和烟雾使用服务器计时；客户端请求动作，服务器在开始及每次推进时重新验证资格。
+// 规则对象通过 Config 从 Game 配置读取，时间单位为秒、距离为厘米；GetDefault 读取类默认规则。
 
+// 启用复制并以 0.05 秒间隔推进能力动作，客户端不自行完成治疗或救援。
 UExtractionAbilities::UExtractionAbilities()
 {
 	SetIsReplicatedByDefault(true);
@@ -18,8 +21,10 @@ UExtractionAbilities::UExtractionAbilities()
 	PrimaryComponentTick.TickInterval = .05f;
 }
 
+// 返回组件所属角色，用于生命状态、距离和动作互斥检查。
 ABrokenEdgeCharacter* UExtractionAbilities::Character() const { return Cast<ABrokenEdgeCharacter>(GetOwner()); }
 
+// 动作、目标和救援占用可复制给相关客户端；个人技能冷却仅发给拥有者。
 void UExtractionAbilities::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -31,6 +36,7 @@ void UExtractionAbilities::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME_CONDITION(UExtractionAbilities, SmokeReadyAt, COND_OwnerOnly);
 }
 
+// 只有有效且非零的小队编号相同才算友方，未分组的两个角色不会自动成为队友。
 bool UExtractionAbilities::Friendly(const ABrokenEdgeCharacter* A, const ABrokenEdgeCharacter* B)
 {
 	const auto* AP = A ? A->GetPlayerState<AExtractionPlayerState>() : nullptr;
@@ -38,6 +44,7 @@ bool UExtractionAbilities::Friendly(const ABrokenEdgeCharacter* A, const ABroken
 	return AP && BP && AP->ExtractionSquad > 0 && AP->ExtractionSquad == BP->ExtractionSquad;
 }
 
+// 检查距离与视线，忽略双方角色相关武器；Range 使用厘米。
 bool UExtractionAbilities::Reach(const ABrokenEdgeCharacter* A, const ABrokenEdgeCharacter* B, float Range)
 {
 	if (!IsValid(A) || !IsValid(B) || FVector::DistSquared(A->GetActorLocation(), B->GetActorLocation()) >
@@ -51,12 +58,14 @@ bool UExtractionAbilities::Reach(const ABrokenEdgeCharacter* A, const ABrokenEdg
 	                                                ECC_Visibility, Q);
 }
 
+// 从 PlayerState 读取倒地状态，不以角色动画或姿势推断。
 bool UExtractionAbilities::IsDowned() const
 {
 	const auto* PS = Character() ? Character()->GetPlayerState<AExtractionPlayerState>() : nullptr;
 	return PS && PS->Life == EExtractionLife::Downed;
 }
 
+// 仅可行动的非守卫角色、空闲战斗状态且背包关闭时允许启动能力。
 bool UExtractionAbilities::CanStart() const
 {
 	const auto* C = Character();
@@ -64,6 +73,7 @@ bool UExtractionAbilities::CanStart() const
 		&& C->GetCombatState() == ECombatState::ECS_Unoccuiped && !C->GetExtractionInteraction()->InventoryOpen;
 }
 
+// 寻找前方可触及的最近倒地队友供本地提示；服务器仍独立验证目标。
 ABrokenEdgeCharacter* UExtractionAbilities::RescueFocus() const
 {
 	const auto* C = Character();
@@ -86,6 +96,7 @@ ABrokenEdgeCharacter* UExtractionAbilities::RescueFocus() const
 	return Best;
 }
 
+// 从视点射线选择治疗目标，没命中其他角色时默认自己；友方和血量条件稍后检查。
 ABrokenEdgeCharacter* UExtractionAbilities::HealFocus() const
 {
 	auto* C = Character();
@@ -101,13 +112,16 @@ ABrokenEdgeCharacter* UExtractionAbilities::HealFocus() const
 	return C;
 }
 
+// 递增本地序号并发送动作请求，序号用于服务器拒绝旧消息。
 void UExtractionAbilities::Request(EExtractionAction Kind, ABrokenEdgeCharacter* Other)
 {
 	ServerBegin(++LocalSequence, Kind, Other);
 }
 
+// 松开救援输入时发送带新序号的取消，避免旧开始请求覆盖较新的取消。
 void UExtractionAbilities::ReleaseRescue() { ServerCancel(++LocalSequence); }
 
+// 只接受更新序号，取消当前能力并释放对目标的救援占用。
 void UExtractionAbilities::ServerCancel_Implementation(uint32 Sequence)
 {
 	if (Sequence <= LastSequence) return;
@@ -115,6 +129,7 @@ void UExtractionAbilities::ServerCancel_Implementation(uint32 Sequence)
 	Cancel();
 }
 
+// 校验序号、动作种类、冷却和目标，再锁定救援者或计算烟雾落点并设定完成时刻。
 void UExtractionAbilities::ServerBegin_Implementation(uint32 Sequence, EExtractionAction Kind,
                                                       ABrokenEdgeCharacter* Other)
 {
@@ -168,6 +183,7 @@ void UExtractionAbilities::ServerBegin_Implementation(uint32 Sequence, EExtracti
 	C->ForceNetUpdate();
 }
 
+// 救援必须是可触及的倒地队友；治疗需要存活、缺血的友方；烟雾没有角色目标。
 bool UExtractionAbilities::ValidTarget() const
 {
 	if (Action == EExtractionAction::Smoke) return true;
@@ -181,6 +197,7 @@ bool UExtractionAbilities::ValidTarget() const
 		&& Target->GetHealth() < Target->GetMaxHealth() && (Target == C || Reach(C, Target, R->HealRange));
 }
 
+// 服务器释放由自己持有的救援锁，清空动作、目标和截止时间，通知复制。
 void UExtractionAbilities::Cancel()
 {
 	if (!GetOwner()->HasAuthority()) return;
@@ -195,12 +212,14 @@ void UExtractionAbilities::Cancel()
 	GetOwner()->ForceNetUpdate();
 }
 
+// 受伤时同时取消自己动作和对自己的救援，避免一方已受伤另一方仍继续计时。
 void UExtractionAbilities::Damaged()
 {
 	if (IsValid(Rescuer)) Rescuer->GetExtractionAbilities()->Cancel();
 	Cancel();
 }
 
+// 在服务器应用救起、回血或生成烟雾；成功作用后记录相应冷却，最后统一释放动作状态。
 void UExtractionAbilities::Complete()
 {
 	const auto* R = GetDefault<UExtractionRules>();
@@ -236,6 +255,7 @@ void UExtractionAbilities::Complete()
 	Cancel();
 }
 
+// 仅服务器推进：目标失效、移动、下落或资格丢失立即取消，到截止时间才调用 Complete。
 void UExtractionAbilities::TickComponent(float Delta, ELevelTick Tick, FActorComponentTickFunction* Function)
 {
 	Super::TickComponent(Delta, Tick, Function);
@@ -250,6 +270,7 @@ void UExtractionAbilities::TickComponent(float Delta, ELevelTick Tick, FActorCom
 	if (GetWorld()->GetTimeSeconds() >= ActionEnd) Complete();
 }
 
+// 销毁时释放双向救援关系，再调用父类生命周期清理。
 void UExtractionAbilities::EndPlay(const EEndPlayReason::Type Reason)
 {
 	Damaged();

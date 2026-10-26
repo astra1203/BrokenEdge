@@ -12,6 +12,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "EngineUtils.h"
+// 交互把本地选中目标与服务器物品事务分开：焦点用于提示，真正操作仍需服务器重新检查距离、遮挡和版本。
+// 搜索结果按玩家独立保存，LootView 是已脱敏的容器视图，不直接广播服务器完整 Contents。
 
 UExtractionInteractionComponent::UExtractionInteractionComponent()
 {
@@ -33,11 +35,13 @@ void UExtractionInteractionComponent::GetLifetimeReplicatedProps(TArray<FLifetim
 	DOREPLIFETIME_CONDITION(UExtractionInteractionComponent, MedicalItem, COND_OwnerOnly);
 }
 
+// 获取所属角色；玩家与守卫库存的选择集中在 Inventory 中。
 ABrokenEdgeCharacter* UExtractionInteractionComponent::Character() const
 {
 	return Cast<ABrokenEdgeCharacter>(GetOwner());
 }
 
+// 优先读取玩家 PlayerState 背包；无玩家状态的守卫使用 GuardInventory。
 UExtractionInventoryComponent* UExtractionInteractionComponent::Inventory() const
 {
 	auto* PS = Character() ? Character()->GetPlayerState<AExtractionPlayerState>() : nullptr;
@@ -58,6 +62,7 @@ bool UExtractionInteractionComponent::CanAct() const
 	return Character() && Character()->GetExtractionCombat()->CanAct() && Inventory() && !Inventory()->WasDropped();
 }
 
+// 检查门锁、200 厘米距离与视线；只忽略自身和手持武器，目标本身命中不算遮挡。
 bool UExtractionInteractionComponent::CanReach(const AExtractionLootActor* Target) const
 {
 	if (IsValid(Target) && Target->AccessDoor && !Target->AccessDoor->Open) return false;
@@ -75,6 +80,7 @@ bool UExtractionInteractionComponent::CanReach(const AExtractionLootActor* Targe
 		|| Hit.GetActor() == Target;
 }
 
+// 本地按距离与朝向评分挑选战利品或钥匙门，两种焦点互斥；界面打开时不重新选取。
 void UExtractionInteractionComponent::UpdateFocus()
 {
 	Focus = nullptr;
@@ -98,11 +104,12 @@ void UExtractionInteractionComponent::UpdateFocus()
 	}
 	for (TActorIterator<AExtractionKeyRoom> It(GetWorld()); It; ++It)
 	{
+		// 距离由门自己的交互碰撞盒决定；站进盒子就算够得着，只要求不是背对门。
 		if (It->Unlocked || !It->CanReach(C)) continue;
 		const FVector Delta = It->GetActorLocation() - C->GetActorLocation();
 		const float Dot = FVector::DotProduct(Forward, Delta.GetSafeNormal2D());
-		const float Score = Delta.Size() + (1 - Dot) * 100;
-		if (Dot >= -.1f && Score < Best)
+		const float Score = Delta.Size();
+		if (Dot >= -.5f && Score < Best)
 		{
 			DoorFocus = *It;
 			Focus = nullptr;
@@ -111,6 +118,8 @@ void UExtractionInteractionComponent::UpdateFocus()
 	}
 }
 
+// 服务器只接受更新的开关会话号，先取消旧交互；散落物直接拾取，容器则进入搜索界面。
+// 拾取先在副本上转移，再同步武器，生成失败恢复原背包，不能让物资消失。
 void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootActor* Target, bool bOpen)
 {
 	if (!GetOwner()->HasAuthority() || NewSession <= Session) return;
@@ -166,6 +175,7 @@ void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootAct
 	GetOwner()->ForceNetUpdate();
 }
 
+// 清空当前打开容器、搜索计时和临时视图；保留玩家已经揭示过的物品记忆。
 void UExtractionInteractionComponent::Close()
 {
 	InventoryOpen = false;
@@ -177,6 +187,7 @@ void UExtractionInteractionComponent::Close()
 	if (GetOwner()->HasAuthority()) GetOwner()->ForceNetUpdate();
 }
 
+// 按容器 ID 和物品 ID 查询本玩家搜索记录；其他玩家搜过不等于本人已经揭示。
 bool UExtractionInteractionComponent::IsRevealed(const FGuid& Id) const
 {
 	if (!Loot) return false;
@@ -184,6 +195,7 @@ bool UExtractionInteractionComponent::IsRevealed(const FGuid& Id) const
 	return Known && Known->Contains(Id);
 }
 
+// 复制服务器容器后擦除未揭示条目的身份、类型和装备信息，仅给所属客户端发送脱敏快照。
 void UExtractionInteractionComponent::RefreshLootView()
 {
 	if (!GetOwner()->HasAuthority() || !Loot) return;
@@ -203,6 +215,7 @@ void UExtractionInteractionComponent::RefreshLootView()
 	GetOwner()->ForceNetUpdate();
 }
 
+// 按槽位/网格顺序每秒揭示一件；目标被他人取走时取消该条搜索，并用容器版本刷新视图。
 void UExtractionInteractionComponent::AdvanceSearch(double Now)
 {
 	if (!Loot || !InventoryOpen) return;
@@ -238,6 +251,7 @@ void UExtractionInteractionComponent::AdvanceSearch(double Now)
 	if (SeenRevision != Loot->Contents.Revision) RefreshLootView();
 }
 
+// 服务器清除医疗计时和物品占用，并取消能力动作；未完成时不消耗医疗物品。
 void UExtractionInteractionComponent::CancelMedical()
 {
 	if (!GetOwner()->HasAuthority()) return;
@@ -247,6 +261,7 @@ void UExtractionInteractionComponent::CancelMedical()
 	GetOwner()->ForceNetUpdate();
 }
 
+// 停止持续射击并退出瞄准，供交互、能力和失能路径共用。
 void UExtractionInteractionComponent::StopCombatInput()
 {
 	if (auto* C = Character())
@@ -256,6 +271,7 @@ void UExtractionInteractionComponent::StopCombatInput()
 	}
 }
 
+// 验证物品类型、动作互斥和治疗需求，再记录服务器完成时刻；空错误字符串表示启动成功。
 FString UExtractionInteractionComponent::StartMedical(const FGuid& Id)
 {
 	const auto* I = Inventory()->Contents.Find(Id);
@@ -276,6 +292,7 @@ FString UExtractionInteractionComponent::StartMedical(const FGuid& Id)
 	return {};
 }
 
+// 从角色前方寻找无墙阻挡且有地面的放置点，忽略玩家、武器和战利品以避免落在其顶上。
 FVector UExtractionInteractionComponent::DropPosition() const
 {
 	const auto* C = Character();
@@ -292,6 +309,8 @@ FVector UExtractionInteractionComponent::DropPosition() const
 	return Point;
 }
 
+// 服务器事务入口：依次校验序号、背包版本、容器会话、距离和搜索权限，再执行转移/丢弃/装配。
+// 保存原库存用于武器生成失败时回滚；成功后才通知容器和背包更新，返回空字符串表示成功。
 FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R)
 {
 	if (!GetOwner()->HasAuthority() || R.Sequence <= LastSequence) return TEXT("重复或过期请求");
@@ -320,6 +339,7 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 	if (MedicalEnd > 0 || C->GetExtractionAbilities()->Action != EExtractionAction::None) return TEXT("当前动作尚未完成");
 	if (R.Op == EExtractionItemOp::Drop) C->GetExtractionCombat()->CancelReload();
 	if (C->GetCombatState() != ECombatState::ECS_Unoccuiped) return TEXT("当前动作尚未完成");
+	// 在改变任何容器前保留快照；后续场景武器同步失败时，要恢复数据并销毁临时掉落物。
 	FExtractionContainer BeforeInventory = Inv->Contents;
 	FExtractionContainer BeforeLoot = Loot ? Loot->Contents : FExtractionContainer();
 	FString Error;
@@ -373,6 +393,7 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 	return {};
 }
 
+// 本地只更新焦点；服务器负责越界关闭、搜索和医疗计时，移动或下落会中断治疗。
 void UExtractionInteractionComponent::TickComponent(float Delta, ELevelTick TickType,
                                                     FActorComponentTickFunction* Function)
 {
@@ -397,6 +418,7 @@ void UExtractionInteractionComponent::TickComponent(float Delta, ELevelTick Tick
 			CancelMedical();
 			return;
 		}
+		// 到时再次确认医疗物品仍存在且治疗有效，成功后才移除物品并增加背包版本。
 		if (Now >= MedicalEnd)
 		{
 			auto* Inv = Inventory();
@@ -417,6 +439,7 @@ void UExtractionInteractionComponent::TickComponent(float Delta, ELevelTick Tick
 	}
 }
 
+// 服务器退出清理统一取消搜索、医疗、装填和切枪，再交给背包执行防重复的整体掉落。
 void UExtractionInteractionComponent::DropOnExit()
 {
 	if (!GetOwner()->HasAuthority()) return;

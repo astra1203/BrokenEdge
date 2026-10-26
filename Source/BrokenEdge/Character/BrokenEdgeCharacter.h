@@ -219,6 +219,8 @@ public:
 	void Look(const FInputActionValue& Value);
 	void CrouchButtonPressed();
 	void EquipButtonPressed();
+	/** F 键：撤离模式里对着钥匙房门按 F 开门（需要对应钥匙卡）。 */
+	void InteractDoorPressed();
 
 	/**
  * @brief 瞄准按钮按下
@@ -283,6 +285,8 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Movement")
 	bool IsSprinting() const { return bSprinting; }
 
+	void UpdateSprint();
+
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	float FirstPersonAimFOV = 65.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
@@ -302,7 +306,6 @@ private:
 	void UpdateFirstPersonWeaponPose();
 	void SprintPressed();
 	void SprintReleased();
-	void UpdateSprint();
 	UFUNCTION(Server, Reliable)
 	void ServerSetSprintRequested(bool bRequested);
 	bool bSprintRequested = false;

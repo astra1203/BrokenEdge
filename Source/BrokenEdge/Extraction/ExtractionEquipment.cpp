@@ -1,6 +1,9 @@
 #include "ExtractionItems.h"
 #include "BrokenEdge/Weapon/WeaponMechanics.h"
+// 物品装备规则的实现：校验耐久、弹药、附件树及精调值，并在容器副本上装卸和改装。
+// 场景武器生成由 InventoryComponent 负责，这里只变更物品数据；成功返回后还需同步场景表现。
 
+// 根据当前容器枚举穿脱护甲、装卸附件、弹种及精调操作；这里只生成候选请求，执行时仍需验证兼容性和空间。
 TArray<ExtractionItems::FEquipmentAction> ExtractionItems::EquipmentActions(const FExtractionContainer& C, FGuid Selected, bool Detailed)
 {
 	TArray<FEquipmentAction> Actions;
@@ -75,6 +78,7 @@ TArray<ExtractionItems::FEquipmentAction> ExtractionItems::EquipmentActions(cons
 
 namespace
 {
+	// 检查来源批次 ID 唯一、数量为正且总数等于物品数量；持久化使用这些批次追踪转移与返还。
 	bool OriginsValid(const TArray<FExtractionOrigin>& Parts, int32 Expected)
 	{
 		int64 Total = 0;
@@ -88,6 +92,8 @@ namespace
 	}
 }
 
+// 依据定义校验实例字段，并遍历附件父链检测重复槽、缺失父节点、循环、冲突及精调范围。
+// Provenance 为 true 时还要求本体、弹匣、附件来源数量匹配，用于服务器持久化边界。
 bool ExtractionItems::ValidateItem(const FExtractionItem& I, bool Provenance, FString& Error)
 {
 	const auto* D = UExtractionItemDefinition::Get(I.Definition);
@@ -125,6 +131,7 @@ bool ExtractionItems::ValidateItem(const FExtractionItem& I, bool Provenance, FS
 			if (!SocketType || *SocketType != Part->AttachmentSlot) { Error = TEXT("Unknown or incompatible mount socket"); return false; }
 		}
 		FGuid Parent = P.Parent;
+		// 沿父链查找时记录已访问节点，避免非法装配形成循环；父子兼容性也需逐级成立。
 		TSet<FGuid> Ancestors; Ancestors.Add(P.Id);
 		while (Parent.IsValid())
 		{
@@ -152,6 +159,7 @@ bool ExtractionItems::ValidateItem(const FExtractionItem& I, bool Provenance, FS
 	return true;
 }
 
+// 把挂载附件恢复为散装物品，保留实例 ID、来源和精调，拆装不应凭空生成另一件资产。
 FExtractionItem ExtractionItems::Unmount(const FExtractionAttachment& Part)
 {
 	FExtractionItem Item = Make(Part.Definition);
@@ -159,6 +167,7 @@ FExtractionItem ExtractionItems::Unmount(const FExtractionAttachment& Part)
 	return Item;
 }
 
+// 先复制容器，再处理安装、整棵子树拆卸、精调、卸弹或换弹种；最终验证通过才递增版本并提交。
 bool ExtractionItems::Configure(FExtractionContainer& Container, const FExtractionItemRequest& R, FString& Error)
 {
 	if (R.FromLoot || R.ToLoot) { Error = TEXT("请先将物品放入背包"); return false; }
@@ -186,6 +195,7 @@ bool ExtractionItems::Configure(FExtractionContainer& Container, const FExtracti
 		const int32 Index = Gun->Attachments.IndexOfByPredicate([&](const auto& P)
 		{ return R.MountedAttachment.IsValid() ? P.Id == R.MountedAttachment : !P.Parent.IsValid() && UExtractionItemDefinition::Get(P.Definition)->AttachmentSlot == R.AttachmentSlot; });
 		if (Index == INDEX_NONE) { Error = TEXT("该附件槽为空"); return false; }
+		// 拆父件时收集所有后代，整组转为散件；任何一件放不进背包都放弃候选改动。
 		TSet<FGuid> Removed; Removed.Add(Gun->Attachments[Index].Id);
 		bool Added = true;
 		while (Added)
@@ -226,10 +236,12 @@ bool ExtractionItems::Configure(FExtractionContainer& Container, const FExtracti
 	else { Error = TEXT("无效装备操作"); return false; }
 	if (const auto* Updated = Next.Find(GunId); Updated && Updated->Magazine > 0 && MagazineCapacity(*Updated) < OldCapacity)
 	{ Error = TEXT("Unload ammunition before reducing magazine capacity"); return false; }
+	// 所有改装分支最终汇合到完整容器校验，只有通过后才替换调用者数据。
 	if (!Validate(Next, Error)) return false;
 	++Next.Revision; Container = MoveTemp(Next); return true;
 }
 
+// 组合已安装附件的散布倍率；完整武器属性解析由 WeaponMechanics 提供。
 float ExtractionItems::ScatterScale(const FExtractionItem& Weapon)
 {
 	float Result = 1;
@@ -238,6 +250,7 @@ float ExtractionItems::ScatterScale(const FExtractionItem& Weapon)
 	return Result;
 }
 
+// 生成护甲、武器或普通堆叠的简要展示文本，不作为权威数据来源。
 FString ExtractionItems::Details(const FExtractionItem& Item)
 {
 	const auto* D = UExtractionItemDefinition::Get(Item.Definition);
@@ -252,6 +265,7 @@ FString ExtractionItems::Details(const FExtractionItem& Item)
 	return FString::Printf(TEXT("× %d"), Item.Quantity);
 }
 
+// 读取解析后的武器参数用于 UI，对单位做换算，并明确这些是项目兼容参数。
 TArray<FString> ExtractionItems::WeaponDetails(const FExtractionItem& Item)
 {
 	const auto S = WeaponMechanics::ResolveWeaponStats(Item);
@@ -272,6 +286,7 @@ TArray<FString> ExtractionItems::WeaponDetails(const FExtractionItem& Item)
 	return Lines;
 }
 
+// 优先使用装配后解析的容量，解析不可用时退回定义容量，未知定义返回零。
 int32 ExtractionItems::MagazineCapacity(const FExtractionItem& Item)
 {
 	const auto Stats = WeaponMechanics::ResolveWeaponStats(Item);

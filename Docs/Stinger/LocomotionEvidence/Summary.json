@@ -1,0 +1,1116 @@
+{
+  "scope": "Stinger AK opt-in; editor cold load and same-process PIE; no packaged or dedicated-server validation",
+  "suites": [
+    {
+      "name": "cold-audit",
+      "checks": 140,
+      "result": "passed"
+    },
+    {
+      "name": "single",
+      "run": "movement-final1",
+      "checks": 96,
+      "result": "passed"
+    },
+    {
+      "name": "multi",
+      "run": "movement-final2",
+      "checks": 96,
+      "result": "passed"
+    },
+    {
+      "name": "grip",
+      "run": "locomotion-grip03",
+      "checks": 21,
+      "result": "passed"
+    },
+    {
+      "name": "actions",
+      "run": "locomotion-actions-final",
+      "checks": 29,
+      "result": "passed"
+    },
+    {
+      "name": "route",
+      "run": "locomotion-route01",
+      "checks": 16,
+      "result": "passed"
+    },
+    {
+      "name": "weapon-input",
+      "run": "locomotion-weapon-final",
+      "tests": 1,
+      "result": "passed"
+    }
+  ],
+  "files": [
+    {
+      "path": "Sources.json",
+      "sha256": "94a3df1e19a402990197f8e866ae9f6d09c74f6a5c1ade1df0fb887a5eeff53e",
+      "bytes": 32386
+    },
+    {
+      "path": "Import.json",
+      "sha256": "f8c4a296b2fa3b446d17e99238d88f992dc7f597eb21b3a0a942638ba1269c8f",
+      "bytes": 57515
+    },
+    {
+      "path": "BindingsBefore.json",
+      "sha256": "10a125ad6003bc8f87bba09c84da20e5ac2db91e76d24ca44081c8187e89dbc1",
+      "bytes": 983
+    },
+    {
+      "path": "Configuration.json",
+      "sha256": "d962fad32f55890ea73af2cdf3bd5dcc1f201626b8954e5c09145d33db2b2a12",
+      "bytes": 2089
+    },
+    {
+      "path": "Audit.json",
+      "sha256": "df00c956280cf99db9fafb4bee17587a71891cee603ccfaf4ad011c484d471c1",
+      "bytes": 32398
+    },
+    {
+      "path": "Build/ColdAudit.txt.gz",
+      "sha256": "6174743b106da156e28d6c72f1cb4fbba7157c2e5f2d30d39deea056ff1f26c7",
+      "bytes": 36998
+    },
+    {
+      "path": "Build/UnrealBuildTool.txt.gz",
+      "sha256": "958e8293d19949efd1ba9b8294bc4bc0cf4fe109ff7f217cc7b04db429de9384",
+      "bytes": 3728
+    },
+    {
+      "path": "Conversion/ExportResults.json",
+      "sha256": "f6f9ad38ab57bb526fb0daf2b09a1726daa6d33dcb7b153789a47710f20af190",
+      "bytes": 16361
+    },
+    {
+      "path": "Conversion/Packages.json.gz",
+      "sha256": "37ace764a79f2cf53980a8214ae17953bb317a9e82432775fa075fea4274e234",
+      "bytes": 16822
+    },
+    {
+      "path": "single/Report.json.gz",
+      "sha256": "9604b87bb686245e0497b66511be652f88e3bd547331b5e955431dc24015b1fc",
+      "bytes": 50983
+    },
+    {
+      "path": "single/Run.json",
+      "sha256": "5e65bd4c7bf0cb9a215032387ecc3edcef9bbf5c96ef47b6fbadfdc7e685ccaf",
+      "bytes": 642
+    },
+    {
+      "path": "single/Editor.txt.gz",
+      "sha256": "859c07c84e80443053af9c79a43b447e6b3cb81ec3a6adda42035136bdcc925d",
+      "bytes": 46190
+    },
+    {
+      "path": "multi/Report.json.gz",
+      "sha256": "4f119c47f8be3fcc959beae7ef034c39f03b8972b95bcf335080ff4875ecfe95",
+      "bytes": 178864
+    },
+    {
+      "path": "multi/Run.json",
+      "sha256": "b3e25f7b3507a17149d74f55959ee961aa7e5dc9eb56db2b267c5e8c6a452089",
+      "bytes": 642
+    },
+    {
+      "path": "multi/Editor.txt.gz",
+      "sha256": "570823368136291df917e682cc9f641e03243924465c956c9d26e5102c3165d8",
+      "bytes": 52353
+    },
+    {
+      "path": "grip/Report.json.gz",
+      "sha256": "fb8415515e7e7e5d2d9d94d4d06f2cdb0fd114699f022bf7fb2ec436c11ad867",
+      "bytes": 344598
+    },
+    {
+      "path": "grip/Run.json",
+      "sha256": "2d1af4bafd09084ecfd5b0735ce093f209339f6a243745dd4d20b76de61091b5",
+      "bytes": 2227
+    },
+    {
+      "path": "grip/Editor.txt.gz",
+      "sha256": "f1cb5719d8dfea3ebf5226119b02d7455f32251d37ee1a6d2afe3fd11ccc7462",
+      "bytes": 52740
+    },
+    {
+      "path": "actions/Report.json.gz",
+      "sha256": "d7769b29b077da5950cd807241e4942695bed4cf4e8c48cd354b1e040661fadd",
+      "bytes": 14523
+    },
+    {
+      "path": "actions/Run.json",
+      "sha256": "a8cb6614ca090e3188e378a7fdeb0d2f06f9b407661ab5a05256f627f59980c8",
+      "bytes": 2383
+    },
+    {
+      "path": "actions/Editor.txt.gz",
+      "sha256": "696e4e7e72558751af2e627d57dbc1d96a2054b5f4bd5dcc6692e75552970e75",
+      "bytes": 57708
+    },
+    {
+      "path": "route/Report.json.gz",
+      "sha256": "b693259b0e0773d45d3111eb33162a46b6bcb505787106dd740ea48d73556db7",
+      "bytes": 158640
+    },
+    {
+      "path": "route/Run.json",
+      "sha256": "06c852c61b00b3558ad8874bd0351e84a281b744035c5a6bf3983ec68e007678",
+      "bytes": 10733
+    },
+    {
+      "path": "route/Editor.txt.gz",
+      "sha256": "514386d455bde7972d7f6a21612e46eb69a19a1799dc4cd95840eca712063c57",
+      "bytes": 66236
+    },
+    {
+      "path": "weapon/Run.json",
+      "sha256": "224968a6cc46d84e65efe6de4e6f26edc6da1ea4d6696742cf3f458fcc6fc769",
+      "bytes": 915
+    },
+    {
+      "path": "weapon/Editor.txt.gz",
+      "sha256": "9b3b3c66430133dbbd9f95ff9b59958eacf078c6376feda03e9f46b1308a39bd",
+      "bytes": 46967
+    },
+    {
+      "path": "Captures/walk_F.png",
+      "sha256": "4bd4bd9c9686a3245f5f5aa2d7db2d2901497a09116b6d82e9198b7c58c0d071",
+      "bytes": 1389215
+    },
+    {
+      "path": "Captures/run_R.png",
+      "sha256": "cc9da2fe43dd74171d4b308f18e01d33318b49f5e7285f76a4f765f632cc3ec2",
+      "bytes": 1313926
+    },
+    {
+      "path": "Captures/crouch_F.png",
+      "sha256": "b85aa1a1cfa211731205a5d53eb2bf1d08428932e648607338e5f53e02eb6e03",
+      "bytes": 1438429
+    },
+    {
+      "path": "Captures/view_walk.png",
+      "sha256": "26098e34df5e144af18cf48ea73c58314ec40e1b765ad8e1dd3e2ce17e8a65c5",
+      "bytes": 1244533
+    },
+    {
+      "path": "Captures/view_run.png",
+      "sha256": "11995796b8b3d1e390f6d555013f89aad7b9e98e8291663dccc04283c1f95d2a",
+      "bytes": 1232086
+    },
+    {
+      "path": "Captures/view_sprint.png",
+      "sha256": "c9596b0451c321e361d309e1141be6c512b2d87a6c544205820765bd9bd3134e",
+      "bytes": 1169163
+    },
+    {
+      "path": "Captures/view_aim.png",
+      "sha256": "8b08a4d15c4a335c34e8e2e0757642846f4f49a25779e06ecafa30b17dc2cf2b",
+      "bytes": 1091779
+    }
+  ],
+  "assets": [
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/ABP_StingerRifleLocomotion.uasset",
+      "bytes": 1407500,
+      "sha256": "bced0b89f9aa920538ef31884317f28ba88f5f7ac78d9cac7f1cd0f5c879a6e1"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Aim/AR_M_3P_CrouchIdleAOCentet.uasset",
+      "bytes": 75974,
+      "sha256": "e6cc316f426e9ab1fc342dd86d1235a48fafa51e914aa02b6dcdd34f1a8d5b71"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Aim/AR_M_3P_CrouchIdleAODown.uasset",
+      "bytes": 75997,
+      "sha256": "7979524a1c3d374150d81970840f1861927ce62cc6fac9849cd5efa0bb7ad981"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Aim/AR_M_3P_CrouchIdleAOUp.uasset",
+      "bytes": 75989,
+      "sha256": "ba83738185531b033248823d3fb74f0cf54724357a9650d4804522b1f13e985b"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Aim/AR_M_3P_IdleAOCenter.uasset",
+      "bytes": 75940,
+      "sha256": "54d8beb58293bcb15257a556af82c8e0e2a7ccdccb8d5b7b84b4bab322cf4139"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Aim/AR_M_3P_IdleAODown.uasset",
+      "bytes": 75961,
+      "sha256": "72ba508ee13020256447033f78561093bc9029be0bb6c25012b8f213baa0d1f7"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Aim/AR_M_3P_IdleAOUp.uasset",
+      "bytes": 75953,
+      "sha256": "f697327573b94675c8710f00cfab45976d71ea2c3917bcf776e7c5bafde32fb4"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/AimV5/AR_M_3P_CrouchIdleAOCentet.uasset",
+      "bytes": 75978,
+      "sha256": "e12d11f08adf33b538cd0737f757f6bf4d69701dbe1fce55c6395a024536754e"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/AimV5/AR_M_3P_CrouchIdleAODown.uasset",
+      "bytes": 76001,
+      "sha256": "d496809622ac514620e21831d28bbb53173ccea25f3b51a11ceeeef767ad9fdf"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/AimV5/AR_M_3P_CrouchIdleAOUp.uasset",
+      "bytes": 75993,
+      "sha256": "e1bfe17330228c65769df8dbf81b67357bc3803690d44f084cdcb05c4bbbbf47"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/AimV5/AR_M_3P_IdleAOCenter.uasset",
+      "bytes": 75944,
+      "sha256": "1fa267ee0725a5127f0abe7b2b6232e149d057bb71edbb1a69ddcf5a1234a4bf"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/AimV5/AR_M_3P_IdleAODown.uasset",
+      "bytes": 75965,
+      "sha256": "8807a6254bb825b18edb031aaf9dd41a80f6c07377ec551f729457d9afc6d74d"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/AimV5/AR_M_3P_IdleAOUp.uasset",
+      "bytes": 75957,
+      "sha256": "a46f41096305a7f4b46b8b10092472fef68cf6a8b5113f7b6f2cbe9512aab749"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/BlendSpaces/AO_Rifle.uasset",
+      "bytes": 4763,
+      "sha256": "216054fb6efdf0ef8e4a3aa58ed9e5a6a316fdb1a1343431091dc6c87b88810f"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/BlendSpaces/AO_RifleCrouching.uasset",
+      "bytes": 4841,
+      "sha256": "1bafda89648fa794c35466f0c3c627354614af6358e427864005d626c0b24a33"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/BlendSpaces/BS_RifleCrouching.uasset",
+      "bytes": 27650,
+      "sha256": "ad77284802cf4fdc57ba6a933a7b4a113ce5511f234d67b711b08270dad26fcb"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/BlendSpaces/BS_RifleStanding.uasset",
+      "bytes": 70115,
+      "sha256": "918ba5b06a241d0371025ca1e6bfb65d948596455e3523bbf72514e4bba4725e"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/DA_AKLocomotionPresentation.uasset",
+      "bytes": 4225,
+      "sha256": "ac31237f0d6a97b1a089e2fbf84c881e7d83c61d525b596c7d0ba292b396cfc1"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/DA_RifleLocomotion.uasset",
+      "bytes": 4761,
+      "sha256": "3c777e11f0b75665ea0aa3f3e906f6711b713679648c751a457615f141ccc000"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/156b230c/AR_M_1P_Idle_Pose_2.uasset",
+      "bytes": 73369,
+      "sha256": "121fe4dbd66e192ceb4d9e3e135f1d0348e8efc9b6f443e8c71505548e76a39d"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/22338ee6/AR_M_1P_WalkToRun.uasset",
+      "bytes": 145943,
+      "sha256": "992d9c3005de6bb4fbfa0fde0fd96f2de4bdee9ad75d1464ef0e8c7638a1da07"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/29ff8e13/AR_M_3P_crouch_Walk_l.uasset",
+      "bytes": 241769,
+      "sha256": "a9fadea6999d9a513a3bb645edcb1b348bb233af6d37acebe0a650cbf16bac7a"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/300d5d5b/AR_M_3P_idle.uasset",
+      "bytes": 1023488,
+      "sha256": "574e79bd3ee74280df6d42671478e8d883d7ca5b8b83afd7c49b7673cf4f4297"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/3858ccbe/AR_M_3P_crouch_Walk_b.uasset",
+      "bytes": 425513,
+      "sha256": "77bb605f9275579dadf6f8108b21c012274fe45d4d1c633db97888031f1b98af"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/43242580/AR_M_3P_WalkB.uasset",
+      "bytes": 443810,
+      "sha256": "2f4b4c8b72a458ed8b676264f48a5ace34e2613b066bdf99d42ad2acfd7162f9"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/477be2a6/AR_M_3P_crouch_Walk_br.uasset",
+      "bytes": 389743,
+      "sha256": "d88085265605fa6abb36a1e3e8fe5b7ef5f1f806b76485c1da2d737069513633"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/4ea06824/AR_M_3P_RunF.uasset",
+      "bytes": 204253,
+      "sha256": "7a2424bf519e6abd235f341c1742cbdc3fd41c5051d85a10d411e41a080236ed"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/4f46593e/AR_M_3P_RunB.uasset",
+      "bytes": 206077,
+      "sha256": "c960a864fb474bf1309d587afea1e7b98905a4722924109a99905d4f964933d8"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/505637c1/AR_M_3P_WalkBR.uasset",
+      "bytes": 641223,
+      "sha256": "7c8bff1025e505c579ea25496e80a38b8d3f1c6719dc446150ff75274ff92272"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/53b95249/AR_M_3P_RunR.uasset",
+      "bytes": 200285,
+      "sha256": "6e760182a58d32c1035a574845ed8518da6917d3ef044044e8084b0f3ed8f254"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/53de4cdc/AR_M_3P_crouch_Walk_f.uasset",
+      "bytes": 406250,
+      "sha256": "7524251d8802e25916d743f3379cb7eb128b4252db0926bc2d502f7ed36354e2"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/579b5cd0/AR_M_1P_Walk_Loop.uasset",
+      "bytes": 440760,
+      "sha256": "fa6ff0d005f31e32d040be53c6559a351a45911cd68dd3ba3612a0500a216165"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/5cac0bd1/AR_M_3P_RunBL.uasset",
+      "bytes": 196192,
+      "sha256": "26d6907040ac86894a5cbd790570868ffb74246246bd36f8b4700d26bc094277"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/635d706e/AR_M_3P_WalkL.uasset",
+      "bytes": 481986,
+      "sha256": "2ae65ecec30be593d076c2912b1965595d1d872d1bc0118e41b3d3f491a81161"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/637b79e9/AR_M_1P_RunToSprint.uasset",
+      "bytes": 159265,
+      "sha256": "7e53c82c6c95d51e86f264ad518e01e211a2f6d932f510ad35fab2239f7de9d6"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/74d3ba40/AR_M_3P_CrouchIdleAOCentet.uasset",
+      "bytes": 76035,
+      "sha256": "a3e14d11dd40310cbb795e90cf6584360c82be5510d8425d098aa9d4539bf140"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/75293af6/AR_M_3P_Sprint.uasset",
+      "bytes": 206533,
+      "sha256": "0a7a1ecbddd31802d6f19a497302c1be1a97f5591b9b3d7ed5ba3cbb439788eb"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/82b4c356/AR_M_1P_WalkToSprint.uasset",
+      "bytes": 156326,
+      "sha256": "55ec107350f3cb7a33fffe1f874fcdb7d103765fe79e96d42fac61e6f2f7cf73"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/83698fbc/AR_M_1P_RunToWalk.uasset",
+      "bytes": 158615,
+      "sha256": "52698f45159bd3d7a5062f82b7f1825b571ab63261623e86f88e9c25b06b77c5"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/85a02533/AR_M_3P_RunFR.uasset",
+      "bytes": 220450,
+      "sha256": "9a7272a61ee613e0dbcc5d5e0cfce3b8a8a2651a42a0f6261457cd8743a5f71e"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/86560d1b/AR_M_3P_IdleAOCenter.uasset",
+      "bytes": 76001,
+      "sha256": "d14aab906875b41e6adc35d5ad6abcdc4163843a1ddcf2f92c1b2b49c7ba2c44"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/87972e7a/AR_M_3P_CrouchIdleAOUp.uasset",
+      "bytes": 76011,
+      "sha256": "ddeb36b074d9bbe1537e6604f7f6672a8d85b49efcb16c1e9601004afca41825"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/8fb4ffca/AR_M_1P_Sprint_Loop.uasset",
+      "bytes": 323328,
+      "sha256": "e415cfdf8934f93ba273e08abc00e2b195f19d467758809eb5da397df13544f7"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/8fe0545d/AR_M_3P_WalkFL.uasset",
+      "bytes": 616647,
+      "sha256": "c88a9ae73d66fd6304aa5706b9400c3789fc20f8cef05ecd821bc386edaac12d"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/99d5d3f5/AR_M_3P_WalkBL.uasset",
+      "bytes": 592071,
+      "sha256": "2852450491da818e219962c18f70151854f81c6b866bf0809e4190ca705bd465"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/9dab2cf5/AR_M_3P_RunBR.uasset",
+      "bytes": 194560,
+      "sha256": "b34ad0359524605d48e269c6eb1fa503751d168deab9d5f507a502240c3091c9"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/9e484996/AR_M_3P_RunFL.uasset",
+      "bytes": 251362,
+      "sha256": "e3fbb1b5f17d85e265753c673f1fdb6991182509252808d0c2093bed6703eef2"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/9fa61a58/AR_M_3P_CrouchIdleAODown.uasset",
+      "bytes": 76021,
+      "sha256": "2452d93ad1a877e74cc736949fae232cca77704da30453381d85be124444b75c"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/a71fcff5/AR_M_3P_crouch_Walk_fr.uasset",
+      "bytes": 399247,
+      "sha256": "3aa2d389600a8804240541f741ce7ed99b51ab66f4598ef089c4228addae216c"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/b291c1db/AR_M_3P_WalkR.uasset",
+      "bytes": 704289,
+      "sha256": "811881fbd5d189ec0536eb088862c8542a279cba8666439df2afe34457502160"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/b34e9725/AR_M_3P_IdleAOUp.uasset",
+      "bytes": 75981,
+      "sha256": "3825fdc49fa41464f666f286cbef8a2c482214033db6759a5a264be29b832db8"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/b62ad841/AR_M_3P_crouch_Walk_r.uasset",
+      "bytes": 241769,
+      "sha256": "d74609f2bb76e3797846b627f33d821553170f6cea2acfd0f621268ae73cd09a"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/b6b9f31a/AR_M_3P_WalkFR.uasset",
+      "bytes": 645639,
+      "sha256": "67034c7840a2014b14dfd4e5df35d84502a51168d25560b8a1bf9e5e897eff30"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/bf867423/AR_M_1P_Run_Loop.uasset",
+      "bytes": 319602,
+      "sha256": "093afd251ba2ddeb6600327b51bf2e7cf3c2b3c7cae4e4e1aecb5b4ddd430265"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/c4898b4f/AR_M_1P_SprintToWalk.uasset",
+      "bytes": 162470,
+      "sha256": "bcf58b8efb8561eb6231c30115fd1794ffd6a96d2a1bee294de005bc093e144e"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/cdda6383/AR_M_3P_IdleAODown.uasset",
+      "bytes": 75991,
+      "sha256": "3b82859777ef49c7748cc7f02c2016d6fe42f8091718aa86050d295f76b34072"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/e8afcb39/AR_M_3P_crouch_Idle.uasset",
+      "bytes": 531715,
+      "sha256": "75c7c9aff1f9753ba8b24b43be7540ce7e615dea0101bd1e9a8d7ad58aea2d3a"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/eb2276cf/AR_M_3P_WalkF.uasset",
+      "bytes": 553090,
+      "sha256": "e356a697ff40d58d4e1b319953b9113abda0dc3b41954ea42bb68131a3cacee8"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/efab1d5e/AR_M_3P_crouch_Walk_fl.uasset",
+      "bytes": 401135,
+      "sha256": "129ce90e831a8dcc12e486c49266336d24139adb2f053e7c5b305b6f942b5871"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/f38c0960/AR_M_3P_crouch_Walk_bl.uasset",
+      "bytes": 413359,
+      "sha256": "7d78944a99a7f6789c523521f22c38ebd004b705460bf389d2b594fb01d4969b"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/f3d1eaa1/AR_M_1P_Idle_Pose.uasset",
+      "bytes": 73158,
+      "sha256": "d70d0f768b9fb213c19abcb4db1d8c000d1dfa7be8b9fdbe17b2d222bf219595"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/MappedV4/fcc2aae6/AR_M_3P_RunL.uasset",
+      "bytes": 199805,
+      "sha256": "172b008760cf4d113ad40d0021fd743aaf2f39e510875bb7386b797ef11a1ee5"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Skeletons/SK_51e447905e7b1366.uasset",
+      "bytes": 16576,
+      "sha256": "bf3555affd456652a5e93bc5fbd37a768a56c1e7c30295ae245544bdb12756d4"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Skeletons/SK_7a037ab236708c82.uasset",
+      "bytes": 17197,
+      "sha256": "920ec7015aee9c45e197d623e945d560326993f54a99e13221da13e0d1fbe27b"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/156b230c/AR_M_1P_Idle_Pose_2.uasset",
+      "bytes": 72749,
+      "sha256": "85f23b5714187f8bdcf9b32233f77a952b45cd968e4fdbd8bd563f80b829e366"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/22338ee6/AR_M_1P_WalkToRun.uasset",
+      "bytes": 145323,
+      "sha256": "3ba0d59b4f822c7d1c742ee2bd982e841777ced202203e9bc19fa6aa5feab29f"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/29ff8e13/AR_M_3P_crouch_Walk_l.uasset",
+      "bytes": 244992,
+      "sha256": "58dbcd19201de352f834154d935d5dd71e3f82718116f854bc8ae181977b22ee"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/300d5d5b/AR_M_3P_idle.uasset",
+      "bytes": 1049943,
+      "sha256": "5c2e21885bc0d0e2bbc193810d7c5f68dbd3939777350749e81fae23a58ea9cf"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/3858ccbe/AR_M_3P_crouch_Walk_b.uasset",
+      "bytes": 433152,
+      "sha256": "ce9aee8735cd4c3ef1f5183d2903d9776ab61c417b3affb7624c3683d932ea62"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/43242580/AR_M_3P_WalkB.uasset",
+      "bytes": 453753,
+      "sha256": "bd454a637ea15fa917e1927aba1859cb009f709ca851eebaa69c6217ba3cc70d"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/477be2a6/AR_M_3P_crouch_Walk_br.uasset",
+      "bytes": 396422,
+      "sha256": "b2599ce2c083aad0c91acb9501b7103b9274463c8b7e9fed79bd23014f60fd2a"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/4ea06824/AR_M_3P_RunF.uasset",
+      "bytes": 207284,
+      "sha256": "0ab91e07edc14eac58a85a50b1d858b8f3473ed2d91be3464877bf8e8891d1c0"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/4f46593e/AR_M_3P_RunB.uasset",
+      "bytes": 209108,
+      "sha256": "2bfbdd7f8b478be8e9e282875b0b2110a13964dcf9041a0b5bce258e4efef6b0"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/505637c1/AR_M_3P_WalkBR.uasset",
+      "bytes": 653854,
+      "sha256": "29367f610ba7efee896ac8bcbd0c0731739b979e5addf5869b507732346f912a"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/53b95249/AR_M_3P_RunR.uasset",
+      "bytes": 202548,
+      "sha256": "d489cd05f426e00404e747f7d5c3159dfa70c7d9c028415703b3b087daa87266"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/53de4cdc/AR_M_3P_crouch_Walk_f.uasset",
+      "bytes": 413313,
+      "sha256": "e85d6ed13fa1038d00906ea0b7c122126fec57297728be5773258d56f4f4da53"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/579b5cd0/AR_M_1P_Walk_Loop.uasset",
+      "bytes": 440140,
+      "sha256": "27d1085a7553f59a7452dd46afb274a652954e307d88398fc7f17d70bd2dd3d2"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/5cac0bd1/AR_M_3P_RunBL.uasset",
+      "bytes": 198839,
+      "sha256": "5316f1cc35149b079e6f654acdb330d3b3ce11f2b74dcd4d4b65ef28cbce0987"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/635d706e/AR_M_3P_WalkL.uasset",
+      "bytes": 493081,
+      "sha256": "ae9d55a518799aa4741d39932422b920ebe18bfc6de3e248124b2e877229f346"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/637b79e9/AR_M_1P_RunToSprint.uasset",
+      "bytes": 158645,
+      "sha256": "bda8c9268ce750f6505ab5172304f72c35b5afda9752c7880b82f3651fa9a47f"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/74d3ba40/AR_M_3P_CrouchIdleAOCentet.uasset",
+      "bytes": 75418,
+      "sha256": "6b9433ca2bc0795e1c9cd8589ff44e45a45e46ad14f5502a1a39efde3cbcabe1"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/75293af6/AR_M_3P_Sprint.uasset",
+      "bytes": 212444,
+      "sha256": "71cb525345b3349d76dfc4217c32dbb588186bad8a0bb4109dbd5cfc8f9318ce"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/82b4c356/AR_M_1P_WalkToSprint.uasset",
+      "bytes": 155706,
+      "sha256": "60dcfdeee51ecc49dbc300be48e11a83c57463b1907f0cbc2b99fb68b9fa3a9b"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/83698fbc/AR_M_1P_RunToWalk.uasset",
+      "bytes": 157995,
+      "sha256": "c6eb9adadd1ada81578fc2891d499cd0cafa904156675adb9380dedb690bafb9"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/85a02533/AR_M_3P_RunFR.uasset",
+      "bytes": 223865,
+      "sha256": "52a4bd48b2c9235ed88d11916d8c5d1d3feff4dfa60510708272b9a2405afeff"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/86560d1b/AR_M_3P_IdleAOCenter.uasset",
+      "bytes": 75384,
+      "sha256": "1f1907167d1c8950f1da81be9bbaa0248bb9a41e86d2e3f53392cfd487a4f3a0"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/87972e7a/AR_M_3P_CrouchIdleAOUp.uasset",
+      "bytes": 75394,
+      "sha256": "9911ff987a7a4a7a64d5b1264b4545921bfb7674bea105a5ed74a3c7964330aa"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/8fb4ffca/AR_M_1P_Sprint_Loop.uasset",
+      "bytes": 322708,
+      "sha256": "28c3321298a9ca947ce38ea4c2d0df99c35c33b0ddb9529b3035bf1a1e57ad85"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/8fe0545d/AR_M_3P_WalkFL.uasset",
+      "bytes": 628702,
+      "sha256": "70d0807853e844e287e48eeba02493a08ebad1995a1b8b3913fc70c6c1ae1eff"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/99d5d3f5/AR_M_3P_WalkBL.uasset",
+      "bytes": 603742,
+      "sha256": "9988a6f5a24e192137f089b02523180e967403af990d0c108b09da818b033446"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/9dab2cf5/AR_M_3P_RunBR.uasset",
+      "bytes": 197207,
+      "sha256": "cdc79490bee1664bd9fa322f0343553f8634afa536079b8de7f52cb273235b7f"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/9e484996/AR_M_3P_RunFL.uasset",
+      "bytes": 254777,
+      "sha256": "7b51b752d69cc457b08aa3a0e0d94b8c4736a0a46fed0ab5a09826e989e5114d"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/9fa61a58/AR_M_3P_CrouchIdleAODown.uasset",
+      "bytes": 75404,
+      "sha256": "dfb6d4e620f52dd7fee7b0fe78ebcb87ba98562283cb386c5852defe0fb6175f"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/a71fcff5/AR_M_3P_crouch_Walk_fr.uasset",
+      "bytes": 406118,
+      "sha256": "b4468fd4fe5322c38f7759968f063c6e55394124443fa117a7073cd538ec54f2"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/b291c1db/AR_M_3P_WalkR.uasset",
+      "bytes": 718456,
+      "sha256": "3fe67c9486b37f902a3d4ad13ed9da188c74df8caff2ecfabdf8614a974f13d3"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/b34e9725/AR_M_3P_IdleAOUp.uasset",
+      "bytes": 75364,
+      "sha256": "7e2cb6b30d42ce07558e6ca17470c74261752e2694facb2e1041e89aa698e037"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/b62ad841/AR_M_3P_crouch_Walk_r.uasset",
+      "bytes": 244992,
+      "sha256": "4f3318caf74979abd330be3e343f5292695725285c3204301765466ad2b22fea"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/b6b9f31a/AR_M_3P_WalkFR.uasset",
+      "bytes": 658270,
+      "sha256": "8de7bf19189117250322ba7924a8ae9bedab3d41c43b7268b21256e7ae56d1cf"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/bf867423/AR_M_1P_Run_Loop.uasset",
+      "bytes": 318982,
+      "sha256": "e960bdfba9473cacc045d13e2507f3be1212ed8fcbaba8c41b1dc70d759994b3"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/c4898b4f/AR_M_1P_SprintToWalk.uasset",
+      "bytes": 161850,
+      "sha256": "c5f0407b478e7eeddc7d64d926565643620e88612bd7a23b5cef01c92910f8d8"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/cdda6383/AR_M_3P_IdleAODown.uasset",
+      "bytes": 75374,
+      "sha256": "03098fc32d95e6009d4bdea695c6533615c24cfb6e6c934b68d1681b5ebf9e7d"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/e8afcb39/AR_M_3P_crouch_Idle.uasset",
+      "bytes": 540794,
+      "sha256": "649b1bd75b6fc90257ed5bc9e79bc53ff7fd4b4d2b3c2ef4ff53c134b661f5f7"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/eb2276cf/AR_M_3P_WalkF.uasset",
+      "bytes": 566105,
+      "sha256": "88d46fb57621c646df78466519aa3fddcd2aa15dff0d2b63f18dd327fdcee201"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/efab1d5e/AR_M_3P_crouch_Walk_fl.uasset",
+      "bytes": 408198,
+      "sha256": "76c2f8837d99b7ebf152f31923f6bbd9e7eceb9f9aa78d7c531224391194476f"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/f38c0960/AR_M_3P_crouch_Walk_bl.uasset",
+      "bytes": 420806,
+      "sha256": "a0c0e2c8a25f17e916f6fff3e5575241de22956a5847d85699dee04b64dfaf49"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/f3d1eaa1/AR_M_1P_Idle_Pose.uasset",
+      "bytes": 72742,
+      "sha256": "00b5658168c3a4044ba5a44a93734052217fb04d2eefd68318cb06c004ac42e1"
+    },
+    {
+      "path": "Content/Characters/Stinger/Animations/DeltaForceLocomotion/Source/fcc2aae6/AR_M_3P_RunL.uasset",
+      "bytes": 202068,
+      "sha256": "6dab675ead707b680185f6397fd952546882143aad1ceb6ff940d37a072d6601"
+    },
+    {
+      "path": "Content/Blueprints/Weapon/BP_AK47.uasset",
+      "bytes": 36420,
+      "sha256": "f9deca512cabfa56ef3d9d83093bb78a5fb2dc855ac7116239b800e82f062118"
+    },
+    {
+      "path": "Content/Characters/Stinger/Blueprints/BP_StingerCharacter.uasset",
+      "bytes": 110639,
+      "sha256": "1d94bc4903a9e135d17ecc24d9805f8774f2fb239e9c6fee3c146dbafa5ac5c9"
+    },
+    {
+      "path": "Content/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired.uasset",
+      "bytes": 110822,
+      "sha256": "2f6e36831a03a6a2331b9d04b4c53f304c1803e33323d3a3537e0682dca385fb"
+    }
+  ],
+  "videos": [
+    {
+      "path": "Captures\\walk_F.mp4",
+      "frames": 7,
+      "sample_fps": 6,
+      "boundary": "Sampled viewport capture at fixed simulation intervals; no audio or performance claim",
+      "sha256": "d90dbe1a0fe57d7f789358cb282e7b5fd6f85586fc4983a4f835523647307345"
+    },
+    {
+      "path": "Captures\\run_R.mp4",
+      "frames": 7,
+      "sample_fps": 6,
+      "boundary": "Sampled viewport capture at fixed simulation intervals; no audio or performance claim",
+      "sha256": "0e1bb338c06cc7a3ea5e7b9ca763255076682bb7f863bc36bbb78aed30c9dcef"
+    },
+    {
+      "path": "Captures\\crouch_F.mp4",
+      "frames": 7,
+      "sample_fps": 6,
+      "boundary": "Sampled viewport capture at fixed simulation intervals; no audio or performance claim",
+      "sha256": "1f85f90f87bdc313abef605edc80c0e655295e64dfa8e4333f891023c9c16ef5"
+    },
+    {
+      "path": "Captures\\view_walk.mp4",
+      "frames": 10,
+      "sample_fps": 6,
+      "boundary": "Sampled viewport capture at fixed simulation intervals; no audio or performance claim",
+      "sha256": "c00f45838ad98371e457d037e70bcace0f91c9464d6fe94b65c6d141b1d8d502"
+    },
+    {
+      "path": "Captures\\view_run.mp4",
+      "frames": 12,
+      "sample_fps": 6,
+      "boundary": "Sampled viewport capture at fixed simulation intervals; no audio or performance claim",
+      "sha256": "7e59c147d3e210aaf631e3d61bc85252f79e3db1d5941050f85d27630b5e9df1"
+    },
+    {
+      "path": "Captures\\view_sprint.mp4",
+      "frames": 12,
+      "sample_fps": 6,
+      "boundary": "Sampled viewport capture at fixed simulation intervals; no audio or performance claim",
+      "sha256": "78d9e1038aa443699e2039bdff7c2383f4e626c92ea2352b553a4560a36352c6"
+    }
+  ],
+  "implementation": [
+    {
+      "path": "Scripts/Stinger/archive_locomotion.py",
+      "sha256": "e99f9d499a4c305c38f118c34a7640fb78e1be0d85a63a8646873316a399dc56"
+    },
+    {
+      "path": "Scripts/Stinger/audit_baseline.py",
+      "sha256": "f7a20e16a4a7b06bc39c7e2cab669fe2d24550f4dec49784f86c21d5ae524a7e"
+    },
+    {
+      "path": "Scripts/Stinger/audit_keys.py",
+      "sha256": "cd6fc4b21531ba60552ea1cc0cb7a77195981353c65f460c995b7b930d019e61"
+    },
+    {
+      "path": "Scripts/Stinger/audit_locomotion.py",
+      "sha256": "262b152b1912b799ca8afd520822b0a953ff90cc829448bfab0c0520a641c35b"
+    },
+    {
+      "path": "Scripts/Stinger/audit_view_rig.py",
+      "sha256": "f66838a47becafcce8e30186e7e7c2f0d03f547e4dc545f62abf1a2d50582bf8"
+    },
+    {
+      "path": "Scripts/Stinger/calibrate_support_hand.py",
+      "sha256": "149918c4c9b8a1fb95a7344cdc1acd04d203e26078683f099b00a1f65d21fa90"
+    },
+    {
+      "path": "Scripts/Stinger/configure_locomotion.py",
+      "sha256": "d77de367eeacd252a6708003205549f1960682a10f3a3fb13d7e1709dc9b0313"
+    },
+    {
+      "path": "Scripts/Stinger/configure_repaired.py",
+      "sha256": "e59912f4564a3de45bc3631dc6591a92f0f9acda7d2e84da5e6e775d68f6e495"
+    },
+    {
+      "path": "Scripts/Stinger/configure_third_person_grip.py",
+      "sha256": "dce08db5a108f1f2577f14241ce8d0d0b91bdcdfb02490268b20d06f2d5c508e"
+    },
+    {
+      "path": "Scripts/Stinger/configure_view_fit.py",
+      "sha256": "e9e6d2c9610182071b2ef2a66359758b0a80c3e638fd9f014e7383af2827a843"
+    },
+    {
+      "path": "Scripts/Stinger/convert_locomotion.ps1",
+      "sha256": "9d619e12ceff5eaec4a8966f74fbdc82c665ff6f8a528950c12b313206d9cd01"
+    },
+    {
+      "path": "Scripts/Stinger/import_animations_commandlet.py",
+      "sha256": "1120e2246c463975bb9f89e5a69ad4e42d41d7e7f5194cd4d66f0e7d0dd4d7f6"
+    },
+    {
+      "path": "Scripts/Stinger/import_arms.py",
+      "sha256": "a7683574b4fd3297e79b3520807d8d9d3e0f089f645f9957d2566e12498d51b4"
+    },
+    {
+      "path": "Scripts/Stinger/import_assets.py",
+      "sha256": "6e2da1d37e3ca8aade96b3ba0b10e3c006e93e64810328a393ef2bd9f0576500"
+    },
+    {
+      "path": "Scripts/Stinger/import_locomotion.py",
+      "sha256": "2ac09f5e81e2c26a158aa4b0a8322450a539079b4d34be3b3d1fada2221f5625"
+    },
+    {
+      "path": "Scripts/Stinger/import_models_commandlet.py",
+      "sha256": "189395b1fd76efaad3ea3710de69947e3bbe66a56eb70bbf69e3694977fc8cf5"
+    },
+    {
+      "path": "Scripts/Stinger/import_view_arms.py",
+      "sha256": "b3c6c0d94505c1acaa8f965aafc5ade904901b4d3d148e4620a8255aaeb98de9"
+    },
+    {
+      "path": "Scripts/Stinger/inspect_commandlet.py",
+      "sha256": "13d360528e67b6aee5e6b599b1d9c4488c19cdbe33796c8fe9962d5d47fe4cfd"
+    },
+    {
+      "path": "Scripts/Stinger/inspect_poses.py",
+      "sha256": "c60570a8e1b6e2b041d280f33ecb8948921f4f5da9ed8d074f278c591284f63a"
+    },
+    {
+      "path": "Scripts/Stinger/inspect_view_configuration.py",
+      "sha256": "697e9626d9733b6da757a836e8274e14528c15867efc82b90e9f125506e3f848"
+    },
+    {
+      "path": "Scripts/Stinger/inspect_weapon.py",
+      "sha256": "2ea4c78ddad62617681dca9cf2733246f29b821f01d26ec4945be551342480df"
+    },
+    {
+      "path": "Scripts/Stinger/prepare_arms.py",
+      "sha256": "06514a48331edd3ebfa60289f8326ecdc3f8e15e2324f6f763483cabe7db70eb"
+    },
+    {
+      "path": "Scripts/Stinger/prepare_capped_view_arms.py",
+      "sha256": "a81a7e9374665043c28178a9f471a88493f9d6ed6447b6cd78e9dea1dd931163"
+    },
+    {
+      "path": "Scripts/Stinger/prepare_locomotion.py",
+      "sha256": "532357e76a2865aa91c50b8de06a90c6643c2b73524ce05ec66ef63455572cc3"
+    },
+    {
+      "path": "Scripts/Stinger/promote_view_fit.py",
+      "sha256": "aa2c20df8b49a1fb2f620c1291021a77d44146d282d4cc33131a266f5318bfb8"
+    },
+    {
+      "path": "Scripts/Stinger/record_baseline.py",
+      "sha256": "db02638fbf553290a1a75b9e8d9aeb4da07461373c68f26a53f22967e5ec0578"
+    },
+    {
+      "path": "Scripts/Stinger/record_repair_reports.py",
+      "sha256": "4656f091bfeaa9d57d4f469caa259f9f776bd88175e3df2450714bb82c0d6d4b"
+    },
+    {
+      "path": "Scripts/Stinger/record_reports.py",
+      "sha256": "73b5c1d250b6db25d8dc455c192b7f330c0822a906732bed91460a660d4f0766"
+    },
+    {
+      "path": "Scripts/Stinger/record_third_person_grip_reports.py",
+      "sha256": "2c81a45b6085a591b0fc915460c1a267cc6ad5a87b0401eca4639004ac21699b"
+    },
+    {
+      "path": "Scripts/Stinger/record_view_fit_reports.py",
+      "sha256": "ca9e363d33b1e18d9c7395161d97d09918b26fff5ba6a3329ba5b2a8bb76b59f"
+    },
+    {
+      "path": "Scripts/Stinger/record_weapon_visibility_reports.py",
+      "sha256": "af918210bbed4813930e738c1cb5b36bb360ebe8ca41601dc50356c52ed401a4"
+    },
+    {
+      "path": "Scripts/Stinger/refresh_level.py",
+      "sha256": "05281f7d4eed49df2fda24062be75eb47bdbb2fa1725117f89f47ef5f27e287f"
+    },
+    {
+      "path": "Scripts/Stinger/repair_import.py",
+      "sha256": "13cbc57917390beba4f36912410ed9db8f85204a71db397e8e11d3fc02cbd511"
+    },
+    {
+      "path": "Scripts/Stinger/repair_pose_check.py",
+      "sha256": "69675cd40d4e18e8307ba0b9ddbc24ddd8afbca13b2d19960cc4372bf11b23a9"
+    },
+    {
+      "path": "Scripts/Stinger/rollback_locomotion.py",
+      "sha256": "dfd5b3301608ec8abe342bd2f04686f2b965f54926ac848bc10c5f2735746120"
+    },
+    {
+      "path": "Scripts/Stinger/run_baseline.py",
+      "sha256": "8b0aef71a7dc9bbfc198b6cb9bb57fa2b031f6f950b99b42f8270a8550bf0fe9"
+    },
+    {
+      "path": "Scripts/Stinger/run_locomotion.py",
+      "sha256": "a80f6a058f2bd32aba8ac689e9191a091de0b883ea39927a626864370618b784"
+    },
+    {
+      "path": "Scripts/Stinger/setup_character.py",
+      "sha256": "739a8ffcc04437baad64d9b5a31605813ad60e77e36e3721cd1f111fda10f1f8"
+    },
+    {
+      "path": "Scripts/Stinger/setup_commandlet.py",
+      "sha256": "93026039aa92d4a6aa25d99eeb2608788ae6bf53abe6a6de912112c8279dabb0"
+    },
+    {
+      "path": "Scripts/Stinger/setup_locomotion.py",
+      "sha256": "3df387dde3140d4b419063363c4df6799b58f733ec55f9e102af3b0cd92727dd"
+    },
+    {
+      "path": "Scripts/Stinger/test_psa_rotation.py",
+      "sha256": "b53216ded7153ad6b1b17a2fcf19aac7c07893c5b1d60a8f7cf9d01ead717454"
+    },
+    {
+      "path": "Scripts/Stinger/validate_assets.py",
+      "sha256": "e1a418d3226342f91b3c2d11188333f26575f62042ac919986b09db5a31419ea"
+    },
+    {
+      "path": "Scripts/Stinger/validate_baseline_combat.py",
+      "sha256": "e0a57d79eaf262ecbfe56f2952b2726a5517484221b183d0ce6dc376dc978ee8"
+    },
+    {
+      "path": "Scripts/Stinger/validate_locomotion.py",
+      "sha256": "69734b9a0ab451d890a6fe86d12b6ed28a9a63b1d95b9b561d1e845bcd34f4cb"
+    },
+    {
+      "path": "Scripts/Stinger/validate_multiplayer_view.py",
+      "sha256": "f9fd63d184fec9104c8ba7658e38ec395c14c39c1a6d3756b4486f65b3e635d5"
+    },
+    {
+      "path": "Scripts/Stinger/validate_pie.py",
+      "sha256": "738e24074404d07f760497639a7c47e52b72ca8915077dd8c7dd1fe779daba73"
+    },
+    {
+      "path": "Scripts/Stinger/validate_third_person_grip.py",
+      "sha256": "49bb38e78d3673d9c11aa3478133caa57a2c48b1f5007973e9f5f519b34c0a86"
+    },
+    {
+      "path": "Scripts/Stinger/validate_view_fit.py",
+      "sha256": "ee937120fd89dad14472a2af4d6f700164c1e0ce49bbd0f8fb5bf9297ad2ef8d"
+    },
+    {
+      "path": "Scripts/Stinger/validate_weapon_visibility.py",
+      "sha256": "0bb396a794fa3883db62b81db26c6b6702db934c16390bed406eaf96066d047a"
+    },
+    {
+      "path": "Source/BrokenEdge/Animation/AnimNode_RifleLocomotion.cpp",
+      "sha256": "225fdfa885b9a91f5a0febff9f6372fe38c970dacba3e7c948d5ece314ec2e42"
+    },
+    {
+      "path": "Source/BrokenEdge/Animation/AnimNode_RifleLocomotion.h",
+      "sha256": "21f2ac6015e10648bd0efe5cee61c50e4a685d251df9f60e07d82792452f39a3"
+    },
+    {
+      "path": "Source/BrokenEdge/Animation/AnimNode_TraversalContact.h",
+      "sha256": "7ad5dd0747a702e5eedefdeceead60c4aca1d40f7bae06ff0dd693a2df886ba6"
+    },
+    {
+      "path": "Source/BrokenEdge/Animation/AnimNode_WeaponGripReach.cpp",
+      "sha256": "10bec2cd4fafa6740a4ce120f2dc7e0fb3cbeaa8091b6079f379cdd78c03e57e"
+    },
+    {
+      "path": "Source/BrokenEdge/Animation/AnimNode_WeaponGripReach.h",
+      "sha256": "6165d6d58a9bb7b8028e2b7b9a21f9a3a120a2306a9bf9b6e4f6b167a5840054"
+    },
+    {
+      "path": "Source/BrokenEdge/Animation/ExtractionMeleePose.h",
+      "sha256": "43a0554b344d895a3052935944dcbd0799414c19fb1c00093be1939d8bfe51de"
+    },
+    {
+      "path": "Source/BrokenEdge/Animation/Notifies/AnimNotify_Example.cpp",
+      "sha256": "954c4691e624c6a70ea5431a164edf55e151fd9844d3af479ce737b516a4f2ef"
+    },
+    {
+      "path": "Source/BrokenEdge/Animation/Notifies/AnimNotify_Example.h",
+      "sha256": "b8c2217b9b3438fc2991559d3ef91a8d904a0052d2961bd084a41cbb882d2e34"
+    },
+    {
+      "path": "Source/BrokenEdge/Animation/Notifies/AnimNotifyState_Example.cpp",
+      "sha256": "bb37ab333ff85bc0b2af445e796fd11503dc9ffc43b0581455b612e00f6e7d85"
+    },
+    {
+      "path": "Source/BrokenEdge/Animation/Notifies/AnimNotifyState_Example.h",
+      "sha256": "4ae21fe4a45fd00981bcd3ad9e932e9d9eb0bb1f414710ae4c39da19757b5c92"
+    },
+    {
+      "path": "Source/BrokenEdge/Animation/RifleLocomotionSet.h",
+      "sha256": "554e7e564be65f5260fe45b5685f80e84e8fc2e184202fd7dc8b2ab338fae870"
+    },
+    {
+      "path": "Source/BrokenEdge/Character/BrokenEdgeAnimInstance.cpp",
+      "sha256": "9216df91704b111bb4522e51eb544ae2d6c86af77a9debc258c97e901c983aff"
+    },
+    {
+      "path": "Source/BrokenEdge/Character/BrokenEdgeAnimInstance.h",
+      "sha256": "9c37b5df2b54ed13b2691fe6e5bee7a9dc8d1da542a1059899f8a29989750809"
+    },
+    {
+      "path": "Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp",
+      "sha256": "9b3f304b415b852eea6b0f284319dc630cab38a0b3de8da55d2c5e4b100eb08f"
+    },
+    {
+      "path": "Source/BrokenEdge/Character/BrokenEdgeCharacter.h",
+      "sha256": "02e0c830fb5893a0ecac1f429fe833fa77d57a36f937ca2155bc1e967a0aae7b"
+    },
+    {
+      "path": "Source/BrokenEdge/Character/StingerFirstPersonAnimInstance.cpp",
+      "sha256": "ed3a9a52f37e6403369beaebcdb282a68cb383eba8266cf7ed5abec98c8dc548"
+    },
+    {
+      "path": "Source/BrokenEdge/Character/StingerFirstPersonAnimInstance.h",
+      "sha256": "98b8f4d1585be31470b158a29803d7f1da98d75d28dc8491aef60472166cc930"
+    },
+    {
+      "path": "Source/StingerTools/Private/ExtractionPIELobbyTests.cpp",
+      "sha256": "de8c4c9b6cc495321d8dca8d01c4230442021525d307e2bed6e119b1f0f0c002"
+    },
+    {
+      "path": "Source/StingerTools/Private/ExtractionPIETeardownTests.cpp",
+      "sha256": "14ccc4ed11b73ea323129737ca399d79ca0c22fb1984aae29eb45401fab794ef"
+    },
+    {
+      "path": "Source/StingerTools/Private/StingerAssetLibrary.cpp",
+      "sha256": "dade385bbe0b1e5a55ff152d23c231c86831455abd19aab61926b54097adf6e5"
+    },
+    {
+      "path": "Source/StingerTools/Private/StingerTools.cpp",
+      "sha256": "b351eaec14499f26caa9e65ad939870a127525ac68ed356fc9b53277ce8abd42"
+    },
+    {
+      "path": "Source/StingerTools/Public/AnimGraphNode_RifleLocomotion.h",
+      "sha256": "d3fe0bd04564a9047a20ebb4bce39865d504ff0420c546075e90a77c72c23df4"
+    },
+    {
+      "path": "Source/StingerTools/Public/AnimGraphNode_TraversalContact.h",
+      "sha256": "2858fc29c25fcf99882637b3c624553c952f23cca3cadeadb4826727bb202ef7"
+    },
+    {
+      "path": "Source/StingerTools/Public/AnimGraphNode_WeaponGripReach.h",
+      "sha256": "13fc0c6b21c9212801bd3645517ec6319ce1f446d84b60f546f2126a9fa1a9c3"
+    },
+    {
+      "path": "Source/StingerTools/Public/StingerAssetLibrary.h",
+      "sha256": "bd9fc83929ecc1c7fc338a782dd23f133dcf2d98bd561e1f719a344f44696fd1"
+    },
+    {
+      "path": "Scripts/SpaceCenter/Converter/Program.cs",
+      "sha256": "de540f2ccefd8ff9ab8e9639fc50db569587be4aa0cfc1127a4eb3362243146f"
+    },
+    {
+      "path": "Source/BrokenEdge/Weapon/WeaponPresentation.h",
+      "sha256": "8064199a6a0afe4389406b404b1a61e64998252d1d79149c811ec632d8818bb8"
+    }
+  ],
+  "cue4parse_commit": "34f1a223e942b67e381329983fb7713f62f9ef9d"
+}

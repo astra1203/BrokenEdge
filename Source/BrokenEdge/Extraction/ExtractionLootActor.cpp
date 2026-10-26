@@ -9,7 +9,10 @@
 #include "UObject/ConstructorHelpers.h"
 #include "GameFramework/Pawn.h"
 #include "EngineUtils.h"
+// 战利品容器 Actor 只复制外观、标识与是否为空；完整 Contents 留在服务器。
+// 每位查看者通过 InteractionComponent 获得自己的搜索视图，打开界面不会重新随机生成物资。
 
+// 分离交互盒、容器阻挡盒和可见模型；模型不承担物品规则，碰撞负责视线与通行查询。
 AExtractionLootActor::AExtractionLootActor()
 {
 	bReplicates = true;
@@ -37,6 +40,7 @@ AExtractionLootActor::AExtractionLootActor()
 	if (Box.Succeeded()) Mesh->SetStaticMesh(Box.Object);
 }
 
+// 各端刷新外观，服务器初始化容器 ID；只有 SeedContents 开启且内容为空时才生成默认物资。
 void AExtractionLootActor::BeginPlay()
 {
 	Super::BeginPlay();
@@ -79,6 +83,7 @@ void AExtractionLootActor::BeginPlay()
 	Changed();
 }
 
+// 复制公开外观和门关联，不注册完整 Contents，避免泄露未搜索的具体物品。
 void AExtractionLootActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -92,6 +97,7 @@ void AExtractionLootActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(AExtractionLootActor, AccessDoor);
 }
 
+// 依据整箱/散落物/枪械切换模型和查询边界；不移动作为根组件的交互盒，以免改变配置点位。
 void AExtractionLootActor::OnRep_Appearance()
 {
 	WeaponMesh->SetVisibility(false);
@@ -139,6 +145,7 @@ void AExtractionLootActor::OnRep_Appearance()
 	}
 }
 
+// 返回容器外观中心的世界位置或交互盒位置，供距离和视线判断使用。
 FVector AExtractionLootActor::InteractionPoint() const
 {
 	return ContainerAppearance
@@ -146,6 +153,7 @@ FVector AExtractionLootActor::InteractionPoint() const
 		       : InteractionBounds->GetComponentLocation();
 }
 
+// 服务器同步空状态与容器 ID；空散落物延后销毁，旧 RPC 仍须重新校验对象与会话。
 void AExtractionLootActor::Changed()
 {
 	if (!HasAuthority()) return;
@@ -156,6 +164,7 @@ void AExtractionLootActor::Changed()
 	if (Loose && Empty) SetLifeSpan(.5f);
 }
 
+// 仅服务器替换容器内容并通知公开状态更新；搜索视图由查看者另行刷新。
 void AExtractionLootActor::SetContents(const FExtractionContainer& NewContents)
 {
 	check(HasAuthority());
@@ -163,6 +172,7 @@ void AExtractionLootActor::SetContents(const FExtractionContainer& NewContents)
 	Changed();
 }
 
+// 延迟生成运行时掉落容器，关闭自动种子物资以免额外产出；返回空表示生成失败。
 AExtractionLootActor* AExtractionLootActor::SpawnContainer(UWorld* World, const FVector& Position,
                                                            bool bLoose, FName Definition)
 {

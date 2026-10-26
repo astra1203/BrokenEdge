@@ -97,7 +97,7 @@ elif args.task in ['assets', 'exit', 'phase5-assets']:
 else:
     successes = re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text)
     metadata['successful_tests'] = len(successes)
-    expected = {'loot-layout': 1, 'weapon-pie': 1, 'weapon-mechanics': 4, 'persistence': 4, 'inventory': 3, 'recover-existing': 1, 'equipment': 4, 'progression': 4}[args.task]
+    expected = {'loot-layout': 1, 'weapon-pie': 2, 'weapon-mechanics': 5, 'persistence': 4, 'inventory': 3, 'recover-existing': 1, 'equipment': 4, 'progression': 4}[args.task]
     passed = passed and len(successes) == expected and not re.search(r'Test Completed\. Result=\{(?:Fail|Failure|\u5931\u8d25)', text)
 metadata['result'] = 'passed' if passed else 'failed'
 metadata['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()

@@ -77,6 +77,7 @@ const FResolvedWeaponStats* WeaponMechanics::Find(FName Definition)
 			S.Equip = Number(B, TEXT("EquipTime"));
 			S.Unequip = Number(B, TEXT("UnEquipTime"));
 			S.SprintToFire = Number(B, TEXT("SprintToFireSpeed"));
+			S.ReturnSprintInterval = FMath::Max(0.f, Number(B, TEXT("ReturnSprintInterval")));
 			S.AimIn = Number(A, TEXT("AimingOnAnimTime"));
 			S.AimOut = Number(A, TEXT("AimingOffAnimTime"));
 			S.Speed = Number(Bullet, TEXT("InitSpeedFor1P"));
@@ -222,9 +223,10 @@ FResolvedWeaponStats WeaponMechanics::ResolveWeaponStats(const FExtractionItem& 
 		TArray<FName> Keys;
 		Attributes.GetKeys(Keys);
 		Keys.Sort(FNameLexicalLess());
-		for (FName Key : Keys) Result.Revision = HashCombine(Result.Revision,
-		                                                     FCrc::StrCrc32(*FString::Printf(
-			                                                     TEXT("%s:%g"), *Key.ToString(), *Attributes[Key])));
+		for (FName Key : Keys)
+			Result.Revision = HashCombine(Result.Revision,
+			                              FCrc::StrCrc32(*FString::Printf(
+				                              TEXT("%s:%g"), *Key.ToString(), *Attributes[Key])));
 		for (FName Part : Parts) Result.Revision = HashCombine(Result.Revision, FCrc::StrCrc32(*Part.ToString()));
 	}
 

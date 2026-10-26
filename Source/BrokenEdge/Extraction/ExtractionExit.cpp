@@ -5,7 +5,10 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Materials/MaterialInterface.h"
 #include "Net/UnrealNetwork.h"
+// 撤离点 Actor 保存区域、开放时段和已使用名额，并将这些状态复制给客户端。
+// 这里只提供可用性与占额操作；玩家停留计时和物资结算由 ExtractionGameMode 负责。
 
+// 创建无碰撞的区域标记与文字；AlwaysRelevant 让远处客户端也可获得撤离点状态。
 AExtractionExit::AExtractionExit()
 {
 	bReplicates = true;
@@ -33,6 +36,7 @@ AExtractionExit::AExtractionExit()
 	Label->SetTextRenderColor(FColor(70, 230, 170));
 }
 
+// 把世界位置变换到撤离点局部坐标，再减去 BoundsOffset 检测半尺寸；不是依靠碰撞重叠事件。
 bool AExtractionExit::Contains(const FVector& Position) const
 {
 	const FVector D = GetActorTransform().InverseTransformPosition(Position) - Definition.BoundsOffset;
@@ -40,6 +44,7 @@ bool AExtractionExit::Contains(const FVector& Position) const
 		&& FMath::Abs(D.Z) <= Definition.HalfExtent.Z;
 }
 
+// 注册定义、开局时间和使用名额的复制；声明 Replicated 还需要在此加入复制列表。
 void AExtractionExit::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -48,6 +53,7 @@ void AExtractionExit::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME(AExtractionExit, UsedCapacity);
 }
 
+// 仅服务器接受有效定义，设置 Actor 变换并主动更新本地表现；客户端通过 OnRep 更新。
 void AExtractionExit::Configure(const FExtractionExitDefinition& InDefinition)
 {
 	if (!HasAuthority() || !InDefinition.IsValid()) return;
@@ -57,6 +63,7 @@ void AExtractionExit::Configure(const FExtractionExitDefinition& InDefinition)
 	ForceNetUpdate();
 }
 
+// 根据收到的定义更新地面标记大小和停留秒数文字，不在此推进撤离逻辑。
 void AExtractionExit::OnRep_Definition()
 {
 	Marker->SetRelativeScale3D(FVector(Definition.HalfExtent.X / 50, Definition.HalfExtent.Y / 50, .03));
@@ -64,6 +71,7 @@ void AExtractionExit::OnRep_Definition()
 		Definition.Label, FText::AsNumber(Definition.HoldSeconds)));
 }
 
+// 服务器记录开局时间并清零名额；开放与关闭时间均相对该时刻计算。
 void AExtractionExit::StartRound(double ServerTime)
 {
 	if (!HasAuthority()) return;
@@ -72,6 +80,7 @@ void AExtractionExit::StartRound(double ServerTime)
 	ForceNetUpdate();
 }
 
+// 依次检查定义、名额、开放和关闭时刻；空字符串表示当前可用，关闭边界包含截止时刻。
 FString AExtractionExit::UnavailableReason(double ServerTime) const
 {
 	if (!Definition.IsValid() || RoundStartedAt < 0) return TEXT("尚未开放");
@@ -83,8 +92,10 @@ FString AExtractionExit::UnavailableReason(double ServerTime) const
 	return {};
 }
 
+// 复用不可用原因作为单一判断依据，避免 UI 提示与服务器条件分叉。
 bool AExtractionExit::Available(double ServerTime) const { return UnavailableReason(ServerTime).IsEmpty(); }
 
+// 服务器再次验证当前可用性后增加已用名额；Capacity 为零表示无限制，并非不统计人数。
 bool AExtractionExit::Consume()
 {
 	if (!HasAuthority() || !Available(GetWorld()->GetTimeSeconds())) return false;

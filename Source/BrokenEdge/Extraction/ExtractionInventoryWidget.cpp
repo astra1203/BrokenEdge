@@ -4,6 +4,7 @@
 #include "ExtractionPlayerController.h"
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionKeyRoom.h"
+#include "ExtractionItems.h"
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionLootActor.h"
 #include "ExtractionState.h"
@@ -12,6 +13,8 @@
 #include "Styling/CoreStyle.h"
 #include "Input/Reply.h"
 #include "Framework/Application/SlateApplication.h"
+// 局内背包的 UMG 外壳与 Slate 交互面板：读取背包及搜索后可见的战利品快照，提交物品操作意图。
+// 拖拽、旋转、菜单和拆分数量都是本地界面状态；真正的容器变更由服务器校验并复制回来。
 
 namespace
 {
@@ -85,6 +88,7 @@ public:
 		Invalidate(EInvalidateWidgetReason::Paint);
 	}
 
+	// 按统一缩放绘制背包、已搜索战利品、拖拽预览及菜单；未知物品不提供可操作 ID。
 	virtual int32 OnPaint(const FPaintArgs& Args, const FGeometry& Geometry, const FSlateRect& Culling,
 	                      FSlateWindowElementList& Draw, int32 Layer, const FWidgetStyle& Style,
 	                      bool Enabled) const override
@@ -115,8 +119,37 @@ public:
 		{
 			if (I->DoorFocus)
 			{
-				Box(FVector2D(380, 505), FVector2D(560, 44), FLinearColor(.015f, .025f, .035f, .9f));
-				Text(FVector2D(395, 518), TEXT("E  机密储藏室 · 消耗一把钥匙开门"), 17);
+				// 只有站进门的交互碰撞盒才会走到这里；再按"手上有没有这张卡"切换文案。
+				const FString Room = I->DoorFocus->RoomLabel.IsEmpty()
+					                     ? FString(TEXT("上锁房间"))
+					                     : I->DoorFocus->RoomLabel.ToString();
+				const FText Card = I->DoorFocus->RequiredCardLabel.IsEmpty()
+					                   ? FText::FromString(TEXT("对应钥匙卡"))
+					                   : I->DoorFocus->RequiredCardLabel;
+				int32 Cards = 0;
+				int32 Uses = 0;
+				if (const auto* Inventory = I->Inventory())
+					for (const auto& Item : Inventory->Contents.Items)
+					{
+						const auto* D = UExtractionItemDefinition::Get(Item.Definition);
+						if (!D) continue;
+						const bool bMatch = I->DoorFocus->RequiredKey.IsNone()
+							                    ? Item.Definition == TEXT("Key")
+							                    : D->KeyRoomId == I->DoorFocus->RequiredKey;
+						if (!bMatch) continue;
+						++Cards;
+						Uses += FMath::Max(1, FMath::RoundToInt(Item.Durability));
+					}
+				const FString Prompt = Cards > 0
+					                       ? FString::Printf(TEXT("F  %s · 使用%s 开门   ·   剩余 %d 次"),
+					                                         *Room, *Card.ToString(), Uses)
+					                       : FString::Printf(TEXT("%s · 需要%s   ·   未持有"),
+					                                         *Room, *Card.ToString());
+				const FLinearColor Tint = Cards > 0
+					                          ? FLinearColor::White
+					                          : FLinearColor(.72f, .56f, .32f);
+				Box(FVector2D(360, 505), FVector2D(620, 44), FLinearColor(.015f, .025f, .035f, .9f));
+				Text(FVector2D(375, 518), Prompt, 17, Tint);
 			}
 			if (I->Focus)
 			{
@@ -253,6 +286,7 @@ public:
 		return Interaction() && Interaction()->InventoryOpen ? FReply::Handled() : FReply::Unhandled();
 	}
 
+	// 按弹窗、菜单、拖拽和选中顺序处理鼠标，避免一次点击同时触发多个操作。
 	virtual FReply OnMouseButtonDown(const FGeometry& G, const FPointerEvent& E) override
 	{
 		if (!Interaction() || !Interaction()->InventoryOpen) return FReply::Unhandled();
@@ -308,6 +342,7 @@ public:
 		return FReply::Unhandled();
 	}
 
+	// 键盘输入同时考虑拆分框和菜单状态；旋转只改变拖拽预览，落点提交后才由服务器执行。
 	virtual FReply OnKeyDown(const FGeometry& G, const FKeyEvent& E) override
 	{
 		if (!PC()) return FReply::Unhandled();
@@ -389,6 +424,7 @@ private:
 		return PC() ? PC()->GetWorld()->GetGameState<AExtractionGameState>() : nullptr;
 	}
 
+	// 鼠标位置先转换到局部坐标，再撤销绘制时的居中偏移和缩放，使点击与格子对齐。
 	FVector2D Position(const FGeometry& G, const FPointerEvent& E) const
 	{
 		return (G.AbsoluteToLocal(E.GetScreenSpacePosition()) - ExtractionUIStyle::Offset(G)) / ExtractionUIStyle::Scale(G);
@@ -407,6 +443,7 @@ private:
 		return nullptr;
 	}
 
+	// 封装物品 ID、来源、数量及落点；控制器补齐会话、请求序号和容器版本后发送。
 	FExtractionItemRequest Request() const
 	{
 		FExtractionItemRequest R;
@@ -417,6 +454,7 @@ private:
 		return R;
 	}
 
+	// 快捷移动根据当前是否打开战利品容器选择目标；没有目标容器时走装备或收纳路径。
 	void QuickTransfer()
 	{
 		auto R = Request();
@@ -430,6 +468,7 @@ private:
 		Cancel();
 	}
 
+	// 在装备槽与背包之间切换；本实现的枪械快捷装备分支按 AK 定义判断。
 	void EquipOrStore()
 	{
 		const auto* C = Container(SelectedLoot);
@@ -437,7 +476,7 @@ private:
 		const auto* Def = Item ? UExtractionItemDefinition::Get(Item->Definition) : nullptr;
 		if (!Def || Def->Kind != EExtractionItemKind::Weapon)
 		{
-			PC()->ItemMessage = TEXT("只有武器可以装备");
+			PC()->ShowItemMessage(TEXT("只有武器可以装备"));
 			Cancel();
 			return;
 		}
@@ -449,7 +488,7 @@ private:
 			R.Slot = !Own->InSlot(0) ? 0 : !Own->InSlot(1) ? 1 : -1;
 			if (R.Slot < 0)
 			{
-				PC()->ItemMessage = TEXT("武器槽已满，请先移出原武器");
+				PC()->ShowItemMessage(TEXT("武器槽已满，请先移出原武器"));
 				Cancel();
 				return;
 			}
@@ -458,6 +497,7 @@ private:
 		Cancel();
 	}
 
+	// 把菜单选择转换为物品操作或改枪面板回调，菜单自身不直接扣减物品。
 	void MenuAction(int32 Row)
 	{
 		if (Row >= 5)
@@ -500,7 +540,7 @@ private:
 		{
 			if (Quantity <= 1)
 			{
-				PC()->ItemMessage = TEXT("该物品无法拆分");
+				PC()->ShowItemMessage(TEXT("该物品无法拆分"));
 				Cancel();
 				return;
 			}
@@ -514,6 +554,7 @@ private:
 		Cancel();
 	}
 
+	// 将拖拽落点解析为装备槽、格子或合并目标；这里只构造请求，不预先移动真实物品。
 	void DropAt(FVector2D P)
 	{
 		auto R = Request();
@@ -547,17 +588,20 @@ private:
 	}
 };
 
+// 创建 Slate 面板并传入所属 UWidget，面板通过控制器读取当前局内状态。
 TSharedRef<SWidget> UExtractionInventoryWidget::RebuildWidget()
 {
 	return SAssignNew(Panel, SExtractionInventoryPanel).Owner(this);
 }
 
+// 释放 Slate 共享引用，避免 UWidget 重建后继续持有旧面板。
 void UExtractionInventoryWidget::ReleaseSlateResources(bool ReleaseChildren)
 {
 	Super::ReleaseSlateResources(ReleaseChildren);
 	Panel.Reset();
 }
 
+// 根据背包开关调整可见性并刷新面板，关闭时保留不拦截鼠标的提示显示。
 void UExtractionInventoryWidget::Refresh()
 {
 	const auto* PC = Cast<AExtractionPlayerController>(GetOwningPlayer());
@@ -566,4 +610,5 @@ void UExtractionInventoryWidget::Refresh()
 	if (Panel) Panel->Refresh();
 }
 
+// 将外部取消操作转交面板，统一清理拖拽和弹出菜单状态。
 bool UExtractionInventoryWidget::CancelDrag() { return Panel && Panel->Cancel(); }

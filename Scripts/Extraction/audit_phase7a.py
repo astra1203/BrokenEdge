@@ -58,7 +58,7 @@ for entry in json.loads((work / 'GeometryAudit.json').read_text(encoding='utf-8'
     check('double_sided_' + manifest['meshes'][entry['source']]['id'], mesh.get_editor_property('body_setup').get_editor_property('double_sided_geometry'))
 old = json.loads((root / 'Saved/SpaceCenter/ImportManifest.json').read_text(encoding='utf-8'))
 check('old_source_ids_preserved', all(len(by_label.get('SC_' + a['id'], [])) == 1 for a in old['actors']))
-check('key_room_preserved', len([a for a in actors if a.get_class().get_name() == 'ExtractionKeyRoom']) == 1)
+check('key_rooms_preserved', len([a for a in actors if a.get_class().get_name() == 'ExtractionKeyRoom']) >= 1)
 gameplay = [a for a in actors if a.get_class().get_name().startswith('Extraction')
             or a.get_class().get_name() in ['NavMeshBoundsVolume', 'RecastNavMesh']]
 check('all_stateful_and_navigation_actors_resident', all('L_SpaceCenterNorth' not in a.get_outer().get_path_name() for a in gameplay))

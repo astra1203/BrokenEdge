@@ -1,0 +1,18 @@
+{
+  "command": [
+    "C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Binaries/Win64/UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Characters/Stinger/Maps/L_StingerTest",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1280",
+    "-ResY=720",
+    "-ExecCmds=py D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Stinger\\validate_locomotion.py",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\Locomotion\\Runs\\movement-final2\\Editor.log"
+  ],
+  "exit_code": 0,
+  "players": 2
+}

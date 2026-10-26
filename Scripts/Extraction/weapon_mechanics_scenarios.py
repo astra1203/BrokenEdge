@@ -2,6 +2,31 @@
 import time
 
 
+def sprint_fire(g, weapon):
+    send, check, player = (g[k] for k in ('send', 'check', 'player'))
+    send('A', 'aim', target='', head=False)
+    send('A', 'look', yaw=0, pitch=0)
+    send('Server', 'fixture', players=[dict(name='EX_A', position=[-1500, -300, 460],
+                                         health=100, shield=0, clear_trauma=True)])
+    send('A', 'input_key', key='W', pressed=True)
+    send('A', 'input_key', key='LeftShift', pressed=True)
+    check(weapon + ' owner and server sprint', lambda: player('A', 'A')['sprinting']
+          and player('Server', 'A')['sprinting'])
+    before = player('Server', 'A')['accepted']
+    send('A', 'input_key', key='LeftMouseButton', pressed=True)
+    check(weapon + ' held Shift permits sprint-to-fire', lambda: player('Server', 'A')['accepted'] > before
+          and not player('Server', 'A')['sprinting'] and not player('A', 'A')['sprinting'])
+    send('A', 'input_key', key='LeftMouseButton', pressed=False)
+    check(weapon + ' release restores sprint on owner and server', lambda: player('A', 'A')['sprinting']
+          and player('Server', 'A')['sprinting'])
+    send('A', 'input_key', key='LeftShift', pressed=False)
+    send('A', 'input_key', key='W', pressed=False)
+    check(weapon + ' stop movement exits sprint', lambda: not player('Server', 'A')['sprinting'])
+    send('A', 'pulse', action='Reload', duration=0)
+    check(weapon + ' reload restores test magazine', lambda: player('A', 'A')['ammo'] ==
+          (30 if weapon == 'AK' else 20), 15)
+
+
 def run(g):
     send, check, wait, player = (g[k] for k in ('send', 'check', 'wait', 'player'))
     peers = ['Server'] + g['ROLES']
@@ -10,6 +35,7 @@ def run(g):
     check('AKM data version replicated', lambda: len({player(p, 'A')['mechanics_revision'] for p in peers}) == 1
           and player('Server', 'A')['mechanics_revision'] > 0)
     check('AKM source muzzle speed', lambda: player('A', 'A')['mechanics_speed'] == 52500)
+    sprint_fire(g, 'AK')
     send('A', 'input_key', key='RightMouseButton', pressed=True)
     check('Owner and authority complete ADS', lambda: player('A', 'A')['aim_alpha'] > .99
           and player('Server', 'A')['aim_alpha'] > .99)
@@ -33,6 +59,10 @@ def run(g):
     check('SCAR source muzzle speed on peers', lambda: all(player(p, 'A')['mechanics_speed'] == 63000 for p in peers))
     check('Swap clears held breath without another key press', lambda: player('Server', 'A')['breath'] >= 99)
     send('A', 'input_key', key='LeftAlt', pressed=False)
+    send('A', 'input_key', key='RightMouseButton', pressed=False)
+    sprint_fire(g, 'SCARH')
+    send('Server', 'fixture', players=[dict(name='EX_A', position=[-1500, -300, 460],
+                                         health=100, shield=0, clear_trauma=True)])
     send('A', 'aim', target='EX_B', head=False)
     send('A', 'input_key', key='RightMouseButton', pressed=True)
     time.sleep(.7)
