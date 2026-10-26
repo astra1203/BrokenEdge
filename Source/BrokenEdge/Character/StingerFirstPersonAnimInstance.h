@@ -27,9 +27,22 @@ public:
 	FString CurrentAnimationName;
 	UPROPERTY(Transient, BlueprintReadOnly, Category = "Stinger|Validation")
 	bool bMissingStateAnimation = false;
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Stinger|Validation")
+	bool bLocomotionMotion = false;
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Stinger|Validation")
+	bool bLoopActiveAnimation = true;
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Stinger|Validation")
+	float ActivePlayRate = 1.f;
+	UPROPERTY(Transient)
+	TObjectPtr<UAnimSequence> LocomotionReference;
+	UPROPERTY(Transient)
+	TObjectPtr<UAnimSequence> LocomotionTransition;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 protected:
+	FName LocomotionTarget;
+	float TransitionRemaining = 0.f;
+	TWeakObjectPtr<class AWeapon> LocomotionWeapon;
 	virtual FAnimInstanceProxy* CreateAnimInstanceProxy() override;
 	virtual void DestroyAnimInstanceProxy(FAnimInstanceProxy* Proxy) override;
 };

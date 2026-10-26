@@ -2,6 +2,9 @@
 #include "BrokenEdgeCharacter.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "BrokenEdge/Weapon/WeaponPresentation.h"
+#include "BrokenEdge/Animation/RifleLocomotionSet.h"
+#include "Animation/AnimSequence.h"
+#include "Animation/Skeleton.h"
 #include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 #include "Animation/AnimInstanceProxy.h"
 #include "Animation/AnimNode_SequencePlayer.h"
@@ -61,6 +64,9 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 		TraversalContacts.Cache(Instance);
 		FrameDelta = DeltaSeconds;
 		UAnimSequence* Desired = CastChecked<UStingerFirstPersonAnimInstance>(Instance)->ActiveAnimation;
+		const auto* ViewState = CastChecked<UStingerFirstPersonAnimInstance>(Instance);
+		Player.SetLoopAnimation(ViewState->bLoopActiveAnimation);
+		Player.SetPlayRate(ViewState->ActivePlayRate);
 		if (Desired && Desired != Player.GetSequence())
 		{
 			Player.SetSequence(Desired);
@@ -69,7 +75,7 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 		}
 		const auto Character = Cast<ABrokenEdgeCharacter>(Instance->TryGetPawnOwner());
 		bWeaponFit = Character && Character->UsesFirstPersonWeaponFit();
-		bActionMotion = Instance->GetCurrentActiveMontage() != nullptr;
+		bActionMotion = Instance->GetCurrentActiveMontage() != nullptr || ViewState->bLocomotionMotion;
 		if (bWeaponFit)
 		{
 			const FTransform& Component = Character->GetFirstPersonMesh()->GetComponentTransform();
@@ -77,6 +83,25 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 			LeftTarget = Character->GetFirstPersonGripTarget(TEXT("LeftHandSocket")).GetRelativeTransform(Component);
 			RightReference = Character->GetViewWeaponFit().SourceRightHand;
 			LeftReference = Character->GetViewWeaponFit().SourceLeftHand;
+			if (ViewState->bLocomotionMotion && ViewState->LocomotionReference && !Instance->GetCurrentActiveMontage())
+			{
+				const auto& Ref = ViewState->LocomotionReference->GetSkeleton()->GetReferenceSkeleton();
+				for (int32 Side = 0; Side < 2; ++Side)
+				{
+					int32 Bone = Ref.FindBoneIndex(Side == 0 ? TEXT("RightHand") : TEXT("LeftHand"));
+					FTransform Transform = FTransform::Identity;
+					while (Bone != INDEX_NONE)
+					{
+						FTransform Local;
+						ViewState->LocomotionReference->
+						           GetBoneTransform(Local, FSkeletonPoseBoneIndex(Bone), 0., false);
+						Transform *= Local;
+						Bone = Ref.GetParentIndex(Bone);
+					}
+					if (Side == 0) RightReference = Transform;
+					else LeftReference = Transform;
+				}
+			}
 			bLeftActionMotion = bActionMotion;
 			const float Reload = Character->GetFirstPersonReloadProgress();
 			if (Reload >= 0.f)
@@ -239,15 +264,23 @@ void UStingerFirstPersonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	ActiveAnimation = IdleAnimation;
 	CurrentVisualState = TEXT("Idle");
 	bMissingStateAnimation = false;
+	bLocomotionMotion = false;
+	bLoopActiveAnimation = true;
+	ActivePlayRate = 1.f;
+	CurrentAnimationName.Reset();
 	if (!Character) return;
 	if (Character->Melee->Active && Character->Melee->Idle)
 	{
 		ActiveAnimation = Character->Melee->Idle;
 		CurrentVisualState = TEXT("Knife");
+		LocomotionTarget = NAME_None;
+		TransitionRemaining = 0.f;
+		CurrentAnimationName = ActiveAnimation->GetPathName();
 		return;
 	}
 	const auto* Weapon = Character->GetEquippedWeapon();
 	const auto* Profile = Weapon ? Weapon->Presentation.Get() : nullptr;
+	const auto* Movement = Profile ? Profile->Locomotion.Get() : nullptr;
 	UAnimSequence* Idle = Profile && Profile->Idle ? Profile->Idle.Get() : IdleAnimation.Get();
 	UAnimSequence* Aim = Profile && Profile->Aim ? Profile->Aim.Get() : AimAnimation.Get();
 	UAnimSequence* Sprint = Profile && Profile->Sprint ? Profile->Sprint.Get() : SprintAnimation.Get();
@@ -274,6 +307,63 @@ void UStingerFirstPersonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 	if (Character->GetCombatState() == ECombatState::ECS_Reloading) CurrentVisualState = TEXT("Reload");
 	else if (Character->GetCombatState() == ECombatState::ECS_SwappingWeapon) CurrentVisualState = TEXT("Equip");
+	const bool bCanMove = Movement && Weapon && !Character->IsTraversing() && !Character->IsDefeated()
+		&& !Character->GetCharacterMovement()->IsFalling() && !Character->IsAiming()
+		&& Character->GetCombatState() == ECombatState::ECS_Unoccuiped && !GetCurrentActiveMontage();
+	if (bCanMove)
+	{
+		if (LocomotionWeapon.Get() != Weapon)
+		{
+			LocomotionTarget = NAME_None;
+			TransitionRemaining = 0.f;
+		}
+		const float Speed = Character->GetVelocity().Size2D();
+		const bool bMoving = Speed > (LocomotionTarget == TEXT("Idle") || LocomotionTarget.IsNone() ? 10.f : 5.f);
+		const float Threshold = Movement->RunThreshold + (LocomotionTarget == TEXT("Run")
+			                                                  ? -Movement->SpeedHysteresis
+			                                                  : Movement->SpeedHysteresis);
+		const FName Target = !bMoving
+			                     ? TEXT("Idle")
+			                     : Character->IsSprinting()
+			                     ? TEXT("Sprint")
+			                     : !Character->bIsCrouched && Speed > Threshold
+			                     ? TEXT("Run")
+			                     : TEXT("Walk");
+		UAnimSequence* Loop = Target == TEXT("Sprint")
+			                      ? Movement->ViewSprint
+			                      : Target == TEXT("Run")
+			                      ? Movement->ViewRun
+			                      : Target == TEXT("Walk")
+			                      ? Movement->ViewWalk
+			                      : Movement->ViewIdle;
+		UAnimSequence* Transition = nullptr;
+		if (Target != LocomotionTarget)
+		{
+			if (LocomotionTarget == TEXT("Walk") && Target == TEXT("Run")) Transition = Movement->WalkToRun;
+			else if (LocomotionTarget == TEXT("Run") && Target == TEXT("Walk")) Transition = Movement->RunToWalk;
+			else if (LocomotionTarget == TEXT("Walk") && Target == TEXT("Sprint")) Transition = Movement->WalkToSprint;
+			else if (LocomotionTarget == TEXT("Run") && Target == TEXT("Sprint")) Transition = Movement->RunToSprint;
+			else if (LocomotionTarget == TEXT("Sprint") && Target == TEXT("Walk")) Transition = Movement->SprintToWalk;
+			LocomotionTarget = Target;
+			TransitionRemaining = Transition ? Transition->GetPlayLength() : 0.f;
+			LocomotionTransition = Transition;
+		}
+		else TransitionRemaining = FMath::Max(0.f, TransitionRemaining - DeltaSeconds);
+		ActiveAnimation = TransitionRemaining > 0.f ? LocomotionTransition.Get() : Loop;
+		bLoopActiveAnimation = TransitionRemaining <= 0.f;
+		CurrentVisualState = Target;
+		bMissingStateAnimation = ActiveAnimation == nullptr;
+		bLocomotionMotion = bMoving && ActiveAnimation;
+		LocomotionReference = Movement->ViewIdle;
+		if (!ActiveAnimation) ActiveAnimation = Idle;
+	}
+	else
+	{
+		LocomotionTarget = NAME_None;
+		TransitionRemaining = 0.f;
+		LocomotionTransition = nullptr;
+	}
+	LocomotionWeapon = const_cast<AWeapon*>(Weapon);
 	CurrentAnimationName = ActiveAnimation ? ActiveAnimation->GetPathName() : FString();
 }
 

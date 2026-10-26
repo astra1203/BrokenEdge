@@ -1,0 +1,50 @@
+{
+  "bindings": [
+    {
+      "asset": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter",
+      "property": "mesh.anim_class",
+      "before": "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/ABP_StingerRifleLocomotion.ABP_StingerRifleLocomotion_C",
+      "after": "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/ABP_StingerRifleLocomotion_C"
+    },
+    {
+      "asset": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired",
+      "property": "mesh.anim_class",
+      "before": "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/ABP_StingerRifleLocomotion.ABP_StingerRifleLocomotion_C",
+      "after": "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/ABP_StingerRifleLocomotion_C"
+    },
+    {
+      "asset": "/Game/Blueprints/Weapon/BP_AK47.BP_AK47",
+      "property": "presentation",
+      "before": "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/DA_AKLocomotionPresentation.DA_AKLocomotionPresentation",
+      "after": "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/DA_AKLocomotionPresentation.DA_AKLocomotionPresentation"
+    }
+  ],
+  "calibration": {
+    "AR_M_3P_WalkF": {
+      "source_root_speed": 131.85992101295517,
+      "blend_speed": 132,
+      "fallback": false
+    },
+    "AR_M_3P_RunF": {
+      "source_root_speed": 390.5555477142334,
+      "blend_speed": 391,
+      "fallback": false
+    },
+    "AR_M_3P_crouch_Walk_f": {
+      "source_root_speed": 128.20513248443604,
+      "blend_speed": 128,
+      "fallback": false
+    },
+    "AR_M_3P_Sprint": {
+      "stance_speed_estimate": 561.1805315769014,
+      "blend_speed": 561,
+      "fallback": true
+    }
+  },
+  "assets": [
+    "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/BlendSpaces/BS_RifleStanding",
+    "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/BlendSpaces/BS_RifleCrouching",
+    "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/BlendSpaces/AO_Rifle",
+    "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/BlendSpaces/AO_RifleCrouching"
+  ]
+}

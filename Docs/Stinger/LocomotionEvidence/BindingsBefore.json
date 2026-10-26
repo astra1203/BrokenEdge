@@ -1,0 +1,20 @@
+[
+  {
+    "asset": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter",
+    "property": "mesh.anim_class",
+    "before": "/Game/Characters/Stinger/Animations/ThirdPerson/ABP_BrokenEdgeAnimInstance_Stinger.ABP_BrokenEdgeAnimInstance_Stinger_C",
+    "after": "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/ABP_StingerRifleLocomotion_C"
+  },
+  {
+    "asset": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired",
+    "property": "mesh.anim_class",
+    "before": "/Game/Characters/Stinger/Animations/ThirdPerson/ABP_BrokenEdgeAnimInstance_Stinger.ABP_BrokenEdgeAnimInstance_Stinger_C",
+    "after": "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/ABP_StingerRifleLocomotion_C"
+  },
+  {
+    "asset": "/Game/Blueprints/Weapon/BP_AK47.BP_AK47",
+    "property": "presentation",
+    "before": null,
+    "after": "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/DA_AKLocomotionPresentation.DA_AKLocomotionPresentation"
+  }
+]

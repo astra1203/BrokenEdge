@@ -1,4 +1,6 @@
 #include "StingerAssetLibrary.h"
+#include "AnimGraphNode_RifleLocomotion.h"
+#include "Animation/BlendSpace.h"
 #include "Engine/GameViewportClient.h"
 #include "Slate/SceneViewport.h"
 #include "Animation/AnimSequence.h"
@@ -39,6 +41,69 @@
 #include "StaticMeshResources.h"
 #include "MeshDescription.h"
 #include "AssetCompilingManager.h"
+
+bool UStingerAssetLibrary::PopulateLocomotionBlendSpace(UBlendSpace* BlendSpace,
+                                                        const TArray<UAnimSequence*>& Animations,
+                                                        const TArray<FVector>& Coordinates, float MaxSpeed,
+                                                        bool bAimOffset)
+{
+	if (!BlendSpace || Animations.IsEmpty() || Animations.Num() != Coordinates.Num()) return false;
+	for (auto* Sequence : Animations)
+		if (!Sequence || Sequence->GetSkeleton() != BlendSpace->GetSkeleton()) return false;
+	BlendSpace->Modify();
+	for (int32 Index = BlendSpace->GetNumberOfBlendSamples() - 1; Index >= 0; --Index) BlendSpace->DeleteSample(Index);
+	auto& X = const_cast<FBlendParameter&>(BlendSpace->GetBlendParameter(0));
+	X.DisplayName = bAimOffset ? TEXT("Pitch") : TEXT("Direction");
+	X.Min = bAimOffset ? -80.f : -180.f;
+	X.Max = bAimOffset ? 80.f : 180.f;
+	X.GridNum = bAimOffset ? 4 : 8;
+	auto& Y = const_cast<FBlendParameter&>(BlendSpace->GetBlendParameter(1));
+	Y.DisplayName = TEXT("Speed");
+	Y.Min = 0.f;
+	Y.Max = MaxSpeed;
+	Y.GridNum = 8;
+	for (int32 Index = 0; Index < Animations.Num(); ++Index)
+		if (BlendSpace->AddSample(Animations[Index], Coordinates[Index]) == INDEX_NONE) return false;
+	BlendSpace->ValidateSampleData();
+	BlendSpace->ResampleData();
+	BlendSpace->PostEditChange();
+	BlendSpace->MarkPackageDirty();
+	return true;
+}
+
+bool UStingerAssetLibrary::ConfigureRifleLocomotion(UAnimBlueprint* Blueprint)
+{
+	if (!Blueprint || !Blueprint->GetPathName().StartsWith(TEXT("/Game/Characters/Stinger/"))) return false;
+	TArray<UEdGraph*> Graphs;
+	Blueprint->GetAllGraphs(Graphs);
+	for (auto* Graph : Graphs)
+		for (auto Node : Graph->Nodes)
+			if (Cast<UAnimGraphNode_RifleLocomotion>(Node)) return true;
+	// Insert before the weapon montage, preserving subsequent aiming, grip IK and traversal layers.
+	for (auto* Graph : Graphs)
+	{
+		for (auto Node : Graph->Nodes)
+		{
+			auto* Slot = Cast<UAnimGraphNode_Slot>(Node);
+			if (!Slot || Slot->Node.SlotName != TEXT("WeaponSlot")) continue;
+			auto* Input = Slot->FindPin(TEXT("Source"));
+			if (!Input || Input->LinkedTo.Num() != 1) return false;
+			auto* Previous = Input->LinkedTo[0];
+			FGraphNodeCreator<UAnimGraphNode_RifleLocomotion> Creator(*Graph);
+			auto* Movement = Creator.CreateNode();
+			Creator.Finalize();
+			Input->BreakLinkTo(Previous);
+			Previous->MakeLinkTo(Movement->FindPinChecked(TEXT("Source")));
+			Movement->FindPinChecked(TEXT("Pose"), EGPD_Output)->MakeLinkTo(Input);
+			Movement->NodePosX = Slot->NodePosX - 240;
+			Movement->NodePosY = Slot->NodePosY;
+			FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(Blueprint);
+			FKismetEditorUtilities::CompileBlueprint(Blueprint);
+			return Blueprint->Status != BS_Error;
+		}
+	}
+	return false;
+}
 
 void UStingerAssetLibrary::FinishValidationAssetCompilation()
 {

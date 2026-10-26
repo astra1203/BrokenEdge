@@ -96,3 +96,7 @@ Docs/Extraction/ExperiencePhaseA/Evidence/**/*.gz filter=lfs diff=lfs merge=lfs 
 Docs/Extraction/Traversal/Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 Docs/Extraction/Traversal/Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
 Docs/Extraction/Traversal/Evidence/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
+
+# Original rifle locomotion evidence preserves recorded SHA-256 bytes.
+Docs/Stinger/LocomotionEvidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Docs/Stinger/LocomotionEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text

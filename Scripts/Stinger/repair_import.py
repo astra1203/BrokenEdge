@@ -5,8 +5,13 @@ import unreal
 sys.path.insert(0, unreal.Paths.project_dir()+'Scripts/Stinger')
 from import_assets import SOURCE, DEST, read_psa, compatible_frame_rate
 
+SOURCE = Path(os.environ.get('STINGER_REPAIR_SOURCE', str(SOURCE)))
+ANIMATION_ROOT = os.environ.get('STINGER_REPAIR_DEST', DEST+'/Animations/Corrected')
+FIXED_LIMBS = os.environ.get('STINGER_REPAIR_FIXED_LIMBS') == '1'
+MAPPING_REVISION = 5 if FIXED_LIMBS else 4
+
 LIB=unreal.EditorAssetLibrary
-REPORT=Path(unreal.Paths.project_saved_dir())/'Stinger'/'import_manifest_v3.json'
+REPORT=Path(os.environ.get('STINGER_REPAIR_REPORT', str(Path(unreal.Paths.project_saved_dir())/'Stinger'/'import_manifest_v3.json')))
 manifest=json.loads(REPORT.read_text(encoding='utf-8')) if REPORT.exists() else {'version':3,'entries':{}}
 targets=[]
 for folder in ['Gameplay','Display']:
@@ -36,7 +41,7 @@ def import_file(path):
     refs=[unreal.Transform(location=unreal.Vector(*b[2]),rotation=quat(b[3]).rotator(),
                           scale=unreal.Vector(*struct.unpack_from('<3f',data,bone_start+i*bone_size+108)))
           for i,b in enumerate(bones)]
-    skeleton_path=DEST+'/Animations/Corrected/Skeletons/SK_'+signature
+    skeleton_path=ANIMATION_ROOT+'/Skeletons/SK_'+signature
     source_skeleton=unreal.load_asset(skeleton_path)
     if source_skeleton is None:
         source_skeleton=unreal.StingerAssetLibrary.create_source_skeleton(skeleton_path,
@@ -53,7 +58,7 @@ def import_file(path):
     coverage=score(target)
     key_start,key_size,key_count=chunks['ANIMKEYS']
     if key_size!=32: raise ValueError('Invalid key record size')
-    result={'status':'written','mapping_revision':4,'source_sha256':hashlib.sha256(data).hexdigest(),'skeleton_signature':signature,
+    result={'status':'written','mapping_revision':MAPPING_REVISION,'fixed_limb_translations':FIXED_LIMBS,'source_sha256':hashlib.sha256(data).hexdigest(),'skeleton_signature':signature,
             'source_skeleton':source_skeleton.get_path_name(),'coverage':coverage,'assets':[],'sequences':[]}
     for name,fps,first,frames in sequences:
         tracks={};zero_bones=[]
@@ -81,7 +86,7 @@ def import_file(path):
                'validation':'needs_additive_or_visibility_metadata' if zero_bones else 'numeric_passed',
                'visual_validation':'pending','assets':{}}
         for mode,skeleton,target_refs in modes:
-            folder=DEST+'/Animations/Corrected/'+('MappedV4' if mode=='Mapped' else mode)+'/'+hashlib.sha1(rel.encode()).hexdigest()[:8]
+            folder=ANIMATION_ROOT+'/'+('MappedV4' if mode=='Mapped' else mode)+'/'+hashlib.sha1(rel.encode()).hexdigest()[:8]
             asset_path=folder+'/'+name
             seq=unreal.load_asset(asset_path)
             if mode=='Source' and seq is not None:
@@ -104,6 +109,8 @@ def import_file(path):
                         # Preserve the motion delta in parent space and apply it to the target bind pose.
                         rotations=[q*source_ref.rotation.inversed()*target_ref.rotation for q in rotations]
                         positions=[target_ref.translation+(p-source_ref.translation) for p in positions]
+                        if FIXED_LIMBS and bone in ('LeftForeArm','RightForeArm','LeftHand','RightHand'):
+                            positions=[target_ref.translation for _ in positions]
                         scales=[s*target_ref.scale3d for s in scales]
                     controller.add_bone_curve(bone,should_transact=False)
                     if not controller.set_bone_track_keys(bone,positions,rotations,scales,should_transact=False):
@@ -125,7 +132,7 @@ def main():
         if '*' not in selected and path.stem not in selected: continue
         rel=path.relative_to(SOURCE).as_posix()
         previous=manifest['entries'].get(rel,{})
-        if previous.get('status')=='written' and previous.get('mapping_revision')==4 and previous.get('source_sha256')==hashlib.sha256(path.read_bytes()).hexdigest():
+        if previous.get('status')=='written' and previous.get('mapping_revision')==MAPPING_REVISION and previous.get('source_sha256')==hashlib.sha256(path.read_bytes()).hexdigest():
             if all(LIB.does_asset_exist(p) for p in previous.get('assets',[])):
                 continue
         try: manifest['entries'][rel]=import_file(path)

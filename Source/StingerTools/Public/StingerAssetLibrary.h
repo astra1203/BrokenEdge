@@ -15,6 +15,11 @@ class STINGERTOOLS_API UStingerAssetLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Locomotion")
+	static bool ConfigureRifleLocomotion(UAnimBlueprint* Blueprint);
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Locomotion")
+	static bool PopulateLocomotionBlendSpace(class UBlendSpace* BlendSpace, const TArray<UAnimSequence*>& Animations,
+	                                         const TArray<FVector>& Coordinates, float MaxSpeed, bool bAimOffset);
 	/** Drain async asset compilation before cold commandlet collision audits. */
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static void FinishValidationAssetCompilation();
