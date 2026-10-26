@@ -57,10 +57,38 @@ public:
 	int32 Guards = 4;
 	UPROPERTY(Config)
 	float GuardReactionSeconds = 2.f;
+	/** 0 表示与玩家长按一样使用当前武器 FireDelay；正数只可额外降低射速。 */
 	UPROPERTY(Config)
-	float GuardShotInterval = .8f;
+	float GuardShotInterval = .15f;
+	/** 默认移速：当前玩家基础步行速度 600 - 75 = 525 cm/s。所有守卫初始化与逐帧更新共用此配置。 */
 	UPROPERTY(Config)
-	float GuardDamageScale = .3f;
+	float GuardWalkSpeed = 525.f;
+	/** 丢失视野后继续追击/观察的总时限，从最后可见时刻开始，单位秒。 */
+	UPROPERTY(Config)
+	float GuardPursuitSeconds = 12.f;
+	/** 使用最后可见速度推算的位置提前量；不会查询隐藏目标的实时位置。 */
+	UPROPERTY(Config)
+	float GuardPursuitPredictionSeconds = 1.25f;
+	/** 预判位移上限 cm，避免高速目标让追击点飞出地图。 */
+	UPROPERTY(Config)
+	float GuardPursuitPredictionDistance = 600.f;
+	/** 从丢失目标时守卫所在位置到追击点的最大导航路径长度 cm。 */
+	UPROPERTY(Config)
+	float GuardPursuitMaxDistance = 8000.f;
+	/** 搜索移动速度下限 cm/s，实际不低于 GuardWalkSpeed，仍受腿部骨折减速影响。 */
+	UPROPERTY(Config)
+	float GuardPursuitSpeed = 360.f;
+	UPROPERTY(Config)
+	float GuardDamageScale = .15f;
+	/** 武器本身的散布计算完成后，额外追加的守卫随机圆锥半角。0 表示关闭，单位度。 */
+	UPROPERTY(Config, meta=(ClampMin="0", ClampMax="45", Units="deg"))
+	float GuardExtraSpreadDegrees = 3.f;
+	/** 首次发现目标的视觉距离，单位 cm。 */
+	UPROPERTY(Config, meta=(ClampMin="0", Units="cm"))
+	float GuardSightRadius = 6000.f;
+	/** 已发现目标的保留距离，运行时确保不小于发现距离，减少边界附近反复丢失目标。 */
+	UPROPERTY(Config, meta=(ClampMin="0", Units="cm"))
+	float GuardLoseSightRadius = 7500.f;
 };
 
 UCLASS()

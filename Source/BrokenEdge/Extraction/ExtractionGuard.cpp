@@ -1,171 +1,238 @@
 #include "ExtractionGuard.h"
 #include "ExtractionGameMode.h"
-#include "ExtractionState.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionSmoke.h"
 #include "ExtractionInventoryComponent.h"
-#include "ExtractionCombatComponent.h"
-#include "ExtractionInteractionComponent.h"
+#include "ExtractionPatrolArea.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
-#include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "NavigationSystem.h"
+#include "NavigationPath.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "EngineUtils.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
-// 守卫使用服务器 AIController 的轻量状态机，不依赖玩家 PlayerState，也不在此使用行为树。
-// 已有 Tick 注释说明巡逻、交战、丢失目标搜索及返回的具体顺序；开火仍通过撤离战斗组件校验。
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "UObject/ConstructorHelpers.h"
 
-// 提供编辑器可配置的世界坐标路线容器，路线本身不执行寻路。
 AExtractionPatrolRoute::AExtractionPatrolRoute()
 {
 	SetRootComponent(CreateDefaultSubobject<USceneComponent>(TEXT("Route")));
 }
 
-// 以 0.1 秒间隔决策，不为 AI 创建玩家状态。
+bool AExtractionGuard::BuildPursuitDestination(const FVector& LastSeenLocation, FVector& OutDestination) const
+{
+	const auto* GuardCharacter = Cast<ABrokenEdgeCharacter>(GetPawn());
+	const auto* Rules = GetDefault<UExtractionRules>();
+	if (!GuardCharacter || !FAISystem::IsValidLocation(LastSeenLocation)) return false;
+	const float Budget = FMath::Max(0.f, Rules->GuardPursuitMaxDistance);
+	if (FVector::Dist(GuardCharacter->GetActorLocation(), LastSeenLocation) > Budget) return false;
+	OutDestination = LastSeenLocation;
+	auto* Nav = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
+	// 缺少导航时保留原有的最后位置搜索语义。实际移动仍由内置 Move To 判断失败，
+	// 不用直线移动绕过导航/碰撞；生产地图必须铺设 NavMeshBoundsVolume。
+	if (!Nav || !Nav->GetNavDataForProps(GuardCharacter->GetNavAgentPropertiesRef(), GuardCharacter->GetActorLocation()))
+		return true;
+
+	// 这里只使用最后可见时缓存的平面速度；不沿用跳跃速度，也不持有隐藏玩家的引用。
+	FVector Offset = LastVisibleTargetVelocity * FMath::Max(0.f, Rules->GuardPursuitPredictionSeconds);
+	Offset.Z = 0;
+	Offset = Offset.GetClampedToMaxSize(FMath::Max(0.f, Rules->GuardPursuitPredictionDistance));
+	auto TryGoal = [&](const FVector& Candidate)
+	{
+		FNavLocation Projected;
+		if (!Nav->ProjectPointToNavigation(Candidate, Projected, FVector(150, 150, 250),
+			&GuardCharacter->GetNavAgentPropertiesRef())) return false;
+		const auto* Path = UNavigationSystemV1::FindPathToLocationSynchronously(
+			GetWorld(), GuardCharacter->GetNavAgentLocation(), Projected.Location, GetPawn(), GetDefaultNavigationFilterClass());
+		if (!Path || !Path->IsValid() || Path->IsPartial() || Path->GetPathLength() > Budget) return false;
+		OutDestination = Projected.Location;
+		return true;
+	};
+	// 预判点在墙内、断开的平台或需绕很远时退回真实最后位置；两者都不可达则放弃。
+	return TryGoal(LastSeenLocation + Offset) || TryGoal(LastSeenLocation);
+}
+
 AExtractionGuard::AExtractionGuard()
 {
-	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.TickInterval = .1f;
+	// 守卫不占玩家席位；不再设置自定义 TickInterval 或运行旧 AI 状态机。
 	bWantsPlayerState = false;
+	// 路径跟随提供移动方向 Focus；交战 Task 的 Gameplay Focus 会以更高优先级覆盖它。
+	bAllowStrafe = false;
+
+	// 仅建立资产引用，实际运行在角色和装备就绪之后；硬引用也让打包收集此树及其依赖。
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree> DefaultTree(
+		TEXT("/Game/Blueprints/Ai/BT_ExtractionGuard.BT_ExtractionGuard"));
+	if (DefaultTree.Succeeded()) GuardBehaviorTree = DefaultTree.Object;
+
+	// 感知组件负责收集视觉候选；仅添加感知能力，不会启动行为树或执行任何战斗动作。
+	auto* Perception = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("GuardPerception"));
+	SetPerceptionComponent(*Perception);
+	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("GuardSightConfig"));
+	// 该属性是半视角：左右各 60 度，总视野约 120 度。
+	SightConfig->PeripheralVisionAngleDegrees = 60.f;
+	// 目前未使用感知系统的队伍编号，玩家可能被归类为 Neutral。
+	// 先接收全部阵营，随后由 Service 排除自身、其他守卫和非玩家对象。
+	SightConfig->DetectionByAffiliation.bDetectEnemies = true;
+	SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	ApplySightRules();
+	Perception->SetDominantSense(SightConfig->GetSenseImplementation());
 }
 
-// 先检查目标生命、30 米距离与前向视锥，再检查烟雾和场景视线，不能隔烟锁定玩家。
-bool AExtractionGuard::Sees(const ABrokenEdgeCharacter* Other) const
+void AExtractionGuard::ApplySightRules()
 {
-	const auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
-	const auto* PS = Other ? Other->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	if (!C || !PS || Other->IsDefeated() || (PS->Life != EExtractionLife::Alive && PS->Life != EExtractionLife::Downed))
-		return false;
-	const FVector Delta = Other->GetActorLocation() - C->GetActorLocation();
-	if (Delta.SizeSquared() > FMath::Square(3000.f) || FVector::DotProduct(
-		C->GetActorForwardVector(), Delta.GetSafeNormal()) < .5f) return false;
-	if (AExtractionSmoke::Blocks(GetWorld(), C->GetPawnViewLocation(), Other->GetPawnViewLocation())) return false;
-	return LineOfSightTo(Other);
+	if (!SightConfig || !GetPerceptionComponent()) return;
+	const auto* Rules = GetDefault<UExtractionRules>();
+	SightConfig->SightRadius = FMath::IsFinite(Rules->GuardSightRadius)
+		? FMath::Max(0.f, Rules->GuardSightRadius) : 6000.f;
+	SightConfig->LoseSightRadius = FMath::Max(SightConfig->SightRadius,
+		FMath::IsFinite(Rules->GuardLoseSightRadius) ? Rules->GuardLoseSightRadius : SightConfig->SightRadius);
+	// 接管时重新应用半径；视角、阵营过滤等仍使用控制器现有配置。
+	// ConfigureSense 会在组件已注册时请求刷新监听器，使实际 Sight 查询使用新的距离。
+	GetPerceptionComponent()->ConfigureSense(*SightConfig);
 }
 
-// 每轮先尝试发现玩家，有目标则交战；失去目标后搜索最后位置，超时回到巡逻路线。
-void AExtractionGuard::Tick(float Delta)
+bool AExtractionGuard::StartGuardAI()
 {
-	Super::Tick(Delta);
+	// AI 逻辑仅在服务器运行，不要求搜打撤 GameMode、Active 阶段或持久化存储。
 	auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
-	const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
-	// 没有受控角色或角色已被击败时，停止移动并清除目标，结束本次 AI 更新。
-	if (!C || C->IsDefeated())
+	if (!HasAuthority() || !IsValid(C) || C->IsDefeated())
 	{
-		StopMovement();
-		ClearFocus(EAIFocusPriority::Gameplay);
-		Target = nullptr;
-		State = EExtractionGuardState::Dead;
-		return;
+		UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_GUARD_BT invalid authority or pawn Controller=%s"), *GetName());
+		return false;
 	}
-	// 仅在服务端对局进行中且持久化存储可用时决策；其他情况下停止移动。
-	const auto* GM = GetWorld()->GetAuthGameMode<AExtractionGameMode>();
-	if (!GS || GS->Phase != EExtractionPhase::Active || !GM || !GM->Store() || !GM->Store()->IsAvailable())
+	// 地图放置和 SpawnActor 都可能在 PostInitializeComponents 中触发 Possess。
+	// 此时角色的 Combat->Character 等引用尚未就绪，必须等 BeginPlay 后再初始化装备。
+	if (!C->HasActorBegunPlay())
 	{
-		StopMovement();
-		return;
+		GetWorldTimerManager().ClearTimer(StartGuardAITimer);
+		StartGuardAITimer = GetWorldTimerManager().SetTimerForNextTick(this, &AExtractionGuard::InitializeGuardAI);
+		return false;
 	}
-	// 所有反应、射击和移动间隔均使用当前世界时间计算。
-	const double Now = GetWorld()->GetTimeSeconds();
-	// Seen 是本轮选出的可见目标；评分越小，攻击优先级越高。
-	ABrokenEdgeCharacter* Seen = nullptr;
-	float Best = TNumericLimits<float>::Max();
-	// 从玩家列表取得角色，再由 Sees 检查生命状态、距离、视角、烟雾和场景遮挡。
-	for (APlayerState* PS : GS->PlayerArray)
-		if (auto* Other = Cast<ABrokenEdgeCharacter>(PS->GetPawn()); Sees(Other))
-		{
-			// 仅统计可见检查通过次数，不要求累计达到某个次数才发现玩家。
-			++VisibleChecks;
-			// 倒地惩罚高于当前 30 米视野内的最大距离平方：未倒地优先，同类目标选最近的。
-			const float Score = FVector::DistSquared(C->GetActorLocation(), Other->GetActorLocation())
-				+ (Other->GetExtractionAbilities()->IsDowned() ? 10000000.f : 0.f);
-			if (Score < Best)
-			{
-				Seen = Other;
-				Best = Score;
-			}
-		}
-	if (Seen)
+	GetWorldTimerManager().ClearTimer(StartGuardAITimer);
+	// 只要由此类型控制器接管，就作为敌人初始化；不要求关卡或 GameMode 额外打标。
+	ApplySightRules();
+	C->bExtractionGuard = true;
+	if (!C->GuardInventory->Contents.Id.IsValid())
 	{
-		const auto* Rules = GetDefault<UExtractionRules>();
-		// 首次发现、重新发现或切换目标时才重置反应时间，持续看见同一目标不会延后开枪。
-		if (Target != Seen) ReactAt = Now + FMath::Max(0.f, Rules->GuardReactionSeconds);
-		Target = Seen;
-		// 持续记录目标位置和最后看见的时间；LostAt 并非首次丢失目标的时间。
-		LastKnown = Seen->GetActorLocation();
-		LostAt = Now;
-		// 交战时关注目标并站定；反应时间控制开枪时机，不延迟进入交战状态。
-		State = EExtractionGuardState::Engage;
-		SetFocus(Seen);
-		StopMovement();
-		// 同时满足反应时间和 AI 射击间隔后，才尝试换弹或开枪。
-		if (auto* W = C->GetEquippedWeapon(); W && Now >= ReactAt && Now >= NextFireAt)
-		{
-			if (W->IsEmpty()) C->GetExtractionCombat()->BeginServerReload();
-			else
-			{
-				// 服务端战斗组件会继续校验射速、弹药和战斗状态，调用不一定成功发射。
-				const uint32 Before = C->GetExtractionCombat()->GetAcceptedShots();
-				// 在目标位置上移 10 cm，并添加长度为 20 cm 的随机方向偏移作为瞄准误差。
-				C->GetExtractionCombat()->FireGuard(LastKnown + FVector(0, 0, 10) + FMath::VRand() * 20);
-				// 只统计实际被接受的射击，成功后才推进 AI 的下次开火时间。
-				const uint32 Fired = C->GetExtractionCombat()->GetAcceptedShots() - Before;
-				Shots += Fired;
-				if (Fired) NextFireAt = Now + FMath::Max(.1f, Rules->GuardShotInterval);
-			}
-		}
-		// 有可见目标时，本轮不再执行后面的搜索和巡逻逻辑。
-		return;
+		C->SetHealth(100);
+		C->SetShield(0);
 	}
-	// 本轮没有可见目标、上一轮仍有目标：解除关注，进入搜索并允许立即请求移动。
-	if (Target)
+	C->GetCharacterMovement()->MaxWalkSpeed = FMath::Max(0.f, GetDefault<UExtractionRules>()->GuardWalkSpeed);
+	C->GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+	// InitializeGuard 内部有一次性初始化保护，重新接管不会重置背包、补满弹药。
+	C->GuardInventory->InitializeGuard();
+	C->ConfigureGuardRotation();
+	C->ForceNetUpdate();
+	// 没有武器也允许运行巡逻/关注等非战斗分支，射击任务自行检查装备。
+	if (!IsValid(GuardBehaviorTree) || !GuardBehaviorTree->BlackboardAsset)
 	{
-		Target = nullptr;
-		ClearFocus(EAIFocusPriority::Gameplay);
-		State = EExtractionGuardState::Search;
-		NextMove = 0;
+		UE_LOG(LogTemp, Error, TEXT("EXTRACTION_GUARD_BT missing behavior tree or blackboard Controller=%s"), *GetName());
+		return false;
 	}
-	if (State == EExtractionGuardState::Search)
+	if (const auto* BT = Cast<UBehaviorTreeComponent>(GetBrainComponent());
+		BT && BT->IsRunning() && BT->GetRootTree() == GuardBehaviorTree) return true;
+
+	// UE 会创建/初始化关联的 BlackboardComponent，并以循环模式启动 BehaviorTreeComponent。
+	// 无需再手动创建这两个组件，也无需在角色 Tick 中调用行为树。
+	const bool bStarted = RunBehaviorTree(GuardBehaviorTree);
+	if (bStarted)
 	{
-		// 从最后看见玩家起搜索五秒；位置固定为 LastKnown，不追踪失去视野后的实际位置。
-		if (Now - LostAt < 5)
-		{
-			if (Now >= NextMove)
-			{
-				// 最多每秒提交一次寻路请求，指定到达容差为 80 cm。
-				MoveToLocation(LastKnown, 80);
-				NextMove = Now + 1;
-			}
-			return;
-		}
-		// 搜索超时后返回尚未完成的巡逻目标点；每轮仍会先检查能否重新发现玩家。
-		State = EExtractionGuardState::Return;
-		NextMove = 0;
+		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_GUARD_BT started Actor=%s Tree=%s"),
+		       *C->GetName(), *GuardBehaviorTree->GetPathName());
 	}
-	// 返回和巡逻共用路线移动逻辑，没有有效路线时不再提交移动请求。
-	if (!Route || Route->Points.IsEmpty()) return;
-	const FVector Point = Route->Points[PatrolIndex % Route->Points.Num()];
-	// 水平距离小于 110 cm 即记为到点，循环切换下一点并恢复巡逻状态。
-	if (FVector::DistSquared2D(C->GetActorLocation(), Point) < FMath::Square(110.f))
+	else
 	{
-		++PatrolArrivals;
-		PatrolIndex = (PatrolIndex + 1) % Route->Points.Num();
-		State = EExtractionGuardState::Patrol;
-		// 延后 0.6 秒再允许提交移动请求；这里不会主动停止当前移动。
-		NextMove = Now + .6;
+		UE_LOG(LogTemp, Error, TEXT("EXTRACTION_GUARD_BT failed Actor=%s Tree=%s"),
+		       *C->GetName(), *GuardBehaviorTree->GetPathName());
 	}
-	if (Now >= NextMove)
-	{
-		// 返回或巡逻途中最多每秒提交一次寻路请求，指定到达容差为 70 cm。
-		MoveToLocation(Point, 70);
-		NextMove = Now + 1;
-	}
+	return bStarted;
 }
 
-// 服务器按配置数量选择已烘焙路线，投影到导航网格后延迟生成角色、标记守卫并初始化库存。
+void AExtractionGuard::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	if (!HasAuthority() || !Cast<ABrokenEdgeCharacter>(GetPawn())) return;
+	ApplySightRules();
+	auto* GuardCharacter = CastChecked<ABrokenEdgeCharacter>(GetPawn());
+	GuardCharacter->bExtractionGuard = true;
+	GuardCharacter->ConfigureGuardRotation();
+	// 在任何巡逻/搜索移动之前记录中心；重复启动行为树不会把中心改成 NPC 当前的位置。
+	if (PatrolOriginPawn.Get() != InPawn)
+	{
+		PatrolOriginPawn = InPawn;
+		PatrolOrigin = InPawn->GetActorLocation();
+	}
+	// 自动覆盖地图放置、运行时生成和重新接管；不再依赖 SpawnGuards 主动调用启动入口。
+	GetWorldTimerManager().ClearTimer(StartGuardAITimer);
+	StartGuardAITimer = GetWorldTimerManager().SetTimerForNextTick(this, &AExtractionGuard::InitializeGuardAI);
+}
+
+void AExtractionGuard::InitializeGuardAI()
+{
+	StartGuardAI();
+}
+
+void AExtractionGuard::StopGuardAI()
+{
+	GetWorldTimerManager().ClearTimer(StartGuardAITimer);
+	// 生命周期结束不能等待某个潜伏任务自行结束；强制中止，重新接管时才能可靠启动新一轮。
+	if (auto* BT = Cast<UBehaviorTreeComponent>(GetBrainComponent())) BT->StopTree(EBTStopMode::Forced);
+	else if (auto* Brain = GetBrainComponent()) Brain->StopLogic(TEXT("Guard stopped"));
+	StopMovement();
+	ClearFocus(EAIFocusPriority::Gameplay);
+	Target = nullptr;
+	LastVisibleTargetVelocity = FVector::ZeroVector;
+}
+
+void AExtractionGuard::OnUnPossess()
+{
+	StopGuardAI();
+	Super::OnUnPossess();
+}
+
+void AExtractionGuard::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	StopGuardAI();
+	Super::EndPlay(EndPlayReason);
+}
+
+bool AExtractionGuard::IsRandomPatrolLocationAllowed(const FVector& Location) const
+{
+	if (!FAISystem::IsValidLocation(Location)) return false;
+	const auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
+	const float Inset = IsValid(C) ? C->GetCapsuleComponent()->GetScaledCapsuleRadius() : 0.f;
+	if (IsValid(PatrolArea))
+		return PatrolArea->GetWorld() == GetWorld() && PatrolArea->ContainsPatrolLocation(Location, Inset);
+	if (!FAISystem::IsValidLocation(PatrolOrigin) || !FMath::IsFinite(RandomPatrolRadius)
+		|| !FMath::IsFinite(RandomPatrolHeight) || RandomPatrolRadius <= Inset || RandomPatrolHeight <= 0)
+		return false;
+	return FVector::DistSquared2D(Location, PatrolOrigin) <= FMath::Square(RandomPatrolRadius - Inset)
+		&& FMath::Abs(Location.Z - PatrolOrigin.Z) <= RandomPatrolHeight;
+}
+
+bool AExtractionGuard::IsRandomPatrolPathAllowed(const TArray<FVector>& PathPoints) const
+{
+	if (PathPoints.Num() < 2 || !IsRandomPatrolLocationAllowed(PathPoints.Last())) return false;
+	bool bEnteredArea = false;
+	for (const FVector& Point : PathPoints)
+	{
+		if (!FAISystem::IsValidLocation(Point)) return false;
+		const bool bInside = IsRandomPatrolLocationAllowed(Point);
+		if (bEnteredArea && !bInside) return false;
+		bEnteredArea |= bInside;
+	}
+	// 圆柱和活动盒都是凸区域：内部路径拐点之间的直线段也在区域中。
+	// 从外部返回允许存在外部前缀；这并不限制交战/搜索分支自身的移动范围。
+	return bEnteredArea;
+}
+
 void AExtractionGameMode::SpawnGuards()
 {
 	int32 Count = FMath::Clamp(GetDefault<UExtractionRules>()->Guards, 0, 4);
@@ -196,20 +263,28 @@ void AExtractionGameMode::SpawnGuards()
 		C->FinishSpawning(Transform);
 		C->SetHealth(100);
 		C->SetShield(0);
-		C->GetCharacterMovement()->MaxWalkSpeed = 220;
+		C->GetCharacterMovement()->MaxWalkSpeed = FMath::Max(0.f, GetDefault<UExtractionRules>()->GuardWalkSpeed);
 
 		C->GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
-		auto* AI = GetWorld()->SpawnActor<AExtractionGuard>();
+		// FinishSpawning 已可能按角色配置自动生成控制器；必须复用，避免生成两套 AI。
+		auto* AI = Cast<AExtractionGuard>(C->GetController());
+		if (!AI) AI = GetWorld()->SpawnActor<AExtractionGuard>();
+		if (!AI)
+		{
+			UE_LOG(LogTemp, Error, TEXT("EXTRACTION_GUARDS failed to spawn controller Actor=%s"), *C->GetName());
+			C->Destroy();
+			continue;
+		}
 		AI->Route = Route;
 		AI->PatrolIndex = Index;
-		AI->Possess(C);
-		C->GuardInventory->InitializeGuard();
+		if (AI->GetPawn() != C) AI->Possess(C);
+		// 显式调用与 OnPossess 的自动启动共用幂等入口；路线在此之前已经分配。
+		AI->StartGuardAI();
 		C->ForceNetUpdate();
 		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_GUARD_SPAWN Actor=%s Route=%s"), *C->GetName(), *Route->GetName());
 	}
 }
 
-// 结束对局时清空守卫库存再销毁角色与 AI，同时移除烟雾，避免清场产生额外掉落。
 void AExtractionGameMode::RemoveGuards()
 {
 	for (TActorIterator<AExtractionGuard> It(GetWorld()); It; ++It)
