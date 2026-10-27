@@ -45,13 +45,19 @@ public:
 	UPROPERTY(Config)
 	float SmokeCastSeconds = .5f;
 	UPROPERTY(Config)
-	float SmokeRange = 1500;
+	float SmokeRange = 3500;
+	// 烟幕半径以厘米计；投掷在视线落点附近，半径决定能遮住多少视野。
 	UPROPERTY(Config)
-	float SmokeRadius = 400;
+	float SmokeRadius = 450;
 	UPROPERTY(Config)
-	float SmokeSeconds = 15;
+	float SmokeSeconds = 18;
 	UPROPERTY(Config)
-	float SmokeCooldown = 30;
+	float SmokeCooldown = 25;
+	// 投掷物初速与落地到起烟的延迟；延迟让对手有机会抢在成烟前穿过去。
+	UPROPERTY(Config)
+	float SmokeThrowSpeed = 1800;
+	UPROPERTY(Config)
+	float SmokeFuseSeconds = 1.5f;
 	// 守卫数量与反应/射击节奏调参；GuardDamageScale 是伤害倍率。
 	UPROPERTY(Config)
 	int32 Guards = 4;
@@ -117,6 +123,10 @@ public:
 	// 只接受更新序号，取消当前能力并释放对目标的救援占用。
 	UFUNCTION(Server, Reliable)
 	void ServerCancel(uint32 Sequence);
+
+	// 烟雾开始施放时广播，供角色播放投掷动画；施放被打断不影响已发出的动作。
+	DECLARE_MULTICAST_DELEGATE(FOnSmokeCastStarted);
+	FOnSmokeCastStarted OnSmokeCastStarted;
 
 private:
 	// 返回组件所属角色，用于生命状态、距离和动作互斥检查。

@@ -106,6 +106,9 @@ public:
 	 */
 	void PlayReloadMontage();
 
+	/** 播放烟雾投掷动画；1P 蒙太奇跟随 3P 位置，保证第一人称与身上动作一致 */
+	void PlaySmokeThrowMontage();
+
 	/** 获取换弹动画 */
 	UAnimMontage* GetReloadMontage() const;
 	UAnimMontage* GetSwapMontage() const;
@@ -273,6 +276,11 @@ public:
 	TObjectPtr<UAnimMontage> FirstPersonReloadMontage = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	TObjectPtr<UAnimMontage> FirstPersonSwapMontage = nullptr;
+	// 烟雾投掷在 1P 与 3P 各需要一段蒙太奇，由 PlayFirstPersonMontage 按同一时间轴同步播放。
+	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	TObjectPtr<UAnimMontage> FirstPersonSmokeMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	TObjectPtr<UAnimMontage> SmokeThrowMontage = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	FName RightHandBone = TEXT("hand_r");

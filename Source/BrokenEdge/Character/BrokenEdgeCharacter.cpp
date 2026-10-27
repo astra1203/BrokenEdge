@@ -250,6 +250,9 @@ void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, con
 void ABrokenEdgeCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	// 投掷动画在施放开始时触发；该委托只在本地角色身上产生可见效果，
+	// 因为 1P 蒙太奇只属于本地控制者，3P 蒙太奇则由复制后的动作状态驱动。
+	ExtractionAbilities->OnSmokeCastStarted.AddUObject(this, &ABrokenEdgeCharacter::PlaySmokeThrowMontage);
 	if (ExtractionCombat->IsEnabled() && OverheadWidget)
 	{
 		// A name plate must not intercept the aiming ray or reveal enemies through cover.
@@ -1744,6 +1747,15 @@ UAnimMontage* ABrokenEdgeCharacter::GetSwapMontage() const
 	return Weapon && Weapon->Presentation && Weapon->Presentation->BodySwap
 		       ? Weapon->Presentation->BodySwap.Get()
 		       : SwapMontage;
+}
+
+void ABrokenEdgeCharacter::PlaySmokeThrowMontage()
+{
+	// 投掷动作与手里的武器无关，因此不走 Presentation；没有配置时静默跳过，
+	// 玩家仍能投出烟雾，只是少了挥手动作。
+	if (!SmokeThrowMontage) return;
+	if (auto* Anim = GetMesh()->GetAnimInstance()) Anim->Montage_Play(SmokeThrowMontage);
+	PlayFirstPersonMontage(FirstPersonSmokeMontage, SmokeThrowMontage);
 }
 
 UAnimMontage* ABrokenEdgeCharacter::GetViewReloadMontage() const
