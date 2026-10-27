@@ -28,7 +28,7 @@ def main(tag):
     keys={json.dumps([a['mesh'],a['transform'],a['materials']],sort_keys=True) for a in actors}
     for a in foliage:
         bounds=world_bounds(a,metadata[a['mesh']])
-        if any(bounds['max'][i]<MINIMUM[i] or bounds['min'][i]>MAXIMUM[i] for i in [0,1]):
+        if not intersects_region(bounds['min'], bounds['max']):
             excluded.append({'source':a['source_object'],'reason':'foliage_bounds_outside_region'});continue
         a=copy.deepcopy(a);a['bounds']=bounds
         a['materials']=[canonical(m['MaterialInterface']['ObjectPath']) if m.get('MaterialInterface') else None for m in metadata[a['mesh']].get('materials',[])]

@@ -8,8 +8,13 @@ from restoration_common import *
 
 def recover(tag):
     out=WORK/'TextureRecoveryRuns'/tag
-    failures=read(WORK/'TextureRuns/Phase7CTextures01/Report.json')['failures']
+    failures=read(input_path('textures','TextureRuns/Phase7CTextures01/Textures.json').parent/'Report.json')['failures']
     names=sorted({canonical(r['ObjectPath']) for r in failures})
+    if not names:
+        write_json(out/'Textures.json',{})
+        write_json(out/'Report.json',{'recovered':0,'failed':[]})
+        print('TEXTURE_RECOVERY 0 FAILED 0',flush=True)
+        return
     parsed=run_converter('texture-mips',names,out/'Mips',partial=True)
     recovered={};failed=[]
     for p in parsed:

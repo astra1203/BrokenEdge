@@ -9,10 +9,10 @@ import traceback
 import unreal
 
 ROOT=Path(unreal.Paths.project_dir()).resolve();sys.path.insert(0,str(ROOT/'Scripts/SpaceCenter'))
-from restoration_common import read,write_json,sha
+from restoration_common import read,write_json,sha,WORK
 from plan_route import FloorGraph
 OUT=Path(os.environ['SPACECENTER_RUN_DIR'])
-CONFIG_FILE=ROOT/'Scripts/SpaceCenter/east_probe.json';config=read(CONFIG_FILE)
+CONFIG_FILE=Path(os.environ.get('SPACECENTER_PROBE_CONFIG',str(ROOT/'Scripts/SpaceCenter/east_probe.json')));config=read(CONFIG_FILE)
 LIB=unreal.StingerAssetLibrary
 state={'phase':'boot','elapsed':0.};started=time.monotonic()
 report={'result':'running','config':config,'config_sha256':sha(CONFIG_FILE)}
@@ -29,8 +29,20 @@ def finish(error=None):
 
 def measure(pawn):
     world=pawn.get_world();probes=[];step=config['step_cm'];assert step==100
-    for x in range(config['minimum'][0],config['maximum'][0]+1,step):
-        for y in range(config['minimum'][1],config['maximum'][1]+1,step):
+    if config.get('seed_probe_directory'):
+        seed=ROOT/config['seed_probe_directory']
+        assert read(seed/'Run.json')['manifest_sha256']==sha(os.environ['SPACECENTER_RESTORE_MANIFEST'])
+        assert read(seed/'Run.json').get('native_assets_sha256')==sha(WORK/'NativeAssets.json'),'Seed collision asset ledger differs'
+        assert read(seed/'Report.json')['result']=='passed'
+        assert read(seed/'Report.json')['config'].get('collision_channel','visibility')==config.get('collision_channel','visibility')
+        probes=read(seed/'Probes.json')
+    regions=config.get('regions',[config])
+    cells=collections.defaultdict(set)
+    for region in regions:
+        for x in range(region['minimum'][0],region['maximum'][0]+1,step):
+            cells[x].update(range(region['minimum'][1],region['maximum'][1]+1,step))
+    for x,ys in sorted(cells.items()):
+        for y in sorted(ys):
             seen=set()
             for height in config['trace_heights']:
                 hit=unreal.SystemLibrary.line_trace_single(world,unreal.Vector(x,y,height),unreal.Vector(x,y,config['trace_bottom']),
@@ -66,9 +78,15 @@ def measure(pawn):
     while queue:
         for neighbor in graph.adjacent(queue.popleft()):
             if neighbor not in reached:reached.add(neighbor);queue.append(neighbor)
-    candidates=[n for n in reached if graph.nodes[n]['location'][0]>=22000]
     report.update(probes=len(probes),tested_edges=len(tested),blocked_edges=len(blocked),reachable_nodes=len(reached),
         reachable_bounds=[[min(graph.nodes[n]['location'][i] for n in reached),max(graph.nodes[n]['location'][i] for n in reached)] for i in range(3)])
+    if config.get('survey_only'):
+        report['targets']=[{'name':t['name'],'requested':t['location'],
+            'nearest_reachable':graph.nodes[min(reached,key=lambda n:math.dist(graph.nodes[n]['location'],t['location']))]}
+            for t in config['targets']]
+        report['boundary']='Measured collision graph only; actual input-driven traversal remains required.'
+        return
+    candidates=[n for n in reached if graph.nodes[n]['location'][0]>=22000]
     assert candidates,'No capsule-clear east connection found in measured corridor'
     end=min(candidates,key=lambda n:math.dist(graph.nodes[n]['location'],config['desired_end']))
     path=graph.path(config['start'],graph.nodes[end]['location']);points=[p['location'] for p in path]
@@ -100,6 +118,17 @@ def tick(delta):
             write_json(OUT/'TerrainCollision.json',terrain)
             report['terrain_collision']={k:v for k,v in terrain.items() if k!='probes'}
             assert terrain['result']=='passed','Original terrain collision differs'
+            if config.get('collision_channel')=='pawn':
+                # Query the actual Pawn responses through the available trace
+                # channel in this disposable PIE world. Never save these changes.
+                changed=0
+                for actor in unreal.GameplayStatics.get_all_actors_of_class(pawn.get_world(),unreal.Actor):
+                    for component in actor.get_components_by_class(unreal.PrimitiveComponent):
+                        response=component.get_collision_response_to_channel(unreal.CollisionChannel.ECC_PAWN)
+                        if response!=component.get_collision_response_to_channel(unreal.CollisionChannel.ECC_VISIBILITY):
+                            component.set_collision_response_to_channel(unreal.CollisionChannel.ECC_VISIBILITY,response)
+                            changed+=1
+                report['pawn_response_query']={'temporary_components':changed,'saved':False}
             unreal.SystemLibrary.execute_console_command(pawn,'t.MaxFPS 30',pawn.get_controller())
             state.update(phase='measure',generator=measure(pawn))
         elif state['phase']=='measure':

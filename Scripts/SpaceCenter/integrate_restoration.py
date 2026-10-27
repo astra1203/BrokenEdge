@@ -23,9 +23,12 @@ def integrate(g):
     read,write,root,out=g['read'],g['write_json'],g['ROOT'],g['OUT']
     manifest,report=g['MANIFEST'],g['report']
     gates=read(input_path('acceptance',root/'Scripts/SpaceCenter/restoration_acceptance.json'))
+    geometry_only=PROFILE['phase']=='7E' and gates.get('integration_scope')=='scene_geometry'
+    if PROFILE['phase']=='7E':
+        assert gates.get('status')==('ready_for_scene_integration' if geometry_only else 'ready'), 'Acceptance is not ready for the requested integration scope'
     digest=g['sha'](os.environ['SPACECENTER_RESTORE_MANIFEST'])
     assert gates['manifest_sha256']==digest,'Acceptance manifest differs'
-    for kind in ['audit','capture','traverse']:
+    for kind in (['audit','capture'] if geometry_only else ['audit','capture','traverse']):
         directory=root/gates[kind]
         run=read(directory/'Run.json');detail=read(directory/'Report.json')
         assert run['result']==detail['result']=='passed',(kind,'not passed')
@@ -40,8 +43,36 @@ def integrate(g):
         traverse=read(root/gates['traverse']/'Report.json')
         assert traverse['route_sha256']==g['sha'](input_path('traverse_route',root/'Scripts/SpaceCenter/route.json')),'Traversal route changed'
         assert {'east_arrival','east_return','room_return'}.issubset({c['name'] for c in traverse['checks'] if c['passed']})
+    if PROFILE['phase']=='7E':
+        capture=read(root/gates['capture']/'Report.json')
+        review=read(root/gates['capture']/'VisualReview.json')
+        assert review['result']=='passed'
+        assert {c['file']:c['sha256'] for c in review['captures']}=={c['file']:c['sha256'] for c in capture['captures']}
+        required={'control_entry','control_upper','launch_arrival','launch_platform','region_return'}
+        for kind in (['audit','capture'] if geometry_only else ['audit','capture','traverse','network']):
+            assert read(root/gates[kind]/'Run.json').get('native_assets_sha256')==g['sha'](g['STATE_FILE']), 'Native assets changed after '+kind
+        for kind,players in ([] if geometry_only else [('traverse',1),('network',2)]):
+            directory=root/gates[kind]
+            run=read(directory/'Run.json');detail=read(directory/'Report.json')
+            assert run['result']==detail['result']=='passed' and run['manifest_sha256']==digest
+            assert detail['players']==players
+            assert detail['route']==read(input_path('traverse_route','phase7e_traverse_route.json'))
+            passed={c['name'] for c in detail['checks'] if c['passed']}
+            for player in range(1,players+1):
+                assert {f'p{player}_{name}' for name in required}.issubset(passed)
+                if players==2:assert {f'replicated_p{player}_{name}' for name in required}.issubset(passed)
     report['acceptance']=gates
+    report['integration_scope']='scene_geometry' if geometry_only else 'validated_traversal'
+    if geometry_only:
+        assert len(gates.get('east_navigation',[]))==2,'Existing east navigation must remain covered'
+        report['regional_traversal']='not_accepted'
+        report['regional_network']='not_validated'
     report['backups']=[]
+    for state in [root/'Scripts/SpaceCenter/restoration_active.json',g['WORK']/'IntegrationBindings.json']:
+        if state.is_file():
+            backup=out/'OriginalState'/state.name;backup.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copy2(state,backup)
+            report['backups'].append({'file':str(state.relative_to(root)),'backup':str(backup),'sha256':g['sha'](backup)})
     for name in [MAIN,NORTH]:
         source=root/'Content'/Path(name.removeprefix('/Game/')).with_suffix('.umap')
         backup=out/'OriginalMaps'/source.name;backup.parent.mkdir(parents=True,exist_ok=True)
@@ -104,12 +135,19 @@ def integrate(g):
         east=unreal.NavigationSystemV1.find_path_to_location_synchronously(world,unreal.Vector(*start),unreal.Vector(*end))
         assert east and east.is_valid() and not east.is_partial(),'Restored east route is incomplete; no map has been saved'
         report['east_route']=[[p.x,p.y,p.z] for p in east.path_points]
+    for name,endpoints in gates.get('region_navigation',{}).items():
+        start,end=endpoints
+        route=unreal.NavigationSystemV1.find_path_to_location_synchronously(world,unreal.Vector(*start),unreal.Vector(*end))
+        assert route and route.is_valid() and not route.is_partial(), 'Incomplete '+name+' navigation; no map has been saved'
+        report.setdefault('region_navigation',{})[name]=[[p.x,p.y,p.z] for p in route.path_points]
     report['gameplay_actors_preserved']=len(before)
     stream.set_editor_property('initially_loaded',False);stream.set_editor_property('initially_visible',False)
     report.update(assemblies=assemblies,geometry_sha256=geometry_signature(manifest),instances=len(bindings))
     write(out/'ActorBindings.json',bindings)
     assert levels.save_all_dirty_levels()
     marker={'version':1,'manifest_sha256':digest,'geometry_sha256':geometry_signature(manifest),
+            'integration_scope':report['integration_scope'],
+            'regional_traversal':report.get('regional_traversal','accepted'),
             'profile_file':PROFILE_FILE.relative_to(root).as_posix(),'profile_sha256':g['sha'](PROFILE_FILE),
             'manifest_file':str(Path(os.environ['SPACECENTER_RESTORE_MANIFEST']).relative_to(root)),
             'integration_report':str((out/'Report.json').relative_to(root)),

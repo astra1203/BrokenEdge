@@ -181,6 +181,15 @@ def assemble(g,map_path=PREVIEW,region=None,load=True,save=True):
         for k,v in [('override_auto_exposure_bias',True),('auto_exposure_bias',-1.),('override_bloom_intensity',True),('bloom_intensity',.15)]:settings.set_editor_property(k,v)
         post.set_editor_property('settings',settings)
         spawn('SCR_PlayerStart',unreal.PlayerStart,(-1500,-300,600))
+        if PROFILE['phase']=='7E':
+            # Match the existing production room lights from import_sample.py.
+            # These belong only to the preview; production retains its lights.
+            for i,xy in enumerate([[-1800,-100],[0,-100],[1700,-1500]]):
+                light=spawn('SCR_InteriorLight_'+str(i),unreal.PointLight,(*xy,700))
+                component=light.get_component_by_class(unreal.PointLightComponent)
+                component.set_mobility(unreal.ComponentMobility.MOVABLE)
+                component.set_editor_property('intensity',2000.)
+                component.set_editor_property('attenuation_radius',1800.)
 
     # Only this generator's tagged stale actors are removed; unrelated actors and explicit preservation survive.
     for label,actor in existing.items():

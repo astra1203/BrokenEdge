@@ -1,0 +1,75 @@
+{
+  "result": "passed",
+  "scope": "Scoped control-building and launch-area reconstruction; all 14 fixed-camera PNGs visually inspected.",
+  "captures": [
+    {
+      "file": "main_overview.png",
+      "sha256": "3647c34e3dae1385613b260a92292c03ed611bd6b947273125c2667d4146c44f"
+    },
+    {
+      "file": "main_interior.png",
+      "sha256": "e99d6530796fb5050705849e158f73e877d0dbd6ac979291f127f39d0f93e154"
+    },
+    {
+      "file": "control_overview.png",
+      "sha256": "3ce167f54999a9cce1b023e62d5e9e7be886a66d4487794fc3ad4cb980f6f159"
+    },
+    {
+      "file": "control_north_entrance.png",
+      "sha256": "d31334e90fdc14ecc3a186de99c3994c2d48b0b4f3fce43a495cea04a59884c9"
+    },
+    {
+      "file": "control_south_exterior.png",
+      "sha256": "fc3fefbd45f3b41ded10424ada90a58709f5aebd937f2682c420f74748a4e79a"
+    },
+    {
+      "file": "control_interior_ground.png",
+      "sha256": "2f5caf89ca60dc3ce3f86795321f78b309230c04504fb0f472b7accd07e73409"
+    },
+    {
+      "file": "control_interior_upper.png",
+      "sha256": "95852e688cbff5b5b8a19c495ff38a3734efffb45834fe6362e277908c9421be"
+    },
+    {
+      "file": "control_bridge.png",
+      "sha256": "5e4f968149a8691069146dda51d6eb712001c3f8bb398dee9b63019ed64980e9"
+    },
+    {
+      "file": "launch_overview.png",
+      "sha256": "199721d209974900380a889b08fd7b180a8dd5758df9c95d701b9bc1a3888372"
+    },
+    {
+      "file": "launch_west.png",
+      "sha256": "4e1500ad32c1fd4da1c6d7a1021923be940a46b2daa78da6d8d87c4ac617e7e3"
+    },
+    {
+      "file": "launch_platform.png",
+      "sha256": "ca2dfd7e2472c21c0be6af0c9507c87c28386282f51a9a081db7f751542f42b2"
+    },
+    {
+      "file": "launch_rocket_transport.png",
+      "sha256": "6833029bbbb1c2a24ca4a930be4712b862dcb4b48180529c7b191ef7312c166d"
+    },
+    {
+      "file": "launch_connection.png",
+      "sha256": "b703b75d9a8637d9c96008c0e81ca88c0e624a2593e467536934456df6ecfe7a"
+    },
+    {
+      "file": "launch_north_ground.png",
+      "sha256": "c7ff3b440809695efd95d176cf95982f2fbac3e76e3acc452d836bfa8c280e7a"
+    }
+  ],
+  "observations": [
+    "Control building facade, lobby, stairs, upper gallery, pedestrian bridge and exterior props are present.",
+    "Launch tower, platform, pipework, road structures, horizontal rocket and transporter are present.",
+    "Preview main-room lights match existing production positions and intensities; the previously dark main interior is now readable.",
+    "No missing-material checkerboards or placeholder primitives observed in the inspected structures."
+  ],
+  "limitations": [
+    "Outer source-region terrain cutoffs and the rear-control terrain discontinuity remain visible outside the planned structural walking route; this is not a complete map reconstruction.",
+    "The upper-interior fixed view is partially occluded by source columns; input-driven upper-floor captures are a separate gate.",
+    "Original stripped shader graphs and baked lighting have not been recovered; visual reconstruction does not establish official rendering parity.",
+    "Editor screenshots do not prove runtime traversal or replication.",
+    "Close launch-platform view shows patchy surface reconstruction and dark structural areas; further material polish remains possible."
+  ]
+}

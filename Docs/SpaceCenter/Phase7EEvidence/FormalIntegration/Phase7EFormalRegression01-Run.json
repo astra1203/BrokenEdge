@@ -1,0 +1,47 @@
+{
+  "task": "traverse-integrated",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1920",
+    "-ResY=1080",
+    "-ForceRes",
+    "-ExecCmds=r.VSync 0,t.MaxFPS 60,t.IdleWhenNotForeground 0,r.ScreenPercentage 100,sg.ViewDistanceQuality 1,sg.AntiAliasingQuality 1,sg.ShadowQuality 1,sg.GlobalIlluminationQuality 1,sg.ReflectionQuality 1,sg.PostProcessQuality 1,sg.TextureQuality 1,sg.EffectsQuality 1,sg.FoliageQuality 1,sg.ShadingQuality 1,py D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\validate_sample.py",
+    "-ini:EditorSettings:[ScalabilityGroups]:sg.ViewDistanceQuality=1,[ScalabilityGroups]:sg.AntiAliasingQuality=1,[ScalabilityGroups]:sg.ShadowQuality=1,[ScalabilityGroups]:sg.GlobalIlluminationQuality=1,[ScalabilityGroups]:sg.ReflectionQuality=1,[ScalabilityGroups]:sg.PostProcessQuality=1,[ScalabilityGroups]:sg.TextureQuality=1,[ScalabilityGroups]:sg.EffectsQuality=1,[ScalabilityGroups]:sg.FoliageQuality=1,[ScalabilityGroups]:sg.ShadingQuality=1",
+    "-ini:GameUserSettings:[ScalabilityGroups]:sg.ViewDistanceQuality=1,[ScalabilityGroups]:sg.AntiAliasingQuality=1,[ScalabilityGroups]:sg.ShadowQuality=1,[ScalabilityGroups]:sg.GlobalIlluminationQuality=1,[ScalabilityGroups]:sg.ReflectionQuality=1,[ScalabilityGroups]:sg.PostProcessQuality=1,[ScalabilityGroups]:sg.TextureQuality=1,[ScalabilityGroups]:sg.EffectsQuality=1,[ScalabilityGroups]:sg.FoliageQuality=1,[ScalabilityGroups]:sg.ShadingQuality=1",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-SCCProvider=None",
+    "-ForceTextureEncodeSpeed=Final",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\SpaceCenter\\Phase7EExpanded\\EditorRuns\\Phase7EFormalRegression01\\Editor.log",
+    "-NullRHI",
+    "-ini:Engine:[DevOptions.Shaders]:ShaderCompilerCoreCountThreshold=999,[DevOptions.Shaders]:NumUnusedShaderCompilingThreads=8,[DevOptions.Shaders]:NumUnusedShaderCompilingThreadsDuringGame=8,[SystemSettings]:Editor.AsyncTextureCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncStaticMeshCompilationMaxConcurrency=1,[SystemSettings]:Editor.AsyncAssetCompilationMaxConcurrency=2,[SystemSettings]:Editor.AsyncAssetCompilationMaxMemoryUsage=2"
+  ],
+  "started_utc": "2026-10-27T02:36:50.842949+00:00",
+  "script_sha256": "0e046c3e273b7e713d12ad471414563bf8e44705930411e6d9f19dc2a6e7904b",
+  "manifest_sha256": "07a6f918e5275a865281fd98c2d99471eec3ec4e21b10170cbed4f6a2afbcec1",
+  "profile_file": "Scripts/SpaceCenter/restoration_profile_7e.json",
+  "profile_sha256": "dcef47b5067e303fa857493ad4c50861da1564f6ca7081aae246b57f8a3c3b7c",
+  "capture_world": null,
+  "native_assets_sha256": "f730e42646f37f95bde84e252ece8b4d96ab7ea29231bb0d5c15c569d51c3161",
+  "route_file": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\SpaceCenter\\east_traverse_route.json",
+  "route_sha256": "e70406b61510c5f813c85ac86de1e4d0538557503db894f2a337afa3beb27624",
+  "headless": true,
+  "map_sha256_before": {
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "e02ccf6c5b3829a5523b5f26fc107954a51e4d99615346d813b5ac90d98a70d3",
+    "Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap": "43dff5d61452b6a39f3140f23ce2bfb654f6d419b3f9e3161b6237420ec90ac3"
+  },
+  "pid": 52640,
+  "exit_code": 0,
+  "map_sha256_after": {
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "e02ccf6c5b3829a5523b5f26fc107954a51e4d99615346d813b5ac90d98a70d3",
+    "Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap": "43dff5d61452b6a39f3140f23ce2bfb654f6d419b3f9e3161b6237420ec90ac3"
+  },
+  "result": "failed",
+  "finished_utc": "2026-10-27T02:42:44.989600+00:00"
+}

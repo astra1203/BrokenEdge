@@ -1,0 +1,27 @@
+{
+  "status": "integrated_with_validation_limits",
+  "maps": [
+    {
+      "file": "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap",
+      "sha256": "e02ccf6c5b3829a5523b5f26fc107954a51e4d99615346d813b5ac90d98a70d3",
+      "before_integration_sha256": "360a16e5fc3eb920a9ff2eea42fc0fa3cd97789b197840bb39da8d2d6ea9aa7c"
+    },
+    {
+      "file": "Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap",
+      "sha256": "43dff5d61452b6a39f3140f23ce2bfb654f6d419b3f9e3161b6237420ec90ac3",
+      "before_integration_sha256": "eb30d8c6375fd7022887f6c3226a30772b6c32eed6b755531e5542d21d99a8db"
+    }
+  ],
+  "instances": 53082,
+  "gameplay_actors_preserved": 50,
+  "navigation": [
+    "north passed",
+    "east passed"
+  ],
+  "idempotency": "passed",
+  "full_runtime_route": "failed; same pre-integration failure reproduced",
+  "new_region_runtime": "not accepted",
+  "formal_screenshots": "incomplete due resource guard",
+  "backup_directory": "Saved/SpaceCenter/Phase7EExpanded/EditorRuns/Phase7EFormalIntegrate03",
+  "git": "Not committed or pushed"
+}
