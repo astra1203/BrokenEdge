@@ -4,7 +4,7 @@
 #include "ExtractionSmoke.generated.h"
 // 烟雾 Actor 复制半径和到期时间，球体只提供视觉表现，不阻挡物理碰撞或导航。
 // AI 视线和屏幕烟雾效果通过 Blocks 的几何查询判定，不能用渲染材质替代服务器遮挡规则。
-// 视觉上用一个压扁的烟团贴住地面，配软边半透明材质，避免早期版本那种灰色实心球。
+// 视觉上用若干压扁球体叠成一团有体积的烟，单球加半透明贴图会只剩一层薄壳、显得很淡。
 
 UCLASS()
 class BROKENEDGE_API AExtractionSmoke : public AActor
@@ -25,8 +25,12 @@ public:
 	// 服务器绝对到期时间（秒），寿命销毁消息延迟时仍可据此忽略已过期烟雾。
 	UPROPERTY(Replicated)
 	double ExpiresAt = 0;
+	// 主烟团；其余 Puffs 共用同一材质，构成叠层体积。
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UStaticMeshComponent> Cloud;
+	// 叠加烟团：每层有独立的固定偏移与尺寸，整体一起鼓胀和淡出。
+	UPROPERTY(VisibleAnywhere)
+	TArray<TObjectPtr<class UStaticMeshComponent>> Puffs;
 	// 由投掷物在生成后指定半径与存续秒数；留空则回退到规则默认值。
 	void SetTuning(float InRadius, float InSeconds);
 	// 检测线段到有效烟雾球心的最短距离是否小于半径；起终点相同可用于判断相机是否在烟内。
@@ -42,7 +46,7 @@ private:
 	float BornAt = -1.f;
 	float LifetimeSeconds = 15;
 	// 淡入与淡出秒数；淡出时长受寿命上限约束，短寿命时按比例压缩。
-	float FadeInSeconds = .6f;
+	float FadeInSeconds = .5f;
 	float FadeOutSeconds = 2.2f;
 	// 上一帧写入的不透明度，避免重复设置参数。
 	float AppliedAlpha = -1.f;
