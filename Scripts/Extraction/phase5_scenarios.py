@@ -142,7 +142,6 @@ def run(env):
     check('Downed state replicates to every peer', lambda: all(player(r, 'A').get('life') == 5 for r in peers))
     if g['args'].scenario == 'squad':
         check('Downing clears knife on all peers',lambda:all(not player(r,'A').get('knife_active') for r in peers))
-        for _ in range(2):send('A','pulse',action='ToggleCameraView',duration=0)
         send('A','screenshot',name='knife-downed')
     accepted = player('Server', 'A')['accepted']
     send('A', 'pulse', action='Fire')

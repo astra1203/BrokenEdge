@@ -23,7 +23,7 @@ phases += [('sprint',0,1,'sprint',2),('aim_move',0,1,'aim',1.5),('idle',0,0,'',1
            ('view_walk',0,.2,'view',1.8),('view_run',0,1,'view',2),('view_sprint',0,1,'view_sprint',2),
            ('view_aim',0,1,'view_aim',1.5),('fire',0,1,'fire',.7),('reload',0,.2,'reload',3.5),
            ('jump',0,1,'jump',.4),('land',0,0,'',1.5)]
-state={'mode':'boot','at':time.monotonic(),'index':0,'step':0,'crouched':False,'view':False}
+state={'mode':'boot','at':time.monotonic(),'index':0,'step':0,'crouched':False,'view':True}
 locals=[];server=None;camera=None
 started=time.monotonic()
 
@@ -89,7 +89,6 @@ def tick(delta):
                 gun.set_actor_location(p.get_actor_location()+unreal.Vector(20,0,-50),False,True)
             camera=lib.spawn_validation_weapon(locals[-1].get_world(),unreal.CameraActor,unreal.Vector())
             camera.get_component_by_class(unreal.CameraComponent).set_field_of_view(65)
-            pulse('toggle_camera_view_action')
             lib.set_validation_fixed_step(1/30)
             state.update(mode='actions',last=unreal.GameplayStatics.get_time_seconds(server))
             return
@@ -101,8 +100,6 @@ def tick(delta):
         if state['step']==1:
             crouched=mode=='crouch'
             if crouched!=state['crouched']:pulse('crouch_action');state['crouched']=crouched
-            view=mode.startswith('view') or mode in ('fire','reload')
-            if view!=state['view']:pulse('toggle_camera_view_action');state['view']=view
             if mode=='reload':pulse('reload_action')
         if name=='equip' and state['step']==20:pulse('equip_action')
         if x or y:pulse('move_action',(x,y,0))

@@ -251,13 +251,11 @@ public:
 	UFUNCTION(BlueprintPure, Category = Camera)
 	bool IsFirstPersonView() const { return bFirstPersonView; }
 
-	// 蜂医等角色可启用专用第一人称表现；旧角色默认使用原有全身视角。
+	// 蜂医等角色使用专用第一人称表现；未配置时使用全身网格副本呈现第一人称。
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	TObjectPtr<USkeletalMesh> FirstPersonMeshAsset = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	TSubclassOf<UAnimInstance> FirstPersonAnimClass;
-	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
-	bool bStartInFirstPerson = false;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	FTransform FirstPersonMeshTransform = FTransform(FRotator(0, -90, 0), FVector(-10, 0, -165));
 	UPROPERTY(EditDefaultsOnly, Category = "FirstPerson")
@@ -353,16 +351,15 @@ private:
 	float ViewActionSectionLength = 1.f;
 	float ViewActionAttachTime = -1.f;
 	FDelegateHandle ViewWeaponPoseDelegateHandle;
-	void ToggleCameraView();
-	void SetFirstPersonView(bool bEnabled);
+	void InitializeFirstPersonView();
+	void ReleaseFirstPersonView();
 	void UpdateFirstPersonCameraLocation();
 	bool CreateFirstPersonBody();
 	void UpdateFirstPersonBodyPose();
 
-	// Local view preference; other players keep seeing the third-person character.
+	// 本地第一人称表现是否已初始化；不再作为可切换的视角偏好。
 	bool bFirstPersonView = false;
-	FTransform ThirdPersonCameraTransform = FTransform::Identity;
-	bool bThirdPersonCameraUsesControlRotation = false;
+	bool bFirstPersonInitializationFailed = false;
 	bool bOriginalMeshOwnerNoSee = false;
 	EFirstPersonPrimitiveType OriginalBodyPrimitiveType;
 	bool bOriginalMeshCastHiddenShadow = false;
@@ -388,9 +385,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
 
-	/** Camera view toggle Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* ToggleCameraViewAction = nullptr;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -429,9 +423,6 @@ private:
 	UInputAction* FireAction;
 
 
-	/// 摄像机弹簧臂组件
-	UPROPERTY(VisibleAnywhere, Category = Camera)
-	class USpringArmComponent* CameraBoom;
 
 	/// 跟随摄像机组件
 	UPROPERTY(VisibleAnywhere, Category = Camera)

@@ -39,7 +39,6 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
 
@@ -52,14 +51,10 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter(const FObjectInitializer& ObjectIniti
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(GetMesh());
-	CameraBoom->TargetArmLength = 600.f;
-	CameraBoom->bUsePawnControlRotation = true;
-
+	// 固定第一人称：相机始终挂在胶囊体，位置由角色眼高更新。
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	FollowCamera->bUsePawnControlRotation = false;
+	FollowCamera->SetupAttachment(GetCapsuleComponent());
+	FollowCamera->bUsePawnControlRotation = true;
 
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -266,7 +261,7 @@ void ABrokenEdgeCharacter::BeginPlay()
 
 void ABrokenEdgeCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	SetFirstPersonView(false);
+	ReleaseFirstPersonView();
 	RefreshFirstPersonWorldWeapons();
 	FirstPersonWorldWeapons.Reset();
 	Super::EndPlay(EndPlayReason);
@@ -278,13 +273,8 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	UpdateSprint();
 	UpdateExtractionLabel();
-	if (!bExtractionGuard && bStartInFirstPerson && IsLocallyControlled() && !bFirstPersonView && !bDefeated && !
-		bDisableGameplay)
-	{
-		// 只在首次获得控制权时应用默认视角，之后允许自由切换。
-		bStartInFirstPerson = false;
-		SetFirstPersonView(true);
-	}
+	// 控制权和组件可能晚于 BeginPlay 就绪；初始化成功或明确失败后不再重复创建。
+	if (!bFirstPersonView && !bFirstPersonInitializationFailed) InitializeFirstPersonView();
 	if (bFirstPersonView)
 	{
 		UpdateFirstPersonCameraLocation();
@@ -475,9 +465,10 @@ void ABrokenEdgeCharacter::TurnInPlace(float DeltaTime)
 void ABrokenEdgeCharacter::NotifyControllerChanged()
 {
 	Super::NotifyControllerChanged();
-	if (bFirstPersonView && !IsLocallyControlled())
+	bFirstPersonInitializationFailed = false;
+	if (!IsLocallyControlled())
 	{
-		SetFirstPersonView(false);
+		ReleaseFirstPersonView();
 	}
 	RefreshFirstPersonWorldWeapons();
 
@@ -517,11 +508,7 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Canceled, this,
 			                                   &ABrokenEdgeCharacter::SprintReleased);
 		}
-		if (ensureMsgf(ToggleCameraViewAction, TEXT("Assign ToggleCameraViewAction in the character Blueprint.")))
-		{
-			EnhancedInputComponent->BindAction(ToggleCameraViewAction, ETriggerEvent::Started,
-			                                   this, &ABrokenEdgeCharacter::ToggleCameraView);
-		}
+
 
 		//跳跃
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ABrokenEdgeCharacter::Jump);
@@ -571,74 +558,71 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	}
 }
 
-void ABrokenEdgeCharacter::ToggleCameraView()
+void ABrokenEdgeCharacter::InitializeFirstPersonView()
 {
-	if (!IsLocallyControlled() || bDisableGameplay || bDefeated) return;
-	SetFirstPersonView(!bFirstPersonView);
+	if (bFirstPersonView || bFirstPersonInitializationFailed || !HasActorBegunPlay() ||
+		!IsPlayerControlled() || !IsLocallyControlled() || bExtractionGuard || bDefeated || bDisableGameplay)
+		return;
+	if (!FollowCamera || !GetMesh() || !GetMesh()->IsRegistered()) return;
+
+	// 明确的资源错误只报告一次；重新获得控制权时允许再次初始化。
+	if (!CreateFirstPersonBody())
+	{
+		bFirstPersonInitializationFailed = true;
+		return;
+	}
+	bOriginalMeshOwnerNoSee = GetMesh()->bOwnerNoSee;
+	OriginalBodyPrimitiveType = GetMesh()->FirstPersonPrimitiveType;
+	bOriginalMeshCastHiddenShadow = GetMesh()->bCastHiddenShadow;
+	OriginalMeshAnimTickOption = GetMesh()->VisibilityBasedAnimTickOption;
+
+	// 同时覆盖旧蓝图曾保存的相机挂载与控制旋转设置。
+	FollowCamera->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	FollowCamera->bUsePawnControlRotation = true;
+	UpdateFirstPersonCameraLocation();
+	GetMesh()->SetOwnerNoSee(true);
+	GetMesh()->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::WorldSpaceRepresentation);
+	GetMesh()->SetCastHiddenShadow(true);
+	// 世界人物仍负责动画通知、武器挂点和远端表现。
+	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+	bFirstPersonView = true;
+	UpdateFirstPersonWeapon();
+	RefreshFirstPersonWorldWeapons();
+	Melee->RefreshPresentation();
 }
 
-void ABrokenEdgeCharacter::SetFirstPersonView(bool bEnabled)
+void ABrokenEdgeCharacter::ReleaseFirstPersonView()
 {
-	if (bFirstPersonView == bEnabled || !FollowCamera || !CameraBoom || !GetMesh()) return;
-
-	if (bEnabled)
+	bFirstPersonInitializationFailed = false;
+	if (!bFirstPersonView) return;
+	// 先清除本地表现状态，再恢复世界武器可见性；不切换到其他相机。
+	bFirstPersonView = false;
+	FirstPersonSourceWeapon = nullptr;
+	Melee->ReleaseViewMesh();
+	if (FirstPersonWeaponMesh)
 	{
-		if (!IsLocallyControlled() || !CreateFirstPersonBody()) return;
-
-		// Cache the Blueprint's actual camera settings before changing the attachment.
-		ThirdPersonCameraTransform = FollowCamera->GetRelativeTransform();
-		bThirdPersonCameraUsesControlRotation = FollowCamera->bUsePawnControlRotation;
-		bOriginalMeshOwnerNoSee = GetMesh()->bOwnerNoSee;
-		OriginalBodyPrimitiveType = GetMesh()->FirstPersonPrimitiveType;
-		bOriginalMeshCastHiddenShadow = GetMesh()->bCastHiddenShadow;
-		OriginalMeshAnimTickOption = GetMesh()->VisibilityBasedAnimTickOption;
-
-		FollowCamera->AttachToComponent(GetCapsuleComponent(),
-		                                FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		FollowCamera->bUsePawnControlRotation = true;
-		UpdateFirstPersonCameraLocation();
-		// The owner sees the headless display body; the original keeps full collision and shadows.
-		GetMesh()->SetOwnerNoSee(true);
-		GetMesh()->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::WorldSpaceRepresentation);
-		GetMesh()->SetCastHiddenShadow(true);
-		// Keep evaluating the original animation, including weapon sockets and reload notifies.
-		GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
-		UpdateFirstPersonWeapon();
+		FirstPersonWeaponMesh->DestroyComponent();
+		FirstPersonWeaponMesh = nullptr;
 	}
-	else
+	if (DedicatedFirstPersonMesh)
 	{
-		FirstPersonSourceWeapon = nullptr;
-		Melee->ReleaseViewMesh();
-		if (FirstPersonWeaponMesh)
-		{
-			FirstPersonWeaponMesh->DestroyComponent();
-			FirstPersonWeaponMesh = nullptr;
-		}
-		if (DedicatedFirstPersonMesh)
-		{
-			DedicatedFirstPersonMesh->UnregisterOnBoneTransformsFinalizedDelegate(ViewWeaponPoseDelegateHandle);
-			ViewWeaponPoseDelegateHandle.Reset();
-			DedicatedFirstPersonMesh->DestroyComponent();
-			DedicatedFirstPersonMesh = nullptr;
-		}
-		FollowCamera->AttachToComponent(CameraBoom, FAttachmentTransformRules::KeepRelativeTransform,
-		                                USpringArmComponent::SocketName);
-		FollowCamera->SetRelativeTransform(ThirdPersonCameraTransform);
-		FollowCamera->bUsePawnControlRotation = bThirdPersonCameraUsesControlRotation;
-		GetMesh()->SetOwnerNoSee(bOriginalMeshOwnerNoSee);
-		GetMesh()->SetFirstPersonPrimitiveType(OriginalBodyPrimitiveType);
-		GetMesh()->SetCastHiddenShadow(bOriginalMeshCastHiddenShadow);
-		GetMesh()->UnregisterOnBoneTransformsFinalizedDelegate(FirstPersonPoseDelegateHandle);
-		FirstPersonPoseDelegateHandle.Reset();
-		if (FirstPersonBody)
-		{
-			FirstPersonBody->DestroyComponent();
-			FirstPersonBody = nullptr;
-		}
-		GetMesh()->VisibilityBasedAnimTickOption = OriginalMeshAnimTickOption;
+		DedicatedFirstPersonMesh->UnregisterOnBoneTransformsFinalizedDelegate(ViewWeaponPoseDelegateHandle);
+		ViewWeaponPoseDelegateHandle.Reset();
+		DedicatedFirstPersonMesh->DestroyComponent();
+		DedicatedFirstPersonMesh = nullptr;
 	}
-
-	bFirstPersonView = bEnabled;
+	GetMesh()->UnregisterOnBoneTransformsFinalizedDelegate(FirstPersonPoseDelegateHandle);
+	FirstPersonPoseDelegateHandle.Reset();
+	if (FirstPersonBody)
+	{
+		FirstPersonBody->DestroyComponent();
+		FirstPersonBody = nullptr;
+	}
+	// 保留尸体、失去控制后的角色及远端观察者需要的世界人物表现。
+	GetMesh()->SetOwnerNoSee(bOriginalMeshOwnerNoSee);
+	GetMesh()->SetFirstPersonPrimitiveType(OriginalBodyPrimitiveType);
+	GetMesh()->SetCastHiddenShadow(bOriginalMeshCastHiddenShadow);
+	GetMesh()->VisibilityBasedAnimTickOption = OriginalMeshAnimTickOption;
 	RefreshFirstPersonWorldWeapons();
 	Melee->RefreshPresentation();
 }
@@ -743,8 +727,10 @@ void ABrokenEdgeCharacter::UpdateFirstPersonCameraLocation()
 
 void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 {
+	// 先刷新世界武器对拥有者的可见性；没有专用第一人称人物网格时不更新本地枪模。
 	RefreshFirstPersonWorldWeapons();
 	if (!DedicatedFirstPersonMesh) return;
+	// 未启用武器适配时，用人物网格偏移表现瞄准；启用适配后由枪械姿势处理，避免重复偏移。
 	const FVector AimOffset = GetViewWeaponFit().bEnabled
 		                          ? FVector::ZeroVector
 		                          : (IsAiming() ? FirstPersonAimMeshOffset : FVector::ZeroVector);
@@ -753,14 +739,16 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 	                                                               GetWorld()->GetDeltaSeconds(),
 	                                                               FirstPersonAimInterpSpeed));
 	AWeapon* Weapon = GetEquippedWeapon();
-	// Owner/state replication can arrive before the equipment slot is cleared.
+	// 持有者或掉落状态的复制可能先于装备槽清理到达，不能继续把这类武器当作当前持枪。
 	if (!IsValid(Weapon) || Weapon->GetOwner() != this || Weapon->GetWeaponState() == EWeaponState::EWS_Dropped)
 		Weapon = nullptr;
+	// 仅在装备来源改变时重新配置显示副本，避免每帧重复创建组件或设置资源。
 	if (FirstPersonSourceWeapon != Weapon)
 	{
 		FirstPersonSourceWeapon = Weapon;
 		if (Weapon)
 		{
+			// 按需创建本地枪模：适配模式挂到相机，否则挂到专用人物的右手插槽。
 			if (!FirstPersonWeaponMesh)
 			{
 				FirstPersonWeaponMesh = NewObject<USkeletalMeshComponent>(this);
@@ -770,6 +758,7 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 				                                       GetViewWeaponFit().bEnabled
 					                                       ? NAME_None
 					                                       : FName(TEXT("RightHandSocket")));
+				// 该组件只负责拥有者的第一人称表现，不参与碰撞、重叠、阴影或导航。
 				FirstPersonWeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				FirstPersonWeaponMesh->SetGenerateOverlapEvents(false);
 				FirstPersonWeaponMesh->SetOnlyOwnerSee(true);
@@ -778,6 +767,7 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 				FirstPersonWeaponMesh->SetCanEverAffectNavigation(false);
 				FirstPersonWeaponMesh->RegisterComponent();
 			}
+			// 网格优先使用武器表现配置；其次使用来源匹配的角色级替代网格，最后复用世界武器网格。
 			USkeletalMesh* SourceMesh = Weapon->GetWeaponMesh()->GetSkeletalMeshAsset();
 			FirstPersonWeaponMesh->SetSkeletalMeshAsset(
 				Weapon->Presentation && Weapon->Presentation->ViewMesh
@@ -785,12 +775,14 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 					: FirstPersonWeaponVisualMesh && SourceMesh == FirstPersonWeaponSourceMesh
 					? FirstPersonWeaponVisualMesh.Get()
 					: SourceMesh);
+			// 清除上一把枪的材质覆盖；专用表现网格使用自身材质，其余路径复制世界武器材质。
 			FirstPersonWeaponMesh->EmptyOverrideMaterials();
 			if (!(Weapon->Presentation && Weapon->Presentation->ViewMesh))
 			{
 				for (int32 Index = 0; Index < Weapon->GetWeaponMesh()->GetNumMaterials(); ++Index)
 					FirstPersonWeaponMesh->SetMaterial(Index, Weapon->GetWeaponMesh()->GetMaterial(Index));
 			}
+			// 切换武器后重设基础变换，并按当前武器是否实际启用适配重新确定挂载位置。
 			FirstPersonWeaponMesh->SetRelativeTransform(FirstPersonWeaponTransform);
 			FirstPersonWeaponMesh->AttachToComponent(UsesFirstPersonWeaponFit()
 				                                         ? static_cast<USceneComponent*>(FollowCamera)
@@ -799,6 +791,7 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 			                                         UsesFirstPersonWeaponFit()
 				                                         ? NAME_None
 				                                         : FName(TEXT("RightHandSocket")));
+			// 适配模式使用专用枪械动画实例；让枪模在人物网格之后更新，再从腰射姿势开始。
 			FirstPersonWeaponMesh->SetAnimInstanceClass(UsesFirstPersonWeaponFit()
 				                                            ? UStingerFirstPersonWeaponAnimInstance::StaticClass()
 				                                            : nullptr);
@@ -806,10 +799,12 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 			ViewWeaponTarget = GetViewWeaponFit().Hip;
 		}
 	}
+	// 适配模式在腰射与瞄准变换之间更新目标姿势，并纳入武器装配产生的瞄准偏移。
 	if (UsesFirstPersonWeaponFit())
 	{
 		FTransform Target = IsAiming() ? GetViewWeaponFit().Aim : GetViewWeaponFit().Hip;
 		if (IsAiming() && Weapon) Target.AddToTranslation(Weapon->EquipmentAimOffset());
+		// 撤离战斗使用组件提供的瞄准进度混合姿势，再叠加视觉后坐力旋转。
 		if (ExtractionCombat->IsEnabled())
 		{
 			FTransform Aim = GetViewWeaponFit().Aim;
@@ -820,13 +815,16 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 		}
 		else
 		{
+			// 其他战斗路径分别插值位置与旋转，使枪械平滑靠近当前目标姿势。
 			ViewWeaponTarget.SetLocation(FMath::VInterpTo(ViewWeaponTarget.GetLocation(), Target.GetLocation(),
 			                                              GetWorld()->GetDeltaSeconds(), FirstPersonAimInterpSpeed));
 			ViewWeaponTarget.SetRotation(FMath::QInterpTo(ViewWeaponTarget.GetRotation(), Target.GetRotation(),
 			                                              GetWorld()->GetDeltaSeconds(), FirstPersonAimInterpSpeed));
 		}
 	}
+	// 翻越期间不执行常规第一人称动作同步，避免干扰翻越表现。
 	if (!IsTraversing()) SyncFirstPersonAction();
+	// 枪模只在有效持枪、未死亡且非翻越和近战时显示；人物网格还可服务于近战或翻越。
 	if (FirstPersonWeaponMesh)
 		FirstPersonWeaponMesh->SetVisibility(
 			Weapon && !bDefeated && !IsTraversing() && !Melee->Active, true);
@@ -1776,7 +1774,7 @@ void ABrokenEdgeCharacter::Defeated(bool bPlayerLeftGame)
 
 void ABrokenEdgeCharacter::MulticastDefeated_Implementation(bool bPlayerLeftGame)
 {
-	SetFirstPersonView(false);
+	ReleaseFirstPersonView();
 	bLeftGame = bPlayerLeftGame;
 
 	if (BrokenEdgePlayerController)

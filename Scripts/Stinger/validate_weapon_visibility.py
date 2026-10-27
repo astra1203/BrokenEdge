@@ -12,7 +12,7 @@ frames.mkdir(parents=True,exist_ok=True)
 report={'players':players,'fps':30,'frame_directory':str(frames),'samples':[], 'checks':[], 'captures':[]}
 phases=[('equip_primary',1.2),('equip_secondary',1.4),('dual_down',.8),('crouch_down',.8),
         ('aim_down',.8),('swap1',1.8),('swap2',1.8),('swap_view',2.),('fire',.7),
-        ('reload_view',2.6),('third_person',.8),('first_person',.8),('drop',2.),('re_pickup',1.4),
+        ('reload_view',2.6),('first_person',.8),('drop',2.),('re_pickup',1.4),
         ('unpossess',.6),('repossess',1.2),('death',1.),('respawn',5.),('respawn_equip',1.5),('destroy_weapon',.8)]
 capture_phases={'dual_down','crouch_down','aim_down','swap1','swap2','swap_view'}
 state={'mode':'boot','at':time.monotonic(),'index':0,'step':0,'flags':set(),'capture_index':0}
@@ -174,10 +174,6 @@ def tick(delta):
         if name=='fire':
             once('uncrouch',lambda:pulse('crouch_action'));pulse('fire_action')
         if name=='reload_view':once('reload',lambda:pulse('reload_action'))
-        if name in ['swap_view','reload_view']:
-            if t>.5:once('view_out',lambda:pulse('toggle_camera_view_action'))
-            if t>1.1:once('view_in',lambda:pulse('toggle_camera_view_action'))
-        if name in ['third_person','first_person']:once('view',lambda:pulse('toggle_camera_view_action'))
         if name=='drop' and 'drop' not in state['flags']:
             dropped=[next(w for w in owned_weapons(p) if w.get_editor_property('weapon_state')==unreal.WeaponState.EWS_EQUIPPED) for p in server_pawns]
             for p in server_pawns:assert lib.drop_validation_weapon(p)
@@ -203,7 +199,7 @@ def tick(delta):
             if t>.5 and 'view' not in state['flags']:
                 locals_=local_pawns()
                 for p in locals_:lib.isolate_validation_input(p.get_controller())
-                pulse('toggle_camera_view_action');state['flags'].add('view')
+                assert all(p.is_first_person_view() for p in locals_);state['flags'].add('view')
         if name=='death' and 'damage' not in state['flags']:
             for p in server_pawns:
                 p.set_editor_property('can_be_damaged',True)
@@ -233,7 +229,7 @@ def tick(delta):
             if name=='respawn_equip':check('respawn_can_equip',all(len(owned_weapons(p))==1 for p in server_pawns))
             if name in ['dual_down','aim_down','swap1','swap2','swap_view','first_person','re_pickup','respawn_equip']:
                 check(name+'_one_local_view_gun',all(v['view_mesh_count']==1 for v in report['samples'][-1]['views'] if v['local']))
-            if name in ['third_person','drop','unpossess','death','destroy_weapon']:
+            if name in ['drop','unpossess','death','destroy_weapon']:
                 check(name+'_no_view_gun',all(v['view_mesh_count']==0 for v in report['samples'][-1]['views']))
             print('WEAPON_VISIBILITY_PHASE_COMPLETE',name,len(report['samples']))
             state.update(index=state['index']+1,step=0,flags=set())

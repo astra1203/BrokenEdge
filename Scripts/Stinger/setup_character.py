@@ -139,7 +139,7 @@ def configure():
     mesh.set_editor_property('relative_rotation',unreal.Rotator(pitch=0,yaw=-90,roll=0))
     cdo.get_editor_property('capsule_component').set_capsule_size(34,92)
     for prop,value in {'first_person_mesh_asset':fp_mesh,'first_person_anim_class':fp.generated_class(),
-                       'start_in_first_person':True,'enable_sprint':True,'right_hand_bone':'RightHand',
+                       'enable_sprint':True,'right_hand_bone':'RightHand',
                        'first_person_head_bone':'Head','sprint_speed':850.0,
                        'first_person_aim_fov':65.0,'first_person_aim_interp_speed':20.0,**montages}.items():
         cdo.set_editor_property(prop,value)

@@ -14,7 +14,7 @@ unreal.BlueprintEditorLibrary.compile_blueprint(source);unreal.BlueprintEditorLi
 a=unreal.get_default_object(source.generated_class());b=unreal.get_default_object(target.generated_class())
 properties=['first_person_mesh_asset','first_person_anim_class','first_person_mesh_transform','first_person_aim_mesh_offset',
     'first_person_weapon_fit','first_person_weapon_source_mesh','first_person_weapon_visual_mesh','first_person_weapon_transform',
-    'first_person_fire_montage','first_person_reload_montage','first_person_swap_montage','start_in_first_person']
+    'first_person_fire_montage','first_person_reload_montage','first_person_swap_montage']
 for name in properties:b.set_editor_property(name,a.get_editor_property(name))
 assert lib.save_loaded_asset(target,only_if_is_dirty=False)
 gm=unreal.load_asset(root+'/Blueprints/BP_StingerTestGameMode')

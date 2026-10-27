@@ -161,10 +161,7 @@ public:
 		auto* C = PC ? Cast<ABrokenEdgeCharacter>(PC->GetPawn()) : nullptr;
 		if (!C || !C->GetEquippedWeapon() || !C->GetExtractionCombat()->GetWeaponStats().IsValid()) return false;
 		auto* Mechanics = C->GetExtractionCombat();
-		auto* Input = PC->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-		auto* Toggle = LoadObject<UInputAction>(
-			nullptr, TEXT("/Game/Input/Actions/IA_ToggleCameraView.IA_ToggleCameraView"));
-		Input->InjectInputForAction(Toggle, FInputActionValue(false), {}, {});
+
 		if (Step == 2 && Mechanics->GetBreathResumeTime() > W->GetTimeSeconds()) SawExhaustion = true;
 		auto Key = [&](FKey K, bool Down)
 		{
@@ -294,10 +291,10 @@ public:
 		else if (Step == 12 && Now - StepAt > .1)
 		{
 			Test->TestEqual(
-				TEXT("PIE knife parent follows recreated arms"), C->Melee->IsViewAttached(), C->IsFirstPersonView());
+				TEXT("PIE knife parent stays attached to first-person arms"), C->Melee->IsViewAttached(), C->IsFirstPersonView());
 			StepAt = Now;
 			if (KnifeSwitches++ == 30) Next();
-			else Input->InjectInputForAction(Toggle, FInputActionValue(true), {}, {});
+			else Test->TestTrue(TEXT("Knife keeps fixed first-person presentation"), C->IsFirstPersonView());
 		}
 		else if (Step == 13)
 		{
@@ -307,19 +304,21 @@ public:
 		else if (Step == 14 && Now - StepAt > .1)
 		{
 			Key(EKeys::RightMouseButton, false);
-			Input->InjectInputForAction(Toggle, FInputActionValue(true), {}, {});
+			Key(EKeys::V, true);
+			Key(EKeys::V, false);
 			Next();
 		}
 		else if (Step == 15 && Now - StepAt > .1)
 		{
-			Test->TestFalse(TEXT("PIE attack switched to third person"), C->IsFirstPersonView());
-			Input->InjectInputForAction(Toggle, FInputActionValue(true), {}, {});
+			Test->TestTrue(TEXT("Legacy view key cannot leave first person during attack"), C->IsFirstPersonView());
+			Key(EKeys::V, true);
+			Key(EKeys::V, false);
 			Next();
 		}
 		else if (Step == 16 && Now - StepAt > .1)
 		{
-			Test->TestTrue(TEXT("PIE knife attack remains attached after view recreation"), C->Melee->IsViewAttached());
-			Test->TestTrue(TEXT("PIE recreated arms resume heavy attack"), C->GetFirstPersonMesh()
+			Test->TestTrue(TEXT("PIE knife attack remains attached after legacy view key"), C->Melee->IsViewAttached());
+			Test->TestTrue(TEXT("PIE arms continue heavy attack"), C->GetFirstPersonMesh()
 			               && C->GetFirstPersonMesh()->GetAnimInstance()->Montage_IsPlaying(C->Melee->HeavyView));
 			Next();
 		}
@@ -450,25 +449,12 @@ public:
 		switch (Step)
 		{
 		case 0:
-			// 第一人称会隐藏第三人称身体并跳过姿势更新，先切到第三人称再采样。
+			// 固定第一人称仍持续更新世界人物骨骼，直接采样世界人物移动动画。
 			StepAt = Now;
 			++Step;
 			return false;
 		case 1:
-			if (C->IsFirstPersonView() && Now - StepAt < 10.0)
-			{
-				if (Now - StepAt > .2 && Now - ToggledAt > .4)
-				{
-					if (auto* Input = PC->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-					{
-						auto* Toggle = LoadObject<UInputAction>(
-							nullptr, TEXT("/Game/Input/Actions/IA_ToggleCameraView.IA_ToggleCameraView"));
-						if (Toggle) Input->InjectInputForAction(Toggle, FInputActionValue(false), {}, {});
-					}
-					ToggledAt = Now;
-				}
-				return false;
-			}
+			if (!C->IsFirstPersonView()) return false;
 			Key(EKeys::W, true);
 			Key(EKeys::LeftShift, true);
 			StepAt = Now;
@@ -553,7 +539,7 @@ public:
 
 private:
 	FAutomationTestBase* Test;
-	double Started, StepAt = 0, ToggledAt = 0;
+	double Started, StepAt = 0;
 	int32 Step = 0;
 	int32 Frames = 0, SprintPoseFrames = 0, NonSprintPoseFrames = 0;
 	int32 PoseSwaps = 0, EnableSwaps = 0, IdleSprintFrames = 0;
