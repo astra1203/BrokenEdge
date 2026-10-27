@@ -1,0 +1,855 @@
+{
+ "source_probe": "Saved/SpaceCenter/Phase7F/EditorRuns/Phase7FRouteProbe01",
+ "seed": 20261028,
+ "boundary": "Project placement on measured reachable floors; not official loot or guard data.",
+ "containers": [
+  {
+   "id": "7F_WestDorm_A1",
+   "group": "7F_WestDorm_A",
+   "poi": "宿舍楼",
+   "recipe": "Supply",
+   "location": [
+    -15500.0,
+    -15900.0,
+    -184.44261169433594
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_6b66776aba24662e"
+  },
+  {
+   "id": "7F_WestDorm_A2",
+   "group": "7F_WestDorm_A",
+   "poi": "宿舍楼",
+   "recipe": "Supply",
+   "location": [
+    -15800.0,
+    -16600.0,
+    -184.44261169433594
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_6b66776aba24662e"
+  },
+  {
+   "id": "7F_WestDorm_A3",
+   "group": "7F_WestDorm_A",
+   "poi": "宿舍楼",
+   "recipe": "Supply",
+   "location": [
+    -15300.0,
+    -16400.0,
+    -202.13761744374438
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_e62c81821c4d6bed"
+  },
+  {
+   "id": "7F_WestDorm_B1",
+   "group": "7F_WestDorm_B",
+   "poi": "宿舍楼",
+   "recipe": "Medical",
+   "location": [
+    -15300.0,
+    -15400.0,
+    -202.032836061629
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_e62c81821c4d6bed"
+  },
+  {
+   "id": "7F_WestDorm_B2",
+   "group": "7F_WestDorm_B",
+   "poi": "宿舍楼",
+   "recipe": "Medical",
+   "location": [
+    -15800.0,
+    -15300.0,
+    -184.44261169433594
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_6b66776aba24662e"
+  },
+  {
+   "id": "7F_WestDorm_B3",
+   "group": "7F_WestDorm_B",
+   "poi": "宿舍楼",
+   "recipe": "Medical",
+   "location": [
+    -15500.0,
+    -14900.0,
+    -202.02909172391014
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_e62c81821c4d6bed"
+  },
+  {
+   "id": "7F_LivingArea_A1",
+   "group": "7F_LivingArea_A",
+   "poi": "生活区",
+   "recipe": "Gear",
+   "location": [
+    -15800.0,
+    -16600.0,
+    -184.44261169433594
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_6b66776aba24662e"
+  },
+  {
+   "id": "7F_LivingArea_A2",
+   "group": "7F_LivingArea_A",
+   "poi": "生活区",
+   "recipe": "Gear",
+   "location": [
+    -16300.000000001372,
+    -17999.999999996173,
+    197.98397080908853
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_51fbab6a2976c8b9"
+  },
+  {
+   "id": "7F_LivingArea_A3",
+   "group": "7F_LivingArea_A",
+   "poi": "生活区",
+   "recipe": "Gear",
+   "location": [
+    -17100.000000076016,
+    -17899.99999996024,
+    197.77328360843603
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_e83db46522065959"
+  },
+  {
+   "id": "7F_LivingArea_B1",
+   "group": "7F_LivingArea_B",
+   "poi": "生活区",
+   "recipe": "Valuable",
+   "location": [
+    -15500.0,
+    -17000.0,
+    -202.0805419457282
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_e62c81821c4d6bed"
+  },
+  {
+   "id": "7F_LivingArea_B2",
+   "group": "7F_LivingArea_B",
+   "poi": "生活区",
+   "recipe": "Valuable",
+   "location": [
+    -16599.999930036865,
+    -17499.99998220116,
+    195.83654683659447
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_ad4a2fc036441cf1"
+  },
+  {
+   "id": "7F_LivingArea_B3",
+   "group": "7F_LivingArea_B",
+   "poi": "生活区",
+   "recipe": "Valuable",
+   "location": [
+    -17099.999895808327,
+    -17399.999989046868,
+    195.64135382695213
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_ad4a2fc036441cf1"
+  },
+  {
+   "id": "7F_WestGate_A1",
+   "group": "7F_WestGate_A",
+   "poi": "西区大门",
+   "recipe": "Supply",
+   "location": [
+    -14100.0,
+    -6000.0,
+    -220.4628908894557
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_3f7e0800bd0d37b2"
+  },
+  {
+   "id": "7F_WestGate_A2",
+   "group": "7F_WestGate_A",
+   "poi": "西区大门",
+   "recipe": "Supply",
+   "location": [
+    -14100.0,
+    -6500.0,
+    -219.46087480966202
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_a11280a5004d707b"
+  },
+  {
+   "id": "7F_WestGate_A3",
+   "group": "7F_WestGate_A",
+   "poi": "西区大门",
+   "recipe": "Supply",
+   "location": [
+    -13100.000032533964,
+    -6600.0000190753335,
+    -207.36735804748605
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_19b11ba49891d5a8"
+  },
+  {
+   "id": "7F_WestGate_B1",
+   "group": "7F_WestGate_B",
+   "poi": "西区大门",
+   "recipe": "Medical",
+   "location": [
+    -13599.999961922342,
+    -6500.000025942094,
+    -203.78786547851632
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_19b11ba49891d5a8"
+  },
+  {
+   "id": "7F_WestGate_B2",
+   "group": "7F_WestGate_B",
+   "poi": "西区大门",
+   "recipe": "Medical",
+   "location": [
+    -13100.0,
+    -6100.0,
+    -222.21279848487552
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_3f7e0800bd0d37b2"
+  },
+  {
+   "id": "7F_WestGate_B3",
+   "group": "7F_WestGate_B",
+   "poi": "西区大门",
+   "recipe": "Medical",
+   "location": [
+    -13600.0,
+    -6000.0,
+    -221.45190928584105
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_3f7e0800bd0d37b2"
+  },
+  {
+   "id": "7F_StaffPassage1_A1",
+   "group": "7F_StaffPassage1_A",
+   "poi": "一号员工通道",
+   "recipe": "Gear",
+   "location": [
+    -6600.0,
+    -17500.0,
+    46.625398955794935
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_2880d4af46f950d4"
+  },
+  {
+   "id": "7F_StaffPassage1_A2",
+   "group": "7F_StaffPassage1_A",
+   "poi": "一号员工通道",
+   "recipe": "Gear",
+   "location": [
+    -6700.0,
+    -17000.0,
+    46.62551249867926
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_2880d4af46f950d4"
+  },
+  {
+   "id": "7F_StaffPassage1_A3",
+   "group": "7F_StaffPassage1_A",
+   "poi": "一号员工通道",
+   "recipe": "Gear",
+   "location": [
+    -7100.0,
+    -16100.0,
+    -284.7904666526681
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_2880d4af46f950d4"
+  },
+  {
+   "id": "7F_StaffPassage1_B1",
+   "group": "7F_StaffPassage1_B",
+   "poi": "一号员工通道",
+   "recipe": "Valuable",
+   "location": [
+    -7600.0,
+    -16100.0,
+    -284.7900479821478
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_2880d4af46f950d4"
+  },
+  {
+   "id": "7F_StaffPassage1_B2",
+   "group": "7F_StaffPassage1_B",
+   "poi": "一号员工通道",
+   "recipe": "Valuable",
+   "location": [
+    -5600.0,
+    -17300.0,
+    46.625469195448716
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_2880d4af46f950d4"
+  },
+  {
+   "id": "7F_StaffPassage1_B3",
+   "group": "7F_StaffPassage1_B",
+   "poi": "一号员工通道",
+   "recipe": "Valuable",
+   "location": [
+    -7100.0,
+    -17300.0,
+    46.625433393766
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_2880d4af46f950d4"
+  },
+  {
+   "id": "7F_StaffPassage2_A1",
+   "group": "7F_StaffPassage2_A",
+   "poi": "二号员工通道",
+   "recipe": "Supply",
+   "location": [
+    15800.0,
+    -17900.0,
+    56.0
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_06242ea9b85810bd"
+  },
+  {
+   "id": "7F_StaffPassage2_A2",
+   "group": "7F_StaffPassage2_A",
+   "poi": "二号员工通道",
+   "recipe": "Supply",
+   "location": [
+    16500.0,
+    -17400.0,
+    -420.9040199312441
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_14c2798109179b46"
+  },
+  {
+   "id": "7F_StaffPassage2_A3",
+   "group": "7F_StaffPassage2_A",
+   "poi": "二号员工通道",
+   "recipe": "Supply",
+   "location": [
+    15800.0,
+    -16700.0,
+    -358.1708713292076
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_14c2798109179b46"
+  },
+  {
+   "id": "7F_StaffPassage2_B1",
+   "group": "7F_StaffPassage2_B",
+   "poi": "二号员工通道",
+   "recipe": "Medical",
+   "location": [
+    16100.0,
+    -17100.0,
+    -382.30210816085287
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_14c2798109179b46"
+  },
+  {
+   "id": "7F_StaffPassage2_B2",
+   "group": "7F_StaffPassage2_B",
+   "poi": "二号员工通道",
+   "recipe": "Medical",
+   "location": [
+    15300.0,
+    -17000.0,
+    -358.21524706945877
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_14c2798109179b46"
+  },
+  {
+   "id": "7F_StaffPassage2_B3",
+   "group": "7F_StaffPassage2_B",
+   "poi": "二号员工通道",
+   "recipe": "Medical",
+   "location": [
+    15699.999997765775,
+    -17399.999997813145,
+    62.79400699084576
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_e2b2255229e34b77"
+  },
+  {
+   "id": "7F_LiftRoom_A1",
+   "group": "7F_LiftRoom_A",
+   "poi": "吊装室",
+   "recipe": "Gear",
+   "location": [
+    24500.0,
+    -13700.0,
+    -550.0458576688981
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_381c496e61c0cd90"
+  },
+  {
+   "id": "7F_LiftRoom_A2",
+   "group": "7F_LiftRoom_A",
+   "poi": "吊装室",
+   "recipe": "Gear",
+   "location": [
+    24200.0,
+    -12300.0,
+    -550.0334445474646
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_381c496e61c0cd90"
+  },
+  {
+   "id": "7F_LiftRoom_A3",
+   "group": "7F_LiftRoom_A",
+   "poi": "吊装室",
+   "recipe": "Gear",
+   "location": [
+    24200.0,
+    -13300.0,
+    -550.0387991564232
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_381c496e61c0cd90"
+  },
+  {
+   "id": "7F_LiftRoom_B1",
+   "group": "7F_LiftRoom_B",
+   "poi": "吊装室",
+   "recipe": "Valuable",
+   "location": [
+    24700.0,
+    -13100.0,
+    -572.51227840361
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_381c496e61c0cd90"
+  },
+  {
+   "id": "7F_LiftRoom_B2",
+   "group": "7F_LiftRoom_B",
+   "poi": "吊装室",
+   "recipe": "Valuable",
+   "location": [
+    24300.000000359792,
+    -12799.999996164614,
+    -547.7831696991814
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_08255de2c5cc1acd"
+  },
+  {
+   "id": "7F_LiftRoom_B3",
+   "group": "7F_LiftRoom_B",
+   "poi": "吊装室",
+   "recipe": "Valuable",
+   "location": [
+    24800.0,
+    -12600.0,
+    -572.4115375206943
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_381c496e61c0cd90"
+  },
+  {
+   "id": "7F_Assembly_A1",
+   "group": "7F_Assembly_A",
+   "poi": "组装室",
+   "recipe": "Supply",
+   "location": [
+    31300.000000002783,
+    -13399.999999998017,
+    257.9969482421875
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_ab2d21ea1ce486ea"
+  },
+  {
+   "id": "7F_Assembly_A2",
+   "group": "7F_Assembly_A",
+   "poi": "组装室",
+   "recipe": "Supply",
+   "location": [
+    31300.000000002783,
+    -12899.999999997643,
+    257.9970703125
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_ab2d21ea1ce486ea"
+  },
+  {
+   "id": "7F_Assembly_A3",
+   "group": "7F_Assembly_A",
+   "poi": "组装室",
+   "recipe": "Supply",
+   "location": [
+    30500.000000002183,
+    -12499.99999999734,
+    257.9969482421875
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_ab2d21ea1ce486ea"
+  },
+  {
+   "id": "7F_Assembly_B1",
+   "group": "7F_Assembly_B",
+   "poi": "组装室",
+   "recipe": "Medical",
+   "location": [
+    31100.000000002634,
+    -12299.999999997191,
+    257.9969482421875
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_ab2d21ea1ce486ea"
+  },
+  {
+   "id": "7F_Assembly_B2",
+   "group": "7F_Assembly_B",
+   "poi": "组装室",
+   "recipe": "Medical",
+   "location": [
+    30800.00000000241,
+    -12899.99999999764,
+    257.9969482421875
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_ab2d21ea1ce486ea"
+  },
+  {
+   "id": "7F_Assembly_B3",
+   "group": "7F_Assembly_B",
+   "poi": "组装室",
+   "recipe": "Medical",
+   "location": [
+    30800.00000000241,
+    -13399.999999998017,
+    257.9969482421875
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_ab2d21ea1ce486ea"
+  },
+  {
+   "id": "7F_Canning_A1",
+   "group": "7F_Canning_A",
+   "poi": "罐装区",
+   "recipe": "Gear",
+   "location": [
+    31800.000000005366,
+    1200.0000000081745,
+    -549.3641346081796
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_fadf1db028e25cf2"
+  },
+  {
+   "id": "7F_Canning_A2",
+   "group": "7F_Canning_A",
+   "poi": "罐装区",
+   "recipe": "Gear",
+   "location": [
+    31600.000000005217,
+    700.0000000077998,
+    -572.3937105339911
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_fadf1db028e25cf2"
+  },
+  {
+   "id": "7F_Canning_A3",
+   "group": "7F_Canning_A",
+   "poi": "罐装区",
+   "recipe": "Gear",
+   "location": [
+    32400.000000005813,
+    600.0000000077252,
+    -552.9449442680084
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_fadf1db028e25cf2"
+  },
+  {
+   "id": "7F_Canning_B1",
+   "group": "7F_Canning_B",
+   "poi": "罐装区",
+   "recipe": "Valuable",
+   "location": [
+    31300.00000000499,
+    1100.0000000081018,
+    -572.3937113857469
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_fadf1db028e25cf2"
+  },
+  {
+   "id": "7F_Canning_B2",
+   "group": "7F_Canning_B",
+   "poi": "罐装区",
+   "recipe": "Valuable",
+   "location": [
+    31900.000000005442,
+    1700.000000008551,
+    -552.2403838602982
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_fadf1db028e25cf2"
+  },
+  {
+   "id": "7F_Canning_B3",
+   "group": "7F_Canning_B",
+   "poi": "罐装区",
+   "recipe": "Valuable",
+   "location": [
+    32300.00001503835,
+    1199.9999819640866,
+    -552.1560100250244
+   ],
+   "covered": false,
+   "floor_actor": "SCR_Group_c24aceecac62cfe7"
+  },
+  {
+   "id": "7F_TestRange_A1",
+   "group": "7F_TestRange_A",
+   "poi": "水平试车间",
+   "recipe": "Supply",
+   "location": [
+    21300.0000077268,
+    20400.000001000357,
+    344.77939108495605
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_d3d793524e21d5e9"
+  },
+  {
+   "id": "7F_TestRange_A2",
+   "group": "7F_TestRange_A",
+   "poi": "水平试车间",
+   "recipe": "Supply",
+   "location": [
+    20800.00000210682,
+    20299.99999987636,
+    296.3454654725098
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_d3d793524e21d5e9"
+  },
+  {
+   "id": "7F_TestRange_A3",
+   "group": "7F_TestRange_A",
+   "poi": "水平试车间",
+   "recipe": "Supply",
+   "location": [
+    21700.000012228407,
+    19799.999994277732,
+    222.770751207606
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_953b44605a53b6ba"
+  },
+  {
+   "id": "7F_TestRange_B1",
+   "group": "7F_TestRange_B",
+   "poi": "水平试车间",
+   "recipe": "Medical",
+   "location": [
+    21200.000006602804,
+    19899.999995380374,
+    344.77927309555264
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_d3d793524e21d5e9"
+  },
+  {
+   "id": "7F_TestRange_B2",
+   "group": "7F_TestRange_B",
+   "poi": "水平试车间",
+   "recipe": "Medical",
+   "location": [
+    20800.00000210682,
+    19599.999992008383,
+    344.77909374999945
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_d3d793524e21d5e9"
+  },
+  {
+   "id": "7F_TestRange_B3",
+   "group": "7F_TestRange_B",
+   "poi": "水平试车间",
+   "recipe": "Medical",
+   "location": [
+    22300.000018972387,
+    19599.99999202974,
+    222.83856093227416
+   ],
+   "covered": true,
+   "floor_actor": "SCR_Group_953b44605a53b6ba"
+  }
+ ],
+ "routes": [
+  {
+   "name": "ExtractionPatrol_7F_WestDorm",
+   "points": [
+    [
+     -15300.0,
+     -17900.0,
+     -36.990585011847685
+    ],
+    [
+     -16900.0,
+     -14100.0,
+     64.03655604811172
+    ],
+    [
+     -19000.0,
+     -16400.0,
+     -44.682754822227594
+    ],
+    [
+     -15500.0,
+     -18000.0,
+     30.91370116413742
+    ]
+   ],
+   "center": [
+    -16600,
+    -15800
+   ],
+   "radius_cm": 2500,
+   "leg_lengths_cm": [
+    5516,
+    4420,
+    5264,
+    321
+   ]
+  },
+  {
+   "name": "ExtractionPatrol_7F_WestGate",
+   "points": [
+    [
+     -11400.0,
+     -7200.0,
+     -54.44797734778086
+    ],
+    [
+     -14600.00000291041,
+     -4499.9999949072635,
+     -201.43458676147566
+    ],
+    [
+     -16000.0,
+     -7000.0,
+     -203.9998726844933
+    ],
+    [
+     -14200.000002697165,
+     -9100.000002276032,
+     -143.55516421317952
+    ]
+   ],
+   "center": [
+    -13600,
+    -6700
+   ],
+   "radius_cm": 2500,
+   "leg_lengths_cm": [
+    5910,
+    3904,
+    3913,
+    4924
+   ]
+  },
+  {
+   "name": "ExtractionPatrol_7F_EastIndustry",
+   "points": [
+    [
+     32800.00000000391,
+     -12999.999999997715,
+     258.0221631242192
+    ],
+    [
+     30500.000000000022,
+     -10499.999999999958,
+     256.62030029296875
+    ],
+    [
+     30500.000000000022,
+     -10599.999999999958,
+     256.62030029296875
+    ],
+    [
+     31800.000000003158,
+     -15099.999999999292,
+     259.2978926036923
+    ]
+   ],
+   "center": [
+    30800,
+    -12900
+   ],
+   "radius_cm": 2500,
+   "leg_lengths_cm": [
+    4803,
+    100,
+    5813,
+    3900
+   ]
+  },
+  {
+   "name": "ExtractionPatrol_7F_TestRange",
+   "points": [
+    [
+     24200.000040328323,
+     19499.999990905744,
+     69.50263791565969
+    ],
+    [
+     22800.000024592373,
+     20700.000004393703,
+     70.11674531010053
+    ],
+    [
+     22399.9999997681,
+     19100.00000076026,
+     149.09277850131105
+    ],
+    [
+     22700.000023468376,
+     18799.999983037767,
+     70.1167451490564
+    ]
+   ],
+   "center": [
+    23100,
+    19900
+   ],
+   "radius_cm": 1200,
+   "leg_lengths_cm": [
+    2600,
+    2418,
+    618,
+    2201
+   ]
+  }
+ ]
+}

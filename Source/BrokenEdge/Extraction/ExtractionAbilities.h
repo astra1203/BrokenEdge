@@ -87,8 +87,9 @@ public:
 	UPROPERTY(Config)
 	float SmokeFuseSeconds = 1.5f;
 	// 守卫数量与反应/射击节奏调参；GuardDamageScale 是伤害倍率。
+	// 按路线名排序轮流分配，8 个刚好核心区 4 条 + 7F 新区域 4 条各一名。
 	UPROPERTY(Config)
-	int32 Guards = 4;
+	int32 Guards = 8;
 	UPROPERTY(Config)
 	float GuardReactionSeconds = 2.f;
 	/** 0 表示与玩家长按一样使用当前武器 FireDelay；正数只可额外降低射速。 */
