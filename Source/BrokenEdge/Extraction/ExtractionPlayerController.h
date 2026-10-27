@@ -15,6 +15,10 @@ class BROKENEDGE_API AExtractionPlayerController : public ABrokenEdgePlayerContr
 	friend class FExtractionDriver;
 
 public:
+	/** Designer-authored inventory; soft class reference is collected for cooking. */
+	UPROPERTY(EditDefaultsOnly, Category="Extraction|UI")
+	TSoftClassPtr<class ULootingMainView> InventoryWidgetClass = TSoftClassPtr<ULootingMainView>(
+		FSoftObjectPath(TEXT("/Game/UI/Looting/WBP_LootingPickupView_Pc.WBP_LootingPickupView_Pc_C")));
 	// 服务器修复失效观战目标；本地创建并刷新界面、切输入模式，再维护避障观战相机。
 	// 目标区域尚未可见时保留旧视点，避免相机提前进入未加载场景。
 	virtual void Tick(float Delta) override;
@@ -111,7 +115,7 @@ private:
 	/** 上次参与计时的提示文本，用于捕捉界面里直接赋值 ItemMessage 的情况。 */
 	FString TimedItemMessage;
 	UPROPERTY(Transient)
-	TObjectPtr<class UExtractionInventoryWidget> InventoryWidget;
+	TObjectPtr<class ULootingMainView> InventoryWidget;
 	FTimerHandle LeaveRetryTimer;
 	// 无会话直接返回，有异步操作时延迟重试，否则绑定销毁回调后发请求。
 	void DestroyLocalSession();
