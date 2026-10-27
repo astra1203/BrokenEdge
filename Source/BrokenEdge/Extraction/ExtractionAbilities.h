@@ -53,8 +53,30 @@ public:
 	UPROPERTY(Config)
 	float SmokeRange = 3500;
 	// 烟幕半径以厘米计；投掷在视线落点附近，半径决定能遮住多少视野。
+	// 150cm = 3 米直径的球形烟团：够挡住一个站着的人，又不会糊住半条街。
 	UPROPERTY(Config)
-	float SmokeRadius = 450;
+	float SmokeRadius = 150;
+	/**
+	 * 云团摆几层。P_Clouds 单张云的 alpha 只有两三成，一层就是一片看得穿的雾；
+	 * 叠 n 层后不透明度按 1-(1-a)^n 累积，16 层（≈0.98）才读得出"实心烟团"。
+	 * 性能吃紧就往下调，8 层大约回到"半透烟雾"的观感。
+	 */
+	UPROPERTY(Config, meta=(ClampMin="1", ClampMax="16"))
+	int32 SmokeCloudLayers = 16;
+	/**
+	 * 视觉半径相对遮挡半径（SmokeRadius）的倍率。
+	 * 1 = 烟正好画满判定球；小于 1 是视觉比判定范围小一圈（宁可少看、不可被判定骗）。
+	 * 觉得整团太大就往下调，不用改代码。
+	 */
+	UPROPERTY(Config, meta=(ClampMin="0.2", ClampMax="2"))
+	float SmokeCloudSizeScale = 1.f;
+	/**
+	 * 垂直尺度倍率：1 = 正球，0.62 = 贴地扁团，4 = 竖起来的烟柱。
+	 * 表现和遮挡判定必须用同一个值，否则会出现"看着在烟里、子弹却穿过去"。
+	 * 大于 1 时烟团变高，判定椭球跟着变高 —— 这是玩法改动，不只是画面。
+	 */
+	UPROPERTY(Config, meta=(ClampMin="0.2", ClampMax="6"))
+	float SmokeCloudAspect = 4.f;
 	UPROPERTY(Config)
 	float SmokeSeconds = 18;
 	UPROPERTY(Config)
