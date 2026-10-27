@@ -18,7 +18,52 @@ from pe_validation import validate_executable
 
 sys.stdout.reconfigure(encoding='utf-8')
 ROOT = Path(__file__).resolve().parents[2]
-ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
+
+
+def read_engine_version():
+    """从 .uproject 的 EngineAssociation 读目标引擎版本，例如 '5.8'。"""
+    uproject = ROOT / 'BrokenEdge.uproject'
+    if uproject.is_file():
+        try:
+            return json.loads(uproject.read_text(encoding='utf-8')).get('EngineAssociation', '')
+        except (ValueError, OSError):
+            return ''
+    return ''
+
+
+def find_engine(version):
+    """定位引擎安装目录。
+
+    原代码写死 C:/UnrealProjects/UnrealEngine-5.8.3-release，本机不存在，
+    直接导致 FileNotFoundError。这里按 .uproject 的 EngineAssociation 定位版本，
+    再在常见安装位置里找匹配的那一份 —— 本机同时装了 5.4 / 5.6 / 5.8，
+    只按名字排序会挑到 5.4，引擎版本不符会直接崩在 Server driver ready。
+    """
+    env = os.environ.get('UE_ENGINE_ROOT')
+    exact, loose = [], []
+    if env:
+        exact.append(Path(env))
+    for drive in ('C:/', 'D:/', 'E:/'):
+        for base in ('Program Files/Epic Games', 'Epic Games', 'UnrealProjects'):
+            root = Path(drive) / base
+            if not root.is_dir():
+                continue
+            if version:
+                # 精确匹配该版本，例如 5.8 -> UE_5.8
+                exact.extend(sorted(root.glob('UE_{0}'.format(version))))
+                exact.extend(sorted(root.glob('UnrealEngine-{0}*'.format(version))))
+            loose.extend(sorted(root.glob('UE_5*')))
+            loose.extend(sorted(root.glob('UnrealEngine-5*')))
+    # 精确匹配的候选必须优先，否则会先命中别的盘上的旧版本（实测会挑到 UE_5.4）。
+    for c in exact + loose:
+        if (c / 'Engine/Binaries/Win64/UnrealEditor.exe').is_file():
+            return c
+    raise SystemExit('UE engine not found; set UE_ENGINE_ROOT to the engine root')
+
+
+ENGINE_VERSION = read_engine_version()
+ENGINE = find_engine(ENGINE_VERSION)
+print('engine:', ENGINE, 'wanted:', ENGINE_VERSION or 'any')
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
 parser.add_argument('--loot-seed', type=int, help='Deterministic authority seed for authored loot validation')

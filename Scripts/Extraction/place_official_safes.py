@@ -159,6 +159,14 @@ def main():
 
     others = [p for p in layout.get_editor_property('points') if not is_safe(p)]
     report['kept_other_points'] = len(others)
+    # 钥匙房容器由钥匙卡体系写入，本脚本只统计不动；为 0 说明编辑器在复用旧的内存版本，
+    # 一旦保存就会把它们连同其它新点一起写没 —— 这种覆盖是静默的，所以必须喊出来。
+    report['key_containers'] = sum(
+        'Key' in str(p.get_editor_property('recipe')) for p in others)
+    if report['key_containers'] == 0:
+        report['warnings'].append(
+            '表内 0 个钥匙房容器：若该版本本应含 6 个，说明编辑器用的是旧内存版本 —— '
+            '先在内容浏览器 Reload 该资产，再重跑本脚本')
     layout.set_editor_property('variant', 'SpaceCenter_Ma1')
     layout.set_editor_property('points', others + built)
     layout.set_editor_property(
@@ -172,9 +180,9 @@ def main():
     out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
     counts = report['counts']
-    print('OFFICIAL_SAFES_PLACED layout=%s total=%d large=%d small=%d kept_other=%d warnings=%d' % (
+    print('OFFICIAL_SAFES_PLACED layout=%s total=%d large=%d small=%d kept_other=%d key=%d warnings=%d' % (
         LAYOUT, counts['total'], counts['LargeSafe'], counts['SmallSafe'],
-        len(others), len(report['warnings'])))
+        len(others), report['key_containers'], len(report['warnings'])))
     for entry in report['points']:
         check = entry.get('floor_check')
         if check is None:

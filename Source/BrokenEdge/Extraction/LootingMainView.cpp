@@ -258,10 +258,10 @@ void ULootingMainView::RebuildContainer(ULootingWidgetPart* Panel, bool Loot)
 	}
 	for (int32 Y = 0; Y < C->Height; ++Y)
 		for (int32 X = 0; X < C->Width; ++X)
-			if (auto* Cell = MakePart(CellClass))
+			if (auto* GridPart = MakePart(CellClass))
 			{
-				Cell->SetVisibility(ESlateVisibility::HitTestInvisible);
-				CanvasChild(Panel->GridCanvas, Cell, FVector2D(X, Y) * CellSize, FVector2D(CellSize - 2));
+				GridPart->SetVisibility(ESlateVisibility::HitTestInvisible);
+				CanvasChild(Panel->GridCanvas, GridPart, FVector2D(X, Y) * CellSize, FVector2D(CellSize - 2));
 			}
 	for (const auto& Item : C->Items)
 	{
