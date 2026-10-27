@@ -276,6 +276,27 @@ public:
 	TObjectPtr<UAnimMontage> FirstPersonReloadMontage = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	TObjectPtr<UAnimMontage> FirstPersonSwapMontage = nullptr;
+	// 技能表现只影响动画，不参与救援、治疗、烟雾的服务器结算。
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> HealMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> FirstPersonHealMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> ReviveMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> FirstPersonReviveMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> SmokeMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> FirstPersonSmokeMontage = nullptr;
+	/**
+	 * 播放技能表现蒙太奇；ActionKind 与 EExtractionAction 取值一致（1 Revive / 2 Heal / 3 Smoke）。
+	 * Seconds 是服务器给定的动作时长，用于把蒙太奇拉伸到与结算同步。
+	 */
+	void PlayAbilityMontage(uint8 ActionKind, float Seconds);
+	/** 停止技能表现并复位蒙太奇状态；重复调用安全。 */
+	void StopAbilityMontage();
+	bool IsAbilityMontageActive() const { return AbilityMontage != nullptr; }
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	FName RightHandBone = TEXT("hand_r");
@@ -326,6 +347,8 @@ private:
 	TObjectPtr<UAnimMontage> ViewActionMontage;
 	UPROPERTY(Transient)
 	TObjectPtr<UAnimMontage> ViewActionThirdPersonMontage;
+	UPROPERTY(Transient)
+	TObjectPtr<UAnimMontage> AbilityMontage;
 	float ViewActionSectionStart = 0.f;
 	float ViewActionSectionLength = 1.f;
 	float ViewActionAttachTime = -1.f;

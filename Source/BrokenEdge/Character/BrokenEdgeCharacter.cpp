@@ -1040,8 +1040,11 @@ void ABrokenEdgeCharacter::UpdateSprint()
 		return;
 	}
 	const FVector Acceleration = GetCharacterMovement()->GetCurrentAcceleration();
+	// 治疗允许移动施放但要降速，且不能边治疗边冲刺；倍率来自 UExtractionRules。
+	const bool bHealing = ExtractionAbilities && ExtractionAbilities->Action == EExtractionAction::Heal;
 	const bool bWasSprinting = bSprinting;
-	bSprinting = bSprintRequested && !ExtractionHealth->LegFracture && !bIsCrouched && !IsAiming() && !bDisableGameplay
+	bSprinting = bSprintRequested && !bHealing && !ExtractionHealth->LegFracture && !bIsCrouched && !IsAiming() &&
+		!bDisableGameplay
 		&& (!ExtractionCombat->IsEnabled() || ExtractionCombat->CanSprintWithWeapon())
 		&& !bDefeated
 		&& GetCombatState() == ECombatState::ECS_Unoccuiped
@@ -1050,6 +1053,9 @@ void ABrokenEdgeCharacter::UpdateSprint()
 	GetCharacterMovement()->MaxWalkSpeed = bSprinting
 		                                       ? SprintSpeed
 		                                       : (IsAiming() ? Combat->AimWalkSpeed : Combat->BaseWalkSpeed);
+	if (bHealing)
+		GetCharacterMovement()->MaxWalkSpeed *= FMath::Clamp(
+			GetDefault<UExtractionRules>()->HealMoveSpeedScale, .05f, 1.f);
 	GetCharacterMovement()->MaxWalkSpeed *= FractureScale;
 }
 
@@ -1137,6 +1143,54 @@ void ABrokenEdgeCharacter::PlayHitReactMontage()
 		FName SectionName("FromRight");
 		AnimInstance->Montage_JumpToSection(SectionName);
 	}
+}
+
+void ABrokenEdgeCharacter::PlayAbilityMontage(uint8 ActionKind, float Seconds)
+{
+	UAnimMontage* ThirdPerson = ActionKind == 1
+		                            ? ReviveMontage.Get()
+		                            : ActionKind == 2
+		                            ? HealMontage.Get()
+		                            : ActionKind == 3
+		                            ? SmokeMontage.Get()
+		                            : nullptr;
+	UAnimMontage* View = ActionKind == 1
+		                     ? FirstPersonReviveMontage.Get()
+		                     : ActionKind == 2
+		                     ? FirstPersonHealMontage.Get()
+		                     : ActionKind == 3
+		                     ? FirstPersonSmokeMontage.Get()
+		                     : nullptr;
+	if (ThirdPerson == nullptr) return;
+	StopAbilityMontage();
+	AbilityMontage = ThirdPerson;
+	// 专用服务器没有可见网格，跳过表现层，避免无意义地评估蒙太奇。
+	if (GetNetMode() == NM_DedicatedServer) return;
+	UAnimInstance* Body = GetMesh() ? GetMesh()->GetAnimInstance() : nullptr;
+	if (Body == nullptr) return;
+	// 持续型动作（救援）按源节奏循环，短动作（治疗、烟雾）拉伸到与服务器结算同时长。
+	const bool bLooping = ActionKind == 1;
+	const float Rate = bLooping
+		                   ? 1.f
+		                   : FMath::Clamp(ThirdPerson->GetPlayLength() / FMath::Max(Seconds, .1f), .5f, 2.5f);
+	Body->Montage_Play(ThirdPerson, Rate);
+	if (bLooping)
+	{
+		const FName Section = ThirdPerson->GetSectionName(0);
+		if (!Section.IsNone()) Body->Montage_SetNextSection(Section, Section, ThirdPerson);
+	}
+	PlayFirstPersonMontage(View, ThirdPerson);
+}
+
+void ABrokenEdgeCharacter::StopAbilityMontage()
+{
+	if (AbilityMontage == nullptr) return;
+	if (UAnimInstance* Body = GetMesh() ? GetMesh()->GetAnimInstance() : nullptr)
+	{
+		if (Body->Montage_IsPlaying(AbilityMontage)) Body->Montage_Stop(.15f, AbilityMontage);
+	}
+	// 第一人称蒙太奇由 SyncFirstPersonAction 跟随第三人称一起停止。
+	AbilityMontage = nullptr;
 }
 
 void ABrokenEdgeCharacter::PlayReloadMontage()

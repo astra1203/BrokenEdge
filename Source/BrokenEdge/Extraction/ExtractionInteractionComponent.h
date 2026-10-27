@@ -44,8 +44,11 @@ public:
 	UPROPERTY(Replicated)
 	double SearchEnd = 0;
 	/** 当前治疗完成的世界时间（秒）；0 表示没有正在进行的治疗。 */
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing=OnRep_MedicalEnd)
 	double MedicalEnd = 0;
+	/** 拥有者客户端据此启停治疗表现蒙太奇；不参与任何结算。 */
+	UFUNCTION()
+	void OnRep_MedicalEnd();
 	/** 本次治疗的持续时间（秒），开始使用时从物品定义读取，最小为 0.1 秒。 */
 	UPROPERTY(Replicated)
 	double MedicalDuration = 3;

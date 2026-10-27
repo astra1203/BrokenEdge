@@ -258,7 +258,19 @@ void UExtractionInteractionComponent::CancelMedical()
 	Character()->GetExtractionAbilities()->Cancel();
 	MedicalEnd = 0;
 	MedicalItem.Invalidate();
+	// 能力组件取消时也会停表现，重复调用安全。
+	Character()->StopAbilityMontage();
 	GetOwner()->ForceNetUpdate();
+}
+
+// 医疗物品的开始/结束都通过 MedicalEnd 复制给拥有者，客户端据此播放或停止治疗表现。
+void UExtractionInteractionComponent::OnRep_MedicalEnd()
+{
+	auto* C = Character();
+	if (C == nullptr) return;
+	if (MedicalEnd > 0)
+		C->PlayAbilityMontage(static_cast<uint8>(EExtractionAction::Heal), static_cast<float>(MedicalDuration));
+	else C->StopAbilityMontage();
 }
 
 // 停止持续射击并退出瞄准，供交互、能力和失能路径共用。
@@ -288,6 +300,8 @@ FString UExtractionInteractionComponent::StartMedical(const FGuid& Id)
 	MedicalItem = Id;
 	MedicalDuration = FMath::Max(.1, static_cast<double>(D->UseSeconds));
 	MedicalEnd = GetWorld()->GetTimeSeconds() + MedicalDuration;
+	// 服务器侧先挂表现（监听服务器可见），远程客户端的拥有者由 OnRep_MedicalEnd 触发。
+	C->PlayAbilityMontage(static_cast<uint8>(EExtractionAction::Heal), static_cast<float>(MedicalDuration));
 	GetOwner()->ForceNetUpdate();
 	return {};
 }

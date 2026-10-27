@@ -16,6 +16,14 @@ struct BROKENEDGE_API FAnimNode_RifleLocomotion : public FAnimNode_Base
 	FAnimNode_BlendSpacePlayer_Standalone AimPlayer;
 	bool bEnabled = false;
 	bool bAim = false;
+	/** 瞄准朝向与身体朝向的偏航差，已乘 AimYawScale 并钳制。 */
+	float AimYaw = 0.f;
+	/** 平滑后的偏航，供 Evaluate 使用，避免视角微抖直接传到脊椎。 */
+	float SmoothedAimYaw = 0.f;
+	/** 冲刺姿势保持计时：>0 时按冲刺处理，防止瞬时速度抖动切换姿势。 */
+	float SprintPoseHold = 0.f;
+	/** 平滑后的速度轴坐标。 */
+	float SmoothedCoordinate = 0.f;
 	float Weight = 0.f;
 	TArray<FTransform> LastPose;
 	TArray<FTransform> BlendFromPose;
