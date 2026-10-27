@@ -10,6 +10,7 @@
 #include "BrokenEdgeCharacter.generated.h"
 
 class UCameraComponent;
+class UAnimInstance;
 class UCombatComponent;
 class AWeapon;
 class UBoxComponent;
@@ -78,6 +79,8 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	/** 守卫统一使用 AI 控制器的期望朝向，避免玩家持枪/原地转身逻辑覆盖导航和 SetFocus。 */
+	void ConfigureGuardRotation();
 	void RotateInPlace(float DeltaTime);
 	float CalculateSpeed();
 	void AimOffset(float DeltaTime);
@@ -574,6 +577,12 @@ public:
 	TObjectPtr<class UExtractionInventoryComponent> GuardInventory;
 	UPROPERTY(Replicated)
 	bool bExtractionGuard = false;
+	/**
+	 * 守卫身体模型相对胶囊的偏航修正。本项目 Stinger 模型使用 -90 度，使模型正面对应 Actor +X。
+	 * 替换为其他朝向的模型时，在敌人蓝图类默认值中调整；不影响玩家角色的模型配置。
+	 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="AI|Presentation")
+	float GuardMeshYawOffset = -90.f;
 	UPROPERTY(Replicated)
 	int32 ExtractionGuardId = INDEX_NONE;
 	bool bWasExtractionDowned = false;

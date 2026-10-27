@@ -7,6 +7,7 @@
 #include "WeaponMechanics.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
 #include "BrokenEdge/Extraction/ExtractionHealth.h"
+#include "BrokenEdge/Extraction/ExtractionAbilities.h"
 
 #include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
@@ -107,13 +108,21 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 				HitCharacter->GetExtractionHealth()->Bullet(DamageToCause, FireHit.BoneName, ExtractionAmmoType,
 				                                            InstigatorController, this);
 			else
+			{
+				// 普通测试地图走 ApplyDamage，也要遵守守卫难度倍率。
+				// 搜打撤已在 ExtractionHealth::Bullet 缩放，不能在其入口重复乘一次。
+				// 按射手身份判断，玩家捡起守卫掉落的同一把枪时仍使用正常伤害。
+				const auto* Shooter = Cast<ABrokenEdgeCharacter>(OwnerPawn);
+				const float DamageScale = Shooter && Shooter->bExtractionGuard
+					? FMath::Clamp(GetDefault<UExtractionRules>()->GuardDamageScale, 0.f, 1.f) : 1.f;
 				UGameplayStatics::ApplyDamage(
 					HitCharacter,
-					DamageToCause,
+					DamageToCause * DamageScale,
 					InstigatorController,
 					this,
 					UDamageType::StaticClass()
 				);
+			}
 		}
 
 		if (!HasAuthority() && bUseServerSideRewind && !GetWorld()->GetGameState<AExtractionGameState>())

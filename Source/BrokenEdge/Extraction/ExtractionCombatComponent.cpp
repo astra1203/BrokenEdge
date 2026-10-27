@@ -4,6 +4,9 @@
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionPlayerController.h"
+#include "ExtractionGuard.h"
+#include "ExtractionGuardAim.h"
+#include "ExtractionAbilities.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/Weapon/HitScanWeapon.h"
@@ -194,7 +197,7 @@ void UExtractionCombatComponent::TickComponent(float Delta, ELevelTick Kind, FAc
 			(Now - LastMechanicsShot) * Stats.CameraFrequency);
 		C->GetFollowCamera()->AddAdditiveOffset(FTransform(FRotator(CameraPitch, 0, 0)), 0);
 	}
-	if (C->IsLocallyControlled() && C->Controller)
+	if (!C->bExtractionGuard && C->IsLocallyControlled() && C->Controller)
 	{
 		FRotator Control = C->Controller->GetControlRotation();
 		if (bHaveControl)
@@ -245,7 +248,9 @@ FVector UExtractionCombatComponent::ResolveShot(const FVector& Target, uint32 Id
 	const uint32 Seed = HashCombine(MechanicsSeed, Id);
 	const bool Hold = CanSteadyWeapon() && bBreathHeld && AimAlpha > .99f && Breath > 0 && Now >= BreathResume;
 	// Continuous deterministic sway, separate from random spread. Frequency/amplitude are compatibility tuning.
-	const float Phase = GetWorld()->GetGameState()->GetServerWorldTimeSeconds();
+	// 普通测试地图可能没有 GameState，仍可使用本地服务器世界时间计算武器摆动。
+	const auto* GameState = GetWorld()->GetGameState();
+	const float Phase = GameState ? GameState->GetServerWorldTimeSeconds() : GetWorld()->GetTimeSeconds();
 	const float Sway = AimAlpha * (C->bIsCrouched ? Stats.CrouchBreath : Stats.StandBreath) * (
 		Hold ? Stats.HeldSwayScale : 1.f) * Stats.SwayDegrees;
 	FRotator Aim = (Target - Start).Rotation();
@@ -254,7 +259,8 @@ FVector UExtractionCombatComponent::ResolveShot(const FVector& Target, uint32 Id
 	const FVector End = Start + WeaponMechanics::SpreadDirection(Aim.Vector(), Spread, Seed) * Stats.MaxDistance;
 	auto Recoil = Stats.Recoil(BurstIndex++, Continuous, AimAlpha, Seed) * (Hold ? Stats.HeldRecoilScale : 1.f);
 	if (C->bIsCrouched) Recoil *= Stats.CrouchRecoil;
-	if (bApplyInput && C->IsLocallyControlled() && C->Controller)
+	// AI 的 ControlRotation 属于 Focus/导航；后坐力仍影响散布，但不能当作玩家输入反写 AI 朝向。
+	if (bApplyInput && !C->bExtractionGuard && C->IsLocallyControlled() && C->Controller)
 	{
 		FRotator Control = C->Controller->GetControlRotation();
 		Control.Pitch += Recoil.X;
@@ -288,7 +294,8 @@ ABrokenEdgeCharacter* UExtractionCombatComponent::Character() const { return Cas
 // 通过当前 GameState 判断是否启用撤离协议，其他模式保持原战斗入口。
 bool UExtractionCombatComponent::IsEnabled() const
 {
-	return GetWorld() && GetWorld()->GetGameState<AExtractionGameState>();
+	const auto* C = Character();
+	return GetWorld() && (GetWorld()->GetGameState<AExtractionGameState>() || (C && C->bExtractionGuard));
 }
 
 // 要求活动对局、存活或守卫身份、未失能且未攀爬；这是多种战斗交互共用的前置条件。
@@ -297,9 +304,12 @@ bool UExtractionCombatComponent::CanAct() const
 	const auto* C = Character();
 	const auto* GS = GetWorld() ? GetWorld()->GetGameState<AExtractionGameState>() : nullptr;
 	const auto* PS = C ? C->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	return C && GS && GS->Phase == EExtractionPhase::Active && (C->bExtractionGuard || (PS && PS->Life ==
-			EExtractionLife::Alive))
-		&& !C->IsDefeated() && !C->bDisableGameplay && !C->IsTraversing();
+	if (!C || C->IsDefeated() || C->bDisableGameplay || C->IsTraversing()) return false;
+	if (GS)
+		return GS->Phase == EExtractionPhase::Active
+			&& (C->bExtractionGuard || (PS && PS->Life == EExtractionLife::Alive));
+	// 独立测试地图没有搜打撤对局阶段；仅给服务器实际接管的守卫放行，不改变普通玩家权限。
+	return C->bExtractionGuard && C->HasAuthority() && IsValid(Cast<AExtractionGuard>(C->GetController()));
 }
 
 // 服务器 AI 走同一射击请求校验链路，不能绕过弹药和射速规则。
@@ -374,16 +384,25 @@ void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint3
 		if (const auto* Inventory = C->GetExtractionInteraction()->Inventory())
 			if (const auto* Item = Inventory->Contents.Find(Weapon->ExtractionItemId))
 				Weapon->SphereRadius *= ExtractionItems::ScatterScale(*Item);
-		const FVector End = Stats.IsValid()
+		FVector End = Stats.IsValid()
 			                    ? ResolveShot(Target, ShotId, true)
 			                    : Weapon->bUseScatter
 			                    ? Weapon->TraceEndWithScatter(Target)
 			                    : FVector(Target);
 		Weapon->SphereRadius = SavedScatter;
+		if (C->bExtractionGuard)
+		{
+			// 在武器/附件原有散布之后再加 AI 专属误差，不修改武器资产，也不影响拾取这把枪的玩家。
+			// 使用独立的种子混合，避免与武器自身的随机采样使用同一序列。
+			const uint32 GuardSeed = HashCombine(HashCombine(MechanicsSeed, ShotId), 0x47554152u);
+			End = ExtractionGuardAim::ApplySpread(Weapon->GetWeaponMesh()->GetSocketLocation(TEXT("MuzzleFlash")),
+				End, GetDefault<UExtractionRules>()->GuardExtraSpreadDegrees, GuardSeed);
+		}
 		C->PlayFireMontage(Combat->bAiming);
 		Weapon->Fire(End);
 		if (auto* Inventory = C->GetExtractionInteraction()->Inventory()) Inventory->RecordShot(Weapon);
 		++AcceptedShots;
+		// 广播已经追加散射的最终端点；客户端不得再次随机采样，以免命中与表现不一致。
 		MulticastShotEffects(Weapon, End, Weapon->GetAmmo());
 	}
 	else ++RejectedShots;
