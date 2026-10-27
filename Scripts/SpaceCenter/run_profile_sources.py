@@ -9,7 +9,7 @@ p=argparse.ArgumentParser(description=__doc__+' Shared option: --profile PATH')
 p.add_argument('--tag',required=True)
 p.add_argument('--start-at',default='select')
 args=p.parse_args()
-assert PROFILE['phase'] in {'7D', '7E'}, 'Unsupported reconstruction phase'
+assert PROFILE['phase'] in {'7D', '7E', '7F'}, 'Unsupported reconstruction phase'
 out=WORK/'SourcePipelineRuns'/args.tag
 out.mkdir(parents=True,exist_ok=False)
 manifest='Saved/SpaceCenter/Phase7D/ManifestRuns/Phase7DManifest01/Manifest.json'
@@ -27,11 +27,11 @@ steps=[
  ('slots','restore_material_slots.py',['--tag','Phase7DSlots01','--manifest',manifest]),
 ]
 phase = 'Phase' + PROFILE['phase']
-if PROFILE['phase'] == '7E':
+if PROFILE['phase'] in {'7E', '7F'}:
     steps.insert(next(i for i, step in enumerate(steps) if step[0] == 'heights'),
-                 ('recovery', 'restore_texture_sources.py', ['recover', '--tag', 'Phase7ERecovery01']))
+                 ('recovery', 'restore_texture_sources.py', ['recover', '--tag', 'Phase7DRecovery01']))
     steps.insert(next(i for i, step in enumerate(steps) if step[0] == 'manifest'),
-                 ('weights', 'extend_terrain_weights.py', ['--tag', 'Phase7EWeights01']))
+                 ('weights', 'extend_terrain_weights.py', ['--tag', 'Phase7DWeights01']))
 steps = [(name, script, [value.replace('Phase7D', phase) for value in options])
          for name, script, options in steps]
 steps = [(name, script, [value.replace('Saved/SpaceCenter/'+phase, WORK.relative_to(ROOT).as_posix())

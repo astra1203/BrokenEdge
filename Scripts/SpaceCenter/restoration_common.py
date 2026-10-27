@@ -23,7 +23,7 @@ if not PROFILE_FILE.is_absolute(): PROFILE_FILE = ROOT/PROFILE_FILE
 PROFILE_FILE = PROFILE_FILE.resolve()
 PROFILE = json.loads(PROFILE_FILE.read_text(encoding='utf-8'))
 assert PROFILE['version'] == 1
-if PROFILE['phase'] in {'7D', '7E'}:
+if PROFILE['phase'] in {'7D', '7E', '7F'}:
     assert PROFILE.get('preview_map')=='/Game/Maps/SpaceCenter/L_SpaceCenterRestorationPreview'+PROFILE['phase'],'Phase requires its own preview map'
     assert {'cameras','traverse_route','acceptance'}.issubset(PROFILE['inputs']),'Explicit validation inputs are required'
 WORK = (ROOT/PROFILE['work_directory']).resolve()

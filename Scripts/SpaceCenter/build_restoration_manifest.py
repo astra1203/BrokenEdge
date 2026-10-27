@@ -38,7 +38,7 @@ def weight_image(out):
         'source_shader_verified':False,'image_sha256':sha(target)})
     entry={'source':'derived:SpaceCenter-original-weightmap-v1','file':str(target),'role':'data',
            'mask_uv':[1/width,1/height,(ORIGIN[0]-source_origin[0])/(width*100),(ORIGIN[1]-source_origin[1])/(height*100)]}
-    if PROFILE['phase']=='7E':entry['revision']=sha(target)[:12]
+    if PROFILE['phase'] in {'7E','7F'}:entry['revision']=sha(target)[:12]
     return entry
 
 
@@ -68,7 +68,7 @@ def main(tag):
     weights=weight_image(out);weight_key=weights['source']+':data';bindings[weight_key]=weights
     terrain=copy.deepcopy(next(r for r in recipes.values() if r['mode']=='opaque' and len(r['layers'])==1))
     terrain_source='terrain:SpaceCenter-source-layers'
-    if PROFILE['phase']=='7E':terrain_source+='-7E'
+    if PROFILE['phase'] in {'7E','7F'}:terrain_source+='-'+PROFILE['phase']
     terrain.update(id=identity(terrain_source),source=terrain_source,source_parent='Original terrain DTA parameters with reconstructed blend',layers=layers,
         two_sided=False,blend_mask=weight_key,vertex_blend=False,mask_uv=weights['mask_uv'],
         overlay_strength=0,macro_strength=0,detail_strength=0,emission_intensity=0,use_cpd=False,opacity=1,

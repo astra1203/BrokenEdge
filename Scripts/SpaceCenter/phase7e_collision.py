@@ -10,7 +10,7 @@ SOURCES = [
 
 
 def repair(g):
-    assert PROFILE['phase']=='7E'
+    assert PROFILE['phase'] in {'7E','7F'}
     lib,state=g['LIB'],g['state']
     rows=[]
     for source in SOURCES:
