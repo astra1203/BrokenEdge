@@ -13,6 +13,10 @@
 // 烟团相对半径的垂直压缩：烟幕是贴地的团，不是等径球。
 static constexpr float SmokeFlatten = .62f;
 
+// 出生第一帧的不透明度下限。从 0 起淡入等于把"能不能看见"全押在 Tick 上：
+// 只要 Tick 没跑起来或 Age 卡在 0，Alpha 就永远是 0，表现为烟完全不出现。
+static constexpr float SmokeFadeInFloor = .7f;
+
 // 叠层布局：相对半径的偏移（X,Y,Z 单位为半径比例）与自身尺寸比例。
 // 一层薄壳在透明材质下会透出背景、看起来只剩一层灰雾，所以这里用一主多辅叠出体积。
 struct FSmokePuffLayer
@@ -23,8 +27,8 @@ struct FSmokePuffLayer
 };
 
 static const FSmokePuffLayer PuffLayers[] = {
-	// 主团：居中，占满半径，作为不透明的核心。
-	{FVector(0, 0, .10f), 1.00f, 1.00f},
+	// 主团：恒在原点。它是根组件，偏移会被解释成世界坐标，非零就等于把烟幕搬走。
+	{FVector::ZeroVector, 1.00f, 1.00f},
 	// 辅团：偏心错开，填满主团边缘的透明衰减带。
 	{FVector(.48f, .10f, .02f), .70f, .85f},
 	{FVector(-.42f, .28f, .08f), .64f, .80f},
@@ -99,42 +103,39 @@ void AExtractionSmoke::SetTuning(float InRadius, float InSeconds)
 void AExtractionSmoke::Tick(float Delta)
 {
 	Super::Tick(Delta);
-	if (BornAt < 0.f) BornAt = GetWorld()->GetTimeSeconds();
+	// 时间基准的兜底放在 ApplyLook 里，这里不重复初始化，避免两处逻辑走偏。
 	ApplyLook();
 }
 
-// 剩余寿命：有复制的到期时间就以它为准，客户端不必猜服务器用了多长的寿命。
-// 拿不到 ExpiresAt（还没复制下来）时退回本地推算。
-float AExtractionSmoke::RemainingSeconds() const
+// 剩余寿命：只用本地时间轴。
+// 上一版拿本地时钟去减服务器写的 ExpiresAt，两个时钟不同源 —— 本地时钟一超前，
+// 剩余寿命就是负数，Alpha 被夹到 0，烟从生成那一刻起完全看不见。
+float AExtractionSmoke::RemainingSeconds(float Age) const
 {
-	if (ExpiresAt > 0.0)
-	{
-		const auto* GS = GetWorld() ? GetWorld()->GetGameState() : nullptr;
-		// 服务器时钟和本地时间不同源，用 GameState 的服务器时间才对得上 ExpiresAt。
-		const double Now = GS ? GS->GetServerWorldTimeSeconds() : GetWorld()->GetTimeSeconds();
-		return static_cast<float>(ExpiresAt - Now);
-	}
-	return LifetimeSeconds - (GetWorld()->GetTimeSeconds() - BornAt);
+	return LifetimeSeconds - Age;
 }
 
 void AExtractionSmoke::ApplyLook()
 {
 	if (!Cloud) return;
+	const UWorld* World = GetWorld();
+	if (!World) return;
 	// 必须在这里兜住未初始化的情况：Refresh 会在 BeginPlay 里先于第一个 Tick 调用，
 	// 那时 BornAt 还是 -1，Age 会被算成 Now+1 —— 服务器跑了几十秒后就是几百秒，
 	// 直接超过寿命让 Alpha 归零，烟雾从生成起就完全看不见。
-	if (BornAt < 0.f) BornAt = GetWorld()->GetTimeSeconds();
-	const double Now = GetWorld()->GetTimeSeconds();
-	const float Age = FMath::Max(static_cast<float>(Now - BornAt), 0.f);
+	if (BornAt < 0.f) BornAt = World->GetTimeSeconds();
+	const float Age = FMath::Max(static_cast<float>(World->GetTimeSeconds() - BornAt), 0.f);
 	const float FadeOut = FMath::Min(FadeOutSeconds, LifetimeSeconds * .35f);
 	// 鼓胀比淡入快：半径先到位，再提高浓度，避免相机周围先起雾而看不到烟团本身。
 	const float Grow = FMath::Clamp(Age / FMath::Max(FadeInSeconds * .45f, .01f), 0.f, 1.f);
 	const float Inflate = FMath::InterpEaseOut(.35f, 1.f, Grow, 2.f);
-	// 不透明度：淡入线性、淡出平滑，避免消失时突然截断。
+	// 不透明度从 0.7 起步，不再平方：出生那一帧就得是一团能看见的烟。
+	// 旧写法从 0 起淡入，只要 Tick 没跑起来或者 Age 卡在 0，Alpha 就永远停在 0，
+	// 表现就是"烟完全不出现"而不是"烟淡"。
 	const float FadeIn = FMath::Clamp(Age / FMath::Max(FadeInSeconds, .01f), 0.f, 1.f);
-	const float Remaining = RemainingSeconds();
-	const float FadeOutAlpha = FMath::Clamp(Remaining / FMath::Max(FadeOut, .01f), 0.f, 1.f);
-	const float Alpha = FMath::Square(FMath::Min(FadeIn, FadeOutAlpha));
+	const float FadeInAlpha = FMath::Lerp(SmokeFadeInFloor, 1.f, FadeIn);
+	const float FadeOutAlpha = FMath::Clamp(RemainingSeconds(Age) / FMath::Max(FadeOut, .01f), 0.f, 1.f);
+	const float Alpha = FMath::Min(FadeInAlpha, FadeOutAlpha);
 	// 整团按当前鼓胀比例缩放，垂直方向压缩成贴地烟团。基础球半径 50 厘米，所以除以 50。
 	const float Scale = Radius / 50.f * Inflate;
 	// 每层按偏移、尺寸、浓度摆放；整团的浓度再乘上全局 Alpha，淡入淡出对所有层一致。
@@ -147,9 +148,11 @@ void AExtractionSmoke::ApplyLook()
 			: Puffs.IsValidIndex(Index - 1) ? Puffs[Index - 1].Get() : nullptr;
 		if (!Mesh) continue;
 		const FSmokePuffLayer& Layer = PuffLayers[Index];
-		// 偏移走相对空间：主团把父级空间按 Radius/50 × Inflate 缩放过，所以相对偏移
-		// 只需要给"半径比例 × 50"，父级缩放会把它换算成世界空间的 Offset × Radius × Inflate。
-		Mesh->SetRelativeLocation(Layer.Offset * 50.f);
+		// 主团就是根组件，对根设"相对位置"等于把整个 Actor 传送到那个世界坐标。
+		// 旧代码无条件写 Layer.Offset * 50，第 0 层是 (0,0,.10) 于是烟幕每帧都被搬到
+		// 世界坐标 (0,0,5) —— 扔在几百米外的烟瞬间跑到地图原点，玩家看到的就是
+		// "完全没有烟"。主团偏移必须恒为零，只有挂在它下面的子团才按层偏移摆放。
+		Mesh->SetRelativeLocation(Index == 0 ? FVector::ZeroVector : Layer.Offset * 50.f);
 		// 缩放：辅团的父级就是主团，父级缩放里已经含了 Radius/50 × Inflate，
 		// 所以辅团只写层系数本身（不能再乘 Inflate，否则鼓胀期间辅团会比主团小一大截）。
 		const float LayerScale = Index == 0 ? Scale : Layer.Scale;
@@ -159,6 +162,14 @@ void AExtractionSmoke::ApplyLook()
 			if (auto* Dynamic = Cast<UMaterialInstanceDynamic>(Mesh->GetMaterial(0)))
 				Dynamic->SetScalarParameterValue(TEXT("Opacity"), Alpha * Layer.Alpha);
 		}
+	}
+	// 诊断日志：每 0.5 秒一行，能直接看出烟在哪、多浓、多大。定位完可以删掉。
+	if (LastLogAge < 0.f || Age - LastLogAge >= .5f)
+	{
+		LastLogAge = Age;
+		UE_LOG(LogTemp, Warning,
+			TEXT("[Smoke] %s loc=%s age=%.2f alpha=%.2f inflate=%.2f scale=%.2f radius=%.0f life=%.1f"),
+			*GetName(), *GetActorLocation().ToCompactString(), Age, Alpha, Inflate, Scale, Radius, LifetimeSeconds);
 	}
 }
 
@@ -182,6 +193,10 @@ void AExtractionSmoke::Refresh()
 	// 客户端在没有本地时间轴时也要有可见尺寸，立即按满尺寸摆放一次。
 	AppliedAlpha = -1.f;
 	ApplyLook();
+	UE_LOG(LogTemp, Warning, TEXT("[Smoke] %s refresh meshes=%d authority=%d world=%.2f loc=%s"),
+		*GetName(), Meshes.Num(), HasAuthority() ? 1 : 0,
+		GetWorld() ? GetWorld()->GetTimeSeconds() : -1.f,
+		*GetActorLocation().ToCompactString());
 }
 
 // 同步半径和绝对到期时间；客户端按同步服务器时间判断是否仍有效。

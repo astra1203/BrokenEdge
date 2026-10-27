@@ -44,8 +44,14 @@ AExtractionSmokeGrenade::AExtractionSmokeGrenade()
 void AExtractionSmokeGrenade::BeginPlay()
 {
 	Super::BeginPlay();
+	if (!HasAuthority()) return;
 	// 未落地就坠出世界的兜底：给保险丝一个上界，避免弹体永久留在地图外。
-	if (HasAuthority()) SetLifeSpan(FMath::Max(FuseAt, 0.0) + 30.0);
+	SetLifeSpan(FuseAt + 30.0);
+	// 飞行超时兜底：投掷物可能一直撞不到任何几何（飞出地图边缘、卡进缝隙、
+	// 或者碰撞通道被忽略），那样永远不会有 NotifyHit，也就永远不起烟。
+	// 玩家看到的是"扔出去什么都没有"，比在落点起烟难查得多，所以这里强制点燃。
+	GetWorld()->GetTimerManager().SetTimer(
+		FuseTimer, this, &AExtractionSmokeGrenade::Ignite, MaxAirborneSeconds, false);
 }
 
 void AExtractionSmokeGrenade::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -73,6 +79,7 @@ void AExtractionSmokeGrenade::NotifyHit(UPrimitiveComponent* Component, AActor* 
 
 void AExtractionSmokeGrenade::Settle(const FVector& Location)
 {
+	if (bSettled || bIgnited) return;
 	bSettled = true;
 	Flight->StopMovementImmediately();
 	Flight->SetComponentTickEnabled(false);
@@ -80,16 +87,29 @@ void AExtractionSmokeGrenade::Settle(const FVector& Location)
 	const float Fuse = FuseSeconds;
 	FuseAt = GetWorld()->GetTimeSeconds() + Fuse;
 	ForceNetUpdate();
+	// 复用同一个定时器句柄：这一步同时取消了 BeginPlay 里的飞行超时。
 	GetWorld()->GetTimerManager().SetTimer(FuseTimer, this, &AExtractionSmokeGrenade::Ignite, Fuse, false);
+	UE_LOG(LogTemp, Warning, TEXT("[SmokeGrenade] settle at %s fuse=%.2f"),
+		*GetActorLocation().ToCompactString(), Fuse);
 }
 
 void AExtractionSmokeGrenade::Ignite()
 {
-	if (!HasAuthority()) return;
+	if (!HasAuthority() || bIgnited) return;
+	bIgnited = true;
+	GetWorld()->GetTimerManager().ClearTimer(FuseTimer);
 	FActorSpawnParameters Params;
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	if (auto* Smoke = GetWorld()->SpawnActor<AExtractionSmoke>(GetActorLocation(), FRotator::ZeroRotator, Params))
-		Smoke->SetTuning(Radius, Seconds);
+	auto* Smoke = GetWorld()->SpawnActor<AExtractionSmoke>(GetActorLocation(), FRotator::ZeroRotator, Params);
+	if (!Smoke)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[SmokeGrenade] smoke spawn failed at %s"),
+			*GetActorLocation().ToCompactString());
+		return;
+	}
+	Smoke->SetTuning(Radius, Seconds);
+	UE_LOG(LogTemp, Warning, TEXT("[SmokeGrenade] ignite at %s radius=%.0f seconds=%.1f settled=%d"),
+		*GetActorLocation().ToCompactString(), Radius, Seconds, bSettled ? 1 : 0);
 	// 烟幕已经生成，弹体不再有意义；销毁后客户端靠烟幕自身的复制接管表现。
 	Destroy();
 }

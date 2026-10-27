@@ -18,12 +18,21 @@ smoke_cls = unreal.load_class(None, SMOKE_CLASS)
 assert smoke_cls, 'class missing'
 
 world = unreal.EditorLevelLibrary.get_editor_world()
-actor = unreal.EditorLevelLibrary.spawn_actor_from_class(smoke_cls, unreal.Vector(0, 0, 200))
+spawn_at = unreal.Vector(0, 0, 200)
+actor = unreal.EditorLevelLibrary.spawn_actor_from_class(smoke_cls, spawn_at)
 assert actor, 'spawn failed'
 # 编辑器世界里不会自动跑 BeginPlay / Tick，必须手动推一次表现：
 # Refresh 是 UFUNCTION，内部会把材质提升为 MID 并调用 ApplyLook 摆放各层。
 # 注意 Tick 不是 UFUNCTION，反射调不到，所以这里只能验证 Refresh 这一条路径。
 actor.call_method('Refresh')
+
+# 关键回归：主团就是根组件，对它写 SetRelativeLocation 等于把整个 Actor 传送到
+# 那个世界坐标（旧 bug 里第 0 层偏移是 (0,0,.10)*50，于是烟幕每帧都被搬到
+# 世界原点 —— 扔在几百米外的烟瞬间跑到地图角落，玩家看到的就是"完全没有烟"）。
+# 摆放各层之后，Actor 必须一动不动地待在生成点。
+moved = (actor.get_actor_location() - spawn_at).length()
+print('SMOKE_LAYER actor_drift={0:.2f}'.format(moved))
+assert moved < 1.0, 'ApplyLook teleported the actor by {0}cm'.format(moved)
 
 meshes = actor.get_components_by_class(unreal.StaticMeshComponent)
 print('SMOKE_LAYER count={0}'.format(len(meshes)))

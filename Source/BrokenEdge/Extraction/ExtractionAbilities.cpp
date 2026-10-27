@@ -275,6 +275,12 @@ void UExtractionAbilities::Complete()
 			Grenade->SetSmokeTuning(R->SmokeRadius, R->SmokeSeconds, R->SmokeFuseSeconds);
 			Grenade->Launch(From, SmokePoint, R->SmokeThrowSpeed);
 			SmokeReadyAt = Now + R->SmokeCooldown;
+			UE_LOG(LogTemp, Warning, TEXT("[SmokeGrenade] thrown from %s to %s"),
+				*From.ToCompactString(), *SmokePoint.ToCompactString());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("[SmokeGrenade] spawn failed at %s"), *From.ToCompactString());
 		}
 	}
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_ABILITY Actor=%s Action=%d Completed"), *GetOwner()->GetName(),

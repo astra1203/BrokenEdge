@@ -84,15 +84,35 @@ def build_smoke_material(texture):
     density = lib.create_material_expression(
         material, unreal.MaterialExpressionScalarParameter, -780, 440)
     density.set_editor_property('parameter_name', 'Density')
-    density.set_editor_property('default_value', 0.92)
+    density.set_editor_property('default_value', 1.0)
 
-    # 浓度 = 贴图遮罩 × 整体不透明度 × 基础密度，最后夹到 1 以内。
+    # 浓度 = (贴图遮罩 × 0.65 + 0.35) × Opacity × Density
+    #
+    # 那个 +0.35 是保底：贴图只是在"哪里有烟"上做细节，不该决定"有没有烟"。
+    # 上一版直接用贴图当遮罩，贴图一旦导入异常（全黑 / alpha 丢失）整片 Opacity
+    # 就是 0，画面上一团空气 —— 而且参数调到 1 也救不回来。保底 0.35 让这类
+    # 素材问题降级成"边缘不那么蓬松"，而不是"什么都看不见"。
+    detail = lib.create_material_expression(
+        material, unreal.MaterialExpressionMultiply, -640, 60)
+    lib.connect_material_expressions(sample, 'RGB', detail, 'A')
+    detail_scale = lib.create_material_expression(
+        material, unreal.MaterialExpressionConstant, -640, 200)
+    detail_scale.set_editor_property('r', 0.65)
+    lib.connect_material_expressions(detail_scale, '', detail, 'B')
+    floor_add = lib.create_material_expression(
+        material, unreal.MaterialExpressionAdd, -500, 100)
+    lib.connect_material_expressions(detail, '', floor_add, 'A')
+    floor_value = lib.create_material_expression(
+        material, unreal.MaterialExpressionConstant, -500, 240)
+    floor_value.set_editor_property('r', 0.35)
+    lib.connect_material_expressions(floor_value, '', floor_add, 'B')
+
     mask = lib.create_material_expression(
-        material, unreal.MaterialExpressionMultiply, -520, 120)
-    lib.connect_material_expressions(sample, 'RGB', mask, 'A')
+        material, unreal.MaterialExpressionMultiply, -340, 120)
+    lib.connect_material_expressions(floor_add, '', mask, 'A')
     lib.connect_material_expressions(opacity, '', mask, 'B')
     boost = lib.create_material_expression(
-        material, unreal.MaterialExpressionMultiply, -360, 160)
+        material, unreal.MaterialExpressionMultiply, -180, 160)
     lib.connect_material_expressions(mask, '', boost, 'A')
     lib.connect_material_expressions(density, '', boost, 'B')
     lib.connect_material_property(boost, '', unreal.MaterialProperty.MP_OPACITY)
@@ -107,6 +127,13 @@ def build_smoke_material(texture):
     material.set_editor_property('blend_mode', unreal.BlendMode.BLEND_TRANSLUCENT)
     material.set_editor_property('shading_model', unreal.MaterialShadingModel.MSM_UNLIT)
     material.set_editor_property('two_sided', True)
+    # 默认的 mask clip 阈值是 0.333，边缘半透明像素会被整片裁掉，烟看起来是"碎块"。
+    # 我们的浓度最低也有 0.35，理论上刚好躲过，但没必要把余量押在默认值上。
+    # 用 try 包住：这个 setter 在 commandlet 下不是必需项，失败也不该拖垮整个材质。
+    try:
+        material.set_editor_property('opacity_mask_clip_value', 0.0)
+    except Exception as error:  # noqa: BLE001
+        unreal.log_warning('SMOKE_MATERIAL opacity_mask_clip_value skipped: {0}'.format(error))
     # -NullRHI 下没有着色器编译设备，recompile_material 必然返回 false，
     # 因此结果只能作为日志参考，不能当保存失败判据；真正落盘看 save_loaded_asset。
     compiled = lib.recompile_material(material)

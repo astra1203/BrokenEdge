@@ -50,9 +50,13 @@ private:
 	void Settle(const FVector& Location);
 	// 保险丝到期：生成烟幕并销毁弹体。
 	void Ignite();
+	// 飞行超时上限：投掷物没撞到任何东西时也必须起烟，否则玩家看到的是"什么都没有"。
+	// 正常抛物线 2 秒内落地，5 秒是明显异常才走这条路径。
+	static constexpr float MaxAirborneSeconds = 5.f;
 	float Radius = 400;
 	float Seconds = 15;
 	float FuseSeconds = 1.5f;
 	bool bSettled = false;
+	bool bIgnited = false;
 	FTimerHandle FuseTimer;
 };

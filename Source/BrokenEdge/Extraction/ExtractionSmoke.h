@@ -52,8 +52,11 @@ private:
 	float FadeOutSeconds = 2.2f;
 	// 上一帧写入的不透明度，避免重复设置参数。
 	float AppliedAlpha = -1.f;
+	// 诊断日志的上次打印时刻（Age 秒）；-1 表示本团还没打过一行。
+	float LastLogAge = -1.f;
 	// 进烟渐隐按平滑步进计算，靠近烟团边缘时只轻微发灰。
 	void ApplyLook();
-	// 客户端按复制来的 ExpiresAt 反推剩余寿命，不依赖本地 LifetimeSeconds 是否一致。
-	float RemainingSeconds() const;
+	// 按本地时间轴算剩余寿命。不能拿 ExpiresAt 去减服务器时钟：
+	// 两者不同源，客户端时钟超前时剩余寿命会算成负数，烟一出生就全透明。
+	float RemainingSeconds(float Age) const;
 };
