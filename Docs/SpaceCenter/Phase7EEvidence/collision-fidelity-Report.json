@@ -1,0 +1,31 @@
+{
+  "task": "collision-fidelity",
+  "created": [],
+  "reused": 0,
+  "errors": [],
+  "collision_fidelity": [
+    {
+      "source": "/Game/Environment/Structures/HAAVK/Building/FutureTech_Ma1/SM_H_Building_FutureTech_Bridge_01P",
+      "original_asset": "/Game/Maps/SpaceCenter/Restored/Assets/7eba631fec15b8a5/SM_H_Building_FutureTech_Bridge_01P/StaticMeshes/SM_H_Building_FutureTech_Bridge_01P.SM_H_Building_FutureTech_Bridge_01P",
+      "asset": "/Game/Maps/SpaceCenter/Restored/Collision7E/64eb05a3fa698ad8/SM_H_Building_FutureTech_Bridge_01P.SM_H_Building_FutureTech_Bridge_01P",
+      "before": {
+        "fallback_target": "<NaniteFallbackTarget.AUTO: 0>",
+        "fallback_percent_triangles": 1.0,
+        "fallback_relative_error": 1.0
+      },
+      "full_collision_fallback": true
+    },
+    {
+      "source": "/Game/Environment/Structures/IRIS/RoadFacility/Ground/SpaceCenter/SM_I_RoadFacility_Ground_L_13",
+      "original_asset": "/Game/Maps/SpaceCenter/Restored/Assets/d25bb60e9ff62c94/SM_I_RoadFacility_Ground_L_13/StaticMeshes/SM_I_RoadFacility_Ground_L_13.SM_I_RoadFacility_Ground_L_13",
+      "asset": "/Game/Maps/SpaceCenter/Restored/Collision7E/da9f14d959f5c23b/SM_I_RoadFacility_Ground_L_13.SM_I_RoadFacility_Ground_L_13",
+      "before": {
+        "fallback_target": "<NaniteFallbackTarget.AUTO: 0>",
+        "fallback_percent_triangles": 1.0,
+        "fallback_relative_error": 1.0
+      },
+      "full_collision_fallback": true
+    }
+  ],
+  "result": "passed"
+}

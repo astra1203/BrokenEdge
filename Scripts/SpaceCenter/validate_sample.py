@@ -13,8 +13,10 @@ OUT = Path(os.environ['SPACECENTER_RUN_DIR'])
 SUITE = os.environ['SPACECENTER_SUITE']
 PLAYERS = int(os.environ.get('SPACECENTER_PLAYERS', '1'))
 RESTORATION = os.environ.get('SPACECENTER_RESTORATION_VALIDATION') == '1'
+HEADLESS = os.environ.get('SPACECENTER_HEADLESS') == '1'
 LIB = unreal.StingerAssetLibrary
 report = {'checks': [], 'captures': [], 'samples': [], 'suite': SUITE, 'players': PLAYERS}
+report['render_mode'] = 'headless_input_driven_pie' if HEADLESS else 'rendered_pie'
 state = {'phase': 'boot', 'elapsed': 0, 'index': 0, 'phase_start': time.monotonic()}
 started = time.monotonic()
 shots = [
@@ -49,6 +51,7 @@ def pulse_all(action):
 
 
 def capture(name, pawn):
+    if HEADLESS:return
     name += '.png'
     unreal.SystemLibrary.execute_console_command(pawn, 'HighResShot '+('1920x1080' if RESTORATION else '1280x720')+' filename=' + str(OUT / name), pawn.get_controller())
     report['captures'].append(name)
@@ -70,7 +73,8 @@ def walk(pawn, target, delta):
     location = pawn.get_actor_location()
     dx, dy = target[0] - location.x, target[1] - location.y
     distance = math.hypot(dx, dy)
-    if distance < 28 and abs(location.z - target[2] - 94) < 70:
+    tolerance=state.get('route',{}).get('point_tolerance_cm',28)
+    if distance < tolerance and abs(location.z - target[2] - 94) < 70:
         state['stalled'] = 0
         return True
     state['stalled'] = state.get('stalled', 0) + delta
@@ -99,9 +103,19 @@ def tick(delta):
         state['elapsed'] += delta
         phase = state['phase']
         elapsed = state['elapsed']
-        if time.monotonic() - started > 1200:
+        if time.monotonic() - started > int(os.environ.get('SPACECENTER_VALIDATION_TIMEOUT','1200')):
             raise TimeoutError('Sample validation timed out: ' + phase)
         if phase == 'boot' and elapsed > 5:
+            if os.environ.get('SPACECENTER_RESTORE_TASK')=='traverse-integrated':
+                # Disposable inspection settings; run_restoration_editor verifies
+                # that neither production map changes on disk.
+                world=unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()
+                world.get_world_settings().set_editor_property('default_game_mode',unreal.EditorAssetLibrary.load_blueprint_class('/Game/Characters/Stinger/Blueprints/BP_StingerTestGameMode'))
+                stream=unreal.GameplayStatics.get_streaming_level(world,'/Game/Maps/SpaceCenter/L_SpaceCenterNorth')
+                assert stream and stream.get_loaded_level()
+                unreal.EditorLevelUtils.set_level_visibility(stream.get_loaded_level(),True,False)
+                stream.set_editor_property('initially_loaded',True)
+                stream.set_editor_property('initially_visible',True)
             state['weapon_class'] = unreal.EditorAssetLibrary.load_blueprint_class('/Game/Blueprints/Weapon/BP_AK47')
             if RESTORATION:
                 unreal.SystemLibrary.execute_console_command(None,'Editor.AsyncAssetCompilationFinishAll')
@@ -117,7 +131,7 @@ def tick(delta):
             state['pawns'] = pawns
             for p in pawns:
                 LIB.isolate_validation_input(p.get_controller())
-                if RESTORATION:assert LIB.set_validation_viewport_size(p.get_controller(),1920,1080)
+                if RESTORATION and not HEADLESS:assert LIB.set_validation_viewport_size(p.get_controller(),1920,1080)
             check('stinger_spawn', all(p.get_class().get_name() == 'BP_StingerCharacter_C' for p in pawns), [vector(p.get_actor_location()) for p in pawns])
             if SUITE == 'traverse':
                 for command in ['r.VSync 0', 't.MaxFPS 0', 't.IdleWhenNotForeground 0', 'r.ScreenPercentage 100',
@@ -201,7 +215,8 @@ def tick(delta):
                 pawns[0].get_controller().set_view_target_with_blend(state['camera'], 0)
                 advance('camera')
         elif phase == 'pickup_approach':
-            p=state['pawns'][0];weapon=state['pickup_weapons'][0]
+            p=state['pawns'][0]
+            weapon=min(state['pickup_weapons'],key=lambda w:math.dist(vector(p.get_actor_location())[:2],vector(w.get_actor_location())[:2]))
             separation=math.dist(vector(p.get_actor_location())[:2],vector(weapon.get_actor_location())[:2])
             if separation<35 and json.loads(LIB.get_validation_state(p))['overlapping_weapon']:
                 check('entered_pickup_overlap',True,{'pawn':snapshot(p),'weapon_location':vector(weapon.get_actor_location()),'horizontal_distance_cm':separation})
@@ -209,8 +224,10 @@ def tick(delta):
             else:
                 if elapsed>8:raise RuntimeError('Could not reach preview weapon pickup')
                 for p in state['pawns']:
-                    p.get_controller().set_control_rotation(unreal.Rotator())
-                    inject(p,'move_action',(0,.4,0))
+                    nearest=min(state['pickup_weapons'],key=lambda w:math.dist(vector(p.get_actor_location())[:2],vector(w.get_actor_location())[:2]))
+                    offset=nearest.get_actor_location()-p.get_actor_location()
+                    p.get_controller().set_control_rotation(unreal.Rotator(yaw=math.degrees(math.atan2(offset.y,offset.x))))
+                    inject(p,'move_action',(0,min(.4,max(.2,offset.length()/120)),0))
         elif phase == 'equip':
             if RESTORATION:
                 report.setdefault('pickup_samples',[]).append({'elapsed':elapsed,'pawn':snapshot(state['pawns'][0]),
@@ -263,6 +280,10 @@ def tick(delta):
             report['frame_seconds'].append(delta)
             if len(report['frame_seconds']) % 15 == 0:
                 report['samples'].append({'player': state['player'], 'segment': segment['name'], 'time': time.monotonic() - started, **snapshot(p)})
+            if RESTORATION and len(report['frame_seconds']) % 150 == 0:
+                (OUT/'Progress.json').write_text(json.dumps({'player':state['player']+1,
+                    'segment':segment['name'],'point':state['point'],'points':len(segment['points']),
+                    'location':vector(p.get_actor_location()),'elapsed_seconds':time.monotonic()-started}),encoding='utf-8')
             if walk(p, segment['points'][state['point']], delta):
                 state['point'] += 1
                 if state['point'] >= len(segment['points']):
@@ -285,6 +306,7 @@ def tick(delta):
                       and json.loads(LIB.get_validation_state(remote[0]))['ammo'] == values['native']['ammo'],
                       [snapshot(r) for r in remote])
             capture('p%d_%s' % (state['player'] + 1, segment['name']), p)
+            print('TRAVERSE_WAYPOINT',state['player']+1,segment['name'],values['location'],flush=True)
             advance('waypoint_capture')
         elif phase == 'waypoint_capture' and elapsed > 2:
             state['segment'] += 1
@@ -294,7 +316,8 @@ def tick(delta):
             elif state['player'] + 1 < PLAYERS:
                 advance('park')
             else:
-                check('screenshots_written', all((OUT / c).is_file() for c in report['captures']))
+                if HEADLESS:check('headless_runtime_no_render',True,'Rendering is validated by the separate fixed-camera capture stage.')
+                else:check('screenshots_written', all((OUT / c).is_file() for c in report['captures']))
                 p = state['pawns'][0]
                 unreal.SystemLibrary.execute_console_command(p, 'csvprofile STOP', p.get_controller())
                 state['profiling'] = False

@@ -1,0 +1,53 @@
+{
+  "status": "scene_geometry_integrated_with_validation_limits",
+  "preview_map": "/Game/Maps/SpaceCenter/L_SpaceCenterRestorationPreview7E",
+  "manifest": "Saved/SpaceCenter/Phase7EExpanded/ManifestRuns/Phase7EManifest01/Manifest.json",
+  "source_audit": "SourceAudit.json",
+  "visual_review": "VisualReview.json",
+  "production_maps": "Phase7E geometry integrated into existing Extraction and North maps; original layouts and gameplay actors preserved.",
+  "runtime_attempts": [
+    {
+      "tag": "Phase7EControlWalk01",
+      "result": "resource_guard_stopped",
+      "reason": "Rendered editor plus PIE left less than 3 GiB physical memory."
+    },
+    {
+      "tag": "Phase7EControlWalk02",
+      "result": "failed",
+      "reason": "Real walking stopped at main-building south turn before reaching control region."
+    },
+    {
+      "tag": "Phase7EControlWalk03",
+      "result": "failed",
+      "reason": "Bridge stair obstruction."
+    },
+    {
+      "tag": "Phase7EControlWalk04",
+      "result": "failed",
+      "reason": "Full collision passed the earlier stair stop but encountered a later obstruction."
+    },
+    {
+      "tag": "Phase7EControlWalk05",
+      "result": "failed",
+      "reason": "An 8 cm waypoint tolerance could not reach one point at approximately 9 cm remaining distance; route automation still needs refinement."
+    }
+  ],
+  "pending": [
+    "Full existing east-return traversal; identical failure also occurs before integration.",
+    "Control and launch input-driven traversal and two-player validation.",
+    "Complete formal-map screenshot review under sufficient available memory.",
+    "Investigate original main-to-launch connection; no new bridge or teleport added."
+  ],
+  "git": "No commit or push performed.",
+  "collision_fidelity": "Two isolated Phase7E mesh copies retained; neither lies at the existing east-return failure point.",
+  "cleanup": "99 abandoned unreferenced import directories backed up and removed.",
+  "final_audit": "Saved/SpaceCenter/Phase7EExpanded/EditorRuns/Phase7EFinalPreview01-audit",
+  "final_capture": "Saved/SpaceCenter/Phase7EExpanded/EditorRuns/Phase7EFinalPreview01-capture",
+  "formal_evidence": "FormalIntegration",
+  "formal_audit": "Phase7EFormalAudit01",
+  "idempotency": "passed; identical bindings, instance count and geometry signature",
+  "existing_route_regression": "failed at east_return point 165; same failure reproduced on pre-integration backup within about 1 cm",
+  "formal_capture": "incomplete: three guarded attempts stopped below 3 GiB available RAM; one formal main overview recorded",
+  "editor": "Closed after validation; automatic reopen deferred because rendered inspection hit the memory guard.",
+  "baseline_snapshot": "ProductionMapBaseline.json records the pre-integration state; current hashes are in FormalIntegration/ProductionMaps.json."
+}

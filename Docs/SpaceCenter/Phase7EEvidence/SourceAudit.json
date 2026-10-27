@@ -1,0 +1,48 @@
+{
+  "result": "passed",
+  "previous_manifest_sha256": "6c237dd8300542c2bd22744acdfdaa7f13d183d802e01bca6465b0c0a4cb850b",
+  "manifest_sha256": "07a6f918e5275a865281fd98c2d99471eec3ec4e21b10170cbed4f6a2afbcec1",
+  "preserved_instances": 40843,
+  "new_instances": 12239,
+  "total_instances": 53082,
+  "new_meshes": 463,
+  "total_meshes": 2546,
+  "terrain_tiles": 244,
+  "new_texture_bindings": 424,
+  "regions": [
+    {
+      "name": "existing",
+      "minimum": [
+        652000,
+        -466000
+      ],
+      "maximum": [
+        691000,
+        -433000
+      ]
+    },
+    {
+      "name": "control",
+      "minimum": [
+        660000,
+        -484000
+      ],
+      "maximum": [
+        677000,
+        -465000
+      ]
+    },
+    {
+      "name": "launch",
+      "minimum": [
+        650000,
+        -434000
+      ],
+      "maximum": [
+        670000,
+        -409000
+      ]
+    }
+  ],
+  "boundary": "Source manifest and import-byte validation only; native visual and traversal reports are separate."
+}
