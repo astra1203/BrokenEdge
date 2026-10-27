@@ -148,11 +148,11 @@ void AExtractionSmoke::ApplyLook()
 			: Puffs.IsValidIndex(Index - 1) ? Puffs[Index - 1].Get() : nullptr;
 		if (!Mesh) continue;
 		const FSmokePuffLayer& Layer = PuffLayers[Index];
-		// 主团就是根组件，对根设"相对位置"等于把整个 Actor 传送到那个世界坐标。
-		// 旧代码无条件写 Layer.Offset * 50，第 0 层是 (0,0,.10) 于是烟幕每帧都被搬到
-		// 世界坐标 (0,0,5) —— 扔在几百米外的烟瞬间跑到地图原点，玩家看到的就是
-		// "完全没有烟"。主团偏移必须恒为零，只有挂在它下面的子团才按层偏移摆放。
-		Mesh->SetRelativeLocation(Index == 0 ? FVector::ZeroVector : Layer.Offset * 50.f);
+		// 主团就是根组件。根组件的位置一个字都不能碰：对无父级的组件来说
+		// "相对位置"就是世界坐标，写 Layer.Offset * 50 会把烟幕搬到 Layer.Offset*50，
+		// 写 ZeroVector 则是把整个 Actor 搬到 (0,0,0) —— 两种写法都是错的。
+		// 根组件保持 spawn 位置不动，只有挂在它下面的子团才按层摆放。
+		if (Index > 0) Mesh->SetRelativeLocation(Layer.Offset * 50.f);
 		// 缩放：辅团的父级就是主团，父级缩放里已经含了 Radius/50 × Inflate，
 		// 所以辅团只写层系数本身（不能再乘 Inflate，否则鼓胀期间辅团会比主团小一大截）。
 		const float LayerScale = Index == 0 ? Scale : Layer.Scale;
