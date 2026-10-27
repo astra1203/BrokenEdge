@@ -11,6 +11,7 @@
 #include "Components/TextRenderComponent.h"
 #include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
 #include "BrokenEdge/Extraction/ExtractionGameMode.h"
+#include "BrokenEdge/Extraction/ExtractionGuard.h"
 #include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
 #include "BrokenEdge/Extraction/ExtractionPlayerController.h"
 #include "StingerFirstPersonAnimInstance.h"
@@ -250,9 +251,6 @@ void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, con
 void ABrokenEdgeCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	// 投掷动画在施放开始时触发；该委托只在本地角色身上产生可见效果，
-	// 因为 1P 蒙太奇只属于本地控制者，3P 蒙太奇则由复制后的动作状态驱动。
-	ExtractionAbilities->OnSmokeCastStarted.AddUObject(this, &ABrokenEdgeCharacter::PlaySmokeThrowMontage);
 	if (ExtractionCombat->IsEnabled() && OverheadWidget)
 	{
 		// A name plate must not intercept the aiming ray or reveal enemies through cover.
@@ -308,8 +306,45 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
  * @brief 原地旋转处理
  * @param DeltaTime 帧时间
  */
+void ABrokenEdgeCharacter::ConfigureGuardRotation()
+{
+	if (!bExtractionGuard) return;
+	// 控制器：巡逻时由 PathFollowing 的 Move Focus 指向路径，交战时由 Gameplay Focus 指向玩家。
+	// 角色：由 CharacterMovement 平滑追随这个期望朝向，不再每帧直接套用玩家镜头旋转。
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	auto* Movement = GetCharacterMovement();
+	Movement->bOrientRotationToMovement = false;
+	Movement->bUseControllerDesiredRotation = !bDisableGameplay && !bDefeated && !IsTraversing();
+	// FRotator 的参数顺序是 Pitch、Yaw、Roll；旧设置 (0, 0, 850) 实际上让 Yaw 转速为零。
+	Movement->RotationRate = FRotator(0.f, 360.f, 0.f);
+	if (GetMesh()->GetSkeletalMeshAsset() && FMath::IsFinite(GuardMeshYawOffset))
+	{
+		// BP_EnemyCharacter 当前使用 Stinger 网格但相对 Yaw 为 0，视觉正面会与导航正面错开 90 度。
+		// 只修正守卫网格的 Yaw，保留蓝图中的位置、缩放以及 Pitch/Roll。
+		FRotator MeshRotation = GetMesh()->GetRelativeRotation();
+		if (!FMath::IsNearlyEqual(FMath::FindDeltaAngleDegrees(MeshRotation.Yaw, GuardMeshYawOffset), 0.f, .01f))
+		{
+			MeshRotation.Yaw = GuardMeshYawOffset;
+			GetMesh()->SetRelativeRotation(MeshRotation);
+		}
+	}
+	bRotateRootBone = false;
+	AO_Yaw = 0;
+	InterpAO_Yaw = 0;
+	TurningInPlace = ETurningInPlace::ETIP_NotTurning;
+}
+
 void ABrokenEdgeCharacter::RotateInPlace(float DeltaTime)
 {
+	if (bExtractionGuard)
+	{
+		// 装备同步也可能改写转向标志，因此每帧恢复守卫策略，并跳过后面的玩家 AimOffset/TurnInPlace。
+		ConfigureGuardRotation();
+		CalculateAO_Pitch();
+		return;
+	}
 	if (IsTraversing())
 	{
 		bUseControllerRotationYaw = false;
@@ -996,12 +1031,20 @@ void ABrokenEdgeCharacter::UpdateSprint()
 	}
 	if (bExtractionGuard)
 	{
-		GetCharacterMovement()->MaxWalkSpeed = 220 * FractureScale;
+		const auto* GuardAI = Cast<AExtractionGuard>(Controller);
+		const bool bPursuing = GuardAI && GuardAI->State == EExtractionGuardState::Search;
+		const auto* GuardRules = GetDefault<UExtractionRules>();
+		const float GuardSpeed = FMath::Max(0.f, GuardRules->GuardWalkSpeed);
+		GetCharacterMovement()->MaxWalkSpeed = (bPursuing
+			? FMath::Max(GuardSpeed, GuardRules->GuardPursuitSpeed) : GuardSpeed) * FractureScale;
 		return;
 	}
 	const FVector Acceleration = GetCharacterMovement()->GetCurrentAcceleration();
+	// 治疗允许移动施放但要降速，且不能边治疗边冲刺；倍率来自 UExtractionRules。
+	const bool bHealing = ExtractionAbilities && ExtractionAbilities->Action == EExtractionAction::Heal;
 	const bool bWasSprinting = bSprinting;
-	bSprinting = bSprintRequested && !ExtractionHealth->LegFracture && !bIsCrouched && !IsAiming() && !bDisableGameplay
+	bSprinting = bSprintRequested && !bHealing && !ExtractionHealth->LegFracture && !bIsCrouched && !IsAiming() &&
+		!bDisableGameplay
 		&& (!ExtractionCombat->IsEnabled() || ExtractionCombat->CanSprintWithWeapon())
 		&& !bDefeated
 		&& GetCombatState() == ECombatState::ECS_Unoccuiped
@@ -1010,6 +1053,9 @@ void ABrokenEdgeCharacter::UpdateSprint()
 	GetCharacterMovement()->MaxWalkSpeed = bSprinting
 		                                       ? SprintSpeed
 		                                       : (IsAiming() ? Combat->AimWalkSpeed : Combat->BaseWalkSpeed);
+	if (bHealing)
+		GetCharacterMovement()->MaxWalkSpeed *= FMath::Clamp(
+			GetDefault<UExtractionRules>()->HealMoveSpeedScale, .05f, 1.f);
 	GetCharacterMovement()->MaxWalkSpeed *= FractureScale;
 }
 
@@ -1029,6 +1075,18 @@ void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProp
 
 void ABrokenEdgeCharacter::PostInitializeComponents()
 {
+	// 使用 ExtractionGuard（含 BP_EnemyAIController 子类）的角色自动按敌人处理。
+	// 必须放在 Super 前：APawn::PostInitializeComponents 会在其中决定是否生成 AI Controller。
+	// 这使现有 BP_EnemyCharacter 无需重新设父类，在任意地图放置或运行时生成都能被接管。
+	if (HasAuthority() && GetWorld() && GetWorld()->IsGameWorld()
+		&& (bExtractionGuard || (AIControllerClass && AIControllerClass->IsChildOf(AExtractionGuard::StaticClass()))))
+	{
+		bExtractionGuard = true;
+		if (!AIControllerClass || !AIControllerClass->IsChildOf(AExtractionGuard::StaticClass()))
+			AIControllerClass = AExtractionGuard::StaticClass();
+		AutoPossessPlayer = EAutoReceiveInput::Disabled;
+		AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	}
 	Super::PostInitializeComponents();
 
 	if (Combat)
@@ -1085,6 +1143,54 @@ void ABrokenEdgeCharacter::PlayHitReactMontage()
 		FName SectionName("FromRight");
 		AnimInstance->Montage_JumpToSection(SectionName);
 	}
+}
+
+void ABrokenEdgeCharacter::PlayAbilityMontage(uint8 ActionKind, float Seconds)
+{
+	UAnimMontage* ThirdPerson = ActionKind == 1
+		                            ? ReviveMontage.Get()
+		                            : ActionKind == 2
+		                            ? HealMontage.Get()
+		                            : ActionKind == 3
+		                            ? SmokeMontage.Get()
+		                            : nullptr;
+	UAnimMontage* View = ActionKind == 1
+		                     ? FirstPersonReviveMontage.Get()
+		                     : ActionKind == 2
+		                     ? FirstPersonHealMontage.Get()
+		                     : ActionKind == 3
+		                     ? FirstPersonSmokeMontage.Get()
+		                     : nullptr;
+	if (ThirdPerson == nullptr) return;
+	StopAbilityMontage();
+	AbilityMontage = ThirdPerson;
+	// 专用服务器没有可见网格，跳过表现层，避免无意义地评估蒙太奇。
+	if (GetNetMode() == NM_DedicatedServer) return;
+	UAnimInstance* Body = GetMesh() ? GetMesh()->GetAnimInstance() : nullptr;
+	if (Body == nullptr) return;
+	// 持续型动作（救援）按源节奏循环，短动作（治疗、烟雾）拉伸到与服务器结算同时长。
+	const bool bLooping = ActionKind == 1;
+	const float Rate = bLooping
+		                   ? 1.f
+		                   : FMath::Clamp(ThirdPerson->GetPlayLength() / FMath::Max(Seconds, .1f), .5f, 2.5f);
+	Body->Montage_Play(ThirdPerson, Rate);
+	if (bLooping)
+	{
+		const FName Section = ThirdPerson->GetSectionName(0);
+		if (!Section.IsNone()) Body->Montage_SetNextSection(Section, Section, ThirdPerson);
+	}
+	PlayFirstPersonMontage(View, ThirdPerson);
+}
+
+void ABrokenEdgeCharacter::StopAbilityMontage()
+{
+	if (AbilityMontage == nullptr) return;
+	if (UAnimInstance* Body = GetMesh() ? GetMesh()->GetAnimInstance() : nullptr)
+	{
+		if (Body->Montage_IsPlaying(AbilityMontage)) Body->Montage_Stop(.15f, AbilityMontage);
+	}
+	// 第一人称蒙太奇由 SyncFirstPersonAction 跟随第三人称一起停止。
+	AbilityMontage = nullptr;
 }
 
 void ABrokenEdgeCharacter::PlayReloadMontage()
@@ -1580,6 +1686,16 @@ AWeapon* ABrokenEdgeCharacter::GetEquippedWeapon()
  */
 FVector ABrokenEdgeCharacter::GetHitTarget() const
 {
+	if (bExtractionGuard)
+	{
+		// AI 没有玩家准星射线，Combat.HitTarget 通常仍为零。动画手部应跟随战斗关注点。
+		if (const auto* AI = Cast<AAIController>(GetController()))
+		{
+			const FVector Focus = AI->GetFocalPointForPriority(EAIFocusPriority::Gameplay);
+			if (FAISystem::IsValidLocation(Focus)) return Focus;
+		}
+		return GetPawnViewLocation() + GetActorForwardVector() * 10000.f;
+	}
 	if (Combat == nullptr) return FVector();
 	return Combat->HitTarget;
 }
@@ -1650,6 +1766,9 @@ void ABrokenEdgeCharacter::SimProxiesTurn()
 void ABrokenEdgeCharacter::Defeated(bool bPlayerLeftGame)
 {
 	if (bDefeated) return;
+	// 死亡时立即终止行为树及延迟启动，避免尸体继续执行关注、移动或其他任务。
+	if (HasAuthority())
+		if (auto* Guard = Cast<AExtractionGuard>(GetController())) Guard->StopGuardAI();
 	if (ExtractionCombat->IsEnabled()) ExtractionCombat->CancelReload();
 	DropWeapons();
 	MulticastDefeated(bPlayerLeftGame);
@@ -1747,15 +1866,6 @@ UAnimMontage* ABrokenEdgeCharacter::GetSwapMontage() const
 	return Weapon && Weapon->Presentation && Weapon->Presentation->BodySwap
 		       ? Weapon->Presentation->BodySwap.Get()
 		       : SwapMontage;
-}
-
-void ABrokenEdgeCharacter::PlaySmokeThrowMontage()
-{
-	// 投掷动作与手里的武器无关，因此不走 Presentation；没有配置时静默跳过，
-	// 玩家仍能投出烟雾，只是少了挥手动作。
-	if (!SmokeThrowMontage) return;
-	if (auto* Anim = GetMesh()->GetAnimInstance()) Anim->Montage_Play(SmokeThrowMontage);
-	PlayFirstPersonMontage(FirstPersonSmokeMontage, SmokeThrowMontage);
 }
 
 UAnimMontage* ABrokenEdgeCharacter::GetViewReloadMontage() const

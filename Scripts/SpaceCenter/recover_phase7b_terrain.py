@@ -139,6 +139,13 @@ def recover(tag, source_probe):
         (n['center'][i] - n['extent'][i]) * scale[i] <= MAXIMUM[i] for i in (0, 1))]
     if not selected:
         raise ValueError('No source terrain covers the bounded region')
+    if TERRAIN_RUNS == 'TerrainSourceRuns':
+        from restoration_common import intersects_region
+        selected = [n for n in selected if intersects_region(
+            [(n['center'][i]-n['extent'][i])*scale[i] for i in (0, 1)],
+            [(n['center'][i]+n['extent'][i])*scale[i] for i in (0, 1)])]
+        if not selected:
+            raise ValueError('No source terrain intersects the selected regions')
     tile_ids = sorted({n['tile'] for n in selected})
     extraction = extract([TERRAIN + 'Asset/CDLODAsset_Heightmap_x%d_y%d' % tile for tile in tile_ids], limit_gib=1)
     write_json(out / 'SourceExtractions.json', extraction)

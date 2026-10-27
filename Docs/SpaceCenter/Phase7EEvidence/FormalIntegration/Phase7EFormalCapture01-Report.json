@@ -1,0 +1,40 @@
+{
+  "task": "capture",
+  "result": "running",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "quality": 1,
+  "camera_config_sha256": "248bbb26e36a0cd45de32399545304a77ce46673042e7d007a3d84f1359ae589",
+  "captures": [
+    {
+      "name": "main_overview",
+      "position": [
+        9500,
+        8500,
+        9500
+      ],
+      "target": [
+        800,
+        -600,
+        700
+      ],
+      "file": "main_overview.png",
+      "sha256": "67b22e6b5591012cd864f333f7c379ac20a627b6bb15db9736bff4fd65d1a755",
+      "size": [
+        1920,
+        1080
+      ]
+    }
+  ],
+  "reference_status": "Source-version matched gameplay views are not yet paired; these are reproducible reconstruction inspection cameras.",
+  "capture_world": "editor",
+  "map": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction",
+  "inspection_setup": "Production lighting/geometry; visible North, unsaved. Editor camera only; runtime collision is a separate gate.",
+  "render_boundary": "One editor world, native high-resolution scene render at requested dimensions, unchanged camera/lighting and Medium. PIE collision and packaged gameplay are separately verified.",
+  "native_render_resolution": [
+    1920,
+    1080
+  ]
+}

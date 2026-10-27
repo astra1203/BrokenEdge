@@ -75,8 +75,14 @@ assert min(scales) > biggest * .4, 'secondary puff too small: {0}'.format(scales
 main_scale = scales[0]
 offsets = [m.get_editor_property('relative_location').length() * main_scale for m in meshes]
 print('SMOKE_LAYER world_offsets={0}'.format(['{0:.0f}'.format(o) for o in offsets]))
+# offsets[0] 是根组件本身，等于 Actor 的出生点（脚本里放在 Z=200），不参与"散开"判断。
+# 辅团的偏移必须落在主团世界半径以内、又不能全挤在原点：
+# 主团此时世界半径 = world_scale x 50（基础球半径），Age=0 时只有满载的约 1/3。
+main_radius = main_scale * 50.0
+print('SMOKE_LAYER main_radius={0:.0f}'.format(main_radius))
 assert max(offsets) < 600, 'puff offset out of range: {0}'.format(offsets)
-assert min(offsets[1:]) > 60, 'secondary puffs all sit at origin: {0}'.format(offsets)
+assert max(offsets[1:]) < main_radius, 'secondary puff escaped the cloud body: {0}'.format(offsets)
+assert min(offsets[1:]) > 25, 'secondary puffs all sit at origin: {0}'.format(offsets)
 
 unreal.EditorLevelLibrary.destroy_actor(actor)
 print('SMOKE_LAYER_DONE')

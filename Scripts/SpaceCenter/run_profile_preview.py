@@ -3,7 +3,7 @@ import argparse
 import datetime
 import subprocess
 import sys
-from restoration_common import ROOT, WORK, PROFILE_FILE, read, sha, write_json
+from restoration_common import ROOT, WORK, PROFILE, PROFILE_FILE, read, sha, write_json
 
 p=argparse.ArgumentParser()
 p.add_argument('--tag',required=True)
@@ -15,7 +15,8 @@ assert args.tag and all(c.isalnum() or c in '-_' for c in args.tag)
 out=WORK/'PreviewRuns'/args.tag
 out.mkdir(parents=True,exist_ok=False)
 steps=[]
-for task in ['verify','textures','materials','warm','preview','audit','capture']:
+tasks=['verify','meshes']+(['collision-fidelity'] if PROFILE['phase']=='7E' else [])+['textures','materials','warm','preview','audit','capture']
+for task in tasks:
     tag=args.tag+'-'+task
     common=['--tag',tag,'--profile',str(PROFILE_FILE)]
     if task=='verify':

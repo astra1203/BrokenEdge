@@ -41,10 +41,9 @@ for kind,quantity in [('LargeSafe',3),('SmallSafe',1)]:
     for item,count in [('Electronics',quantity),('Tools',1)]:
         stack=unreal.ExtractionLootStack();stack.set_editor_property('item',item);stack.set_editor_property('quantity',count);stacks.append(stack)
     recipe.set_editor_property('items',stacks);assert lib.save_loaded_asset(recipe);recipes[kind]=recipe
-# Compatibility groups use only authored points within the same source variant.
-# Membership is project tuning, not a recovered official server selection rule.
-compatibility_groups={'总裁室会客室钥匙房':'ProjectPresidentOneOfThree','总裁室外':'ProjectPresidentOneOfThree',
-                      'H3核心室':'ProjectH3OneOfTwo','H3破译站免保区':'ProjectH3OneOfTwo'}
+# 大小保险一律必定刷新：不再使用“N 选 1”兼容组，每个已启用点位都是固定点。
+# 组语义仍保留在 UExtractionLootLayout 中（非空组按权重选一个），只有这里不赋值。
+# 关掉分组的代价：原先 1/3、1/2 概率出现的总统室/H3 大保险柜，现在每局都在。
 for variant in sorted({p['variant'] for p in manifest['points']}):
     folder='/Game/Extraction/Loot';name='DA_'+variant+'_Loot';path=folder+'/'+name
     layout=unreal.load_asset(path) if lib.does_asset_exist(path) else None
@@ -63,17 +62,15 @@ for variant in sorted({p['variant'] for p in manifest['points']}):
             rotation=unreal.Rotator(pitch=rot.get('Pitch',0),yaw=rot.get('Yaw',0),roll=rot.get('Roll',0)),
             scale=unreal.Vector(*[scale[k] for k in ('X','Y','Z')])))
         p.set_editor_property('enabled',bool(validation[row['id']]))
-        if variant=='SpaceCenter_Ma1' and row['kind']=='LargeSafe' and row['room'] in compatibility_groups:
-            p.set_editor_property('group',compatibility_groups[row['room']])
         # This authored actor is parked about 55m below the playable floor; collision alone is insufficient.
         if variant=='SpaceCenter_Ma1' and row['world_position']['Z'] < -1000:
             p.set_editor_property('enabled',False)
-        p.set_editor_property('reference',row['package']+':'+row['actor']+'; group unresolved; compatibility drops')
+        p.set_editor_property('reference',row['package']+':'+row['actor']+'; fixed point, guaranteed spawn; compatibility drops')
         points.append(p)
         report.append({'id':row['id'],'variant':variant,'room':row['room'],'enabled':p.get_editor_property('enabled'),
-                       'group':str(p.get_editor_property('group')),'group_status':'project compatibility', 'floor_checks':validation[row['id']]})
+                       'group':str(p.get_editor_property('group')),'group_status':'fixed (guaranteed spawn)', 'floor_checks':validation[row['id']]})
     layout.set_editor_property('variant',variant);layout.set_editor_property('points',points)
-    layout.set_editor_property('group_policy','Ma1 source coordinates; President 1-of-3 and H3 1-of-2 are PROJECT groups, not recovered official membership. Other points fixed. Drops are project recipes.')
+    layout.set_editor_property('group_policy','Ma1 source coordinates; every enabled safe is a fixed point and spawns in every raid (project tuning). Drops are project recipes.')
     assert lib.save_loaded_asset(layout)
     layouts[variant]=layout.get_path_name()
 map_definition=unreal.load_asset('/Game/Extraction/Maps/DA_SpaceCenterGameplay')
@@ -82,5 +79,5 @@ map_definition.set_editor_property('loot_layout',unreal.load_asset(layouts['Spac
 assert lib.save_loaded_asset(map_definition)
 out=root/'Docs/Extraction/RestorationEvidence/Loot/PlacementAudit.json'
 out.write_text(json.dumps({'layouts':layouts,'points':report,'runtime_enabled':True,'active_variant':'SpaceCenter_Ma1',
-    'limits':'Group membership and drops are project compatibility. Floor checks are not reachability or visual approval; unsupported and underground points disabled.'},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    'limits':'All enabled safes are fixed points and spawn every raid (project tuning, no one-of-N groups). Floor checks are not reachability or visual approval; unsupported and underground points stay disabled.'},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print('LOOT_LAYOUTS_AUDITED',len(report),'floor-supported',sum(p['enabled'] for p in report))

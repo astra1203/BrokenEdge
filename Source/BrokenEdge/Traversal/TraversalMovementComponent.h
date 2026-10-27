@@ -42,6 +42,12 @@ public:
 	bool ClearAt(const FVector& Position) const;
 	bool ClearSegment(const FVector& From, const FVector& To) const;
 	bool Standable(const FVector& Feet, FVector& Center) const;
+	/**
+	 * 攀爬/翻越的正面朝向：对齐障碍表面的水平法线，而不是直接沿用相机朝向。
+	 * 斜着撞上箱体时若用相机朝向，角色会斜切过箱体边缘，动画朝向和障碍明显不符。
+	 * 法线退化为竖直方向（表面是顶面/底面）时保持首选朝向。
+	 */
+	static FVector SnapFacingToNormal(const FVector& Preferred, const FVector& Normal);
 
 private:
 	FTraversalMoveResponse ResponseData;

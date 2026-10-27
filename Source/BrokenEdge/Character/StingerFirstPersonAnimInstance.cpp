@@ -275,6 +275,10 @@ void UStingerFirstPersonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		CurrentVisualState = TEXT("Knife");
 		LocomotionTarget = NAME_None;
 		TransitionRemaining = 0.f;
+		AirTransition = nullptr;
+		AirTransitionRemaining = 0.f;
+		AimTransition = nullptr;
+		AimTransitionRemaining = 0.f;
 		CurrentAnimationName = ActiveAnimation->GetPathName();
 		return;
 	}
@@ -285,13 +289,69 @@ void UStingerFirstPersonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	UAnimSequence* Aim = Profile && Profile->Aim ? Profile->Aim.Get() : AimAnimation.Get();
 	UAnimSequence* Sprint = Profile && Profile->Sprint ? Profile->Sprint.Get() : SprintAnimation.Get();
 	UAnimSequence* Jump = Profile && Profile->Jump ? Profile->Jump.Get() : JumpAnimation.Get();
+	UAnimSequence* JumpStart = Movement && Movement->ViewJumpStart ? Movement->ViewJumpStart.Get() : Jump;
+	UAnimSequence* JumpLoop = Movement && Movement->ViewJumpLoop ? Movement->ViewJumpLoop.Get() : Jump;
+	UAnimSequence* JumpLand = Movement ? Movement->ViewJumpLand.Get() : nullptr;
+	UAnimSequence* AimOn = Movement ? Movement->ViewAimOn.Get() : nullptr;
+	UAnimSequence* AimOff = Movement ? Movement->ViewAimOff.Get() : nullptr;
+
+	// 起跳/落地与开镜/关镜都按边沿触发一次性序列；源资源缺项时自动退回姿势混合。
+	const bool bFalling = Character->GetCharacterMovement()->IsFalling();
+	const bool bAiming = Character->IsAiming();
+	if (bFalling && !bWasFalling && JumpStart)
+	{
+		AirTransition = JumpStart;
+		AirTransitionState = TEXT("JumpStart");
+		AirTransitionRemaining = FMath::Max(JumpStart->GetPlayLength(), .05f);
+	}
+	else if (!bFalling && bWasFalling && JumpLand)
+	{
+		AirTransition = JumpLand;
+		AirTransitionState = TEXT("JumpLand");
+		AirTransitionRemaining = FMath::Max(JumpLand->GetPlayLength(), .05f);
+	}
+	bWasFalling = bFalling;
+	if (bAiming != bWasAiming)
+	{
+		UAnimSequence* Edge = bAiming ? AimOn : AimOff;
+		bWasAiming = bAiming;
+		if (Edge)
+		{
+			AimTransition = Edge;
+			AimTransitionState = bAiming ? TEXT("AimOn") : TEXT("AimOff");
+			AimTransitionRemaining = FMath::Max(Edge->GetPlayLength(), .05f);
+		}
+	}
+	// 落地动作比开镜过渡优先；两者都不能盖住空中循环以外的东西。
+	UAnimSequence* OneShot = nullptr;
+	FName OneShotState = NAME_None;
+	if (AirTransition && AirTransitionRemaining > 0.f)
+	{
+		OneShot = AirTransition;
+		OneShotState = AirTransitionState;
+		AirTransitionRemaining = FMath::Max(0.f, AirTransitionRemaining - DeltaSeconds);
+		if (AirTransitionRemaining <= 0.f) AirTransition = nullptr;
+	}
+	else if (AimTransition && AimTransitionRemaining > 0.f && !bFalling)
+	{
+		OneShot = AimTransition;
+		OneShotState = AimTransitionState;
+		AimTransitionRemaining = FMath::Max(0.f, AimTransitionRemaining - DeltaSeconds);
+		if (AimTransitionRemaining <= 0.f) AimTransition = nullptr;
+	}
+	else
+	{
+		AirTransition = nullptr;
+		AimTransition = nullptr;
+	}
+
 	ActiveAnimation = Idle;
-	if (!Character->GetEquippedWeapon()) CurrentVisualState = TEXT("Unarmed");
-	else if (Character->GetCharacterMovement()->IsFalling())
+	if (!Weapon) CurrentVisualState = TEXT("Unarmed");
+	else if (bFalling)
 	{
 		CurrentVisualState = TEXT("Airborne");
-		bMissingStateAnimation = !Jump;
-		if (Jump) ActiveAnimation = Jump;
+		bMissingStateAnimation = !JumpLoop;
+		if (JumpLoop) ActiveAnimation = JumpLoop;
 	}
 	else if (Character->IsSprinting())
 	{
@@ -299,16 +359,19 @@ void UStingerFirstPersonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		bMissingStateAnimation = !Sprint;
 		if (Sprint) ActiveAnimation = Sprint;
 	}
-	else if (const_cast<ABrokenEdgeCharacter*>(Character)->IsAiming())
+	else if (bAiming)
 	{
 		CurrentVisualState = TEXT("Aim");
 		bMissingStateAnimation = !Aim;
 		if (Aim) ActiveAnimation = Aim;
 	}
-	if (Character->GetCombatState() == ECombatState::ECS_Reloading) CurrentVisualState = TEXT("Reload");
-	else if (Character->GetCombatState() == ECombatState::ECS_SwappingWeapon) CurrentVisualState = TEXT("Equip");
-	const bool bCanMove = Movement && Weapon && !Character->IsTraversing() && !Character->IsDefeated()
-		&& !Character->GetCharacterMovement()->IsFalling() && !Character->IsAiming()
+	if (Character->GetCombatState() == ECombatState::ECS_Reloading && !bFalling)
+		CurrentVisualState = TEXT("Reload");
+	else if (Character->GetCombatState() == ECombatState::ECS_SwappingWeapon && !bFalling)
+		CurrentVisualState = TEXT("Equip");
+	const bool bCanMove = !OneShot && Movement && Weapon && !Character->IsTraversing() && !Character->
+		IsDefeated()
+		&& !bFalling && !bAiming
 		&& Character->GetCombatState() == ECombatState::ECS_Unoccuiped && !GetCurrentActiveMontage();
 	if (bCanMove)
 	{
@@ -355,6 +418,16 @@ void UStingerFirstPersonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		bMissingStateAnimation = ActiveAnimation == nullptr;
 		bLocomotionMotion = bMoving && ActiveAnimation;
 		LocomotionReference = Movement->ViewIdle;
+		// 循环段按实际地面速度匹配播放速率，消除脚步滑动；过渡段保持源节奏。
+		if (bMoving && bLoopActiveAnimation)
+		{
+			const float Natural = Target == TEXT("Sprint")
+				                      ? Movement->SprintSpeed
+				                      : Target == TEXT("Run")
+				                      ? Movement->RunSpeed
+				                      : Movement->WalkSpeed;
+			if (Natural > 1.f) ActivePlayRate = FMath::Clamp(Speed / Natural, .55f, Movement->ViewPlayRateMax);
+		}
 		if (!ActiveAnimation) ActiveAnimation = Idle;
 	}
 	else
@@ -362,6 +435,15 @@ void UStingerFirstPersonAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		LocomotionTarget = NAME_None;
 		TransitionRemaining = 0.f;
 		LocomotionTransition = nullptr;
+	}
+	if (OneShot)
+	{
+		ActiveAnimation = OneShot;
+		bLoopActiveAnimation = false;
+		bLocomotionMotion = false;
+		bMissingStateAnimation = false;
+		ActivePlayRate = 1.f;
+		CurrentVisualState = OneShotState;
 	}
 	LocomotionWeapon = const_cast<AWeapon*>(Weapon);
 	CurrentAnimationName = ActiveAnimation ? ActiveAnimation->GetPathName() : FString();

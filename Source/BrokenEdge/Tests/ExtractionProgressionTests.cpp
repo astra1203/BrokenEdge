@@ -465,4 +465,71 @@ bool FExtractionEconomyCrashBoundary::RunTest(const FString&)
 	if (!FFileHelper::SaveStringToFile(TEXT("durable-boundary"), *(Path / TEXT("Ready.txt")))) return false;
 	for (;;) FPlatformProcess::Sleep(1);
 }
+
+// 钥匙卡商店：六张航天基地卡都必须可购买、买入即补满开门次数、半价回收，
+// 并能从仓库移入配装，随出战票据带入战局。
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionKeyCardShop, "BrokenEdge.Extraction.Progression.KeyCardShop",
+                                 EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+
+bool FExtractionKeyCardShop::RunTest(const FString&)
+{
+	const auto* Rules = GetDefault<UExtractionProgressionRules>();
+	const TArray<FName> Cards = {
+		TEXT("Key_Contract"), TEXT("Key_StaffPassage"), TEXT("Key_EastBridge"),
+		TEXT("Key_Monitor"), TEXT("Key_President"), TEXT("Key_Core")
+	};
+	for (FName Card : Cards)
+	{
+		const FString Name = Card.ToString();
+		const auto* O = Rules->Offer(Card);
+		TestNotNull(*FString::Printf(TEXT("%s 可购买"), *Name), O);
+		if (!O) continue;
+		const auto* D = UExtractionItemDefinition::Get(Card);
+		TestNotNull(*FString::Printf(TEXT("%s 定义可加载"), *Name), D);
+		if (!D) continue;
+		TestTrue(*FString::Printf(TEXT("%s 是钥匙卡"), *Name), D->Kind == EExtractionItemKind::Key);
+		TestTrue(*FString::Printf(TEXT("%s 有开门次数"), *Name), D->KeyUses >= 1);
+		TestTrue(*FString::Printf(TEXT("%s 价格与等级合法"), *Name),
+		         O->Price > 0 && O->Price <= 1000000 && O->Level >= 1 && O->Level <= 3);
+		const auto Instance = ExtractionItems::Make(Card);
+		TestEqual(*FString::Printf(TEXT("%s 买入补满次数"), *Name), Instance.Durability, float(D->KeyUses));
+		TestEqual(*FString::Printf(TEXT("%s 半价回收"), *Name), Rules->SellPrice(Instance, 1), int64(O->Price / 2));
+	}
+	TestTrue(TEXT("商品表配置合法"), Rules->IsValidConfiguration());
+
+	const FString Directory = ProgressionDirectory();
+	auto* S = ProgressionStore(Directory);
+	FGuid P;
+	FString Credential;
+	TestTrue(TEXT("开档"), S->OpenProfile({}, {}, P, Credential));
+	TestTrue(TEXT("买入合同房钥匙卡"),
+	         S->Economy(P, EconomyRequest(S, P, EExtractionEconomyAction::Buy, TEXT("Key_Contract"))));
+	TestEqual(TEXT("按标价扣款"), S->View(P)->Progression.Credits, int64(2000 - 700));
+	const auto* Bought = S->View(P)->Stash.Items.FindByPredicate([](const auto& I)
+	{
+		return I.Definition == TEXT("Key_Contract");
+	});
+	TestNotNull(TEXT("钥匙卡进入仓库"), Bought);
+	if (!Bought) return false;
+	FExtractionStorageRequest Equip;
+	Equip.Operation = FGuid::NewGuid();
+	Equip.Revision = S->View(P)->Revision;
+	Equip.From = EExtractionStorageSide::Stash;
+	Equip.To = EExtractionStorageSide::Loadout;
+	Equip.Move.Item = Bought->Id;
+	Equip.Move.Slot = -1;
+	TestTrue(TEXT("移入配装"), S->Move(P, Equip));
+	TestEqual(TEXT("仓库交出钥匙卡"), S->View(P)->Stash.Count(TEXT("Key_Contract")), 0);
+	TestEqual(TEXT("配装持有钥匙卡"), S->View(P)->Loadout.Count(TEXT("Key_Contract")), 1);
+	FGuid Raid;
+	TestTrue(TEXT("准备出战"), S->BeginRaid({P}, Raid));
+	const auto* Record = S->FindRaid(Raid);
+	TestNotNull(TEXT("出战票据存在"), Record);
+	if (!Record) return false;
+	TestEqual(TEXT("票据携带钥匙卡"), Record->Players[0].Original.Count(TEXT("Key_Contract")), 1);
+	TestTrue(TEXT("出战清空配装"), S->View(P)->Loadout.Items.IsEmpty());
+	TestTrue(TEXT("取消未激活出战"), S->AbortRaid(Raid));
+	TestEqual(TEXT("取消后钥匙卡退回仓库"), S->View(P)->Stash.Count(TEXT("Key_Contract")), 1);
+	return true;
+}
 #endif

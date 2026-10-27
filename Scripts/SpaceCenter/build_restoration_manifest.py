@@ -10,7 +10,12 @@ from restoration_recipes import make_recipes,calibration
 
 def weight_image(out):
     entries=read(input_path('terrain_textures','TerrainTextureRuns/Phase7CTerrainTextures01')/'Weights.json')
-    active=[0,1,2,4];width=height=512;pixels=bytearray(width*height*4);sources=[]
+    coordinates=[tuple(map(int,re.search(r'_x(\d+)_y(\d+)',e['name']).groups())) for e in entries]
+    low=[min(p[i] for p in coordinates) for i in (0,1)]
+    high=[max(p[i] for p in coordinates) for i in (0,1)]
+    width,height=[(high[i]-low[i]+1)*128 for i in (0,1)]
+    assert len(set(coordinates))==(high[0]-low[0]+1)*(high[1]-low[1]+1), 'Incomplete weight rectangle'
+    active=[0,1,2,4];pixels=bytearray(width*height*4);sources=[]
     for e in entries:
         x,y=map(int,re.search(r'_x(\d+)_y(\d+)',e['name']).groups())
         data=Path(e['raw_file']).read_bytes();sources.append({'source':e['object_path'],'sha256':sha(e['raw_file'])})
@@ -20,17 +25,21 @@ def weight_image(out):
             weights=[0,0,0,0];weights[active.index(first)]=round((1-blend)*255)
             weights[active.index(second)]+=round(blend*255)
             assert sum(weights)==255
-            offset=(((y-10)*128+i//128)*width+(x-21)*128+i%128)*4
+            offset=(((y-low[1])*128+i//128)*width+(x-low[0])*128+i%128)*4
             pixels[offset:offset+4]=bytes(weights)
     def chunk(t,b):return struct.pack('>I',len(b))+t+b+struct.pack('>I',zlib.crc32(t+b))
     scanlines=b''.join(b'\0'+pixels[i*width*4:(i+1)*width*4] for i in range(height))
     png=b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',width,height,8,6,0,0,0))+chunk(b'IDAT',zlib.compress(scanlines))+chunk(b'IEND',b'')
     target=out/'SourceTerrainWeights.png';target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(png)
+    source_origin=[378000+low[0]*12800,-604800+low[1]*12800]
     write_json(out/'TerrainWeightReconstruction.json',{'sources':sources,'active_layers':active,
-        'source_origin_cm':[646800,-476800],'size_cm':[51200,51200],
+        'source_origin_cm':source_origin,'size_cm':[width*100,height*100],
         'method':'Observed G16 bit fields: high-byte layer index >>3, low-byte layer index >>3, low 3 bits /7 blend. All observed values validated. Shader interpolation visually reconstructed.',
         'source_shader_verified':False,'image_sha256':sha(target)})
-    return {'source':'derived:SpaceCenter-original-weightmap-v1','file':str(target),'role':'data'}
+    entry={'source':'derived:SpaceCenter-original-weightmap-v1','file':str(target),'role':'data',
+           'mask_uv':[1/width,1/height,(ORIGIN[0]-source_origin[0])/(width*100),(ORIGIN[1]-source_origin[1])/(height*100)]}
+    if PROFILE['phase']=='7E':entry['revision']=sha(target)[:12]
+    return entry
 
 
 def main(tag):
@@ -39,6 +48,7 @@ def main(tag):
     textures={}
     for path in cache_files('AugmentRuns/*/Textures.json'):textures.update(read(path))
     textures.update(read(input_path('textures','AugmentRuns/Phase7CAugment01/Textures.json')))
+    for path in cache_files('TextureRecoveryRuns/*/Textures.json'):textures.update(read(path))
     roots=read(input_path('material_roots','MaterialRuns/Phase7CMaterials02/Report.json'))['roots']
     variants=read(ROOT/'Scripts/SpaceCenter/restoration_source_variants.json')['material_variants']
     recipes,bindings,missing=make_recipes(graph,roots,textures,material_variants=variants)
@@ -58,8 +68,9 @@ def main(tag):
     weights=weight_image(out);weight_key=weights['source']+':data';bindings[weight_key]=weights
     terrain=copy.deepcopy(next(r for r in recipes.values() if r['mode']=='opaque' and len(r['layers'])==1))
     terrain_source='terrain:SpaceCenter-source-layers'
+    if PROFILE['phase']=='7E':terrain_source+='-7E'
     terrain.update(id=identity(terrain_source),source=terrain_source,source_parent='Original terrain DTA parameters with reconstructed blend',layers=layers,
-        two_sided=False,blend_mask=weight_key,vertex_blend=False,mask_uv=[1/512,1/512,(ORIGIN[0]-646800)/51200,(ORIGIN[1]+476800)/51200],
+        two_sided=False,blend_mask=weight_key,vertex_blend=False,mask_uv=weights['mask_uv'],
         overlay_strength=0,macro_strength=0,detail_strength=0,emission_intensity=0,use_cpd=False,opacity=1,
         source_chain=['/Game/Maps/BuildMaps_HD/SpaceCenter_Ma1/Runtime/LandscapeCDLOD/LandscapeCDLOD'],
         notes=['Source height and weight samples; terrain shader visually reconstructed. Missing shared Rock01 image uses same-name original Forrest_Tutorial asset.',

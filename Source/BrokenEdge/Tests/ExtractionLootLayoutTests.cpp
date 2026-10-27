@@ -63,6 +63,7 @@ bool FExtractionLootLayoutTest::RunTest(const FString&)
 		{
 			const auto& P = Authored->Points[Index];
 			Seen.Add(P.Id);
+			TestTrue(TEXT("Guaranteed point is enabled"), P.Enabled);
 			TestNotNull(TEXT("Source model configured"), P.Appearance.Get());
 			TestNotNull(TEXT("Separate project recipe configured"), P.Recipe.Get());
 			if (P.Kind == UExtractionLootLayout::LooseKind)

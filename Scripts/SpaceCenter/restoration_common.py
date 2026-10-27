@@ -23,20 +23,30 @@ if not PROFILE_FILE.is_absolute(): PROFILE_FILE = ROOT/PROFILE_FILE
 PROFILE_FILE = PROFILE_FILE.resolve()
 PROFILE = json.loads(PROFILE_FILE.read_text(encoding='utf-8'))
 assert PROFILE['version'] == 1
-if PROFILE['phase']=='7D':
-    assert PROFILE.get('preview_map')=='/Game/Maps/SpaceCenter/L_SpaceCenterRestorationPreview7D','7D requires its own preview map'
-    assert {'cameras','traverse_route','acceptance'}.issubset(PROFILE['inputs']),'7D must not fall back to historical validation inputs'
+if PROFILE['phase'] in {'7D', '7E'}:
+    assert PROFILE.get('preview_map')=='/Game/Maps/SpaceCenter/L_SpaceCenterRestorationPreview'+PROFILE['phase'],'Phase requires its own preview map'
+    assert {'cameras','traverse_route','acceptance'}.issubset(PROFILE['inputs']),'Explicit validation inputs are required'
 WORK = (ROOT/PROFILE['work_directory']).resolve()
 assert WORK.is_relative_to(BASE) and WORK != BASE, 'Profile output must be a bounded phase workspace'
 ORIGIN = PROFILE['origin']
 MINIMUM = PROFILE['minimum']
 MAXIMUM = PROFILE['maximum']
 assert len(ORIGIN)==3 and len(MINIMUM)==len(MAXIMUM)==2 and all(a<b for a,b in zip(MINIMUM,MAXIMUM))
+for region in PROFILE.get('regions', []):
+    assert len(region['minimum']) == len(region['maximum']) == 2
+    assert all(MINIMUM[i] <= region['minimum'][i] < region['maximum'][i] <= MAXIMUM[i] for i in (0, 1))
 CACHE_WORKSPACES = [(ROOT/p).resolve() for p in PROFILE.get('cache_workspaces',[])]
 assert all(p.is_relative_to(BASE) and p!=WORK for p in CACHE_WORKSPACES)
 os.environ['SPACECENTER_RESTORE_PROFILE'] = str(PROFILE_FILE)
 os.environ['SPACECENTER_WORK'] = str(WORK)
 from source_packages import extract, write_json
+
+
+def intersects_region(minimum, maximum):
+    """Select the union of explicit source-space regions; old profiles use their envelope."""
+    regions = PROFILE.get('regions', [{'minimum': MINIMUM, 'maximum': MAXIMUM}])
+    return any(all(maximum[i] >= region['minimum'][i] and minimum[i] <= region['maximum'][i]
+                   for i in (0, 1)) for region in regions)
 
 
 def read(path):

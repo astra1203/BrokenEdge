@@ -130,6 +130,30 @@ void UExtractionAbilities::ServerCancel_Implementation(uint32 Sequence)
 	Cancel();
 }
 
+// 动作复制到客户端时同步表现；服务器侧由 ServerBegin/Cancel 直接调用，不依赖 RepNotify。
+void UExtractionAbilities::OnRep_Action()
+{
+	RefreshAbilityMontage();
+}
+
+void UExtractionAbilities::RefreshAbilityMontage()
+{
+	auto* C = Character();
+	if (C == nullptr) return;
+	if (Action == EExtractionAction::None)
+	{
+		C->StopAbilityMontage();
+		return;
+	}
+	const auto* R = GetDefault<UExtractionRules>();
+	const float Seconds = Action == EExtractionAction::Revive
+		                      ? R->ReviveSeconds
+		                      : Action == EExtractionAction::Heal
+		                      ? R->HealSeconds
+		                      : R->SmokeCastSeconds;
+	C->PlayAbilityMontage(static_cast<uint8>(Action), Seconds);
+}
+
 // 校验序号、动作种类、冷却和目标，再锁定救援者或计算烟雾落点并设定完成时刻。
 void UExtractionAbilities::ServerBegin_Implementation(uint32 Sequence, EExtractionAction Kind,
                                                       ABrokenEdgeCharacter* Other)
@@ -193,9 +217,9 @@ void UExtractionAbilities::ServerBegin_Implementation(uint32 Sequence, EExtracti
 		                   : R->SmokeCastSeconds);
 	C->GetCombat()->FireButtonPressed(false);
 	C->GetExtractionInteraction()->StopCombatInput();
+	// 时长确定后再挂表现，保证蒙太奇与 ActionEnd 对齐。
+	RefreshAbilityMontage();
 	C->ForceNetUpdate();
-	// 资格和目标都已通过校验，此时才触发表现，避免被拒绝的请求也挥手。
-	if (Kind == EExtractionAction::Smoke) OnSmokeCastStarted.Broadcast();
 }
 
 // 救援必须是可触及的倒地队友；治疗需要存活、缺血的友方；烟雾没有角色目标。
@@ -224,6 +248,8 @@ void UExtractionAbilities::Cancel()
 	Action = EExtractionAction::None;
 	ActionEnd = 0;
 	Target = nullptr;
+	// 取消、完成、受伤都会经过这里，统一收表现。
+	RefreshAbilityMontage();
 	GetOwner()->ForceNetUpdate();
 }
 
@@ -289,13 +315,22 @@ void UExtractionAbilities::Complete()
 }
 
 // 仅服务器推进：目标失效、移动、下落或资格丢失立即取消，到截止时间才调用 Complete。
+bool UExtractionAbilities::CancelledByMovement(EExtractionAction Kind, bool bMoved)
+{
+	// 没有动作时不存在"取消"；治疗是唯一允许移动施放的动作，其余（含将来新增）默认站定。
+	return bMoved && Kind != EExtractionAction::None && Kind != EExtractionAction::Heal;
+}
+
 void UExtractionAbilities::TickComponent(float Delta, ELevelTick Tick, FActorComponentTickFunction* Function)
 {
 	Super::TickComponent(Delta, Tick, Function);
 	if (!GetOwner()->HasAuthority() || Action == EExtractionAction::None) return;
 	const auto* C = Character();
-	if (!CanStart() || !ValidTarget() || C->GetCharacterMovement()->IsFalling()
-		|| C->GetVelocity().SizeSquared() > 25 || FVector::DistSquared(StartedAt, C->GetActorLocation()) > 4)
+	// 治疗允许边走边施放（移速由角色按 HealMoveSpeedScale 降低）；救援与烟雾仍需站定，
+	// 否则施法点会跟着角色漂移，救援脱离范围、烟雾落点失去意义。
+	const bool bMoved = C->GetVelocity().SizeSquared() > 25
+		|| FVector::DistSquared(StartedAt, C->GetActorLocation()) > 4;
+	if (!CanStart() || !ValidTarget() || C->GetCharacterMovement()->IsFalling() || CancelledByMovement(Action, bMoved))
 	{
 		Cancel();
 		return;

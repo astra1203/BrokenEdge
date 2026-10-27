@@ -18,7 +18,8 @@ BASE_WORK = PROJECT / 'Saved/SpaceCenter'
 WORK = Path(os.environ.get('SPACECENTER_WORK', str(BASE_WORK))).resolve()
 if not WORK.is_relative_to(BASE_WORK.resolve()):
     raise ValueError('Conversion work directory must stay inside Saved/SpaceCenter')
-SOURCE = Path('D:/司晨/源代码和素材/三角洲解包资产/原始资源ZIP')
+# 原始资源 ZIP 的根目录会随素材迁移（本地盘 / 共享盘），用 DELTA_SOURCE_ZIPS 覆盖。
+SOURCE = Path(os.environ.get('DELTA_SOURCE_ZIPS', 'D:/司晨/源代码和素材/三角洲解包资产/原始资源ZIP'))
 PAYLOADS = {'.uasset', '.umap', '.uexp', '.ubulk', '.uptnl'}
 
 

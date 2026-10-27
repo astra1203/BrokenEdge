@@ -10,6 +10,7 @@
 #include "BrokenEdgeCharacter.generated.h"
 
 class UCameraComponent;
+class UAnimInstance;
 class UCombatComponent;
 class AWeapon;
 class UBoxComponent;
@@ -78,6 +79,8 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	/** 守卫统一使用 AI 控制器的期望朝向，避免玩家持枪/原地转身逻辑覆盖导航和 SetFocus。 */
+	void ConfigureGuardRotation();
 	void RotateInPlace(float DeltaTime);
 	float CalculateSpeed();
 	void AimOffset(float DeltaTime);
@@ -105,9 +108,6 @@ public:
  * @brief 播放换弹动画
 	 */
 	void PlayReloadMontage();
-
-	/** 播放烟雾投掷动画；1P 蒙太奇跟随 3P 位置，保证第一人称与身上动作一致 */
-	void PlaySmokeThrowMontage();
 
 	/** 获取换弹动画 */
 	UAnimMontage* GetReloadMontage() const;
@@ -276,11 +276,27 @@ public:
 	TObjectPtr<UAnimMontage> FirstPersonReloadMontage = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	TObjectPtr<UAnimMontage> FirstPersonSwapMontage = nullptr;
-	// 烟雾投掷在 1P 与 3P 各需要一段蒙太奇，由 PlayFirstPersonMontage 按同一时间轴同步播放。
-	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
+	// 技能表现只影响动画，不参与救援、治疗、烟雾的服务器结算。
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> HealMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> FirstPersonHealMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> ReviveMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> FirstPersonReviveMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> SmokeMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
 	TObjectPtr<UAnimMontage> FirstPersonSmokeMontage = nullptr;
-	UPROPERTY(EditDefaultsOnly, Category = "Animation")
-	TObjectPtr<UAnimMontage> SmokeThrowMontage = nullptr;
+	/**
+	 * 播放技能表现蒙太奇；ActionKind 与 EExtractionAction 取值一致（1 Revive / 2 Heal / 3 Smoke）。
+	 * Seconds 是服务器给定的动作时长，用于把蒙太奇拉伸到与结算同步。
+	 */
+	void PlayAbilityMontage(uint8 ActionKind, float Seconds);
+	/** 停止技能表现并复位蒙太奇状态；重复调用安全。 */
+	void StopAbilityMontage();
+	bool IsAbilityMontageActive() const { return AbilityMontage != nullptr; }
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	FName RightHandBone = TEXT("hand_r");
@@ -331,6 +347,8 @@ private:
 	TObjectPtr<UAnimMontage> ViewActionMontage;
 	UPROPERTY(Transient)
 	TObjectPtr<UAnimMontage> ViewActionThirdPersonMontage;
+	UPROPERTY(Transient)
+	TObjectPtr<UAnimMontage> AbilityMontage;
 	float ViewActionSectionStart = 0.f;
 	float ViewActionSectionLength = 1.f;
 	float ViewActionAttachTime = -1.f;
@@ -582,6 +600,12 @@ public:
 	TObjectPtr<class UExtractionInventoryComponent> GuardInventory;
 	UPROPERTY(Replicated)
 	bool bExtractionGuard = false;
+	/**
+	 * 守卫身体模型相对胶囊的偏航修正。本项目 Stinger 模型使用 -90 度，使模型正面对应 Actor +X。
+	 * 替换为其他朝向的模型时，在敌人蓝图类默认值中调整；不影响玩家角色的模型配置。
+	 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="AI|Presentation")
+	float GuardMeshYawOffset = -90.f;
 	UPROPERTY(Replicated)
 	int32 ExtractionGuardId = INDEX_NONE;
 	bool bWasExtractionDowned = false;

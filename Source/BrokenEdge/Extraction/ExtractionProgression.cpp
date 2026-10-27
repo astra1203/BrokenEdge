@@ -12,7 +12,12 @@ UExtractionProgressionRules::UExtractionProgressionRules()
 		{TEXT("Vest2"), 600, 1}, {TEXT("Key"), 300, 1}, {TEXT("RedDot"), 300, 2},
 		{TEXT("VerticalGrip"), 300, 2}, {TEXT("Compensator"), 300, 2}, {TEXT("AmmoAP"), 6, 3},
 		{TEXT("Helmet3"), 800, 3}, {TEXT("Vest3"), 1200, 3},
-		{TEXT("SCARH"), 1800, 1}, {TEXT("Ammo76251"), 4, 1}
+		{TEXT("SCARH"), 1800, 1}, {TEXT("Ammo76251"), 4, 1},
+		// 航天基地钥匙卡：商店可购买，买入后按定义补满开门次数，需在仓库移入配装才能带入。
+		// 价格按房间价值与开门次数分层：入门房 3 次 < 二楼房 2 次 < 核心/总裁 1-2 次高价值。
+		{TEXT("Key_Contract"), 700, 1}, {TEXT("Key_StaffPassage"), 800, 1},
+		{TEXT("Key_EastBridge"), 1200, 2}, {TEXT("Key_Monitor"), 1400, 2},
+		{TEXT("Key_President"), 2400, 3}, {TEXT("Key_Core"), 2600, 3}
 	};
 	Quests = {
 		{TEXT("初次撤离"), TEXT("接取后成功撤离一次"), 1, 500, 100},

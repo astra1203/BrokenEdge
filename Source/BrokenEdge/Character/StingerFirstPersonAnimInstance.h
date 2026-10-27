@@ -42,6 +42,18 @@ public:
 protected:
 	FName LocomotionTarget;
 	float TransitionRemaining = 0.f;
+	/** 起跳/落地一次性动作，播完自动回到循环姿势。 */
+	UPROPERTY(Transient)
+	TObjectPtr<UAnimSequence> AirTransition;
+	FName AirTransitionState;
+	float AirTransitionRemaining = 0.f;
+	/** 开镜/关镜一次性过渡。 */
+	UPROPERTY(Transient)
+	TObjectPtr<UAnimSequence> AimTransition;
+	FName AimTransitionState;
+	float AimTransitionRemaining = 0.f;
+	bool bWasFalling = false;
+	bool bWasAiming = false;
 	TWeakObjectPtr<class AWeapon> LocomotionWeapon;
 	virtual FAnimInstanceProxy* CreateAnimInstanceProxy() override;
 	virtual void DestroyAnimInstanceProxy(FAnimInstanceProxy* Proxy) override;

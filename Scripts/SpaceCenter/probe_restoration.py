@@ -32,7 +32,7 @@ def dependencies(tag):
                 template=props.get('AssetPathTemplate',p['package']+'/'+p['package'].split('/')[-2]+'_X%d_Y%d')
                 for a in props.get('Assets',[]):
                     b=a['Bounds'];center=b['Origin'];extent=b['BoxExtent']
-                    if all(center[k]+extent[k]>=MINIMUM[i] and center[k]-extent[k]<=MAXIMUM[i] for i,k in enumerate('XY')):
+                    if intersects_region([center[k]-extent[k] for k in 'XY'], [center[k]+extent[k] for k in 'XY']):
                         names.add(template%(a['ID']['X'],a['ID']['Y']))
             if 'DynamicTexture' in o.get('Type',''):
                 names.update(canonical(t['AssetPathName']) for t in props['TextureArray'][:5])

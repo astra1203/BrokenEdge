@@ -7,6 +7,7 @@ import math
 import sqlite3
 from pathlib import Path
 from restoration_common import BASE, WORK, ROOT, MINIMUM, MAXIMUM, ORIGIN, read, write_json, canonical, identity, extract_recorded, run_converter, input_path, CACHE_WORKSPACES
+from restoration_common import intersects_region
 
 GEOMETRY_GROUPS = {'BigMeshGroup', 'MidMeshGroup', 'SmallMeshGroup', 'Room', 'Landmark',
                    'Decorations', 'Decorations_HQ', 'Decorations_SQ', 'Decorations_SSQ',
@@ -127,7 +128,7 @@ def select(tag, discovery, bounds_tag):
                 continue
             else:
                 measured=world_bounds(obj,metadata[mesh])
-                if any(measured['max'][i]<MINIMUM[i] or measured['min'][i]>MAXIMUM[i] for i in [0,1]):
+                if not intersects_region(measured['min'], measured['max']):
                     reason='bounds_outside_region'
                 elif obj.get('properties',{}).get('bVisible',True) is False:
                     reason='source_hidden'

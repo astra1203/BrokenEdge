@@ -31,6 +31,12 @@ def asset(entry,kind,role=None):
         report['reused']+=1
         return previous['asset']
     revision=entry.get('revision')
+    # Merged checkouts may contain assets not present in the local import ledger.
+    # Never overwrite those based only on an asynchronously populated registry.
+    original_folder=DEST+('/Terrain/' if kind=='terrain' else '/Assets/')+identity(key)
+    original_disk=ROOT/'Content'/original_folder.removeprefix('/Game/')
+    if not previous and original_disk.is_dir() and any(original_disk.rglob('*.uasset')):
+        revision=revision or digest[:12]
     if previous and previous['sha256']!=digest and revision==digest[:12]:
         previous=None
     elif previous and (previous['sha256']!=digest or not previous.get('pending')):
@@ -42,7 +48,14 @@ def asset(entry,kind,role=None):
     else:
         folder=DEST+('/Revisions/'+revision if revision else '')+('/Terrain/' if kind=='terrain' else '/Assets/')+identity(key)
         cls=unreal.Texture2D if kind=='texture' else unreal.StaticMesh
+        disk_folder=ROOT/'Content'/folder.removeprefix('/Game/')
         paths=[p for p in LIB.list_assets(folder,recursive=True) if isinstance(LIB.load_asset(p),cls)] if LIB.does_directory_exist(folder) else []
+        if disk_folder.is_dir():
+            for file in disk_folder.rglob('*.uasset'):
+                path='/Game/'+file.relative_to(ROOT/'Content').with_suffix('').as_posix()
+                obj=LIB.load_asset(path)
+                if isinstance(obj,cls) and obj.get_path_name() not in paths:paths.append(obj.get_path_name())
+            paths=sorted(set(p.split('.')[0] for p in paths))
         if paths:
             if not previous or not previous.get('pending') or len(paths)!=1:
                 raise RuntimeError('Untracked native assets in '+folder)
@@ -144,6 +157,12 @@ try:
     elif TASK=='textures':import_textures()
     elif TASK=='warm':warm_assets()
     elif TASK=='terrain-fidelity':terrain_fidelity()
+    elif TASK=='collision-fidelity':
+        from phase7e_collision import repair
+        repair(globals())
+    elif TASK=='cleanup-imports':
+        from cleanup_phase7e_imports import cleanup
+        cleanup(globals())
     else:
         from restoration_world import run
         run(globals())

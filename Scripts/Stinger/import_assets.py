@@ -5,12 +5,14 @@ GLB 保留蒙皮；PSA 使用 AnimationDataController，近似源帧率并保留
 """
 from pathlib import Path
 import json
+import os
 import struct
 import hashlib
 from fractions import Fraction
 import unreal
 
-SOURCE = Path(r"D:\司晨\源代码和素材\蜂医的人物模型和相关动画资产")
+# 源目录不再写死：原始素材盘符会变（本地盘 / 共享盘），用 STINGER_SOURCE 覆盖。
+SOURCE = Path(os.environ.get('STINGER_SOURCE', r"D:\司晨\源代码和素材\蜂医的人物模型和相关动画资产"))
 DEST = "/Game/Characters/Stinger"
 REPORT = Path(unreal.Paths.project_saved_dir()) / "Stinger" / "import_manifest.json"
 IMPORT_VERSION = 2

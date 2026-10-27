@@ -726,7 +726,7 @@ void UExtractionWidget::Refresh()
 		const auto* A = C->GetExtractionAbilities();
 		if (PS->Life == EExtractionLife::Alive)
 		{
-			Text += FString::Printf(TEXT("\nZ 治疗 %.0fs · X 烟雾 %.0fs"), FMath::Max(0.0, A->HealReadyAt - Now),
+			Text += FString::Printf(TEXT("\nZ 治疗(可移动) %.0fs · X 烟雾 %.0fs"), FMath::Max(0.0, A->HealReadyAt - Now),
 			                        FMath::Max(0.0, A->SmokeReadyAt - Now));
 			if (A->RescueFocus()) Text += TEXT("\n按住 E 救援队友 · 5 秒");
 		}
@@ -736,7 +736,7 @@ void UExtractionWidget::Refresh()
 				A->Action == EExtractionAction::Revive
 					? TEXT("正在救援")
 					: A->Action == EExtractionAction::Heal
-					? TEXT("正在治疗")
+					? TEXT("正在治疗 · 可移动，移速降低")
 					: TEXT("投放烟雾"), FMath::Max(0.0, A->ActionEnd - Now));
 		if (A->Rescuer)
 			Text += FString::Printf(

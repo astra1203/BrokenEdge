@@ -35,6 +35,12 @@ public:
 	// 治疗能力的施放时长、范围、恢复量及冷却，与背包医疗物品各自计时。
 	UPROPERTY(Config)
 	float HealSeconds = 2;
+	/**
+	 * 治疗期间的移速倍率：允许边走边治疗，但按此比例降速。
+	 * 治疗是唯一允许移动施放的能力，救援与烟雾仍需站定。
+	 */
+	UPROPERTY(Config, meta=(ClampMin="0.05", ClampMax="1"))
+	float HealMoveSpeedScale = .4f;
 	UPROPERTY(Config)
 	float HealRange = 1000;
 	UPROPERTY(Config)
@@ -63,10 +69,38 @@ public:
 	int32 Guards = 4;
 	UPROPERTY(Config)
 	float GuardReactionSeconds = 2.f;
+	/** 0 表示与玩家长按一样使用当前武器 FireDelay；正数只可额外降低射速。 */
 	UPROPERTY(Config)
-	float GuardShotInterval = .8f;
+	float GuardShotInterval = .15f;
+	/** 默认移速：当前玩家基础步行速度 600 - 75 = 525 cm/s。所有守卫初始化与逐帧更新共用此配置。 */
 	UPROPERTY(Config)
-	float GuardDamageScale = .3f;
+	float GuardWalkSpeed = 525.f;
+	/** 丢失视野后继续追击/观察的总时限，从最后可见时刻开始，单位秒。 */
+	UPROPERTY(Config)
+	float GuardPursuitSeconds = 12.f;
+	/** 使用最后可见速度推算的位置提前量；不会查询隐藏目标的实时位置。 */
+	UPROPERTY(Config)
+	float GuardPursuitPredictionSeconds = 1.25f;
+	/** 预判位移上限 cm，避免高速目标让追击点飞出地图。 */
+	UPROPERTY(Config)
+	float GuardPursuitPredictionDistance = 600.f;
+	/** 从丢失目标时守卫所在位置到追击点的最大导航路径长度 cm。 */
+	UPROPERTY(Config)
+	float GuardPursuitMaxDistance = 8000.f;
+	/** 搜索移动速度下限 cm/s，实际不低于 GuardWalkSpeed，仍受腿部骨折减速影响。 */
+	UPROPERTY(Config)
+	float GuardPursuitSpeed = 360.f;
+	UPROPERTY(Config)
+	float GuardDamageScale = .15f;
+	/** 武器本身的散布计算完成后，额外追加的守卫随机圆锥半角。0 表示关闭，单位度。 */
+	UPROPERTY(Config, meta=(ClampMin="0", ClampMax="45", Units="deg"))
+	float GuardExtraSpreadDegrees = 3.f;
+	/** 首次发现目标的视觉距离，单位 cm。 */
+	UPROPERTY(Config, meta=(ClampMin="0", Units="cm"))
+	float GuardSightRadius = 6000.f;
+	/** 已发现目标的保留距离，运行时确保不小于发现距离，减少边界附近反复丢失目标。 */
+	UPROPERTY(Config, meta=(ClampMin="0", Units="cm"))
+	float GuardLoseSightRadius = 7500.f;
 };
 
 UCLASS()
@@ -83,8 +117,11 @@ public:
 	virtual void TickComponent(float Delta, ELevelTick Tick, FActorComponentTickFunction* Function) override;
 	// 销毁时释放双向救援关系，再调用父类生命周期清理。
 	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing=OnRep_Action)
 	EExtractionAction Action = EExtractionAction::None;
+	/** 动作复制到客户端后同步技能表现蒙太奇；不参与任何结算。 */
+	UFUNCTION()
+	void OnRep_Action();
 	// 服务器绝对完成时刻，0 表示未计时；HUD 应使用同步服务器时间计算剩余值。
 	UPROPERTY(Replicated)
 	double ActionEnd = 0;
@@ -123,10 +160,11 @@ public:
 	// 只接受更新序号，取消当前能力并释放对目标的救援占用。
 	UFUNCTION(Server, Reliable)
 	void ServerCancel(uint32 Sequence);
-
-	// 烟雾开始施放时广播，供角色播放投掷动画；施放被打断不影响已发出的动作。
-	DECLARE_MULTICAST_DELEGATE(FOnSmokeCastStarted);
-	FOnSmokeCastStarted OnSmokeCastStarted;
+	/**
+	 * 位移是否让当前动作失效。治疗允许边走边施放（移速由 HealMoveSpeedScale 降低），
+	 * 救援与烟雾仍需站定：救援要保持在队友范围内，烟雾落点在起手时已经固定。
+	 */
+	static bool CancelledByMovement(EExtractionAction Kind, bool bMoved);
 
 private:
 	// 返回组件所属角色，用于生命状态、距离和动作互斥检查。
@@ -139,4 +177,6 @@ private:
 	bool ValidTarget() const;
 	// 在服务器应用救起、回血或生成烟雾；成功作用后记录相应冷却，最后统一释放动作状态。
 	void Complete();
+	/** 服务器与客户端共用：把当前 Action 映射到角色表现层，None 表示停止。 */
+	void RefreshAbilityMontage();
 };

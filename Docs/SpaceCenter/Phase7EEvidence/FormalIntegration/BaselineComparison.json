@@ -1,0 +1,29 @@
+{
+  "result": "same_failure_reproduced_before_integration",
+  "new_map": {
+    "player": 1,
+    "segment": "east_return",
+    "point": 165,
+    "points": 362,
+    "location": [
+      14188.362472772948,
+      11053.889053545809,
+      127.59637659742502
+    ],
+    "elapsed_seconds": 367.84399999998277
+  },
+  "baseline_map": {
+    "player": 1,
+    "segment": "east_return",
+    "point": 165,
+    "points": 362,
+    "location": [
+      14188.681688417053,
+      11054.8184403313,
+      127.17241061565514
+    ],
+    "elapsed_seconds": 365.18699999997625
+  },
+  "stopped_position_distance_cm": 1.070236225413463,
+  "limitation": "Neither full route passed. This comparison does not establish complete gameplay or multiplayer validation."
+}
