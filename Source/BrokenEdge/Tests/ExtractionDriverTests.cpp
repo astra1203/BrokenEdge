@@ -1470,6 +1470,9 @@ private:
 			J->SetArrayField(TEXT("position"), VectorJson(It->GetActorLocation()));
 			J->SetNumberField(TEXT("radius"), It->Radius);
 			J->SetNumberField(TEXT("expires"), It->ExpiresAt);
+			// 实际写进材质的不透明度：逻辑上存在但 alpha 为 0 时玩家看到的是空气，
+			// 只断言 actor 数量会漏掉这种情况（正是"烟直接消失"那个 bug）。
+			J->SetNumberField(TEXT("alpha"), It->VisualAlpha());
 			Smokes.Add(MakeShared<FJsonValueObject>(J));
 		}
 		TArray<TSharedPtr<FJsonValue>> Paths;

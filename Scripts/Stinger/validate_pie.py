@@ -54,7 +54,7 @@ def advance(phase):
 def capture(name):
     values = [snapshot(p) for p in state['pawns']]
     report['sessions'][-1]['snapshots'][name] = values
-    if os.environ.get('STINGER_VISUAL_CAPTURE') and name in ['equipped','aim','reload','third_person']:
+    if os.environ.get('STINGER_VISUAL_CAPTURE') and name in ['equipped','aim','reload','fixed_first_person']:
         path=str(OUT.parent / ('view_'+name+'.png'))
         unreal.SystemLibrary.execute_console_command(state['pawns'][0],'HighResShot 1280x720 filename='+path,state['pawns'][0].get_controller())
     return values
@@ -161,12 +161,11 @@ def tick(delta):
                 values=capture('reload')
                 previous=report['sessions'][-1]['snapshots']['fire']
                 check(str(state['players'])+'p_reload',all(s['ammo'] is not None and s['ammo']>p['ammo'] for s,p in zip(values,previous)),values)
-                advance('third_person')
-        elif phase == 'third_person':
-            pulse('toggle_camera_view_action')
+                advance('fixed_first_person')
+        elif phase == 'fixed_first_person':
             if elapsed > .5:
-                values=capture('third_person')
-                check(str(state['players'])+'p_view_toggle',all(s['local'] and not s['native']['disabled'] and not s['first_person'] and not s['fp_instances'] and not s['body_owner_hidden'] for s in values),values)
+                values=capture('fixed_first_person')
+                check(str(state['players'])+'p_fixed_view',all(s['local'] and not s['native']['disabled'] and s['first_person'] and s['fp_instances'] and s['body_owner_hidden'] for s in values),values)
                 advance('stop')
         elif phase == 'stop':
             unreal.get_editor_subsystem(unreal.LevelEditorSubsystem).editor_request_end_play()

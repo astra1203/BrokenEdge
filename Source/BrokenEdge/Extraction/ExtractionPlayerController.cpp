@@ -10,7 +10,7 @@
 #include "ExtractionSmoke.h"
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionLootActor.h"
-#include "ExtractionInventoryWidget.h"
+#include "LootingMainView.h"
 #include "ExtractionAccountComponent.h"
 #include "ExtractionExit.h"
 #include "EngineUtils.h"
@@ -403,8 +403,11 @@ void AExtractionPlayerController::Tick(float Delta)
 	}
 	if (!InventoryWidget)
 	{
-		InventoryWidget = CreateWidget<UExtractionInventoryWidget>(this);
-		InventoryWidget->AddToViewport(60);
+		if (UClass* WidgetClass = InventoryWidgetClass.LoadSynchronous())
+		{
+			InventoryWidget = CreateWidget<ULootingMainView>(this, WidgetClass);
+			if (InventoryWidget) InventoryWidget->AddToViewport(60);
+		}
 	}
 	if (auto* ControlledCharacter = Cast<ABrokenEdgeCharacter>(GetPawn()))
 	{
@@ -424,7 +427,7 @@ void AExtractionPlayerController::Tick(float Delta)
 		else SetInputMode(FInputModeGameOnly());
 	}
 	ExtractionWidget->Refresh();
-	InventoryWidget->Refresh();
+	if (InventoryWidget) InventoryWidget->Refresh();
 	if (!bExtractionSpectating)
 	{
 		GetPlayerViewPoint(LastSpectatorLocation, LastSpectatorRotation);
@@ -521,7 +524,8 @@ bool UExtractionWidget::Initialize()
 	auto* Canvas = WidgetTree->ConstructWidget<UCanvasPanel>();
 	WidgetTree->RootWidget = Canvas;
 	SmokeHaze = WidgetTree->ConstructWidget<UBorder>();
-	SmokeHaze->SetBrushColor(FLinearColor(.34f, .34f, .34f, 1.f));
+	// 起始全透明，由 Refresh 按相机距烟心的深度逐帧提升，进烟时不再突然糊满屏。
+	SmokeHaze->SetBrushColor(FLinearColor(.34f, .34f, .34f, 0.f));
 	SmokeHaze->SetVisibility(ESlateVisibility::Collapsed);
 	auto* HazeSlot = Canvas->AddChildToCanvas(SmokeHaze);
 	HazeSlot->SetAnchors(FAnchors(0, 0, 1, 1));
@@ -610,9 +614,10 @@ void UExtractionWidget::Refresh()
 	};
 	Compass->SetText(
 		FText::FromString(FString::Printf(TEXT("—   %s   %03d°   —"), Directions[((Heading + 22) / 45) % 8], Heading)));
-	SmokeHaze->SetVisibility(AExtractionSmoke::Blocks(GetWorld(), Eye, Eye)
-		                         ? ESlateVisibility::HitTestInvisible
-		                         : ESlateVisibility::Collapsed);
+	// 只给"在烟里"的信号太生硬，改为按距烟心的深度渐变：烟心最浓 .55，边缘接近 0。
+	const float Haze = AExtractionSmoke::Haze(GetWorld(), Eye);
+	SmokeHaze->SetVisibility(Haze > .01f ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
+	SmokeHaze->SetBrushColor(FLinearColor(.34f, .34f, .34f, Haze * .55f));
 	const int32 Seconds = FMath::Max(0, FMath::CeilToInt(GS->Deadline - GS->GetServerWorldTimeSeconds()));
 	FString Text;
 	if (GS->Phase == EExtractionPhase::Waiting) Text = TEXT("等待其他玩家加载…");

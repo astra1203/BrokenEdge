@@ -4,6 +4,7 @@
 #include "ExtractionCombatComponent.h"
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionSmoke.h"
+#include "ExtractionSmokeGrenade.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/Weapon/Weapon.h"
@@ -193,8 +194,20 @@ void UExtractionAbilities::ServerBegin_Implementation(uint32 Sequence, EExtracti
 		const auto Eye = C->GetPawnViewLocation();
 		SmokePoint = Eye + C->GetControlRotation().Vector() * R->SmokeRange;
 		FHitResult Hit;
-		if (GetWorld()->LineTraceSingleByChannel(Hit, Eye, SmokePoint, ECC_Visibility, Q)) SmokePoint = Hit.ImpactPoint
-			+ Hit.ImpactNormal * 10;
+		// 准星命中点即期望落点；抛物线会让实际落点略近，用下面的一次回退修正。
+		if (GetWorld()->LineTraceSingleByChannel(Hit, Eye, SmokePoint, ECC_Visibility, Q)) SmokePoint = Hit.ImpactPoint;
+		// 投掷物从胸口抛出并带重力，沿视线的水平距离会缩短，按飞行时间回退避免砸在眼前。
+		const FVector FlatMid = (SmokePoint - Eye) * FVector(1, 1, 0);
+		const float Range = static_cast<float>(FlatMid.Size());
+		const float Speed = FMath::Max(R->SmokeThrowSpeed, 1.f);
+		// 抛体水平射程与初速正相关；这里用一阶近似把瞄准点收回，保持落点在准星附近。
+		const float Shorten = FMath::Clamp(Range * .12f, 0.f, 300.f);
+		if (Range > 1.f) SmokePoint -= FlatMid / Range * Shorten;
+		// 落点贴地：再向下打一次，避免落在半空或嵌进楼梯。
+		FHitResult Ground;
+		const FVector Above = SmokePoint + FVector(0, 0, 300);
+		if (GetWorld()->LineTraceSingleByChannel(Ground, Above, SmokePoint - FVector(0, 0, 400), ECC_Visibility, Q))
+			SmokePoint = Ground.ImpactPoint;
 	}
 	StartedAt = C->GetActorLocation();
 	ActionEnd = Now + (Kind == EExtractionAction::Revive
@@ -275,8 +288,26 @@ void UExtractionAbilities::Complete()
 	}
 	else if (Action == EExtractionAction::Smoke)
 	{
-		auto* Smoke = GetWorld()->SpawnActor<AExtractionSmoke>(SmokePoint, FRotator::ZeroRotator);
-		if (Smoke) SmokeReadyAt = Now + R->SmokeCooldown;
+		// 从胸口高度抛出，落点用预先算好的 SmokePoint；投掷物负责落地和延迟起烟。
+		const FVector From = Character()->GetActorLocation()
+			+ FVector(0, 0, Character()->BaseEyeHeight * .5f)
+			+ Character()->GetControlRotation().Vector() * 40.f;
+		FActorSpawnParameters Params;
+		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		Params.Owner = Character();
+		if (auto* Grenade = GetWorld()->SpawnActor<AExtractionSmokeGrenade>(
+			From, FRotator::ZeroRotator, Params))
+		{
+			Grenade->SetSmokeTuning(R->SmokeRadius, R->SmokeSeconds, R->SmokeFuseSeconds);
+			Grenade->Launch(From, SmokePoint, R->SmokeThrowSpeed);
+			SmokeReadyAt = Now + R->SmokeCooldown;
+			UE_LOG(LogTemp, Warning, TEXT("[SmokeGrenade] thrown from %s to %s"),
+				*From.ToCompactString(), *SmokePoint.ToCompactString());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("[SmokeGrenade] spawn failed at %s"), *From.ToCompactString());
+		}
 	}
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_ABILITY Actor=%s Action=%d Completed"), *GetOwner()->GetName(),
 	       static_cast<int32>(Action));

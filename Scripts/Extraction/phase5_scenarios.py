@@ -1,5 +1,15 @@
 """Network acceptance through production requests; fixtures arrange only position/vitals."""
+import configparser
 import time
+from pathlib import Path
+
+# 烟雾半径是 Config 项（Config/DefaultGame.ini 的 ExtractionRules 节），
+# 测试直接读配置而不是写死数值，调平时不需要同步改测试。
+def smoke_radius():
+    ini = Path(__file__).resolve().parents[2] / 'Config/DefaultGame.ini'
+    parser = configparser.ConfigParser()
+    parser.read(ini, encoding='utf-8')
+    return float(parser['/Script/BrokenEdge.ExtractionRules']['SmokeRadius'])
 
 
 def lobby(env):
@@ -132,7 +142,6 @@ def run(env):
     check('Downed state replicates to every peer', lambda: all(player(r, 'A').get('life') == 5 for r in peers))
     if g['args'].scenario == 'squad':
         check('Downing clears knife on all peers',lambda:all(not player(r,'A').get('knife_active') for r in peers))
-        for _ in range(2):send('A','pulse',action='ToggleCameraView',duration=0)
         send('A','screenshot',name='knife-downed')
     accepted = player('Server', 'A')['accepted']
     send('A', 'pulse', action='Fire')
@@ -178,11 +187,17 @@ def run(env):
     send('Server', 'occluder', enabled=True)
     send('A', 'input_key', key='X', pressed=True)
     send('A', 'input_key', key='X', pressed=False)
-    check('X input creates one smoke actor on every peer', lambda: all(len(state(r).get('smokes', [])) == 1 for r in peers))
+    # 投掷后要飞行并等保险丝，烟幕不是立刻出现；check 本身按 timeout 轮询。
+    check('X input creates one smoke actor on every peer', lambda: all(len(state(r).get('smokes', [])) == 1 for r in peers), 8)
     expected_smoke = state('Server')['smokes'][0]
-    check('Smoke deployment is clipped before the opaque wall', lambda: 1400 < expected_smoke['position'][0] < 1445 and abs(expected_smoke['position'][1]-4200) < 30)
+    # 落点由投掷物实际撞击决定；挡板前的落点允许落在地面到墙面之间。
+    check('Smoke deployment is clipped before the opaque wall', lambda: 1300 < expected_smoke['position'][0] < 1445 and abs(expected_smoke['position'][1]-4200) < 60)
     send('Server', 'occluder', enabled=False)
-    check('Smoke radius and server expiry agree', lambda: expected_smoke['radius'] == 400 and all(len(state(r)['smokes']) == 1 and abs(state(r)['smokes'][0]['expires'] - expected_smoke['expires']) < .001 and all(abs(a-b) < .2 for a,b in zip(state(r)['smokes'][0]['position'], expected_smoke['position'])) for r in peers))
+    # 烟必须真的可见：只查 actor 数量会漏掉"存在但 alpha=0"的情况（曾导致烟直接消失）。
+    check('Smoke is actually visible on every peer',
+          lambda: all(len(state(r)['smokes']) == 1 and state(r)['smokes'][0]['alpha'] > .5 for r in peers), 5)
+    # 半径取自 Config 的 SmokeRadius（450），不再写死旧值 400。
+    check('Smoke radius and server expiry agree', lambda: expected_smoke['radius'] == smoke_radius() and all(len(state(r)['smokes']) == 1 and abs(state(r)['smokes'][0]['expires'] - expected_smoke['expires']) < .001 and all(abs(a-b) < .2 for a,b in zip(state(r)['smokes'][0]['position'], expected_smoke['position'])) for r in peers))
     send('A', 'ability', kind='smoke')
     time.sleep(.7)
     check('Smoke cooldown prevents duplicate actors', lambda: all(len(state(r)['smokes']) == 1 for r in peers))

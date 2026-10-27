@@ -255,14 +255,8 @@ def tick(delta):
                 advance('land')
         elif phase == 'land' and elapsed > 2:
             check('land', all(not p.character_movement.is_falling() for p in state['pawns']))
-            advance('third_person')
-        elif phase == 'third_person':
-            pulse_all('toggle_camera_view_action')
-            if elapsed > 1:
-                check('third_person', all(not p.is_first_person_view() for p in state['pawns']))
-                advance('first_person')
+            advance('first_person')
         elif phase == 'first_person':
-            pulse_all('toggle_camera_view_action')
             if elapsed > 1:
                 check('first_person', all(p.is_first_person_view() for p in state['pawns']))
                 state.update(player=0, segment=0, point=0, stalled=0)

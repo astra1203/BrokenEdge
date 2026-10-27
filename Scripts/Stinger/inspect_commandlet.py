@@ -14,7 +14,7 @@ for cls, method in [(unreal.IKRigController, 'set_skeletal_mesh'),(unreal.IKRigC
                     (unreal.EditorLevelLibrary,'new_level'),(unreal.EditorLevelLibrary,'save_current_level')]:
     report['docs'][cls.__name__+'.'+method]=getattr(cls,method).__doc__
 base = unreal.get_default_object(unreal.EditorAssetLibrary.load_blueprint_class('/Game/Blueprints/Character/BP_BrokenEdgeCharacter'))
-report['base_character'] = {name:str(base.get_editor_property(name)) for name in ['default_mapping_context','jump_action','move_action','look_action','crouch_action','equip_action','aim_action','reload_action','drop_action','fire_action','toggle_camera_view_action','fire_weapon_montage','reload_montage','swap_montage','hit_react_montage','defeated_montage']}
+report['base_character'] = {name:str(base.get_editor_property(name)) for name in ['default_mapping_context','jump_action','move_action','look_action','crouch_action','equip_action','aim_action','reload_action','drop_action','fire_action','fire_weapon_montage','reload_montage','swap_montage','hit_react_montage','defeated_montage']}
 bp = unreal.load_asset('/Game/Blueprints/Character/Animation/ABP_BrokenEdgeAnimInstance')
 report['source_skeleton']=bp.get_editor_property('target_skeleton').get_path_name()
 assets = unreal.EditorAssetLibrary.list_assets('/Game/Characters/Stinger/Meshes/Gameplay',recursive=True)

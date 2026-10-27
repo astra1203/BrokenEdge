@@ -138,7 +138,8 @@ def finish(error=None):
             check(phase + '_releases_left_ik', bool(peers) and all(any(r['ik_active'] is False for r in rows if (r['world'], r['pawn']) == peer) for peer in peers))
         rows = [r for s in report['samples'] if s['phase'] == 'missing_socket' and s['time'] > .3 for r in s['pawns']]
         check('missing_socket_disables_ik', bool(rows) and all(r['ik_active'] is False for r in rows))
-        for phase, hidden in [('first_person', True), ('third_person', False)]:
+        # World-body captures no longer switch the owning player out of first person.
+        for phase, hidden in [('first_person', True), ('third_person', True)]:
             rows = [r for s in report['samples'] if s['phase'] == phase and s['time'] > .4 for r in s['pawns'] if r['local']]
             check(phase + '_dual_world_weapon_visibility', bool(rows) and all(len(r['world_weapons']) == 2 and all(w['owner_no_see'] == hidden for w in r['world_weapons']) for r in rows))
         for part in ['upper_arm_length', 'forearm_length', 'right_upper_arm_length', 'right_forearm_length']:
@@ -198,7 +199,6 @@ def tick(delta):
                 light = lib.spawn_validation_weapon(local_pawns[-1].get_world(), unreal.DirectionalLight, unreal.Vector())
                 light.set_actor_rotation(unreal.Rotator(pitch=-35, yaw=65), False)
                 light.get_component_by_class(unreal.DirectionalLightComponent).set_intensity(2)
-            pulse('toggle_camera_view_action')
             lib.set_validation_fixed_step(1 / 30)
             state.update(mode='actions', last_time=unreal.GameplayStatics.get_time_seconds(server))
             return
@@ -251,7 +251,6 @@ def tick(delta):
         if name == 'restored_socket' and 'restore' not in state['flags']:
             for mesh, asset in missing_meshes: mesh.set_skeletal_mesh_asset(asset)
             state['flags'].add('restore')
-        if name in ['first_person', 'third_person']: once('view', lambda: pulse('toggle_camera_view_action'))
         record(name, t, duration)
         if t >= duration:
             print('THIRD_PERSON_GRIP_PHASE_COMPLETE', name, len(report['samples']))

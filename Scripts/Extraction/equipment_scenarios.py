@@ -188,10 +188,8 @@ def run(g):
     time.sleep(.8)
     capture('B', 'equipment-ads')
     time.sleep(1.5)
-    send('B', 'pulse', action='ToggleCameraView')
     time.sleep(.4)
-    capture('B', 'equipment-third-person')
-    send('B', 'pulse', action='ToggleCameraView')
+    capture('B', 'equipment-fixed-first-person')
     check('Owner has five first-person parts and hides five world parts', lambda:
           len(player('B', 'B')['equipment_visuals']) == 10
           and sum(v['visible'] and v['owner_only'] for v in player('B', 'B')['equipment_visuals']) == 5

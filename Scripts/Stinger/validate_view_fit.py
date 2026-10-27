@@ -16,10 +16,10 @@ frames=out/'ViewFitFrames'/time.strftime('%Y%m%d-%H%M%S')
 frames.mkdir(parents=True,exist_ok=True)
 report={'frame_directory':str(frames),'fps':5,'samples':[],'checks':[],'visual_acceptance':'pending'}
 phases=[('idle',.8),('aim',1.2),('fire',.7),('release',.4),('reload',3.2),
-        ('fire_again',.7),('release_again',.4),('reload_toggle',3.2),
+        ('fire_again',.7),('release_again',.4),('reload_repeat',3.2),
         ('look_up',.8),('look_down',.8),('crouch',.8),('uncrouch',.4),
         ('jump',1.4),('sprint',1.4),('walk',.7),('equip_secondary',1.),
-        ('swap',2.1),('swap_toggle',2.1),('third_person',.8),('first_person',.8),
+        ('swap',2.1),('swap_repeat',2.1),('first_person',.8),
         ('hit',.7),('death',.8)]
 state={'mode':'boot','warmup':0.,'index':0,'frame':0,'phase_frame':0,'flags':set()}
 started=time.monotonic()
@@ -68,7 +68,7 @@ def finish(error=None):
     unreal.SystemLibrary.quit_editor()
 def record(phase,t):
     s=snapshot();s.update(phase=phase,time=t,frame=state['frame'])
-    if s['first_person'] and s['body_visible'] and phase not in ['reload','reload_toggle','swap','swap_toggle','hit','death']:
+    if s['first_person'] and s['body_visible'] and phase not in ['reload','reload_repeat','swap','swap_repeat','hit','death']:
         n=s['native']
         if 'right_grip_error' in n: check(phase+'_right_grip_'+str(state['frame']),n['right_grip_error']<.1,n['right_grip_error'])
         if 'left_grip_error' in n: check(phase+'_left_grip_'+str(state['frame']),n['left_grip_error']<1.,n['left_grip_error'])
@@ -76,12 +76,12 @@ def record(phase,t):
     n=s['native']
     if phase in ['reload','swap'] and .2<t<1.2:
         check(phase+'_imported_montage_active_'+str(state['frame']),'view_montage_fraction' in n,n.get('view_montage'))
-    if phase in ['reload','reload_toggle'] and s['first_person'] and .2<n.get('view_montage_fraction',-1)<.42:
+    if phase in ['reload','reload_repeat'] and s['first_person'] and .2<n.get('view_montage_fraction',-1)<.42:
         check(phase+'_magazine_contact_'+str(state['frame']),n['magazine_hand_error']<.5,n['magazine_hand_error'])
-    if 'view_montage_fraction' in n and n.get('body_montage_position') is not None and phase in ['reload','reload_toggle']:
+    if 'view_montage_fraction' in n and n.get('body_montage_position') is not None and phase in ['reload','reload_repeat']:
         expected=min(n['body_montage_position']/reload_finish,.999)
         check(phase+'_action_sync_'+str(state['frame']),abs(n['view_montage_fraction']-expected)<.035,[n['view_montage_fraction'],expected])
-    if 'view_montage_fraction' in n and n.get('body_montage_position') is not None and phase in ['swap','swap_toggle']:
+    if 'view_montage_fraction' in n and n.get('body_montage_position') is not None and phase in ['swap','swap_repeat']:
         fraction=min(n['body_montage_position']/swap_finish,.999);key=swap_attach/swap_finish
         source_key=pawn.get_editor_property('first_person_weapon_fit').get_editor_property('swap_attach_fraction')
         expected=fraction/key*source_key if fraction<key else source_key+(fraction-key)/(1-key)*(1-source_key)
@@ -124,10 +124,7 @@ def tick(delta):
         name,duration=phases[state['index']]
         if name in ['aim','fire','fire_again']: input_action('aim_action')
         if name in ['fire','fire_again']: input_action('fire_action')
-        if name in ['reload','reload_toggle']:once('reload',lambda:input_action('reload_action'))
-        if name in ['reload_toggle','swap_toggle']:
-            if t>.5:once('view_out',lambda:input_action('toggle_camera_view_action'))
-            if t>1.:once('view_back',lambda:input_action('toggle_camera_view_action'))
+        if name in ['reload','reload_repeat']:once('reload',lambda:input_action('reload_action'))
         if name=='look_up':pawn.get_controller().set_control_rotation(unreal.Rotator(pitch=75))
         elif name=='look_down':pawn.get_controller().set_control_rotation(unreal.Rotator(pitch=-75))
         elif name not in ['look_up','look_down']:pawn.get_controller().set_control_rotation(unreal.Rotator())
@@ -138,15 +135,14 @@ def tick(delta):
         if name=='equip_secondary':
             once('spawn_secondary',place_weapon)
             if t>.3:once('equip_secondary',lambda:input_action('equip_action'))
-        if name in ['swap','swap_toggle']:once('swap',lambda:input_action('equip_action'))
-        if name in ['third_person','first_person']:once('view',lambda:input_action('toggle_camera_view_action'))
+        if name in ['swap','swap_repeat']:once('swap',lambda:input_action('equip_action'))
         if name in ['hit','death']:
             once('damage',lambda:unreal.GameplayStatics.apply_damage(pawn,10 if name=='hit' else 1000,pawn.get_controller(),None,unreal.DamageType))
         if state['frame']%6==0:record(name,t)
         if t>=duration:
             s=snapshot()
-            if name in ['reload','reload_toggle']:check(name+'_settled_once',s['native']['ammo']==primary_ammo and s['native']['combat_state']=='ECS_Unoccuiped',s)
-            if name in ['reload_toggle','swap_toggle','first_person']:check(name+'_view_restored',s['first_person'] and s['body_visible'],s)
+            if name in ['reload','reload_repeat']:check(name+'_settled_once',s['native']['ammo']==primary_ammo and s['native']['combat_state']=='ECS_Unoccuiped',s)
+            if name in ['reload_repeat','swap_repeat','first_person']:check(name+'_fixed_view',s['first_person'] and s['body_visible'],s)
             if name=='equip_secondary':check('secondary_equipped',s['native']['has_secondary_weapon'],s)
             if name=='death':check('death_cleans_view',not s['first_person'] and s['body_asset'] is None and s['weapon_asset'] is None,s)
             state.update(index=state['index']+1,phase_frame=0,flags=set())

@@ -11,13 +11,12 @@ cdo = unreal.get_default_object(bp.generated_class())
 mesh = cdo.get_editor_property('mesh')
 report = {'parent':str(parent), 'mesh':str(mesh.get_skeletal_mesh_asset()),
           'anim_class':str(mesh.get_editor_property('anim_class')), 'properties':{}, 'hitboxes':{}, 'input':[]}
-for prop in ['first_person_mesh_asset','first_person_anim_class','start_in_first_person','enable_sprint',
+for prop in ['first_person_mesh_asset','first_person_anim_class','enable_sprint',
              'right_hand_bone','first_person_head_bone','sprint_speed','first_person_aim_fov',
              'fire_weapon_montage','reload_montage','swap_montage','default_mapping_context','sprint_action']:
     value = cdo.get_editor_property(prop)
     report['properties'][prop] = str(value)
     assert value is not None, prop
-assert cdo.get_editor_property('start_in_first_person')
 assert cdo.get_editor_property('enable_sprint')
 assert '/Stinger/' in mesh.get_skeletal_mesh_asset().get_path_name()
 fp_mesh = cdo.get_editor_property('first_person_mesh_asset')
