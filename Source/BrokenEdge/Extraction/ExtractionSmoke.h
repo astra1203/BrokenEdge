@@ -54,6 +54,10 @@ private:
 	float AppliedAlpha = -1.f;
 	// 诊断日志的上次打印时刻（Age 秒）；-1 表示本团还没打过一行。
 	float LastLogAge = -1.f;
+	// 生成位置。表现代码若在根组件上写了位置，Actor 会被搬走 —— 这类 bug 表现为
+	// "烟完全没有"，但组件、材质、alpha 全都正常，极难察觉，所以在这里做一次自检。
+	FVector SpawnLocation = FVector::ZeroVector;
+	bool bDriftReported = false;
 	// 进烟渐隐按平滑步进计算，靠近烟团边缘时只轻微发灰。
 	void ApplyLook();
 	// 按本地时间轴算剩余寿命。不能拿 ExpiresAt 去减服务器时钟：

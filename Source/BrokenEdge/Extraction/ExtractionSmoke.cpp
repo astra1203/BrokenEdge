@@ -76,6 +76,8 @@ AExtractionSmoke::AExtractionSmoke()
 void AExtractionSmoke::BeginPlay()
 {
 	Super::BeginPlay();
+	// 摆任何一层之前先记住它该在哪，后面用来检测宿主被搬走。
+	SpawnLocation = GetActorLocation();
 	LifetimeSeconds = GetDefault<UExtractionRules>()->SmokeSeconds;
 	if (HasAuthority())
 	{
@@ -170,6 +172,19 @@ void AExtractionSmoke::ApplyLook()
 		UE_LOG(LogTemp, Warning,
 			TEXT("[Smoke] %s loc=%s age=%.2f alpha=%.2f inflate=%.2f scale=%.2f radius=%.0f life=%.1f"),
 			*GetName(), *GetActorLocation().ToCompactString(), Age, Alpha, Inflate, Scale, Radius, LifetimeSeconds);
+	}
+	// 自检：这个 Actor 不该移动。一旦有人又在根组件上写了位置，这里立刻喊一声。
+	// 只在服务器判（客户端 BeginPlay 时位置可能还没同步下来，会误报）。
+	if (!bDriftReported && HasAuthority())
+	{
+		const float Drift = static_cast<float>(FVector::Dist(GetActorLocation(), SpawnLocation));
+		if (Drift > 50.f)
+		{
+			bDriftReported = true;
+			UE_LOG(LogTemp, Error,
+				TEXT("[Smoke] %s drifted %.0fcm from spawn %s to %s — something wrote a world position on the root component"),
+				*GetName(), Drift, *SpawnLocation.ToCompactString(), *GetActorLocation().ToCompactString());
+		}
 	}
 }
 
