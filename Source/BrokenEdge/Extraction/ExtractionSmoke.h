@@ -52,4 +52,6 @@ private:
 	float AppliedAlpha = -1.f;
 	// 进烟渐隐按平滑步进计算，靠近烟团边缘时只轻微发灰。
 	void ApplyLook();
+	// 客户端按复制来的 ExpiresAt 反推剩余寿命，不依赖本地 LifetimeSeconds 是否一致。
+	float RemainingSeconds() const;
 };

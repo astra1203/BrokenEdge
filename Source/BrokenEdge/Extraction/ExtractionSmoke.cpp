@@ -86,7 +86,12 @@ void AExtractionSmoke::SetTuning(float InRadius, float InSeconds)
 {
 	Radius = FMath::Max(InRadius, 50.f);
 	LifetimeSeconds = FMath::Max(InSeconds, 1.f);
-	if (HasAuthority()) ExpiresAt = GetWorld()->GetTimeSeconds() + LifetimeSeconds;
+	if (HasAuthority())
+	{
+		ExpiresAt = GetWorld()->GetTimeSeconds() + LifetimeSeconds;
+		// 生命周期必须跟 ApplyLook 用的寿命一致，否则烟会在还没淡完时被直接销毁。
+		SetLifeSpan(LifetimeSeconds);
+	}
 	Refresh();
 }
 
@@ -98,9 +103,27 @@ void AExtractionSmoke::Tick(float Delta)
 	ApplyLook();
 }
 
+// 剩余寿命：有复制的到期时间就以它为准，客户端不必猜服务器用了多长的寿命。
+// 拿不到 ExpiresAt（还没复制下来）时退回本地推算。
+float AExtractionSmoke::RemainingSeconds() const
+{
+	if (ExpiresAt > 0.0)
+	{
+		const auto* GS = GetWorld() ? GetWorld()->GetGameState() : nullptr;
+		// 服务器时钟和本地时间不同源，用 GameState 的服务器时间才对得上 ExpiresAt。
+		const double Now = GS ? GS->GetServerWorldTimeSeconds() : GetWorld()->GetTimeSeconds();
+		return static_cast<float>(ExpiresAt - Now);
+	}
+	return LifetimeSeconds - (GetWorld()->GetTimeSeconds() - BornAt);
+}
+
 void AExtractionSmoke::ApplyLook()
 {
 	if (!Cloud) return;
+	// 必须在这里兜住未初始化的情况：Refresh 会在 BeginPlay 里先于第一个 Tick 调用，
+	// 那时 BornAt 还是 -1，Age 会被算成 Now+1 —— 服务器跑了几十秒后就是几百秒，
+	// 直接超过寿命让 Alpha 归零，烟雾从生成起就完全看不见。
+	if (BornAt < 0.f) BornAt = GetWorld()->GetTimeSeconds();
 	const double Now = GetWorld()->GetTimeSeconds();
 	const float Age = FMath::Max(static_cast<float>(Now - BornAt), 0.f);
 	const float FadeOut = FMath::Min(FadeOutSeconds, LifetimeSeconds * .35f);
@@ -109,7 +132,7 @@ void AExtractionSmoke::ApplyLook()
 	const float Inflate = FMath::InterpEaseOut(.35f, 1.f, Grow, 2.f);
 	// 不透明度：淡入线性、淡出平滑，避免消失时突然截断。
 	const float FadeIn = FMath::Clamp(Age / FMath::Max(FadeInSeconds, .01f), 0.f, 1.f);
-	const float Remaining = LifetimeSeconds - Age;
+	const float Remaining = RemainingSeconds();
 	const float FadeOutAlpha = FMath::Clamp(Remaining / FMath::Max(FadeOut, .01f), 0.f, 1.f);
 	const float Alpha = FMath::Square(FMath::Min(FadeIn, FadeOutAlpha));
 	// 整团按当前鼓胀比例缩放，垂直方向压缩成贴地烟团。基础球半径 50 厘米，所以除以 50。
@@ -124,13 +147,12 @@ void AExtractionSmoke::ApplyLook()
 			: Puffs.IsValidIndex(Index - 1) ? Puffs[Index - 1].Get() : nullptr;
 		if (!Mesh) continue;
 		const FSmokePuffLayer& Layer = PuffLayers[Index];
-		// 偏移走相对空间：主团把父级空间按 Radius/50 缩放过，所以相对偏移写
-		// "半径比例 × 50" 才会变成世界空间的 Offset × Radius；直接写半径比例会小 50 倍。
-		Mesh->SetRelativeLocation(Layer.Offset * 50.f * (Inflate * .9f + .1f));
-		// 缩放必须用相对值：辅团的父级就是主团，主团已经在按 Radius 缩放，
-		// 若写世界缩放会把继承来的父级缩放覆盖掉，辅团只剩层系数（0.5~0.72），
-		// 会比主团小一个量级 —— 表现为一团大的中间加几颗看不见的小球。
-		const float LayerScale = Index == 0 ? Scale : Inflate * Layer.Scale;
+		// 偏移走相对空间：主团把父级空间按 Radius/50 × Inflate 缩放过，所以相对偏移
+		// 只需要给"半径比例 × 50"，父级缩放会把它换算成世界空间的 Offset × Radius × Inflate。
+		Mesh->SetRelativeLocation(Layer.Offset * 50.f);
+		// 缩放：辅团的父级就是主团，父级缩放里已经含了 Radius/50 × Inflate，
+		// 所以辅团只写层系数本身（不能再乘 Inflate，否则鼓胀期间辅团会比主团小一大截）。
+		const float LayerScale = Index == 0 ? Scale : Layer.Scale;
 		Mesh->SetRelativeScale3D(FVector(LayerScale, LayerScale, LayerScale * SmokeFlatten));
 		if (bAlphaChanged)
 		{
