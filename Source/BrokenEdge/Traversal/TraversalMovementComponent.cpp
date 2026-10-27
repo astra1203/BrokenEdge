@@ -209,6 +209,15 @@ bool UTraversalMovementComponent::Standable(const FVector& Feet, FVector& Center
 	return ClearAt(Center);
 }
 
+FVector UTraversalMovementComponent::SnapFacingToNormal(const FVector& Preferred, const FVector& Normal)
+{
+	FVector Flat = Normal;
+	Flat.Z = 0.f;
+	if (Flat.SizeSquared() < 1e-4f) return Preferred;
+	// ImpactNormal 指向角色一侧，朝向取反才是"撞向障碍"的方向。
+	return -Flat.GetSafeNormal();
+}
+
 bool UTraversalMovementComponent::TryObstacle()
 {
 	if (!CanTraverse() || Active() || !IsMovingOnGround()) return false;
@@ -219,15 +228,18 @@ bool UTraversalMovementComponent::TryObstacle()
 	// Walking deliberately floats the capsule above the floor. Measure obstacle height
 	// from the supporting surface, otherwise an over-limit ledge can pass the probe.
 	if (CurrentFloor.IsWalkableFloor()) Feet.Z -= CurrentFloor.GetDistanceToFloor();
-	const FVector Facing = FRotator(0, CharacterOwner->GetControlRotation().Yaw, 0).Vector();
+	const FVector Camera = FRotator(0, CharacterOwner->GetControlRotation().Yaw, 0).Vector();
 	const FCollisionQueryParams Params(SCENE_QUERY_STAT(TraversalProbe), false, CharacterOwner);
 	FHitResult Front, Top;
 	const FVector Probe = Feet + FVector(0, 0, MaxStepHeight + 6.f);
-	if (!GetWorld()->LineTraceSingleByChannel(Front, Probe, Probe + Facing * (Radius + Rules->Reach), ECC_Pawn, Params))
+	if (!GetWorld()->LineTraceSingleByChannel(Front, Probe, Probe + Camera * (Radius + Rules->Reach), ECC_Pawn, Params))
 		return false;
 	if (!Front.Component.IsValid() || Front.Component->Mobility != EComponentMobility::Static ||
-		FVector::DotProduct(Front.ImpactNormal, -Facing) < .5f)
+		FVector::DotProduct(Front.ImpactNormal, -Camera) < .5f)
 		return false;
+	// 命中后朝向改由障碍表面法线决定：视角只要大致朝向障碍就能触发，
+	// 但角色一定正对障碍面攀爬，避免斜切过边缘。
+	const FVector Facing = SnapFacingToNormal(Camera, Front.ImpactNormal);
 	const FVector Lip = Front.ImpactPoint + Facing * 5.f;
 	if (!GetWorld()->LineTraceSingleByChannel(Top, FVector(Lip.X, Lip.Y, Feet.Z + Rules->MantleHeight + 12.f),
 	                                          FVector(Lip.X, Lip.Y, Feet.Z + MaxStepHeight), ECC_Pawn,

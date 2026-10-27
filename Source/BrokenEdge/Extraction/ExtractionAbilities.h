@@ -35,6 +35,12 @@ public:
 	// 治疗能力的施放时长、范围、恢复量及冷却，与背包医疗物品各自计时。
 	UPROPERTY(Config)
 	float HealSeconds = 2;
+	/**
+	 * 治疗期间的移速倍率：允许边走边治疗，但按此比例降速。
+	 * 治疗是唯一允许移动施放的能力，救援与烟雾仍需站定。
+	 */
+	UPROPERTY(Config, meta=(ClampMin="0.05", ClampMax="1"))
+	float HealMoveSpeedScale = .4f;
 	UPROPERTY(Config)
 	float HealRange = 1000;
 	UPROPERTY(Config)
@@ -105,8 +111,11 @@ public:
 	virtual void TickComponent(float Delta, ELevelTick Tick, FActorComponentTickFunction* Function) override;
 	// 销毁时释放双向救援关系，再调用父类生命周期清理。
 	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing=OnRep_Action)
 	EExtractionAction Action = EExtractionAction::None;
+	/** 动作复制到客户端后同步技能表现蒙太奇；不参与任何结算。 */
+	UFUNCTION()
+	void OnRep_Action();
 	// 服务器绝对完成时刻，0 表示未计时；HUD 应使用同步服务器时间计算剩余值。
 	UPROPERTY(Replicated)
 	double ActionEnd = 0;
@@ -145,6 +154,11 @@ public:
 	// 只接受更新序号，取消当前能力并释放对目标的救援占用。
 	UFUNCTION(Server, Reliable)
 	void ServerCancel(uint32 Sequence);
+	/**
+	 * 位移是否让当前动作失效。治疗允许边走边施放（移速由 HealMoveSpeedScale 降低），
+	 * 救援与烟雾仍需站定：救援要保持在队友范围内，烟雾落点在起手时已经固定。
+	 */
+	static bool CancelledByMovement(EExtractionAction Kind, bool bMoved);
 
 private:
 	// 返回组件所属角色，用于生命状态、距离和动作互斥检查。
@@ -157,4 +171,6 @@ private:
 	bool ValidTarget() const;
 	// 在服务器应用救起、回血或生成烟雾；成功作用后记录相应冷却，最后统一释放动作状态。
 	void Complete();
+	/** 服务器与客户端共用：把当前 Action 映射到角色表现层，None 表示停止。 */
+	void RefreshAbilityMontage();
 };

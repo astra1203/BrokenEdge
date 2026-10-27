@@ -43,6 +43,42 @@ public:
 	TObjectPtr<UAnimSequence> RunToSprint;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UAnimSequence> SprintToWalk;
+	/** 第一人称开镜过渡；为空时沿用 0.15 秒姿势混合。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="View|First Person")
+	TObjectPtr<UAnimSequence> ViewAimOn;
+	/** 第一人称关镜过渡；为空时沿用 0.15 秒姿势混合。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="View|First Person")
+	TObjectPtr<UAnimSequence> ViewAimOff;
+	/** 第一人称起跳；为空时回退到 ViewJump 或 Idle。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="View|First Person")
+	TObjectPtr<UAnimSequence> ViewJumpStart;
+	/** 第一人称空中循环；为空时回退到 ViewJump 或 Idle。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="View|First Person")
+	TObjectPtr<UAnimSequence> ViewJumpLoop;
+	/** 第一人称落地；为空时直接回到循环姿势。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="View|First Person")
+	TObjectPtr<UAnimSequence> ViewJumpLand;
+	/** 第一人称播放速率匹配上限，避免极高速时动画抽搐。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="1"), Category="View|First Person")
+	float ViewPlayRateMax = 2.5f;
+	/** 第三人称瞄准左右偏移：把 (瞄准朝向 - 身体朝向) 的偏航按此比例分配到脊椎上。0 关闭。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0", ClampMax="1"), Category="Third Person")
+	float AimYawScale = .6f;
+	/** 瞄准偏航的最大参与角度，超过部分留给身体转向。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0", Units="deg"), Category="Third Person")
+	float AimYawClamp = 70.f;
+	/**
+	 * 冲刺姿势保持时长：IsSprinting 成立期间锁定冲刺姿势，掉线后仍保留这么久。
+	 * 避免瞬时速度跌破阈值（撞墙、台阶、网络修正）时姿势在冲刺与跑之间反复跳。
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0", Units="s"), Category="Third Person")
+	float SprintPoseHoldSeconds = .18f;
+	/** 速度轴坐标的平滑速度，让冲刺↔跑切换是过渡而不是硬切。0 表示不平滑。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0"), Category="Third Person")
+	float CoordinateInterpSpeed = 12.f;
+	/** 冲刺采样只覆盖 ±这个角度，超出部分钳制到边界，避免 45° 附近来回跳。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="1", Units="deg"), Category="Third Person")
+	float SprintDirectionLimit = 45.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="1"))
 	float WalkSpeed = 150.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="1"))

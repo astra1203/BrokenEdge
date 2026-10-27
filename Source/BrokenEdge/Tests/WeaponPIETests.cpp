@@ -21,6 +21,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputAction.h"
 #include "BrokenEdge/Character/StingerFirstPersonAnimInstance.h"
+#include "BrokenEdge/Character/BrokenEdgeAnimInstance.h"
 
 class FWeaponSprintPIESequence : public IAutomationLatentCommand
 {
@@ -410,6 +411,176 @@ bool FWeaponSprintPIETest::RunTest(const FString&)
 	ADD_LATENT_AUTOMATION_COMMAND(FEditorLoadMap(TEXT("/Game/Extraction/Training/L_WeaponRange")));
 	ADD_LATENT_AUTOMATION_COMMAND(FStartPIECommand(false));
 	FAutomationTestFramework::Get().EnqueueLatentCommand(MakeShared<FWeaponSprintPIESequence>(this));
+	ADD_LATENT_AUTOMATION_COMMAND(FEndPlayMapCommand());
+	FAutomationTestFramework::Get().EnqueueLatentCommand(Restore);
+	return true;
+}
+
+/**
+ * 连续冲刺期间采样第三人称原版移动节点的实际坐标，确认姿势不会在冲刺与普通移动之间来回切。
+ * 坐标取自 UBrokenEdgeAnimInstance::RifleLocomotionCoordinates（Y 是速度轴，850 为冲刺）。
+ */
+class FRifleLocomotionStabilitySequence : public IAutomationLatentCommand
+{
+public:
+	explicit FRifleLocomotionStabilitySequence(FAutomationTestBase* InTest) : Test(InTest),
+	                                                                        Started(FPlatformTime::Seconds())
+	{
+	}
+
+	virtual bool Update() override
+	{
+		const double Now = FPlatformTime::Seconds();
+		if (Now - Started > 60.0)
+		{
+			Test->AddError(FString::Printf(TEXT("Locomotion stability PIE timed out at step %d"), Step));
+			return true;
+		}
+		UWorld* W = GEditor ? GEditor->PlayWorld.Get() : nullptr;
+		auto* PC = W ? Cast<AExtractionPlayerController>(W->GetFirstPlayerController()) : nullptr;
+		auto* C = PC ? Cast<ABrokenEdgeCharacter>(PC->GetPawn()) : nullptr;
+		if (!C || !C->GetEquippedWeapon()) return false;
+		auto* Body = C->GetMesh();
+		auto* Anim = Body ? Cast<UBrokenEdgeAnimInstance>(Body->GetAnimInstance()) : nullptr;
+		if (Anim == nullptr) return false;
+		auto Key = [&](FKey K, bool Down)
+		{
+			PC->InputKey(FInputKeyEventArgs::CreateSimulated(K, Down ? IE_Pressed : IE_Released, Down ? 1.f : 0.f));
+		};
+		switch (Step)
+		{
+		case 0:
+			// 第一人称会隐藏第三人称身体并跳过姿势更新，先切到第三人称再采样。
+			StepAt = Now;
+			++Step;
+			return false;
+		case 1:
+			if (C->IsFirstPersonView() && Now - StepAt < 10.0)
+			{
+				if (Now - StepAt > .2 && Now - ToggledAt > .4)
+				{
+					if (auto* Input = PC->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+					{
+						auto* Toggle = LoadObject<UInputAction>(
+							nullptr, TEXT("/Game/Input/Actions/IA_ToggleCameraView.IA_ToggleCameraView"));
+						if (Toggle) Input->InjectInputForAction(Toggle, FInputActionValue(false), {}, {});
+					}
+					ToggledAt = Now;
+				}
+				return false;
+			}
+			Key(EKeys::W, true);
+			Key(EKeys::LeftShift, true);
+			StepAt = Now;
+			++Step;
+			return false;
+		case 2:
+			// 起步与 Walk→Run→Sprint 过渡结束后再开始计数。
+			if (Now - StepAt < 1.0) return false;
+			StepAt = Now;
+			++Step;
+			return false;
+		case 3:
+		{
+			++Frames;
+			if (!C->IsSprinting()) ++IdleSprintFrames;
+			const float Coordinate = Anim->RifleLocomotionCoordinates.Y;
+			const float Speed = C->GetVelocity().Size2D();
+			MinCoordinate = FMath::Min(MinCoordinate, Coordinate);
+			MaxCoordinate = FMath::Max(MaxCoordinate, Coordinate);
+			MinSpeed = FMath::Min(MinSpeed, Speed);
+			MaxSpeed = FMath::Max(MaxSpeed, Speed);
+			const bool bSprintPose = Coordinate >= 700.f;
+			if (bSprintPose) ++SprintPoseFrames;
+			else ++NonSprintPoseFrames;
+			if (bHasPose && bSprintPose != bLastSprintPose && Swaps.Num() < 10)
+			{
+				Swaps.Add(FString::Printf(TEXT("[t=%.2f Y=%.0f v=%.0f sprint=%d crouch=%d]"),
+				                          Now - StepAt, Coordinate, Speed, C->IsSprinting() ? 1 : 0,
+				                          C->bIsCrouched ? 1 : 0));
+			}
+			if (bHasPose && bSprintPose != bLastSprintPose) ++PoseSwaps;
+			bHasPose = true;
+			bLastSprintPose = bSprintPose;
+			if (bHasEnabled && Anim->bRifleLocomotionEnabled != bLastEnabled) ++EnableSwaps;
+			bHasEnabled = true;
+			bLastEnabled = Anim->bRifleLocomotionEnabled;
+			if (Now - StepAt < 1.5) return false;
+			Test->AddInfo(FString::Printf(
+				TEXT("RifleLocomotion sprint: frames=%d sprintPose=%d nonSprintPose=%d poseSwaps=%d enableSwaps=%d notSprinting=%d Y=[%.0f..%.0f] v=[%.0f..%.0f]"),
+				Frames, SprintPoseFrames, NonSprintPoseFrames, PoseSwaps, EnableSwaps, IdleSprintFrames,
+				MinCoordinate, MaxCoordinate, MinSpeed, MaxSpeed));
+			for (const FString& Swap : Swaps) Test->AddInfo(TEXT("  swap ") + Swap);
+			Test->TestTrue(TEXT("Third-person body animation updates"), !Anim->RifleLocomotionAsset.IsEmpty());
+			Test->TestTrue(TEXT("Sprint is sustained for the whole sample window"), IdleSprintFrames == 0);
+			Test->TestEqual(TEXT("Sprint pose does not flip back to normal locomotion"), PoseSwaps, 0);
+			Test->TestEqual(TEXT("Rifle locomotion node stays enabled while sprinting"), EnableSwaps, 0);
+			// 松开 Shift 但继续前进：冲刺姿势要平滑回落到普通移动，且不再来回跳。
+			Key(EKeys::LeftShift, false);
+			PoseSwaps = 0;
+			bHasPose = false;
+			StepAt = Now;
+			++Step;
+			return false;
+		}
+		case 4:
+		{
+			++ReleaseFrames;
+			const float Coordinate = Anim->RifleLocomotionCoordinates.Y;
+			const bool bSprintPose = Coordinate >= 700.f;
+			// 前 0.4 秒是松开冲刺的过渡窗口（保持时间 + 坐标平滑），之后才不允许再跳。
+			if (Now - StepAt > .4)
+			{
+				if (bHasPose && bSprintPose != bLastSprintPose) ++PoseSwaps;
+				bHasPose = true;
+				bLastSprintPose = bSprintPose;
+			}
+			ReleasedCoordinate = Coordinate;
+			if (Now - StepAt < 1.0) return false;
+			Key(EKeys::W, false);
+			Test->AddInfo(FString::Printf(
+				TEXT("RifleLocomotion release: frames=%d settledSwaps=%d finalY=%.0f sprintPose=%d"),
+				ReleaseFrames, PoseSwaps, ReleasedCoordinate, bSprintPose ? 1 : 0));
+			Test->TestEqual(TEXT("Pose does not flap after returning from sprint"), PoseSwaps, 0);
+			Test->TestTrue(TEXT("Sprint pose is left after releasing sprint"), !bSprintPose);
+			++Step;
+			return true;
+		}
+		default:
+			return true;
+		}
+	}
+
+private:
+	FAutomationTestBase* Test;
+	double Started, StepAt = 0, ToggledAt = 0;
+	int32 Step = 0;
+	int32 Frames = 0, SprintPoseFrames = 0, NonSprintPoseFrames = 0;
+	int32 PoseSwaps = 0, EnableSwaps = 0, IdleSprintFrames = 0;
+	float MinCoordinate = BIG_NUMBER, MaxCoordinate = -BIG_NUMBER;
+	int32 ReleaseFrames = 0;
+	float ReleasedCoordinate = 0.f;
+	float MinSpeed = BIG_NUMBER, MaxSpeed = -BIG_NUMBER;
+	TArray<FString> Swaps;
+	bool bHasPose = false, bLastSprintPose = false;
+	bool bHasEnabled = false, bLastEnabled = false;
+};
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FRifleLocomotionStabilityPIETest,
+                                 "BrokenEdge.Extraction.WeaponPIE.RifleLocomotionStability",
+                                 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FRifleLocomotionStabilityPIETest::RunTest(const FString&)
+{
+	const auto Restore = MakeShared<FRestoreWeaponPIESettings>();
+	auto* Settings = GetMutableDefault<ULevelEditorPlaySettings>();
+	Settings->SetPlayNetMode(PIE_Standalone);
+	Settings->SetPlayNumberOfClients(1);
+	Settings->SetRunUnderOneProcess(true);
+	Settings->bLaunchSeparateServer = false;
+	ADD_LATENT_AUTOMATION_COMMAND(FEditorLoadMap(TEXT("/Game/Extraction/Training/L_WeaponRange")));
+	ADD_LATENT_AUTOMATION_COMMAND(FStartPIECommand(false));
+	FAutomationTestFramework::Get().EnqueueLatentCommand(MakeShared<FRifleLocomotionStabilitySequence>(this));
 	ADD_LATENT_AUTOMATION_COMMAND(FEndPlayMapCommand());
 	FAutomationTestFramework::Get().EnqueueLatentCommand(Restore);
 	return true;
