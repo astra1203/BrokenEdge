@@ -10,7 +10,7 @@
 #include "ExtractionSmoke.h"
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionLootActor.h"
-#include "ExtractionInventoryWidget.h"
+#include "LootingMainView.h"
 #include "ExtractionAccountComponent.h"
 #include "ExtractionExit.h"
 #include "EngineUtils.h"
@@ -403,8 +403,11 @@ void AExtractionPlayerController::Tick(float Delta)
 	}
 	if (!InventoryWidget)
 	{
-		InventoryWidget = CreateWidget<UExtractionInventoryWidget>(this);
-		InventoryWidget->AddToViewport(60);
+		if (UClass* WidgetClass = InventoryWidgetClass.LoadSynchronous())
+		{
+			InventoryWidget = CreateWidget<ULootingMainView>(this, WidgetClass);
+			if (InventoryWidget) InventoryWidget->AddToViewport(60);
+		}
 	}
 	if (auto* ControlledCharacter = Cast<ABrokenEdgeCharacter>(GetPawn()))
 	{
@@ -424,7 +427,7 @@ void AExtractionPlayerController::Tick(float Delta)
 		else SetInputMode(FInputModeGameOnly());
 	}
 	ExtractionWidget->Refresh();
-	InventoryWidget->Refresh();
+	if (InventoryWidget) InventoryWidget->Refresh();
 	if (!bExtractionSpectating)
 	{
 		GetPlayerViewPoint(LastSpectatorLocation, LastSpectatorRotation);
