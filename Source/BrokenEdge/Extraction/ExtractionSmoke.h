@@ -37,6 +37,8 @@ public:
 	static bool Blocks(const UWorld* World, const FVector& Start, const FVector& End);
 	// 相机在烟内时返回 0..1 的相对深度，用于全屏蒙版的淡入淡出；不在烟内返回 0。
 	static float Haze(const UWorld* World, const FVector& Eye);
+	// 主烟团当前写入材质的不透明度，供验收测试确认烟雾真的可见（而不是逻辑上存在、画面上是空气）。
+	float VisualAlpha() const { return AppliedAlpha; }
 	// 基础球半径为 50 厘米，因此用 Radius/50 缩放；这是复制半径的表现回调。
 	UFUNCTION()
 	void Refresh();
