@@ -193,10 +193,13 @@ void AExtractionSmoke::Refresh()
 	// 客户端在没有本地时间轴时也要有可见尺寸，立即按满尺寸摆放一次。
 	AppliedAlpha = -1.f;
 	ApplyLook();
-	UE_LOG(LogTemp, Warning, TEXT("[Smoke] %s refresh meshes=%d authority=%d world=%.2f loc=%s"),
+	// 这一行把"看不见"的四个必要条件一次列全：组件在、网格在、材质在、位置没被搬走。
+	UE_LOG(LogTemp, Warning,
+		TEXT("[Smoke] %s refresh meshes=%d authority=%d world=%.2f loc=%s mesh=%d mat=%d"),
 		*GetName(), Meshes.Num(), HasAuthority() ? 1 : 0,
 		GetWorld() ? GetWorld()->GetTimeSeconds() : -1.f,
-		*GetActorLocation().ToCompactString());
+		*GetActorLocation().ToCompactString(),
+		Cloud->GetStaticMesh() ? 1 : 0, Cloud->GetMaterial(0) ? 1 : 0);
 }
 
 // 同步半径和绝对到期时间；客户端按同步服务器时间判断是否仍有效。
