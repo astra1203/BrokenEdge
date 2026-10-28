@@ -49,28 +49,41 @@ bool FExtractionLootLayoutTest::RunTest(const FString&)
 	if (!TestNotNull(TEXT("Production source layout exists"), Authored)) return false;
 	Seen.Reset();
 	// 不硬编码数量：以数据本身为基准，避免每次调点位都要改测试。
-	// 本回合必然全中的 = 启用 + 非散落点 + 不属于任何随机组。
-	const int32 Expected = Authored->Points.FilterByPredicate([](const FExtractionLootPoint& P)
+	// 每局 = 全部固定点（启用、非散落、无组）+ 每个随机组恰好一个（7F 新区域按组每局刷一个）。
+	TSet<FName> Fixed;
+	TMap<FName, TSet<FName>> Groups;
+	for (const auto& P : Authored->Points)
 	{
-		return P.Enabled && P.Kind != UExtractionLootLayout::LooseKind && P.Group.IsNone();
-	}).Num();
-	TestTrue(TEXT("Production layout has fixed containers"), Expected > 0);
+		if (!P.Enabled || P.Kind == UExtractionLootLayout::LooseKind) continue;
+		if (P.Group.IsNone()) Fixed.Add(P.Id);
+		else Groups.FindOrAdd(P.Group).Add(P.Id);
+	}
+	int32 Candidates = 0;
+	for (const auto& Group : Groups) Candidates += Group.Value.Num();
+	TestTrue(TEXT("Production layout has fixed containers"), Fixed.Num() > 0);
 	for (int32 Seed = 0; Seed < 1000; ++Seed)
 	{
 		if (!TestTrue(TEXT("Production layout selects"), Authored->Select(Seed, Out, Error))) return false;
-		TestEqual(TEXT("Every fixed container is selected"), Out.Num(), Expected);
+		TestEqual(TEXT("Fixed containers plus one per group"), Out.Num(), Fixed.Num() + Groups.Num());
+		int32 FixedHits = 0;
+		TMap<FName, int32> GroupHits;
 		for (int32 Index : Out)
 		{
 			const auto& P = Authored->Points[Index];
 			Seen.Add(P.Id);
-			TestTrue(TEXT("Guaranteed point is enabled"), P.Enabled);
+			if (P.Group.IsNone()) ++FixedHits;
+			else ++GroupHits.FindOrAdd(P.Group);
+			TestTrue(TEXT("Selected point is enabled"), P.Enabled);
 			TestNotNull(TEXT("Source model configured"), P.Appearance.Get());
 			TestNotNull(TEXT("Separate project recipe configured"), P.Recipe.Get());
 			if (P.Kind == UExtractionLootLayout::LooseKind)
 				AddError(TEXT("A loose site occupied an authored container slot"));
 		}
+		TestEqual(TEXT("Every fixed container is selected"), FixedHits, Fixed.Num());
+		TestEqual(TEXT("Every group spawns"), GroupHits.Num(), Groups.Num());
+		for (const auto& Hit : GroupHits) TestEqual(TEXT("Exactly one container per group"), Hit.Value, 1);
 	}
-	TestEqual(TEXT("Every production container covered"), Seen.Num(), Expected);
+	TestEqual(TEXT("Every production container covered"), Seen.Num(), Fixed.Num() + Candidates);
 	return true;
 }
 #endif
