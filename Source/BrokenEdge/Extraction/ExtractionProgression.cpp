@@ -13,6 +13,8 @@ UExtractionProgressionRules::UExtractionProgressionRules()
 		{TEXT("VerticalGrip"), 300, 2}, {TEXT("Compensator"), 300, 2}, {TEXT("AmmoAP"), 6, 3},
 		{TEXT("Helmet3"), 800, 3}, {TEXT("Vest3"), 1200, 3},
 		{TEXT("SCARH"), 1800, 1}, {TEXT("Ammo76251"), 4, 1},
+		// M4A1：射速高、单发伤害低于 AK（官方 31 / 40），价位介于 AK 与 SCAR-H 之间。
+		{TEXT("M4A1"), 1500, 1}, {TEXT("Ammo55645"), 3, 1},
 		// 航天基地钥匙卡：商店可购买，买入后按定义补满开门次数，需在仓库移入配装才能带入。
 		// 价格按房间价值与开门次数分层：入门房 3 次 < 二楼房 2 次 < 核心/总裁 1-2 次高价值。
 		{TEXT("Key_Contract"), 700, 1}, {TEXT("Key_StaffPassage"), 800, 1},

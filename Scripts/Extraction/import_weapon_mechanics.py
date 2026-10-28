@@ -6,6 +6,9 @@ from pathlib import Path
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
+import sys  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import weapon_specs  # noqa: E402
 
 
 def import_snapshot(source):
@@ -34,7 +37,10 @@ def import_snapshot(source):
         return next(iter(selected.values()))
 
     profiles = {}
-    for item, rec in [('AK', 18010000006), ('SCARH', 18010000021)]:
+    # (item, receiver RecId, default preset); new weapons come from weapon_specs.WEAPONS.
+    weapons = [('AK', 18010000006, 10010000012), ('SCARH', 18010000021, 10010000228)]
+    weapons += [(item, spec['rec'], spec['preset']) for item, spec in sorted(weapon_specs.WEAPONS.items())]
+    for item, rec, preset_id in weapons:
         base = rows('WeaponAttributeTable', 'RecId', rec)
         aim = rows('WeaponAimingTable', 'AimingId', base['AimingId'])
         bullet = rows('WeaponBulletTable', 'BulletId', base['BulletFlyingId'])
@@ -48,7 +54,6 @@ def import_snapshot(source):
         profiles[item] = dict(recId=rec, base=base, aim=aim, bullet=bullet, breath=breath,
                               recoil=recoil, spread=spread)
         profiles[item]['stance'] = rows('WeaponCharacterStateTable', 'CharacterStateId', base['CharacterStateId'])
-        preset_id = 10010000012 if item == 'AK' else 10010000228
         profiles[item]['preset'] = rows('GunPresetTable', 'ItemId', preset_id)
         profiles[item]['assembly'] = rows('GunDescTable', 'DesId', preset_id, many=True)
     # Keep operation definitions/curves for audit, without pretending unknown operations are implemented.
@@ -77,7 +82,7 @@ def import_snapshot(source):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--source', type=Path, default=Path('D:/司晨/源代码和素材/三角洲解包资产'))
+    parser.add_argument('--source', type=Path, default=weapon_specs.DEFAULT_SOURCE.parent)
     parser.add_argument('--check', action='store_true')
     parser.add_argument('--audit', action='store_true', help='Audit relationships into Docs; never change runtime snapshot')
     args = parser.parse_args()

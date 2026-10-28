@@ -282,7 +282,10 @@ TArray<FString> ExtractionItems::WeaponDetails(const FExtractionItem& Item)
 	const auto S = WeaponMechanics::ResolveWeaponStats(Item);
 	if (!S.IsValid()) return {};
 	TArray<FString> Lines;
-	Lines.Add(Item.Definition == TEXT("AK") ? TEXT("AKM · 枪械参数") : TEXT("SCAR-H · 枪械参数"));
+	const auto* Gun = UExtractionItemDefinition::Get(Item.Definition);
+	Lines.Add(Item.Definition == TEXT("AK")
+		          ? FString(TEXT("AKM · 枪械参数"))
+		          : (Gun ? Gun->Label.ToString() : Item.Definition.ToString()) + TEXT(" · 枪械参数"));
 	Lines.Add(FString::Printf(TEXT("射速 %.1f 发/分    初速 %.0f 米/秒"), 60 / S.Interval, S.Speed / 100));
 	Lines.Add(FString::Printf(TEXT("开镜 %.0f 毫秒    跑射延迟 %.0f 毫秒"), S.AimIn * 1000, S.SprintToFire * 1000));
 	Lines.Add(FString::Printf(TEXT("换弹 %.2f 秒    空仓 %.2f 秒"), S.Reload, S.EmptyReload));
