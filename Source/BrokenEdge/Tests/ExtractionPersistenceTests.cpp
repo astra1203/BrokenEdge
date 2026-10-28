@@ -101,7 +101,8 @@ bool FExtractionStoreTransactions::RunTest(const FString&)
 	R.Move.Item = V->Overflow[0].Id;
 	R.Move.Quantity = V->Overflow[0].Quantity;
 	TestFalse(TEXT("Full stash claim leaves overflow intact"), S->Move(Id, R));
-	TestTrue(TEXT("Free one ammo cell"), Equip(S, Id, TEXT("Ammo")));
+	// 这局用的是合成背包，原出战背包没有带回；改为把一把步枪装进武器槽来腾出仓库空间（武器槽不需要网格）。
+	TestTrue(TEXT("Free stash space"), Equip(S, Id, TEXT("AK"), 0));
 	R.Revision = S->View(Id)->Revision;
 	TestTrue(TEXT("Claim after space becomes available"), S->Move(Id, R));
 	TestTrue(TEXT("Repeated claim is idempotent"), S->Move(Id, R));
@@ -167,7 +168,10 @@ bool FExtractionRecoveryProvenance::RunTest(const FString&)
 	S = Store(Path);
 	TestEqual(TEXT("Confirmed death is never refunded"), S->View(B)->Stash.Count(TEXT("AK")), 1);
 	// Export the original stack GUID after consuming part of it, then recover its remainder.
-	TestTrue(TEXT("Equip original stack for GUID recovery"), Equip(S, B, TEXT("Ammo")));
+	// 背包随死亡丢失，只剩回到出战配置的安全箱；把这一堆弹药放进安全箱网格带入下一局。
+	TestTrue(TEXT("Safe box returns to the loadout after death"),
+	         S->View(B)->Loadout.InSlot(ExtractionGear::SafeSlot) != nullptr);
+	TestTrue(TEXT("Equip original stack for GUID recovery"), Equip(S, B, TEXT("Ammo"), ExtractionGear::SafeGrid));
 	const int32 Before = S->View(B)->Stash.Count(TEXT("Ammo"));
 	S->BeginRaid({A, B}, Raid);
 	S->ActivateRaid(Raid);
@@ -175,12 +179,16 @@ bool FExtractionRecoveryProvenance::RunTest(const FString&)
 	AInv = PartialRaid.Players[0].Original;
 	BInv = PartialRaid.Players[1].Original;
 	Move = FExtractionItemRequest();
-	Move.Item = BInv.Items[0].Id;
-	Move.Quantity = BInv.Items[0].Quantity;
+	const auto* Stack = BInv.Items.FindByPredicate([](const auto& I) { return I.Definition == TEXT("Ammo"); });
+	if (!TestNotNull(TEXT("Ammo stack entered the raid"), Stack)) return false;
+	Move.Item = Stack->Id;
+	Move.Quantity = Stack->Quantity;
 	const int32 OriginalQuantity = Move.Quantity;
 	TestTrue(TEXT("Transfer whole original stack"), ExtractionItems::Transfer(BInv, AInv, Move, Error));
-	AInv.Items[0].Quantity -= 10;
-	ExtractionItems::TakeOrigins(AInv.Items[0].Origins, 10);
+	auto* Moved = AInv.Find(Move.Item);
+	if (!TestNotNull(TEXT("Stack landed in A's backpack"), Moved)) return false;
+	Moved->Quantity -= 10;
+	ExtractionItems::TakeOrigins(Moved->Origins, 10);
 	TestTrue(TEXT("Extract partially consumed original identity"), S->Settle(Raid, A, EExtractionOutcome::Extracted,
 	                                                                         AInv));
 	S = Store(Path);

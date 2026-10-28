@@ -54,6 +54,14 @@ namespace
 		Progress.GuardKills = Kills;
 		if (Document)
 		{
+			// 前面某局阵亡会丢掉背包；像玩家重新买一个那样补上，文件才有地方放。
+			if (!Inventory.InSlot(ExtractionGear::BagSlot))
+			{
+				auto Bag = ExtractionItems::Make(TEXT("Bag_Hike"));
+				Bag.Slot = ExtractionGear::BagSlot;
+				Inventory.GearGrids = true;
+				Inventory.Items.Add(Bag);
+			}
 			ExtractionItems::AutoPlace(Inventory, *Document);
 			if (FromRoom) for (const auto& O : Document->Origins) Progress.FileLots.Add(O.Lot);
 		}
@@ -240,7 +248,7 @@ bool FExtractionProgressionMigration::RunTest(const FString&)
 		FFileHelper::LoadFileToArray(Before, *(Directory / TEXT("Store.journal")));
 		auto* S = ProgressionStore(Directory);
 		TestTrue(TEXT("Migrate old store"), S->IsAvailable());
-		TestEqual(TEXT("Current payload version"), S->TestState().Version, 3);
+		TestEqual(TEXT("Current payload version"), S->TestState().Version, 4);
 		TestEqual(TEXT("Exactly one starting grant"), S->View(P)->Progression.Credits, int64(2000));
 		TestEqual(TEXT("Rifle identity unchanged"), S->View(P)->Stash.Items[0].Id, Rifle.Id);
 		TestEqual(TEXT("Rifle provenance unchanged"), S->View(P)->Stash.Items[0].Origins[0].Lot, Rifle.Origins[0].Lot);

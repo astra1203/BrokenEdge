@@ -56,7 +56,7 @@ namespace
 		return Result;
 	}
 
-	FString GridTitle(const FExtractionContainer& C, const ExtractionItems::FGrid& Grid)
+	FString StashGridTitle(const FExtractionContainer& C, const ExtractionItems::FGrid& Grid)
 	{
 		const auto* Gear = C.InSlot(ExtractionGear::SlotForGrid(Grid.Section));
 		const auto* D = Gear ? UExtractionItemDefinition::Get(Gear->Definition) : nullptr;
@@ -140,7 +140,7 @@ public:
 			if (!C) continue;
 			for (const auto& L : Layout(C, Side))
 			{
-				if (Side) Text(L.At - FVector2D(0, 17), GridTitle(*C, L.Grid), 11);
+				if (Side) Text(L.At - FVector2D(0, 17), StashGridTitle(*C, L.Grid), 11);
 				for (int32 Y = 0; Y < L.Grid.Rows(); ++Y)
 					for (int32 X = 0; X < L.Grid.Width; ++X)
 						if (L.Grid.Has(X, Y))

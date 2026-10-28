@@ -63,6 +63,25 @@ namespace
 		++Loadout.Revision;
 	}
 
+	// 胸挂/背包/安全箱本体直接装回出战配置（槽空时），下一局不用重新装；返回装不回去的其余物品。
+	TArray<FExtractionItem> ReturnGear(FExtractionContainer& Loadout, const TArray<FExtractionItem>& Items)
+	{
+		TArray<FExtractionItem> Rest;
+		Loadout.GearGrids = true;
+		for (const auto& I : Items)
+		{
+			if (I.Slot >= ExtractionGear::RigSlot && I.Slot <= ExtractionGear::SafeSlot
+				&& ExtractionItems::Fits(Loadout, I))
+			{
+				Loadout.Items.Add(I);
+				++Loadout.Revision;
+				continue;
+			}
+			Rest.Add(I);
+		}
+		return Rest;
+	}
+
 	bool PreserveLegacyJournal(IPlatformFile& Files, const FString& Journal, int64 ValidEnd, int32 Version)
 	{
 		const FString Backup = Journal + FString::Printf(TEXT(".v%d.bak"), Version);
@@ -628,24 +647,8 @@ bool UExtractionPersistence::Settle(FGuid RaidId, FGuid Profile, EExtractionOutc
 		ExtractionItems::MergeOrigins(R->Exported, I.MagazineOrigins);
 		for (const auto& Part : I.Attachments) ExtractionItems::MergeOrigins(R->Exported, Part.Origins);
 	}
-	// 安全箱本体直接装回出战配置，下局不用重新装；装不回去（槽已占用）时与其他物资一起入库。
-	TArray<FExtractionItem> ToStash;
-	for (const auto& I : Kept)
-	{
-		if (I.Slot == ExtractionGear::SafeSlot)
-		{
-			FExtractionItem Safe = I;
-			P->View.Loadout.GearGrids = true;
-			if (ExtractionItems::Fits(P->View.Loadout, Safe))
-			{
-				P->View.Loadout.Items.Add(Safe);
-				++P->View.Loadout.Revision;
-				continue;
-			}
-		}
-		ToStash.Add(I);
-	}
-	if (!Kept.IsEmpty()) Deposit(P->View, ToStash);
+	// 携行装备本体装回出战配置，其余物资入库；装不回去（槽已占用）时一起入库。
+	if (!Kept.IsEmpty()) Deposit(P->View, ReturnGear(P->View.Loadout, Kept));
 	else ++P->View.Revision;
 	P->View.Result.OverflowCount = P->View.Overflow.Num();
 	R->Closed = !R->Players.ContainsByPredicate([](const auto& V) { return V.Outcome == EExtractionOutcome::None; });
@@ -713,7 +716,7 @@ bool UExtractionPersistence::Recover()
 				}
 			}
 			M.Outcome = R.Active ? EExtractionOutcome::Recovered : EExtractionOutcome::Aborted;
-			Deposit(P->View, Refund);
+			Deposit(P->View, ReturnGear(P->View.Loadout, Refund));
 			P->View.Result.Raid = R.Id;
 			P->View.Result.Outcome = M.Outcome;
 			P->View.Result.Items = Refund;
@@ -744,7 +747,7 @@ void UExtractionPersistence::AbortPreparedRecord(FExtractionStoreState& Candidat
 	{
 		if (Member.Outcome != EExtractionOutcome::None) continue;
 		auto& View = ProfileIn(Candidate, Member.Profile)->View;
-		Deposit(View, Member.Original.Items);
+		Deposit(View, ReturnGear(View.Loadout, Member.Original.Items));
 		Member.Outcome = EExtractionOutcome::Aborted;
 		View.Result.Raid = Raid.Id;
 		View.Result.Outcome = EExtractionOutcome::Aborted;

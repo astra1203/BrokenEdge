@@ -148,4 +148,75 @@ bool FExtractionEquipmentRules::RunTest(const FString&)
 	TestFalse(TEXT("Reject invalid magazine state"), ExtractionItems::Validate(B, Error));
 	return true;
 }
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionGearContainers, "BrokenEdge.Extraction.Inventory.GearContainers",
+                                 EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+
+bool FExtractionGearContainers::RunTest(const FString&)
+{
+	FString Error;
+	FExtractionContainer C;
+	C.Id = FGuid::NewGuid();
+	C.WeaponSlots = C.GearGrids = true;
+	TestTrue(TEXT("No gear means no grid"), ExtractionItems::Grids(C).IsEmpty());
+	TestFalse(TEXT("Nothing fits without a backpack"), ExtractionItems::AutoPlace(C, ExtractionItems::Make(TEXT("Medkit"))));
+	for (const auto& [Slot, Definition] : {TPair<int32, FName>(ExtractionGear::RigSlot, TEXT("Rig_Ammo")),
+	                                       TPair<int32, FName>(ExtractionGear::BagSlot, TEXT("Bag_Hike")),
+	                                       TPair<int32, FName>(ExtractionGear::SafeSlot, TEXT("Safe_Basic"))})
+	{
+		auto Gear = ExtractionItems::Make(Definition);
+		Gear.Slot = Slot;
+		TestTrue(*FString::Printf(TEXT("Equip %s"), *Definition.ToString()), ExtractionItems::Fits(C, Gear));
+		C.Items.Add(Gear);
+	}
+	auto Wrong = ExtractionItems::Make(TEXT("Bag_ALS"));
+	Wrong.Slot = ExtractionGear::RigSlot;
+	TestFalse(TEXT("Backpack cannot go into the rig slot"), ExtractionItems::Fits(C, Wrong));
+
+	ExtractionItems::FGrid Rig, Bag, Safe;
+	TestTrue(TEXT("Rig grid exists"), ExtractionItems::GridOf(C, ExtractionGear::RigGrid, Rig));
+	TestTrue(TEXT("Backpack grid exists"), ExtractionItems::GridOf(C, ExtractionGear::BagGrid, Bag));
+	TestTrue(TEXT("Safe grid exists"), ExtractionItems::GridOf(C, ExtractionGear::SafeGrid, Safe));
+	// 10 格胸挂按 6 列排：第一行 6 格、第二行只有 4 格。
+	TestEqual(TEXT("Rig keeps official cell count"), Rig.Cells, 10);
+	TestEqual(TEXT("Rig has two rows"), Rig.Rows(), 2);
+	TestTrue(TEXT("Partial row cell exists"), Rig.Has(3, 1));
+	TestFalse(TEXT("Cells beyond the count do not exist"), Rig.Has(4, 1));
+	TestEqual(TEXT("24-cell backpack equals the legacy 6x4"), Bag.Width * Bag.Rows(), 24);
+	TestEqual(TEXT("Basic safe box is 2x2"), Safe.Cells, 4);
+
+	auto Beyond = ExtractionItems::Make(TEXT("Medkit"));
+	Beyond.Slot = ExtractionGear::RigGrid;
+	Beyond.Cell = FIntPoint(5, 1);
+	TestFalse(TEXT("Missing cell in the partial row rejects placement"), ExtractionItems::Fits(C, Beyond));
+
+	TestTrue(TEXT("Auto place succeeds"), ExtractionItems::AutoPlace(C, ExtractionItems::Make(TEXT("Medkit"))));
+	TestTrue(TEXT("Auto place fills the rig first"),
+	         C.Items.ContainsByPredicate([](const auto& I)
+	         {
+		         return I.Definition == TEXT("Medkit") && I.Slot == ExtractionGear::RigGrid;
+	         }));
+	for (int32 N = 0; N < 60; ++N) ExtractionItems::AutoPlace(C, ExtractionItems::Make(TEXT("Electronics")));
+	TestFalse(TEXT("Auto place never fills the safe box"),
+	          C.Items.ContainsByPredicate([](const auto& I) { return I.Slot == ExtractionGear::SafeGrid; }));
+	TestTrue(TEXT("Explicit safe box placement works"),
+	         ExtractionItems::AutoPlace(C, ExtractionItems::Make(TEXT("Document")), ExtractionGear::SafeGrid));
+	TestTrue(TEXT("Gear container validates"), ExtractionItems::Validate(C, Error));
+
+	// 背包里有东西时不能取下，否则物品失去所在网格。
+	FExtractionContainer Stash;
+	Stash.Id = FGuid::NewGuid();
+	Stash.Width = Stash.Height = 16;
+	FExtractionItemRequest Take;
+	Take.Item = C.InSlot(ExtractionGear::BagSlot)->Id;
+	const FString Before = Snapshot(C);
+	TestFalse(TEXT("Non-empty backpack cannot be removed"), ExtractionItems::Transfer(C, Stash, Take, Error));
+	TestEqual(TEXT("Rejected removal changes nothing"), Snapshot(C), Before);
+
+	// 死亡只保留安全箱本体与其中物品。
+	int32 Kept = 0;
+	for (const auto& I : C.Items) Kept += ExtractionItems::Protected(I);
+	TestEqual(TEXT("Safe box and its document survive death"), Kept, 2);
+	return true;
+}
 #endif
