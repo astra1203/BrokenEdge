@@ -279,6 +279,11 @@ public:
 	TObjectPtr<UAnimMontage> HealMontage = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
 	TObjectPtr<UAnimMontage> FirstPersonHealMontage = nullptr;
+	// 激素枪射向队友（官方 MedicalGun Fire）；未配置时回退到自用的 Heal 蒙太奇。
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> HealOtherMontage = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
+	TObjectPtr<UAnimMontage> FirstPersonHealOtherMontage = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
 	TObjectPtr<UAnimMontage> ReviveMontage = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
@@ -288,7 +293,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
 	TObjectPtr<UAnimMontage> FirstPersonSmokeMontage = nullptr;
 	/**
-	 * 播放技能表现蒙太奇；ActionKind 与 EExtractionAction 取值一致（1 Revive / 2 Heal / 3 Smoke）。
+	 * 播放技能表现蒙太奇；ActionKind 与 EExtractionAction 取值一致（1 Revive / 2 Heal / 3 Smoke），
+	 * 另加表现专用的 4 = 激素枪打队友。
 	 * Seconds 是服务器给定的动作时长，用于把蒙太奇拉伸到与结算同步。
 	 */
 	void PlayAbilityMontage(uint8 ActionKind, float Seconds);

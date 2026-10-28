@@ -1147,6 +1147,21 @@ void ABrokenEdgeCharacter::PlayHitReactMontage()
 
 void ABrokenEdgeCharacter::PlayAbilityMontage(uint8 ActionKind, float Seconds)
 {
+	if (ActionKind == 4)
+	{
+		if (HealOtherMontage == nullptr) ActionKind = 2;
+		else
+		{
+			StopAbilityMontage();
+			AbilityMontage = HealOtherMontage;
+			if (GetNetMode() == NM_DedicatedServer) return;
+			if (UAnimInstance* Body = GetMesh() ? GetMesh()->GetAnimInstance() : nullptr)
+				Body->Montage_Play(HealOtherMontage, FMath::Clamp(
+					                   HealOtherMontage->GetPlayLength() / FMath::Max(Seconds, .1f), .5f, 2.5f));
+			PlayFirstPersonMontage(FirstPersonHealOtherMontage, HealOtherMontage);
+			return;
+		}
+	}
 	UAnimMontage* ThirdPerson = ActionKind == 1
 		                            ? ReviveMontage.Get()
 		                            : ActionKind == 2

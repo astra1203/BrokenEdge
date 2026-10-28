@@ -12,6 +12,10 @@
 | 射击 | 单发，`FireInterval 0.66 s`，`FireCD 1.0 s` | 同上 |
 | 自用 | 动画键 `SelfCure`，消耗 1 发（`AmmoNum=1`），动画通知 `AddBuff` 时上效果 | `BP_AbilityTemp_SelfCure` |
 | 冷却 | 引用 `CDID=2`，**解包数据表里没有 CD 配置表，数值未找到** | `SkillDataConfig` 行 20010101 |
+| 弹道 | `BulletFlyingId 2007`：初速 2900（cm/s）、`GravityParam 0`、`ZeroGravityDistance 0`、`MaxDistance 10000`、`Radius 1`、`FlyMode_PhysicSimulate`、`bEnableInstantHitInstead=false` | `WeaponBase/WeaponBulletTable` 行 2001 |
+
+项目实现：对准队友时由服务器生成 `AExtractionStimDart`，按 120 Hz 子步扫掠飞行，命中存活队友才施加下表 Buff，
+撞墙、命中敌人或飞满 100 m 都浪费这一发；自用不发射飞镖。
 
 ### 命中效果（SOL 撤离模式适用的 Buff）
 

@@ -729,8 +729,9 @@ void UExtractionWidget::Refresh()
 		const auto* A = C->GetExtractionAbilities();
 		if (PS->Life == EExtractionLife::Alive)
 		{
-			Text += FString::Printf(TEXT("\nZ 治疗(可移动) %.0fs · X 烟雾 %.0fs"), FMath::Max(0.0, A->HealReadyAt - Now),
-			                        FMath::Max(0.0, A->SmokeReadyAt - Now));
+			Text += FString::Printf(TEXT("\nZ 激素枪(对准队友，否则自用) %.0fs · X 蜂巢烟雾 %.0fs"),
+			                        FMath::Max(0.0, A->HealReadyAt - Now), FMath::Max(0.0, A->SmokeReadyAt - Now));
+			if (C->GetExtractionHealth()->Painkiller) Text += TEXT("\n激素生效 · 止痛中，骨折暂不影响移动");
 			if (A->RescueFocus()) Text += TEXT("\n按住 E 救援队友 · 5 秒");
 		}
 		if (A->Action != EExtractionAction::None)
@@ -739,8 +740,8 @@ void UExtractionWidget::Refresh()
 				A->Action == EExtractionAction::Revive
 					? TEXT("正在救援")
 					: A->Action == EExtractionAction::Heal
-					? TEXT("正在治疗 · 可移动，移速降低")
-					: TEXT("投放烟雾"), FMath::Max(0.0, A->ActionEnd - Now));
+					? (A->Target && A->Target != C ? TEXT("激素枪 · 射向队友") : TEXT("激素枪 · 自我注射"))
+					: TEXT("投放蜂巢烟雾"), FMath::Max(0.0, A->ActionEnd - Now));
 		if (A->Rescuer)
 			Text += FString::Printf(
 				TEXT("\n队友正在救援 · %.1f 秒"), FMath::Max(0.0, A->Rescuer->GetExtractionAbilities()->ActionEnd - Now));

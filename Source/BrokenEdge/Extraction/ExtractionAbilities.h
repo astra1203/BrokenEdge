@@ -7,9 +7,13 @@
 // 规则对象通过 Config 从 Game 配置读取，时间单位为秒、距离为厘米；GetDefault 读取类默认规则。
 
 class ABrokenEdgeCharacter;
+class USkeletalMeshComponent;
 
 UENUM()
 enum class EExtractionAction : uint8 { None, Revive, Heal, Smoke };
+
+// 表现层专用的动作编号：激素枪打队友与自用走不同蒙太奇，但服务器只有一个 Heal 动作。
+inline constexpr uint8 ExtractionHealOtherPresentation = 4;
 
 /** Server clocks and tuning shared by gameplay, HUD and smoke visibility. */
 UCLASS(Config=Game, DefaultConfig)
@@ -32,8 +36,8 @@ public:
 	float ReviveRange = 200;
 	UPROPERTY(Config)
 	float ReviveHealth = 30;
-	// 激素枪（官方 C101 技能 20010101）：一发弹，对准队友射击，否则给自己打；
-	// 出手时长取官方 FireInterval 0.66 s。射程与冷却在解包数据里没有，保留项目值。
+	// 激素枪（官方 C101 技能 20010101）：一发弹，对准队友射出飞镖，否则给自己打；
+	// 出手时长取官方 FireInterval 0.66 s。冷却在解包数据里没有，保留项目值。
 	// 数据出处见 Docs/Extraction/RestorationEvidence/Stinger/OfficialKit.md。
 	UPROPERTY(Config)
 	float HealSeconds = .66f;
@@ -44,9 +48,15 @@ public:
 	UPROPERTY(Config, meta=(ClampMin="0.05", ClampMax="1"))
 	float HealMoveSpeedScale = .4f;
 	UPROPERTY(Config)
-	float HealRange = 1000;
-	UPROPERTY(Config)
 	float HealCooldown = 20;
+	// 激素飞镖弹道照官方 BulletId 2007：初速 2900 cm/s、无重力、最远 10000 cm、半径 1 cm。
+	// 准星射线只用来判断"对准的是不是队友"，命中与否完全由飞镖在服务器上飞过去决定。
+	UPROPERTY(Config)
+	float StimDartSpeed = 2900;
+	UPROPERTY(Config)
+	float StimDartMaxDistance = 10000;
+	UPROPERTY(Config)
+	float StimDartRadius = 1;
 	// 激素命中效果，照官方撤离模式 Buff：300013 每 0.1 s +0.2 持续 60 s（2 HP/s）、
 	// 300062 每 0.5 s +10 持续 1 s、300100 临时止痛 20 s。重复命中刷新持续时间，不叠加。
 	UPROPERTY(Config)
@@ -62,6 +72,16 @@ public:
 	/** 止痛期间无视腿部骨折的减速与禁止冲刺；骨折本身仍需夹板处理。 */
 	UPROPERTY(Config)
 	float StimPainkillerSeconds = 20;
+	// 激素枪模型（官方 Support_C101_MedicalGun_01），施放治疗或救援时挂在手上，只是表现。
+	// 官方动作驱动 Weapon_RightHand_Joint，枪的 Root 与之重合，所以零偏移挂接；骨骼缺失时回退 RightHand。
+	UPROPERTY(Config)
+	FSoftObjectPath StimGunViewMesh = FSoftObjectPath(TEXT(
+		"/Game/Extraction/Abilities/MedicalGun/1P/Support_C101_MedicalGun_01_1P/SkeletalMeshes/Support_C101_MedicalGun_01_1P.Support_C101_MedicalGun_01_1P"));
+	UPROPERTY(Config)
+	FSoftObjectPath StimGunWorldMesh = FSoftObjectPath(TEXT(
+		"/Game/Extraction/Abilities/MedicalGun/3P/Support_C101_MedicalGun_01_3P/SkeletalMeshes/Support_C101_MedicalGun_01_3P.Support_C101_MedicalGun_01_3P"));
+	UPROPERTY(Config)
+	FName StimGunBone = TEXT("Weapon_RightHand_Joint");
 	// 烟雾投掷的施放、距离、遮挡半径、存续时间和个人冷却参数。
 	UPROPERTY(Config)
 	float SmokeCastSeconds = .5f;
@@ -153,6 +173,8 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out) const override;
 	// 仅服务器推进：目标失效、移动、下落或资格丢失立即取消，到截止时间才调用 Complete。
 	virtual void TickComponent(float Delta, ELevelTick Tick, FActorComponentTickFunction* Function) override;
+	// 有画面的端异步预载激素枪模型。
+	virtual void BeginPlay() override;
 	// 销毁时释放双向救援关系，再调用父类生命周期清理。
 	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
 	UPROPERTY(ReplicatedUsing=OnRep_Action)
@@ -217,4 +239,18 @@ private:
 	void Complete();
 	/** 服务器与客户端共用：把当前 Action 映射到角色表现层，None 表示停止。 */
 	void RefreshAbilityMontage();
+	/**
+	 * 各端维护激素枪模型：治疗或救援期间显示并隐藏当前枪械，其余时间收起。
+	 * 第一人称手臂可能被重建，每次都检查挂接父组件，不保留失效的挂接。
+	 */
+	void RefreshStimGun();
+	// 本地创建一个挂在 Parent 上的激素枪组件；骨骼缺失时挂 RightHand。
+	USkeletalMeshComponent* MakeStimGun(USkeletalMeshComponent* Parent, const FSoftObjectPath& Path, bool bView);
+	UPROPERTY(Transient)
+	TObjectPtr<USkeletalMeshComponent> WorldStimGun;
+	UPROPERTY(Transient)
+	TObjectPtr<USkeletalMeshComponent> ViewStimGun;
+	TWeakObjectPtr<class AWeapon> HiddenGun;
+	// 持有异步加载句柄，保证模型在角色存续期间不被回收。
+	TSharedPtr<struct FStreamableHandle> StimGunLoad;
 };

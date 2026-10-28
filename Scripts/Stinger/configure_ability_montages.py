@@ -20,6 +20,9 @@ BP_ROOT = '/Game/Characters/Stinger/Blueprints/'
 SOURCES = {
     'Heal': (MAPPED + '/0b5a0cec/Support_C101_MedicalGun_M_1P_UseForMe',
              MAPPED + '/452b0376/Support_C101_MedicalGun_M_3P_UesForMe'),
+    # 激素枪射向队友：官方 MedicalGun 单发 AimFire（1P）与 Fire（3P）。
+    'HealOther': (MAPPED + '/1ae74b90/Support_C101_MedicalGun_M_1P_AimFire',
+                  MAPPED + '/6c8b92e4/Support_C101_MedicalGun_M_3P_Fire'),
     'Revive': (MAPPED + '/aee6cf12/Support_C101_MedicalGun_M_1P_Rescue_Loop',
                MAPPED + '/2174ae28/Support_C101_MedicalGun_M_3P_Rescue_Loop'),
     'Smoke': (MAPPED + '/3d9c73aa/Support_C101_SmokeScreen_M_1P_Fire',
@@ -28,6 +31,7 @@ SOURCES = {
 # 蓝图属性名 -> 蒙太奇资产名
 PROPERTIES = {
     'Heal': ('FirstPersonHealMontage', 'HealMontage'),
+    'HealOther': ('FirstPersonHealOtherMontage', 'HealOtherMontage'),
     'Revive': ('FirstPersonReviveMontage', 'ReviveMontage'),
     'Smoke': ('FirstPersonSmokeMontage', 'SmokeMontage'),
 }

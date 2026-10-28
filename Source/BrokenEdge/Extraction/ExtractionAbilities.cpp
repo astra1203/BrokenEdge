@@ -5,9 +5,14 @@
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionSmoke.h"
 #include "ExtractionSmokeGrenade.h"
+#include "ExtractionStimDart.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/Weapon/Weapon.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Engine/AssetManager.h"
+#include "Engine/SkeletalMesh.h"
+#include "Engine/StreamableManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "EngineUtils.h"
@@ -20,6 +25,16 @@ UExtractionAbilities::UExtractionAbilities()
 	SetIsReplicatedByDefault(true);
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.TickInterval = .05f;
+}
+
+// 有画面的端提前异步载入激素枪模型，首次施放时直接可用，不在动作里同步加载。
+void UExtractionAbilities::BeginPlay()
+{
+	Super::BeginPlay();
+	if (GetNetMode() == NM_DedicatedServer) return;
+	const auto* R = GetDefault<UExtractionRules>();
+	StimGunLoad = UAssetManager::GetStreamableManager().RequestAsyncLoad(
+		TArray<FSoftObjectPath>{R->StimGunViewMesh, R->StimGunWorldMesh});
 }
 
 // 返回组件所属角色，用于生命状态、距离和动作互斥检查。
@@ -97,7 +112,7 @@ ABrokenEdgeCharacter* UExtractionAbilities::RescueFocus() const
 	return Best;
 }
 
-// 从视点射线选择治疗目标，没命中其他角色时默认自己；友方和血量条件稍后检查。
+// 从视点射线判断准星下是不是队友，只决定"射飞镖还是自用"；飞镖是否命中由服务器弹道决定。
 ABrokenEdgeCharacter* UExtractionAbilities::HealFocus() const
 {
 	auto* C = Character();
@@ -107,9 +122,10 @@ ABrokenEdgeCharacter* UExtractionAbilities::HealFocus() const
 	FHitResult Hit;
 	const auto Start = C->GetPawnViewLocation();
 	GetWorld()->LineTraceSingleByChannel(
-		Hit, Start, Start + C->GetControlRotation().Vector() * GetDefault<UExtractionRules>()->HealRange,
+		Hit, Start, Start + C->GetControlRotation().Vector() * GetDefault<UExtractionRules>()->StimDartMaxDistance,
 		ECC_Visibility, Q);
-	if (auto* Other = Cast<ABrokenEdgeCharacter>(Hit.GetActor())) return Other;
+	// 只有准星对着队友才射飞镖；对着敌人或空处都按自用处理。
+	if (auto* Other = Cast<ABrokenEdgeCharacter>(Hit.GetActor()); Other && Friendly(C, Other)) return Other;
 	return C;
 }
 
@@ -140,6 +156,7 @@ void UExtractionAbilities::RefreshAbilityMontage()
 {
 	auto* C = Character();
 	if (C == nullptr) return;
+	RefreshStimGun();
 	if (Action == EExtractionAction::None)
 	{
 		C->StopAbilityMontage();
@@ -151,7 +168,62 @@ void UExtractionAbilities::RefreshAbilityMontage()
 		                      : Action == EExtractionAction::Heal
 		                      ? R->HealSeconds
 		                      : R->SmokeCastSeconds;
-	C->PlayAbilityMontage(static_cast<uint8>(Action), Seconds);
+	// 激素枪对准队友是射击动作，否则是给自己扎针；Target 与 Action 同批复制。
+	const bool bHealOther = Action == EExtractionAction::Heal && IsValid(Target) && Target != C;
+	C->PlayAbilityMontage(bHealOther ? ExtractionHealOtherPresentation : static_cast<uint8>(Action), Seconds);
+}
+
+USkeletalMeshComponent* UExtractionAbilities::MakeStimGun(USkeletalMeshComponent* Parent, const FSoftObjectPath& Path,
+                                                           bool bView)
+{
+	// 只用 BeginPlay 已异步载入且编译完成的模型；同步加载或等待编译会卡住游戏线程（实测 11 s 收不到包）。
+	auto* Mesh = Cast<USkeletalMesh>(Path.ResolveObject());
+	if (!Mesh || Mesh->IsCompiling() || !Parent) return nullptr;
+	const FName Bone = Parent->DoesSocketExist(GetDefault<UExtractionRules>()->StimGunBone)
+		                   ? GetDefault<UExtractionRules>()->StimGunBone
+		                   : FName(TEXT("RightHand"));
+	auto* Gun = NewObject<USkeletalMeshComponent>(GetOwner());
+	Gun->SetupAttachment(Parent, Bone);
+	Gun->SetSkeletalMeshAsset(Mesh);
+	Gun->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Gun->SetCanEverAffectNavigation(false);
+	if (bView)
+	{
+		Gun->SetOnlyOwnerSee(true);
+		Gun->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::FirstPerson);
+		Gun->SetCastShadow(false);
+	}
+	Gun->RegisterComponent();
+	if (bView) Gun->AddTickPrerequisiteComponent(Parent);
+	return Gun;
+}
+
+void UExtractionAbilities::RefreshStimGun()
+{
+	auto* C = Character();
+	if (!C || GetNetMode() == NM_DedicatedServer) return;
+	const auto* R = GetDefault<UExtractionRules>();
+	// 救援官方也是端着激素枪（MedicalGun Rescue 动作），烟雾用另一套道具，不显示枪。
+	const bool bShow = (Action == EExtractionAction::Heal || Action == EExtractionAction::Revive) && !C->IsDefeated();
+	auto* Gun = C->GetEquippedWeapon();
+	if (HiddenGun.IsValid() && (HiddenGun != Gun || !bShow)) HiddenGun->SetActorHiddenInGame(false);
+	HiddenGun = bShow ? Gun : nullptr;
+	if (HiddenGun.IsValid()) HiddenGun->SetActorHiddenInGame(true);
+	if (bShow && !WorldStimGun) WorldStimGun = MakeStimGun(C->GetMesh(), R->StimGunWorldMesh, false);
+	if (WorldStimGun)
+	{
+		WorldStimGun->SetVisibility(bShow);
+		WorldStimGun->SetOwnerNoSee(C->IsLocallyControlled() && C->IsFirstPersonView());
+	}
+	auto* Arms = C->GetFirstPersonMesh();
+	if (ViewStimGun && ViewStimGun->GetAttachParent() != Arms)
+	{
+		ViewStimGun->DestroyComponent();
+		ViewStimGun = nullptr;
+	}
+	if (bShow && !ViewStimGun && IsValid(Arms) && C->IsLocallyControlled() && C->IsFirstPersonView())
+		ViewStimGun = MakeStimGun(Arms, R->StimGunViewMesh, true);
+	if (ViewStimGun) ViewStimGun->SetVisibility(bShow && C->IsFirstPersonView());
 }
 
 // 校验序号、动作种类、冷却和目标，再锁定救援者或计算烟雾落点并设定完成时刻。
@@ -233,8 +305,8 @@ bool UExtractionAbilities::ValidTarget() const
 	if (Action == EExtractionAction::Revive)
 		return Target != C && PS->Life == EExtractionLife::Downed && Reach(C, Target, R->ReviveRange);
 	// 官方激素 Buff 不判血量（满血也有止痛），只排除倒地/阵亡（IncludeImpendingDeath=false）。
-	return Action == EExtractionAction::Heal && PS->Life == EExtractionLife::Alive
-		&& (Target == C || Reach(C, Target, R->HealRange));
+	// 射向队友时不再要求距离和视线：飞镖真实飞过去，被挡住或队友躲开就打空。
+	return Action == EExtractionAction::Heal && (Target != C || PS->Life == EExtractionLife::Alive);
 }
 
 // 服务器释放由自己持有的救援锁，清空动作、目标和截止时间，通知复制。
@@ -282,8 +354,26 @@ void UExtractionAbilities::Complete()
 	}
 	else if (Action == EExtractionAction::Heal)
 	{
-		// 一发激素弹：命中队友或自用后立即进入冷却，效果由目标的生命组件按官方 Buff 推进。
-		Target->GetExtractionHealth()->ApplyStim();
+		// 一发激素弹，出手即进入冷却。自用直接上效果（官方 UseForMe 由动画通知 AddBuff）；
+		// 射向队友则沿当前准星发射飞镖，由飞镖命中时施加效果，打空就浪费这一发。
+		if (Target == Character()) Target->GetExtractionHealth()->ApplyStim();
+		else
+		{
+			auto* C = Character();
+			const FVector Direction = C->GetControlRotation().Vector();
+			FVector From = C->GetPawnViewLocation() + Direction * 30.f;
+			// 贴墙出手时不能把飞镖生成在墙另一侧，与枪口穿墙处理一致。
+			FCollisionQueryParams Q(SCENE_QUERY_STAT(ExtractionStimMuzzle), false, C);
+			FHitResult Wall;
+			if (GetWorld()->LineTraceSingleByChannel(Wall, C->GetPawnViewLocation(), From, ECC_Visibility, Q))
+				From = Wall.ImpactPoint - Direction * (R->StimDartRadius + .1f);
+			FActorSpawnParameters Params;
+			Params.Owner = C;
+			Params.Instigator = C;
+			Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			if (auto* Dart = GetWorld()->SpawnActor<AExtractionStimDart>(From, Direction.Rotation(), Params))
+				Dart->Launch(C, Direction);
+		}
 		HealReadyAt = Now + R->HealCooldown;
 	}
 	else if (Action == EExtractionAction::Smoke)
@@ -324,6 +414,8 @@ bool UExtractionAbilities::CancelledByMovement(EExtractionAction Kind, bool bMov
 void UExtractionAbilities::TickComponent(float Delta, ELevelTick Tick, FActorComponentTickFunction* Function)
 {
 	Super::TickComponent(Delta, Tick, Function);
+	// 表现每端都维护：手臂重建或换枪后重新挂接、重新隐藏。
+	if (Action != EExtractionAction::None || HiddenGun.IsValid()) RefreshStimGun();
 	if (!GetOwner()->HasAuthority() || Action == EExtractionAction::None) return;
 	const auto* C = Character();
 	// 治疗允许边走边施放（移速由角色按 HealMoveSpeedScale 降低）；救援与烟雾仍需站定，
@@ -342,5 +434,8 @@ void UExtractionAbilities::TickComponent(float Delta, ELevelTick Tick, FActorCom
 void UExtractionAbilities::EndPlay(const EEndPlayReason::Type Reason)
 {
 	Damaged();
+	if (HiddenGun.IsValid()) HiddenGun->SetActorHiddenInGame(false);
+	if (WorldStimGun) WorldStimGun->DestroyComponent();
+	if (ViewStimGun) ViewStimGun->DestroyComponent();
 	Super::EndPlay(Reason);
 }

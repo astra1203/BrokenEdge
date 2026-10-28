@@ -207,6 +207,9 @@ public:
 					Command->TryGetStringField(TEXT("target"), Name);
 					auto* Target = Name.IsEmpty() ? Pawn : FindPawn(World, Name);
 					auto* A = Pawn->GetExtractionAbilities();
+					// 激素枪射向队友是真实飞镖，像玩家一样先把准星对准目标胸口，命中仍由服务器弹道判定。
+					if (Kind == TEXT("heal") && Target && Target != Pawn && PC)
+						PC->SetControlRotation((Target->GetActorLocation() - Pawn->GetPawnViewLocation()).Rotation());
 					if (Kind == TEXT("cancel")) A->ReleaseRescue();
 					else if (Kind == TEXT("duplicate")) A->ServerBegin(0, EExtractionAction::Heal, Target);
 					else
