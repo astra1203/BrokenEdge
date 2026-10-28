@@ -34,6 +34,14 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 	FTransform RightTarget, LeftTarget, RightReference, LeftReference;
 	bool bLeftActionMotion = false;
 	FTraversalContactPose TraversalContacts;
+	// 持刀移动手感：根骨骼上的竖向微晃与轻微左右摆，在全部 IK 之后叠加。
+	// 偏移按相机空间计算，再转到网格空间——手臂组件相对相机有 -90 度偏航，直接猜轴会歪。
+	float BobPhase = 0.f;
+	float BobWeight = 0.f;
+	FVector BobViewOffset = FVector::ZeroVector;
+	FRotator BobViewRotation = FRotator::ZeroRotator;
+	/** 手臂组件变换的逆，在游戏线程取好，评估阶段不再碰组件。 */
+	FTransform BobComponentInverse = FTransform::Identity;
 
 	explicit FStingerFirstPersonProxy(UAnimInstance* Instance) : FAnimInstanceProxy(Instance)
 	{
@@ -102,8 +110,14 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 					else LeftReference = Transform;
 				}
 			}
-			bLeftActionMotion = bActionMotion;
-			const float Reload = Character->GetFirstPersonReloadProgress();
+		bLeftActionMotion = bActionMotion;
+		// 枪在 IK 之后会按右手重新锚定（UpdateFirstPersonWeaponPose），而左手目标本来就是
+		// 「握把相对偏移 × 解算后的右手」，已经跟着右臂摆臂一起动了；再叠加一份左手自己的
+		// 摆臂偏移就成了二次位移 —— 冲刺摆臂幅度最大，于是左手明显脱把。
+		// 只清左手这一份：右臂与枪保留摆臂，冲刺动作照常可见；蒙太奇期间不动，不削弱后坐。
+		if (ViewState->CurrentVisualState == TEXT("Sprint") && !Instance->GetCurrentActiveMontage())
+			bLeftActionMotion = false;
+		const float Reload = Character->GetFirstPersonReloadProgress();
 			if (Reload >= 0.f)
 			{
 				const auto& Fit = Character->GetViewWeaponFit();
@@ -148,6 +162,19 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 			                                                      Rotation);
 			LeftHandIK.Alpha = 1.f;
 		}
+		// 只有刀槽、未播攻击蒙太奇且在地面时才有晃动；幅度随速度增长，静止时归零。
+		const float KnifeSpeed = Character ? Character->GetVelocity().Size2D() : 0.f;
+		const bool bKnifeSway = Character && Character->Melee->Active && !Instance->GetCurrentActiveMontage()
+			&& !Character->GetCharacterMovement()->IsFalling();
+		const float SwayTarget = bKnifeSway ? FMath::Clamp((KnifeSpeed - 20.f) / 220.f, 0.f, 1.f) : 0.f;
+		BobWeight = FMath::FInterpTo(BobWeight, SwayTarget, DeltaSeconds, 7.f);
+		// 相位按速度推进：走得越快摆得越急，蹲走几乎看不出来。
+		BobPhase = FMath::Fmod(BobPhase + DeltaSeconds * (6.6f + KnifeSpeed * .017f), 4.f * PI);
+		BobViewRotation = Character ? Character->GetViewRotation() : FRotator::ZeroRotator;
+		BobViewOffset = FVector(0.f, FMath::Sin(BobPhase * .5f) * .4f, FMath::Sin(BobPhase) * 1.f) * BobWeight;
+		if (BobWeight > KINDA_SMALL_NUMBER)
+			if (const auto* Component = GetSkelMeshComponent())
+				BobComponentInverse = Component->GetComponentTransform().Inverse();
 	}
 
 	virtual void UpdateAnimationNode(const FAnimationUpdateContext& Context) override
@@ -253,6 +280,13 @@ struct FStingerFirstPersonProxy : FAnimInstanceProxy
 			FCSPose<FCompactPose>::ConvertComponentPosesToLocalPoses(MoveTemp(Pose), Output.Pose);
 		}
 		TraversalContacts.Apply(Output.Pose);
+		// 叠在根骨骼上：手臂和刀一起轻微起伏，且不与每帧插值的手臂组件位置互相抢参数。
+		if (BobWeight > KINDA_SMALL_NUMBER && Output.Pose.GetNumBones() > 0)
+		{
+			const FVector Offset = BobComponentInverse.TransformVectorNoScale(
+				BobViewRotation.RotateVector(BobViewOffset));
+			Output.Pose[FCompactPoseBoneIndex(0)].AddToTranslation(Offset);
+		}
 		return true;
 	}
 };

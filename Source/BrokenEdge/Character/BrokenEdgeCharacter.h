@@ -295,6 +295,11 @@ public:
 	/** 停止技能表现并复位蒙太奇状态；重复调用安全。 */
 	void StopAbilityMontage();
 	bool IsAbilityMontageActive() const { return AbilityMontage != nullptr; }
+	/**
+	 * 只在 Development 构建里生效的「卡住」探针：持续有移动输入、贴地却几乎不位移时，
+	 * 打一条含移动模式/地面/卡住对象的日志，用于定位位置相关的走不动问题。
+	 */
+	void DiagnoseStuckMovement(float DeltaTime);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	FName RightHandBone = TEXT("hand_r");
@@ -347,6 +352,12 @@ private:
 	TObjectPtr<UAnimMontage> ViewActionThirdPersonMontage;
 	UPROPERTY(Transient)
 	TObjectPtr<UAnimMontage> AbilityMontage;
+	/** DiagnoseStuckMovement 的累积时长与单次上报标记。 */
+	float StuckSeconds = 0.f;
+	bool bStuckReported = false;
+	/** 本次会话累计卡住次数，便于测试与现场确认探针是否命中。 */
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "Diagnostics", meta = (AllowPrivateAccess = "true"))
+	int32 StuckEpisodes = 0;
 	float ViewActionSectionStart = 0.f;
 	float ViewActionSectionLength = 1.f;
 	float ViewActionAttachTime = -1.f;

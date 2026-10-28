@@ -35,6 +35,9 @@
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/InstancedStaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
 #include "Components/PoseableMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/WidgetComponent.h"
@@ -272,6 +275,7 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	UpdateSprint();
+	DiagnoseStuckMovement(DeltaTime);
 	UpdateExtractionLabel();
 	// 控制权和组件可能晚于 BeginPlay 就绪；初始化成功或明确失败后不再重复创建。
 	if (!bFirstPersonView && !bFirstPersonInitializationFailed) InitializeFirstPersonView();
@@ -1191,6 +1195,154 @@ void ABrokenEdgeCharacter::StopAbilityMontage()
 	}
 	// 第一人称蒙太奇由 SyncFirstPersonAction 跟随第三人称一起停止。
 	AbilityMontage = nullptr;
+}
+
+void ABrokenEdgeCharacter::DiagnoseStuckMovement(float DeltaTime)
+{
+#if UE_BUILD_SHIPPING
+	return;
+#else
+	const auto* Move = GetCharacterMovement();
+	if (Move == nullptr || !IsLocallyControlled() || IsTraversing())
+	{
+		StuckSeconds = 0.f;
+		bStuckReported = false;
+		return;
+	}
+	// 有明确移动输入、却几乎没有水平位移，持续 0.5 秒即视为卡住。
+	// bDisableGameplay / 倒地 / 是否贴地都不跳过——它们本身可能就是原因或佐证，一并写进日志。
+	// 注意不能读 GetPendingInputVector：移动组件在 Tick 里已经消费掉了，恒为零。
+	const bool bWantsMove = Move->GetCurrentAcceleration().SizeSquared2D() > 100.f
+		|| Move->GetLastInputVector().SizeSquared2D() > .01f;
+	const bool bBlocked = GetVelocity().SizeSquared2D() < 100.f;
+	if (!bWantsMove || !bBlocked)
+	{
+		StuckSeconds = 0.f;
+		bStuckReported = false;
+		return;
+	}
+	StuckSeconds += DeltaTime;
+	if (StuckSeconds < .5f || bStuckReported) return;
+	bStuckReported = true;
+	++StuckEpisodes;
+	FString Blockers;
+	TArray<AActor*> Overlapping;
+	GetOverlappingActors(Overlapping);
+	for (const AActor* Actor : Overlapping)
+	{
+		if (Actor == nullptr || Actor == this) continue;
+		Blockers += Actor->GetName() + TEXT(";");
+	}
+	UE_LOG(LogTemp, Warning,
+	       TEXT("STUCK_TRACE loc=%s mode=%d custom=%d walkableFloorZ=%.1f stepHeight=%.1f speed=%.1f accel=%.1f "
+		       "maxSpeed=%.0f disableGameplay=%d defeated=%d combat=%d lastInput=%s overlaps=%s"),
+	       *GetActorLocation().ToCompactString(), static_cast<int32>(Move->MovementMode),
+	       Move->CustomMovementMode, Move->GetWalkableFloorZ(), Move->MaxStepHeight,
+	       GetVelocity().Size2D(), Move->GetCurrentAcceleration().Size2D(), Move->MaxWalkSpeed,
+	       bDisableGameplay ? 1 : 0, IsDefeated() ? 1 : 0, static_cast<int32>(GetCombatState()),
+	       *Move->GetLastInputVector().ToCompactString(), *Blockers);
+	// 前向多高度射线：区分「撞墙」与「被矮台阶/边沿挡住」，并指出具体是哪个对象。
+	const FVector Forward = Move->GetLastInputVector().GetSafeNormal2D();
+	const auto* Capsule = GetCapsuleComponent();
+	if (!Forward.IsNearlyZero() && Capsule != nullptr)
+	{
+		const float Radius = Capsule->GetScaledCapsuleRadius();
+		const float HalfHeight = Capsule->GetScaledCapsuleHalfHeight();
+		const float FeetZ = GetActorLocation().Z - HalfHeight;
+		FCollisionQueryParams ProbeParams(SCENE_QUERY_STAT(StuckProbe), false, this);
+		for (const float Height : {10.f, 40.f, 70.f, HalfHeight})
+		{
+			const FVector Start(GetActorLocation().X, GetActorLocation().Y, FeetZ + Height);
+			const FVector End = Start + Forward * (Radius + 140.f);
+			FHitResult Hit;
+			if (!GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, ProbeParams)) continue;
+			// 静态网格特指到资源名，日志里能直接看出是哪块模型挡路。
+			FString MeshName;
+			// GetStaticMesh() 返回 TObjectPtr，auto* 推导不出指针类型，这里显式声明。
+			if (const UStaticMeshComponent* StaticMeshComponent = Cast<UStaticMeshComponent>(Hit.GetComponent()))
+			{
+				if (const UStaticMesh* StaticMesh = StaticMeshComponent->GetStaticMesh())
+					MeshName = StaticMesh->GetName();
+			}
+			UE_LOG(LogTemp, Warning,
+			       TEXT("STUCK_HIT height=%.0f actor=%s component=%s class=%s mesh=%s impactZ=%.1f normalZ=%.2f dist=%.1f"),
+			       Height, *GetNameSafe(Hit.GetActor()), *GetNameSafe(Hit.GetComponent()),
+			       Hit.GetActor() ? *Hit.GetActor()->GetClass()->GetName() : TEXT("?"),
+			       MeshName.IsEmpty() ? TEXT("-") : *MeshName,
+			       Hit.ImpactPoint.Z, Hit.ImpactNormal.Z, Hit.Distance);
+		}
+		// 沿前进方向逐段下探地面：台阶是锯齿（每级抬升一格），斜坡是平滑上升，可据此判断是否被台阶挡住。
+		FString Profile;
+		float Previous = TNumericLimits<float>::Lowest();
+		for (int32 Sample = 0; Sample <= 8; ++Sample)
+		{
+			const FVector Column = GetActorLocation() + Forward * (Sample * 25.f);
+			FHitResult Ground;
+			const bool bGround = GetWorld()->LineTraceSingleByChannel(
+				Ground, Column + FVector(0, 0, 100), Column - FVector(0, 0, 300), ECC_Visibility, ProbeParams);
+			if (!bGround)
+			{
+				Profile += FString::Printf(TEXT(" [%d]=none"), Sample * 25);
+				Previous = TNumericLimits<float>::Lowest();
+				continue;
+			}
+			if (Previous <= TNumericLimits<float>::Lowest() + 1.f)
+				Profile += FString::Printf(TEXT(" [%d]=%.0f"), Sample * 25, Ground.ImpactPoint.Z);
+			else
+				Profile += FString::Printf(TEXT(" [%d]=%.0f(d%+.0f)"), Sample * 25, Ground.ImpactPoint.Z,
+				                           Ground.ImpactPoint.Z - Previous);
+			Previous = Ground.ImpactPoint.Z;
+		}
+		UE_LOG(LogTemp, Warning, TEXT("STUCK_PROFILE feetZ=%.1f ground%s"), FeetZ, *Profile);
+
+		// 迈步失败的具体关卡：引擎允许迈（CanStepUp）却被几何挡住，还是引擎直接拒绝了这一步。
+		const FHitResult& FloorHit = Move->CurrentFloor.HitResult;
+		const float FloorHeight = FloorHit.bBlockingHit ? FloorHit.ImpactPoint.Z : FeetZ;
+		UE_LOG(LogTemp, Warning,
+		       TEXT("STUCK_GATE floor actor=%s normalZ=%.2f z=%.1f flatBase=%d perch=%.1f"),
+		       *GetNameSafe(FloorHit.GetActor()), FloorHit.ImpactNormal.Z, FloorHeight,
+		       Move->bUseFlatBaseForFloorChecks ? 1 : 0, Move->PerchRadiusThreshold);
+
+		// 用 ECC_Pawn（角色真正碰撞的通道）找正前方的阻挡，并用真实胶囊做一次"抬升+前扫"。
+		FCollisionQueryParams PawnParams(SCENE_QUERY_STAT(StuckGate), false, this);
+		const FVector ProbeFrom = FVector(GetActorLocation().X, GetActorLocation().Y, FeetZ + 5.f);
+		FHitResult Wall;
+		if (GetWorld()->LineTraceSingleByChannel(Wall, ProbeFrom, ProbeFrom + Forward * (Radius + 40.f),
+		                                         ECC_Pawn, PawnParams))
+		{
+			const UPrimitiveComponent* WallComponent = Wall.GetComponent();
+			UE_LOG(LogTemp, Warning,
+			       TEXT("STUCK_GATE blocker actor=%s comp=%s isISM=%d profile=%s impactAboveFloor=%.1f normalZ=%.2f "
+				       "canStepUpOn=%d"),
+			       *GetNameSafe(Wall.GetActor()), *GetNameSafe(WallComponent),
+			       WallComponent && WallComponent->IsA<UInstancedStaticMeshComponent>() ? 1 : 0,
+			       WallComponent ? *WallComponent->GetCollisionProfileName().ToString() : TEXT("?"),
+			       Wall.ImpactPoint.Z - FloorHeight, Wall.ImpactNormal.Z,
+			       WallComponent ? (WallComponent->CanCharacterStepUp(this) ? 1 : 0) : -1);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("STUCK_GATE blocker none on ECC_Pawn within %.0f"), Radius + 40.f);
+		}
+
+		const FCollisionShape CapsuleShape = FCollisionShape::MakeCapsule(Radius, HalfHeight);
+		const FVector Raised = GetActorLocation() + FVector(0, 0, Move->MaxStepHeight);
+		FHitResult ForwardSweep;
+		const bool bRaisedBlocked = GetWorld()->SweepSingleByChannel(
+			ForwardSweep, Raised, Raised + Forward * 40.f, FQuat::Identity, ECC_Pawn, CapsuleShape, PawnParams);
+		FHitResult NewFloor;
+		const bool bNewFloor = GetWorld()->LineTraceSingleByChannel(
+			NewFloor, Raised, Raised - FVector(0, 0, HalfHeight + 60.f), ECC_Pawn, PawnParams);
+		UE_LOG(LogTemp, Warning,
+		       TEXT("STUCK_GATE raisedBy=%.0f sweepBlocked=%d sweepMesh=%s newFloorZ=%.1f newFloorNormalZ=%.2f "
+			       "walkableZ=%.2f newFloorWalkable=%d"),
+		       Move->MaxStepHeight, bRaisedBlocked ? 1 : 0,
+		       bRaisedBlocked ? *GetNameSafe(ForwardSweep.GetActor()) : TEXT("-"),
+		       bNewFloor ? NewFloor.ImpactPoint.Z : -99999.f, bNewFloor ? NewFloor.ImpactNormal.Z : -1.f,
+		       Move->GetWalkableFloorZ(),
+		       bNewFloor && Move->IsWalkable(NewFloor) ? 1 : 0);
+	}
+#endif
 }
 
 void ABrokenEdgeCharacter::PlayReloadMontage()

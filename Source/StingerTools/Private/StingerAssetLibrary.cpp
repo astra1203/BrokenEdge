@@ -36,6 +36,7 @@
 #include "AnimGraphNode_ComponentToLocalSpace.h"
 #include "AnimGraphNode_Root.h"
 #include "AnimGraphNode_Slot.h"
+#include "AnimGraphNode_LayeredBoneBlend.h"
 #include "AnimGraphNode_TraversalContact.h"
 #include "Engine/StaticMesh.h"
 #include "StaticMeshResources.h"
@@ -699,4 +700,147 @@ UAnimMontage* UStingerAssetLibrary::CreateVisualMontage(UAnimSequence* Sequence,
 	Montage->BlendOut.SetBlendTime(FMath::Min(.04f, Sequence->GetPlayLength() * .1f));
 	Montage->MarkPackageDirty();
 	return Montage;
+}
+
+// Dump the anim graph so the slot order can be audited without opening the editor UI.
+FString UStingerAssetLibrary::DescribeAnimGraphChain(UAnimBlueprint* Blueprint)
+{
+	if (!Blueprint) return TEXT("NO_BLUEPRINT");
+	TArray<UEdGraph*> Graphs;
+	Blueprint->GetAllGraphs(Graphs);
+	FString Out;
+	for (auto* Graph : Graphs)
+	{
+		Out += FString::Printf(TEXT("GRAPH %s\n"), *Graph->GetName());
+		for (auto Node : Graph->Nodes)
+		{
+			if (!Node) continue;
+			FString Extra;
+			if (auto* Slot = Cast<UAnimGraphNode_Slot>(Node)) Extra = FString::Printf(TEXT(" SlotName=%s"), *Slot->Node.SlotName.ToString());
+			if (auto* Layer = Cast<UAnimGraphNode_LayeredBoneBlend>(Node))
+			{
+				Extra = FString::Printf(TEXT(" Layers=%d Weights=%d BlendMode=%d"), Layer->Node.LayerSetup.Num(),
+				                        Layer->Node.BlendWeights.Num(), static_cast<int32>(Layer->Node.BlendMode));
+				for (int32 Index = 0; Index < Layer->Node.LayerSetup.Num(); ++Index)
+				{
+					Extra += TEXT(" [");
+					for (const auto& Filter : Layer->Node.LayerSetup[Index].BranchFilters)
+						Extra += FString::Printf(TEXT("%s:%d "), *Filter.BoneName.ToString(), Filter.BlendDepth);
+					Extra += TEXT("]");
+				}
+			}
+			Out += FString::Printf(TEXT("  NODE %s name=%s pos=(%d,%d)%s\n"), *Node->GetClass()->GetName(),
+			                       *Node->GetName(), Node->NodePosX, Node->NodePosY, *Extra);
+			for (auto* Pin : Node->Pins)
+			{
+				if (!Pin || Pin->LinkedTo.Num() == 0) continue;
+				FString Links;
+				for (auto* Link : Pin->LinkedTo)
+					if (Link && Link->GetOwningNode())
+						Links += FString::Printf(TEXT("%s.%s <- %s.%s | "), *Node->GetName(), *Pin->PinName.ToString(),
+						                         *Link->GetOwningNode()->GetName(), *Link->PinName.ToString());
+				Out += FString::Printf(TEXT("    PIN %s -> %s\n"), *Pin->PinName.ToString(), *Links);
+			}
+		}
+	}
+	return Out;
+}
+
+FString UStingerAssetLibrary::DescribeSkeletonBones(USkeleton* Skeleton)
+{
+	if (!Skeleton) return TEXT("NO_SKELETON");
+	const auto& Bones = Skeleton->GetReferenceSkeleton();
+	FString Out;
+	for (int32 Index = 0; Index < Bones.GetNum(); ++Index)
+		Out += FString::Printf(TEXT("%d %s parent=%d\n"), Index, *Bones.GetBoneName(Index).ToString(),
+		                       Bones.GetParentIndex(Index));
+	return Out;
+}
+
+bool UStingerAssetLibrary::SetMontageSlotName(UAnimMontage* Montage, FName SlotName)
+{
+	if (!Montage || SlotName.IsNone()) return false;
+	bool bChanged = false;
+	for (auto& Track : Montage->SlotAnimTracks)
+	{
+		if (Track.SlotName == SlotName) continue;
+		Track.SlotName = SlotName;
+		bChanged = true;
+	}
+	if (bChanged) Montage->MarkPackageDirty();
+	return true;
+}
+
+// Insert <Slot> + layered blend per bone between the current tail node and the contact node,
+// so melee montages replace the upper body only and the legs keep following locomotion.
+bool UStingerAssetLibrary::ConfigureMeleeUpperBodySlot(UAnimBlueprint* Blueprint, FName SlotName, FName BranchBone)
+{
+	if (!Blueprint || SlotName.IsNone() || BranchBone.IsNone()) return false;
+	TArray<UEdGraph*> Graphs;
+	Blueprint->GetAllGraphs(Graphs);
+	for (auto* Graph : Graphs)
+	{
+		if (Graph->GetFName() != TEXT("AnimGraph")) continue;
+		UAnimGraphNode_Root* Root = nullptr;
+		for (auto Node : Graph->Nodes)
+			if (auto* Candidate = Cast<UAnimGraphNode_Root>(Node)) Root = Candidate;
+		if (!Root) return false;
+		// Re-running must not stack a second layer.
+		for (auto Node : Graph->Nodes)
+			if (auto* Existing = Cast<UAnimGraphNode_Slot>(Node))
+				if (Existing->Node.SlotName == SlotName) return true;
+		auto* Result = Root->FindPinChecked(TEXT("Result"));
+		if (Result->LinkedTo.Num() != 1) return false;
+		// Result is fed by the contact node; walk one pin back to the pose that feeds it.
+		auto* ContactOutput = Result->LinkedTo[0];
+		if (!ContactOutput) return false;
+		auto* ContactNode = ContactOutput->GetOwningNode();
+		if (!ContactNode) return false;
+		// The contact node exposes a single pose input; fall back to scanning for it.
+		UEdGraphPin* ContactInput = ContactNode->FindPin(TEXT("Source"), EGPD_Input);
+		if (!ContactInput || ContactInput->LinkedTo.Num() != 1)
+		{
+			ContactInput = nullptr;
+			for (auto* Pin : ContactNode->Pins)
+				if (Pin && Pin->Direction == EGPD_Input && Pin->LinkedTo.Num() == 1) { ContactInput = Pin; break; }
+		}
+		if (!ContactInput) return false;
+		auto* TailOutput = ContactInput->LinkedTo[0];
+		if (!TailOutput) return false;
+		auto* TailNode = TailOutput->GetOwningNode();
+		if (!TailNode) return false;
+
+		FGraphNodeCreator<UAnimGraphNode_Slot> SlotCreator(*Graph);
+		auto* NewSlot = SlotCreator.CreateNode();
+		NewSlot->Node.SlotName = SlotName;
+		NewSlot->NodePosX = TailNode->NodePosX + 240;
+		NewSlot->NodePosY = TailNode->NodePosY;
+		SlotCreator.Finalize();
+
+		FGraphNodeCreator<UAnimGraphNode_LayeredBoneBlend> BlendCreator(*Graph);
+		auto* Blend = BlendCreator.CreateNode();
+		BlendCreator.Finalize();
+		Blend->NodePosX = TailNode->NodePosX + 480;
+		Blend->NodePosY = TailNode->NodePosY;
+		Blend->Node.BlendMode = ELayeredBoneBlendMode::BranchFilter;
+		// The node constructor already adds the first pose; a node without one means the pin is missing.
+		if (Blend->Node.LayerSetup.Num() == 0 || Blend->Node.BlendPoses.Num() == 0) return false;
+		FBranchFilter Filter;
+		Filter.BoneName = BranchBone;
+		// Depth 1 gives the whole branch full weight, matching the existing reload upper body layer.
+		Filter.BlendDepth = 1;
+		Blend->Node.LayerSetup[0].BranchFilters.Reset();
+		Blend->Node.LayerSetup[0].BranchFilters.Add(Filter);
+
+		TailOutput->BreakLinkTo(ContactInput);
+		TailOutput->MakeLinkTo(NewSlot->FindPinChecked(TEXT("Source")));
+		TailOutput->MakeLinkTo(Blend->FindPinChecked(TEXT("BasePose")));
+		NewSlot->FindPinChecked(TEXT("Pose"))->MakeLinkTo(Blend->FindPinChecked(TEXT("BlendPoses_0")));
+		Blend->FindPinChecked(TEXT("Pose"))->MakeLinkTo(ContactInput);
+		if (ContactInput->LinkedTo.Num() != 1 || ContactInput->LinkedTo[0]->GetOwningNode() != Blend) return false;
+		FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(Blueprint);
+		FKismetEditorUtilities::CompileBlueprint(Blueprint);
+		return Blueprint->Status != BS_Error;
+	}
+	return false;
 }
