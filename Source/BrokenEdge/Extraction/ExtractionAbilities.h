@@ -82,11 +82,9 @@ public:
 		"/Game/Extraction/Abilities/MedicalGun/3P/Support_C101_MedicalGun_01_3P/SkeletalMeshes/Support_C101_MedicalGun_01_3P.Support_C101_MedicalGun_01_3P"));
 	UPROPERTY(Config)
 	FName StimGunBone = TEXT("Weapon_RightHand_Joint");
-	// 烟雾投掷的施放、距离、遮挡半径、存续时间和个人冷却参数。
+	// 烟雾投掷的施放、遮挡半径、存续时间和个人冷却参数。出手 0.433 s 取官方 PreFireTime。
 	UPROPERTY(Config)
-	float SmokeCastSeconds = .5f;
-	UPROPERTY(Config)
-	float SmokeRange = 3500;
+	float SmokeCastSeconds = .4333f;
 	// 烟幕半径以厘米计；投掷在视线落点附近，半径决定能遮住多少视野。
 	// 150cm = 3 米直径的球形烟团：够挡住一个站着的人，又不会糊住半条街。
 	UPROPERTY(Config)
@@ -116,9 +114,19 @@ public:
 	float SmokeSeconds = 18;
 	UPROPERTY(Config)
 	float SmokeCooldown = 25;
-	// 投掷物初速与落地到起烟的延迟；延迟让对手有机会抢在成烟前穿过去。
+	// 真实投掷：沿准星方向按初速抛出，由重力和弹跳决定落点，不再预先选落点。
+	// 官方 WeaponThrowableProjectileTable（ProjectileId 4）：高抛 1800、低抛 900 cm/s，重力倍率 1。
 	UPROPERTY(Config)
 	float SmokeThrowSpeed = 1800;
+	UPROPERTY(Config)
+	float SmokeThrowLowSpeed = 900;
+	/**
+	 * 出手方向相对准星的俯仰修正（度，正数抬高）。官方 ThrowRotationPitchAddition 为 -15，
+	 * 但其符号约定没能从数据确认；按"抬高 15°"使用，落点更贴近准星前方，需要时改配置。
+	 */
+	UPROPERTY(Config)
+	float SmokeThrowPitch = 15;
+	// 落地到起烟的延迟；延迟让对手有机会抢在成烟前穿过去。
 	UPROPERTY(Config)
 	float SmokeFuseSeconds = 1.5f;
 	// 守卫数量与反应/射击节奏调参；GuardDamageScale 是伤害倍率。
@@ -195,7 +203,8 @@ public:
 	UPROPERTY(Replicated)
 	TObjectPtr<ABrokenEdgeCharacter> Rescuer;
 	// 递增本地序号并发送动作请求，序号用于服务器拒绝旧消息。
-	void Request(EExtractionAction Kind, ABrokenEdgeCharacter* Other = nullptr);
+	// bLowThrow 只对烟雾有效：官方蜂巢烟雾支持高抛（X）与低抛（Alt+X）。
+	void Request(EExtractionAction Kind, ABrokenEdgeCharacter* Other = nullptr, bool bLowThrow = false);
 	// 松开救援输入时发送带新序号的取消，避免旧开始请求覆盖较新的取消。
 	void ReleaseRescue();
 	// 服务器释放由自己持有的救援锁，清空动作、目标和截止时间，通知复制。
@@ -216,7 +225,7 @@ public:
 	static bool Reach(const ABrokenEdgeCharacter* A, const ABrokenEdgeCharacter* B, float Range);
 	// 校验序号、动作种类、冷却和目标，再锁定救援者或计算烟雾落点并设定完成时刻。
 	UFUNCTION(Server, Reliable)
-	void ServerBegin(uint32 Sequence, EExtractionAction Kind, ABrokenEdgeCharacter* Other);
+	void ServerBegin(uint32 Sequence, EExtractionAction Kind, ABrokenEdgeCharacter* Other, bool bLowThrow);
 	// 只接受更新序号，取消当前能力并释放对目标的救援占用。
 	UFUNCTION(Server, Reliable)
 	void ServerCancel(uint32 Sequence);
@@ -230,9 +239,9 @@ private:
 	// 返回组件所属角色，用于生命状态、距离和动作互斥检查。
 	ABrokenEdgeCharacter* Character() const;
 	uint32 LocalSequence = 0, LastSequence = 0;
-	// 施法起点用于检测位置偏移；SmokePoint 是开始施法时选定的世界落点。
+	// 施法起点用于检测位置偏移；LowThrow 记录本次烟雾是高抛还是低抛。
 	FVector StartedAt = FVector::ZeroVector;
-	FVector SmokePoint = FVector::ZeroVector;
+	bool LowThrow = false;
 	// 救援必须是可触及的倒地队友；治疗需要存活、缺血的友方；烟雾没有角色目标。
 	bool ValidTarget() const;
 	// 在服务器应用救起、回血或生成烟雾；成功作用后记录相应冷却，最后统一释放动作状态。

@@ -130,9 +130,9 @@ ABrokenEdgeCharacter* UExtractionAbilities::HealFocus() const
 }
 
 // 递增本地序号并发送动作请求，序号用于服务器拒绝旧消息。
-void UExtractionAbilities::Request(EExtractionAction Kind, ABrokenEdgeCharacter* Other)
+void UExtractionAbilities::Request(EExtractionAction Kind, ABrokenEdgeCharacter* Other, bool bLowThrow)
 {
-	ServerBegin(++LocalSequence, Kind, Other);
+	ServerBegin(++LocalSequence, Kind, Other, bLowThrow);
 }
 
 // 松开救援输入时发送带新序号的取消，避免旧开始请求覆盖较新的取消。
@@ -228,7 +228,7 @@ void UExtractionAbilities::RefreshStimGun()
 
 // 校验序号、动作种类、冷却和目标，再锁定救援者或计算烟雾落点并设定完成时刻。
 void UExtractionAbilities::ServerBegin_Implementation(uint32 Sequence, EExtractionAction Kind,
-                                                      ABrokenEdgeCharacter* Other)
+                                                      ABrokenEdgeCharacter* Other, bool bLowThrow)
 {
 	if (Sequence <= LastSequence) return;
 	LastSequence = Sequence;
@@ -259,28 +259,7 @@ void UExtractionAbilities::ServerBegin_Implementation(uint32 Sequence, EExtracti
 		Ability->Rescuer = C;
 		Target->ForceNetUpdate();
 	}
-	if (Kind == EExtractionAction::Smoke)
-	{
-		FCollisionQueryParams Q(SCENE_QUERY_STAT(ExtractionSmokeAim), false, C);
-		if (C->GetEquippedWeapon()) Q.AddIgnoredActor(C->GetEquippedWeapon());
-		const auto Eye = C->GetPawnViewLocation();
-		SmokePoint = Eye + C->GetControlRotation().Vector() * R->SmokeRange;
-		FHitResult Hit;
-		// 准星命中点即期望落点；抛物线会让实际落点略近，用下面的一次回退修正。
-		if (GetWorld()->LineTraceSingleByChannel(Hit, Eye, SmokePoint, ECC_Visibility, Q)) SmokePoint = Hit.ImpactPoint;
-		// 投掷物从胸口抛出并带重力，沿视线的水平距离会缩短，按飞行时间回退避免砸在眼前。
-		const FVector FlatMid = (SmokePoint - Eye) * FVector(1, 1, 0);
-		const float Range = static_cast<float>(FlatMid.Size());
-		const float Speed = FMath::Max(R->SmokeThrowSpeed, 1.f);
-		// 抛体水平射程与初速正相关；这里用一阶近似把瞄准点收回，保持落点在准星附近。
-		const float Shorten = FMath::Clamp(Range * .12f, 0.f, 300.f);
-		if (Range > 1.f) SmokePoint -= FlatMid / Range * Shorten;
-		// 落点贴地：再向下打一次，避免落在半空或嵌进楼梯。
-		FHitResult Ground;
-		const FVector Above = SmokePoint + FVector(0, 0, 300);
-		if (GetWorld()->LineTraceSingleByChannel(Ground, Above, SmokePoint - FVector(0, 0, 400), ECC_Visibility, Q))
-			SmokePoint = Ground.ImpactPoint;
-	}
+	LowThrow = Kind == EExtractionAction::Smoke && bLowThrow;
 	StartedAt = C->GetActorLocation();
 	ActionEnd = Now + (Kind == EExtractionAction::Revive
 		                   ? R->ReviveSeconds
@@ -378,21 +357,33 @@ void UExtractionAbilities::Complete()
 	}
 	else if (Action == EExtractionAction::Smoke)
 	{
-		// 从胸口高度抛出，落点用预先算好的 SmokePoint；投掷物负责落地和延迟起烟。
-		const FVector From = Character()->GetActorLocation()
-			+ FVector(0, 0, Character()->BaseEyeHeight * .5f)
-			+ Character()->GetControlRotation().Vector() * 40.f;
+		// 真实投掷：沿出手瞬间的准星方向（加俯仰修正）按官方初速抛出，落点交给重力与弹跳。
+		// 出手点照官方偏移：前 10、右 15（低抛 24）、上 2（低抛 0）厘米，相对视点。
+		auto* C = Character();
+		const FRotator View = C->GetControlRotation().GetNormalized();
+		FRotator Throw = View;
+		Throw.Pitch = FMath::Clamp(View.Pitch + R->SmokeThrowPitch, -89.f, 89.f);
+		const FRotationMatrix Axes(View);
+		const FVector Eye = C->GetPawnViewLocation();
+		FVector From = Eye + Axes.GetUnitAxis(EAxis::X) * 10.f
+			+ Axes.GetUnitAxis(EAxis::Y) * (LowThrow ? 24.f : 15.f) + Axes.GetUnitAxis(EAxis::Z) * (LowThrow ? 0.f : 2.f);
+		// 贴墙出手时不能把弹体生成在墙另一侧。
+		FCollisionQueryParams Q(SCENE_QUERY_STAT(ExtractionSmokeMuzzle), false, C);
+		FHitResult Wall;
+		if (GetWorld()->LineTraceSingleByChannel(Wall, Eye, From, ECC_Visibility, Q))
+			From = Wall.ImpactPoint + Wall.ImpactNormal * 6.f;
+		const FVector Velocity = Throw.Vector() * (LowThrow ? R->SmokeThrowLowSpeed : R->SmokeThrowSpeed);
 		FActorSpawnParameters Params;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		Params.Owner = Character();
+		Params.Owner = C;
 		if (auto* Grenade = GetWorld()->SpawnActor<AExtractionSmokeGrenade>(
 			From, FRotator::ZeroRotator, Params))
 		{
 			Grenade->SetSmokeTuning(R->SmokeRadius, R->SmokeSeconds, R->SmokeFuseSeconds);
-			Grenade->Launch(From, SmokePoint, R->SmokeThrowSpeed);
+			Grenade->Launch(From, Velocity);
 			SmokeReadyAt = Now + R->SmokeCooldown;
-			UE_LOG(LogTemp, Warning, TEXT("[SmokeGrenade] thrown from %s to %s"),
-				*From.ToCompactString(), *SmokePoint.ToCompactString());
+			UE_LOG(LogTemp, Warning, TEXT("[SmokeGrenade] %s throw from %s velocity %s"), LowThrow ? TEXT("low") : TEXT("high"),
+				*From.ToCompactString(), *Velocity.ToCompactString());
 		}
 		else
 		{

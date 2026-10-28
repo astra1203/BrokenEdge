@@ -32,8 +32,8 @@ public:
 		Seconds = InSeconds;
 		FuseSeconds = InFuseSeconds;
 	}
-	// 落点被墙壁或地面挡住时取命中点，未命中则用预定落点；只在服务器调用。
-	void Launch(const FVector& From, const FVector& To, float Speed);
+	// 以给定初速从 From 抛出，飞行、弹跳与停稳全部交给投射物组件；只在服务器调用。
+	void Launch(const FVector& From, const FVector& Velocity);
 
 protected:
 	UPROPERTY(VisibleAnywhere)

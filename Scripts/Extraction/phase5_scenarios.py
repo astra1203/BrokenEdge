@@ -200,8 +200,9 @@ def run(env):
     # 投掷后要飞行并等保险丝，烟幕不是立刻出现；check 本身按 timeout 轮询。
     check('X input creates one smoke actor on every peer', lambda: all(len(state(r).get('smokes', [])) == 1 for r in peers), 8)
     expected_smoke = state('Server')['smokes'][0]
-    # 落点由投掷物实际撞击决定；挡板前的落点允许落在地面到墙面之间。
-    check('Smoke deployment is clipped before the opaque wall', lambda: 1300 < expected_smoke['position'][0] < 1445 and abs(expected_smoke['position'][1]-4200) < 60)
+    # 真实投掷：A 离挡板只有 45 cm，弹体撞墙后按弹性弹回、落在 A 身后一两米；
+    # 这里要证明的是烟不会穿墙出现在另一侧，而不是落在准星点上。
+    check('Smoke deployment is clipped before the opaque wall', lambda: 900 < expected_smoke['position'][0] < 1445 and abs(expected_smoke['position'][1]-4200) < 150)
     send('Server', 'occluder', enabled=False)
     # 烟必须真的可见：只查 actor 数量会漏掉"存在但 alpha=0"的情况（曾导致烟直接消失）。
     check('Smoke is actually visible on every peer',

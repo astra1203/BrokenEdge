@@ -35,8 +35,8 @@ AExtractionSmokeGrenade::AExtractionSmokeGrenade()
 	Flight->UpdatedComponent = Shell;
 	Flight->InitialSpeed = 1800.f;
 	Flight->MaxSpeed = 2600.f;
-	// 重力略高于真实值，让投掷弧线更紧凑、落点更好预判。
-	Flight->ProjectileGravityScale = 1.35f;
+	// 官方 WeaponThrowableProjectileTable（ProjectileId 4）GravityScale 1：真实重力。
+	Flight->ProjectileGravityScale = 1.f;
 	// 官方 BP_AbilityBullet_C101_Smoke：Bounciness 0.2、Friction 0.8、速度低于 10 cm/s 视为停稳。
 	Flight->bShouldBounce = true;
 	Flight->Bounciness = .2f;
@@ -65,10 +65,10 @@ void AExtractionSmokeGrenade::GetLifetimeReplicatedProps(TArray<FLifetimePropert
 	DOREPLIFETIME(AExtractionSmokeGrenade, FuseAt);
 }
 
-void AExtractionSmokeGrenade::Launch(const FVector& From, const FVector& To, float Speed)
+void AExtractionSmokeGrenade::Launch(const FVector& From, const FVector& Velocity)
 {
 	SetActorLocation(From);
-	Flight->Velocity = (To - From).GetSafeNormal() * Speed + FVector(0, 0, 260);
+	Flight->Velocity = Velocity;
 	// 飞行阶段不许被过早销毁；真正的寿命由 Ignite 决定。
 	SetLifeSpan(0);
 }

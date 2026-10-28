@@ -211,7 +211,7 @@ public:
 					if (Kind == TEXT("heal") && Target && Target != Pawn && PC)
 						PC->SetControlRotation((Target->GetActorLocation() - Pawn->GetPawnViewLocation()).Rotation());
 					if (Kind == TEXT("cancel")) A->ReleaseRescue();
-					else if (Kind == TEXT("duplicate")) A->ServerBegin(0, EExtractionAction::Heal, Target);
+					else if (Kind == TEXT("duplicate")) A->ServerBegin(0, EExtractionAction::Heal, Target, false);
 					else
 						A->Request(Kind == TEXT("revive")
 							           ? EExtractionAction::Revive

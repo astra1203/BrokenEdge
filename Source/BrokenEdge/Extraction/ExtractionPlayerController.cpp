@@ -48,6 +48,9 @@ void AExtractionPlayerController::SetupInputComponent()
 	InputComponent->BindKey(EKeys::H, IE_Pressed, this, &ThisClass::UseMedical);
 	InputComponent->BindKey(EKeys::Z, IE_Pressed, this, &ThisClass::HealAbility);
 	InputComponent->BindKey(EKeys::X, IE_Pressed, this, &ThisClass::SmokeAbility);
+	// 官方蜂巢烟雾支持低抛；组合键要求修饰键完全匹配，单按 X 不会触发这一条。
+	InputComponent->BindKey(FInputChord(EKeys::X, false, false, true, false), IE_Pressed, this,
+	                        &ThisClass::SmokeAbilityLow);
 	InputComponent->BindKey(EKeys::E, IE_Released, this, &ThisClass::ReleaseInteract);
 	InputComponent->BindKey(EKeys::Three, IE_Pressed, this, &ThisClass::SelectKnife);
 	InputComponent->BindKey(EKeys::One, IE_Pressed, this, &ThisClass::SelectHeldGun);
@@ -165,12 +168,19 @@ void AExtractionPlayerController::HealAbility()
 		C->GetExtractionAbilities()->Request(EExtractionAction::Heal, C->GetExtractionAbilities()->HealFocus());
 }
 
-// 发起烟雾能力请求，落点与冷却在服务器处理。
+// 发起烟雾能力请求（高抛），出手方向与冷却在服务器处理。
 void AExtractionPlayerController::SmokeAbility()
 {
 	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
 		C->GetExtractionAbilities()->Request(
 			EExtractionAction::Smoke);
+}
+
+// Alt+X 低抛：初速减半、出手点更低，用来把烟丢到脚前或门口。
+void AExtractionPlayerController::SmokeAbilityLow()
+{
+	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
+		C->GetExtractionAbilities()->Request(EExtractionAction::Smoke, nullptr, true);
 }
 
 // 交互优先救援，其次钥匙门、战利品；没有目标时才尝试切枪，避免同一按键触发多种动作。
@@ -729,7 +739,7 @@ void UExtractionWidget::Refresh()
 		const auto* A = C->GetExtractionAbilities();
 		if (PS->Life == EExtractionLife::Alive)
 		{
-			Text += FString::Printf(TEXT("\nZ 激素枪(对准队友，否则自用) %.0fs · X 蜂巢烟雾 %.0fs"),
+			Text += FString::Printf(TEXT("\nZ 激素枪(对准队友，否则自用) %.0fs · X 蜂巢烟雾(Alt+X 低抛) %.0fs"),
 			                        FMath::Max(0.0, A->HealReadyAt - Now), FMath::Max(0.0, A->SmokeReadyAt - Now));
 			if (C->GetExtractionHealth()->Painkiller) Text += TEXT("\n激素生效 · 止痛中，骨折暂不影响移动");
 			if (A->RescueFocus()) Text += TEXT("\n按住 E 救援队友 · 5 秒");

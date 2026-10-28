@@ -60,6 +60,7 @@ public:
 	void HealAbility();
 	// 发起烟雾能力请求，落点与冷却在服务器处理。
 	void SmokeAbility();
+	void SmokeAbilityLow();
 	// 仅可行动且未开菜单时切换本人背包，不绕过服务器 Open 流程。
 	void ToggleInventory();
 	// 切换只读战术地图，必要时关闭背包；HitTestInvisible 使地图不截获游戏鼠标输入。
