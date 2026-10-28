@@ -17,7 +17,14 @@ UExtractionProgressionRules::UExtractionProgressionRules()
 		// 价格按房间价值与开门次数分层：入门房 3 次 < 二楼房 2 次 < 核心/总裁 1-2 次高价值。
 		{TEXT("Key_Contract"), 700, 1}, {TEXT("Key_StaffPassage"), 800, 1},
 		{TEXT("Key_EastBridge"), 1200, 2}, {TEXT("Key_Monitor"), 1400, 2},
-		{TEXT("Key_President"), 2400, 3}, {TEXT("Key_Core"), 2600, 3}
+		{TEXT("Key_President"), 2400, 3}, {TEXT("Key_Core"), 2600, 3},
+		// 胸挂/背包/安全箱：官方价位（胸包 1 万、ALS 2.8 万、安全箱数百万）与本项目经济不同量级，
+		// 按格数分档换算到项目价位；基础安全箱新档案自带，不在商店出售。
+		{TEXT("Rig_Pouch"), 300, 1}, {TEXT("Rig_Ammo"), 500, 1}, {TEXT("Rig_Assault"), 800, 2},
+		{TEXT("Rig_Hurricane"), 1200, 3},
+		{TEXT("Bag_Climb"), 300, 1}, {TEXT("Bag_Hike"), 500, 1}, {TEXT("Bag_ALS"), 900, 2},
+		{TEXT("Bag_GTO"), 1600, 3},
+		{TEXT("Safe_Advanced"), 3000, 2}, {TEXT("Safe_Premium"), 6000, 3}
 	};
 	Quests = {
 		{TEXT("初次撤离"), TEXT("接取后成功撤离一次"), 1, 500, 100},

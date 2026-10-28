@@ -17,6 +17,17 @@ TArray<ExtractionItems::FEquipmentAction> ExtractionItems::EquipmentActions(cons
 	};
 	if (D->Kind == EExtractionItemKind::Armor && C.WeaponSlots)
 		Add(Item->Slot >= 0 ? TEXT("卸下护甲") : TEXT("穿戴护甲"), EExtractionItemOp::Transfer).Slot = Item->Slot >= 0 ? -1 : D->ArmorSlot;
+	// 胸挂/背包/安全箱：取下需要先清空（Transfer 会拒绝），所以只在空的时候给"卸下"。
+	if (D->Kind == EExtractionItemKind::Gear && C.GearGrids)
+	{
+		const bool Worn = Item->Slot == D->GearSlot;
+		const bool Empty = !C.Items.ContainsByPredicate([&](const FExtractionItem& I)
+		{
+			return I.Slot == ExtractionGear::GridForSlot(D->GearSlot);
+		});
+		if (!Worn) Add(FString::Printf(TEXT("装备 %s"), *D->Label.ToString()), EExtractionItemOp::Transfer).Slot = D->GearSlot;
+		else if (Empty) Add(FString::Printf(TEXT("卸下 %s"), *D->Label.ToString()), EExtractionItemOp::Transfer).Slot = -1;
+	}
 	if (D->Kind == EExtractionItemKind::Attachment)
 		for (const auto& Gun : C.Items)
 			if (const auto* GunDef = UExtractionItemDefinition::Get(Gun.Definition); GunDef && GunDef->SupportsAttachment(Item->Definition))

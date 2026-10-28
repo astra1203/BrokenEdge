@@ -236,8 +236,13 @@ void UExtractionInteractionComponent::AdvanceSearch(double Now)
 		TArray<FExtractionItem> Ordered = Loot->Contents.Items;
 		Ordered.Sort([](const FExtractionItem& A, const FExtractionItem& B)
 		{
-			const int32 KA = A.Slot >= 0 ? A.Slot - 2 : A.Cell.Y * 16 + A.Cell.X;
-			const int32 KB = B.Slot >= 0 ? B.Slot - 2 : B.Cell.Y * 16 + B.Cell.X;
+			// 装备槽在前，网格按分区（胸挂 -2、背包 -1 …）分段，再按格子行列。
+			auto Key = [](const FExtractionItem& I)
+			{
+				return I.Slot >= 0 ? I.Slot - 100 : (I.Slot == -2 ? 0 : -I.Slot * 1000) + I.Cell.Y * 16 + I.Cell.X;
+			};
+			const int32 KA = Key(A);
+			const int32 KB = Key(B);
 			return KA < KB;
 		});
 		for (const auto& I : Ordered)

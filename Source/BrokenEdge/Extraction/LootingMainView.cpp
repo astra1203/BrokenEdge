@@ -8,6 +8,7 @@
 #include "ExtractionGunsmith.h"
 #include "ExtractionUIStyle.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Blueprint/WidgetTree.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/VerticalBox.h"
@@ -35,6 +36,50 @@ namespace
 		auto* Slot = Canvas->AddChildToCanvas(Child);
 		Slot->SetPosition(At);
 		Slot->SetSize(Size);
+	}
+
+	// 一块网格分区在画布上的位置；Top 以格为单位。
+	struct FGridView
+	{
+		ExtractionItems::FGrid Grid;
+		float Top = 0;
+	};
+
+	// 携行容器自上而下排胸挂、背包、安全箱，每段上方留半格写标题；固定网格（战利品、仓库）不留标题。
+	TArray<FGridView> GridLayout(const FExtractionContainer& C, FVector2D& Extent)
+	{
+		TArray<FGridView> Views;
+		float Y = 0;
+		int32 Width = 1;
+		for (const auto& Grid : ExtractionItems::Grids(C))
+		{
+			if (C.GearGrids) Y += .5f;
+			Views.Add({Grid, Y});
+			Y += Grid.Rows() + (C.GearGrids ? .25f : 0.f);
+			Width = FMath::Max(Width, Grid.Width);
+		}
+		Extent = FVector2D(Width, FMath::Max(Y, 1.f));
+		return Views;
+	}
+
+	FString GridTitle(const FExtractionContainer& C, const ExtractionItems::FGrid& Grid)
+	{
+		const auto* Gear = C.InSlot(ExtractionGear::SlotForGrid(Grid.Section));
+		const auto* D = Gear ? UExtractionItemDefinition::Get(Gear->Definition) : nullptr;
+		const TCHAR* Kind = Grid.Section == ExtractionGear::RigGrid
+			                    ? TEXT("胸挂")
+			                    : Grid.Section == ExtractionGear::SafeGrid
+			                    ? TEXT("安全箱 · 死亡不掉落")
+			                    : TEXT("背包");
+		return FString::Printf(TEXT("%s  %s  %d 格"), Kind, D ? *D->Label.ToString() : TEXT(""), Grid.Cells);
+	}
+
+	// 屏幕局部坐标（格）落在哪个分区：标题行算在下方分区里，方便把东西拖到分区顶部。
+	const FGridView* GridAt(const TArray<FGridView>& Views, float LocalY)
+	{
+		for (const auto& View : Views)
+			if (LocalY >= View.Top - .5f && LocalY < View.Top + View.Grid.Rows() + .25f) return &View;
+		return nullptr;
 	}
 }
 
@@ -210,8 +255,12 @@ void ULootingMainView::RebuildEquipment(UVerticalBox* List, bool Loot)
 	EquipmentTargets.RemoveAll([Loot](const auto& P) { return !P || P->bLoot == Loot; });
 	const auto* C = Container(Loot);
 	if (!C || !C->WeaponSlots) return;
-	const TCHAR* Names[] = {TEXT("手持武器"),TEXT("背负武器"),TEXT("头盔"),TEXT("胸甲")};
-	for (int32 N = 0; N < 4; ++N)
+	const TCHAR* Names[] = {
+		TEXT("手持武器"), TEXT("背负武器"), TEXT("头盔"), TEXT("胸甲"), TEXT("胸挂"), TEXT("背包"), TEXT("安全箱")
+	};
+	// 携行容器多出胸挂、背包、安全箱三个槽；守卫等固定网格容器仍只有前四个。
+	const int32 SlotCount = C->GearGrids ? ExtractionGear::SafeSlot + 1 : 4;
+	for (int32 N = 0; N < SlotCount; ++N)
 	{
 		auto* EquipmentView = MakePart(SlotClass);
 		if (!EquipmentView) continue;
@@ -250,27 +299,46 @@ void ULootingMainView::RebuildContainer(ULootingWidgetPart* Panel, bool Loot)
 		}
 		return;
 	}
-	const FVector2D Size(C->Width * CellSize, C->Height * CellSize);
+	FVector2D Extent;
+	const auto Views = GridLayout(*C, Extent);
+	const FVector2D Size = Extent * CellSize;
 	if (Panel->ContentSize)
 	{
 		Panel->ContentSize->SetWidthOverride(Size.X);
 		Panel->ContentSize->SetHeightOverride(Size.Y);
 	}
-	for (int32 Y = 0; Y < C->Height; ++Y)
-		for (int32 X = 0; X < C->Width; ++X)
-			if (auto* GridPart = MakePart(CellClass))
+	for (const auto& View : Views)
+	{
+		if (C->GearGrids && WidgetTree)
+			if (auto* Title = WidgetTree->ConstructWidget<UTextBlock>())
 			{
-				GridPart->SetVisibility(ESlateVisibility::HitTestInvisible);
-				CanvasChild(Panel->GridCanvas, GridPart, FVector2D(X, Y) * CellSize, FVector2D(CellSize - 2));
+				Text(Title, GridTitle(*C, View.Grid));
+				Title->SetColorAndOpacity(FSlateColor(FLinearColor(.75f, .78f, .8f)));
+				FSlateFontInfo Font = Title->GetFont();
+				Font.Size = FMath::Max(9, FMath::RoundToInt(CellSize * .22f));
+				Title->SetFont(Font);
+				CanvasChild(Panel->GridCanvas, Title, FVector2D(0, (View.Top - .5f) * CellSize),
+				            FVector2D(Extent.X * CellSize, CellSize * .5f));
 			}
+		for (int32 Y = 0; Y < View.Grid.Rows(); ++Y)
+			for (int32 X = 0; X < View.Grid.Width; ++X)
+				if (View.Grid.Has(X, Y))
+					if (auto* GridPart = MakePart(CellClass))
+					{
+						GridPart->SetVisibility(ESlateVisibility::HitTestInvisible);
+						CanvasChild(Panel->GridCanvas, GridPart, FVector2D(X, View.Top + Y) * CellSize,
+						            FVector2D(CellSize - 2));
+					}
+	}
 	for (const auto& Item : C->Items)
 	{
-		if (Item.Slot >= 0) continue;
+		const auto* View = Views.FindByPredicate([&](const FGridView& V) { return V.Grid.Section == Item.Slot; });
+		if (Item.Slot >= 0 || !View) continue;
 		if (auto* Card = MakePart(ItemClass))
 		{
 			Card->bLoot = Loot;
 			Card->SetItem(Item);
-			CanvasChild(Panel->ItemCanvas, Card, FVector2D(Item.Cell) * CellSize,
+			CanvasChild(Panel->ItemCanvas, Card, FVector2D(Item.Cell.X, View->Top + Item.Cell.Y) * CellSize,
 			            FVector2D(Item.Extent()) * CellSize - FVector2D(2));
 		}
 	}
@@ -310,7 +378,9 @@ void ULootingMainView::Refresh()
 			LastLootId = Loot ? Loot->Id : FGuid();
 			LastLootRevision = Loot ? Loot->Revision : INDEX_NONE;
 		}
-		Text(OwnTitle, Own ? FString::Printf(TEXT("背包  /  %d × %d"), Own->Width, Own->Height) : TEXT("背包"));
+		int32 OwnCells = 0;
+		if (Own) for (const auto& Grid : ExtractionItems::Grids(*Own)) OwnCells += Grid.Cells;
+		Text(OwnTitle, Own ? FString::Printf(TEXT("携行  /  共 %d 格"), OwnCells) : TEXT("携行"));
 		const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
 		const double Now = GS ? GS->GetServerWorldTimeSeconds() : 0;
 		Text(LootTitle, I->Loot
@@ -419,9 +489,19 @@ void ULootingMainView::EquipOrStore()
 	const auto* C = Container(SelectedLoot);
 	const auto* Item = C ? C->Find(Selected) : nullptr;
 	const auto* D = Item ? UExtractionItemDefinition::Get(Item->Definition) : nullptr;
+	if (D && D->Kind == EExtractionItemKind::Gear)
+	{
+		// 胸挂/背包/安全箱直接放进对应装备槽；槽已占用时由服务器拒绝并提示。
+		auto R = Request();
+		R.ToLoot = false;
+		R.Slot = D->GearSlot;
+		PC()->RequestItem(R);
+		CancelDrag();
+		return;
+	}
 	if (!D || D->Kind != EExtractionItemKind::Weapon)
 	{
-		PC()->ShowItemMessage(TEXT("只有武器可以装备"));
+		PC()->ShowItemMessage(TEXT("只有武器和携行装备可以装备"));
 		CancelDrag();
 		return;
 	}
@@ -614,14 +694,22 @@ bool ULootingMainView::PlaceAt(FVector2D Screen, UDragDropOperation* Operation)
 		auto* Panel = Side ? LootContainer.Get() : OwnContainer.Get();
 		const auto* Target = Container(Side != 0);
 		if (!Panel || !Target || !Contains(Panel->ItemCanvas, Screen)) continue;
-		const FVector2D Local = Panel->ItemCanvas->GetCachedGeometry().AbsoluteToLocal(Screen) / CellSize;
+		const FVector2D Canvas = Panel->ItemCanvas->GetCachedGeometry().AbsoluteToLocal(Screen) / CellSize;
+		FVector2D Extent;
+		const auto Views = GridLayout(*Target, Extent);
+		const auto* View = GridAt(Views, Canvas.Y);
+		if (!View) break;
+		// 换算到该分区自己的格子坐标；松手位置减去抓取点得到物品左上角。
+		const FVector2D Local(Canvas.X, Canvas.Y - View->Top);
 		const FIntPoint Ext = Rotated ? FIntPoint(Item->Size.Y, Item->Size.X) : Item->Size;
 		const FVector2D Offset = ActiveDrag ? ActiveDrag->GrabFraction * FVector2D(Ext) : FVector2D::ZeroVector;
 		R.ToLoot = Side != 0;
+		R.Slot = View->Grid.Section;
 		R.Cell = FIntPoint(FMath::FloorToInt(Local.X - Offset.X), FMath::FloorToInt(Local.Y - Offset.Y));
 		for (const auto& Other : Target->Items)
-			if (Other.Id.IsValid() && Other.Id != Selected && Other.Slot < 0 && Local.X >= Other.Cell.X && Local.Y >=
-				Other.Cell.Y && Local.X < Other.Cell.X + Other.Extent().X && Local.Y < Other.Cell.Y + Other.Extent().Y)
+			if (Other.Id.IsValid() && Other.Id != Selected && Other.Slot == View->Grid.Section && Local.X >= Other.Cell.X
+				&& Local.Y >= Other.Cell.Y && Local.X < Other.Cell.X + Other.Extent().X
+				&& Local.Y < Other.Cell.Y + Other.Extent().Y)
 			{
 				R.MergeInto = Other.Id;
 				break;

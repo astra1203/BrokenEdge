@@ -47,6 +47,22 @@ namespace
 		return ExtractionItems::ValidateItem(I, true, Why);
 	}
 
+	// 把出战配置变成携行容器：缺背包时装上 24 格野战徒步背包（6 列 × 4 行，与旧固定网格完全一致，
+	// 原有物品摆放不变），缺安全箱时装上基础安全箱。新建档案与旧档案迁移共用。
+	void EquipDefaultGear(FExtractionContainer& Loadout)
+	{
+		Loadout.GearGrids = true;
+		for (const auto& [Slot, Definition] : {TPair<int32, FName>(ExtractionGear::BagSlot, TEXT("Bag_Hike")),
+		                                       TPair<int32, FName>(ExtractionGear::SafeSlot, TEXT("Safe_Basic"))})
+		{
+			if (Loadout.InSlot(Slot)) continue;
+			auto Gear = ExtractionItems::Make(Definition);
+			Gear.Slot = Slot;
+			Loadout.Items.Add(Gear);
+		}
+		++Loadout.Revision;
+	}
+
 	bool PreserveLegacyJournal(IPlatformFile& Files, const FString& Journal, int64 ValidEnd, int32 Version)
 	{
 		const FString Backup = Journal + FString::Printf(TEXT(".v%d.bak"), Version);
@@ -179,7 +195,7 @@ bool UExtractionPersistence::Load(const FString& Directory)
 		}
 	}
 	// Preserve exact legacy bytes before tail repair, recovery, or migration.
-	if (State.Sequence > 0 && State.Version < 3)
+	if (State.Sequence > 0 && State.Version < 4)
 	{
 		if (!PreserveLegacyJournal(Files, Journal, ValidEnd, State.Version))
 		{
@@ -213,13 +229,25 @@ bool UExtractionPersistence::Load(const FString& Directory)
 		if (!Commit(MoveTemp(Migrated))) return false;
 		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=3"));
 	}
+	if (State.Version < 4)
+	{
+		FExtractionStoreState Migrated = State;
+		Migrated.Version = 4;
+		for (auto& Profile : Migrated.Profiles)
+		{
+			EquipDefaultGear(Profile.View.Loadout);
+			++Profile.View.Revision;
+		}
+		if (!Commit(MoveTemp(Migrated))) return false;
+		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=4"));
+	}
 	return Recover();
 }
 
 // 检查存储版本、档案与出战身份唯一性、容器合法性及物品来源；不接受客户端自行拼出的结果状态。
 bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) const
 {
-	if (Candidate.Version < 1 || Candidate.Version > 3 || !Candidate.Id.IsValid()) return false;
+	if (Candidate.Version < 1 || Candidate.Version > 4 || !Candidate.Id.IsValid()) return false;
 	TSet<FGuid> Profiles, Items;
 	for (const auto& P : Candidate.Profiles)
 	{
@@ -227,7 +255,7 @@ bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) co
 			CredentialHash.Len() != 40)
 			return false;
 		Profiles.Add(P.View.Profile);
-		if (Candidate.Version == 3 && !P.View.Progression.Validate()) return false;
+		if (Candidate.Version >= 3 && !P.View.Progression.Validate()) return false;
 		TSet<FGuid> Operations;
 		for (const auto& Receipt : P.EconomyReceipts)
 		{
@@ -360,6 +388,7 @@ bool UExtractionPersistence::OpenProfile(FGuid Requested, const FString& Credent
 	P.View.Stash.Height = 12;
 	P.View.Loadout.Id = FGuid::NewGuid();
 	P.View.Loadout.WeaponSlots = true;
+	EquipDefaultGear(P.View.Loadout);
 	Issued = FGuid::NewGuid().ToString(EGuidFormats::Digits) + FGuid::NewGuid().ToString(EGuidFormats::Digits);
 	P.CredentialHash = Hash(Issued);
 	for (int32 Kit = 0; Kit < 3; ++Kit)
@@ -585,14 +614,38 @@ bool UExtractionPersistence::Settle(FGuid RaidId, FGuid Profile, EExtractionOutc
 						                                  TEXT("\n%s：%d / %d"), *Rules->Quests[Index].Label,
 						                                  Quest.Progress, Rules->Quests[Index].Target);
 		}
-		for (const auto& I : Inventory.Items)
-		{
-			ExtractionItems::MergeOrigins(R->Exported, I.Origins);
-			ExtractionItems::MergeOrigins(R->Exported, I.MagazineOrigins);
-			for (const auto& Part : I.Attachments) ExtractionItems::MergeOrigins(R->Exported, Part.Origins);
-		}
-		Deposit(P->View, Inventory.Items);
 	}
+	// 撤离带出全部物资；其他结局只保留安全箱及其中物品（死亡不掉落）。
+	TArray<FExtractionItem> Kept;
+	for (const auto& I : Inventory.Items)
+		if (Outcome == EExtractionOutcome::Extracted || ExtractionItems::Protected(I)) Kept.Add(I);
+	if (Outcome != EExtractionOutcome::Extracted && !Kept.IsEmpty())
+		P->View.Result.ProgressMessage += TEXT("\n安全箱内物资已保留");
+	// 带出的批次计入 Exported，崩溃恢复时不会再按入局原件重复返还。
+	for (const auto& I : Kept)
+	{
+		ExtractionItems::MergeOrigins(R->Exported, I.Origins);
+		ExtractionItems::MergeOrigins(R->Exported, I.MagazineOrigins);
+		for (const auto& Part : I.Attachments) ExtractionItems::MergeOrigins(R->Exported, Part.Origins);
+	}
+	// 安全箱本体直接装回出战配置，下局不用重新装；装不回去（槽已占用）时与其他物资一起入库。
+	TArray<FExtractionItem> ToStash;
+	for (const auto& I : Kept)
+	{
+		if (I.Slot == ExtractionGear::SafeSlot)
+		{
+			FExtractionItem Safe = I;
+			P->View.Loadout.GearGrids = true;
+			if (ExtractionItems::Fits(P->View.Loadout, Safe))
+			{
+				P->View.Loadout.Items.Add(Safe);
+				++P->View.Loadout.Revision;
+				continue;
+			}
+		}
+		ToStash.Add(I);
+	}
+	if (!Kept.IsEmpty()) Deposit(P->View, ToStash);
 	else ++P->View.Revision;
 	P->View.Result.OverflowCount = P->View.Overflow.Num();
 	R->Closed = !R->Players.ContainsByPredicate([](const auto& V) { return V.Outcome == EExtractionOutcome::None; });

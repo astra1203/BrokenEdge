@@ -300,7 +300,10 @@ void UExtractionInventoryComponent::DropAll(const FVector& Position)
 {
 	if (!GetOwner()->HasAuthority() || bDropped) return;
 	CaptureWeapons();
-	if (!Contents.Items.IsEmpty())
+	// 安全箱及其中物品不掉落：结算时已随玩家回到仓库，这里只丢其余装备与物资。
+	FExtractionContainer Dropped = Contents;
+	Dropped.Items.RemoveAll([](const FExtractionItem& I) { return ExtractionItems::Protected(I); });
+	if (!Dropped.Items.IsEmpty())
 	{
 		auto* Loot = AExtractionLootActor::SpawnContainer(GetWorld(), Position, false);
 		if (!Loot)
@@ -308,7 +311,6 @@ void UExtractionInventoryComponent::DropAll(const FVector& Position)
 			UE_LOG(LogTemp, Error, TEXT("EXTRACTION_DROP_FAILED Owner=%s"), *GetOwner()->GetName());
 			return;
 		}
-		FExtractionContainer Dropped = Contents;
 		Dropped.Id = FGuid::NewGuid();
 		++Dropped.Revision;
 		Loot->SetContents(Dropped);

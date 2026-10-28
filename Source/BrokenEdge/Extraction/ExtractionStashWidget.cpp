@@ -13,27 +13,59 @@
 
 namespace
 {
+	// 仓库 38 px 一格；出战携行网格最多胸挂 4 行 + 背包 8 行 + 安全箱 2 行，缩到 30 px 才放得下。
 	constexpr float Cell = 38;
-	FVector2D Grid(int32 Side) { return Side == 0 ? FVector2D(105, 165) : FVector2D(660, 245); }
+	constexpr float LoadoutCell = 30;
+	const FVector2D SlotSize(150, 40);
+	const TCHAR* SlotNames[] = {
+		TEXT("手持武器"), TEXT("背负武器"), TEXT("头盔"), TEXT("胸甲"), TEXT("胸挂"), TEXT("背包"), TEXT("安全箱")
+	};
 
-	FVector2D Slot(int32 Index)
-	{
-		return Index < 2 ? FVector2D(660 + Index * 185, 165) : FVector2D(1040, 165 + (Index - 2) * 80);
-	}
+	FVector2D Slot(int32 Index) { return FVector2D(520, 165 + Index * 46); }
 
 	bool InsideStash(FVector2D P, FVector2D O, FVector2D S)
 	{
 		return P.X >= O.X && P.Y >= O.Y && P.X < O.X + S.X && P.Y < O.Y + S.Y;
 	}
 
-	FVector2D Origin(const FExtractionItem& I, int32 Side)
+	// 一块网格在面板上的位置：仓库只有一块；出战配置按胸挂、背包、安全箱自上而下排列，各留一行标题。
+	struct FStashGrid
 	{
-		return I.Slot >= 0 ? Slot(I.Slot) : Grid(Side) + FVector2D(I.Cell.X, I.Cell.Y) * Cell;
+		ExtractionItems::FGrid Grid;
+		FVector2D At;
+		float CellSize = Cell;
+		FVector2D Extent() const { return FVector2D(Grid.Width, Grid.Rows()) * CellSize; }
+	};
+
+	TArray<FStashGrid> Layout(const FExtractionContainer* C, int32 Side)
+	{
+		TArray<FStashGrid> Result;
+		if (!C) return Result;
+		float Y = 165;
+		for (const auto& Grid : ExtractionItems::Grids(*C))
+		{
+			if (Side == 0)
+			{
+				Result.Add({Grid, FVector2D(105, 165), Cell});
+				continue;
+			}
+			Y += 18;
+			Result.Add({Grid, FVector2D(690, Y), LoadoutCell});
+			Y += Grid.Rows() * LoadoutCell + 6;
+		}
+		return Result;
 	}
 
-	FVector2D Size(const FExtractionItem& I)
+	FString GridTitle(const FExtractionContainer& C, const ExtractionItems::FGrid& Grid)
 	{
-		return I.Slot >= 0 ? FVector2D(172, 58) : FVector2D(I.Extent().X, I.Extent().Y) * Cell;
+		const auto* Gear = C.InSlot(ExtractionGear::SlotForGrid(Grid.Section));
+		const auto* D = Gear ? UExtractionItemDefinition::Get(Gear->Definition) : nullptr;
+		return FString::Printf(TEXT("%s %s · %d 格"), Grid.Section == ExtractionGear::RigGrid
+			                                             ? TEXT("胸挂")
+			                                             : Grid.Section == ExtractionGear::SafeGrid
+			                                             ? TEXT("安全箱(死亡不掉落)")
+			                                             : TEXT("背包"), D ? *D->Label.ToString() : TEXT(""),
+		                       Grid.Cells);
 	}
 }
 
@@ -55,6 +87,21 @@ public:
 	const FExtractionContainer* Container(int32 Side) const
 	{
 		return !Account() ? nullptr : Side == 0 ? &Account()->Profile.Stash : &Account()->Profile.Loadout;
+	}
+
+	// 物品左上角与尺寸：装备槽用固定卡片，网格物品按所在分区的原点与格子大小换算；分区不存在时放到画面外。
+	FVector2D Origin(const FExtractionItem& I, int32 Side) const
+	{
+		if (I.Slot >= 0) return Slot(I.Slot);
+		for (const auto& L : Layout(Container(Side), Side))
+			if (L.Grid.Section == I.Slot) return L.At + FVector2D(I.Cell.X, I.Cell.Y) * L.CellSize;
+		return FVector2D(-10000);
+	}
+
+	FVector2D Size(const FExtractionItem& I, int32 Side) const
+	{
+		if (I.Slot >= 0) return SlotSize;
+		return FVector2D(I.Extent().X, I.Extent().Y) * (Side == 0 ? Cell : LoadoutCell);
 	}
 
 	// 从当前档案绘制两侧容器和分页溢出区；拖拽时隐藏原位置仅是视觉反馈。
@@ -82,28 +129,35 @@ public:
 		Box({50, 45}, {1180, 630}, FLinearColor(.018, .03, .045, 1));
 		Text({100, 65}, TEXT("仓库与出战装备"), 28);
 		Text({105, 126}, TEXT("仓库 · 10 × 12"));
-		Text({660, 125}, TEXT("出战装备 · 背包 6 × 4 ＋双武器槽"));
+		int32 LoadoutCells = 0;
+		if (const auto* L = Container(1)) for (const auto& Grid : ExtractionItems::Grids(*L)) LoadoutCells += Grid.Cells;
+		Text({520, 125}, FString::Printf(TEXT("出战装备 · 携行共 %d 格"), LoadoutCells));
 		Box({1070, 65}, {115, 42}, FLinearColor(.12, .25, .32));
 		Text({1090, 75}, TEXT("返回大厅"));
 		for (int32 Side = 0; Side < 2; ++Side)
 		{
 			const auto* C = Container(Side);
 			if (!C) continue;
-			for (int32 Y = 0; Y < C->Height; ++Y)
-				for (int32 X = 0; X < C->Width; ++X)
-					Box(Grid(Side) + FVector2D(X, Y) * Cell, {Cell - 2, Cell - 2}, FLinearColor(.085, .12, .15));
+			for (const auto& L : Layout(C, Side))
+			{
+				if (Side) Text(L.At - FVector2D(0, 17), GridTitle(*C, L.Grid), 11);
+				for (int32 Y = 0; Y < L.Grid.Rows(); ++Y)
+					for (int32 X = 0; X < L.Grid.Width; ++X)
+						if (L.Grid.Has(X, Y))
+							Box(L.At + FVector2D(X, Y) * L.CellSize, FVector2D(L.CellSize - 2),
+							    FLinearColor(.085, .12, .15));
+			}
 			if (Side)
-				for (int32 I = 0; I < 4; ++I)
+				for (int32 I = 0; I <= ExtractionGear::SafeSlot; ++I)
 				{
-					Box(Slot(I), {172, 58}, FLinearColor(.09, .15, .18));
-					Text(Slot(I) + FVector2D(5, 15),
-					     I == 0 ? TEXT("手持武器") : I == 1 ? TEXT("背负武器") : I == 2 ? TEXT("头盔") : TEXT("胸甲"));
+					Box(Slot(I), SlotSize, FLinearColor(.09, .15, .18));
+					Text(Slot(I) + FVector2D(5, 11), SlotNames[I], 13);
 				}
 			for (const auto& I : C->Items)
 			{
 				if (Dragging && Selected == I.Id) continue;
 				const auto* D = UExtractionItemDefinition::Get(I.Definition);
-				const FVector2D P = Origin(I, Side), S = Size(I);
+				const FVector2D P = Origin(I, Side), S = Size(I, Side);
 				Box(P + FVector2D(1, 1), S - FVector2D(3, 3), FLinearColor(.035f, .055f, .06f));
 				Box(P + FVector2D(1, 1), FVector2D(S.X - 3, 2), ExtractionUIStyle::Rarity(D ? D->DisplayRarity : 0), 1);
 				const bool HasIcon = ExtractionUIStyle::Icon(Draw, Layer + 1, G, P + FVector2D(3, 3),
@@ -114,20 +168,21 @@ public:
 				     I.Slot >= 0 ? Label.Left(12) : FString::Printf(TEXT("×%d"), I.Quantity), S.X < 75 ? 9 : 11, 2);
 			}
 		}
-		Text({660, 425}, FString::Printf(TEXT("溢出领取区 · %d 件（点击领取到仓库，滚轮翻页）"), A->Profile.Overflow.Num()), 14);
+		Text({900, 405}, FString::Printf(TEXT("溢出领取区 · %d 件"), A->Profile.Overflow.Num()), 14);
+		Text({900, 430}, TEXT("点击领取到仓库，滚轮翻页"), 11);
 		for (int32 Row = 0; Row < 5; ++Row)
 		{
 			const int32 N = OverflowOffset + Row;
 			if (!A->Profile.Overflow.IsValidIndex(N)) break;
 			const auto& I = A->Profile.Overflow[N];
 			const auto* D = UExtractionItemDefinition::Get(I.Definition);
-			Box({660, 453.f + Row * 29}, {495, 27}, FLinearColor(.11, .18, .21));
-			Text({672, 457.f + Row * 29},
+			Box({900, 453.f + Row * 29}, {280, 27}, FLinearColor(.11, .18, .21));
+			Text({912, 457.f + Row * 29},
 			     FString::Printf(TEXT("%s × %d"), D ? *D->Label.ToString() : *I.Definition.ToString(), I.Quantity), 14);
 		}
 		Text({105, 630}, A->Locked ? TEXT("已准备或正在保存 · 装备已锁定") : TEXT("拖放整理 · R 旋转 · Shift 点击转移 · 右键装备／拆分 · Esc 返回"),
 		     14);
-		if (!A->Message.IsEmpty()) Text({660, 605}, A->Message.Left(44), 13);
+		if (!A->Message.IsEmpty()) Text({900, 610}, A->Message.Left(22), 13);
 		if (Dragging)
 		{
 			const auto* I = Container(SelectedSide)->Find(Selected);
@@ -153,7 +208,11 @@ public:
 		if (Menu)
 		{
 			Box(MenuAt, {250, MenuHeight()}, FLinearColor(.06, .1, .14), 5);
-			const TCHAR* Labels[] = {TEXT("快捷转移"), TEXT("装备到手持槽"), TEXT("装备到背负槽"), TEXT("卸下到背包"), TEXT("拆分数量")};
+			const bool Gear = SelectedGearSlot() >= 0;
+			const TCHAR* Labels[] = {
+				TEXT("快捷转移"), Gear ? TEXT("装备到出战") : TEXT("装备到手持槽"), Gear ? TEXT("—") : TEXT("装备到背负槽"),
+				TEXT("放入胸挂／背包"), TEXT("拆分数量")
+			};
 			for (int32 I = 0; I < 5; ++I) Text(MenuAt + FVector2D(10, 5 + I * 31), Labels[I], 15, 6);
 			const auto Actions = EquipmentActions();
 			for (int32 I = 0; I < Actions.Num(); ++I)
@@ -246,15 +305,18 @@ public:
 			}
 			else if (Row < 4)
 			{
+				const int32 GearSlot = SelectedGearSlot();
+				if (GearSlot >= 0 && Row == 2) return FReply::Handled().SetUserFocus(AsShared());
 				auto R = Request();
 				R.To = Row == 0 ? OtherSide() : EExtractionStorageSide::Loadout;
-				R.Move.Slot = Row == 1 ? 0 : Row == 2 ? 1 : -1;
+				// 胸挂/背包/安全箱"装备到出战"直接进对应装备槽；武器仍是手持/背负两个槽。
+				R.Move.Slot = Row == 1 ? (GearSlot >= 0 ? GearSlot : 0) : Row == 2 ? 1 : -1;
 				Send(R);
 			}
 			return FReply::Handled().SetUserFocus(AsShared());
 		}
 		if (Splitting) return FReply::Handled();
-		if (InsideStash(Mouse, {660, 453}, {495, 145}))
+		if (InsideStash(Mouse, {900, 453}, {280, 145}))
 		{
 			const int32 N = OverflowOffset + FMath::FloorToInt((Mouse.Y - 453) / 29);
 			if (Account()->Profile.Overflow.IsValidIndex(N))
@@ -299,8 +361,8 @@ public:
 		Mouse = Position(G, E);
 		auto R = Request();
 		R.Move.AutoPlace = false;
-		for (int32 I = 0; I < 4; ++I)
-			if (InsideStash(Mouse, Slot(I), {172, 58}))
+		for (int32 I = 0; I <= ExtractionGear::SafeSlot; ++I)
+			if (InsideStash(Mouse, Slot(I), SlotSize))
 			{
 				R.To = EExtractionStorageSide::Loadout;
 				R.Move.Slot = I;
@@ -310,16 +372,17 @@ public:
 		int32 TargetSide = 0;
 		const auto* Target = Hit(Mouse, TargetSide);
 		for (int32 Side = 0; Side < 2; ++Side)
-		{
-			const auto* C = Container(Side);
-			if (!InsideStash(Mouse, Grid(Side), FVector2D(C->Width, C->Height) * Cell)) continue;
-			R.To = static_cast<EExtractionStorageSide>(Side);
-			const auto V = (Mouse - Grid(Side)) / Cell;
-			R.Move.Cell = FIntPoint(FMath::FloorToInt(V.X), FMath::FloorToInt(V.Y));
-			if (Target && TargetSide == Side && Target->Id != Selected) R.Move.MergeInto = Target->Id;
-			Send(R);
-			return FReply::Handled().ReleaseMouseCapture();
-		}
+			for (const auto& L : Layout(Container(Side), Side))
+			{
+				if (!InsideStash(Mouse, L.At, L.Extent())) continue;
+				R.To = static_cast<EExtractionStorageSide>(Side);
+				R.Move.Slot = L.Grid.Section;
+				const auto V = (Mouse - L.At) / L.CellSize;
+				R.Move.Cell = FIntPoint(FMath::FloorToInt(V.X), FMath::FloorToInt(V.Y));
+				if (Target && TargetSide == Side && Target->Id != Selected) R.Move.MergeInto = Target->Id;
+				Send(R);
+				return FReply::Handled().ReleaseMouseCapture();
+			}
 		Cancel();
 		return FReply::Handled().ReleaseMouseCapture();
 	}
@@ -368,6 +431,15 @@ private:
 	}
 
 	float MenuHeight() const { return 5.f + 31.f * (5 + EquipmentActions().Num()); }
+
+	// 选中物品若是胸挂/背包/安全箱，返回它对应的装备槽，否则 -1。
+	int32 SelectedGearSlot() const
+	{
+		const auto* C = Container(SelectedSide);
+		const auto* I = C ? C->Find(Selected) : nullptr;
+		const auto* D = I ? UExtractionItemDefinition::Get(I->Definition) : nullptr;
+		return D && D->Kind == EExtractionItemKind::Gear ? D->GearSlot : -1;
+	}
 	TWeakObjectPtr<UExtractionStashWidget> Owner;
 	FGuid Selected;
 	int32 SelectedSide = 0, Quantity = 1, OverflowOffset = 0;
@@ -415,7 +487,7 @@ private:
 			if (const auto* C = Container(S))
 				for (const auto& I : C->Items)
 					if (InsideStash(
-						P, Origin(I, S), Size(I)))
+						P, Origin(I, S), Size(I, S)))
 					{
 						Side = S;
 						return &I;

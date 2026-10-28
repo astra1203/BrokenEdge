@@ -37,7 +37,11 @@ const TArray<FName>& UExtractionItemDefinition::Ids()
 		TEXT("SCARH"), TEXT("Ammo76251"),
 		// 航天基地钥匙卡：房号见 AExtractionKeyRoom::RequiredKey
 		TEXT("Key_President"), TEXT("Key_Core"), TEXT("Key_Monitor"), TEXT("Key_Contract"),
-		TEXT("Key_EastBridge"), TEXT("Key_StaffPassage")
+		TEXT("Key_EastBridge"), TEXT("Key_StaffPassage"),
+		// 携行装备：官方 EquipmentPart / LOC_GameItem 中的胸挂、背包、安全箱
+		TEXT("Rig_Pouch"), TEXT("Rig_Ammo"), TEXT("Rig_Assault"), TEXT("Rig_Hurricane"),
+		TEXT("Bag_Climb"), TEXT("Bag_Hike"), TEXT("Bag_ALS"), TEXT("Bag_GTO"),
+		TEXT("Safe_Basic"), TEXT("Safe_Advanced"), TEXT("Safe_Premium")
 	};
 	return Names;
 }
@@ -135,25 +139,61 @@ void ExtractionItems::MergeOrigins(TArray<FExtractionOrigin>& Target, const TArr
 	}
 }
 
-// 装备槽按类别与占用检查，网格则按旋转后的尺寸检测边界与矩形重叠。
+bool ExtractionItems::GridOf(const FExtractionContainer& Container, int32 Section, FGrid& Out)
+{
+	Out = FGrid();
+	Out.Section = Section;
+	if (!Container.GearGrids)
+	{
+		if (Section != -1) return false;
+		Out.Width = Container.Width;
+		Out.Cells = Container.Width * Container.Height;
+		return Out.Cells > 0;
+	}
+	const auto* Gear = Container.InSlot(ExtractionGear::SlotForGrid(Section));
+	const auto* D = Gear ? UExtractionItemDefinition::Get(Gear->Definition) : nullptr;
+	if (!D || D->Kind != EExtractionItemKind::Gear || D->GearCells <= 0) return false;
+	Out.Width = FMath::Clamp(D->GearWidth, 1, 8);
+	Out.Cells = D->GearCells;
+	return true;
+}
+
+TArray<ExtractionItems::FGrid> ExtractionItems::Grids(const FExtractionContainer& Container)
+{
+	TArray<FGrid> Result;
+	for (int32 Section : {ExtractionGear::RigGrid, ExtractionGear::BagGrid, ExtractionGear::SafeGrid})
+		if (FGrid Grid; GridOf(Container, Section, Grid)) Result.Add(Grid);
+	return Result;
+}
+
+bool ExtractionItems::Protected(const FExtractionItem& Item)
+{
+	return Item.Slot == ExtractionGear::SafeSlot || Item.Slot == ExtractionGear::SafeGrid;
+}
+
+// 装备槽按类别与占用检查，网格则按旋转后的尺寸检测分区边界与同分区矩形重叠。
 bool ExtractionItems::Fits(const FExtractionContainer& Container, const FExtractionItem& Item)
 {
 	if (Item.Slot >= 0)
 	{
 		const auto* D = UExtractionItemDefinition::Get(Item.Definition);
+		const bool Gear = Item.Slot >= ExtractionGear::RigSlot && Item.Slot <= ExtractionGear::SafeSlot;
 		return Container.WeaponSlots && D && ((Item.Slot < 2 && D->Kind == EExtractionItemKind::Weapon)
 				|| (Item.Slot >= 2 && Item.Slot <= 3 && D->Kind == EExtractionItemKind::Armor && D->ArmorSlot == Item.
-					Slot))
+					Slot)
+				|| (Gear && Container.GearGrids && D->Kind == EExtractionItemKind::Gear && D->GearSlot == Item.Slot))
 			&& !Container.InSlot(Item.Slot);
 	}
-	if (Item.Slot != -1) return false;
+	FGrid Grid;
+	if (!GridOf(Container, Item.Slot, Grid)) return false;
 	const FIntPoint Size = Item.Extent();
-	if (Size.X <= 0 || Size.Y <= 0 || Item.Cell.X < 0 || Item.Cell.Y < 0
-		|| Item.Cell.X > Container.Width - Size.X || Item.Cell.Y > Container.Height - Size.Y)
+	// 矩形四角都要落在存在的格子上；网格只有最后一行可能不满，检查右下角即可覆盖。
+	if (Size.X <= 0 || Size.Y <= 0 || !Grid.Has(Item.Cell.X, Item.Cell.Y)
+		|| !Grid.Has(Item.Cell.X + Size.X - 1, Item.Cell.Y + Size.Y - 1))
 		return false;
 	for (const auto& Other : Container.Items)
 	{
-		if (Other.Slot >= 0) continue;
+		if (Other.Slot != Item.Slot) continue;
 		const FIntPoint OtherSize = Other.Extent();
 		if (Item.Cell.X < Other.Cell.X + OtherSize.X && Item.Cell.X + Size.X > Other.Cell.X
 			&& Item.Cell.Y < Other.Cell.Y + OtherSize.Y && Item.Cell.Y + Size.Y > Other.Cell.Y)
@@ -163,15 +203,21 @@ bool ExtractionItems::Fits(const FExtractionContainer& Container, const FExtract
 }
 
 // 在副本中先合并已有堆叠，再尝试两种朝向逐格放置；全部放下才提交，失败不保留部分堆叠。
-bool ExtractionItems::AutoPlace(FExtractionContainer& Container, FExtractionItem Item)
+bool ExtractionItems::AutoPlace(FExtractionContainer& Container, FExtractionItem Item, int32 Section)
 {
 	const auto* D = UExtractionItemDefinition::Get(Item.Definition);
 	if (!D || Item.Quantity <= 0 || Item.Quantity > D->MaxStack) return false;
 	FExtractionContainer Candidate = Container;
+	// 默认顺序先胸挂再背包；安全箱只接受明确指定，避免捡东西时被自动塞进去。
+	TArray<int32> Sections;
+	if (Section < 0) Sections.Add(Section);
+	else if (Container.GearGrids) Sections = {ExtractionGear::RigGrid, ExtractionGear::BagGrid};
+	else Sections.Add(-1);
 	if (D->MaxStack > 1)
 		for (auto& Other : Candidate.Items)
 		{
-			if (Other.Definition != Item.Definition || Other.Quantity >= D->MaxStack) continue;
+			if (Other.Definition != Item.Definition || Other.Quantity >= D->MaxStack || !Sections.Contains(Other.Slot))
+				continue;
 			const int32 Count = FMath::Min(D->MaxStack - Other.Quantity, Item.Quantity);
 			MergeOrigins(Other.Origins, TakeOrigins(Item.Origins, Count));
 			Other.Quantity += Count;
@@ -182,21 +228,26 @@ bool ExtractionItems::AutoPlace(FExtractionContainer& Container, FExtractionItem
 				return true;
 			}
 		}
-	Item.Slot = -1;
-	for (int32 Rotation = 0; Rotation < 2; ++Rotation)
+	for (int32 Target : Sections)
 	{
-		Item.Rotated = Rotation != 0;
-		for (int32 Y = 0; Y < Candidate.Height; ++Y)
-			for (int32 X = 0; X < Candidate.Width; ++X)
-			{
-				Item.Cell = FIntPoint(X, Y);
-				if (Fits(Candidate, Item))
+		FGrid Grid;
+		if (!GridOf(Candidate, Target, Grid)) continue;
+		Item.Slot = Target;
+		for (int32 Rotation = 0; Rotation < 2; ++Rotation)
+		{
+			Item.Rotated = Rotation != 0;
+			for (int32 Y = 0; Y < Grid.Rows(); ++Y)
+				for (int32 X = 0; X < Grid.Width; ++X)
 				{
-					Candidate.Items.Add(Item);
-					Container = MoveTemp(Candidate);
-					return true;
+					Item.Cell = FIntPoint(X, Y);
+					if (Fits(Candidate, Item))
+					{
+						Candidate.Items.Add(Item);
+						Container = MoveTemp(Candidate);
+						return true;
+					}
 				}
-			}
+		}
 	}
 	return false;
 }
@@ -212,8 +263,13 @@ bool ExtractionItems::Validate(const FExtractionContainer& Container, FString& E
 	FExtractionContainer Occupied = Container;
 	Occupied.Items.Reset();
 	TSet<FGuid> Ids;
-	for (const auto& I : Container.Items)
+	// 先放装备槽再放网格：网格分区由胸挂/背包/安全箱决定，顺序颠倒会把合法物品判成越界。
+	TArray<const FExtractionItem*> Ordered;
+	for (const auto& I : Container.Items) if (I.Slot >= 0) Ordered.Add(&I);
+	for (const auto& I : Container.Items) if (I.Slot < 0) Ordered.Add(&I);
+	for (const auto* Entry : Ordered)
 	{
+		const auto& I = *Entry;
 		if (Ids.Contains(I.Id) || !ValidateItem(I, false, Error) || !Fits(Occupied, I))
 		{
 			Error = TEXT("物品或占格无效");
@@ -245,9 +301,19 @@ bool ExtractionItems::Transfer(FExtractionContainer& Source, FExtractionContaine
 		return false;
 	}
 	const auto* D = UExtractionItemDefinition::Get(Original->Definition);
-	if (!D || Request.Slot < -1 || Request.Slot > 3)
+	if (!D || Request.Slot < ExtractionGear::SafeGrid || Request.Slot > ExtractionGear::SafeSlot)
 	{
 		Error = TEXT("目标位置无效");
+		return false;
+	}
+	// 胸挂/背包/安全箱里还有东西时不能取下，否则里面的物品会失去所在网格。
+	if (Source.GearGrids && Original->Slot >= ExtractionGear::RigSlot && Original->Slot <= ExtractionGear::SafeSlot
+		&& Source.Items.ContainsByPredicate([&](const FExtractionItem& I)
+		{
+			return I.Slot == ExtractionGear::GridForSlot(Original->Slot);
+		}))
+	{
+		Error = TEXT("请先清空这件装备里的物品");
 		return false;
 	}
 	const bool Same = &Source == &Destination;
@@ -281,7 +347,9 @@ bool ExtractionItems::Transfer(FExtractionContainer& Source, FExtractionContaine
 			Placed = true;
 		}
 	}
-	else if (Request.AutoPlace && Request.Slot == -1) Placed = AutoPlace(Target, Moving);
+	// Slot -1 自动放置走默认顺序（胸挂→背包）；-2/-3 只放进指定分区。
+	else if (Request.AutoPlace && Request.Slot < 0)
+		Placed = AutoPlace(Target, Moving, Request.Slot == -1 ? 0 : Request.Slot);
 	else if (Fits(Target, Moving))
 	{
 		Target.Items.Add(Moving);

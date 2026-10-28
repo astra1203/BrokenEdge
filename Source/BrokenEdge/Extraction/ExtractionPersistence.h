@@ -101,8 +101,9 @@ USTRUCT()
 struct FExtractionStoreState
 {
 	GENERATED_BODY()
+	// 4：出战配置改为携行容器（胸挂/背包/安全箱决定网格），旧配置迁移时补背包与基础安全箱。
 	UPROPERTY()
-	int32 Version = 3;
+	int32 Version = 4;
 	// 日志事务序号逐条递增，加载时拒绝跳号；Version 是结构版本，与事务序号不同。
 	UPROPERTY()
 	int64 Sequence = 0;
