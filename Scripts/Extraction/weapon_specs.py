@@ -22,6 +22,7 @@ WEAPONS = {
         rec=18010000001,
         preset=10010000122,
         receiver='Rec_AR_M4A1-Std_001',
+        socket_row='Base_AR_M4A1_None',
         anims={
             'idle': GENERIC_AR + 'AR_M_1P_Idle01',
             'aim': GENERIC_AR + 'AR_M_1P_AimIdle_Pose',
@@ -41,6 +42,12 @@ WEAPONS = {
         description='5.56×45 mm，30 发弹匣。官方默认配装（预设 10010000122）。',
     ),
 }
+
+# 第一人称持枪位置以已实机校准的 SCAR-H 表现资产为基准（相机空间，X 前 Y 右 Z 上，厘米），
+# 叠加官方 WeaponSocketTransformTable 中两把枪 WeaponPoint 相对 FPPCamera 的差值。
+REFERENCE_FIT = dict(socket_row='Base_AR_Scar-H_None',
+                     presentation='/Game/Extraction/Weapons/SCARH/DA_SCARH_Presentation')
+FIT_POSES = {'hip': 'Idle', 'aim': 'AimingIdleStaticSeq'}
 
 # Part category (item id prefix) -> mount socket on its parent, from PartSocketsTable.
 CATEGORY_SOCKETS = {

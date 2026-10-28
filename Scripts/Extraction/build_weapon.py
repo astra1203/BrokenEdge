@@ -7,8 +7,8 @@
 Imports the assembled 1P/3P meshes and the listed animations, adds the gameplay
 sockets (MuzzleFlash / Hand_R / LeftHandSocket) from the official part sockets,
 builds the presentation asset, duplicates the AK blueprint and item definition, and
-creates the ammunition definition. Hip/aim fit offsets start from the SCAR values and
-are provisional until checked in game. Evidence: Saved/Extraction/Weapons/<id>/Build.json.
+creates the ammunition definition. Hip/aim fit is the play-tested SCAR-H presentation
+fit plus the official per-weapon difference recorded in the manifest. Evidence: Saved/Extraction/Weapons/<id>/Build.json.
 """
 import json
 import os
@@ -110,8 +110,13 @@ profile = unreal.load_asset(profile_path) or tools.create_asset(profile_path.rsp
                                                                profile_class, factory)
 fit = unreal.StingerViewWeaponFit()
 fit.set_editor_property('enabled', True)
-fit.set_editor_property('hip', unreal.Transform(location=unreal.Vector(35, 12, -23), rotation=unreal.Rotator(yaw=-90)))
-fit.set_editor_property('aim', unreal.Transform(location=unreal.Vector(20, 0, -16.7), rotation=unreal.Rotator(yaw=-90)))
+reference = unreal.load_asset(weapon_specs.REFERENCE_FIT['presentation']).get_editor_property('view_fit')
+for key in ('hip', 'aim'):
+    base = reference.get_editor_property(key)
+    location = base.translation + unreal.Vector(*MANIFEST['view_fit'][key])
+    fit.set_editor_property(key, unreal.Transform(location=location, rotation=base.rotation.rotator()))
+    report.setdefault('view_fit', {})[key] = [location.x, location.y, location.z]
+report['view_fit']['official_delta'] = MANIFEST['view_fit']
 fit.set_editor_property('source_right_hand', right)
 fit.set_editor_property('source_left_hand', left)
 fit.set_editor_property('magazine_bone', 'Mag_point')

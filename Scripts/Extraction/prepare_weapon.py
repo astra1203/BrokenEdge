@@ -12,6 +12,8 @@ Run with the engine's bundled Python. Source archives stay read-only.
 3. Assemble one skinned GLB per view: parts are translated to their mount socket and
    bound to the receiver ``Root`` joint (the magazine to ``Mag_point``), preserving the
    receiver rig. Mount rotations must be identity; anything else is refused.
+4. Derive the first-person hip/aim fit from ``WeaponSocketTransformTable`` relative to
+   the play-tested SCAR-H fit (``weapon_specs.REFERENCE_FIT``).
 """
 import argparse
 import hashlib
@@ -69,6 +71,33 @@ def resolve(source, spec):
     evidence = [dict(entry=n, sha256=h) for n, h in
                 [(desc_name, desc_hash), (items_name, items_hash), (sockets_name, sockets_hash)]]
     return parts, sockets, evidence
+
+
+def view_fit(source, spec):
+    """Official camera-space WeaponPoint difference to the reference weapon, per fit pose."""
+    data = next(p for p in source.glob('*DataTables_001.zip') if 'Redirect' not in p.name)
+    with zipfile.ZipFile(data) as archive:
+        rows, name, digest = table(archive, '/WeaponAppearance/WeaponSocketTransformTable.json')
+
+    def camera_space(row, pose):
+        entry = next(t['Value'] for t in rows[row]['TransformMap'] if t['Key'] == pose)
+        sockets = {s['Key']: s['Value'] for s in entry['SocketTransformMap']}
+        weapon, camera = sockets['WeaponPoint']['Translation'], sockets['FPPCamera']
+        d = [weapon[a] - camera['Translation'][a] for a in 'XYZ']
+        # Inverse-rotate by the camera quaternion (q* v q).
+        q = camera['Rotation']
+        x, y, z, w = -q['X'], -q['Y'], -q['Z'], q['W']
+        t = [2 * (y * d[2] - z * d[1]), 2 * (z * d[0] - x * d[2]), 2 * (x * d[1] - y * d[0])]
+        return [d[0] + w * t[0] + (y * t[2] - z * t[1]), d[1] + w * t[1] + (z * t[0] - x * t[2]),
+                d[2] + w * t[2] + (x * t[1] - y * t[0])]
+
+    reference = weapon_specs.REFERENCE_FIT
+    fit = {'evidence': dict(entry=name, sha256=digest, row=spec['socket_row'], reference=reference['socket_row'])}
+    for key, pose in weapon_specs.FIT_POSES.items():
+        own, base = camera_space(spec['socket_row'], pose), camera_space(reference['socket_row'], pose)
+        fit[key] = [round(o - b, 3) for o, b in zip(own, base)]
+        fit['evidence'][pose] = dict(weapon=[round(v, 3) for v in own], reference=[round(v, 3) for v in base])
+    return fit
 
 
 def extract(source, out, spec, parts, socket_rows):
@@ -288,6 +317,7 @@ def main():
     manifest = {'schema': 1, 'weapon': options.weapon, 'rec': spec['rec'], 'preset': spec['preset'],
                 'parts': [{'model': m, 'parent': p, 'socket': s} for m, p, s in parts],
                 'models': models, 'animations': animations, 'assemblies': assemblies,
+                'view_fit': view_fit(source, spec),
                 'tables': evidence, 'files': records}
     (out / 'Manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(json.dumps({'weapon': options.weapon, 'parts': [m for m, _, _ in parts],
