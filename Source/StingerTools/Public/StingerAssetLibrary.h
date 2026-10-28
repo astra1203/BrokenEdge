@@ -74,4 +74,17 @@ public:
 	static void RemapBlueprintBones(UAnimBlueprint* Blueprint, const TMap<FName, FName>& BoneMap);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Import")
 	static UAnimMontage* CreateVisualMontage(UAnimSequence* Sequence, const FString& PackageName);
+	/** Dump every anim graph node with its pins and links; Python cannot read anim graphs. */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static FString DescribeAnimGraphChain(UAnimBlueprint* Blueprint);
+	/** Bone list with parent indices, used to pick a layered blend branch root. */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static FString DescribeSkeletonBones(class USkeleton* Skeleton);
+	/** Retarget an existing montage onto another slot without reimporting its sequence. */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Setup")
+	static bool SetMontageSlotName(UAnimMontage* Montage, FName SlotName);
+	/** Install <Slot> plus a layered blend per bone right before the output pose.
+	 *  Melee attacks must not freeze the legs, and the weapon layer is inactive while the knife is out. */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Setup")
+	static bool ConfigureMeleeUpperBodySlot(UAnimBlueprint* Blueprint, FName SlotName, FName BranchBone);
 };

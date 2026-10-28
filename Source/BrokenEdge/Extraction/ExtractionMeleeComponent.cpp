@@ -84,16 +84,34 @@ void UExtractionMeleeComponent::Strike()
 		                                   C->GetController(), C, UDamageType::StaticClass());
 }
 
+// 蒙太奇打进的槽必须真的存在于动画图里：槽缺失时 Montage_Play 照样返回时长，画面却完全没有动作。
+static void PlaySlotMontage(UAnimInstance* Anim, UAnimMontage* Montage, const TCHAR* Label)
+{
+	if (!Anim || !Montage) return;
+	const float Length = Anim->Montage_Play(Montage);
+	const FName Slot = Montage->SlotAnimTracks.Num() > 0 ? Montage->SlotAnimTracks[0].SlotName : NAME_None;
+	if (Length <= 0.f)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MELEE_MONTAGE_REJECTED %s anim=%s slot=%s"), Label,
+		       *GetNameSafe(Anim->GetClass()), *Slot.ToString());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("MELEE_MONTAGE_PLAY %s anim=%s slot=%s slotweight=%.3f"), Label,
+		       *GetNameSafe(Anim->GetClass()), *Slot.ToString(), Anim->GetSlotNodeGlobalWeight(Slot));
+	}
+}
+
 // 多播播放第三人称与可用的第一人称蒙太奇；不在表现回调中计算伤害。
 void UExtractionMeleeComponent::PlayAttack_Implementation(bool Heavy)
 {
 	auto* C = Character();
 	if (!C) return;
 	if (auto* Anim = C->GetMesh()->GetAnimInstance())
-		if (auto* Montage = Heavy ? HeavyBody.Get() : LightBody.Get()) Anim->Montage_Play(Montage);
+		PlaySlotMontage(Anim, Heavy ? HeavyBody.Get() : LightBody.Get(), TEXT("body"));
 	if (auto* View = C->GetFirstPersonMesh())
 		if (auto* Anim = View->GetAnimInstance())
-			if (auto* Montage = Heavy ? HeavyView.Get() : LightView.Get()) Anim->Montage_Play(Montage);
+			PlaySlotMontage(Anim, Heavy ? HeavyView.Get() : LightView.Get(), TEXT("view"));
 }
 
 // 每帧维护刀的可见性和挂接，视角切换后不保留失效的手臂父组件。
