@@ -1014,18 +1014,20 @@ void ABrokenEdgeCharacter::UpdateSprint()
 		GetCharacterMovement()->MaxWalkSpeedCrouched = ExtractionSavedCrouchSpeed;
 		bWasExtractionDowned = false;
 	}
-	const float FractureScale = ExtractionHealth->LegFracture
+	// 激素止痛期间骨折不影响移动（FractureHinders），止痛结束后恢复减速。
+	const bool bFractureHinders = ExtractionHealth->FractureHinders();
+	const float FractureScale = bFractureHinders
 		                            ? GetDefault<UExtractionEquipmentRules>()->FractureSpeedScale
 		                            : 1.f;
-	if (bExtractionFractureSpeedApplied != ExtractionHealth->LegFracture)
+	if (bExtractionFractureSpeedApplied != bFractureHinders)
 	{
-		if (ExtractionHealth->LegFracture)
+		if (bFractureHinders)
 		{
 			ExtractionFractureCrouchSpeed = GetCharacterMovement()->MaxWalkSpeedCrouched;
 			GetCharacterMovement()->MaxWalkSpeedCrouched *= FractureScale;
 		}
 		else GetCharacterMovement()->MaxWalkSpeedCrouched = ExtractionFractureCrouchSpeed;
-		bExtractionFractureSpeedApplied = ExtractionHealth->LegFracture;
+		bExtractionFractureSpeedApplied = bFractureHinders;
 	}
 	if (bExtractionGuard)
 	{
@@ -1041,7 +1043,7 @@ void ABrokenEdgeCharacter::UpdateSprint()
 	// 治疗允许移动施放但要降速，且不能边治疗边冲刺；倍率来自 UExtractionRules。
 	const bool bHealing = ExtractionAbilities && ExtractionAbilities->Action == EExtractionAction::Heal;
 	const bool bWasSprinting = bSprinting;
-	bSprinting = bSprintRequested && !bHealing && !ExtractionHealth->LegFracture && !bIsCrouched && !IsAiming() &&
+	bSprinting = bSprintRequested && !bHealing && !bFractureHinders && !bIsCrouched && !IsAiming() &&
 		!bDisableGameplay
 		&& (!ExtractionCombat->IsEnabled() || ExtractionCombat->CanSprintWithWeapon())
 		&& !bDefeated

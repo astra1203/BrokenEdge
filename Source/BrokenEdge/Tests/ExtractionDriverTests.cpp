@@ -309,6 +309,7 @@ public:
 							// Baseline precondition only; equipment acceptance uses medicine/rescue.
 							Character->GetExtractionHealth()->Bleeding = false;
 							Character->GetExtractionHealth()->LegFracture = false;
+							Character->GetExtractionHealth()->ClearStim();
 						}
 						Character->ForceNetUpdate();
 					}
@@ -1247,6 +1248,7 @@ private:
 					Player->SetBoolField(TEXT("knife_view_attached"), Character->Melee->IsViewAttached());
 					Player->SetBoolField(TEXT("bleeding"), Character->GetExtractionHealth()->Bleeding);
 					Player->SetBoolField(TEXT("fracture"), Character->GetExtractionHealth()->LegFracture);
+					Player->SetBoolField(TEXT("painkiller"), Character->GetExtractionHealth()->Painkiller);
 					Player->SetNumberField(
 						TEXT("bullet_sequence"), Character->GetExtractionHealth()->TestBulletSequence);
 					Player->SetStringField(TEXT("hit_bone"), Character->GetExtractionHealth()->TestHitBone.ToString());

@@ -44,6 +44,15 @@ public:
 	bool Bleeding = false;
 	UPROPERTY(Replicated)
 	bool LegFracture = false;
+	// 激素止痛中：骨折仍在，但减速与禁止冲刺暂时失效；由服务器到时清除。
+	UPROPERTY(Replicated)
+	bool Painkiller = false;
+	// 骨折当前是否真正影响移动，角色移速和冲刺都读这里。
+	bool FractureHinders() const { return LegFracture && !Painkiller; }
+	// 服务器施加激素效果：持续回血、快速回血和止痛，重复施加只刷新时间不叠加。
+	void ApplyStim();
+	// 立即结束全部激素效果（测试夹具重置基线用）。
+	void ClearStim();
 	// 服务器先过滤友军等无效伤害，再应用弹药/守卫倍率、护甲和生命损失，最后依据实际掉血产生创伤。
 	void Bullet(float Damage, FName Bone, FName Ammo, AController* Attacker, AActor* Causer);
 	// 按治疗类型检查是否缺血、出血或骨折，供医疗开始与完成时复核。
@@ -68,6 +77,13 @@ private:
 	// 下一次出血的世界时间（秒）；BleedInstigator 弱引用保留伤害归属而不阻止控制器销毁。
 	double NextBleed = 0;
 	TWeakObjectPtr<AController> BleedInstigator;
+	// 激素计时（服务器世界时间）：持续回血截止、下一跳快速回血时刻与剩余跳数、止痛截止。
+	double RegenEnds = 0;
+	double NextQuickHeal = 0;
+	int32 QuickHealsLeft = 0;
+	double PainkillerEnds = 0;
+	// 推进激素效果；返回是否改动了生命或状态。
+	bool TickStim(float Delta);
 	// 获取当前受伤角色，组件不管理跨关卡的账号生命状态。
 	class ABrokenEdgeCharacter* Character() const;
 };

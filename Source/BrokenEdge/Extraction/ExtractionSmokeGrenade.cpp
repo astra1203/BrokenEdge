@@ -37,7 +37,11 @@ AExtractionSmokeGrenade::AExtractionSmokeGrenade()
 	Flight->MaxSpeed = 2600.f;
 	// 重力略高于真实值，让投掷弧线更紧凑、落点更好预判。
 	Flight->ProjectileGravityScale = 1.35f;
-	Flight->bShouldBounce = false;
+	// 官方 BP_AbilityBullet_C101_Smoke：Bounciness 0.2、Friction 0.8、速度低于 10 cm/s 视为停稳。
+	Flight->bShouldBounce = true;
+	Flight->Bounciness = .2f;
+	Flight->Friction = .8f;
+	Flight->BounceVelocityStopSimulatingThreshold = 10.f;
 	Flight->bRotationFollowsVelocity = false;
 }
 
@@ -45,6 +49,7 @@ void AExtractionSmokeGrenade::BeginPlay()
 {
 	Super::BeginPlay();
 	if (!HasAuthority()) return;
+	Flight->OnProjectileStop.AddDynamic(this, &AExtractionSmokeGrenade::HandleStop);
 	// 未落地就坠出世界的兜底：给保险丝一个上界，避免弹体永久留在地图外。
 	SetLifeSpan(FuseAt + 30.0);
 	// 飞行超时兜底：投掷物可能一直撞不到任何几何（飞出地图边缘、卡进缝隙、
@@ -73,8 +78,13 @@ void AExtractionSmokeGrenade::NotifyHit(UPrimitiveComponent* Component, AActor* 
                                         const FHitResult& Hit)
 {
 	Super::NotifyHit(Component, Other, OtherComponent, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+	// 弹跳期间每次碰撞都会进来，停稳以 OnProjectileStop 为准，这里不再起烟。
+}
+
+void AExtractionSmokeGrenade::HandleStop(const FHitResult& Hit)
+{
 	if (!HasAuthority() || bSettled) return;
-	Settle(HitLocation);
+	Settle(Hit.bBlockingHit ? FVector(Hit.ImpactPoint) : GetActorLocation());
 }
 
 void AExtractionSmokeGrenade::Settle(const FVector& Location)

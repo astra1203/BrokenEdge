@@ -32,9 +32,11 @@ public:
 	float ReviveRange = 200;
 	UPROPERTY(Config)
 	float ReviveHealth = 30;
-	// 治疗能力的施放时长、范围、恢复量及冷却，与背包医疗物品各自计时。
+	// 激素枪（官方 C101 技能 20010101）：一发弹，对准队友射击，否则给自己打；
+	// 出手时长取官方 FireInterval 0.66 s。射程与冷却在解包数据里没有，保留项目值。
+	// 数据出处见 Docs/Extraction/RestorationEvidence/Stinger/OfficialKit.md。
 	UPROPERTY(Config)
-	float HealSeconds = 2;
+	float HealSeconds = .66f;
 	/**
 	 * 治疗期间的移速倍率：允许边走边治疗，但按此比例降速。
 	 * 治疗是唯一允许移动施放的能力，救援与烟雾仍需站定。
@@ -44,9 +46,22 @@ public:
 	UPROPERTY(Config)
 	float HealRange = 1000;
 	UPROPERTY(Config)
-	float HealAmount = 50;
-	UPROPERTY(Config)
 	float HealCooldown = 20;
+	// 激素命中效果，照官方撤离模式 Buff：300013 每 0.1 s +0.2 持续 60 s（2 HP/s）、
+	// 300062 每 0.5 s +10 持续 1 s、300100 临时止痛 20 s。重复命中刷新持续时间，不叠加。
+	UPROPERTY(Config)
+	float StimRegenPerSecond = 2;
+	UPROPERTY(Config)
+	float StimRegenSeconds = 60;
+	UPROPERTY(Config)
+	float StimQuickHeal = 10;
+	UPROPERTY(Config)
+	float StimQuickInterval = .5f;
+	UPROPERTY(Config)
+	int32 StimQuickTicks = 2;
+	/** 止痛期间无视腿部骨折的减速与禁止冲刺；骨折本身仍需夹板处理。 */
+	UPROPERTY(Config)
+	float StimPainkillerSeconds = 20;
 	// 烟雾投掷的施放、距离、遮挡半径、存续时间和个人冷却参数。
 	UPROPERTY(Config)
 	float SmokeCastSeconds = .5f;

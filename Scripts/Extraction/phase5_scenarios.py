@@ -107,27 +107,32 @@ def run(env):
     send('A', 'input_key', key='Z', pressed=False)
     check('Z input starts an authoritative self heal channel', lambda: player('Server', 'A').get('action') == 2)
     send('A', 'ability', kind='duplicate')
-    check('Self heal completes once for 50 HP', lambda: all(player(r, 'A').get('health') == 90 for r in peers))
+    # 激素枪照官方：快速回血 1 s 内 +20，随后每秒 +2 持续 60 s，同时止痛 20 s。
+    check('Self stim quick heal lands once', lambda: all(player(r, 'A').get('health', 0) >= 60 for r in peers), 3)
     cooldown = player('Server', 'A')['heal_ready']
+    check('Self stim grants painkiller', lambda: player('Server', 'A').get('painkiller') is True)
+    rising = player('Server', 'A')['health']
+    time.sleep(2)
+    check('Stim keeps healing over time', lambda: player('Server', 'A')['health'] >= rising + 3)
     send('A', 'ability', kind='heal')
     time.sleep(.6)
-    check('Heal cooldown and duplicate cannot grant extra healing', lambda: player('Server', 'A')['health'] == 90
-          and player('Server', 'A')['action'] == 0 and player('Server', 'A')['heal_ready'] == cooldown)
+    check('Stim cooldown and duplicate cannot fire a second round', lambda: player('Server', 'A')['action'] == 0
+          and player('Server', 'A')['heal_ready'] == cooldown)
     place({'A': (positions['A'], 20)})
     send('C', 'ability', kind='heal', target='EX_A')
-    check('Ally heal succeeds and replicates', lambda: all(player(r, 'A').get('health') == 70 for r in peers))
-    place({'B': (positions['B'], 40)})
-    send('B', 'ability', kind='heal')
-    check('Interruptible heal begins', lambda: player('Server', 'B').get('action') == 2)
-    send('B', 'pulse', action='Move', duration=.6)
-    check('Movement cancels healing without cooldown', lambda: player('Server', 'B')['action'] == 0
-          and player('Server', 'B')['health'] == 40 and player('Server', 'B')['heal_ready'] == 0)
+    check('Ally stim succeeds and replicates', lambda: all(player(r, 'A').get('health', 0) >= 40 for r in peers), 3)
     place({'B': (positions['B'], 40)})
     send('B', 'ability', kind='heal')
     check('Inventory interruption channel starts', lambda: player('Server', 'B')['action'] == 2)
     send('B', 'inventory', open=True)
     check('Inventory cancels channel', lambda: player('Server', 'B')['action'] == 0 and player('Server', 'B')['heal_ready'] == 0)
     send('B', 'inventory', open=False)
+    place({'B': (positions['B'], 40)})
+    send('B', 'ability', kind='heal')
+    check('Stim begins', lambda: player('Server', 'B').get('action') == 2)
+    send('B', 'pulse', action='Move', duration=.6)
+    check('Moving does not cancel the stim', lambda: player('Server', 'B')['heal_ready'] > 0
+          and player('Server', 'B')['health'] > 40, 3)
 
     # C remains beside A; the hostile B can actually shoot A without a friendly body in the way.
     place({'A': (positions['A'], 20), 'B': (positions['B'], 100), 'C': (positions['C'], 80)})
