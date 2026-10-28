@@ -48,6 +48,9 @@ protected:
 private:
 	// 落地后固定并使用命中点作为烟幕中心，避免弹体从斜坡继续下滑。
 	void Settle(const FVector& Location);
+	// 官方投掷物会弹跳滚停（AbilityExplosionType=Stop），停稳时由投掷物组件回调。
+	UFUNCTION()
+	void HandleStop(const FHitResult& Hit);
 	// 保险丝到期：生成烟幕并销毁弹体。
 	void Ignite();
 	// 飞行超时上限：投掷物没撞到任何东西时也必须起烟，否则玩家看到的是"什么都没有"。

@@ -54,8 +54,11 @@
 3. 门槛：出生组 ≥2、撤离点 ≥1（`AExtractionGameMode::bMapConfigurationValid` 的硬要求）。
    达不到就只写报告不动资产；`--fallback-legacy` 可把旧配置组/撤离点以 `Legacy_*`、Temporary 兜底。
 
-时序默认不启用（换位置不改开放时间）；`--official-timing` 才按官方秒数 ×1/3 折算进 600 s 回合
-（试验场 180 s、德穆兰 300 s、广场 300 s 开、420 s 关）。1/3 是项目折算，不是官方局时。
+时序默认照官方原值、不折算：试验场 540 s 开；广场 900 s 开（官方为开关式，项目以 ExpectedOpenTime
+作开放时刻）、开后 120 s 关。单局时长解包数据里没有，按官方玩法 30 分钟（`AExtractionGameMode`
+默认 RoundSeconds = 1800）。`--open-at-start` 退回开局全开，仅供调试。
+
+德穆兰撤离点按项目决定不启用（2026-10-28），脚本 `EXCLUDED_EXITS` 中记录原因，报告列入 dropped_exits。
 
 ## 尚未解决
 

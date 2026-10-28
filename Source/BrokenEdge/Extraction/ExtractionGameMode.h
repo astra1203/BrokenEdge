@@ -72,7 +72,7 @@ private:
 	TArray<TObjectPtr<class UExtractionItemDefinition>> ItemDefinitions;
 	// 时间字段均使用服务器世界时间（秒）；LoadedAt 控制加载超时，ReturnAt 控制回大厅等待。
 	double LoadedAt = 0;
-	double RoundSeconds = 600;
+	double RoundSeconds = 1800;
 	double ReturnAt = 0;
 	int32 ExpectedPlayers = 2;
 	bool bTravelRequested = false;

@@ -181,7 +181,7 @@ def assemble(g,map_path=PREVIEW,region=None,load=True,save=True):
         for k,v in [('override_auto_exposure_bias',True),('auto_exposure_bias',-1.),('override_bloom_intensity',True),('bloom_intensity',.15)]:settings.set_editor_property(k,v)
         post.set_editor_property('settings',settings)
         spawn('SCR_PlayerStart',unreal.PlayerStart,(-1500,-300,600))
-        if PROFILE['phase']=='7E':
+        if PROFILE['phase'] in {'7E','7F'}:
             # Match the existing production room lights from import_sample.py.
             # These belong only to the preview; production retains its lights.
             for i,xy in enumerate([[-1800,-100],[0,-100],[1700,-1500]]):

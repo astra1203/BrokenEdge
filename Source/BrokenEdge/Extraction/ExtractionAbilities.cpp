@@ -232,8 +232,9 @@ bool UExtractionAbilities::ValidTarget() const
 	const auto* PS = Target->GetPlayerState<AExtractionPlayerState>();
 	if (Action == EExtractionAction::Revive)
 		return Target != C && PS->Life == EExtractionLife::Downed && Reach(C, Target, R->ReviveRange);
+	// 官方激素 Buff 不判血量（满血也有止痛），只排除倒地/阵亡（IncludeImpendingDeath=false）。
 	return Action == EExtractionAction::Heal && PS->Life == EExtractionLife::Alive
-		&& Target->GetHealth() < Target->GetMaxHealth() && (Target == C || Reach(C, Target, R->HealRange));
+		&& (Target == C || Reach(C, Target, R->HealRange));
 }
 
 // 服务器释放由自己持有的救援锁，清空动作、目标和截止时间，通知复制。
@@ -281,9 +282,8 @@ void UExtractionAbilities::Complete()
 	}
 	else if (Action == EExtractionAction::Heal)
 	{
-		Target->SetHealth(Target->GetHealth() + R->HealAmount);
-		Target->UpdateHUDHealth();
-		Target->ForceNetUpdate();
+		// 一发激素弹：命中队友或自用后立即进入冷却，效果由目标的生命组件按官方 Buff 推进。
+		Target->GetExtractionHealth()->ApplyStim();
 		HealReadyAt = Now + R->HealCooldown;
 	}
 	else if (Action == EExtractionAction::Smoke)

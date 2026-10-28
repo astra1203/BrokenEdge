@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "phase": "7F",
+  "work_directory": "Saved/SpaceCenter/Phase7F",
+  "origin": [
+    664000,
+    -451000,
+    -22400
+  ],
+  "minimum": [
+    635000,
+    -487000
+  ],
+  "maximum": [
+    704000,
+    -409000
+  ],
+  "cache_workspaces": [
+    "Saved/SpaceCenter/Phase7C",
+    "Saved/SpaceCenter/Phase7D",
+    "Saved/SpaceCenter/Phase7E",
+    "Saved/SpaceCenter/Phase7EExpanded"
+  ],
+  "material_revision": 2,
+  "inputs": {
+    "layouts": "Saved/SpaceCenter/Phase7C/DiscoveryRuns/Phase7CDiscover02/Layouts.json",
+    "mesh_metadata": "Saved/SpaceCenter/Phase7C/BoundsRuns/Phase7CBounds02/MeshMetadata.json",
+    "mesh_failures": "Saved/SpaceCenter/Phase7C/BoundsRuns/Phase7CBounds02/Failures.json",
+    "probe_base": "Saved/SpaceCenter/Phase7C/ProbeRuns/Phase7CProbe02/Inspect/Parsed/Packages.json",
+    "selection": "Saved/SpaceCenter/Phase7F/SelectionRuns/Phase7FSelect02/Selection.json",
+    "static_selection": "Saved/SpaceCenter/Phase7F/SelectionRuns/Phase7FSelect01/Selection.json",
+    "static_metadata": "Saved/SpaceCenter/Phase7F/SelectionRuns/Phase7FSelect01/MeshMetadata.json",
+    "foliage": "Saved/SpaceCenter/Phase7F/FoliageRuns/Phase7FFoliage01/Decoded.json",
+    "foliage_probe": "Saved/SpaceCenter/Phase7F/ProbeRuns/Phase7FProbe01/Inspect/Parsed/Packages.json",
+    "graph": "Saved/SpaceCenter/Phase7F/MaterialRuns/Phase7FMaterials01/Graph.json",
+    "material_roots": "Saved/SpaceCenter/Phase7F/MaterialRuns/Phase7FMaterials01/Report.json",
+    "textures": "Saved/SpaceCenter/Phase7F/TextureRuns/Phase7FTextures01/Textures.json",
+    "meshes": "Saved/SpaceCenter/Phase7F/AssetRuns/Phase7FMeshes01/Meshes.json",
+    "terrain": "Saved/SpaceCenter/Phase7F/TerrainRuns/Phase7FTerrain01/Manifest.json",
+    "terrain_source": "Saved/SpaceCenter/Phase7F/TerrainSourceRuns/Phase7FHeight01",
+    "terrain_textures": "Saved/SpaceCenter/Phase7F/TerrainTextureRuns/Phase7FWeights01",
+    "native_seed": "Saved/SpaceCenter/Phase7EExpanded/NativeAssets.json",
+    "previous_manifest": "Saved/SpaceCenter/Phase7EExpanded/ManifestRuns/Phase7EManifest01/Manifest.json",
+    "acceptance": "Scripts/SpaceCenter/restoration_acceptance_7f.json",
+    "cameras": "Scripts/SpaceCenter/restoration_cameras_7f.json",
+    "traverse_route": "Scripts/SpaceCenter/phase7f_traverse_route.json",
+    "terrain_texture_seed": "Saved/SpaceCenter/Phase7C/TerrainTextureRuns/Phase7CTerrainTextures01"
+  },
+  "preview_map": "/Game/Maps/SpaceCenter/L_SpaceCenterRestorationPreview7F",
+  "regions": [
+    {
+      "name": "playable",
+      "reference": "MapRegionData_SpaceCenter DFMMapRegionHelperActor_1 WorldPosMin/WorldPosMax",
+      "minimum": [
+        635958,
+        -486414
+      ],
+      "maximum": [
+        703158,
+        -411414
+      ]
+    },
+    {
+      "name": "existing",
+      "minimum": [
+        652000,
+        -466000
+      ],
+      "maximum": [
+        691000,
+        -433000
+      ]
+    },
+    {
+      "name": "control",
+      "minimum": [
+        660000,
+        -484000
+      ],
+      "maximum": [
+        677000,
+        -465000
+      ]
+    },
+    {
+      "name": "launch",
+      "minimum": [
+        650000,
+        -434000
+      ],
+      "maximum": [
+        670000,
+        -409000
+      ]
+    }
+  ]
+}

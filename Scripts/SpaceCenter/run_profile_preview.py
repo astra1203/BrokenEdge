@@ -15,7 +15,7 @@ assert args.tag and all(c.isalnum() or c in '-_' for c in args.tag)
 out=WORK/'PreviewRuns'/args.tag
 out.mkdir(parents=True,exist_ok=False)
 steps=[]
-tasks=['verify','meshes']+(['collision-fidelity'] if PROFILE['phase']=='7E' else [])+['textures','materials','warm','preview','audit','capture']
+tasks=['verify','meshes']+(['collision-fidelity'] if PROFILE['phase'] in {'7E','7F'} else [])+['textures','materials','warm','preview','audit','capture']
 for task in tasks:
     tag=args.tag+'-'+task
     common=['--tag',tag,'--profile',str(PROFILE_FILE)]

@@ -27,6 +27,60 @@ void UExtractionHealth::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(UExtractionHealth, Bleeding);
 	DOREPLIFETIME(UExtractionHealth, LegFracture);
+	DOREPLIFETIME(UExtractionHealth, Painkiller);
+}
+
+// 三个效果各自刷新截止时间（官方 StackType=Refresh）；快速回血从命中后一个周期开始跳。
+void UExtractionHealth::ApplyStim()
+{
+	auto* C = Character();
+	if (!C || !C->HasAuthority() || C->IsDefeated()) return;
+	const auto* R = GetDefault<UExtractionRules>();
+	const double Now = GetWorld()->GetTimeSeconds();
+	RegenEnds = Now + FMath::Max(0.f, R->StimRegenSeconds);
+	QuickHealsLeft = FMath::Max(0, R->StimQuickTicks);
+	NextQuickHeal = Now + FMath::Max(.05f, R->StimQuickInterval);
+	PainkillerEnds = Now + FMath::Max(0.f, R->StimPainkillerSeconds);
+	Painkiller = PainkillerEnds > Now;
+	C->ForceNetUpdate();
+	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STIM_APPLIED Actor=%s Health=%.1f"), *C->GetName(), C->GetHealth());
+}
+
+void UExtractionHealth::ClearStim()
+{
+	RegenEnds = 0;
+	QuickHealsLeft = 0;
+	PainkillerEnds = 0;
+	Painkiller = false;
+}
+
+// 倒地不回血（官方 IncludeImpendingDeath=false），计时照走；止痛到点即解除。
+bool UExtractionHealth::TickStim(float Delta)
+{
+	auto* C = Character();
+	const double Now = GetWorld()->GetTimeSeconds();
+	bool bChanged = false;
+	if (Painkiller && Now >= PainkillerEnds)
+	{
+		Painkiller = false;
+		bChanged = true;
+	}
+	const bool bCanHeal = !C->IsDefeated() && !C->GetExtractionAbilities()->IsDowned() && C->GetHealth() > 0;
+	float Heal = 0;
+	if (Now < RegenEnds) Heal += GetDefault<UExtractionRules>()->StimRegenPerSecond * Delta;
+	while (QuickHealsLeft > 0 && Now >= NextQuickHeal)
+	{
+		Heal += GetDefault<UExtractionRules>()->StimQuickHeal;
+		--QuickHealsLeft;
+		NextQuickHeal += FMath::Max(.05f, GetDefault<UExtractionRules>()->StimQuickInterval);
+	}
+	if (bCanHeal && Heal > 0 && C->GetHealth() < C->GetMaxHealth())
+	{
+		C->SetHealth(FMath::Min(C->GetMaxHealth(), C->GetHealth() + Heal));
+		C->UpdateHUDHealth();
+		bChanged = true;
+	}
+	return bChanged;
 }
 
 // 兼容项目骨架的腿部骨名，用于决定有效创伤是否附带骨折。
@@ -162,7 +216,9 @@ void UExtractionHealth::TickComponent(float Delta, ELevelTick Kind, FActorCompon
 {
 	Super::TickComponent(Delta, Kind, Tick);
 	auto* C = Character();
-	if (!C || !C->HasAuthority() || !C->GetExtractionCombat()->IsEnabled() || !Bleeding) return;
+	if (!C || !C->HasAuthority() || !C->GetExtractionCombat()->IsEnabled()) return;
+	if (TickStim(Delta)) C->ForceNetUpdate();
+	if (!Bleeding) return;
 	const double Now = GetWorld()->GetTimeSeconds();
 	if (!C->GetExtractionCombat()->CanAct())
 	{

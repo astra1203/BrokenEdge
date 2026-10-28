@@ -56,7 +56,8 @@ void AExtractionGameMode::InitGame(const FString& Map, const FString& Options, F
 {
 	Super::InitGame(Map, Options, Error);
 	ExpectedPlayers = FMath::Clamp(UGameplayStatics::GetIntOption(Options, TEXT("ExpectedPlayers"), 2), 1, 6);
-	float Duration = 600;
+	// 航天基地官方单局 30 分钟（公开玩法规则；解包资源里没有该值，由官方服务器下发）。
+	float Duration = 1800;
 	FParse::Value(FCommandLine::Get(), TEXT("ExtractionRoundSeconds="), Duration);
 	RoundSeconds = FMath::Clamp(static_cast<double>(Duration), 10.0, 3600.0);
 	int32 Seed = FMath::Rand();

@@ -67,6 +67,7 @@ print('engine:', ENGINE, 'wanted:', ENGINE_VERSION or 'any')
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
 parser.add_argument('--loot-seed', type=int, help='Deterministic authority seed for authored loot validation')
+parser.add_argument('--guards', type=int, help='Override the scenario guard count (server clamps to its own maximum)')
 parser.add_argument('--packaged', action='store_true')
 parser.add_argument('--package-root', default='Packaged', help='Archive root containing the Client/Server packages')
 parser.add_argument('--port', type=int, default=27777, help='Isolated test server port')
@@ -265,7 +266,7 @@ def launch(role):
                    '-server' if role == 'Server' else '-game']
     entry = '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction?ExpectedPlayers=3' if role == 'Server' and args.scenario == 'load_timeout' else '/Game/Maps/Lobby'
     command += [entry, '-nosound', '-unattended', '-nosplash', '-NoLoadingScreen',
-                '-ExtractionGuards=' + ('4' if args.scenario in ['pvpve', 'guard_tuning', 'progression', 'northcombat'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
+                '-ExtractionGuards=' + (str(args.guards) if args.guards is not None else '4' if args.scenario in ['pvpve', 'guard_tuning', 'progression', 'northcombat'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
                 '-MatchType=Extraction', '-NumPublicConnections=' + str(len(ROLES)),
                 '-MinPlayersToStart=' + str(len(ROLES)), '-port=' + str(args.port), '-ExtractionTestPort=' + str(args.port),
                 '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '1200' if args.debug_hold or args.scenario in ['streaming', 'performance', 'east'] else '600'),

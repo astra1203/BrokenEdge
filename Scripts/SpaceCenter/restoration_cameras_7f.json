@@ -1,0 +1,28 @@
+{
+  "version": 4,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "field_of_view": 80,
+  "quality": 1,
+  "reference_status": "Phase7F inspection cameras aimed at MapPOIData_SpaceCenter coordinates (world = source - (664000, -451000)); not paired with official gameplay screenshots.",
+  "shots": [
+    {"name": "full_overview", "position": [5500, 2000, 52000], "target": [5500, 2100, 0]},
+    {"name": "main_overview", "position": [9500, 8500, 9500], "target": [800, -600, 700]},
+    {"name": "control_overview", "position": [15000, -33000, 9000], "target": [4850, -25500, 1500]},
+    {"name": "launch_overview", "position": [-9000, 18000, 9000], "target": [-5000, 27500, 1000]},
+    {"name": "west_dorm_overview", "position": [-6000, -6000, 9000], "target": [-16643, -15792, 300]},
+    {"name": "west_dorm_ground", "position": [-11500, -12000, 600], "target": [-16643, -15792, 400]},
+    {"name": "west_gate", "position": [-7500, -3500, 2500], "target": [-13584, -6539, 300]},
+    {"name": "staff_passage_1", "position": [-3000, -13000, 2000], "target": [-6742, -17042, 300]},
+    {"name": "staff_passage_2", "position": [12000, -13000, 2000], "target": [16097, -17093, 300]},
+    {"name": "east_industry_overview", "position": [18000, -2000, 10000], "target": [30885, -16140, 300]},
+    {"name": "east_print_ground", "position": [25500, -23500, 700], "target": [30966, -19283, 500]},
+    {"name": "east_assembly_ground", "position": [25500, -9000, 700], "target": [30805, -12996, 500]},
+    {"name": "east_canning", "position": [24500, 5500, 2500], "target": [31899, 1094, 300]},
+    {"name": "test_range_overview", "position": [12000, 12000, 7000], "target": [21480, 20002, 300]},
+    {"name": "outer_sand_west", "position": [-24000, 20000, 4000], "target": [-12000, 5000, 0]},
+    {"name": "outer_sand_east", "position": [36000, 30000, 5000], "target": [26000, 15000, 0]}
+  ]
+}

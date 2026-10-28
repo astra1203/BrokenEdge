@@ -77,7 +77,7 @@ if args.headless:env['SPACECENTER_HEADLESS']='1'
 if args.probe_config:env['SPACECENTER_PROBE_CONFIG']=str((ROOT/args.probe_config).resolve())
 if args.task.startswith('traverse'):env.update(SPACECENTER_SUITE='traverse',SPACECENTER_PLAYERS=str(args.players),SPACECENTER_RESTORATION_VALIDATION='1',
     SPACECENTER_TRAVERSE_ROUTE=str((ROOT/args.route).resolve() if args.route else input_path('traverse_route',ROOT/'Scripts/SpaceCenter/route.json')))
-if args.task.startswith('traverse') and PROFILE['phase']=='7E':
+if args.task.startswith('traverse') and PROFILE['phase'] in {'7E','7F'}:
     env['SPACECENTER_VALIDATION_TIMEOUT']=str(1800*args.players)
 metadata={'task':args.task,'command':command,'started_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
           'script_sha256':sha(script),'manifest_sha256':sha(args.manifest),

@@ -235,10 +235,12 @@ bool AExtractionGuard::IsRandomPatrolPathAllowed(const TArray<FVector>& PathPoin
 
 void AExtractionGameMode::SpawnGuards()
 {
-	int32 Count = FMath::Clamp(GetDefault<UExtractionRules>()->Guards, 0, 4);
+	// 7F 起每个区域一条巡逻路线（核心区 4 条 + 新区域 4 条），上限随之放开到 8。
+	constexpr int32 MaxGuards = 8;
+	int32 Count = FMath::Clamp(GetDefault<UExtractionRules>()->Guards, 0, MaxGuards);
 	// Explicit server scenario configuration; clients cannot change this through a URL or RPC.
 	FParse::Value(FCommandLine::Get(), TEXT("ExtractionGuards="), Count);
-	Count = FMath::Clamp(Count, 0, 4);
+	Count = FMath::Clamp(Count, 0, MaxGuards);
 	TArray<AExtractionPatrolRoute*> Routes;
 	for (TActorIterator<AExtractionPatrolRoute> It(GetWorld()); It; ++It) if (!It->Points.IsEmpty()) Routes.Add(*It);
 	Routes.Sort([](const auto& A, const auto& B) { return A.GetName() < B.GetName(); });

@@ -15,8 +15,8 @@
     py ".../place_official_spawn_exits.py" --audit
 官方组落不下 2 队时，用现有配置兜底保证能开局：
     py ".../place_official_spawn_exits.py" --fallback-legacy
-按官方延迟/关闭规则开放撤离点（默认是开局全开，只换位置）：
-    py ".../place_official_spawn_exits.py" --official-timing
+默认按官方延迟/关闭规则开放撤离点；调试时可退回开局全开、整局不关：
+    py ".../place_official_spawn_exits.py" --open-at-start
 外扩半径（默认 15 m）：
     py ".../place_official_spawn_exits.py" --snap-radius=3000
 逐点落空时的区内重扫半径（默认 25 m，只补不足、不覆盖已命中点）：
@@ -43,14 +43,17 @@ CAPSULE_RADIUS = 34.0      # 项目角色胶囊，见 Docs/Extraction/Traversal/
 CAPSULE_HALF = 92.0
 GROUND_NORMAL_MIN = 0.7
 
-# 官方局时未在解包数据里出现。三角洲大地图单局限时按 30 分钟量级，
-# 而本项目 RoundSeconds 默认 600，因此按 1/3 折算官方绝对秒数：
-#   试验场 540→180s、德穆兰 900→300s、广场 900(ExpectedOpenTime)→300s。
-#   开启后的关闭延迟同比例折算（广场官方 120s → 40s），否则 600s 的回合里两分钟就关没意义。
-# 这是明确的项目折算，不是官方数值。默认不启用（撤离点开局全开、整局不关），
-# 要按官方时序就跑 --official-timing。
-ROUND_SECONDS = 600.0
-OPEN_TIME_SCALE = 1.0 / 3.0
+# 撤离时序照官方 GameplayConfig 原值，不折算：试验场 FirstDelayTime 540s、
+# 广场 ExpectedOpenTime 900s + LimitedTime 120s 后关闭（官方是开关式开放，项目没有开关逻辑，
+# 以 ExpectedOpenTime 作为开放时刻）。单局时长不在解包数据里，按官方玩法 30 分钟，
+# 与 AExtractionGameMode 默认 RoundSeconds 一致。--open-at-start 可退回开局全开（仅调试用）。
+ROUND_SECONDS = 1800.0
+
+# 按项目决定不启用的官方撤离点（不是探测失败）；报告 dropped_exits 会写明原因。
+EXCLUDED_EXITS = {
+    'OfficialExitDemoulin': '项目不启用：德穆兰撤离点（用户决定，2026-10-28）',
+}
+OPEN_TIME_SCALE = 1.0
 HOLD_SECONDS = 10.0
 
 # 探测顺序：越靠前越接近原版 authored 位置。
@@ -213,6 +216,9 @@ def scan_area(world, center_xy, z_ref, radius, want, min_z=RESCAN_MIN_Z):
 def resolve(world, xyz, snap_rings):
     """返回 dict(state, location, xy_offset, z_offset)。state: authored|z_shifted|xy_snapped|missing。"""
     x, y, z = float(xyz[0]), float(xyz[1]), float(xyz[2])
+    # 大幅改高度的结果只作备选：原位正中被物件占住时，同层平移几米比跳到
+    # 楼上/屋顶更接近原版（实测德穆兰撤离点会被抬到 8 m 高的顶面上）。
+    shifted = None
     for window in Z_WINDOWS:
         location = floor_at(world, x, y, z, window)
         if not location:
@@ -222,10 +228,13 @@ def resolve(world, xyz, snap_rings):
             continue
         if not standable(world, location):
             continue
-        state = 'authored' if dz <= Z_WINDOWS[0] else 'z_shifted'
-        return {'state': state, 'location': location, 'xy_offset': 0.0, 'z_offset': round(location.z - z, 1)}
+        if dz <= Z_WINDOWS[0]:
+            return {'state': 'authored', 'location': location, 'xy_offset': 0.0, 'z_offset': round(location.z - z, 1)}
+        shifted = {'state': 'z_shifted', 'location': location, 'xy_offset': 0.0, 'z_offset': round(location.z - z, 1)}
+        break
+    missing = shifted or {'state': 'missing', 'location': None, 'xy_offset': None, 'z_offset': None}
     if not snap_rings:
-        return {'state': 'missing', 'location': None, 'xy_offset': None, 'z_offset': None}
+        return missing
     # XY 外扩：只在同高度带内找，避免把二楼点位吸到一楼地面。
     for ring in snap_rings:
         for step in range(SNAP_DIRECTIONS):
@@ -241,7 +250,7 @@ def resolve(world, xyz, snap_rings):
                 continue
             return {'state': 'xy_snapped', 'location': location, 'xy_offset': round(ring, 1),
                     'z_offset': round(location.z - z, 1)}
-    return {'state': 'missing', 'location': None, 'xy_offset': None, 'z_offset': None}
+    return missing
 
 
 def make_transform(location, yaw):
@@ -252,7 +261,7 @@ def make_transform(location, yaw):
 
 def main():
     audit_only = '--audit' in sys.argv
-    official_timing = '--official-timing' in sys.argv
+    official_timing = '--open-at-start' not in sys.argv
     fallback_legacy = '--fallback-legacy' in sys.argv
     snap_radius = arg_number('snap-radius', SNAP_RINGS[-1])
     snap_rings = tuple([r for r in SNAP_RINGS if r < snap_radius - 1.0] + [snap_radius])
@@ -367,13 +376,18 @@ def main():
         # --- 撤离点 ---
         exits = []
         for row in payload['exits']:
+            if row['id'] in EXCLUDED_EXITS:
+                report['dropped_exits'].append({'id': row['id'], 'authored': row['world'],
+                                                'reason': EXCLUDED_EXITS[row['id']]})
+                print('  SKIP EXIT  %-22s %s' % (row['id'], EXCLUDED_EXITS[row['id']]))
+                continue
             found = resolve(world, row['world'], snap_rings)
             if found['location'] is None:
                 report['dropped_exits'].append({'id': row['id'], 'authored': row['world'],
                                                 'reason': '该位置没有可站立地面'})
                 print('  MISS EXIT  %-22s authored=%s' % (row['id'], row['world']))
                 continue
-            # 时序按 1/3 折算，且开/关都要折；不用官方时序就一律 0（开局即开、整局不关）。
+            # 默认照官方原值（OPEN_TIME_SCALE=1）；--open-at-start 时一律 0（开局即开、整局不关）。
             if official_timing:
                 opens = round(row['open_seconds'] * OPEN_TIME_SCALE, 1)
                 closes = (round(opens + row['close_seconds_after_open'] * OPEN_TIME_SCALE, 1)

@@ -15,6 +15,7 @@
 幂等：每次删掉旧的 Loose 点重建，候选顺序由固定种子决定，重复跑结果一致。
 """
 import math
+import random
 from pathlib import Path
 
 import unreal
@@ -25,15 +26,17 @@ RECIPE_PATH = '/Game/Extraction/Loot/DA_ProjectLooseLootRecipe'
 LOOSE_KIND = 'Loose'
 
 # 散落物资池：每个点从这张表里随机取一条（物品, 数量）。运行时按 Seed 抽，不在这里定。
-POOL = [('Ammo', 30), ('AmmoAP', 20), ('Ammo76251', 30), ('Bandage', 2), ('Splint', 1),
+POOL = [('Ammo', 30), ('AmmoAP', 20), ('Ammo76251', 30), ('Bandage', 1), ('Splint', 1),
         ('Medkit', 1), ('Electronics', 1), ('Tools', 1), ('Document', 1)]
 
-SITE_COUNT = 40             # 候选点总数；实际每局刷 LooseSpawnCount 个（布局上默认 10）
-MIN_SPACING = 1500.0        # 候选点之间的最小平面间距（cm）
+SITE_COUNT = 150            # 候选点总数；实际每局刷 LOOSE_SPAWN_COUNT 个
+LOOSE_SPAWN_COUNT = 30      # 7F 起覆盖整个官方可玩区，按面积从 10 放大
+MIN_SPACING = 3000.0        # 候选点之间的最小平面间距（cm）
 GRID = 2000.0               # 网格步长（cm）
-X_RANGE = (-4000.0, 14000.0)
-Y_RANGE = (-30000.0, 4000.0)
-SAMPLE_SEED = 20261026      # 只用来自候选排序，保证幂等
+# 官方可玩区（MapRegionData_SpaceCenter 换算到工程坐标），7F 地图已还原到这个范围。
+X_RANGE = (-28000.0, 39000.0)
+Y_RANGE = (-35000.0, 39500.0)
+SAMPLE_SEED = 20261026      # 只用来打乱候选顺序，保证幂等
 
 ROOF_UP, ROOF_STOP = 2500.0, 200.0     # 头顶探测：地面之上 25m → 2m，无命中即露天
 GROUND_UP, GROUND_DOWN = 800.0, 1200.0
@@ -78,8 +81,9 @@ def ground_at(world, x, y):
 
 
 def sample(candidates):
-    """贪心采样：先按 (x,y) 排序打散，再保证最小间距。"""
+    """贪心采样：固定种子打乱后保证最小间距；按坐标排序会让上限先被西侧填满。"""
     ordered = sorted(candidates, key=lambda p: (round(p.x / 100.0), round(p.y / 100.0)))
+    random.Random(SAMPLE_SEED).shuffle(ordered)
     chosen = []
     for point in ordered:
         if all((point.x - c.x) ** 2 + (point.y - c.y) ** 2 >= MIN_SPACING ** 2 for c in chosen):
@@ -149,8 +153,7 @@ def main():
     layout.set_editor_property('points', kept + sites)
     try:
         # 属性在 C++ 里声明；未编译的旧 DLL 上取不到，这里只提示不中断。
-        if not layout.get_editor_property('loose_spawn_count'):
-            layout.set_editor_property('loose_spawn_count', 10)
+        layout.set_editor_property('loose_spawn_count', LOOSE_SPAWN_COUNT)
         loose_count = layout.get_editor_property('loose_spawn_count')
     except Exception as exc:
         loose_count = 'MISSING'

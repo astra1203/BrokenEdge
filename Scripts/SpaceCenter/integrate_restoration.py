@@ -23,8 +23,8 @@ def integrate(g):
     read,write,root,out=g['read'],g['write_json'],g['ROOT'],g['OUT']
     manifest,report=g['MANIFEST'],g['report']
     gates=read(input_path('acceptance',root/'Scripts/SpaceCenter/restoration_acceptance.json'))
-    geometry_only=PROFILE['phase']=='7E' and gates.get('integration_scope')=='scene_geometry'
-    if PROFILE['phase']=='7E':
+    geometry_only=PROFILE['phase'] in {'7E','7F'} and gates.get('integration_scope')=='scene_geometry'
+    if PROFILE['phase'] in {'7E','7F'}:
         assert gates.get('status')==('ready_for_scene_integration' if geometry_only else 'ready'), 'Acceptance is not ready for the requested integration scope'
     digest=g['sha'](os.environ['SPACECENTER_RESTORE_MANIFEST'])
     assert gates['manifest_sha256']==digest,'Acceptance manifest differs'
@@ -43,7 +43,7 @@ def integrate(g):
         traverse=read(root/gates['traverse']/'Report.json')
         assert traverse['route_sha256']==g['sha'](input_path('traverse_route',root/'Scripts/SpaceCenter/route.json')),'Traversal route changed'
         assert {'east_arrival','east_return','room_return'}.issubset({c['name'] for c in traverse['checks'] if c['passed']})
-    if PROFILE['phase']=='7E':
+    if PROFILE['phase'] in {'7E','7F'}:
         capture=read(root/gates['capture']/'Report.json')
         review=read(root/gates['capture']/'VisualReview.json')
         assert review['result']=='passed'
