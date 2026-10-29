@@ -2,11 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
-#include "Blueprint/UserWidget.h"
 #include "ExtractionItems.h"
 #include "ExtractionPlayerController.generated.h"
 // 撤离控制器把本地输入转为服务器 RPC，并管理 HUD、背包、观战和离开会话。
-// 本地界面只读复制状态；物品结果、撤离成功和观战资格由服务器决定。此文件同时实现 UExtractionWidget。
+// 本地界面只读复制状态；物品结果、撤离成功和观战资格由服务器决定。HUD 实现位于 ExtractionWidget。
 
 UCLASS()
 class BROKENEDGE_API AExtractionPlayerController : public ABrokenEdgePlayerController
@@ -15,11 +14,17 @@ class BROKENEDGE_API AExtractionPlayerController : public ABrokenEdgePlayerContr
 	friend class FExtractionDriver;
 
 public:
+	UPROPERTY(EditDefaultsOnly, Category="Extraction|UI")
+	TSoftClassPtr<class UExtractionWidget> ExtractionWidgetClass = TSoftClassPtr<UExtractionWidget>(
+		FSoftObjectPath(TEXT("/Game/UI/Extraction/WBP_ExtractionHUD.WBP_ExtractionHUD_C")));
+	virtual void BeginPlay() override;
+	virtual void ReceivedPlayer() override;
+	virtual void PostSeamlessTravel() override;
 	/** Designer-authored inventory; soft class reference is collected for cooking. */
 	UPROPERTY(EditDefaultsOnly, Category="Extraction|UI")
 	TSoftClassPtr<class ULootingMainView> InventoryWidgetClass = TSoftClassPtr<ULootingMainView>(
 		FSoftObjectPath(TEXT("/Game/UI/Looting/WBP_LootingPickupView_Pc.WBP_LootingPickupView_Pc_C")));
-	// 服务器修复失效观战目标；本地创建并刷新界面、切输入模式，再维护避障观战相机。
+	// 服务器修复失效观战目标；本地刷新界面、切输入模式，再维护避障观战相机。
 	// 目标区域尚未可见时保留旧视点，避免相机提前进入未加载场景。
 	virtual void Tick(float Delta) override;
 	// 远端观战连接在服务器的相关性视点跟随所选队友，避免仍用撤离点附近的旧相机位置。
@@ -106,6 +111,8 @@ public:
 	void ShowItemMessage(const FString& Message, float Seconds = ItemMessageSeconds);
 
 private:
+	void EnsureLocalWidgets();
+	bool bLocalWidgetsAttempted = false;
 	UPROPERTY(Transient)
 	TObjectPtr<class UExtractionTacticalMap> TacticalMap;
 	bool bMenuOpen = false;
@@ -134,52 +141,4 @@ private:
 	// 解除回调绑定；失败延迟重试，成功后打开大厅，避免遗留旧会话。
 	UFUNCTION()
 	void LocalSessionDestroyed(bool bSuccess);
-};
-
-UCLASS()
-class BROKENEDGE_API UExtractionWidget : public UUserWidget
-{
-	GENERATED_BODY()
-
-public:
-	// 构建 HUD 控件树并绑定按钮，展示层只保存控件引用，不创建权威对局状态。
-	virtual bool Initialize() override;
-	// 读取 GameState、PlayerState 和本人账号快照更新倒计时、撤离点、任务、生命与武器信息。
-	// 使用同步服务器时间计算剩余秒数，进度条到零本身不会触发撤离结算。
-	void Refresh();
-
-private:
-	UPROPERTY(Transient)
-	TObjectPtr<class UTextBlock> Status;
-	UPROPERTY(Transient)
-	TObjectPtr<class UBorder> SmokeHaze;
-	UPROPERTY(Transient)
-	TObjectPtr<class UTextBlock> Vitals;
-	UPROPERTY(Transient)
-	TObjectPtr<class UTextBlock> WeaponStatus;
-	UPROPERTY(Transient)
-	TObjectPtr<class UTextBlock> ExitStatus;
-	UPROPERTY(Transient)
-	TObjectPtr<class UTextBlock> Compass;
-	UPROPERTY(Transient)
-	TObjectPtr<class UTextBlock> ExtractionCountdown;
-	UPROPERTY(Transient)
-	TObjectPtr<class UProgressBar> ExtractionProgress;
-	UPROPERTY(Transient)
-	TObjectPtr<class UProgressBar> HealthProgress;
-	UPROPERTY(Transient)
-	TObjectPtr<class UButton> Previous;
-	UPROPERTY(Transient)
-	TObjectPtr<class UButton> Next;
-	UPROPERTY(Transient)
-	TObjectPtr<class UButton> Leave;
-	// 请求服务器选择上一位合法观战队友。
-	UFUNCTION()
-	void PreviousClicked();
-	// 请求服务器选择下一位合法观战队友。
-	UFUNCTION()
-	void NextClicked();
-	// 按钮只提交离开请求，会话清理由服务器确认后的客户端链路处理。
-	UFUNCTION()
-	void LeaveClicked();
 };

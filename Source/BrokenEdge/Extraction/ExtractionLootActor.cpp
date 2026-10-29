@@ -1,4 +1,5 @@
 #include "ExtractionLootActor.h"
+#include "ExtractionGameMode.h"
 #include "ExtractionKeyRoom.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -35,9 +36,6 @@ AExtractionLootActor::AExtractionLootActor()
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(RootComponent);
 	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> Box(TEXT(
-		"/Game/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/StaticMeshes/SM_H_FutureTech_Tools_Box_01"));
-	if (Box.Succeeded()) Mesh->SetStaticMesh(Box.Object);
 }
 
 // 各端刷新外观，服务器初始化容器 ID；只有 SeedContents 开启且内容为空时才生成默认物资。
@@ -100,6 +98,10 @@ void AExtractionLootActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 // 依据整箱/散落物/枪械切换模型和查询边界；不移动作为根组件的交互盒，以免改变配置点位。
 void AExtractionLootActor::OnRep_Appearance()
 {
+	Mesh->SetStaticMesh(DefaultContainerMesh);
+	Mesh->SetRelativeTransform(FTransform::Identity);
+	WeaponMesh->SetRelativeTransform(FTransform::Identity);
+	InteractionBounds->SetBoxExtent(Loose ? LooseInteractionExtent : ContainerInteractionExtent);
 	WeaponMesh->SetVisibility(false);
 	Mesh->SetVisibility(true);
 	ContainerBounds->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -112,13 +114,12 @@ void AExtractionLootActor::OnRep_Appearance()
 		const auto Bounds = ContainerAppearance->GetBounds();
 		// The interaction box is the actor root; changing its location would move the authored point.
 		InteractionBounds->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		ContainerBounds->SetRelativeLocation(Bounds.Origin);
+		ContainerBounds->SetRelativeLocation(Bounds.Origin + VisualOffset - FVector(0, 0, -20));
 		ContainerBounds->SetBoxExtent(Bounds.BoxExtent.ComponentMax(FVector(5)));
 		ContainerBounds->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		WeaponMesh->SetRelativeLocation(FVector::ZeroVector);
+		WeaponMesh->SetRelativeLocation(VisualOffset - FVector(0, 0, -20));
 		return;
 	}
-	if (Loose) InteractionBounds->SetBoxExtent(FVector(45, 25, 20));
 	if (const auto* Def = Loose ? UExtractionItemDefinition::Get(LooseDefinition) : nullptr)
 	{
 		if (Def->WorldMesh) Mesh->SetStaticMesh(Def->WorldMesh);
@@ -129,7 +130,7 @@ void AExtractionLootActor::OnRep_Appearance()
 			if (const auto* Asset = WeaponMesh->GetSkeletalMeshAsset())
 			{
 				const auto Bounds = Asset->GetBounds();
-				WeaponMesh->SetRelativeLocation(-Bounds.Origin + FVector(0, 0, Bounds.BoxExtent.Z - 20.f));
+				WeaponMesh->SetRelativeLocation(-Bounds.Origin + FVector(0, 0, Bounds.BoxExtent.Z) + VisualOffset);
 			}
 			WeaponMesh->SetVisibility(true);
 			Mesh->SetVisibility(false);
@@ -137,11 +138,11 @@ void AExtractionLootActor::OnRep_Appearance()
 	}
 	if (UStaticMesh* Asset = Mesh->GetStaticMesh())
 	{
-		const float Scale = (Loose ? 34.f : 80.f) / FMath::Max(
+		const float Scale = (Loose ? LooseSize : ContainerSize) / FMath::Max(
 			1.f, static_cast<float>(Asset->GetBounds().BoxExtent.GetMax() * 2));
 		Mesh->SetRelativeScale3D(FVector(Scale));
 		Mesh->SetRelativeLocation(-Asset->GetBounds().Origin * Scale
-			+ FVector(0, 0, Asset->GetBounds().BoxExtent.Z * Scale - 20.f));
+			+ FVector(0, 0, Asset->GetBounds().BoxExtent.Z * Scale) + VisualOffset);
 	}
 }
 
@@ -149,7 +150,8 @@ void AExtractionLootActor::OnRep_Appearance()
 FVector AExtractionLootActor::InteractionPoint() const
 {
 	return ContainerAppearance
-		       ? GetActorTransform().TransformPosition(ContainerAppearance->GetBounds().Origin)
+		       ? GetActorTransform().TransformPosition(
+			       ContainerAppearance->GetBounds().Origin + VisualOffset - FVector(0, 0, -20))
 		       : InteractionBounds->GetComponentLocation();
 }
 
@@ -176,8 +178,10 @@ void AExtractionLootActor::SetContents(const FExtractionContainer& NewContents)
 AExtractionLootActor* AExtractionLootActor::SpawnContainer(UWorld* World, const FVector& Position,
                                                            bool bLoose, FName Definition)
 {
+	const auto Class = ResolveSpawnClass(World);
+	if (!Class) return nullptr;
 	const FTransform Transform(FRotator::ZeroRotator, Position);
-	auto* Loot = World->SpawnActorDeferred<AExtractionLootActor>(StaticClass(), Transform, nullptr, nullptr,
+	auto* Loot = World->SpawnActorDeferred<AExtractionLootActor>(Class, Transform, nullptr, nullptr,
 	                                                             ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	if (!Loot) return nullptr;
 	Loot->Loose = bLoose;
@@ -187,4 +191,22 @@ AExtractionLootActor* AExtractionLootActor::SpawnContainer(UWorld* World, const 
 	Loot->FinishSpawning(Transform);
 	Loot->SetLifeSpan(0);
 	return Loot;
+}
+
+void AExtractionLootActor::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+	OnRep_Appearance();
+}
+
+TSubclassOf<AExtractionLootActor> AExtractionLootActor::ResolveSpawnClass(UWorld* World)
+{
+	if (!World || World->GetNetMode() == NM_Client) return nullptr;
+	const auto* Mode = World->GetAuthGameMode<AExtractionGameMode>();
+	if (!Mode || !Mode->LootActorClass || Mode->LootActorClass->HasAnyClassFlags(CLASS_Abstract))
+	{
+		UE_LOG(LogTemp, Error, TEXT("EXTRACTION_LOOT_CLASS_INVALID"));
+		return nullptr;
+	}
+	return Mode->LootActorClass;
 }

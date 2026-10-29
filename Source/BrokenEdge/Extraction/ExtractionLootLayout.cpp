@@ -69,10 +69,12 @@ void UExtractionLootLayout::Spawn(UWorld* World, int32 Seed) const
 		UE_LOG(LogTemp, Error, TEXT("EXTRACTION_LOOT_LAYOUT_INVALID %s"), *Error);
 		return;
 	}
+	const auto LootClass = AExtractionLootActor::ResolveSpawnClass(World);
+	if (!LootClass) return;
 	for (int32 I : Selected)
 	{
 		const auto& P = Points[I];
-		auto* Actor = World->SpawnActorDeferred<AExtractionLootActor>(AExtractionLootActor::StaticClass(), P.Transform,
+		auto* Actor = World->SpawnActorDeferred<AExtractionLootActor>(LootClass, P.Transform,
 		                                                              nullptr, nullptr,
 		                                                              ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 		if (!Actor) continue;

@@ -11,7 +11,7 @@ root = Path(unreal.Paths.project_dir()).resolve()
 lib = unreal.EditorAssetLibrary
 tools = unreal.AssetToolsHelpers.get_asset_tools()
 definition_class = unreal.load_class(None, '/Script/BrokenEdge.ExtractionItemDefinition')
-loot_class = unreal.load_class(None, '/Script/BrokenEdge.ExtractionLootActor')
+loot_class = unreal.EditorAssetLibrary.load_blueprint_class('/Game/Blueprints/Extraction/BP_ExtractionLootActor')
 assert definition_class and loot_class
 factory = unreal.DataAssetFactory()
 factory.set_editor_property('data_asset_class', definition_class)

@@ -197,7 +197,7 @@ assert levels.load_level('/Game/Maps/SpaceCenter/L_SpaceCenterExtraction')
 for actor in actors.get_all_level_actors():
     if 'ExtractionPhase6A' in [str(t) for t in actor.tags]:
         actors.destroy_actor(actor)
-loot_class = unreal.load_class(None, '/Script/BrokenEdge.ExtractionLootActor')
+loot_class = unreal.EditorAssetLibrary.load_blueprint_class('/Game/Blueprints/Extraction/BP_ExtractionLootActor')
 for tier, position in [(2, (1490, 4660, 425)), (3, (-1140, -420, 425))]:
     crate = actors.spawn_actor_from_class(loot_class, unreal.Vector(*position))
     crate.set_actor_label(f'ExtractionEquipmentSupply{tier}')

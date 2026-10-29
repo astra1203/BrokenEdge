@@ -118,7 +118,7 @@ for label, pos, size in [('North', [1000, 12000, 154], [12000, 30, 200]),
     solid('SC_NorthBoundary' + label, pos, size)
 manager = tagged(unreal.load_class(None, '/Script/BrokenEdge.ExtractionRegionStream'), 'ExtractionNorthStreaming', [0, 0, 0])
 manager.set_editor_property('region_level', unreal.load_asset(north))
-loot_class = unreal.load_class(None, '/Script/BrokenEdge.ExtractionLootActor')
+loot_class = unreal.EditorAssetLibrary.load_blueprint_class('/Game/Blueprints/Extraction/BP_ExtractionLootActor')
 for i, pos in enumerate([[1700, 7500, 79], [1700, 10100, 79]]):
     loot = tagged(loot_class, 'ExtractionNorthSupply_' + str(i), pos)
     loot.set_editor_property('label', '北侧补给箱 ' + str(i + 1))

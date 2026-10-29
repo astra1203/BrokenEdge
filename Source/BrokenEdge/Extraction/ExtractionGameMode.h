@@ -14,6 +14,8 @@ class BROKENEDGE_API AExtractionGameMode : public ABrokenEdgeGameMode
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditDefaultsOnly, Category="Extraction|Loot")
+	TSubclassOf<class AExtractionLootActor> LootActorClass;
 	// 配置本模式的状态、控制器和角色类型；延迟开局，等待大厅票据及地图加载校验。
 	AExtractionGameMode();
 	// 读取人数、时长与出生随机种子；这里只准备参数，不代表对局已经激活。

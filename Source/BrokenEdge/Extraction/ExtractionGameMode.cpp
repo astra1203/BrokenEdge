@@ -1,4 +1,5 @@
 #include "ExtractionGameMode.h"
+#include "ExtractionLootActor.h"
 #include "ExtractionLootLayout.h"
 #include "ExtractionRegionStream.h"
 #include "ExtractionKeyRoom.h"
@@ -36,6 +37,8 @@
 // 配置本模式的状态、控制器和角色类型；延迟开局，等待大厅票据及地图加载校验。
 AExtractionGameMode::AExtractionGameMode()
 {
+	static ConstructorHelpers::FClassFinder<AExtractionLootActor> LootClass(TEXT("/Game/Blueprints/Extraction/BP_ExtractionLootActor"));
+	if (LootClass.Succeeded()) LootActorClass = LootClass.Class;
 	PrimaryActorTick.bCanEverTick = true;
 	bDelayedStart = true;
 	bUseSeamlessTravel = true;

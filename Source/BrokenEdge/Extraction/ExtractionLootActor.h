@@ -8,7 +8,7 @@
 // 每位查看者通过 InteractionComponent 获得自己的搜索视图，打开界面不会重新随机生成物资。
 
 /** Contents stay on the server. Each viewer receives a separately filtered view. */
-UCLASS()
+UCLASS(Blueprintable)
 class BROKENEDGE_API AExtractionLootActor : public AActor
 {
 	GENERATED_BODY()
@@ -16,6 +16,21 @@ class BROKENEDGE_API AExtractionLootActor : public AActor
 public:
 	// 分离交互盒、容器阻挡盒和可见模型；模型不承担物品规则，碰撞负责视线与通行查询。
 	AExtractionLootActor();
+	/** Resolve the configured authority class; never silently substitute the native class. */
+	static TSubclassOf<AExtractionLootActor> ResolveSpawnClass(UWorld* World);
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Extraction|Appearance")
+	TObjectPtr<UStaticMesh> DefaultContainerMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Extraction|Appearance", meta=(ClampMin="1"))
+	float ContainerSize = 80.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Extraction|Appearance", meta=(ClampMin="1"))
+	float LooseSize = 34.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Extraction|Appearance")
+	FVector ContainerInteractionExtent = FVector(40, 30, 30);
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Extraction|Appearance")
+	FVector LooseInteractionExtent = FVector(45, 25, 20);
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Extraction|Appearance")
+	FVector VisualOffset = FVector(0, 0, -20);
+	virtual void OnConstruction(const FTransform& Transform) override;
 	// 各端刷新外观，服务器初始化容器 ID；只有 SeedContents 开启且内容为空时才生成默认物资。
 	virtual void BeginPlay() override;
 	// 复制公开外观和门关联，不注册完整 Contents，避免泄露未搜索的具体物品。
