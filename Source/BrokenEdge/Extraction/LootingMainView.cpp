@@ -666,20 +666,25 @@ void ULootingMainView::UpdateDragRotation()
 	bRotationDown = Down;
 }
 
+// 处理拖拽松手或拆分后的点击放置；返回 true 表示事件已处理，不代表物品移动成功。
 bool ULootingMainView::PlaceAt(FVector2D Screen, UDragDropOperation* Operation)
 {
+	// 仅接收当前物品拖拽；没有拖拽且没有待放置物品时，不处理此次事件。
 	if (Operation && (Operation != ActiveDrag || !Cast<ULootingDragDropOperation>(Operation))) return false;
 	if (!ActiveDrag && !bPendingPlacement) return false;
 	auto* I = Interaction();
 	const auto* C = Container(SelectedLoot);
 	const auto* Item = C ? C->Find(Selected) : nullptr;
+	// 背包关闭、交互不可用或源物品已消失时，结束本次放置并清理拖拽状态。
 	if (!I || !I->InventoryOpen || !I->CanAct() || !Item)
 	{
 		CancelDrag();
 		return true;
 	}
 	auto R = Request();
+	// 使用鼠标指定的目标槽位或格子，关闭自动寻找空位。
 	R.AutoPlace = false;
+	// 装备槽优先于容器网格命中；命中后提交请求并结束本次拖拽。
 	for (const auto& Target : EquipmentTargets)
 		if (Contains(Target, Screen))
 		{
@@ -689,23 +694,30 @@ bool ULootingMainView::PlaceAt(FVector2D Screen, UDragDropOperation* Operation)
 			CancelDrag();
 			return true;
 		}
+	// 依次检查自身容器和战利品容器，只处理鼠标所在的物品画布。
 	for (int32 Side = 0; Side < 2; ++Side)
 	{
 		auto* Panel = Side ? LootContainer.Get() : OwnContainer.Get();
 		const auto* Target = Container(Side != 0);
 		if (!Panel || !Target || !Contains(Panel->ItemCanvas, Screen)) continue;
+		// 将屏幕位置转换为画布局部坐标，再按格子尺寸换算为网格单位。
 		const FVector2D Canvas = Panel->ItemCanvas->GetCachedGeometry().AbsoluteToLocal(Screen) / CellSize;
 		FVector2D Extent;
 		const auto Views = GridLayout(*Target, Extent);
+		// 按纵向位置定位具体分区；未命中分区则结束查找，由函数末尾取消放置。
 		const auto* View = GridAt(Views, Canvas.Y);
 		if (!View) break;
 		// 换算到该分区自己的格子坐标；松手位置减去抓取点得到物品左上角。
 		const FVector2D Local(Canvas.X, Canvas.Y - View->Top);
+		// 旋转后交换宽高，并将抓取比例换算为格子偏移；点击放置时偏移为零。
 		const FIntPoint Ext = Rotated ? FIntPoint(Item->Size.Y, Item->Size.X) : Item->Size;
 		const FVector2D Offset = ActiveDrag ? ActiveDrag->GrabFraction * FVector2D(Ext) : FVector2D::ZeroVector;
 		R.ToLoot = Side != 0;
 		R.Slot = View->Grid.Section;
+		// 扣除抓取偏移后向下取整，得到物品左上角所在的目标格子。
 		R.Cell = FIntPoint(FMath::FloorToInt(Local.X - Offset.X), FMath::FloorToInt(Local.Y - Offset.Y));
+		// 用鼠标落点查找同分区内的其他物品作为合并候选，而非用左上角格子判断。
+		// MergeInto 仅记录候选物品，是否能合并仍由请求处理逻辑判定。
 		for (const auto& Other : Target->Items)
 			if (Other.Id.IsValid() && Other.Id != Selected && Other.Slot == View->Grid.Section && Local.X >= Other.Cell.X
 				&& Local.Y >= Other.Cell.Y && Local.X < Other.Cell.X + Other.Extent().X
@@ -714,10 +726,12 @@ bool ULootingMainView::PlaceAt(FVector2D Screen, UDragDropOperation* Operation)
 				R.MergeInto = Other.Id;
 				break;
 			}
+		// 提交放置请求后清理本地拖拽状态，实际结果由请求处理逻辑决定。
 		PC()->RequestItem(R);
 		CancelDrag();
 		return true;
 	}
+	// 未命中有效目标时取消放置；此次事件仍视为已处理。
 	CancelDrag();
 	return true;
 }
