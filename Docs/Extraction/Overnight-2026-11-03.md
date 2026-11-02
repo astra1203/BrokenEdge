@@ -22,7 +22,7 @@
 | 03:07 | 守卫逐枪采样单元测试 | 13项通过，覆盖旧参数、采样漏帧、burst与历史缺失拒绝；不等同实机AI通过 | 待运行回归 |
 
 | 03:10 | 专服与两客户端首次联机尝试 | overnight-exit-network01进入正式地图；加载峰值可用内存0.64 GiB，主动停止自有测试，记为aborted_resource，无联机通过结论 | 不作为验收通过 |
-| 03:12 | 发布撤离中央反馈和规则测试 | 3组规则测试通过；证据见OvernightEvidence/ExitFeedback-Automation.json。HUD渲染/复制仍待低内存方式验证 | 功能提交号随后补记 |
+| 03:12 | 发布撤离中央反馈和规则测试 | 3组规则测试通过；证据见OvernightEvidence/ExitFeedback-Automation.json。HUD渲染/复制仍待低内存方式验证 | 功能提交 `0b5bb56281499bd5cd610bc1ba715b58ef8a0553`；随本日志一并推送 |
 
 ## 工作包状态
 
