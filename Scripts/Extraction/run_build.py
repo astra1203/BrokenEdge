@@ -23,6 +23,7 @@ parser.add_argument('--cook-root', help='New short absolute cook directory, requ
 parser.add_argument('--direct-stage', action='store_true', help='Stage the fresh distributable directly in the archive root, avoiding a duplicate archive copy')
 parser.add_argument('--no-uba', action='store_true', help='Use UE non-detoured local builds for this process tree through UBT environment configuration')
 parser.add_argument('--compile-only', action='store_true', help='Compile objects with UBT -NoLink; never report an executable from this step')
+parser.add_argument('--fast-link-symbols', action='store_true', help='Use MSVC DEBUG:FASTLINK for bounded-memory local Development linking; packaged output omits nonportable debug files')
 parser.add_argument('--jobs', type=int, default=0, help='Optional UBT compile action limit; 0 uses the engine default')
 parser.add_argument('--cook-workers', type=int, default=0, help='Optional shader worker limit and bounded async asset compilation during cooking')
 parser.add_argument('--tag', required=True)
@@ -33,6 +34,10 @@ if args.cook_workers < 0:
     raise ValueError('cook-workers must be zero or positive')
 if args.compile_only and args.package:
     parser.error('--compile-only cannot package')
+if args.fast_link_symbols and args.target == 'Editor':
+    parser.error('--fast-link-symbols requires --target Client or Server')
+if args.fast_link_symbols and args.compile_only:
+    parser.error('--fast-link-symbols cannot be used with --compile-only')
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
 if (args.package_root or args.file_cook or args.cook_root) and not args.package:
@@ -61,7 +66,10 @@ if args.package:
                '-nop4', '-build', '-cook', '-stage', '-pak', '-iostore', '-archive',
                '-archivedirectory=' + str(archive),
                '-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction',
-               '-prereqs', '-ubtargs=-NoHotReloadFromIDE -WaitMutex' + (f' -MaxParallelActions={args.jobs}' if args.jobs else ''), '-utf8output']
+               '-prereqs', '-ubtargs=-NoHotReloadFromIDE -WaitMutex' + (f' -MaxParallelActions={args.jobs}' if args.jobs else '')
+               + (' -LinkerArguments=/DEBUG:FASTLINK' if args.fast_link_symbols else ''), '-utf8output']
+    if args.fast_link_symbols:
+        command.append('-nodebuginfo')
     command += ['-server', '-noclient', '-serverplatform=Win64', '-serverconfig=Development'] if args.target == 'Server' else ['-platform=Win64', '-clientconfig=Development']
     if args.direct_stage:
         command.remove('-archive')
@@ -97,8 +105,13 @@ else:
         command.append(f'-MaxParallelActions={args.jobs}')
     if args.compile_only:
         command.append('-NoLink')
+    if args.fast_link_symbols:
+        command.append('-LinkerArguments=/DEBUG:FASTLINK')
 metadata = {'command': command, 'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
             'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'compile_only': args.compile_only}
+if args.fast_link_symbols:
+    metadata['linker_debug_info'] = ('MSVC FASTLINK index PDB; local-only symbols'
+                                     + ('; omitted from package' if args.package else ''))
 if args.package:
     metadata.update(archive_root=str(archive_root), direct_stage=args.direct_stage, cook_store='filesystem' if args.file_cook else 'project-default')
     if cook_root:
