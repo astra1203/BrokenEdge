@@ -11,6 +11,7 @@
 #include "HAL/FileManager.h"
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
+#include "Policies/CondensedJsonPrintPolicy.h"
 #include "Engine/Engine.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/LocalPlayer.h"
@@ -676,6 +677,8 @@ private:
 	double WalkSince = 0;
 	double Started, LastWrite = 0, PulseEnd = 0;
 	double TimeoutSeconds = 1500;
+	double LastAimDiagnosticWrite = -1;
+	bool bAimDiagnosticWriteFailed = false;
 	int32 LastCommand = 0;
 	bool bHeadAim = false;
 	bool bBodyCenterAim = false;
@@ -1129,6 +1132,128 @@ private:
 		};
 	}
 
+	// Diagnostic queries only: these do not change aiming, projectile origins or damage.
+	void WriteAimDiagnostics(UWorld* World, APlayerController* PC, const TSharedPtr<FJsonObject>& State)
+	{
+		if (!PC || AimTarget.IsEmpty() || !FParse::Param(FCommandLine::Get(), TEXT("ExtractionFlightDiagnostics"))) return;
+		auto* Shooter = Cast<ABrokenEdgeCharacter>(PC->GetPawn());
+		auto* Target = FindPawn(World, AimTarget);
+		auto Probe = MakeShared<FJsonObject>();
+		Probe->SetBoolField(TEXT("read_only_probe"), true);
+		Probe->SetStringField(TEXT("scope"), TEXT("local snapshot; not an authoritative shot or impact"));
+		Probe->SetStringField(TEXT("target_name"), AimTarget);
+		Probe->SetStringField(TEXT("target_actor"), GetNameSafe(Target));
+		Probe->SetStringField(TEXT("shooter_actor"), GetNameSafe(Shooter));
+		State->SetObjectField(TEXT("aim_diagnostics"), Probe);
+		FVector Camera;
+		FRotator CameraRotation;
+		PC->GetPlayerViewPoint(Camera, CameraRotation);
+		const FRotator ControlRotation = PC->GetControlRotation();
+		Probe->SetArrayField(TEXT("camera_position"), VectorJson(Camera));
+		Probe->SetArrayField(TEXT("camera_rotation_pitch_yaw_roll"), VectorJson(FVector(CameraRotation.Pitch, CameraRotation.Yaw, CameraRotation.Roll)));
+		Probe->SetArrayField(TEXT("control_rotation_pitch_yaw_roll"), VectorJson(FVector(ControlRotation.Pitch, ControlRotation.Yaw, ControlRotation.Roll)));
+		Probe->SetArrayField(TEXT("control_direction"), VectorJson(ControlRotation.Vector()));
+		Probe->SetStringField(TEXT("configured_bone"), AimBone.ToString());
+		Probe->SetBoolField(TEXT("configured_head"), bHeadAim);
+		Probe->SetBoolField(TEXT("configured_body_center"), bBodyCenterAim);
+		if (!Shooter || !Target || !Target->GetMesh()) return;
+		Probe->SetArrayField(TEXT("production_hit_target"), VectorJson(Shooter->GetHitTarget()));
+		auto* Weapon = Shooter->GetEquippedWeapon();
+		const auto& Stats = Shooter->GetExtractionCombat()->GetWeaponStats();
+		const bool bMuzzleReady = Weapon && Weapon->GetWeaponMesh()
+			&& Weapon->GetWeaponMesh()->DoesSocketExist(TEXT("MuzzleFlash")) && Stats.IsValid() && Stats.Radius > 0;
+		Probe->SetBoolField(TEXT("muzzle_probe_available"), bMuzzleReady);
+		Probe->SetStringField(TEXT("weapon"), GetNameSafe(Weapon));
+		auto HitJson = [](const FHitResult& Hit)
+		{
+			auto Value = MakeShared<FJsonObject>();
+			Value->SetBoolField(TEXT("blocking"), Hit.bBlockingHit);
+			Value->SetStringField(TEXT("actor"), GetNameSafe(Hit.GetActor()));
+			Value->SetStringField(TEXT("component"), GetNameSafe(Hit.GetComponent()));
+			Value->SetStringField(TEXT("component_path"), GetPathNameSafe(Hit.GetComponent()));
+			Value->SetStringField(TEXT("bone"), Hit.BoneName.ToString());
+			Value->SetArrayField(TEXT("location"), VectorJson(Hit.Location));
+			Value->SetArrayField(TEXT("impact_point"), VectorJson(Hit.ImpactPoint));
+			Value->SetArrayField(TEXT("impact_normal"), VectorJson(Hit.ImpactNormal));
+			Value->SetBoolField(TEXT("start_penetrating"), Hit.bStartPenetrating);
+			Value->SetNumberField(TEXT("distance"), Hit.Distance);
+			return Value;
+		};
+		FVector Muzzle = FVector::ZeroVector;
+		FCollisionQueryParams MuzzleQuery(SCENE_QUERY_STAT(ExtractionAimMuzzleProbe), true, Shooter);
+		MuzzleQuery.AddIgnoredActor(Weapon);
+		if (bMuzzleReady)
+		{
+			Muzzle = Weapon->GetWeaponMesh()->GetSocketLocation(TEXT("MuzzleFlash"));
+			Probe->SetArrayField(TEXT("raw_muzzle_position"), VectorJson(Muzzle));
+			Probe->SetNumberField(TEXT("muzzle_sphere_radius"), Stats.Radius);
+			FHitResult Obstruction;
+			World->LineTraceSingleByChannel(Obstruction, Shooter->GetPawnViewLocation(), Muzzle, ECC_Visibility, MuzzleQuery);
+			Probe->SetObjectField(TEXT("muzzle_origin_obstruction"), HitJson(Obstruction));
+			// Match the production barrel obstruction adjustment without spawning a round.
+			if (Obstruction.bBlockingHit) Muzzle = Obstruction.ImpactPoint + Obstruction.ImpactNormal * (Stats.Radius + .1f);
+			Probe->SetArrayField(TEXT("muzzle_position"), VectorJson(Muzzle));
+		}
+		FCollisionQueryParams CameraBase(SCENE_QUERY_STAT(ExtractionAimCameraProbe), false, Shooter);
+		// Both equipped and secondary weapon actors belong to this pawn.
+		for (TActorIterator<AWeapon> It(World); It; ++It)
+			if (It->GetOwner() == Shooter) CameraBase.AddIgnoredActor(*It);
+		auto Points = MakeShared<FJsonObject>();
+		auto WritePoint = [&](const TCHAR* Name, const FVector& Point, bool bAvailable)
+		{
+			auto Value = MakeShared<FJsonObject>();
+			Value->SetBoolField(TEXT("available"), bAvailable);
+			Points->SetObjectField(Name, Value);
+			if (!bAvailable) return;
+			Value->SetArrayField(TEXT("position"), VectorJson(Point));
+			FCollisionQueryParams CameraQuery = CameraBase;
+			FHitResult SimpleHit, ComplexHit;
+			World->LineTraceSingleByChannel(SimpleHit, Camera, Point, ECC_Visibility, CameraQuery);
+			CameraQuery.bTraceComplex = true;
+			World->LineTraceSingleByChannel(ComplexHit, Camera, Point, ECC_Visibility, CameraQuery);
+			Value->SetObjectField(TEXT("camera_simple"), HitJson(SimpleHit));
+			Value->SetObjectField(TEXT("camera_complex"), HitJson(ComplexHit));
+			if (bMuzzleReady)
+			{
+				FHitResult MuzzleHit;
+				World->SweepSingleByChannel(MuzzleHit, Muzzle, Point, FQuat::Identity, ECC_Visibility,
+				                           FCollisionShape::MakeSphere(Stats.Radius), MuzzleQuery);
+				Value->SetObjectField(TEXT("muzzle_complex_sphere"), HitJson(MuzzleHit));
+			}
+		};
+		const FVector Body = Target->GetActorLocation() + FVector(0, 0, 10);
+		const FVector Head = Target->GetMesh()->GetBoneLocation(TEXT("head"));
+		WritePoint(TEXT("body"), Body, true);
+		WritePoint(TEXT("head"), Head, Target->GetMesh()->GetBoneIndex(TEXT("head")) != INDEX_NONE);
+		WritePoint(TEXT("spine2"), Target->GetMesh()->GetBoneLocation(TEXT("Spine2")),
+		           Target->GetMesh()->GetBoneIndex(TEXT("Spine2")) != INDEX_NONE);
+		FVector Selected = bHeadAim ? Head + FVector(0, 0, 8) : Body;
+		if (!AimBone.IsNone()) Selected = Target->GetMesh()->GetBoneLocation(AimBone);
+		if (bBodyCenterAim && Target->GetMesh()->GetBodyInstance(AimBone)) Selected = Target->GetMesh()->GetCenterOfMass(AimBone);
+		WritePoint(TEXT("selected"), Selected, true);
+		Probe->SetObjectField(TEXT("points"), Points);
+		const double Now = FPlatformTime::Seconds();
+		if (LastAimDiagnosticWrite < 0 || Now - LastAimDiagnosticWrite >= .5)
+		{
+			LastAimDiagnosticWrite = Now;
+			auto Record = MakeShared<FJsonObject>();
+			Record->SetNumberField(TEXT("world_time"), World->GetTimeSeconds());
+			Record->SetStringField(TEXT("role"), Role);
+			Record->SetStringField(TEXT("target"), AimTarget);
+			Record->SetObjectField(TEXT("aim_diagnostics"), Probe);
+			FString Line;
+			FJsonSerializer::Serialize(Record, TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Line));
+			Line += TEXT("\n");
+			if (!FFileHelper::SaveStringToFile(Line, *(Folder / (Role + TEXT("-aim-diagnostics.jsonl"))),
+			                                  FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM,
+			                                  &IFileManager::Get(), FILEWRITE_Append) && !bAimDiagnosticWriteFailed)
+			{
+				bAimDiagnosticWriteFailed = true;
+				Test->AddError(TEXT("Could not append read-only aim diagnostics"));
+			}
+		}
+	}
+
 	void WriteState(UWorld* World, APlayerController* PC)
 	{
 		auto State = MakeShared<FJsonObject>();
@@ -1179,6 +1304,7 @@ private:
 			PC->GetPlayerViewPoint(Camera, Rotation);
 			State->SetArrayField(TEXT("view_position"), VectorJson(Camera));
 		}
+		WriteAimDiagnostics(World, PC, State);
 		auto Quality = MakeShared<FJsonObject>();
 		for (const TCHAR* Name : {
 			     TEXT("sg.ViewDistanceQuality"), TEXT("sg.AntiAliasingQuality"), TEXT("sg.ShadowQuality"),

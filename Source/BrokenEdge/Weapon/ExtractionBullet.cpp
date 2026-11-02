@@ -2,6 +2,7 @@
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Extraction/ExtractionHealth.h"
 #include "Components/SceneComponent.h"
+#include "Components/PrimitiveComponent.h"
 #include "DrawDebugHelpers.h"
 #include "HAL/IConsoleManager.h"
 #include "Kismet/GameplayStatics.h"
@@ -12,6 +13,9 @@
 
 static TAutoConsoleVariable<int32> CVarWeaponFlight(
 	TEXT("BrokenEdge.Weapon.DebugFlight"), 0, TEXT("Draw authoritative swept bullet paths."));
+
+static TAutoConsoleVariable<int32> CVarWeaponFlightLog(
+	TEXT("BrokenEdge.Weapon.LogFlight"), 0, TEXT("Log authoritative bullet initialization and first impact; no per-tick logging."));
 
 AExtractionBullet::AExtractionBullet()
 {
@@ -44,6 +48,11 @@ void AExtractionBullet::Initialize(const FResolvedWeaponStats& Profile, const FV
 	TrailEffect = Trail;
 	PreviousVisual = GetActorLocation();
 	bPredicted = GetNetMode() == NM_Client;
+	if (HasAuthority() && !bPredicted && CVarWeaponFlightLog.GetValueOnGameThread())
+		UE_LOG(LogTemp, Display,
+		       TEXT("EXTRACTION_BULLET_INIT Bullet=%s Owner=%s Instigator=%s Start=%s Direction=%s Velocity=%s Speed=%.3f BodyDamage=%.3f HeadDamage=%.3f Radius=%.3f"),
+		       *GetName(), *GetNameSafe(GetOwner()), *GetNameSafe(GetInstigator()), *GetActorLocation().ToString(),
+		       *Direction.GetSafeNormal().ToString(), *Velocity.ToString(), Stats.Speed, BodyDamage, HeadDamage, Stats.Radius);
 }
 
 void AExtractionBullet::Tick(float DeltaSeconds)
@@ -76,6 +85,13 @@ void AExtractionBullet::Tick(float DeltaSeconds)
 		if (CVarWeaponFlight.GetValueOnGameThread()) DrawDebugLine(GetWorld(), Start, Finish, FColor::Yellow, false, 3);
 		if (Hit.bBlockingHit)
 		{
+			if (HasAuthority() && !bPredicted && CVarWeaponFlightLog.GetValueOnGameThread())
+				UE_LOG(LogTemp, Display,
+				       TEXT("EXTRACTION_BULLET_IMPACT Bullet=%s Owner=%s Instigator=%s Actor=%s Component=%s ComponentPath=%s Bone=%s Location=%s ImpactPoint=%s Normal=%s ImpactNormal=%s StartPenetrating=%d Distance=%.3f BodyDamage=%.3f"),
+				       *GetName(), *GetNameSafe(GetOwner()), *GetNameSafe(GetInstigator()), *GetNameSafe(Hit.GetActor()),
+				       *GetNameSafe(Hit.GetComponent()), *GetPathNameSafe(Hit.GetComponent()), *Hit.BoneName.ToString(),
+				       *Hit.Location.ToString(), *Hit.ImpactPoint.ToString(), *Hit.Normal.ToString(),
+				       *Hit.ImpactNormal.ToString(), Hit.bStartPenetrating ? 1 : 0, Distance, BodyDamage);
 			if (auto* Victim = Cast<ABrokenEdgeCharacter>(Hit.GetActor()); Victim && HasAuthority() && !bPredicted)
 				Victim->GetExtractionHealth()->Bullet(
 					(Hit.BoneName == TEXT("head") ? HeadDamage : BodyDamage) * Stats.Falloff(Distance),

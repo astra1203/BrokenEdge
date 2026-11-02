@@ -93,6 +93,7 @@ parser.add_argument('--performance-route', choices=['old', 'north', 'east'], def
 parser.add_argument('--performance-samples', type=int, choices=[1, 3], default=3)
 parser.add_argument('--performance-seconds', type=int, choices=[60, 180], default=180)
 parser.add_argument('--network-stats', action='store_true', help='Enable UE network byte-rate collection for a separate bandwidth capture')
+parser.add_argument('--flight-diagnostics', action='store_true', help='Opt-in authority bullet init/impact logs and read-only local aim probes; changes no combat rules')
 parser.add_argument('--bounded-rendering', action='store_true', help='Functional/HUD validation with Medium scalability, 768 MiB texture pool and no ray tracing; not default visual/performance acceptance')
 parser.add_argument('--streaming-loops', type=int, choices=[1, 2, 10], default=10)
 args = parser.parse_args()
@@ -160,6 +161,10 @@ if args.scenario == 'guard_tuning':
                  'Source/BrokenEdge/Extraction/ExtractionGuard.cpp',
                  'Source/BrokenEdge/Extraction/ExtractionHealth.cpp']:
         report['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+
+if args.flight_diagnostics:
+    name = 'Source/BrokenEdge/Weapon/ExtractionBullet.cpp'
+    report['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
 
 
 def save():
@@ -318,6 +323,10 @@ def launch(role):
         command = [c.replace('-ExecCmds=', '-ExecCmds=' + quality + ',r.Streaming.PoolSize 768,', 1)
                    if c.startswith('-ExecCmds=') else c for c in command]
         command += ['-noraytracing']
+    if args.flight_diagnostics:
+        command += ['-ExtractionFlightDiagnostics']
+        command = [c.replace('-ExecCmds=', '-ExecCmds=BrokenEdge.Weapon.LogFlight 1,', 1)
+                   if c.startswith('-ExecCmds=') else c for c in command]
     if args.scenario == 'swap':
         command += ['-LogCmds=LogTemp Verbose']
     env = os.environ.copy()

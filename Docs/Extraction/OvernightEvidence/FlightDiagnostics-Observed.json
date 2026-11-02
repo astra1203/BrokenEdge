@@ -1,0 +1,333 @@
+{
+  "schema": 1,
+  "created_utc": "2026-11-02T21:24:25.035066+00:00",
+  "scope": "Read-only analysis of the completed input-driven route run. This artifact does not certify a complete extraction loop.",
+  "input_files": {
+    "Saved/Extraction/overnight-route-flight01/Report.json": {
+      "sha256": "da6e03baae44ef07fe9d6c7dde1f4a3d7c517d76c19333716d742895bdc707a5",
+      "bytes": 5763518
+    },
+    "Saved/Extraction/overnight-route-flight01/Server.log": {
+      "sha256": "ea70c310a706e66afaf2a06e5dd37ae242d1f70ae5d39bc322058602c94e09f6",
+      "bytes": 123635
+    },
+    "Saved/Extraction/overnight-route-flight01/A-aim-diagnostics.jsonl": {
+      "sha256": "e85d0e53513668d3de529b2fb1ee3fe23bf9e4b7665c140009283148507c622a",
+      "bytes": 41605
+    },
+    "Saved/Extraction/overnight-route-flight01/A-state.json": {
+      "sha256": "e67a56b37099fb8c10a3205f013b9212cac6646ae206cb8736852694a197fef3",
+      "bytes": 38268
+    },
+    "Saved/Extraction/overnight-route-flight01/Server-state.json": {
+      "sha256": "a59ce54da86bf569ddfb2b9efd7b9b2fd24ff219145663266d23f180e011d1e6",
+      "bytes": 157305
+    },
+    "Saved/Extraction/overnight-route02/Report.json": {
+      "sha256": "5f9d39ea20be54e711a44dcdd8898bd8a100f80d74c56777bb316642db9ca625",
+      "bytes": 2102367
+    },
+    "Saved/Extraction/overnight-route02/Server-state.json": {
+      "sha256": "bfef5bc21e42cf7167614d13a80898fc1d3959dc8ccda3c992c5e789886e1c84",
+      "bytes": 162257
+    },
+    "Saved/Extraction/overnight-route02/A-state.json": {
+      "sha256": "4fa70c4a46f841ed0f1d2ed9e2194c0f1cf7c2284300044403653f2775a557a0",
+      "bytes": 37601
+    },
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": {
+      "sha256": "0cc9d9e0296a7088ca27c867a34fa5db0a5716e4864fe7f85df8e70b398bb081",
+      "bytes": 86687
+    }
+  },
+  "run": {
+    "tag": "overnight-route-flight01",
+    "package_root": "Packaged/Overnight20261103_04",
+    "port": 27890,
+    "result": "failed",
+    "error": "AssertionError(('existing dorm guard encounter', 'A', 'Walk stalled at waypoint 2'))",
+    "recorded_base_commit": "46df0763c7efad4b45a3a9e795f6dd31e7d48239",
+    "recorded_source_sha256": {
+      "Scripts/Extraction/run_network.py": "110523ed7baf73c25a850a83a7667471ca2148bd6b49cd30da0a3fe59e9c6735",
+      "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "0cc9d9e0296a7088ca27c867a34fa5db0a5716e4864fe7f85df8e70b398bb081",
+      "Scripts/Extraction/overnight_route_scenarios.py": "a5c09f18c7de1ba31e4119a4fa4e86359a265472954d1dbef7a6c9de10596f7c",
+      "Source/BrokenEdge/Weapon/ExtractionBullet.cpp": "76f346bc64b332f839672f3e9c75374b672a88f9e3ff96b0e8d4292d4947ae71"
+    },
+    "flight_diagnostics": true,
+    "loot_seed": null
+  },
+  "confirmed": {
+    "combat": {
+      "guard": "GUARD_6",
+      "route": "ExtractionPatrol_7F_WestDorm",
+      "shooter": "A",
+      "accepted_shots": 10,
+      "accepted_before": 0,
+      "accepted_after": 10,
+      "guard_health_before": 100,
+      "guard_health_after": 0,
+      "guard_dead_before": false,
+      "guard_dead_after": true,
+      "guard_kills_before": 0,
+      "guard_kills_after": 1,
+      "kills_added": 1,
+      "encounter_index": 0
+    },
+    "authority_shooter_actor": "BP_StingerCharacter_C_2147481874",
+    "authority_guard_actor": "BP_StingerCharacter_C_2147481805",
+    "bullet_initializations": 10,
+    "first_shot": {
+      "init_line": 993,
+      "impact_line": 994,
+      "damage_line": 995,
+      "target": "BP_StingerCharacter_C_2147481805",
+      "bone": "LeftUpLeg"
+    },
+    "player_bullet_impacts": [
+      {
+        "line": 994,
+        "bullet": "ExtractionBullet_2147470724",
+        "actor": "BP_StingerCharacter_C_2147481805",
+        "component": "CharacterMesh0",
+        "bone": "LeftUpLeg",
+        "distance_cm": 1585.834
+      },
+      {
+        "line": 1002,
+        "bullet": "ExtractionBullet_2147470651",
+        "actor": "SpaceCenterInstanceGroup_17903",
+        "component": "Instances",
+        "bone": "None",
+        "distance_cm": 6394.017
+      },
+      {
+        "line": 1009,
+        "bullet": "ExtractionBullet_2147470581",
+        "actor": "SpaceCenterInstanceGroup_17903",
+        "component": "Instances",
+        "bone": "None",
+        "distance_cm": 6397.181
+      },
+      {
+        "line": 1013,
+        "bullet": "ExtractionBullet_2147470545",
+        "actor": "SpaceCenterInstanceGroup_15025",
+        "component": "Instances",
+        "bone": "None",
+        "distance_cm": 3237.177
+      },
+      {
+        "line": 1017,
+        "bullet": "ExtractionBullet_2147470442",
+        "actor": "BP_StingerCharacter_C_2147481805",
+        "component": "CharacterMesh0",
+        "bone": "RightUpLeg",
+        "distance_cm": 1603.051
+      },
+      {
+        "line": 1025,
+        "bullet": "ExtractionBullet_2147470373",
+        "actor": "BP_StingerCharacter_C_2147481805",
+        "component": "CharacterMesh0",
+        "bone": "Spine1",
+        "distance_cm": 1587.524
+      },
+      {
+        "line": 1030,
+        "bullet": "ExtractionBullet_2147470305",
+        "actor": "BP_StingerCharacter_C_2147481805",
+        "component": "CharacterMesh0",
+        "bone": "RightUpLeg",
+        "distance_cm": 1612.165
+      },
+      {
+        "line": 1042,
+        "bullet": "ExtractionBullet_2147470164",
+        "actor": "SpaceCenterInstanceGroup_15025",
+        "component": "Instances",
+        "bone": "None",
+        "distance_cm": 3189.647
+      },
+      {
+        "line": 1046,
+        "bullet": "ExtractionBullet_2147470096",
+        "actor": "BP_StingerCharacter_C_2147481805",
+        "component": "CharacterMesh0",
+        "bone": "RightUpLeg",
+        "distance_cm": 1606.737
+      }
+    ],
+    "guard_health_damage_events": [
+      {
+        "line": 995,
+        "bone": "LeftUpLeg",
+        "health_damage": 20.0
+      },
+      {
+        "line": 1018,
+        "bone": "RightUpLeg",
+        "health_damage": 20.0
+      },
+      {
+        "line": 1026,
+        "bone": "Spine1",
+        "health_damage": 20.0
+      },
+      {
+        "line": 1031,
+        "bone": "RightUpLeg",
+        "health_damage": 20.0
+      },
+      {
+        "line": 1048,
+        "bone": "RightUpLeg",
+        "health_damage": 19.0
+      }
+    ],
+    "sum_logged_bullet_health_damage": 99.0,
+    "bullets_without_recorded_impact": [
+      {
+        "line": 1036,
+        "bullet": "ExtractionBullet_2147470236"
+      }
+    ],
+    "probe": {
+      "file": "Saved/Extraction/overnight-route-flight01/A-aim-diagnostics.jsonl",
+      "lines": [
+        1,
+        5
+      ],
+      "records": 5,
+      "client_world_time_range": [
+        56.85843160375953,
+        59.22510700672865
+      ],
+      "configured_head": false,
+      "configured_bone": "None",
+      "all_body_simple_complex_and_muzzle_sphere_first_blockers_are_target": true,
+      "all_muzzle_origin_obstructions_clear": true,
+      "body_target_cm": [
+        -15171.98,
+        -18169.97,
+        257.38
+      ],
+      "scope": "Local read-only probes are not authoritative bullet impacts. The server log independently establishes the actual hits."
+    },
+    "medical": [
+      {
+        "role": "A",
+        "item": "BE02B5654387DFA82A00FB9A3838155B",
+        "health_before": 65,
+        "health_after": 100,
+        "result": "passed"
+      },
+      {
+        "role": "B",
+        "item": "BC8A6F924D36287CC5952C961CA8F912",
+        "health_before": 80,
+        "health_after": 100,
+        "result": "passed"
+      }
+    ],
+    "completed_loot_groups": [
+      "7F_WestDorm_A",
+      "7F_WestDorm_B",
+      "7F_LivingArea_B"
+    ],
+    "acquired_definitions": [
+      "Bandage",
+      "Splint",
+      "Document",
+      "Tools"
+    ],
+    "second_raid_completed": false
+  },
+  "route02_comparison": {
+    "old_result": "failed",
+    "old_error": "AssertionError('Natural encounter exhausted the owned reserve ammunition')",
+    "old_accepted": 90,
+    "old_guard_health": 100,
+    "old_a_health": 17,
+    "old_destination": "7F_WestDorm_A1",
+    "new_destination": "7F_WestDorm_A3",
+    "old_a_actor_cm": [
+      -15596.78212882764,
+      -16533.61971889798,
+      -62.30136558412626
+    ],
+    "new_a_actor_cm": [
+      -15299.496639507523,
+      -16525.97624028753,
+      -107.98608141805637
+    ],
+    "old_guard_actor_cm": [
+      -15161.925021226325,
+      -18482.819015530025,
+      292.24062198400435
+    ],
+    "new_guard_actor_cm_from_body_probe": [
+      -15171.98,
+      -18169.97,
+      247.38
+    ],
+    "a_displacement_cm": 300.87236195170277,
+    "guard_displacement_cm": 316.20892542911577,
+    "finding": "The first shot hit in this run, so the earlier 90-shot zero-damage failure was not reproduced. Both the player and the guard moved approximately 3 metres between runs. This does not establish that the old obstruction was fixed or that head aiming is required."
+  },
+  "limitations": [
+    "The overall route failed at waypoint 2 of the existing dorm guard encounter walk after three successful loot searches. The natural 900-second exit, settlement and second raid were not completed.",
+    "The older run has no bullet initialization or impact diagnostics and no historical head-bone or actual muzzle coordinates. Platform-edge and muzzle obstruction remain unverified hypotheses.",
+    "Of the 10 player shots, 5 hit the guard, 4 hit environment geometry and 1 has no recorded impact. The missing impact is not attributed to any specific collision or destruction cause.",
+    "The five logged bullet health-damage events total 99, while the report shows guard health changing from 100 to 0. The remaining point is not assigned a cause from these bullet-impact logs.",
+    "Log timestamps and client world_time use different time bases. Probes are sampled at intervals of at least 0.5 seconds and do not replace per-shot server records.",
+    "Neither run specified loot_seed. The selected physical loot nodes were A1 and A3, producing different natural encounter positions."
+  ],
+  "probe_replay_assessment": {
+    "strict_arbitrary_coordinate_read_only_2x2_supported_by_existing_driver": false,
+    "reason": "WriteAimDiagnostics reads the actual local camera, an existing AimTarget and the actual weapon. There is no arbitrary start/end query command. world_camera creates or moves a test camera and changes ViewTarget; fixture changes character positions. Their combination is not an entirely read-only procedure.",
+    "no_new_cpp_option": "In a separate diagnostic fixture run with guards=0, use real players A and B as observer and target proxies. Place A at each old/new player position and B at each old/new guard position with fixture; use aim EX_B head=false, wait for replicated positions and grounding to stabilize, and collect the existing JSONL body probes for all four combinations without pressing Fire. world_camera may fix an explicitly recorded camera origin. This requires no new C++, but must be labelled fixture setup plus reconstructed pose, not a successful main-route run.",
+    "fixture_replay_limits": [
+      "The B proxy pose, muzzle and bones are not the historical guard frame; they support an environment-obstruction comparison only.",
+      "Gravity may move characters after fixture placement. Validate actual replicated positions against the requested coordinates instead of trusting command acknowledgement.",
+      "Existing camera probes support position comparisons, but do not export an ISM instance index or mesh asset path. Add a read-only interface only if those identifiers are required."
+    ],
+    "recommended_matrix": {
+      "observer_pawn_eye_cm": {
+        "old": [
+          -15596.78212882764,
+          -16533.61971889798,
+          1.698634415873741
+        ],
+        "new": [
+          -15299.496639507523,
+          -16525.97624028753,
+          -43.98608141805637
+        ]
+      },
+      "target_body_cm": {
+        "old": [
+          -15161.925021226325,
+          -18482.819015530025,
+          302.24062198400435
+        ],
+        "new": [
+          -15171.98,
+          -18169.97,
+          257.38
+        ]
+      },
+      "additional_old_guard_view_proxy_cm": [
+        -15161.925021226325,
+        -18482.819015530025,
+        356.24062198400435
+      ],
+      "checks": [
+        "simple line",
+        "complex line",
+        "radius1 complex sphere sweep"
+      ],
+      "classification": "Static proposal only; not executed. The old view_proxy coordinate is not a historical head-bone coordinate."
+    }
+  },
+  "actions": "Only this analysis JSON was created or updated. Source evidence was not modified; no gameplay source edits, driver commands, UE/build launches or Git operations were performed."
+}
