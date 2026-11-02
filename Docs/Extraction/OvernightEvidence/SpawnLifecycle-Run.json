@@ -1,0 +1,22 @@
+{
+  "task": "spawn-lifecycle",
+  "started_utc": "2026-11-02T19:42:30.938503+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-spawn-lifecycle02\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.SpawnLifecycle",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-spawn-lifecycle02\\Automation"
+  ],
+  "pid": 4628,
+  "exit_code": 0,
+  "successful_tests": 3,
+  "result": "passed",
+  "finished_utc": "2026-11-02T19:42:52.012791+00:00"
+}

@@ -28,6 +28,9 @@
 | 03:29 | 带守卫网络01资源中止 | 正式地图加载时可用RAM0.04GiB，停止本轮自有UE进程；Report记aborted_resource。改走新独立包验证，不关闭用户应用 | 未计守卫联网通过 |
 | 03:30–03:34 | 撤离反馈网络03 | editor06通过；26项状态/复制/HUD检查通过并产出4张截图。但旧控制器切图期间被错误重试出生，Server自动化最终Fail，整轮仍记failed | 正在修复真实初始化时序；截图还发现三行文字挤压进度条，改回两行待重验 |
 | 03:36 | 增强构建/验收资源保护 | 可配置本轮磁盘/RAM门槛，RAM低于1GiB立即中止自有任务树；保留默认规则，报告精确触发原因。10项阈值测试和真实短子进程smoke通过 | 随资源保护修复提交并推送 |
+| 03:37 | 资源保护发布 | 21af3ac25d118f0bd354a9328f93568df3bfd5d7，HEAD/跟踪引用/GitHub一致 | 已推送 |
+| 03:40–03:42 | 修复无缝切图旧控制器的出生资格 | editor07/08通过；SpawnLifecycle首轮2/3，fixture的ULocalPlayer Outer不符合UE ClassWithin，改为GEngine后overnight-spawn-lifecycle02为3/3。旧PC不重生/不计Ready，真实当前PC缺PS仍Error | 功能独立提交；联网仍待新包验证 |
+| 03:43–03:45 | 撤离反馈网络04资源中止 | 新保护器检测RAM0.832GiB并停止自有任务树，随后空闲恢复19GiB。未进入完整验收；记录为aborted_resource，转新Server/Client包 | 不能用中止结果替代通过 |
 
 ## 工作包状态
 

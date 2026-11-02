@@ -14,6 +14,7 @@
 #include "ExtractionGuard.h"
 #include "ExtractionSmoke.h"
 #include "EngineUtils.h"
+#include "Engine/Player.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/UI/BrokenEdgeHUD.h"
@@ -127,29 +128,68 @@ void AExtractionGameMode::PreLogin(const FString& Options, const FString& Addres
 void AExtractionGameMode::HandleStartingNewPlayer_Implementation(APlayerController* Player)
 {
 	const auto* State = GetGameState<AExtractionGameState>();
-	if (!Player || !State || State->Phase != EExtractionPhase::Waiting) return;
-	if (auto* PS = Player->GetPlayerState<AExtractionPlayerState>())
-	{
-		PS->Life = EExtractionLife::Alive;
-		PS->SetLobbyReady(false);
-		PS->SetTeam(ETeam::ET_NoTeam);
-	}
+	if (!State || State->Phase != EExtractionPhase::Waiting) return;
+	auto* PS = CurrentPlayerState(Player);
+	if (!PS) return;
+	PS->Life = EExtractionLife::Alive;
+	PS->SetLobbyReady(false);
+	PS->SetTeam(ETeam::ET_NoTeam);
 	if (!Player->GetPawn()) RestartPlayer(Player);
 	if (!Player->GetPawn()) return;
-	if (auto* PS = Player->GetPlayerState<AExtractionPlayerState>()) PS->Inventory->InitializeLoadout();
+	PS->Inventory->InitializeLoadout();
 	FreezePlayer(Player, true);
 	if (auto* Character = Cast<ABrokenEdgeCharacter>(Player->GetPawn()))
 		Character->GetMesh()->VisibilityBasedAnimTickOption =
 			EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 }
 
+// SetPlayer 会先移走旧 PC 的 Player，旧 PC 的 PlayerState 也已清空，但对象会保留到网络确认。
+// HasClientLoadedCurrentWorld 对没有 Player 的对象仍返回 true，不能单独作为出生资格。
+AExtractionPlayerState* AExtractionGameMode::CurrentPlayerState(APlayerController* Player)
+{
+	if (!IsValid(Player) || Player->IsPendingKillPending() || !Player->IsA<AExtractionPlayerController>()
+		|| !Player->Player || Player->Player->PlayerController != Player || Player->PendingSwapConnection
+		|| !Player->HasClientLoadedCurrentWorld())
+		return nullptr;
+	auto* PS = Player->GetPlayerState<AExtractionPlayerState>();
+	if (!IsValid(PS))
+	{
+		// A live, converted controller with the wrong state is a real initialization failure.
+		const FString Key = TEXT("no_player_state:") + Player->GetName();
+		if (!SpawnAttemptWarnings.Contains(Key))
+		{
+			SpawnAttemptWarnings.Add(Key);
+			UE_LOG(LogTemp, Error,
+			       TEXT("EXTRACTION_SPAWN_FAIL no_player_state | CurrentPC=%s PCClass=%s PlayerState=%s PSClass=%s"),
+			       *Player->GetName(), *GetNameSafe(Player->GetClass()), *GetNameSafe(Player->PlayerState),
+			       *GetNameSafe(Player->PlayerState ? Player->PlayerState->GetClass() : nullptr));
+		}
+		return nullptr;
+	}
+	return PS;
+}
+
+int32 AExtractionGameMode::StartWaitingPlayers()
+{
+	int32 Ready = 0;
+	for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	{
+		auto* Player = It->Get();
+		if (!CurrentPlayerState(Player)) continue;
+		if (!Player->GetPawn()) HandleStartingNewPlayer(Player);
+		if (Player->GetPawn()) ++Ready;
+	}
+	return Ready;
+}
+
 // 只有等待阶段、存活且没有 Pawn 的玩家可生成角色；撤离模式不提供战斗中复活。
 bool AExtractionGameMode::PlayerCanRestart_Implementation(APlayerController* Player)
 {
 	const auto* GS = GetGameState<AExtractionGameState>();
-	const auto* PS = Player ? Player->GetPlayerState<AExtractionPlayerState>() : nullptr;
-	return GS && GS->Phase == EExtractionPhase::Waiting && PS && PS->Life == EExtractionLife::Alive && !Player->
-		GetPawn();
+	if (!GS || GS->Phase != EExtractionPhase::Waiting) return false;
+	const auto* PS = CurrentPlayerState(Player);
+	// Do not call AGameMode's implementation: it forbids restarting before InProgress.
+	return PS && PS->Life == EExtractionLife::Alive && !Player->GetPawn() && Player->CanRestartPlayer();
 }
 
 // 将出生入口统一到自定义分组选择，避免默认实现退回世界原点。
@@ -545,12 +585,7 @@ void AExtractionGameMode::Tick(float Delta)
 	RefreshAliveCount();
 	if (GS->Phase == EExtractionPhase::Waiting)
 	{
-		for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
-			if (It->Get()->HasClientLoadedCurrentWorld() && !It->Get()->GetPawn())
-				HandleStartingNewPlayer(It->Get());
-		int32 Ready = 0;
-		for (auto It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
-			if (It->Get()->HasClientLoadedCurrentWorld() && It->Get()->GetPawn()) ++Ready;
+		const int32 Ready = StartWaitingPlayers();
 		const auto* Region = AExtractionRegionStream::Find(GetWorld());
 		if (Ready >= ExpectedPlayers && (!Region || Region->IsReady()))
 		{

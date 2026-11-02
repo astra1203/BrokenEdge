@@ -72,7 +72,12 @@ public:
 private:
 #if WITH_DEV_AUTOMATION_TESTS
 	friend struct FExtractionExitFeedbackFixture;
+	friend struct FExtractionSpawnLifecycleFixture;
 #endif
+	// 无缝旅行替换后的旧控制器会暂留在 World 中；仅当前连接所属的撤离控制器可参与出生。
+	class AExtractionPlayerState* CurrentPlayerState(APlayerController* Player);
+	// 重试尚未生成角色的有效成员，并以同一资格规则统计已就绪人数。
+	int32 StartWaitingPlayers();
 	UPROPERTY()
 	TArray<TObjectPtr<class UExtractionItemDefinition>> ItemDefinitions;
 	// 时间字段均使用服务器世界时间（秒）；LoadedAt 控制加载超时，ReturnAt 控制回大厅等待。
@@ -85,7 +90,8 @@ private:
 	bool bEndingPlay = false;
 	UPROPERTY()
 	TArray<TObjectPtr<class AExtractionExit>> Exits;
-	UPROPERTY() TObjectPtr<class UExtractionMapDefinition> LoadedMapDefinition;
+	UPROPERTY()
+	TObjectPtr<class UExtractionMapDefinition> LoadedMapDefinition;
 	// 先检测所在撤离区域，再发布不可用原因或以服务器世界时间推进停留倒计时。
 	// 离开区域会清空进度，换撤离点会重新计时；成功写入仓库后才消耗名额、清空背包并转为观战。
 	void UpdateExtraction(double Now);

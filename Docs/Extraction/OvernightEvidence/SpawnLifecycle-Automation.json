@@ -1,0 +1,74 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "F16A40D04C368616BDF990BAEEC13BDC",
+			"instanceName": "DESKTOP-M9PA1SF-4628",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "NVIDIA GeForce RTX 4060 Ti",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.02-19.42.51",
+	"succeeded": 3,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.027310099452733994,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "CurrentMissingStateIsAnError",
+			"fullTestPath": "BrokenEdge.Extraction.SpawnLifecycle.CurrentMissingStateIsAnError",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"F16A40D04C368616BDF990BAEEC13BDC"
+			],
+			"duration": 0.012684300541877747,
+			"dateTime": "2026.11.02-19.42.51",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RetiredControllersDoNotRestart",
+			"fullTestPath": "BrokenEdge.Extraction.SpawnLifecycle.RetiredControllersDoNotRestart",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"F16A40D04C368616BDF990BAEEC13BDC"
+			],
+			"duration": 0.0070753991603851318,
+			"dateTime": "2026.11.02-19.42.51",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RetiredPawnDoesNotCountReady",
+			"fullTestPath": "BrokenEdge.Extraction.SpawnLifecycle.RetiredPawnDoesNotCountReady",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"F16A40D04C368616BDF990BAEEC13BDC"
+			],
+			"duration": 0.0075503997504711151,
+			"dateTime": "2026.11.02-19.42.51",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}
