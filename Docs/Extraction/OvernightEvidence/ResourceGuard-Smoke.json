@@ -1,0 +1,46 @@
+{
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+    "-c",
+    "print(123)"
+  ],
+  "result": "passed",
+  "samples": [
+    {
+      "utc": "2026-11-02T19:36:58.296906+00:00",
+      "c_free_gib": 164.53509140014648,
+      "d_free_gib": 60.64018249511719,
+      "ram_free_gib": 19.537784576416016,
+      "commit_used_gib": 23.54195785522461,
+      "commit_limit_gib": 71.6148910522461
+    },
+    {
+      "utc": "2026-11-02T19:36:58.301906+00:00",
+      "c_free_gib": 164.53509140014648,
+      "d_free_gib": 60.64018249511719,
+      "ram_free_gib": 19.53769302368164,
+      "commit_used_gib": 23.542999267578125,
+      "commit_limit_gib": 71.6148910522461
+    },
+    {
+      "utc": "2026-11-02T19:36:58.335538+00:00",
+      "c_free_gib": 164.53509140014648,
+      "d_free_gib": 60.64017868041992,
+      "ram_free_gib": 19.523143768310547,
+      "commit_used_gib": 23.548542022705078,
+      "commit_limit_gib": 71.6148910522461
+    }
+  ],
+  "limits": {
+    "start_c_gib": 40,
+    "start_d_gib": 40.0,
+    "start_ram_gib": 8,
+    "stop_c_gib": 25,
+    "stop_d_gib": 25.0,
+    "stop_ram_gib": 2.0,
+    "critical_ram_gib": 1.0,
+    "low_ram_seconds": 15
+  },
+  "pid": 4884,
+  "exit_code": 0
+}
