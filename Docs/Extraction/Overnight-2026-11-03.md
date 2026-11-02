@@ -10,6 +10,7 @@
 - 路线：大厅配装 → `OfficialWestDorm` → `7F_WestDorm_A` 补给 → `7F_WestDorm_B` 医疗 → `7F_LivingArea_B` 贵重物资 / 宿舍守卫 → `OfficialExitSquare` → 回仓 → 第二局。
 - 沿用现有 LAN、武器与蜂医。广场 900 秒开放、120 秒窗口是项目兼容规则，不宣称还原官方拉闸。德穆兰保持禁用；试验场 `Bag=Empty` 的官方语义未确认，本轮不扩改。
 - 源点和历史站立审计不是当前连续步行验证；构建、自动化、联机、渲染、Cook、完整包分别记录。
+- [当前源码能力核对](OvernightEvidence/CurrentCapabilities.md)：更正旧盘点中已经补齐的装备分区、安全箱、M4A1与子弹重力；区别现有能力、兼容规则和仍有差距。
 
 ## 时间线
 
@@ -31,6 +32,8 @@
 | 03:37 | 资源保护发布 | 21af3ac25d118f0bd354a9328f93568df3bfd5d7，HEAD/跟踪引用/GitHub一致 | 已推送 |
 | 03:40–03:42 | 修复无缝切图旧控制器的出生资格 | editor07/08通过；SpawnLifecycle首轮2/3，fixture的ULocalPlayer Outer不符合UE ClassWithin，改为GEngine后overnight-spawn-lifecycle02为3/3。旧PC不重生/不计Ready，真实当前PC缺PS仍Error | 功能独立提交；联网仍待新包验证 |
 | 03:43–03:45 | 撤离反馈网络04资源中止 | 新保护器检测RAM0.832GiB并停止自有任务树，随后空闲恢复19GiB。未进入完整验收；记录为aborted_resource，转新Server/Client包 | 不能用中止结果替代通过 |
+| 03:46–03:47 | 出生时序修复推送，并启动全新专服包 | 1eb55cf46d99928e57a28507cab02a8279d42675三处SHA一致；Server独立file-cook到C:/BECookONServer01，归档到Packaged/Overnight20261103_01，不复用旧包 | 已推送；打包进行中 |
+| 03:48 | 核对旧盘点与当前实现 | 新增CurrentCapabilities.md，38项定义及资产路径检查，记录已有装备分区/M4/重力、两处有效撤离点和守卫当前参数 | 源码盘点，不计运行验收 |
 
 ## 工作包状态
 
