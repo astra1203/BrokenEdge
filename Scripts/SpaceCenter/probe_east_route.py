@@ -107,11 +107,28 @@ def tick(delta):
         state['elapsed']+=delta
         if time.monotonic()-started>1200:raise TimeoutError('East floor probe timed out')
         if state['phase']=='boot' and state['elapsed']>5:
+            if os.environ.get('SPACECENTER_RESTORE_TASK', '').endswith('-integrated'):
+                # Match the other read-only integrated inspections. A production
+                # extraction login requires a lobby raid ticket, which a geometry
+                # probe does not create. These settings are never saved.
+                world=unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()
+                mode=unreal.EditorAssetLibrary.load_blueprint_class('/Game/Characters/Stinger/Blueprints/BP_StingerTestGameMode')
+                assert mode, 'Missing existing Stinger inspection GameMode'
+                world.get_world_settings().set_editor_property('default_game_mode',mode)
+                stream=unreal.GameplayStatics.get_streaming_level(world,'/Game/Maps/SpaceCenter/L_SpaceCenterNorth')
+                assert stream and stream.get_loaded_level(), 'North geometry must be loaded for the integrated probe'
+                unreal.EditorLevelUtils.set_level_visibility(stream.get_loaded_level(),True,False)
+                stream.set_editor_property('initially_loaded',True)
+                stream.set_editor_property('initially_visible',True)
+                report['inspection_setup']='Unsaved local Stinger test mode and visible North; geometry measurement only, not raid/login acceptance.'
             unreal.SystemLibrary.execute_console_command(None,'Editor.AsyncAssetCompilationFinishAll')
             unreal.SystemLibrary.collect_garbage();LIB.begin_validation_pie(1);state.update(phase='spawn',elapsed=0)
         elif state['phase']=='spawn':
             pawns=[p for w in LIB.get_validation_worlds() for p in unreal.GameplayStatics.get_all_actors_of_class(w,unreal.BrokenEdgeCharacter) if p.is_locally_controlled()]
-            if len(pawns)!=1 or state['elapsed']<5:return
+            if len(pawns)!=1:
+                if state['elapsed']>60:raise RuntimeError('Probe PIE did not create one local inspection pawn')
+                return
+            if state['elapsed']<5:return
             pawn=pawns[0];LIB.isolate_validation_input(pawn.get_controller())
             from restoration_terrain_audit import audit
             terrain=audit(pawn.get_world(),read(os.environ['SPACECENTER_RESTORE_MANIFEST']))

@@ -1,0 +1,244 @@
+{
+  "result": "passed",
+  "config": {
+    "version": 1,
+    "step_cm": 100,
+    "trace_heights": [
+      -300,
+      -150,
+      0,
+      150,
+      300,
+      450,
+      600,
+      750,
+      900,
+      1050,
+      1200,
+      1350,
+      1500,
+      1650,
+      1800,
+      1950,
+      2000,
+      2100,
+      2250,
+      2400,
+      2550,
+      2600,
+      2700,
+      2850,
+      3000,
+      3150,
+      3300,
+      3400
+    ],
+    "trace_bottom": -4500,
+    "start": [
+      -1500,
+      -300,
+      362
+    ],
+    "survey_only": true,
+    "collision_channel": "pawn",
+    "seed_probe_directory": "Saved/SpaceCenter/Phase7F/EditorRuns/Phase7FRouteProbe01",
+    "regions": [
+      {
+        "minimum": [
+          -23000,
+          -22500
+        ],
+        "maximum": [
+          -20000,
+          -20000
+        ]
+      }
+    ],
+    "targets": [
+      {
+        "name": "PlayerStart6_8",
+        "location": [
+          -22629.56,
+          -20995.22,
+          330.76
+        ]
+      },
+      {
+        "name": "PlayerStart7",
+        "location": [
+          -22629.56,
+          -21381.0,
+          330.76
+        ]
+      },
+      {
+        "name": "PlayerStart8",
+        "location": [
+          -22629.56,
+          -21722.7,
+          330.76
+        ]
+      },
+      {
+        "name": "PlayerStart9",
+        "location": [
+          -22257.56,
+          -21602.62,
+          330.76
+        ]
+      },
+      {
+        "name": "PlayerStart10",
+        "location": [
+          -22257.56,
+          -21321.97,
+          330.76
+        ]
+      }
+    ]
+  },
+  "config_sha256": "fb63148a396af7bfb56fb4dffbc5310ea441e95feeda8f0502cd9881268b1dd4",
+  "inspection_setup": "Unsaved local Stinger test mode and visible North; geometry measurement only, not raid/login acceptance.",
+  "terrain_collision": {
+    "result": "passed",
+    "tiles": 558,
+    "errors": [],
+    "max_error_cm": 0.00011920928955078125
+  },
+  "pawn_response_query": {
+    "temporary_components": 6089,
+    "saved": false
+  },
+  "probes": 632422,
+  "tested_edges": 892632,
+  "blocked_edges": 6326,
+  "reachable_nodes": 129753,
+  "reachable_bounds": [
+    [
+      -23000.00000305171,
+      35000.000015076985
+    ],
+    [
+      -29100.0,
+      24000.00004148559
+    ],
+    [
+      -654.8284482781676,
+      2736.8344098060147
+    ]
+  ],
+  "targets": [
+    {
+      "name": "PlayerStart6_8",
+      "requested": [
+        -22629.56,
+        -20995.22,
+        330.76
+      ],
+      "nearest_reachable": {
+        "location": [
+          -22600.0,
+          -21000.0,
+          184.0
+        ],
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "clear": true,
+        "actor": "SCR_Group_28631d3e38ccaed0"
+      }
+    },
+    {
+      "name": "PlayerStart7",
+      "requested": [
+        -22629.56,
+        -21381.0,
+        330.76
+      ],
+      "nearest_reachable": {
+        "location": [
+          -22600.0,
+          -21400.0,
+          184.0
+        ],
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "clear": true,
+        "actor": "SCR_Group_28631d3e38ccaed0"
+      }
+    },
+    {
+      "name": "PlayerStart8",
+      "requested": [
+        -22629.56,
+        -21722.7,
+        330.76
+      ],
+      "nearest_reachable": {
+        "location": [
+          -22600.0,
+          -21700.0,
+          184.0
+        ],
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "clear": true,
+        "actor": "SCR_Group_28631d3e38ccaed0"
+      }
+    },
+    {
+      "name": "PlayerStart9",
+      "requested": [
+        -22257.56,
+        -21602.62,
+        330.76
+      ],
+      "nearest_reachable": {
+        "location": [
+          -22300.0,
+          -21600.0,
+          184.0
+        ],
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "clear": true,
+        "actor": "SCR_Group_28631d3e38ccaed0"
+      }
+    },
+    {
+      "name": "PlayerStart10",
+      "requested": [
+        -22257.56,
+        -21321.97,
+        330.76
+      ],
+      "nearest_reachable": {
+        "location": [
+          -22300.0,
+          -21300.0,
+          184.0
+        ],
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "clear": true,
+        "actor": "SCR_Group_28631d3e38ccaed0"
+      }
+    }
+  ],
+  "boundary": "Measured collision graph only; actual input-driven traversal remains required.",
+  "elapsed_seconds": 199.98499999998603
+}
