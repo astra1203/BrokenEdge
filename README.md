@@ -33,11 +33,11 @@ BrokenEdge 是一个使用 **Unreal Engine 5.8.3** 和 C++ 开发的多人第三
 
 ## 获取项目
 
-仓库位于团队局域网 Gitea。克隆前必须安装 [Git LFS](https://git-lfs.com/)。
+当前开发成果同步到 [GitHub](https://github.com/astra1203/BrokenEdge)，原团队局域网 Gitea 保留。克隆前必须安装 [Git LFS](https://git-lfs.com/)。
 
 ```powershell
 git lfs install
-git clone http://192.168.1.111:3000/2604_0608_UECPP/BrokenEdge.git
+git clone https://github.com/astra1203/BrokenEdge.git
 Set-Location BrokenEdge
 git lfs pull
 ```
@@ -190,7 +190,7 @@ blq3/weapon-swap
 blq4/session-menu
 ```
 
-随后在 Gitea 中创建 Pull Request：
+随后在所用的 GitHub 或 Gitea 仓库中创建 Pull Request：
 
 ```text
 来源分支：账号/功能名称
@@ -208,6 +208,9 @@ git lfs status
 不要提交 `Binaries/`、`Intermediate/`、`Saved/`、`DerivedDataCache/` 或 IDE 临时文件。切换包含 Unreal 资产的分支前，建议先关闭 Unreal Editor，避免 `.uasset` 被占用。
 
 ## 项目文档
+
+- [航天基地夜间实施记录：改动、验证与逐次推送](Docs/Extraction/Overnight-2026-11-03.md)
+- [搜打撤当前能力与官方差距核对](Docs/Extraction/OvernightEvidence/CurrentCapabilities.md)
 
 - [已完成功能、网络同步分析与后续开发路线](Docs/BrokenEdge_Project_Status_Network_Replication_Roadmap.md)
 - [比赛流程与会话匹配代码评审](Docs/BrokenEdge_Match_and_Matchmaking_Gap_Analysis.md)
