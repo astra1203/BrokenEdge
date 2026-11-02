@@ -85,7 +85,7 @@ parser.add_argument('--traversal-lifecycle', action='store_true', help='Three-pl
 parser.add_argument('--optic-validation', action='store_true', help='Additional mounted-optic visual acceptance in the equipment scenario')
 parser.add_argument('--optic-remote-only', action='store_true', help='Stop equipment acceptance after observer mount captures; not a full combat regression')
 parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2560x1440', '3440x1440'], help='Rendered client size for visual acceptance')
-parser.add_argument('--scenario', choices=['exit-feedback', 'lobby-ui', 'loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
+parser.add_argument('--scenario', choices=['flight-matrix', 'exit-feedback', 'lobby-ui', 'loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
 parser.add_argument('--players', type=int, choices=[1, 2, 3, 6])
 parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
 parser.add_argument('--rendered-role', choices=['A', 'B'], help='Render only this client; the other clients remain connected with NullRHI')
@@ -99,6 +99,8 @@ parser.add_argument('--streaming-loops', type=int, choices=[1, 2, 10], default=1
 args = parser.parse_args()
 if args.players == 1 and args.scenario != 'lobby-ui':
     parser.error('Single-player acceptance currently supports lobby-ui only')
+if args.scenario == 'flight-matrix' and (args.players != 2 or args.guards != 0 or not args.flight_diagnostics):
+    parser.error('--scenario flight-matrix requires --players 2 --guards 0 --flight-diagnostics')
 if not 1024 <= args.port <= 65535:
     parser.error('--port must be between 1024 and 65535')
 if args.traversal_lifecycle and (args.scenario!='traversal' or args.players!=3):
@@ -161,6 +163,10 @@ if args.scenario == 'guard_tuning':
                  'Source/BrokenEdge/Extraction/ExtractionGuard.cpp',
                  'Source/BrokenEdge/Extraction/ExtractionHealth.cpp']:
         report['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+
+if args.scenario == 'flight-matrix':
+    name = 'Scripts/Extraction/flight_matrix_scenarios.py'
+    report['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
 
 if args.flight_diagnostics:
     name = 'Source/BrokenEdge/Weapon/ExtractionBullet.cpp'
@@ -477,7 +483,7 @@ try:
             join(role)
             if args.scenario == 'identity' and role == 'A':
                 check('First profile authenticated before duplicate connection', lambda: state('A').get('account', {}).get('bound'))
-    if args.scenario not in ['lobby-ui', 'load_timeout', 'identity', 'progression']:
+    if args.scenario not in ['flight-matrix', 'lobby-ui', 'load_timeout', 'identity', 'progression']:
         begin_round()
     if args.lag:
         for role in processes:
@@ -486,7 +492,10 @@ try:
         check('Packet simulation applied: 50ms each direction and 2 percent loss', lambda: all(state(r).get('packet_lag') == 50 and state(r).get('packet_loss') == 2 for r in processes))
     for role in rendered_roles:
         send(role, 'screenshot', name='spawn')
-    if args.scenario == 'exit-feedback':
+    if args.scenario == 'flight-matrix':
+        from flight_matrix_scenarios import run
+        run(globals())
+    elif args.scenario == 'exit-feedback':
         from exit_feedback_scenarios import run
         run(globals())
     elif args.scenario == 'identity':

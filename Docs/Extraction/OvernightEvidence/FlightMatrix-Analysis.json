@@ -1,0 +1,715 @@
+{
+  "result": "completed_read_only_analysis",
+  "run_result": "passed",
+  "diagnostic_capture_result": "completed_diagnostic_capture",
+  "main_route_acceptance": false,
+  "scope": "Read-only analysis of an independent packaged fixture reconstruction. B is a same-class player proxy, not a replay of a historical guard or weapon pose. No new UE process or gameplay command was issued by this analysis.",
+  "summary": "In all three samples per case, both old-observer cases have clear camera-to-proxy lines but a near-muzzle environment obstruction. Both new-observer cases reach the proxy from camera and muzzle. Changing only the target position does not change the blocker category in this reconstruction.",
+  "base_commit_recorded_by_runner": "d879800e8cf8ddf754fc5f387b5c9b089e3dbb1c",
+  "run_configuration": {
+    "scenario": "flight-matrix",
+    "players": 2,
+    "guards": 0,
+    "flight_diagnostics": true,
+    "bounded_rendering": true
+  },
+  "automation_processes": {
+    "Server": {
+      "pid": 17372,
+      "exit_code": 0,
+      "automation_success": true,
+      "finish_ack": true,
+      "log": "Saved/Extraction/overnight-flight-matrix02/Server.log",
+      "bullet_init_lines": 0,
+      "bullet_impact_lines": 0,
+      "success_log_line": 983,
+      "driver_ok_log_line": 996
+    },
+    "A": {
+      "pid": 34656,
+      "exit_code": 0,
+      "automation_success": true,
+      "finish_ack": true,
+      "log": "Saved/Extraction/overnight-flight-matrix02/A.log",
+      "bullet_init_lines": 0,
+      "bullet_impact_lines": 0,
+      "success_log_line": 1318,
+      "driver_ok_log_line": 1322
+    },
+    "B": {
+      "pid": 37500,
+      "exit_code": 0,
+      "automation_success": true,
+      "finish_ack": true,
+      "log": "Saved/Extraction/overnight-flight-matrix02/B.log",
+      "bullet_init_lines": 0,
+      "bullet_impact_lines": 0,
+      "success_log_line": 918,
+      "driver_ok_log_line": 922
+    }
+  },
+  "resource_monitor": {
+    "report": "Saved/Extraction/overnight-flight-matrix02-resources/Report.json",
+    "result": "passed",
+    "exit_code": 0,
+    "limits": {
+      "start_c_gib": 40,
+      "start_d_gib": 32.0,
+      "start_ram_gib": 8,
+      "stop_c_gib": 25,
+      "stop_d_gib": 25.0,
+      "stop_ram_gib": 2.0,
+      "critical_ram_gib": 1.0,
+      "low_ram_seconds": 15
+    }
+  },
+  "source_sha256": {
+    "Scripts/Extraction/run_network.py": {
+      "recorded_run_sha256": "c2d510da864759d269d422c12e289426fe3d678bad836974b1eb65038c7caa99",
+      "current_file_matches_recorded_run": true
+    },
+    "Scripts/Extraction/flight_matrix_scenarios.py": {
+      "recorded_run_sha256": "74008ba9c2864bc15b8387037065e12f452d2194260685bf11dcb7cd2d845728",
+      "current_file_matches_recorded_run": true
+    },
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": {
+      "recorded_run_sha256": "0cc9d9e0296a7088ca27c867a34fa5db0a5716e4864fe7f85df8e70b398bb081",
+      "current_file_matches_recorded_run": true
+    },
+    "Source/BrokenEdge/Weapon/ExtractionBullet.cpp": {
+      "recorded_run_sha256": "76f346bc64b332f839672f3e9c75374b672a88f9e3ff96b0e8d4292d4947ae71",
+      "current_file_matches_recorded_run": true
+    },
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": {
+      "recorded_run_sha256": "7cd9aecb8490a270aa72c08bd383e990529f4bbea49bdbe461756ac9defb5b21",
+      "current_file_matches_recorded_run": true
+    }
+  },
+  "input_sha256": {
+    "Saved/Extraction/overnight-flight-matrix02/Report.json": "4f1b05b9d484fe5259c2068d147da1a5c5c512ee91f5ad3aeb69269e7c72e263",
+    "Saved/Extraction/overnight-flight-matrix02/FlightMatrixEvidence.json": "26367a2286907d26afd3677044b7addc2a5f4a8009b4d8c3f8d42ddddab4a7dc",
+    "Saved/Extraction/overnight-flight-matrix02/FlightMatrixRawProbes.jsonl": "64f9a5f00d81de613dbd6c26d46cbd983f1fdbc95cd5dc3721bb8f31b6973f39",
+    "Saved/Extraction/overnight-flight-matrix02/A-aim-diagnostics.jsonl": "64f9a5f00d81de613dbd6c26d46cbd983f1fdbc95cd5dc3721bb8f31b6973f39",
+    "Saved/Extraction/overnight-flight-matrix02-resources/Report.json": "b7d94850112e42f9e9978548fcf6e2b8c052950668d2582bca38c8c8391c366b",
+    "Saved/Extraction/overnight-flight-matrix02/Server.log": "e36e7a423083da2d446cd2c64483d98f53065edd9e8c28a00d2332f409d7d67a",
+    "Saved/Extraction/overnight-flight-matrix02/Server-state.json": "2a6c54f383289c7dccb9362879daa6d8a3650ec92ff63609b1e67cc72ee5664e",
+    "Saved/Extraction/overnight-flight-matrix02/A.log": "8a7a9d0cc826fcf51243a0a35b6a6b0d2d16eafb37cfa394621085c11db0b965",
+    "Saved/Extraction/overnight-flight-matrix02/A-state.json": "ba1542597bb9d4a888c358ec67921af36810ad3208c24a270439d0a14b512eca",
+    "Saved/Extraction/overnight-flight-matrix02/B.log": "fcf05f755ef8e3fd8bc15bd7e796484c2d2807a8be0f303fd045af6c92a089df",
+    "Saved/Extraction/overnight-flight-matrix02/B-state.json": "ce716c252cf482fb6a5a3ec959260546fb415d887a60118407294c0af4e26474",
+    "Saved/Extraction/overnight-flight-matrix02/A-flight-matrix-old-old-proxy-pose.json": "cc5ea4efd0121449bf598a847b7770366f23203c08223d22eddb8143594cce7a",
+    "Saved/Extraction/overnight-flight-matrix02/A-flight-matrix-old-new-proxy-pose.json": "f404df5708f8a82881f2935dfcc1726b698a41903c7d9bb637a7944e6bb3c71a",
+    "Saved/Extraction/overnight-flight-matrix02/A-flight-matrix-new-old-proxy-pose.json": "21550f4c9fd50f88de5005be74ca26047882d94e0f9d02e4be448a38781dba93",
+    "Saved/Extraction/overnight-flight-matrix02/A-flight-matrix-new-new-proxy-pose.json": "eddbb7a9e43319961ffab6ca6015c75dd6dac6c19dfc62a92d30da1e61c9c1e5",
+    "Saved/Extraction/overnight-route02/A-state.json": "4fa70c4a46f841ed0f1d2ed9e2194c0f1cf7c2284300044403653f2775a557a0",
+    "Saved/Extraction/overnight-route02/Server-state.json": "bfef5bc21e42cf7167614d13a80898fc1d3959dc8ccda3c992c5e789886e1c84",
+    "Saved/Extraction/overnight-route-flight01/Report.json": "da6e03baae44ef07fe9d6c7dde1f4a3d7c517d76c19333716d742895bdc707a5",
+    "Saved/Extraction/overnight-route-flight01/A-aim-diagnostics.jsonl": "e85d0e53513668d3de529b2fb1ee3fe23bf9e4b7665c140009283148507c622a"
+  },
+  "historical_coordinate_sources": {
+    "old": {
+      "camera": [
+        -15594.595285282589,
+        -16543.38337822376,
+        1.6986773564457849
+      ],
+      "actor": [
+        -15596.78212882764,
+        -16533.61971889798,
+        -62.30136558412626
+      ],
+      "target_actor": [
+        -15161.925021226325,
+        -18482.819015530025,
+        292.24062198400435
+      ]
+    },
+    "new": {
+      "camera": [
+        -15298.693020050529,
+        -16535.92592339146,
+        -43.98608893003724
+      ],
+      "actor": [
+        -15299.496639507523,
+        -16525.97624028753,
+        -107.98608141805637
+      ],
+      "target_actor": [
+        -15171.98,
+        -18169.97,
+        247.38
+      ]
+    },
+    "camera_boundary": "old is the final client camera snapshot, not a per-shot record; new is JSONL record 2"
+  },
+  "component_identities_in_A_client_world": {
+    "target_proxy": {
+      "actor": "BP_StingerCharacter_C_2147481662",
+      "component": "CharacterMesh0",
+      "component_path": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.BP_StingerCharacter_C_2147481662.CharacterMesh0"
+    },
+    "SpaceCenterInstanceGroup_17530": {
+      "actor": "SpaceCenterInstanceGroup_17530",
+      "component": "Instances",
+      "component_path": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_17530.Instances"
+    }
+  },
+  "query_contract": {
+    "camera_simple": "ECC_Visibility line query, bTraceComplex=false",
+    "camera_complex": "ECC_Visibility line query, bTraceComplex=true",
+    "muzzle_complex_sphere": "ECC_Visibility sphere sweep from current local third-person MuzzleFlash socket to the target point, bTraceComplex=true, radius=1 cm",
+    "muzzle_simple": "Not recorded by the current driver; no simple-muzzle result is claimed.",
+    "muzzle_origin": "Pawn view location to raw muzzle complex line query; all 12 selected records were unobstructed. This does not imply that the outgoing muzzle-to-target sweep is clear.",
+    "source": "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp:1136-1234 (WriteAimDiagnostics)"
+  },
+  "cases": [
+    {
+      "id": "old-old",
+      "observer": "old",
+      "target": "old",
+      "sample_source_lines": [
+        2,
+        3,
+        4
+      ],
+      "client_world_time_seconds": [
+        19.188085708767176,
+        19.788087408989668,
+        20.388089008629322
+      ],
+      "configured_camera_cm": [
+        -15594.595285282589,
+        -16543.38337822376,
+        1.6986773564457849
+      ],
+      "actual_first_camera_cm": [
+        -15594.595285282589,
+        -16543.38337822376,
+        1.6986773564457849
+      ],
+      "requested_actor_positions_cm": {
+        "A": [
+          -15596.78212882764,
+          -16533.61971889798,
+          -62.30136558412626
+        ],
+        "B": [
+          -15161.925021226325,
+          -18482.819015530025,
+          292.24062198400435
+        ]
+      },
+      "max_actual_actor_error_cm_all_three_peers": 0.005113143117633456,
+      "max_camera_error_cm": 0.0,
+      "all_positions_grounded": true,
+      "muzzle_first_cm": [
+        -15547.183056249161,
+        -16587.36482487754,
+        29.672660506638145
+      ],
+      "muzzle_sphere_radius_cm": 1,
+      "eye_to_muzzle_origin_obstructed_samples": 0,
+      "body_target_cm": [
+        -15161.93,
+        -18482.82,
+        302.24
+      ],
+      "body_first_blockers": {
+        "muzzle_complex_sphere": [
+          {
+            "component_ref": "SpaceCenterInstanceGroup_17530",
+            "bone": "None",
+            "blocking": true,
+            "start_penetrating": false,
+            "samples": 3,
+            "distance_cm_min_max": [
+              63.00259780883789,
+              63.23961639404297
+            ],
+            "first_impact_point": [
+              -15533.949607849121,
+              -16649.375366210938,
+              38.41902160644531
+            ]
+          }
+        ],
+        "camera_simple_and_complex": [
+          {
+            "component_ref": "target_proxy",
+            "bone": "Hips",
+            "blocking": true,
+            "start_penetrating": false,
+            "samples": 3,
+            "distance_cm_min_max": [
+              1972.7403564453125,
+              1974
+            ],
+            "first_impact_point": [
+              -15169.699202914682,
+              -18447.994284167882,
+              296.8432964007649
+            ]
+          }
+        ]
+      },
+      "proxy_pose_file": "A-flight-matrix-old-old-proxy-pose.json",
+      "camera_simple_equals_complex_every_sample": true,
+      "head_and_spine2_summary": {
+        "head": {
+          "camera_simple_and_complex": {
+            "component_ref": "target_proxy",
+            "bone": "Spine2",
+            "samples": 3
+          },
+          "muzzle_complex_sphere": {
+            "component_ref": "SpaceCenterInstanceGroup_17530",
+            "bone": "None",
+            "samples": 3
+          }
+        },
+        "spine2": {
+          "camera_simple_and_complex": {
+            "component_ref": "target_proxy",
+            "bone": "RightShoulder",
+            "samples": 3
+          },
+          "muzzle_complex_sphere": {
+            "component_ref": "SpaceCenterInstanceGroup_17530",
+            "bone": "None",
+            "samples": 3
+          }
+        }
+      },
+      "selected_point_equals_body_every_sample": true
+    },
+    {
+      "id": "old-new",
+      "observer": "old",
+      "target": "new",
+      "sample_source_lines": [
+        6,
+        7,
+        8
+      ],
+      "client_world_time_seconds": [
+        21.888881508260965,
+        22.388882607221603,
+        22.92221710830927
+      ],
+      "configured_camera_cm": [
+        -15594.595285282589,
+        -16543.38337822376,
+        1.6986773564457849
+      ],
+      "actual_first_camera_cm": [
+        -15594.595285282589,
+        -16543.38337822376,
+        1.6986773564457849
+      ],
+      "requested_actor_positions_cm": {
+        "A": [
+          -15596.78212882764,
+          -16533.61971889798,
+          -62.30136558412626
+        ],
+        "B": [
+          -15171.98,
+          -18169.97,
+          247.38
+        ]
+      },
+      "max_actual_actor_error_cm_all_three_peers": 0.0025447486056472857,
+      "max_camera_error_cm": 0.0,
+      "all_positions_grounded": true,
+      "muzzle_first_cm": [
+        -15546.104068734654,
+        -16587.014807236676,
+        29.247579094309593
+      ],
+      "muzzle_sphere_radius_cm": 1,
+      "eye_to_muzzle_origin_obstructed_samples": 0,
+      "body_target_cm": [
+        -15171.98,
+        -18169.97,
+        257.38
+      ],
+      "body_first_blockers": {
+        "muzzle_complex_sphere": [
+          {
+            "component_ref": "SpaceCenterInstanceGroup_17530",
+            "bone": "None",
+            "blocking": true,
+            "start_penetrating": false,
+            "samples": 3,
+            "distance_cm_min_max": [
+              60.65925598144531,
+              60.99504470825195
+            ],
+            "first_impact_point": [
+              -15531.471214294434,
+              -16646.35353088379,
+              37.62835693359375
+            ]
+          }
+        ],
+        "camera_simple_and_complex": [
+          {
+            "component_ref": "target_proxy",
+            "bone": "Hips",
+            "blocking": true,
+            "start_penetrating": false,
+            "samples": 3,
+            "distance_cm_min_max": [
+              1663.1864013671875,
+              1663.785400390625
+            ],
+            "first_impact_point": [
+              -15181.114626517465,
+              -18134.812116154277,
+              251.8535701246031
+            ]
+          }
+        ]
+      },
+      "proxy_pose_file": "A-flight-matrix-old-new-proxy-pose.json",
+      "camera_simple_equals_complex_every_sample": true,
+      "head_and_spine2_summary": {
+        "head": {
+          "camera_simple_and_complex": {
+            "component_ref": "target_proxy",
+            "bone": "Spine2",
+            "samples": 3
+          },
+          "muzzle_complex_sphere": {
+            "component_ref": "SpaceCenterInstanceGroup_17530",
+            "bone": "None",
+            "samples": 3
+          }
+        },
+        "spine2": {
+          "camera_simple_and_complex": {
+            "component_ref": "target_proxy",
+            "bone": "RightShoulder",
+            "samples": 3
+          },
+          "muzzle_complex_sphere": {
+            "component_ref": "SpaceCenterInstanceGroup_17530",
+            "bone": "None",
+            "samples": 3
+          }
+        }
+      },
+      "selected_point_equals_body_every_sample": true
+    },
+    {
+      "id": "new-old",
+      "observer": "new",
+      "target": "old",
+      "sample_source_lines": [
+        10,
+        11,
+        12
+      ],
+      "client_world_time_seconds": [
+        24.4888881072402,
+        25.022222708910704,
+        25.622224308550358
+      ],
+      "configured_camera_cm": [
+        -15298.693020050529,
+        -16535.92592339146,
+        -43.98608893003724
+      ],
+      "actual_first_camera_cm": [
+        -15298.693020050529,
+        -16535.92592339146,
+        -43.98608893003724
+      ],
+      "requested_actor_positions_cm": {
+        "A": [
+          -15299.496639507523,
+          -16525.97624028753,
+          -107.98608141805637
+        ],
+        "B": [
+          -15161.925021226325,
+          -18482.819015530025,
+          292.24062198400435
+        ]
+      },
+      "max_actual_actor_error_cm_all_three_peers": 0.006386206384410939,
+      "max_camera_error_cm": 0.0,
+      "all_positions_grounded": true,
+      "muzzle_first_cm": [
+        -15259.010837182259,
+        -16585.537157039165,
+        -14.10083779077744
+      ],
+      "muzzle_sphere_radius_cm": 1,
+      "eye_to_muzzle_origin_obstructed_samples": 0,
+      "body_target_cm": [
+        -15161.93,
+        -18482.82,
+        302.24
+      ],
+      "body_first_blockers": {
+        "muzzle_complex_sphere": [
+          {
+            "component_ref": "target_proxy",
+            "bone": "Hips",
+            "blocking": true,
+            "start_penetrating": false,
+            "samples": 3,
+            "distance_cm_min_max": [
+              1890.6807861328125,
+              1892.16015625
+            ],
+            "first_impact_point": [
+              -15164.163806038092,
+              -18450.36726825211,
+              296.4423818300632
+            ]
+          }
+        ],
+        "camera_simple_and_complex": [
+          {
+            "component_ref": "target_proxy",
+            "bone": "Hips",
+            "blocking": true,
+            "start_penetrating": false,
+            "samples": 3,
+            "distance_cm_min_max": [
+              1949.090087890625,
+              1949.098388671875
+            ],
+            "first_impact_point": [
+              -15164.211405734708,
+              -18450.34297980357,
+              296.46444613083264
+            ]
+          }
+        ]
+      },
+      "proxy_pose_file": "A-flight-matrix-new-old-proxy-pose.json",
+      "camera_simple_equals_complex_every_sample": true,
+      "head_and_spine2_summary": {
+        "head": {
+          "camera_simple_and_complex": {
+            "component_ref": "target_proxy",
+            "bone": "Spine2",
+            "samples": 3
+          },
+          "muzzle_complex_sphere": {
+            "component_ref": "target_proxy",
+            "bone": "Spine2",
+            "samples": 3
+          }
+        },
+        "spine2": {
+          "camera_simple_and_complex": {
+            "component_ref": "target_proxy",
+            "bone": "RightShoulder",
+            "samples": 3
+          },
+          "muzzle_complex_sphere": {
+            "component_ref": "target_proxy",
+            "bone": "RightShoulder",
+            "samples": 3
+          }
+        }
+      },
+      "selected_point_equals_body_every_sample": true
+    },
+    {
+      "id": "new-new",
+      "observer": "new",
+      "target": "new",
+      "sample_source_lines": [
+        14,
+        15,
+        16
+      ],
+      "client_world_time_seconds": [
+        27.188896108418703,
+        27.788902908563614,
+        28.38890540599823
+      ],
+      "configured_camera_cm": [
+        -15298.693020050529,
+        -16535.92592339146,
+        -43.98608893003724
+      ],
+      "actual_first_camera_cm": [
+        -15298.693020050529,
+        -16535.92592339146,
+        -43.98608893003724
+      ],
+      "requested_actor_positions_cm": {
+        "A": [
+          -15299.496639507523,
+          -16525.97624028753,
+          -107.98608141805637
+        ],
+        "B": [
+          -15171.98,
+          -18169.97,
+          247.38
+        ]
+      },
+      "max_actual_actor_error_cm_all_three_peers": 0.006386206384410939,
+      "max_camera_error_cm": 0.0,
+      "all_positions_grounded": true,
+      "muzzle_first_cm": [
+        -15258.447418285255,
+        -16585.36342615821,
+        -14.592011829413245
+      ],
+      "muzzle_sphere_radius_cm": 1,
+      "eye_to_muzzle_origin_obstructed_samples": 0,
+      "body_target_cm": [
+        -15171.98,
+        -18169.97,
+        257.38
+      ],
+      "body_first_blockers": {
+        "muzzle_complex_sphere": [
+          {
+            "component_ref": "target_proxy",
+            "bone": "Hips",
+            "blocking": true,
+            "start_penetrating": false,
+            "samples": 3,
+            "distance_cm_min_max": [
+              1576.158447265625,
+              1576.6319580078125
+            ],
+            "first_impact_point": [
+              -15174.326606429537,
+              -18137.38350919677,
+              251.40649911662334
+            ]
+          }
+        ],
+        "camera_simple_and_complex": [
+          {
+            "component_ref": "target_proxy",
+            "bone": "Hips",
+            "blocking": true,
+            "start_penetrating": false,
+            "samples": 3,
+            "distance_cm_min_max": [
+              1633.053466796875,
+              1633.053466796875
+            ],
+            "first_impact_point": [
+              -15174.51765166992,
+              -18137.245394615155,
+              251.34461342389213
+            ]
+          }
+        ]
+      },
+      "proxy_pose_file": "A-flight-matrix-new-new-proxy-pose.json",
+      "camera_simple_equals_complex_every_sample": true,
+      "head_and_spine2_summary": {
+        "head": {
+          "camera_simple_and_complex": {
+            "component_ref": "target_proxy",
+            "bone": "Spine2",
+            "samples": 3
+          },
+          "muzzle_complex_sphere": {
+            "component_ref": "target_proxy",
+            "bone": "Spine2",
+            "samples": 3
+          }
+        },
+        "spine2": {
+          "camera_simple_and_complex": {
+            "component_ref": "target_proxy",
+            "bone": "RightShoulder",
+            "samples": 3
+          },
+          "muzzle_complex_sphere": {
+            "component_ref": "target_proxy",
+            "bone": "RightShoulder",
+            "samples": 3
+          }
+        }
+      },
+      "selected_point_equals_body_every_sample": true
+    }
+  ],
+  "capture_integrity": {
+    "selected_samples": 12,
+    "total_raw_records": 16,
+    "trailing_partial_bytes": 0,
+    "raw_copy_equals_original_bytes": true,
+    "raw_copy_sha256": "64f9a5f00d81de613dbd6c26d46cbd983f1fdbc95cd5dc3721bb8f31b6973f39",
+    "all_selected_samples_equal_referenced_raw_line": true,
+    "evidence_equals_report_flight_matrix": true,
+    "all_four_pose_hashes_match": true,
+    "final_owning_client_resources": {
+      "A": {
+        "health": 80,
+        "shield": 0,
+        "ammo": 30,
+        "accepted": 0,
+        "rejected": 0,
+        "bullet_sequence": 0,
+        "guard_kills": 0
+      },
+      "B": {
+        "health": 80,
+        "shield": 0,
+        "ammo": 30,
+        "accepted": 0,
+        "rejected": 0,
+        "bullet_sequence": 0,
+        "guard_kills": 0
+      }
+    },
+    "all_three_process_bullet_init_and_impact_counts_zero": true,
+    "initial_replication_pending_then_resolved": [
+      {
+        "peer": "A",
+        "role": "B",
+        "world_time": 18.179478608071804,
+        "missing_fields": [
+          "position",
+          "falling",
+          "pawn_name"
+        ]
+      },
+      {
+        "peer": "B",
+        "role": "A",
+        "world_time": 11.040372598916292,
+        "missing_fields": [
+          "position",
+          "falling",
+          "pawn_name"
+        ]
+      }
+    ]
+  },
+  "interpretation": [
+    "Old-old: body camera simple and complex first hit the player proxy CharacterMesh0/Hips at about 19.73 m; the outgoing muzzle sphere first hits SpaceCenterInstanceGroup_17530.Instances after 63.00-63.24 cm.",
+    "Old-new: body camera simple and complex first hit the proxy; muzzle first hits the same environment component after 60.66-61.00 cm. Moving only the target to its new coordinate does not remove this obstruction.",
+    "New-old and new-new: all three query types first hit the proxy. The body point hits Hips; head and Spine2 points hit the current proxy physics bodies reported in cases.",
+    "In this two-position reconstruction, changing the observer fixture/camera configuration changes the muzzle blocker category for both target positions. Neither target-position change changes the category at a fixed observer configuration.",
+    "Head and Spine2 probes from the old observer are also blocked at the muzzle. These observations do not support a head-aim-only remedy for the reconstructed obstruction.",
+    "This establishes a current near-muzzle occlusion mechanism consistent with the route02 location, rather than a camera-to-body obstruction. It does not establish the collision actor of any historical route02 shot."
+  ],
+  "limits": [
+    "The old camera is the final route02 A-state snapshot, not a per-shot camera record. Route02 has no corresponding authoritative bullet initialization or impact diagnostics.",
+    "B is a normal player proxy with current idle animation and collision bodies. Its Hips/Spine2/RightShoulder hits must not be substituted for historical guard bones or poses.",
+    "A is fixture-positioned and viewed through world_camera. The current local muzzle, rotation and animation are reconstructed; original historical muzzle transforms were not restored.",
+    "Only two observer and two target coordinates were sampled, in fixed order, three records per case. This is not a repeated randomized experiment or a complete sweep of nearby positions.",
+    "Queries are local A-client straight line/sphere probes, not authoritative projectile simulation. No shots, spread, damage, guard AI, kill credit, extraction or settlement were exercised.",
+    "Fixture commands explicitly reapply unchanged current health and shield. Setup therefore is a fixture reconstruction, not an entirely read-only gameplay procedure.",
+    "The environment component identity is exact; this analysis does not infer its visual mesh or remove its collision.",
+    "The packaged processes and diagnostic capture passed. The main route remains outside this result."
+  ]
+}

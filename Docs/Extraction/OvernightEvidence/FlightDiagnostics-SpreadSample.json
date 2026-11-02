@@ -1,0 +1,511 @@
+{
+  "schema": 1,
+  "created_utc": "2026-11-02T21:43:06.981523+00:00",
+  "input_sha256": {
+    "Saved/Extraction/overnight-route03/Report.json": "097e9f152f42cf93a0c2910476961b4b7b21363e71743ee99a2262c121e91c9b",
+    "Saved/Extraction/overnight-route03/Server.log": "e09464f3afd3a6c529bafa754158be618534b05d2ac89abdbd9962bb9d96aff1",
+    "Saved/Extraction/overnight-route03/Server-state.json": "61004c234ea2f1801e08bcef639c6f1d4689ecfdc85c82b05611146b4cdf0ace",
+    "Saved/Extraction/overnight-route03/A-aim-diagnostics.jsonl": "273cf34c9519fefa8b48cdcde4e2ec9e525d13cc0f5be519bc19281baff1d6fb",
+    "Saved/Extraction/overnight-route03/OvernightAimFailure-01.json": "f8f70157ad43d39e95a85dcbc8417c9527caf82aa7301120f789d8884d8d86e9",
+    "Content/Extraction/Data/WeaponMechanics.json": "2ed67c97560e7f84c617e1b3a51f69d31c9e984743f312e83031a43ae6348dd6",
+    "Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp": "af0aeb2c56afa6baa8bd8d891fabb5ebf9cc122e660c92152b880cb10f35f9fb",
+    "Source/BrokenEdge/Weapon/WeaponMechanics.cpp": "ded07f1aed6baa0cc6c4d7ca99ccc38cf26d8264eb68dd3016877a0776ed947f",
+    "Source/BrokenEdge/Weapon/ExtractionBullet.cpp": "76f346bc64b332f839672f3e9c75374b672a88f9e3ff96b0e8d4292d4947ae71"
+  },
+  "run": {
+    "tag": "overnight-route03",
+    "result": "failed",
+    "error": "AssertionError('accepted shots without observed guard damage')",
+    "loot_seed": 17848,
+    "shooter_actor": "BP_StingerCharacter_C_2147481872",
+    "guard_actor": "BP_StingerCharacter_C_2147481803",
+    "accepted": 6,
+    "rejected": 0,
+    "player_health_at_gate": 74,
+    "player_health_final": 68,
+    "guard_health": 100,
+    "aim_alpha_at_gate": 0
+  },
+  "finding": "Six authoritative player bullets missed. No fixed body-center or muzzle obstruction is observed in the captured probes. The six-shot zero-damage stop is not sufficient to diagnose occlusion; these paths are consistent with hip-fire dispersion around a clear aim point.",
+  "player_shots": [
+    {
+      "bullet": "ExtractionBullet_2147470266",
+      "init_line": 996,
+      "start_cm": [
+        -15279.305,
+        -16593.803,
+        -72.221
+      ],
+      "velocity_cm_s": [
+        -1140.241,
+        -51716.938,
+        8961.482
+      ],
+      "body_damage": 20.0,
+      "projected_at_guard_y_cm": [
+        -15325.826827264767,
+        -18703.853819343134,
+        293.40742209700716
+      ],
+      "projected_x_z_offset_from_body_cm": [
+        57.73953234200417,
+        -3.8941004231024863
+      ],
+      "angle_to_guard_body_degrees": 1.5453573082189018,
+      "impact_line": 997,
+      "actor": "SpaceCenterInstanceGroup_16749",
+      "component": "Instances",
+      "component_path": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_16749.Instances",
+      "bone": "None",
+      "impact_point_cm": [
+        -15331.089,
+        -18943.49,
+        334.758
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        -0.0
+      ],
+      "start_penetrating": false,
+      "distance_cm": 2384.249,
+      "impact_relative_to_guard_y": "beyond_guard"
+    },
+    {
+      "bullet": "ExtractionBullet_2147470196",
+      "init_line": 1000,
+      "start_cm": [
+        -15265.954,
+        -16591.277,
+        -17.244
+      ],
+      "velocity_cm_s": [
+        -2177.482,
+        -51849.149,
+        7948.23
+      ],
+      "body_damage": 20.0,
+      "projected_at_guard_y_cm": [
+        -15354.674800369105,
+        -18703.853819343134,
+        306.6040626327675
+      ],
+      "projected_x_z_offset_from_body_cm": [
+        28.891559237667025,
+        9.30254011265788
+      ],
+      "angle_to_guard_body_degrees": 0.8129924757361666,
+      "impact_line": 1001,
+      "actor": "SpaceCenterInstanceGroup_16749",
+      "component": "Instances",
+      "component_path": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_16749.Instances",
+      "bone": "None",
+      "impact_point_cm": [
+        -15364.697,
+        -18943.49,
+        343.186
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        -0.0
+      ],
+      "start_penetrating": false,
+      "distance_cm": 2380.727,
+      "impact_relative_to_guard_y": "beyond_guard"
+    },
+    {
+      "bullet": "ExtractionBullet_2147470127",
+      "init_line": 1006,
+      "start_cm": [
+        -15265.479,
+        -16590.239,
+        -15.288
+      ],
+      "velocity_cm_s": [
+        -4082.033,
+        -51902.152,
+        6764.145
+      ],
+      "body_damage": 20.0,
+      "projected_at_guard_y_cm": [
+        -15431.711903827334,
+        -18703.853819343134,
+        260.16873081504895
+      ],
+      "projected_x_z_offset_from_body_cm": [
+        -48.14554422056244,
+        -37.1327917050607
+      ],
+      "angle_to_guard_body_degrees": 1.6279690515595593,
+      "impact_line": 1007,
+      "actor": "SpaceCenterInstanceGroup_17087",
+      "component": "Instances",
+      "component_path": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_17087.Instances",
+      "bone": "None",
+      "impact_point_cm": [
+        -15447.48,
+        -18904.908,
+        286.241
+      ],
+      "normal": [
+        0.034,
+        0.999,
+        -0.0
+      ],
+      "start_penetrating": false,
+      "distance_cm": 2340.32,
+      "impact_relative_to_guard_y": "beyond_guard"
+    },
+    {
+      "bullet": "ExtractionBullet_2147470059",
+      "init_line": 1010,
+      "start_cm": [
+        -15265.683,
+        -16590.85,
+        -15.66
+      ],
+      "velocity_cm_s": [
+        -3142.966,
+        -52029.43,
+        6269.782
+      ],
+      "body_damage": 20.0,
+      "projected_at_guard_y_cm": [
+        -15393.324205411354,
+        -18703.853819343134,
+        238.9665318003454
+      ],
+      "projected_x_z_offset_from_body_cm": [
+        -9.757845804582757,
+        -58.33499071976425
+      ],
+      "angle_to_guard_body_degrees": 1.5750074178967293,
+      "impact_line": 1011,
+      "actor": "SpaceCenterInstanceGroup_17565",
+      "component": "Instances",
+      "component_path": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_17565.Instances",
+      "bone": "None",
+      "impact_point_cm": [
+        -15364.661,
+        -18230.196,
+        180.991
+      ],
+      "normal": [
+        -0.016,
+        0.557,
+        0.83
+      ],
+      "start_penetrating": false,
+      "distance_cm": 1653.61,
+      "impact_relative_to_guard_y": "before_guard"
+    },
+    {
+      "bullet": "ExtractionBullet_2147469988",
+      "init_line": 1016,
+      "start_cm": [
+        -15278.994,
+        -16598.072,
+        -58.016
+      ],
+      "velocity_cm_s": [
+        -2511.346,
+        -51954.832,
+        7116.078
+      ],
+      "body_damage": 20.0,
+      "projected_at_guard_y_cm": [
+        -15380.781390032946,
+        -18703.853819343134,
+        230.40582912703192
+      ],
+      "projected_x_z_offset_from_body_cm": [
+        2.784969573825947,
+        -66.89569339307772
+      ],
+      "angle_to_guard_body_degrees": 1.7774496190560882,
+      "impact_line": 1017,
+      "actor": "SpaceCenterInstanceGroup_17565",
+      "component": "Instances",
+      "component_path": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_17565.Instances",
+      "bone": "None",
+      "impact_point_cm": [
+        -15356.334,
+        -18198.944,
+        160.336
+      ],
+      "normal": [
+        -0.015,
+        0.542,
+        0.84
+      ],
+      "start_penetrating": false,
+      "distance_cm": 1617.124,
+      "impact_relative_to_guard_y": "before_guard"
+    },
+    {
+      "bullet": "ExtractionBullet_2147469918",
+      "init_line": 1021,
+      "start_cm": [
+        -15266.239,
+        -16592.135,
+        -16.042
+      ],
+      "velocity_cm_s": [
+        -4933.084,
+        -51609.499,
+        8268.874
+      ],
+      "body_damage": 20.0,
+      "projected_at_guard_y_cm": [
+        -15468.087235732737,
+        -18703.853819343134,
+        322.29759210836653
+      ],
+      "projected_x_z_offset_from_body_cm": [
+        -84.52087612596551,
+        24.996069588256887
+      ],
+      "angle_to_guard_body_degrees": 2.3410664326454755,
+      "impact_line": 1022,
+      "actor": "SpaceCenterInstanceGroup_16749",
+      "component": "Instances",
+      "component_path": "/Game/Maps/SpaceCenter/L_SpaceCenterExtraction.L_SpaceCenterExtraction:PersistentLevel.SpaceCenterInstanceGroup_16749.Instances",
+      "bone": "None",
+      "impact_point_cm": [
+        -15490.621,
+        -18940.601,
+        360.069
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "start_penetrating": false,
+      "distance_cm": 2387.97,
+      "impact_relative_to_guard_y": "beyond_guard"
+    }
+  ],
+  "probes": [
+    {
+      "line": 1,
+      "world_time": 58.143943317234516,
+      "camera": [
+        -15289.466651230829,
+        -16525.952299158547,
+        -43.986098996023145
+      ],
+      "target_actor": "BP_StingerCharacter_C_2147481698",
+      "body": [
+        -15383.57,
+        -18703.850000000002,
+        297.3
+      ],
+      "production_hit_target": [
+        -14037.480515384967,
+        -16525.95229915975,
+        -43.986098996023145
+      ],
+      "muzzle_origin_blocked": false,
+      "body_first_blockers": {
+        "camera_simple": {
+          "actor": "BP_StingerCharacter_C_2147481698",
+          "component": "CharacterMesh0",
+          "bone": "Spine1",
+          "distance_cm": 2180.945556640625
+        },
+        "camera_complex": {
+          "actor": "BP_StingerCharacter_C_2147481698",
+          "component": "CharacterMesh0",
+          "bone": "Spine1",
+          "distance_cm": 2180.945556640625
+        },
+        "muzzle_complex_sphere": {
+          "actor": "BP_StingerCharacter_C_2147481698",
+          "component": "CharacterMesh0",
+          "bone": "Spine1",
+          "distance_cm": 2216.49560546875
+        }
+      },
+      "all_requested_point_queries_hit_target": true
+    },
+    {
+      "line": 2,
+      "world_time": 58.74457301571965,
+      "camera": [
+        -15299.852483434914,
+        -16535.944853061847,
+        -43.986098996023145
+      ],
+      "target_actor": "BP_StingerCharacter_C_2147481698",
+      "body": [
+        -15383.57,
+        -18703.850000000002,
+        297.3
+      ],
+      "production_hit_target": [
+        -15382.529981826036,
+        -18677.184879524157,
+        293.10218974393166
+      ],
+      "muzzle_origin_blocked": false,
+      "body_first_blockers": {
+        "camera_simple": {
+          "actor": "BP_StingerCharacter_C_2147481698",
+          "component": "CharacterMesh0",
+          "bone": "Spine1",
+          "distance_cm": 2169.185302734375
+        },
+        "camera_complex": {
+          "actor": "BP_StingerCharacter_C_2147481698",
+          "component": "CharacterMesh0",
+          "bone": "Spine1",
+          "distance_cm": 2169.185302734375
+        },
+        "muzzle_complex_sphere": {
+          "actor": "BP_StingerCharacter_C_2147481698",
+          "component": "CharacterMesh0",
+          "bone": "Spine1",
+          "distance_cm": 2111.35302734375
+        }
+      },
+      "all_requested_point_queries_hit_target": true
+    },
+    {
+      "line": 3,
+      "world_time": 59.31124101579189,
+      "camera": [
+        -15299.852459942551,
+        -16535.944853968904,
+        -43.986098996023145
+      ],
+      "target_actor": "BP_StingerCharacter_C_2147481698",
+      "body": [
+        -15383.57,
+        -18703.850000000002,
+        297.3
+      ],
+      "production_hit_target": [
+        -15382.584505066854,
+        -18677.928020765885,
+        293.3052725496622
+      ],
+      "muzzle_origin_blocked": false,
+      "body_first_blockers": {
+        "camera_simple": {
+          "actor": "BP_StingerCharacter_C_2147481698",
+          "component": "CharacterMesh0",
+          "bone": "Spine1",
+          "distance_cm": 2170.014404296875
+        },
+        "camera_complex": {
+          "actor": "BP_StingerCharacter_C_2147481698",
+          "component": "CharacterMesh0",
+          "bone": "Spine1",
+          "distance_cm": 2170.014404296875
+        },
+        "muzzle_complex_sphere": {
+          "actor": "BP_StingerCharacter_C_2147481698",
+          "component": "CharacterMesh0",
+          "bone": "Spine1",
+          "distance_cm": 2107.7783203125
+        }
+      },
+      "all_requested_point_queries_hit_target": true
+    },
+    {
+      "line": 4,
+      "world_time": 59.87790931761265,
+      "camera": [
+        -15299.852477282902,
+        -16535.944853299385,
+        -43.986098996023145
+      ],
+      "target_actor": "BP_StingerCharacter_C_2147481698",
+      "body": [
+        -15383.57,
+        -18703.850000000002,
+        297.3
+      ],
+      "production_hit_target": [
+        -15382.570024359036,
+        -18678.2562942329,
+        293.2708089431145
+      ],
+      "muzzle_origin_blocked": false,
+      "body_first_blockers": {
+        "camera_simple": {
+          "actor": "BP_StingerCharacter_C_2147481698",
+          "component": "CharacterMesh0",
+          "bone": "Spine1",
+          "distance_cm": 2170.2705078125
+        },
+        "camera_complex": {
+          "actor": "BP_StingerCharacter_C_2147481698",
+          "component": "CharacterMesh0",
+          "bone": "Spine1",
+          "distance_cm": 2170.2705078125
+        },
+        "muzzle_complex_sphere": {
+          "actor": "BP_StingerCharacter_C_2147481698",
+          "component": "CharacterMesh0",
+          "bone": "Spine1",
+          "distance_cm": 2112.459716796875
+        }
+      },
+      "all_requested_point_queries_hit_target": true
+    }
+  ],
+  "parameters": {
+    "hip_base_degrees": [
+      2.3296,
+      2.3296
+    ],
+    "ads_base_degrees": [
+      0.0,
+      0.0
+    ],
+    "per_shot_accumulation_degrees": [
+      1,
+      1
+    ],
+    "hip_recovery_degrees_per_second": [
+      15,
+      15
+    ],
+    "hip_accumulation_cap_degrees": [
+      5.75,
+      5.75
+    ],
+    "weapon_attachments": [],
+    "speed_cm_s": 52500,
+    "gravity_free_distance_cm": 2500.0,
+    "max_distance_cm": 100000,
+    "radius_cm": 1.0,
+    "nominal_hip_cone_offset_cm_at_2135": 86.85523862015405,
+    "source_locations": [
+      "WeaponMechanics.cpp:113-123 imports base, recovery and per-shot accumulation",
+      "ExtractionCombatComponent.cpp:189-191 recovers accumulation",
+      "ExtractionCombatComponent.cpp:243-259 blends hip/ADS and applies seeded spread",
+      "WeaponMechanics.cpp:271-279 samples a disk with sqrt(uniform radius)",
+      "ExtractionBullet.cpp:76 applies gravity after the free distance"
+    ]
+  },
+  "interpretation": [
+    "Shots 1, 2, 3 and 6 crossed the guard Y plane and hit geometry behind it. Shots 4 and 5 angled lower and hit SpaceCenterInstanceGroup_17565 before reaching that plane.",
+    "All four body probes first hit the replicated guard CharacterMesh0/Spine1 for simple line, complex line and muzzle sphere; all muzzle-origin obstruction probes were clear.",
+    "Probe 1 was captured during aim initialization: its production_hit_target still points along the previous view. Probes 2-4 converge on the guard torso. The actual six authoritative velocity vectors all point toward the encounter, so persistent stale aim is not supported.",
+    "All six recorded impact distances are below 2500 cm, so the configured gravity-free segment covers the entire logged flights.",
+    "At approximately 21.35 m, a 2.3296 degree base hip spread has an approximately 87 cm lateral scale. The projected offsets are compatible in scale with dispersion; no precise hit probability is estimated."
+  ],
+  "limitations": [
+    "Client probes sample a clear centerline; they are not per-shot authority traces or exact authority bone poses.",
+    "Projected guard-plane coordinates for shots 4 and 5 are counterfactual extensions: those bullets had already stopped on geometry.",
+    "Angles are calculated to actor location plus Z10, not the exact per-shot crosshair impact, seed, spread or muzzle pose used by ResolveShot. They are not exact measurements of the generated spread angle.",
+    "These six misses do not reproduce or explain the earlier route02 ninety-shot failure; the guard position differs.",
+    "The run intentionally stopped at a diagnostic threshold and does not establish a gameplay or route failure beyond that stop."
+  ],
+  "minimum_next_experiment": "Use existing normal RightMouseButton input with the same body target, wait for owner and authority aim_alpha > 0.99, then fire through the production input path. Keep collision, damage, ammunition and AI rules unchanged. This tests normal ADS dispersion without requiring head targeting or a production fix.",
+  "actions": "Only this analysis JSON was written; no UE, driver commands, source edits or Git operations were run."
+}
