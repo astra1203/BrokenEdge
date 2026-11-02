@@ -25,6 +25,9 @@
 #include "InputKeyEventArgs.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
+#include "Components/ProgressBar.h"
+#include "BrokenEdge/Extraction/ExtractionWidget.h"
 #include "BrokenEdge/UI/LobbyShowcase.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -75,12 +78,14 @@ public:
 	FExtractionDriver(FAutomationTestBase* InTest, FString InRole, FString InFolder)
 		: Test(InTest), Role(MoveTemp(InRole)), Folder(MoveTemp(InFolder)), Started(FPlatformTime::Seconds())
 	{
+		FParse::Value(FCommandLine::Get(), TEXT("ExtractionTestTimeout="), TimeoutSeconds);
+		TimeoutSeconds = FMath::Clamp(TimeoutSeconds, 60.0, 7200.0);
 	}
 
 	virtual bool Update() override
 	{
 		const double Now = FPlatformTime::Seconds();
-		if (Now - Started > 1500)
+		if (Now - Started > TimeoutSeconds)
 		{
 			Test->AddError(TEXT("Extraction driver timeout"));
 			return true;
@@ -220,6 +225,43 @@ public:
 							           : Kind == TEXT("heal")
 							           ? EExtractionAction::Heal
 							           : EExtractionAction::Smoke, Target);
+				}
+				else if (Op == TEXT("exit_config") && Role == TEXT("Server"))
+				{
+					const FName ExitId(*Command->GetStringField(TEXT("exit_id")));
+					AExtractionExit* Exit = nullptr;
+					for (TActorIterator<AExtractionExit> It(World); It; ++It)
+						if (It->Definition.Id == ExitId)
+						{
+							Exit = *It;
+							break;
+						}
+					if (!Exit) Error = TEXT("Unknown test exit");
+					else
+					{
+						auto Definition = Exit->Definition;
+						double Value;
+						if (Command->TryGetNumberField(TEXT("opens_after"), Value))
+							Definition.OpensAfterSeconds =
+								Value;
+						if (Command->TryGetNumberField(TEXT("closes_after"), Value))
+							Definition.ClosesAfterSeconds =
+								Value;
+						if (Command->TryGetNumberField(TEXT("hold_seconds"), Value)) Definition.HoldSeconds = Value;
+						if (Command->TryGetNumberField(TEXT("capacity"), Value)) Definition.Capacity = Value;
+						if (!Definition.IsValid()) Error = TEXT("Invalid test exit definition");
+						else
+						{
+							Exit->Configure(Definition);
+							bool ResetStart = false;
+							if (Command->TryGetBoolField(TEXT("reset_start"), ResetStart) && ResetStart)
+								Exit->StartRound(World->GetTimeSeconds());
+							if (Command->TryGetNumberField(TEXT("used"), Value))
+								Exit->UsedCapacity = FMath::Max(
+									0, static_cast<int32>(Value));
+							Exit->ForceNetUpdate();
+						}
+					}
 				}
 				else if (Op == TEXT("guard_spawn") && Role == TEXT("Server"))
 				{
@@ -633,6 +675,7 @@ private:
 	int32 WalkIndex = 0;
 	double WalkSince = 0;
 	double Started, LastWrite = 0, PulseEnd = 0;
+	double TimeoutSeconds = 1500;
 	int32 LastCommand = 0;
 	bool bHeadAim = false;
 	bool bBodyCenterAim = false;
@@ -679,6 +722,7 @@ private:
 			Entry->SetStringField(TEXT("id"), I.Id.ToString());
 			Entry->SetStringField(TEXT("definition"), I.Definition.ToString());
 			Entry->SetNumberField(TEXT("quantity"), I.Quantity);
+			Entry->SetNumberField(TEXT("sell_price"), GetDefault<UExtractionProgressionRules>()->SellPrice(I, I.Quantity));
 			Entry->SetNumberField(TEXT("x"), I.Cell.X);
 			Entry->SetNumberField(TEXT("y"), I.Cell.Y);
 			Entry->SetNumberField(TEXT("slot"), I.Slot);
@@ -1095,6 +1139,19 @@ private:
 			if (Widget->IsInViewport() && Widget->IsVisible())
 				VisibleWidgets.Add(MakeShared<FJsonValueString>(Widget->GetClass()->GetName()));
 		State->SetArrayField(TEXT("visible_widgets"), VisibleWidgets);
+		for (auto* Widget : Widgets)
+			if (Cast<UExtractionWidget>(Widget) && Widget->IsInViewport())
+			{
+				auto Hud = MakeShared<FJsonObject>();
+				if (const auto* Text = Cast<UTextBlock>(Widget->GetWidgetFromName(TEXT("ExtractionCountdown"))))
+					Hud->SetStringField(TEXT("countdown_text"), Text->GetText().ToString());
+				if (const auto* Progress = Cast<UProgressBar>(Widget->GetWidgetFromName(TEXT("ExtractionProgress"))))
+				{
+					Hud->SetBoolField(TEXT("progress_visible"), Widget->IsVisible() && Progress->IsVisible());
+					Hud->SetNumberField(TEXT("progress_percent"), Progress->GetPercent());
+				}
+				State->SetObjectField(TEXT("extraction_hud"), Hud);
+			}
 		int32 Showcases = 0;
 		for (TActorIterator<ALobbyShowcase> It(World); It; ++It)
 		{
@@ -1165,8 +1222,24 @@ private:
 		if (auto* GS = World->GetGameState<AExtractionGameState>())
 		{
 			State->SetStringField(TEXT("storage_error"), GS->StorageError);
+			TArray<TSharedPtr<FJsonValue>> ExitStates;
 			for (TActorIterator<AExtractionExit> It(World); It; ++It)
 			{
+				auto Entry = MakeShared<FJsonObject>();
+				Entry->SetStringField(TEXT("id"), It->Definition.Id.ToString());
+				Entry->SetStringField(TEXT("label"), It->Definition.Label.ToString());
+				Entry->SetArrayField(TEXT("bounds_center"), VectorJson(It->GetActorTransform().TransformPosition(It->Definition.BoundsOffset)));
+				Entry->SetArrayField(TEXT("half_extent"), VectorJson(It->Definition.HalfExtent));
+				Entry->SetArrayField(TEXT("position"), VectorJson(It->GetActorLocation()));
+				Entry->SetNumberField(TEXT("opens_after"), It->Definition.OpensAfterSeconds);
+				Entry->SetNumberField(TEXT("closes_after"), It->Definition.ClosesAfterSeconds);
+				Entry->SetNumberField(TEXT("round_started"), It->RoundStartedAt);
+				Entry->SetNumberField(TEXT("hold_seconds"), It->Definition.HoldSeconds);
+				Entry->SetNumberField(TEXT("capacity"), It->Definition.Capacity);
+				Entry->SetNumberField(TEXT("used"), It->UsedCapacity);
+				Entry->SetBoolField(TEXT("available"), It->Available(GS->GetServerWorldTimeSeconds()));
+				Entry->SetStringField(TEXT("reason"), It->UnavailableReason(GS->GetServerWorldTimeSeconds()));
+				ExitStates.Add(MakeShared<FJsonValueObject>(Entry));
 				State->SetArrayField(TEXT("exit_position"), VectorJson(It->GetActorLocation()));
 				FHitResult Floor;
 				if (World->LineTraceSingleByChannel(Floor, FVector(1400, 2900, 650), FVector(1400, 2900, -1000),
@@ -1176,6 +1249,7 @@ private:
 					State->SetStringField(TEXT("exit_surface"), GetNameSafe(Floor.GetActor()));
 				}
 			}
+			State->SetArrayField(TEXT("exits"), ExitStates);
 			State->SetNumberField(TEXT("phase"), static_cast<int32>(GS->Phase));
 			State->SetNumberField(TEXT("alive"), GS->AlivePlayers);
 			State->SetNumberField(TEXT("remaining"), GS->Deadline - GS->GetServerWorldTimeSeconds());
@@ -1235,9 +1309,13 @@ private:
 				{
 					Player->SetBoolField(TEXT("ready"), LobbyPS->IsLobbyReady());
 					Player->SetNumberField(TEXT("squad"), LobbyPS->ExtractionSquad);
+					Player->SetStringField(TEXT("extraction_raid"), LobbyPS->ExtractionRaid.ToString());
 				}
 				if (auto* ExtractionPS = Cast<AExtractionPlayerState>(PS))
 				{
+					Player->SetStringField(TEXT("extract_exit_id"), ExtractionPS->ExtractExitId.ToString());
+					Player->SetStringField(TEXT("extract_blocked_reason"), ExtractionPS->ExtractBlockedReason);
+					Player->SetNumberField(TEXT("extract_at"), ExtractionPS->ExtractAt);
 					Player->SetNumberField(
 						TEXT("life"), static_cast<int32>(ExtractionPS->Life));
 					Player->SetObjectField(TEXT("inventory"), InventoryJson(ExtractionPS->Inventory->Contents));

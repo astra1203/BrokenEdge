@@ -85,7 +85,7 @@ parser.add_argument('--traversal-lifecycle', action='store_true', help='Three-pl
 parser.add_argument('--optic-validation', action='store_true', help='Additional mounted-optic visual acceptance in the equipment scenario')
 parser.add_argument('--optic-remote-only', action='store_true', help='Stop equipment acceptance after observer mount captures; not a full combat regression')
 parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2560x1440', '3440x1440'], help='Rendered client size for visual acceptance')
-parser.add_argument('--scenario', choices=['lobby-ui', 'loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
+parser.add_argument('--scenario', choices=['exit-feedback', 'lobby-ui', 'loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
 parser.add_argument('--players', type=int, choices=[1, 2, 3, 6])
 parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
 parser.add_argument('--rendered-role', choices=['A', 'B'], help='Render only this client; the other clients remain connected with NullRHI')
@@ -93,6 +93,7 @@ parser.add_argument('--performance-route', choices=['old', 'north', 'east'], def
 parser.add_argument('--performance-samples', type=int, choices=[1, 3], default=3)
 parser.add_argument('--performance-seconds', type=int, choices=[60, 180], default=180)
 parser.add_argument('--network-stats', action='store_true', help='Enable UE network byte-rate collection for a separate bandwidth capture')
+parser.add_argument('--bounded-rendering', action='store_true', help='Functional/HUD validation with Medium scalability, 768 MiB texture pool and no ray tracing; not default visual/performance acceptance')
 parser.add_argument('--streaming-loops', type=int, choices=[1, 2, 10], default=10)
 args = parser.parse_args()
 if args.players == 1 and args.scenario != 'lobby-ui':
@@ -308,6 +309,15 @@ def launch(role):
         command += ['-ini:Engine:[/Script/OnlineSubsystemUtils.IpNetDriver]:ConnectionTimeout=10.0']
     if role == 'Server' and args.traversal_lifecycle:
         command += ['-ini:Engine:[/Script/OnlineSubsystemUtils.IpNetDriver]:ConnectionTimeout=10.0']
+    if args.bounded_rendering and role in rendered_roles:
+        # Process-only resource limits; record them in the invocation and leave
+        # the project's normal visual settings and assets unchanged.
+        quality = ','.join('sg.' + name + 'Quality 1' for name in
+            ['ViewDistance', 'AntiAliasing', 'Shadow', 'GlobalIllumination', 'Reflection',
+             'PostProcess', 'Texture', 'Effects', 'Foliage', 'Shading'])
+        command = [c.replace('-ExecCmds=', '-ExecCmds=' + quality + ',r.Streaming.PoolSize 768,', 1)
+                   if c.startswith('-ExecCmds=') else c for c in command]
+        command += ['-noraytracing']
     if args.scenario == 'swap':
         command += ['-LogCmds=LogTemp Verbose']
     env = os.environ.copy()
@@ -335,7 +345,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['lobby-ui', 'weapon-mechanics', 'knife', 'scar', 'settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
+    phase4 = args.scenario in ['exit-feedback', 'lobby-ui', 'weapon-mechanics', 'knife', 'scar', 'settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
@@ -467,7 +477,10 @@ try:
         check('Packet simulation applied: 50ms each direction and 2 percent loss', lambda: all(state(r).get('packet_lag') == 50 and state(r).get('packet_loss') == 2 for r in processes))
     for role in rendered_roles:
         send(role, 'screenshot', name='spawn')
-    if args.scenario == 'identity':
+    if args.scenario == 'exit-feedback':
+        from exit_feedback_scenarios import run
+        run(globals())
+    elif args.scenario == 'identity':
         check('Same credential cannot bind two simultaneous clients', lambda: not state('B').get('account', {}).get('bound') and bool(state('B').get('account', {}).get('message')))
         send('B', 'ready')
         check('Unbound duplicate cannot become ready', lambda: not player('Server', 'B')['ready'])

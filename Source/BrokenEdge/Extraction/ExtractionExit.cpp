@@ -34,6 +34,8 @@ AExtractionExit::AExtractionExit()
 	Label->SetWorldSize(45);
 	Label->SetHorizontalAlignment(EHTA_Center);
 	Label->SetTextRenderColor(FColor(70, 230, 170));
+	// The HUD owns localized point names and timing; world text obscures nearby players.
+	Label->SetHiddenInGame(true);
 }
 
 // 把世界位置变换到撤离点局部坐标，再减去 BoundsOffset 检测半尺寸；不是依靠碰撞重叠事件。

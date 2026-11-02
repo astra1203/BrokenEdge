@@ -40,12 +40,18 @@
 | 04:08–04:11 | 增加可选 FASTLINK 本机符号并完成新客户端 | overnight-client-fastlink01 重新链接成功，最低空闲 RAM 12.56 GiB；overnight-package-client04 Build/Cook/Stage/PE 全部通过。包 EXE 与原生 SHA 一致，FASTLINK 索引符号不纳入运行包 | 默认构建方式不变，待独立提交工具改进 |
 | 04:15 | 启动新独立包撤离反馈联机验收 | overnight-packaged-exit01：专服 + 两客户端，A 渲染、B NullRHI；中等测试画质，仅作为功能/HUD覆盖 | 运行中 |
 | 04:16–04:18 | 独立包撤离反馈首轮发现遗漏 Cook 资源 | 26项场景/复制/HUD检查全部通过，专服自动化Success、无旧PC出生错误；客户端因缺动态加载的拾取UI而Fail，另发现蜂医枪资源遗漏。整轮仍failed，修复正式Cook覆盖后重跑；两行中央提示已截图确认 | 不将场景通过记为整轮通过 |
+| 04:20 | 发布可选低内存链接方式与独立包构建证据 | 3组CLI测试通过，Editor/compile-only误用提前拒绝；58452bc8f08b480a4e7b7471f7558cc4922bad10已推送，HEAD/跟踪/GitHub一致 | 已推送 |
+| 04:21–04:23 | 新Cook配置首轮专服打包中止 | overnight-package-server02重新触发Full PDB链接，RAM0.691GiB时保护器停止；未到Cook，没有有效包。中断EXE/PDB及UBT日志保留 | failed/aborted_resource，改专服也用FASTLINK |
+| 04:24 | 开始新配置专服03并修正世界文字遮挡 | UI/Looting、蜂医模型、物品定义和钥匙门默认模型4个窄Cook根已补齐；此次重建一并隐藏运行时世界Label，保留地面标记和HUD点名/规则，未改区域判定 | 编译/打包中，截图重验待完成 |
+| 04:26–04:30 | 全新配对包通过并完成撤离反馈联网验收 | Server03/Client05均Build/Cook/Stage/PE通过，两端所有生产Source/Config哈希与当前文件一致。overnight-packaged-exit02共26项检查通过，Server/A/B均Automation Success、exit0、finish ack；无缺UI/蜂医包错误 | DevelopmentPackages-02.json、ExitFeedback-Packaged.json及4张真实HUD截图；A中等画质，B NullRHI |
+| 04:30 | 核对近距离撤离HUD | 两行倒计时与进度条无重叠；世界Label缺字遮挡已消失；地面Marker和屏幕点名、条件保留 | 本轮fixtures验证，不宣称连续路线或900秒自然开放已通过 |
+| 04:31–04:33 | 独立包守卫回归首轮 | 21项通过：巡逻、实际逐枪反应/射速/伤害、玩家伤害、墙体、烟雾三秒阻挡；随后等待守卫进入换弹超时。整轮failed，保留原始日志，正在定位 | 不计完整守卫回归通过 |
 
 ## 工作包状态
 
 | 工作包 | 状态 | 验收边界 |
 | --- | --- | --- |
-| 撤离区域反馈 | 规则实现和自动化通过；联机待验证 | 中央原因、倒计时取消、服务器确认、玩家状态隔离 |
+| 撤离区域反馈 | 规则/3项原生/26项独立包联机/HUD截图通过 | 中央原因、倒计时取消、服务器确认、玩家状态隔离 |
 | 守卫回归修正 | 实施中 | 当前规则射速/伤害、快照漏采、掉落与拾枪 |
 | 正式地图连续路线 | 准备中 | 正常行走与搜索，不使用途中传送证明路线 |
 | 回仓与第二局 | 待实施验证 | 物品唯一归属、装备保留、出售与再次出战 |

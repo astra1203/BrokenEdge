@@ -98,9 +98,10 @@ void UExtractionWidget::Refresh()
 			if (PS->ExtractAt > 0 && PS->ExtractExitId == It->Definition.Id)
 			{
 				const double Remaining = FMath::Max(0.0, PS->ExtractAt - GS->GetServerWorldTimeSeconds());
-				CountdownText = It->Definition.Label.ToString() + TEXT("\n") + (Remaining > 0
-					? FString::Printf(TEXT("正在撤离  %.1f\n请留在撤离区域内"), Remaining)
-					: FString(TEXT("等待服务器确认撤离")));
+				// Keep the point and timer on one line so the existing two-line HUD slot stays above its progress bar.
+				CountdownText = Remaining > 0
+					? FString::Printf(TEXT("%s · 正在撤离 %.1f\n请留在撤离区域内"), *It->Definition.Label.ToString(), Remaining)
+					: It->Definition.Label.ToString() + TEXT("\n等待服务器确认撤离");
 				ExitFraction = FMath::Clamp(1.f - Remaining / It->Definition.HoldSeconds, 0., 1.);
 				bShowExitProgress = Remaining > 0;
 			}
