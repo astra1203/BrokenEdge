@@ -1,0 +1,348 @@
+{
+  "schema": 1,
+  "result": "review_complete_with_explicit_boundaries",
+  "reviewed_at_utc": "2026-11-02T22:42:35.282549+00:00",
+  "reviewed_at_beijing": "2026-11-03T06:42:35.282549+08:00",
+  "baseline_commit": "ba124b0e9ecdf09161c7d5a7a08b9c3a628084a4",
+  "head_commit": "35229ee2608a79ec2b405a4fb0b3f1902c413922",
+  "scope": "Read-only review of committed Source/Config changes from baseline to HEAD plus the current uncommitted GameMode development spawn-group support. Existing build evidence was compared and packaged PE files were rehashed; no build, UE run, asset audit or gameplay retest was performed.",
+  "conclusion": "No additional damage, fire-rate, spread, collision or persistence-rule mutation was found in this diff. No new source-level release blocker was identified. Extraction overlap selection, development gates and role-specific build provenance are explicit below.",
+  "committed_source_config_paths": [
+    "Config/DefaultGame.ini",
+    "Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp",
+    "Source/BrokenEdge/Extraction/ExtractionCombatComponent.h",
+    "Source/BrokenEdge/Extraction/ExtractionExit.cpp",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.h",
+    "Source/BrokenEdge/Extraction/ExtractionWidget.cpp",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp",
+    "Source/BrokenEdge/Tests/ExtractionExitFeedbackTests.cpp",
+    "Source/BrokenEdge/Tests/ExtractionSpawnLifecycleTests.cpp",
+    "Source/BrokenEdge/Tests/GuardBTTaskTests.cpp",
+    "Source/BrokenEdge/Weapon/ExtractionBullet.cpp"
+  ],
+  "uncommitted_source_config_paths": [
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp"
+  ],
+  "audited_working_file_sha256": {
+    "Config/DefaultGame.ini": "8505e7b8a4d4ba7891db93664cc182f3b16793c0d2c47af852df0fb5d6c414cd",
+    "Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp": "af0aeb2c56afa6baa8bd8d891fabb5ebf9cc122e660c92152b880cb10f35f9fb",
+    "Source/BrokenEdge/Extraction/ExtractionCombatComponent.h": "ed63b238f91776141baedb7ea2343b217395cc3dba056d7c318ccf93488103a2",
+    "Source/BrokenEdge/Extraction/ExtractionExit.cpp": "3bbb510b921d29bb5973921409f7b67c5a865eae50de4d766fe97712f389ca3b",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp": "d13bf93ff7570e1241f704d98b7167cb8b9165808f7e8408259e717541e5edd0",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.h": "3e00f3a25ef6cffbeb9c3e283eef52e571def64ba88338c6e599daf6aeeab2e2",
+    "Source/BrokenEdge/Extraction/ExtractionWidget.cpp": "0d45bcb28bc33e1292e3303555c20b1a3612b3abcb712791abdb623f6f97fa74",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "0cc9d9e0296a7088ca27c867a34fa5db0a5716e4864fe7f85df8e70b398bb081",
+    "Source/BrokenEdge/Tests/ExtractionExitFeedbackTests.cpp": "8dc230840a4eda0c20c12221c3f1539624042d2bd1b14a8acc3e9c7c3399fcb5",
+    "Source/BrokenEdge/Tests/ExtractionSpawnLifecycleTests.cpp": "40474aade2caf447c20311f15691b5637c8693f4cbc369c13522d1da43e89c66",
+    "Source/BrokenEdge/Tests/GuardBTTaskTests.cpp": "d1c96d16482ae21ba3da9da9cea8b0a389e5c3efe9286523214f8434685d6e08",
+    "Source/BrokenEdge/Weapon/ExtractionBullet.cpp": "76f346bc64b332f839672f3e9c75374b672a88f9e3ff96b0e8d4292d4947ae71"
+  },
+  "production_changes": [
+    {
+      "area": "Extraction region feedback and overlap selection",
+      "sources": [
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+          "line": 498
+        },
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+          "line": 513
+        },
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+          "line": 525
+        }
+      ],
+      "behavior": "Select the containing region before evaluating availability; publish its unavailable reason and cancel hold. In overlaps, initial selection follows map-definition order and an existing selection is retained even if unavailable instead of switching to another available exit.",
+      "boundary": "This includes an intentional selection behavior change, not only HUD text. Empty-pack item counting, hold duration, capacity consumption and durable-settlement ordering are unchanged.",
+      "test_reference": {
+        "path": "Source/BrokenEdge/Tests/ExtractionExitFeedbackTests.cpp",
+        "line": 205
+      }
+    },
+    {
+      "area": "Current controller spawn lifecycle",
+      "sources": [
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+          "line": 129
+        },
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+          "line": 149
+        },
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+          "line": 173
+        },
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+          "line": 187
+        }
+      ],
+      "behavior": "Only a valid current ExtractionPlayerController with its owning Player backlink, no pending swap, a loaded world and valid ExtractionPlayerState can start or count as ready. Retired seamless-travel controllers are excluded; missing state on a current controller remains an initialization error.",
+      "boundary": "Restart still requires Waiting phase, Alive state, no pawn and CanRestartPlayer. This does not add active-raid respawning."
+    },
+    {
+      "area": "HUD and world labels",
+      "sources": [
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionWidget.cpp",
+          "line": 93
+        },
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionWidget.cpp",
+          "line": 102
+        },
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionExit.cpp",
+          "line": 38
+        }
+      ],
+      "behavior": "Right-top empty-pack condition moves to the point-name line. Central feedback includes the point name and server-confirmation state; progress is visible only during a positive hold. The world TextRender label is hidden in game.",
+      "boundary": "No exit volume, Contains logic, empty-pack condition, distance calculation or authoritative completion rule is changed."
+    },
+    {
+      "area": "Cook coverage",
+      "sources": [
+        {
+          "path": "Config/DefaultGame.ini",
+          "line": 63
+        }
+      ],
+      "behavior": "Add four narrow always-cook roots for Looting UI, medical-gun meshes, item definitions and the default key-room door mesh.",
+      "boundary": "No gameplay numeric configuration values changed from the baseline."
+    }
+  ],
+  "diagnostic_and_fixture_gates": [
+    {
+      "area": "Accepted shot history",
+      "sources": [
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp",
+          "line": 405
+        },
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionCombatComponent.h",
+          "line": 58
+        }
+      ],
+      "gate": "WITH_DEV_AUTOMATION_TESTS",
+      "behavior": "Append sequence and server time only after a successful accepted shot; retain at most 64 records.",
+      "boundary": "Passive developer-build observation; no replicated or saved field and no shot acceptance/rejection rule change."
+    },
+    {
+      "area": "Authoritative bullet logging",
+      "sources": [
+        {
+          "path": "Source/BrokenEdge/Weapon/ExtractionBullet.cpp",
+          "line": 17
+        },
+        {
+          "path": "Source/BrokenEdge/Weapon/ExtractionBullet.cpp",
+          "line": 51
+        },
+        {
+          "path": "Source/BrokenEdge/Weapon/ExtractionBullet.cpp",
+          "line": 88
+        }
+      ],
+      "cvar": "BrokenEdge.Weapon.LogFlight",
+      "default": 0,
+      "gate": "Explicit nonzero CVar plus HasAuthority() and !bPredicted",
+      "guarded_by_dev_automation_macro": false,
+      "shipping_exclusion_claimed": false,
+      "behavior": "Log initialization and first blocking impact; no new per-tick log, trace, damage calculation or projectile mutation.",
+      "boundary": "The CVar is default-off but is not wrapped in WITH_DEV_AUTOMATION_TESTS. Do not claim it is compiled out of Shipping."
+    },
+    {
+      "area": "Process-driver commands and aim probes",
+      "sources": [
+        {
+          "path": "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp",
+          "line": 2
+        },
+        {
+          "path": "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp",
+          "line": 230
+        },
+        {
+          "path": "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp",
+          "line": 1138
+        }
+      ],
+      "gate": "Entire driver is WITH_DEV_AUTOMATION_TESTS; the automation test requires an allowed test role and nonempty test directory. Aim probes additionally require ExtractionFlightDiagnostics and a configured aim target; exit_config only accepts the Server role.",
+      "behavior": "Read-only diagnostic traces/snapshots plus explicit isolated development fixture commands.",
+      "boundary": "The diagnostic traces do not alter production aim, muzzle origin, projectile collision or damage. Fixture exit schedule changes are not ordinary gameplay verification."
+    },
+    {
+      "area": "Uncommitted fixed authored spawn group",
+      "sources": [
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+          "line": 208
+        },
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+          "line": 310
+        },
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+          "line": 337
+        },
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+          "line": 386
+        }
+      ],
+      "gate": "WITH_DEV_AUTOMATION_TESTS AND ExtractionTestRole=Server AND nonempty ExtractionTestDir before reading ExtractionTestSpawnGroup",
+      "behavior": "Restrict candidates to the specified authored group; unavailable group or failed ground validation returns failure rather than falling back to another group.",
+      "boundary": "Without those development arguments, existing random group selection and recovery remain. This is server-process command-line configuration, not a client RPC or a teleport.",
+      "committed_at_review": false,
+      "working_file_sha256": "d13bf93ff7570e1241f704d98b7167cb8b9165808f7e8408259e717541e5edd0",
+      "build_coverage": "This exact working file hash occurs in Editor10, the latest HUD Client native build and the reused Server native build."
+    }
+  ],
+  "build_coverage": [
+    {
+      "build": "overnight-editor10",
+      "role": "Editor",
+      "evidence_file": "Saved/Extraction/overnight-editor10/Run.json",
+      "evidence_member": "$",
+      "evidence_file_sha256": "295e28df115462dffda41925cb8527619e787d0e3393ab0b32092d366490abd8",
+      "recorded_head": "0d3d98da9881f3f8c7fcc90f6ccfc166fcc4ecb7",
+      "started_utc": "2026-11-02T22:18:32.864688+00:00",
+      "exit_code": 0,
+      "compile_only": false,
+      "source_config_entries_compared": 208,
+      "build_manifest_sha256": "7d746aea88a48014112231c3745b0bd4d4087cbeb94c36f1baa33dab4d027ce8",
+      "current_files_manifest_sha256": "7d746aea88a48014112231c3745b0bd4d4087cbeb94c36f1baa33dab4d027ce8",
+      "all_entries_match_current": true,
+      "differences": [],
+      "game_mode_build_sha256": "d13bf93ff7570e1241f704d98b7167cb8b9165808f7e8408259e717541e5edd0"
+    },
+    {
+      "build": "overnight-hud-client01",
+      "role": "Client",
+      "evidence_file": "Docs/Extraction/OvernightEvidence/HUD-ExitStatus-Stage.json",
+      "evidence_member": "native_client_build",
+      "evidence_file_sha256": "c893e14d710773ad31ef4a3a93a526854897f98d589f1b054820bd557ff92031",
+      "recorded_head": "d11cf86b30ff22b1a7e4cd9c3e288cc0d9f7f072",
+      "started_utc": "2026-11-02T21:55:48.234955+00:00",
+      "exit_code": 0,
+      "compile_only": false,
+      "source_config_entries_compared": 208,
+      "build_manifest_sha256": "7d746aea88a48014112231c3745b0bd4d4087cbeb94c36f1baa33dab4d027ce8",
+      "current_files_manifest_sha256": "7d746aea88a48014112231c3745b0bd4d4087cbeb94c36f1baa33dab4d027ce8",
+      "all_entries_match_current": true,
+      "differences": [],
+      "game_mode_build_sha256": "d13bf93ff7570e1241f704d98b7167cb8b9165808f7e8408259e717541e5edd0"
+    },
+    {
+      "build": "overnight-flight-server01",
+      "role": "Server",
+      "evidence_file": "Docs/Extraction/OvernightEvidence/FlightDiagnostics-Stage.json",
+      "evidence_member": "native_builds[tag=overnight-flight-server01].build",
+      "evidence_file_sha256": "5e5e8e9142c41f2422035822aa82737dd23b34052bdc14cb4984f5a179e70323",
+      "recorded_head": "46df0763c7efad4b45a3a9e795f6dd31e7d48239",
+      "started_utc": "2026-11-02T21:09:14.300307+00:00",
+      "exit_code": 0,
+      "compile_only": false,
+      "source_config_entries_compared": 208,
+      "build_manifest_sha256": "8dfd5313996f70bb5bf74befa312fafbf668306d1d390cb196e6e799caa0cf8a",
+      "current_files_manifest_sha256": "7d746aea88a48014112231c3745b0bd4d4087cbeb94c36f1baa33dab4d027ce8",
+      "all_entries_match_current": false,
+      "differences": [
+        {
+          "path": "Source/BrokenEdge/Extraction/ExtractionWidget.cpp",
+          "build_sha256": "375e34f93fb4730db30c0c58f84907f8e262a3c36dc3be2715d24a4f612a5c54",
+          "current_sha256": "0d45bcb28bc33e1292e3303555c20b1a3612b3abcb712791abdb623f6f97fa74"
+        }
+      ],
+      "game_mode_build_sha256": "d13bf93ff7570e1241f704d98b7167cb8b9165808f7e8408259e717541e5edd0"
+    }
+  ],
+  "package_boundaries": {
+    "package_root": "Packaged/Overnight20261103_05",
+    "latest_editor_and_client_match_current_source_config": true,
+    "all_targets_from_identical_latest_source": false,
+    "server_difference": "The reused Server was built before the client-only ExtractionWidget.cpp line-layout change. No other Source/Config hash differs.",
+    "stage_scope": "Client-only HUD text layout native rebuild. Server binary, cooked resources and runtime dependencies byte-identical to 04. No new Cook or Server rebuild claimed.",
+    "fresh_cook_claimed": false,
+    "release_wording": "Latest Editor and Client match current Source/Config. Server reuse is intentional and differs only in the later HUD layout file. Do not claim every target has the identical latest source manifest or that this stage performed a fresh Cook.",
+    "optional_completion": "Rebuild Server only if an identical latest Source/Config manifest for every target is required; the review found no additional server-logic build gap."
+  },
+  "packaged_pe_verification": {
+    "method": "Current packaged files inspected for MZ/PE AMD64 headers and streaming SHA-256; compared with native build, staged package and route07 recorded hashes.",
+    "records": [
+      {
+        "role": "Server",
+        "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_05\\Server\\WindowsServer\\BrokenEdge\\Binaries\\Win64\\BrokenEdgeServer.exe",
+        "current_bytes": 321328640,
+        "current_file_sha256": "2b97179c948d50d2d35e0689795ea7c3fb831453bc199c94ec42e88c8a606902",
+        "native_build_sha256": "2b97179c948d50d2d35e0689795ea7c3fb831453bc199c94ec42e88c8a606902",
+        "stage_sha256": "2b97179c948d50d2d35e0689795ea7c3fb831453bc199c94ec42e88c8a606902",
+        "run07_sha256": "2b97179c948d50d2d35e0689795ea7c3fb831453bc199c94ec42e88c8a606902",
+        "machine": 34404,
+        "sections": 12,
+        "all_four_hashes_equal": true
+      },
+      {
+        "role": "A",
+        "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_05\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+        "current_bytes": 339632640,
+        "current_file_sha256": "acf1fcc54372261efcd663938142930b37ad2f837c0c7dcb9489b66323b3e87d",
+        "native_build_sha256": "acf1fcc54372261efcd663938142930b37ad2f837c0c7dcb9489b66323b3e87d",
+        "stage_sha256": "acf1fcc54372261efcd663938142930b37ad2f837c0c7dcb9489b66323b3e87d",
+        "run07_sha256": "acf1fcc54372261efcd663938142930b37ad2f837c0c7dcb9489b66323b3e87d",
+        "machine": 34404,
+        "sections": 13,
+        "all_four_hashes_equal": true
+      },
+      {
+        "role": "B",
+        "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_05\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+        "current_bytes": 339632640,
+        "current_file_sha256": "acf1fcc54372261efcd663938142930b37ad2f837c0c7dcb9489b66323b3e87d",
+        "native_build_sha256": "acf1fcc54372261efcd663938142930b37ad2f837c0c7dcb9489b66323b3e87d",
+        "stage_sha256": "acf1fcc54372261efcd663938142930b37ad2f837c0c7dcb9489b66323b3e87d",
+        "run07_sha256": "acf1fcc54372261efcd663938142930b37ad2f837c0c7dcb9489b66323b3e87d",
+        "machine": 34404,
+        "sections": 13,
+        "all_four_hashes_equal": true
+      }
+    ]
+  },
+  "provenance": [
+    {
+      "path": "Saved/Extraction/overnight-editor10/Run.json",
+      "sha256": "295e28df115462dffda41925cb8527619e787d0e3393ab0b32092d366490abd8"
+    },
+    {
+      "path": "Docs/Extraction/OvernightEvidence/HUD-ExitStatus-Stage.json",
+      "sha256": "c893e14d710773ad31ef4a3a93a526854897f98d589f1b054820bd557ff92031"
+    },
+    {
+      "path": "Docs/Extraction/OvernightEvidence/FlightDiagnostics-Stage.json",
+      "sha256": "5e5e8e9142c41f2422035822aa82737dd23b34052bdc14cb4984f5a179e70323"
+    },
+    {
+      "path": "Saved/Extraction/overnight-route07/Report.json",
+      "sha256": "44fe55c04f5c656e6ca3f3a65d30b8c1cf2c7fbae0debaf67b35d996ab045af6"
+    }
+  ],
+  "route07_boundary": {
+    "recorded_result": "failed",
+    "package_root": "Packaged/Overnight20261103_05",
+    "flight_diagnostics": true,
+    "complete_route_pass_claimed": false,
+    "note": "PE identity and source coverage are separate from route outcome; route07 is recorded failed and is not promoted to a complete-route pass."
+  },
+  "excluded_scope": [
+    "Previously existing BrokenEdge.uproject engine association change.",
+    "Asset content review, new Cook, Shipping target compilation and fresh runtime validation.",
+    "Uncommitted Python route/harness changes; these do not change the reviewed native Source/Config."
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "scope": "Exact historical scenario source bytes for failed runs; decompressed SHA matches the corresponding runtime report. Earlier unavailable versions are not reconstructed.",
+  "entries": [
+    {
+      "run": "overnight-route04b",
+      "artifact": "overnight-route04b.py.gz",
+      "uncompressed_sha256": "14259cb36da129738c5300ae4194d027860d159eafbdefb09348790a64fa5659",
+      "compressed_sha256": "159f2cc202c87d8cab8d8506d6ce2375d6b8a6d36a4c086f1bc8bb78632a9a29",
+      "result": "failed"
+    },
+    {
+      "run": "overnight-route05",
+      "artifact": "overnight-route05.py.gz",
+      "uncompressed_sha256": "63ebb89df3d8bf3aebfd5c59378a34ad2751b2f3e666c657d46bcadaef2a684b",
+      "compressed_sha256": "d3659998b45aca0e67eb43a88cf73594c6bb1174d59eab919779ff43a4024cf6",
+      "result": "failed"
+    },
+    {
+      "run": "overnight-route06",
+      "artifact": "overnight-route06.py.gz",
+      "uncompressed_sha256": "b06239608a7afe960f7acfe973103a6d9b2ca5fc88fe8522b673c0f1ced6ef9c",
+      "compressed_sha256": "44e1228dc3301ea19814aa588e5c3ac6a4344c616d6f41842e9c14e85776ed4f",
+      "result": "failed"
+    },
+    {
+      "run": "overnight-route07",
+      "artifact": "overnight-route07.py.gz",
+      "uncompressed_sha256": "752cc87a2644a904f2af54b2c85b5d9255fe331037094b045154deeb6ba513d4",
+      "compressed_sha256": "b3b4ef2efcd59a67387a34584293d6ed55a5720895a573fc4fbda6eabcf6c64d",
+      "result": "failed"
+    },
+    {
+      "run": "overnight-route08",
+      "artifact": "overnight-route08.py.gz",
+      "uncompressed_sha256": "4200f36c28f3fd3159acb27feb8ec3e81c44f5a6aac1f6391a2ac8e366ad5ce4",
+      "compressed_sha256": "f11d4676101383922457b5621b12061a03c293f4d54f87618913ac80a4850a55",
+      "result": "failed"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # BrokenEdge
 
-BrokenEdge 是一个使用 **Unreal Engine 5.8.3** 和 C++ 开发的多人第三人称项目，主要用于学习和实践角色移动、武器交互、属性增益、HUD、网络复制以及在线会话等 UE5 系统。
+BrokenEdge 是一个使用 **Unreal Engine 5.8.3** 和 C++ 开发的多人射击项目，包含航天基地搜打撤、大厅配装与仓库、物资搜刮、守卫交战和撤离结算，也保留自由模式与团队模式。当前本地玩家使用第一人称视角，远端角色保留世界人物表现。
 
 > 项目仍在开发中。部分玩法、联机回调和表现逻辑可能尚未完成，当前实现请以源码、蓝图和实际运行结果为准。
 
@@ -9,12 +9,13 @@ BrokenEdge 是一个使用 **Unreal Engine 5.8.3** 和 C++ 开发的多人第三
 - 基于 Enhanced Input 的移动、视角、跳跃、蹲伏、装备和瞄准输入
 - 角色移动动画、瞄准偏移和原地转向数据
 - 主武器/副武器的拾取、装备、背包挂接、丢弃和切换流程
-- 动态准星、武器弹药 HUD 接口和命中扫描武器基础结构
+- 动态准星、弹药 HUD，以及搜打撤模式的实体子弹、飞行时间、重力和距离衰减
 - 生命值、护盾及其网络复制与 HUD 更新
 - 生命、护盾、移动速度和跳跃能力拾取增益
 - `Server`、`Multicast`、`ReplicatedUsing` 等多人同步机制
 - 基于 Online Subsystem 的创建、搜索和加入会话接口
 - 游戏客户端、编辑器和独立服务器构建目标
+- 搜打撤的胸挂、背包、安全箱、物品唯一身份、回仓和再次出战
 
 ## 技术环境
 
@@ -76,6 +77,7 @@ git lfs ls-files | Select-Object -First 20
 
 - `Content/Maps/MainMap.umap`：编辑器启动地图。
 - `Content/Maps/Lobby.umap`：客户端和专用服务器的默认入口；客户端显示加入菜单，专服等待玩家。
+- `Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap`：航天基地搜打撤正式地图，经大厅准备流程进入。
 - `Content/Maps/FreeForAll.umap`、`Content/Maps/Teams.umap`：自由模式和团队模式比赛地图。
 - `BrokenEdge.Target.cs`：Windows 游戏程序，用于运行客户端。
 - `BrokenEdgeEditor.Target.cs`：编辑器目标。
@@ -91,9 +93,11 @@ git lfs ls-files | Select-Object -First 20
 [MultiplayerSessions.DedicatedServer]
 NumPublicConnections=8
 MinPlayersToStart=2
-MatchType=FreeForAll
+MatchType=Teams
 bAutoStartSession=True
 ```
+
+仓库默认模式为 `Teams`。测试搜打撤时，给专服传入 `-MatchType=Extraction`；本轮独立包复验命令见 [连续路线验证](Docs/Extraction/Overnight-Route-Validation.md)。
 
 `NumPublicConnections` 是容量；`MinPlayersToStart` 是开局所需的真实客户端数量，专服本身不算玩家。满足人数且全员准备后启动在线会话，并无缝跳转到所选比赛地图。将 `bAutoStartSession` 设为 False 会停留在大厅。当前支持 `FreeForAll`、`Teams` 和 `Extraction`；后者的死亡观战、返回大厅和验收记录见 [阶段 2](Docs/Extraction/Phase2.md)。
 
@@ -135,15 +139,17 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Scripts\Test-LanSessio
 
 可追加 `-BindAddress <本机IPv4>` 指定测试网卡。脚本使用无渲染模式，通过实际 UMG 按钮委托检查客户端禁止建房、空搜索重试、模式过滤、专服自动注册、两名客户端搜索加入，以及两个模式的无缝跳图。日志保存到 `Saved/SessionTests/Dedicated-<时间戳>/`。本机进程验收不等于跨机器网络或画面验证。
 
-### 已验证的打包结果（2026-09-08）
+### 历史打包记录（2026-09-08）
+
+以下保留当时的验收说明；原 `Saved` 日志不在 Git 中，当前工作区也已不可用。本轮结果见 [2026-11-03 实施记录](Docs/Extraction/Overnight-2026-11-03.md)。
 
 本次使用 `Saved/PackagingWorkspace/20260908-093209` 中的已保存工程副本构建，产物归档到原工程的 `Packaged` 目录，保留原工程编辑器运行。服务器和 Windows 客户端的 Build/Cook/Stage/Pak/IoStore/Archive 均成功，UAT 退出码均为 0；两个包的 EXE、`.pak`、`.ucas`、`.utoc` 齐全，启动脚本 SHA-256 与 `Deployment` 中的版本一致。
 
 实际执行 `Test-LanSessions.ps1 -Packaged -BindAddress 192.168.1.111`，9 项独立进程测试全部通过：空搜索重试 1 项；FreeForAll、Teams 各包含模式过滤、两个客户端加入和服务器状态检查 4 项。两个客户端均经菜单 Find/Join 连接到专服，达到 2 人后分别无缝进入对应比赛地图；切图后仍为专服，在线会话和容量配置有效。
 
-- [服务器打包日志](Saved/PackagingLogs/DedicatedServer-20260908.log)
-- [客户端成功打包日志](Saved/PackagingLogs/WindowsClient-20260908-resume.log)（首次编译在链接前中断，续跑复用了编译结果）
-- [打包产物联机测试日志](Saved/SessionTests/Dedicated-20260908-122341/)
+- 服务器打包日志原路径：`Saved/PackagingLogs/DedicatedServer-20260908.log`
+- 客户端成功打包日志原路径：`Saved/PackagingLogs/WindowsClient-20260908-resume.log`（首次编译在链接前中断，续跑复用了编译结果）
+- 打包产物联机测试日志原路径：`Saved/SessionTests/Dedicated-20260908-122341/`
 
 日志为本机产物，不纳入 Git。烘焙仍报告两项已有警告：`BrokenEdgePlayerController.MatchState` 未注册复制，以及动画蓝图 `hand_r` 修改骨骼节点没有启用变换。这次验收覆盖会话连接与地图切换，不代表已验证完整战斗流程、画面或跨机器网络。
 
@@ -241,6 +247,6 @@ git lfs status
 
 ## 蜂医角色测试
 
-地图：/Game/Characters/Stinger/Maps/L_StingerTest。角色 BP_StingerCharacter 直接继承 ABrokenEdgeCharacter；第一人称使用修正导入动作和 AK 适配，第三人称暂用原项目重定向动作。操作为 WASD 移动、Shift 冲刺、Space 跳跃、Ctrl 蹲伏、E 装备/切枪、右键瞄准、左键开火、R 换弹、V 切换视角。
+地图：/Game/Characters/Stinger/Maps/L_StingerTest。角色 BP_StingerCharacter 直接继承 ABrokenEdgeCharacter；第一人称使用修正导入动作和 AK 适配，第三人称暂用原项目重定向动作。操作为 WASD 移动、Shift 冲刺、Space 跳跃、Ctrl 蹲伏、E 装备/切枪、右键瞄准、左键开火、R 换弹。当前角色固定第一人称，旧测试说明中的 V 切换视角已不适用。
 
 [适配说明与验证证据](Docs/Stinger/ViewFit.md)。

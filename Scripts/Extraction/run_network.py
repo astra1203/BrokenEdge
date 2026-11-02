@@ -85,7 +85,7 @@ parser.add_argument('--traversal-lifecycle', action='store_true', help='Three-pl
 parser.add_argument('--optic-validation', action='store_true', help='Additional mounted-optic visual acceptance in the equipment scenario')
 parser.add_argument('--optic-remote-only', action='store_true', help='Stop equipment acceptance after observer mount captures; not a full combat regression')
 parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2560x1440', '3440x1440'], help='Rendered client size for visual acceptance')
-parser.add_argument('--scenario', choices=['flight-matrix', 'exit-feedback', 'lobby-ui', 'loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
+parser.add_argument('--scenario', choices=['flight-matrix', 'overnight-route', 'exit-feedback', 'lobby-ui', 'loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
 parser.add_argument('--players', type=int, choices=[1, 2, 3, 6])
 parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
 parser.add_argument('--rendered-role', choices=['A', 'B'], help='Render only this client; the other clients remain connected with NullRHI')
@@ -162,6 +162,9 @@ if args.scenario == 'guard_tuning':
                  'Source/BrokenEdge/Extraction/ExtractionGuard.h',
                  'Source/BrokenEdge/Extraction/ExtractionGuard.cpp',
                  'Source/BrokenEdge/Extraction/ExtractionHealth.cpp']:
+        report['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+if args.scenario == 'overnight-route':
+    for name in ['Scripts/Extraction/overnight_route_scenarios.py', 'Scripts/Extraction/overnight_route.json']:
         report['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
 
 if args.scenario == 'flight-matrix':
@@ -278,14 +281,18 @@ def launch(role):
                    '-server' if role == 'Server' else '-game']
     entry = '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction?ExpectedPlayers=3' if role == 'Server' and args.scenario == 'load_timeout' else '/Game/Maps/Lobby'
     command += [entry, '-nosound', '-unattended', '-nosplash', '-NoLoadingScreen',
-                '-ExtractionGuards=' + (str(args.guards) if args.guards is not None else '4' if args.scenario in ['pvpve', 'guard_tuning', 'progression', 'northcombat'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
+                '-ExtractionGuards=' + (str(args.guards) if args.guards is not None else '8' if args.scenario == 'overnight-route' else '4' if args.scenario in ['pvpve', 'guard_tuning', 'progression', 'northcombat'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
                 '-MatchType=Extraction', '-NumPublicConnections=' + str(len(ROLES)),
                 '-MinPlayersToStart=' + str(len(ROLES)), '-port=' + str(args.port), '-ExtractionTestPort=' + str(args.port),
-                '-ExtractionRoundSeconds=' + ('15' if args.scenario == 'timeout' else '1200' if args.debug_hold or args.scenario in ['streaming', 'performance', 'east'] else '600'),
+                '-ExtractionRoundSeconds=' + ('1800' if args.scenario == 'overnight-route' else '15' if args.scenario == 'timeout' else '1200' if args.debug_hold or args.scenario in ['streaming', 'performance', 'east'] else '600'),
                 '-ExtractionTestRole=' + role, '-ExtractionTestDir=' + str(OUT),
                 '-ExtractionStore=' + str(OUT / 'Store'), '-ExtractionProfile=' + args.tag + '_' + ('A' if args.scenario == 'identity' and role == 'B' else role),
                 '-ExecCmds=t.MaxFPS 30,' + ('sg.ShadowQuality 0,sg.EffectsQuality 1,' if len(ROLES) == 6 else '') + 'BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
                 '-TestExit=Automation Test Queue Empty', '-abslog=' + str(OUT / (role + '.log'))]
+    if args.scenario == 'overnight-route':
+        command += ['-ExtractionTestTimeout=4200']
+        if role == 'Server':
+            command += ['-ExtractionTestSpawnGroup=OfficialWestDorm']
     if args.isolated_room:
         command += ['-RoomName=' + args.tag, '-ExtractionTestRoom=' + args.tag]
     if args.loot_seed is not None:
@@ -483,7 +490,7 @@ try:
             join(role)
             if args.scenario == 'identity' and role == 'A':
                 check('First profile authenticated before duplicate connection', lambda: state('A').get('account', {}).get('bound'))
-    if args.scenario not in ['flight-matrix', 'lobby-ui', 'load_timeout', 'identity', 'progression']:
+    if args.scenario not in ['flight-matrix', 'overnight-route', 'lobby-ui', 'load_timeout', 'identity', 'progression']:
         begin_round()
     if args.lag:
         for role in processes:
@@ -494,6 +501,9 @@ try:
         send(role, 'screenshot', name='spawn')
     if args.scenario == 'flight-matrix':
         from flight_matrix_scenarios import run
+        run(globals())
+    elif args.scenario == 'overnight-route':
+        from overnight_route_scenarios import run
         run(globals())
     elif args.scenario == 'exit-feedback':
         from exit_feedback_scenarios import run

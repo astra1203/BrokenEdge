@@ -38,7 +38,8 @@
 // 配置本模式的状态、控制器和角色类型；延迟开局，等待大厅票据及地图加载校验。
 AExtractionGameMode::AExtractionGameMode()
 {
-	static ConstructorHelpers::FClassFinder<AExtractionLootActor> LootClass(TEXT("/Game/Blueprints/Extraction/BP_ExtractionLootActor"));
+	static ConstructorHelpers::FClassFinder<AExtractionLootActor> LootClass(
+		TEXT("/Game/Blueprints/Extraction/BP_ExtractionLootActor"));
 	if (LootClass.Succeeded()) LootActorClass = LootClass.Class;
 	PrimaryActorTick.bCanEverTick = true;
 	bDelayedStart = true;
@@ -204,6 +205,15 @@ AActor* AExtractionGameMode::FindPlayerStart_Implementation(AController* Player,
 AActor* AExtractionGameMode::ChoosePlayerStart_Implementation(AController* Player)
 {
 	if (const auto* Existing = PlayerStarts.Find(Player); Existing && Existing->IsValid()) return Existing->Get();
+#if WITH_DEV_AUTOMATION_TESTS
+	// The isolated process driver may select an authored group without teleporting a spawned player.
+	// Invalid test groups fail closed; ordinary games retain their random selection and recovery behavior.
+	FString TestSpawnGroup, TestRole, TestDirectory;
+	FParse::Value(FCommandLine::Get(), TEXT("ExtractionTestRole="), TestRole);
+	FParse::Value(FCommandLine::Get(), TEXT("ExtractionTestDir="), TestDirectory);
+	if (TestRole == TEXT("Server") && !TestDirectory.IsEmpty())
+		FParse::Value(FCommandLine::Get(), TEXT("ExtractionTestSpawnGroup="), TestSpawnGroup);
+#endif
 
 	// 出生失败以前是静默 return nullptr，日志里只剩 GameModeBase 的 "Player start not found"，
 	// 完全看不出是哪一步断的。这里对每一种失败只打一次，避免每帧刷屏。
@@ -297,6 +307,9 @@ AActor* AExtractionGameMode::ChoosePlayerStart_Implementation(AController* Playe
 		for (int32 I = 0; I < LoadedMapDefinition->SpawnGroups.Num(); ++I)
 		{
 			const auto& Group = LoadedMapDefinition->SpawnGroups[I];
+#if WITH_DEV_AUTOMATION_TESTS
+			if (!TestSpawnGroup.IsEmpty() && Group.Id != FName(*TestSpawnGroup)) continue;
+#endif
 			if (ClaimedSpawnGroups.Contains(I) || Group.Id.IsNone() || Group.Positions.Num() < 3) continue;
 			bool Valid = true;
 			FTransform Resolved;
@@ -321,6 +334,14 @@ AActor* AExtractionGameMode::ChoosePlayerStart_Implementation(AController* Playe
 		}
 		if (Candidates.IsEmpty())
 		{
+#if WITH_DEV_AUTOMATION_TESTS
+			if (!TestSpawnGroup.IsEmpty())
+			{
+				Fail(TEXT("test_group_unavailable"), TestSpawnGroup + TEXT(" | ") + FString::Join(
+					     Rejects, TEXT(" ; ")));
+				return nullptr;
+			}
+#endif
 			Fail(TEXT("no_valid_group"), FString::Join(Rejects, TEXT(" ; ")));
 			// 兜底：严格校验全挂时，宁可出生在 authored 位置（可能略悬空/贴地，落地即修正），
 			// 也不能让整局卡在 Waiting —— 那会让玩家一直处于冻结状态。
@@ -362,6 +383,13 @@ AActor* AExtractionGameMode::ChoosePlayerStart_Implementation(AController* Playe
 	FString Why;
 	if (!Ground(Group.Positions[Slot], Resolved, Why))
 	{
+#if WITH_DEV_AUTOMATION_TESTS
+		if (!TestSpawnGroup.IsEmpty())
+		{
+			Fail(TEXT("test_spawn_ground"), TestSpawnGroup + TEXT(" | ") + Why);
+			return nullptr;
+		}
+#endif
 		// 单点兜底：这一队已经选定了，不能因为一个点探测失败就让玩家没有 Pawn。
 		Resolved = Group.Positions[Slot];
 		Resolved.SetLocation(Resolved.GetLocation() + FVector(0, 0, Half + 3));
