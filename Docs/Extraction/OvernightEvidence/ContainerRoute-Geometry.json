@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "result": "completed",
+  "runtime_proof": false,
+  "classification": "ideal_centerline_intersections",
+  "scope": "Selected 7F asset-derived yaw OBBs vs linear, vertical capsule centre paths from measured feet; not an Unreal capsule Sweep, observed motion, jump arc or runtime traversal proof.",
+  "assumptions": [
+    "Grounded capsule center = measured feet + snapshot half-height in world Z.",
+    "Boxes retain audited asset transforms; snapshot verifies selection and translation only.",
+    "Only actual exported 7F candidates are covered; other scenery, loot and players are not.",
+    "Compatible spawn-pair alternatives are audited, not identified as actually walked.",
+    "Negative clearance is axis-to-box distance minus radius, not penetration depth.",
+    "CDO NO_COLLISION precedes native OnRep_Appearance enabling QueryOnly/Pawn Block."
+  ],
+  "selected_containers": [
+    "7F_Assembly_A1",
+    "7F_Assembly_B2",
+    "7F_Canning_A3",
+    "7F_Canning_B1",
+    "7F_LiftRoom_A3",
+    "7F_LiftRoom_B1",
+    "7F_LivingArea_A2",
+    "7F_LivingArea_B2",
+    "7F_StaffPassage1_A3",
+    "7F_StaffPassage1_B3",
+    "7F_StaffPassage2_A3",
+    "7F_StaffPassage2_B2",
+    "7F_TestRange_A3",
+    "7F_TestRange_B3",
+    "7F_WestDorm_A3",
+    "7F_WestDorm_B2",
+    "7F_WestGate_A2",
+    "7F_WestGate_B2"
+  ],
+  "ignored_nonexported_loot": 66,
+  "capsules_from_snapshot": {
+    "A": {
+      "radius_cm": 34.0,
+      "half_height_cm": 92.0
+    },
+    "B": {
+      "radius_cm": 34.0,
+      "half_height_cm": 92.0
+    }
+  },
+  "contact_tolerance_cm": 1e-07,
+  "summary": {
+    "route_pairs": 82,
+    "compatible_pairs": 24,
+    "skipped_pairs": 58,
+    "path_edges": 6496,
+    "box_edge_checks": 116928,
+    "broad_phase_rejections": 116899,
+    "exact_distance_checks": 29,
+    "intersecting_box_edges": 2
+  },
+  "conflicts": [
+    {
+      "a_start": "7F_WestDorm_A3",
+      "b_start": "7F_WestDorm_A3__peer",
+      "destination": "7F_WestDorm_B2",
+      "b_end": "7F_WestDorm_B2__peer",
+      "role": "A",
+      "container": "7F_WestDorm_B2",
+      "group": "7F_WestDorm_B",
+      "intersecting_edges": 1,
+      "closest": {
+        "edge_index": 15,
+        "parameter": 0.9848079979915845,
+        "axis_box_distance_cm": 30.86783975721145,
+        "clearance_cm": -3.132160242788551,
+        "center_cm": [
+          -15700.0,
+          -15301.51920020084,
+          -92.21508457792197
+        ],
+        "start_feet_cm": [
+          -15700.0,
+          -15400.0,
+          -169.4666
+        ],
+        "end_feet_cm": [
+          -15700.0,
+          -15300.0,
+          -184.4426
+        ]
+      }
+    },
+    {
+      "a_start": "7F_WestDorm_B2",
+      "b_start": "7F_WestDorm_B2__peer",
+      "destination": "7F_LivingArea_B2",
+      "b_end": "7F_LivingArea_B2__peer",
+      "role": "A",
+      "container": "7F_WestDorm_B2",
+      "group": "7F_WestDorm_B",
+      "intersecting_edges": 1,
+      "closest": {
+        "edge_index": 0,
+        "parameter": 0.01519200200841542,
+        "axis_box_distance_cm": 30.86783975721145,
+        "clearance_cm": -3.132160242788551,
+        "center_cm": [
+          -15700.0,
+          -15301.51920020084,
+          -92.21508457792197
+        ],
+        "start_feet_cm": [
+          -15700.0,
+          -15300.0,
+          -184.4426
+        ],
+        "end_feet_cm": [
+          -15700.0,
+          -15400.0,
+          -169.4666
+        ]
+      }
+    }
+  ],
+  "input_sha256": {
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Docs\\Extraction\\OvernightEvidence\\ContainerBounds-AssetAudit.json": "0ed96769378f35bfdff701e265d05650b1029def443b2e8d0285e2cdeb077222",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\overnight_route.json": "c7339854a385c07dea6146863004c8a3d318d96957d73cb9b8b6356955440f43",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-route05\\Server-state.json": "22cbc2435d9934d4f7266a8d32459b458b03951f045900b305b4d1e66942486e",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\container_route_geometry.py": "5ca6436e3eed1014e979441418979c27c29985894427dc3c88fbb77ff04e9182"
+  },
+  "asset_audit_provenance_verified": true
+}
