@@ -1,0 +1,943 @@
+{
+  "result": "passed",
+  "staged_at": "2026-11-02T21:58:51.467161+00:00",
+  "scope": "Client-only HUD text layout native rebuild. Server binary, cooked resources and runtime dependencies byte-identical to 04. No new Cook or Server rebuild claimed.",
+  "base_root": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_04",
+  "stage_root": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_05",
+  "changed_build_inputs": [
+    "Source/BrokenEdge/Extraction/ExtractionWidget.cpp"
+  ],
+  "native_client_build": {
+    "command": [
+      "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Build\\BatchFiles\\Build.bat",
+      "BrokenEdge",
+      "Win64",
+      "Development",
+      "-Project=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+      "-WaitMutex",
+      "-NoHotReloadFromIDE",
+      "-MaxParallelActions=1",
+      "-LinkerArguments=/DEBUG:FASTLINK"
+    ],
+    "head": "d11cf86b30ff22b1a7e4cd9c3e288cc0d9f7f072",
+    "started_utc": "2026-11-02T21:55:48.234955+00:00",
+    "compile_only": false,
+    "linker_debug_info": "MSVC FASTLINK index PDB; local-only symbols",
+    "input_sha256": {
+      "Scripts/Extraction/run_build.py": "526d64b9ae0f141a2d19ae92e2eccb84ca6d3f253ede1a7a3a7808acf1b68f07",
+      "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "0cc9d9e0296a7088ca27c867a34fa5db0a5716e4864fe7f85df8e70b398bb081",
+      "Config/DefaultGame.ini": "8505e7b8a4d4ba7891db93664cc182f3b16793c0d2c47af852df0fb5d6c414cd",
+      "Config/DefaultEngine.ini": "01df3b1fc0e4b2533180b8b5ce0b26b2893c8cb5f88c412a5e782407e6abdf7d",
+      "BrokenEdge.uproject": "f341e1a1916de17662ebb1921a015005d084c2f98d481b4ca77b2a25ba1bab77",
+      "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "7cd9aecb8490a270aa72c08bd383e990529f4bbea49bdbe461756ac9defb5b21",
+      "Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap": "674c0e223b8645e99b423c8739e156625499b4e4ea61ff43cdd8be3b290477ed",
+      "Source/BrokenEdge/Animation/AnimNode_RifleLocomotion.cpp": "6accbf9ed8b90a78e7922d854120d36de242c27a543b83f6b7c33da8d1a4c996",
+      "Source/BrokenEdge/Animation/AnimNode_RifleLocomotion.h": "ce84375999b2df377276b6a7bb5eebeb948b8c9652ccb6041374f3f1cc0ccdcd",
+      "Source/BrokenEdge/Animation/AnimNode_TraversalContact.h": "7ad5dd0747a702e5eedefdeceead60c4aca1d40f7bae06ff0dd693a2df886ba6",
+      "Source/BrokenEdge/Animation/AnimNode_WeaponGripReach.cpp": "10bec2cd4fafa6740a4ce120f2dc7e0fb3cbeaa8091b6079f379cdd78c03e57e",
+      "Source/BrokenEdge/Animation/AnimNode_WeaponGripReach.h": "6165d6d58a9bb7b8028e2b7b9a21f9a3a120a2306a9bf9b6e4f6b167a5840054",
+      "Source/BrokenEdge/Animation/ExtractionMeleePose.h": "43a0554b344d895a3052935944dcbd0799414c19fb1c00093be1939d8bfe51de",
+      "Source/BrokenEdge/Animation/Notifies/AnimNotify_Example.cpp": "954c4691e624c6a70ea5431a164edf55e151fd9844d3af479ce737b516a4f2ef",
+      "Source/BrokenEdge/Animation/Notifies/AnimNotify_Example.h": "b8c2217b9b3438fc2991559d3ef91a8d904a0052d2961bd084a41cbb882d2e34",
+      "Source/BrokenEdge/Animation/Notifies/AnimNotifyState_Example.cpp": "bb37ab333ff85bc0b2af445e796fd11503dc9ffc43b0581455b612e00f6e7d85",
+      "Source/BrokenEdge/Animation/Notifies/AnimNotifyState_Example.h": "4ae21fe4a45fd00981bcd3ad9e932e9d9eb0bb1f414710ae4c39da19757b5c92",
+      "Source/BrokenEdge/Animation/RifleLocomotionSet.h": "c64427662d23f0b40efb1da38737d027441c386520d807f22c72caa00fc6107e",
+      "Source/BrokenEdge/BrokenEdge.cpp": "891a1bdc7b0a623bd090c6f2e18d4fdb5642ed99fbc4c844da408a859f7ef68d",
+      "Source/BrokenEdge/BrokenEdge.h": "2ddc9169162e0e082a2a40a6e2d15fbb18919d4804fab7394a8b2ec1431e323d",
+      "Source/BrokenEdge/BrokenEdgeTypes/CombatState.h": "65ab71d71a73bd405ee5cd7da3e1e48a2e746f6eeff248a3d78bd5cb0c0da633",
+      "Source/BrokenEdge/BrokenEdgeTypes/Team.h": "eba981f0b82f0c7bfa053f277d1c7007f189d9e3bbee3de5b86397ad78ba3c53",
+      "Source/BrokenEdge/BrokenEdgeTypes/TurningInPlace.h": "87fcee9a961dfb77862086fe46e7218458b620d4251130414fedd6510a25614e",
+      "Source/BrokenEdge/BrokenEdgeTypes/WeaponType.h": "d2392f1aeceb7a4702130f4e19a1250640fb42eb1ed639e325d91fabd7630b33",
+      "Source/BrokenEdge/Character/BrokenEdgeAnimInstance.cpp": "9216df91704b111bb4522e51eb544ae2d6c86af77a9debc258c97e901c983aff",
+      "Source/BrokenEdge/Character/BrokenEdgeAnimInstance.h": "9c37b5df2b54ed13b2691fe6e5bee7a9dc8d1da542a1059899f8a29989750809",
+      "Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp": "6d186dde878b4157c98a2b033fae9c0241f462d099a8ee3045459e7520229a8a",
+      "Source/BrokenEdge/Character/BrokenEdgeCharacter.h": "c481bc77656a6610cbe5c28c335b2be92e0a2cf4a97903e6cc065c19270a1b1a",
+      "Source/BrokenEdge/Character/BTService_UpdateGuardContext.cpp": "37221a9c2c3b21a9dd58d16f4c77a60ac7572675be8246d51e45f7e5ea85c864",
+      "Source/BrokenEdge/Character/BTService_UpdateGuardContext.h": "ea43471a8d2e5369a33297cad2ffa76af4ef9cd54a089ed6e6c70d970d068ea7",
+      "Source/BrokenEdge/Character/BTTask_CompletePatrolArrival.cpp": "3ee8fb74b24117cd67869a224cc79cba203f4f7f0812a44ca59649508fb77059",
+      "Source/BrokenEdge/Character/BTTask_CompletePatrolArrival.h": "1d9440d8a1c55c180246b25c3369ee6dfe112f5adec9e1924ea76400d158a9a3",
+      "Source/BrokenEdge/Character/BTTask_EngageTarget.cpp": "4c447f9484f6f5c61adb78b844513e9288752e4b1ce311b8d72dc379da407a68",
+      "Source/BrokenEdge/Character/BTTask_EngageTarget.h": "3b9f14666c87a7d0e61b24d4c4469dca8fb8297ffcf76b6bb1c3503d4c1919b6",
+      "Source/BrokenEdge/Character/BTTask_SetPatrolDestination.cpp": "ef8099d93ef4759036f27ce8c271e5017579a1a3929331babd1a9cb68932b221",
+      "Source/BrokenEdge/Character/BTTask_SetPatrolDestination.h": "c2c61ca60444c5e0e134f2dd37a9801d258c9ee827502941109c324acf2434e8",
+      "Source/BrokenEdge/Character/BTTask_StopGuardActions.cpp": "be55b9bb0c8d6d65d0a54af184e50529bbfca92ade133d448328efef8148e311",
+      "Source/BrokenEdge/Character/BTTask_StopGuardActions.h": "6ef9c658b3595dc2db0d97b9f5200f4b5f01a33f43443df4823833d514074c83",
+      "Source/BrokenEdge/Character/GuardBlackboardKeys.h": "36c3180dc3b3eddbe2d2f5e8dd068ad45da285fbee1d9da1cad131110af6b694",
+      "Source/BrokenEdge/Character/StingerFirstPersonAnimInstance.cpp": "5967f429cf61ea1d5f0c364a5ffebe888742a00ab00c94301b6b6e97eba33a8d",
+      "Source/BrokenEdge/Character/StingerFirstPersonAnimInstance.h": "abf76a2fb58c46a4922698ecca4e57094b963f9b70b0420a99df32f92ff62eab",
+      "Source/BrokenEdge/Component/BuffComponent.cpp": "3272d591023dc03818d71d54a5fce394d86a285f9c6cbeb18e0c6ebf5cad29bd",
+      "Source/BrokenEdge/Component/BuffComponent.h": "c1ab04e82c946d10bb102bf5f6c7b1fff303b52e9b1fe7b0ec2e541d708f480d",
+      "Source/BrokenEdge/Component/CombatComponent.cpp": "69667e9c0100940d8a67c18786e7cc5a78a13ae3fdfbc553f7d7b84d5149d178",
+      "Source/BrokenEdge/Component/CombatComponent.h": "28025c74f724d2657ec8ddd0245409cfb74704379e620d29869e936f3d7c4e96",
+      "Source/BrokenEdge/Component/LagCompensationComponent.cpp": "2928c9f7a6d027c201889a39c67a0ea1357b52a5ee72c1a42d255b3e79297fdd",
+      "Source/BrokenEdge/Component/LagCompensationComponent.h": "c2e65daa9188695fbc7559755fb6ec346d1e479d5c6ae0010e94f7e3613010a4",
+      "Source/BrokenEdge/Extraction/ExtractionAbilities.cpp": "4861f2c89a03549a25423ec01431c0c0c14c6e783ba05e33b6e85b7eaab84c0d",
+      "Source/BrokenEdge/Extraction/ExtractionAbilities.h": "3b860c57499b3f9270c2ee47292e9a5b52cec7f52b28b5ac7cff52c1f9243679",
+      "Source/BrokenEdge/Extraction/ExtractionAccountComponent.cpp": "3f86f2ba1083dbdba9ce02cd591eda0307eb44cf1fe7ba638010d659e3a3508d",
+      "Source/BrokenEdge/Extraction/ExtractionAccountComponent.h": "4ee50e8efa39e7442617601d2f1cb1bb295d71e0a89c966fa7dfafd85ade5e05",
+      "Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp": "af0aeb2c56afa6baa8bd8d891fabb5ebf9cc122e660c92152b880cb10f35f9fb",
+      "Source/BrokenEdge/Extraction/ExtractionCombatComponent.h": "ed63b238f91776141baedb7ea2343b217395cc3dba056d7c318ccf93488103a2",
+      "Source/BrokenEdge/Extraction/ExtractionEquipment.cpp": "c6c8752010dbb2514f0990c4c3e601a0a9b26ab84ffd714e9358f5848b340927",
+      "Source/BrokenEdge/Extraction/ExtractionExit.cpp": "3bbb510b921d29bb5973921409f7b67c5a865eae50de4d766fe97712f389ca3b",
+      "Source/BrokenEdge/Extraction/ExtractionExit.h": "2d3f0a7cd77b2630756562fc5d6eaf4fee5aee12bbe7c91f6e857fc443d7cad2",
+      "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp": "d13bf93ff7570e1241f704d98b7167cb8b9165808f7e8408259e717541e5edd0",
+      "Source/BrokenEdge/Extraction/ExtractionGameMode.h": "3e00f3a25ef6cffbeb9c3e283eef52e571def64ba88338c6e599daf6aeeab2e2",
+      "Source/BrokenEdge/Extraction/ExtractionGuard.cpp": "0921d130682b31b13cb5099958335c9473dd9f3aef83123f87cfe5f705b16100",
+      "Source/BrokenEdge/Extraction/ExtractionGuard.h": "3b2b7b6e11cada4ec0efeef6dac2afccaffd25cda43a122b4405c27a2c314aae",
+      "Source/BrokenEdge/Extraction/ExtractionGuardAim.h": "603179522885dbae6e222025388077aaa3f6166233dd8dad7c103399569713fd",
+      "Source/BrokenEdge/Extraction/ExtractionGunsmith.cpp": "f49b49b19cd4f91ca013bd84329bb8df3680a350ed697da7bcefca5e0c7f4f29",
+      "Source/BrokenEdge/Extraction/ExtractionGunsmith.h": "5479dede814f2b6e6f99367a5cc39ffee0f4ace2deac8deb33dc98eab433a434",
+      "Source/BrokenEdge/Extraction/ExtractionHealth.cpp": "4d19351c81d7735ab258f270bfdc1027836caeeceb6405d23029386c9aaa4df0",
+      "Source/BrokenEdge/Extraction/ExtractionHealth.h": "3ecca84ea86cf0a028b6d753b25983a858b74521b15d8956fabec9dd0d39a3b7",
+      "Source/BrokenEdge/Extraction/ExtractionInteractionComponent.cpp": "189bbcd25615d9111ffa7cebe01512920f45ca7172c60c277605c26ab6c31079",
+      "Source/BrokenEdge/Extraction/ExtractionInteractionComponent.h": "a7012fdf0d953b84d17ff844a39e4b055df4f54d485227dac4a2f21d54a2fb65",
+      "Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp": "b7d50311a3bb59047733bed3cca12fe9882784078744f5903379b9a98d004e7d",
+      "Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h": "1904748f3648705ec05a93e43017bace8a3c158b388fd4885801e02c31e8815a",
+      "Source/BrokenEdge/Extraction/ExtractionItems.cpp": "1f9bdd020671f166fb9908b3cd35d17a729b5d281c8828292804bf56273a16c8",
+      "Source/BrokenEdge/Extraction/ExtractionItems.h": "fc07ca47737641e2f317c5f99e098e3592ab0433d31951ff7c866f825fec5e7b",
+      "Source/BrokenEdge/Extraction/ExtractionKeyRoom.cpp": "43f0428ac86daa6fc4336b3b1851358bb8f86be344aa989b6ad4820bc88f7f91",
+      "Source/BrokenEdge/Extraction/ExtractionKeyRoom.h": "74923e39ebfcfc31ee94aec296c20c77724d9bfcccc9d525e90ed7354b74e32f",
+      "Source/BrokenEdge/Extraction/ExtractionLootActor.cpp": "62a51d5234c95ca69e14522d2cbd3c8d08b6bcc0eb337eaa1789a2a686113fbf",
+      "Source/BrokenEdge/Extraction/ExtractionLootActor.h": "5286509bb880334ec61dad63e25f34e9b4650335ab097a8ce777340d5c1217b4",
+      "Source/BrokenEdge/Extraction/ExtractionLootLayout.cpp": "30a1167beea278ed12b360fee39396db6dfc50e4a899d9759d31637450df6e93",
+      "Source/BrokenEdge/Extraction/ExtractionLootLayout.h": "fa6ed1817919dbc7777e9c9e4c082cb861b4151c8475c0a0ac111153ed331921",
+      "Source/BrokenEdge/Extraction/ExtractionMapDefinition.h": "c2137b198f6ec600fcad67fb860da484267a0b6a35a20aa58f2fc87de24ebd0f",
+      "Source/BrokenEdge/Extraction/ExtractionMeleeComponent.cpp": "bdce6d5ccf2f78cfbb59d8ec43da7f41414749895e9edcdb93101b496d7355da",
+      "Source/BrokenEdge/Extraction/ExtractionMeleeComponent.h": "1a455ca9b1e9b084bc313a7dc8325e81282067ba7f458876ea72c4d1ed3592a1",
+      "Source/BrokenEdge/Extraction/ExtractionNavigation.cpp": "b8df0f2af005984c1139c928cf584d820b1b13f852362c15fc787cbdf7ebe449",
+      "Source/BrokenEdge/Extraction/ExtractionNavigation.h": "24d788687302d7805f7c15a548f1a6bfbdd7fc5febebfd1773674b92ea11692d",
+      "Source/BrokenEdge/Extraction/ExtractionPatrolArea.cpp": "773015829c99dff420d6a2bb5805eed868d7c111138a1942c9ff3d35979702fe",
+      "Source/BrokenEdge/Extraction/ExtractionPatrolArea.h": "31a2ee473ce2361cb278ecc9be39805c7a1e5bbba192b1c84a8bc88329b15585",
+      "Source/BrokenEdge/Extraction/ExtractionPersistence.cpp": "0cc391989327cdaf772617811859b7d2c377ff152224a6c4dfdc9cb446930f7f",
+      "Source/BrokenEdge/Extraction/ExtractionPersistence.h": "b8178ab99f2414e29131311b71ad6f9d25b5d90ecc35b848992112f065e26b4f",
+      "Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp": "7424b9a01d7530402b4a90b9c1333170f26529dc524732377a28d1f7f30d6876",
+      "Source/BrokenEdge/Extraction/ExtractionPlayerController.h": "ed9b35840938b5911440866ad73605914d367d7811d63462db217cb86cd00a16",
+      "Source/BrokenEdge/Extraction/ExtractionProgression.cpp": "70eb93af0641634a2ef468ae2fe2d738ad5ee4b6dd9ef24391204b5fb9c02422",
+      "Source/BrokenEdge/Extraction/ExtractionProgression.h": "81518d2877e1c9beaec90aa32caefe6df565ccccd7d426fa813505a24e90ce00",
+      "Source/BrokenEdge/Extraction/ExtractionProgressionWidget.cpp": "ad8dff844fd7e177370770ff94200dc11f847072419bb0e286561d96f09bb6af",
+      "Source/BrokenEdge/Extraction/ExtractionProgressionWidget.h": "489ddd28ae2d0e0bf43be59a6e3f3ce9c547527fe18e881c8ec43046619faf8d",
+      "Source/BrokenEdge/Extraction/ExtractionRegionStream.cpp": "4ccc360c2b18b42d14a508ab00d24771ec771012bbb749f6eb67122bdc31d086",
+      "Source/BrokenEdge/Extraction/ExtractionRegionStream.h": "7c05d03fdf0d8ef23ed7de28f48d8ee705355c6a851a8b1d16a78540ffcea654",
+      "Source/BrokenEdge/Extraction/ExtractionSmoke.cpp": "813b33af72a6af80ab5605c1277dacfc1ecf1866b0f74d163d32a14dddeb069e",
+      "Source/BrokenEdge/Extraction/ExtractionSmoke.h": "ac96cd6bfcb19dc3a21158772880d480c16c01f5368cfa815ce90df0f22d55b5",
+      "Source/BrokenEdge/Extraction/ExtractionSmokeGrenade.cpp": "04cb84f816b9e014254b83496aa02ee3d78f82b23c1a6e2504d9d92c1808fe1f",
+      "Source/BrokenEdge/Extraction/ExtractionSmokeGrenade.h": "de1c196844f11574e715514948a4d6327afd1af5c841fe51f8bf8fcc3c963b03",
+      "Source/BrokenEdge/Extraction/ExtractionStashWidget.cpp": "5cfbf319b6e90a5a68813b2ab6cf0b8a538e2d3c7bf1334bec2560dd9ce79faa",
+      "Source/BrokenEdge/Extraction/ExtractionStashWidget.h": "4401f05382fffed459f8e52ecef4fd46ba8f5de71290e0c4a66b56bdacd1c267",
+      "Source/BrokenEdge/Extraction/ExtractionState.cpp": "d7c0ffa647588086830e9bab69532dd08ad3d7194b0009fbef8d21964edcf713",
+      "Source/BrokenEdge/Extraction/ExtractionState.h": "9f10506957ae374f65efb9aeeeb82d764713b0217d0d276aedd1a1df833c8502",
+      "Source/BrokenEdge/Extraction/ExtractionStimDart.cpp": "ba1c45b85d8935e55a08c766a6e238e8128c81873b36112aa2352777c6bb41c4",
+      "Source/BrokenEdge/Extraction/ExtractionStimDart.h": "e584b45f711f873b97a3f63f1d79a8f7c71235fb8ade7859068a30bbac6bf1c2",
+      "Source/BrokenEdge/Extraction/ExtractionTacticalMap.cpp": "3265e6ca73981f1f909208d45e701cc0b7df791803b88d024ae89ba205474530",
+      "Source/BrokenEdge/Extraction/ExtractionTacticalMap.h": "9d14608e7d4b2ef35f725a4fd9cbb5b05576b99962774e4738cc6758b9cc9bfc",
+      "Source/BrokenEdge/Extraction/ExtractionUIStyle.h": "8aa5a26ba5369c83d6a53525272d483f42a8a0a2369b8a36ad97e43f5400531a",
+      "Source/BrokenEdge/Extraction/ExtractionWeaponVisuals.cpp": "a6f0510e9788ca71027048f586769546ec2965c1650832dfe9c52854f6346179",
+      "Source/BrokenEdge/Extraction/ExtractionWeaponVisuals.h": "165ed19301bf7076eb024153163d4fdc0c43c556f56da3d33f60ac71feed00a0",
+      "Source/BrokenEdge/Extraction/ExtractionWidget.cpp": "0d45bcb28bc33e1292e3303555c20b1a3612b3abcb712791abdb623f6f97fa74",
+      "Source/BrokenEdge/Extraction/ExtractionWidget.h": "e466f3bcfdbf5dbe0d193adfe5c190922d4629369ba3c0fd168d0351a190a446",
+      "Source/BrokenEdge/Extraction/LootingMainView.cpp": "7a8143cd6e420376c7c7462f1b076ee8ee45453e472e0a630261e61ed64450fd",
+      "Source/BrokenEdge/Extraction/LootingMainView.h": "8ba385ce098cb5c779b764dcdf4134ac094ba115434268c67ff9985330d38613",
+      "Source/BrokenEdge/Extraction/WeaponRangeGameMode.cpp": "4e521e5f53660e6820fed9833f2f0bac762598470bed5fb76011688a6b6cc4f0",
+      "Source/BrokenEdge/Extraction/WeaponRangeGameMode.h": "17559016368d3644379a63a7cc5e1c2c9146dc7bd0e2403cb51430525d749a13",
+      "Source/BrokenEdge/GameMode/BrokenEdgeGameMode.cpp": "f42656a609239fb5fe96d7d34160a8529899f09897f7d02b5c70ea7bbe6a72bf",
+      "Source/BrokenEdge/GameMode/BrokenEdgeGameMode.h": "50d5ac263cb1fe0b80b3fd556b7fa81c7c6403f9aaec59fbe0034b7feabc9f18",
+      "Source/BrokenEdge/GameMode/LobbyGameMode.cpp": "8e91f59d53355fe487c367efd540ac36764666cdb5aa12cf2be6de8cb00f9994",
+      "Source/BrokenEdge/GameMode/LobbyGameMode.h": "e47548bc4f2de0af933fc68110ddc4c71f6508183fa03d76dfa3ff75792707dc",
+      "Source/BrokenEdge/GameMode/TeamsGameMode.cpp": "d7f3a85393854a95042160ce49fc40a4898b9063ed8f54951218a22bcc2d696a",
+      "Source/BrokenEdge/GameMode/TeamsGameMode.h": "46df1bd56bc25293d1f9abfb3c9b3439e9363d70acc92cbc6c26ccb715f92315",
+      "Source/BrokenEdge/GameState/BrokenEdgeGameState.cpp": "e6f0db39d004bae62150d66826f3cff12f413675b8834d2f7102a1fc0e9efdaa",
+      "Source/BrokenEdge/GameState/BrokenEdgeGameState.h": "c885f80b8d02663f7c4a19e06e34707616740c951f5cd20251e66a7976d394fc",
+      "Source/BrokenEdge/GameState/LobbyGameState.cpp": "b5fcf8c6dd06fb092328ac0d0409c0600d5ed4dd705b5fd26206a0adfdbc0fff",
+      "Source/BrokenEdge/GameState/LobbyGameState.h": "7913a9e5c936202d8276a264b2b8116d15db96fe3940790785268b678100c116",
+      "Source/BrokenEdge/Pickups/AmmoPickup.cpp": "2d523cd16b754dcbf4368dab6beaf5319c62617b87e4cf4f811751fee7d67305",
+      "Source/BrokenEdge/Pickups/AmmoPickup.h": "5ea9b07c880663477f5282256135ad89aa4c4686ec7c6e11409d728c56c4dae4",
+      "Source/BrokenEdge/Pickups/HealthPickup.cpp": "cf4b45d4fe5bc454a079dc97d470d3531b1b7de5f444331a58fdb7e1dde6fac0",
+      "Source/BrokenEdge/Pickups/HealthPickup.h": "0b86834225caf25dfb420d113d39d699732e4d4469873a245912a415c997150b",
+      "Source/BrokenEdge/Pickups/JumpPickup.cpp": "b371f9dc9fa87bdc761105ecd6e42d44128881066f4b3a9fa65d9357acdf47de",
+      "Source/BrokenEdge/Pickups/JumpPickup.h": "5b2f46da5409031d53efbf4593ca688aeda6079bd3ec5358e6c3081c68c29ce6",
+      "Source/BrokenEdge/Pickups/Pickup.cpp": "01923b3fe0dd3b8a8c0c2b506df003893c948d2e4219340383368b04799c23f6",
+      "Source/BrokenEdge/Pickups/Pickup.h": "93aa3084bcd00c531b45f05e9b49d27aef293fb5e14f702b662644dac969df71",
+      "Source/BrokenEdge/Pickups/ShieldPickup.cpp": "5f63d9c80cc71d049ebf68434045e72427edfad6a8a24612facb94565d310d62",
+      "Source/BrokenEdge/Pickups/ShieldPickup.h": "892b79e1c6f3d7df19672a2dbe8ae975a927e4e711874dfb13605227119f7b41",
+      "Source/BrokenEdge/Pickups/SpeedPickup.cpp": "3b715ab955d1fa897f222eea8f02d0ebf14d84c658c55eb2251cd54f52626183",
+      "Source/BrokenEdge/Pickups/SpeedPickup.h": "0401657b2f1daaca294a5d1deade8a20591741756f9a2a9530fb0c4d7bc677ef",
+      "Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.cpp": "a20fdab79d0b84a4b703763f6c0adcfb7d45a1cdcc05594c7858ab5733b52cf1",
+      "Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.h": "0252e02370f45f4b092737b08144067492ef7ab6d964bc67c6d390be52761744",
+      "Source/BrokenEdge/PlayerState/BrokenEdgePlayerState.cpp": "8b3242ccfb7d64057def4400dec387ac40b1e038885dea5c662ba0fc34d7e1d0",
+      "Source/BrokenEdge/PlayerState/BrokenEdgePlayerState.h": "6686eab27cafc3f5d0897b57729810e608e61c023bb9cf57e4f293bf81bbe7d8",
+      "Source/BrokenEdge/SpaceCenter/SpaceCenterInstanceGroup.cpp": "93564aa4677893b7c2c35050e31acd780f6186b82f0713355222ca2571c1a414",
+      "Source/BrokenEdge/SpaceCenter/SpaceCenterInstanceGroup.h": "7b508363402e11cbfc17ead674d7f5f21782fbf9c3b62637f1e64150609e5482",
+      "Source/BrokenEdge/test/CombatObserver.cpp": "a73f0fc5f024b21336dab04f2289b52fe2d8f2973f5384003cc4d788b3818437",
+      "Source/BrokenEdge/test/CombatObserver.h": "eb339e3f34fb23fe409582662ce0f1355856e1fbc6a4f0a53eedfa8c96c50a7d",
+      "Source/BrokenEdge/test/MyCharacter.cpp": "8af334d775595070dc5e6e4674d92bcd4d88c24a74d3ff240e7983c6d071114b",
+      "Source/BrokenEdge/test/MyCharacter.h": "aae47020966829f664be64bd6eab2d9e6794a34f20c07560c28c548ba5922c38",
+      "Source/BrokenEdge/test/TestActorMove.cpp": "fe6409e26a35ec890de17c922fb5750a640bb1d643f5bfb24b28d479df0031ad",
+      "Source/BrokenEdge/test/TestActorMove.h": "0a3dddea45c37d8e89ca0627b0b0c823da61561361faa4a2827eee135285a788",
+      "Source/BrokenEdge/Tests/ExtractionAbilityTests.cpp": "cd14db1c438d38f7658800c3b8e090c435917da98f5ca4bc9d9c6c4910fa8dbd",
+      "Source/BrokenEdge/Tests/ExtractionBlueprintTests.cpp": "30bafec980c243fffccbba8f86595223e927bb65bc5b8ecc013307e97aa362eb",
+      "Source/BrokenEdge/Tests/ExtractionEquipmentTests.cpp": "93078e616fa18f26fd0a0dc145ef638edf91e4eecd4a176f6adce0808c34db9b",
+      "Source/BrokenEdge/Tests/ExtractionExitFeedbackTests.cpp": "8dc230840a4eda0c20c12221c3f1539624042d2bd1b14a8acc3e9c7c3399fcb5",
+      "Source/BrokenEdge/Tests/ExtractionExpansionTests.cpp": "fd27898e13408bb611bd0244e6a3f6d6cd9b0b39b4c87a8bdeb39463d3b8ae93",
+      "Source/BrokenEdge/Tests/ExtractionInventoryTests.cpp": "f4045cf78a181acc3ea0bb3b61c09a901d05b273a3add076a9cf546dd4e5bab8",
+      "Source/BrokenEdge/Tests/ExtractionLootLayoutTests.cpp": "c9cf7d0034f0252dec447f62fb8d4f0a04ab6897d35bc2910e5828cd3ca24624",
+      "Source/BrokenEdge/Tests/ExtractionPersistenceTests.cpp": "ef1070ad6f9822201dc5b8ea0f9131548b82d4767d6812333bbd13e6cfc9fb11",
+      "Source/BrokenEdge/Tests/ExtractionProgressionTests.cpp": "00588e9b82f78d1fb269be2eaf5a961808b5ca5ad69bc8ece35bf123c80948f6",
+      "Source/BrokenEdge/Tests/ExtractionScarTests.cpp": "a01cf91f5dc9dcdc326ff5ba66b8e1e267b7f50d94f2b26e416352f533502f79",
+      "Source/BrokenEdge/Tests/ExtractionSpawnLifecycleTests.cpp": "40474aade2caf447c20311f15691b5637c8693f4cbc369c13522d1da43e89c66",
+      "Source/BrokenEdge/Tests/ExtractionStartingSupplyTests.cpp": "a2859969e8336db7a5c312bb67e916de566b7d992677d3dd0f12ce0ead56c6ca",
+      "Source/BrokenEdge/Tests/GuardBTTaskTests.cpp": "d1c96d16482ae21ba3da9da9cea8b0a389e5c3efe9286523214f8434685d6e08",
+      "Source/BrokenEdge/Tests/SessionLobbyTests.cpp": "e59b8fbdda587fc7da55fa8975c4cf045aa3ee3ca44d808cc69d1be81d653325",
+      "Source/BrokenEdge/Tests/TraversalAcceptanceFixture.cpp": "3bcfb7273b6799693b7ee726810003e71bde41d4f59b5e78c0d902e038388069",
+      "Source/BrokenEdge/Tests/TraversalAcceptanceFixture.h": "b7f99910756d55e3a62fc2e680ae730b79e0d15987f176b9ba61b0c00de8d8d9",
+      "Source/BrokenEdge/Tests/TraversalEntryTests.cpp": "eb4c18495f14e5d2cca30fbf45f39d58295fa8e2b62c8c8c20d57ab1900d6698",
+      "Source/BrokenEdge/Tests/WeaponMechanicsTests.cpp": "4fca1342f5ffed8b5e46eaa784143018440d03e885671b9916d45adc983d084f",
+      "Source/BrokenEdge/Tests/WeaponPatternTests.cpp": "7fe5c91ac0986037c517600bb104a4e2165af0de478d104753bcff5f16ee07d0",
+      "Source/BrokenEdge/Tests/WeaponPIETests.cpp": "f40eb80148f6e46f3840b030238fcb76844ec63a4d8ac0d6a26f5a2fe6687d21",
+      "Source/BrokenEdge/Tests/WeaponSprintTests.cpp": "50d1925b5532c04fb3bd5533e19f31d476980539bffda9a9a9c665dd73428c60",
+      "Source/BrokenEdge/Traversal/ExtractionLadder.cpp": "99ce1d9a8141ca1c703861bc78ae32b44d05e26c5af25f4429ded90e9359c863",
+      "Source/BrokenEdge/Traversal/ExtractionLadder.h": "c4a82753847e4d1ffbe7bc86b2632ebd57b54c95a963223abb96a39b06e37ab5",
+      "Source/BrokenEdge/Traversal/ExtractionTraversalComponent.cpp": "a03abf933d0640ad073b10978b89fd108aa0218e6073c28cf678497aaec0ba6e",
+      "Source/BrokenEdge/Traversal/ExtractionTraversalComponent.h": "719458daa25929c5905bc7ef14762ab34d1059cdc23351a96d739931b76e85bc",
+      "Source/BrokenEdge/Traversal/ExtractionTraversalTypes.h": "8341f9c7e01ea87f5a972a3afdeba3ecafb6ea97fe6a5ffc315ba8a712960a10",
+      "Source/BrokenEdge/Traversal/TraversalContactPose.cpp": "0023d20bb18c301cf06782f915cc95229951bdfa54b198b55c383360fb0372a1",
+      "Source/BrokenEdge/Traversal/TraversalContactPose.h": "516e33a8dfeb40a9449193605fa7045c2ab2a5233bdd34406967ce503aed161d",
+      "Source/BrokenEdge/Traversal/TraversalLadderEntry.h": "b22d5734d13a2bc90ac904fd6674abf4c74f290d8417d71a6f11fbe1d8e4c298",
+      "Source/BrokenEdge/Traversal/TraversalMovementComponent.cpp": "7352d6b14d22899eb3f53297e746051e02b03dc1dad34f7c15836ea801e113c3",
+      "Source/BrokenEdge/Traversal/TraversalMovementComponent.h": "e938246115673d5c5e5711a743ccfe926f142005f3bc1b06e2987a3618edd607",
+      "Source/BrokenEdge/UI/BrokenEdgeHUD.cpp": "eec99af9113c9c74fc21a76a4f0d965ceab6b13eb789f5b3b0642083c3b0956f",
+      "Source/BrokenEdge/UI/BrokenEdgeHUD.h": "14a3214f0a47ab7da24c327b4c6bbcca8109f36e82753944c889bbfd43ea3ac2",
+      "Source/BrokenEdge/UI/CharacterOverlay.cpp": "9bd69309ad191461dd3b6c4e6d78dfd43af573130146bad2b3ad9df83b49c337",
+      "Source/BrokenEdge/UI/CharacterOverlay.h": "b90798f9e8ec2a876a1dfe62a71ff10f7c609dabb673f009ccda02f78a6cf7e2",
+      "Source/BrokenEdge/UI/DefeatedAnnouncement.cpp": "10fa843d23318ccad560c297139117105a4501fabdc2910eb20e2120e6fb0166",
+      "Source/BrokenEdge/UI/DefeatedAnnouncement.h": "c9c8a834847b3e9f13380316b5d16529875c25290e830a35a92047c71758694d",
+      "Source/BrokenEdge/UI/LobbyShowcase.cpp": "b38d2ac457f7bd82340a5e299ffe31336cca3a578911fcd8e7bb974d44913180",
+      "Source/BrokenEdge/UI/LobbyShowcase.h": "60d0216a767da978ab7b0228d5d222132a8f76c661ad93d8dca494f681770baa",
+      "Source/BrokenEdge/UI/LobbyWidget.cpp": "88aefa0b233b6be1b93222e9e235f09fb4795d38347bd5e07665c3227412fd38",
+      "Source/BrokenEdge/UI/LobbyWidget.h": "83bca36a90324a56115ae8ee0945288d8ca1fcd0c6646527542c825a1cd85ead",
+      "Source/BrokenEdge/Weapon/ExtractionBullet.cpp": "76f346bc64b332f839672f3e9c75374b672a88f9e3ff96b0e8d4292d4947ae71",
+      "Source/BrokenEdge/Weapon/ExtractionBullet.h": "19337e70fb54ba3dc435b99fa5c89532755a0623f87cee3cf3cc3a2cb71e7c7c",
+      "Source/BrokenEdge/Weapon/HitScanWeapon.cpp": "b85866259a7b7c2e7dccd9b1f5ebd17fe568c60220af782b972b7df0bf9a3d14",
+      "Source/BrokenEdge/Weapon/HitScanWeapon.h": "ad812ef0e1d043e1f592350df1a6c5e9480d0384b9af137452de734e22f047e8",
+      "Source/BrokenEdge/Weapon/Projectile.cpp": "841b424625a3932812cb9c3704c82861b5d874cb500d0d217332279c7d9407b8",
+      "Source/BrokenEdge/Weapon/Projectile.h": "b6112a5d1ffbb38ed7748d0bcf6e39e5676d53107e7435079599d023d5d8a52d",
+      "Source/BrokenEdge/Weapon/ProjectileBullet.cpp": "abbe9d9d01fad2c90c94599e7cc433bb758ffcf6d22e2e3fb96f4279eb7a0f8e",
+      "Source/BrokenEdge/Weapon/ProjectileBullet.h": "bb067727eb21d4b39cae4e75bef7289eaeb46682d0ab15d7bf0676b8f9870da7",
+      "Source/BrokenEdge/Weapon/ProjectileRocket.cpp": "fe73513e6df02f4aae4572496cb97a46c17bec4b6724f88b63d9e94e08ff79df",
+      "Source/BrokenEdge/Weapon/ProjectileRocket.h": "168972e91079202387e70d8a713ae4074d83b3bf28e500beda05d25fc6b2ae7b",
+      "Source/BrokenEdge/Weapon/ProjectileWeapon.cpp": "3ceb856d466c840ae04bb98079e3b9fed21e4fd8e166eb0486bb5ca5541151a7",
+      "Source/BrokenEdge/Weapon/ProjectileWeapon.h": "00eb468e87e1d418651d41fa98ca1520ba5c919ff64c010adb18e43ae1299073",
+      "Source/BrokenEdge/Weapon/RocketMovementComponent.cpp": "9ccc830ab22ae04a07705561a7f6a3446c61e2905b08b93393cbe983f2021a28",
+      "Source/BrokenEdge/Weapon/RocketMovementComponent.h": "c2ec5ee9decb6487add57be39f26d32b47071cef8e3a0c99f6a83d6e4b8767f2",
+      "Source/BrokenEdge/Weapon/Shotgun.cpp": "a4b98692b134003be57cb5101e0897f98f2135677466a95ad284b307da0783f8",
+      "Source/BrokenEdge/Weapon/Shotgun.h": "a1fdd405e831dd7a81db1da38bc3cea2a5d265d178e687f3864809ab6332b313",
+      "Source/BrokenEdge/Weapon/Weapon.cpp": "accbecd6ca5e8986b19996b7030b12cfd0a1ed5f8bc29b5580a50276c0d551f4",
+      "Source/BrokenEdge/Weapon/Weapon.h": "a69ed5e9635a738006dbf472a9c07879af908e1e34281b209deea23cd6bc1f5b",
+      "Source/BrokenEdge/Weapon/WeaponMechanics.cpp": "ded07f1aed6baa0cc6c4d7ca99ccc38cf26d8264eb68dd3016877a0776ed947f",
+      "Source/BrokenEdge/Weapon/WeaponMechanics.h": "2b5e5c870993fc9faf19f9e179c45ae554addcca480ff8c08c9937f03bc26163",
+      "Source/BrokenEdge/Weapon/WeaponPresentation.h": "8064199a6a0afe4389406b404b1a61e64998252d1d79149c811ec632d8818bb8",
+      "Source/BrokenEdge/Weapon/WeaponSprintState.h": "24ed89c4a9530bb1353bc6f163700b53b19ff7c6830b8dc0d88289d5ed720c90"
+    },
+    "environment_overrides": {
+      "UnrealBuildTool_BuildConfiguration__bAllowUBAExecutor": "false"
+    },
+    "pid": 37648,
+    "exit_code": 0,
+    "elapsed_seconds": 87.65600000001723,
+    "executable": {
+      "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+      "bytes": 339632640,
+      "sha256": "acf1fcc54372261efcd663938142930b37ad2f837c0c7dcb9489b66323b3e87d",
+      "machine": "AMD64",
+      "sections": 13
+    }
+  },
+  "staged_client": "Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe",
+  "staged_client_sha256": "acf1fcc54372261efcd663938142930b37ad2f837c0c7dcb9489b66323b3e87d",
+  "unchanged_payload": [
+    {
+      "path": "Client/Windows/BrokenEdge.exe",
+      "bytes": 173568,
+      "sha256": "061bdd6d6c67ab6f19e80c1cc06a9aaa8ad959bb767871d76b5bed6790e52c34"
+    },
+    {
+      "path": "Client/Windows/Manifest_NonUFSFiles_Win64.txt",
+      "bytes": 3046,
+      "sha256": "d8a4875fd2676cf489c70cd76e55d5746484aedebd533a34176836f06d5c8266"
+    },
+    {
+      "path": "Client/Windows/Manifest_UFSFiles_Win64.txt",
+      "bytes": 7015927,
+      "sha256": "1f501b18ecef0a402693de83fd7851f3582253c024b8d296d7656800b21f32b0"
+    },
+    {
+      "path": "Client/Windows/NOTICES.txt",
+      "bytes": 111,
+      "sha256": "ba49ae5586f817b36a2772269f71f899cb1f54b5f2720fad951319edd5e140b8"
+    },
+    {
+      "path": "Client/Windows/StartClient.bat",
+      "bytes": 435,
+      "sha256": "11b9456f2f443f4bbec2a808bf6a957670b306974b1a5a3f5b902a7f6824190e"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Binaries/Win64/tbb12.dll",
+      "bytes": 331776,
+      "sha256": "e6856cefe45a067aaa5fdf033e6fe9704dafe8cf96e648c02230cf0cef0e745f"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Binaries/Win64/tbbmalloc.dll",
+      "bytes": 106496,
+      "sha256": "af20d7ca563e542432b856f6628d9481247197d1853bd4057caaf6c449749d42"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Binaries/Win64/D3D12/x64/D3D12Core.dll",
+      "bytes": 4821064,
+      "sha256": "560f9574372a52ab66ad95ee1222f1eb4c9f6161d8f6b7b025d89f684b07246c"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Binaries/Win64/D3D12/x64/d3d12SDKLayers.dll",
+      "bytes": 4932640,
+      "sha256": "bcec9e1315fb4dbc767371926fb5eb8281de1b3ab1fb530a636b3c193a9a2bbd"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Binaries/Win64/DML/x64/DirectML.dll",
+      "bytes": 18527776,
+      "sha256": "9c9e6d822561c6c41b90e6994b3e8857cf1d66dbfb1e0c4c799c7c89b4e92da1"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.pak",
+      "bytes": 12741158,
+      "sha256": "f0883e9df7fc34baac78115e5106100373f7eff91a0312b156d31266f67f475b"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.ucas",
+      "bytes": 2730284368,
+      "sha256": "67c04b0349f77458bb309068cdbb9ac0ee8aef41601dc9ad7f8c195070baa610"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.utoc",
+      "bytes": 4581836,
+      "sha256": "99878fc0421b80ea7c1833c21a9ffae2ae36d22d82e12d438fa61735f11f640c"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Content/Paks/global.ucas",
+      "bytes": 3380272,
+      "sha256": "d0b7b913d01db02df9a3e42d0f6bc37f8215f2b6f893106357057c59909782f8"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Content/Paks/global.utoc",
+      "bytes": 818,
+      "sha256": "a28f72e9c21086d2e951f6564e73f0e5904282431dfb14f5538e9dce60d6f13d"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-267F129742876785FB46A68586DFD122/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-357FDCD048852CC399301EA8FBE484F9/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-3CDB21FE4D2B9C7E789F2581C031D80F/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-5CA032BB444295ECE08BAC8253804F3A/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-65CAFC5E4EFE51A59E3087901E510C26/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-6AB005B74CC7B99F8AA402A8D6D5EE16/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-6E51BBC1442DE202B8A036A8732EBDB3/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-7B2DE5B3472832AC198521AD83C15D2F/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-7C5C5A3D45D335B141E8369A7082ADAC/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-8479E92E4A2449A69DC211A6A86E73C8/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-8497C03648BFE86EFA37F3A75B5DEEE9/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-894390D24378150A243124A3F9BCD786/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-95177A694B884EB5B43BDDBB95DD105F/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-CE03D62B4FEAB888EBB78DBB0AB23770/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-CFC8EA894A82D5C593F27C9B0FA8D92E/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-D5AE12EC4CE15BE57A651088F2C697A6/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-DB2D4BCB4602FA19CE3598B9AB7C0746/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-DD246A63423DAF6CF8B700A56DFA6490/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Config/Windows/Engine.ini",
+      "bytes": 112,
+      "sha256": "04fc8195f7ae16c1e7f0e06801cd3d23c1b7e2af76d810d58a1685994da34cf9"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-flight-matrix01_A/507117CA43106EC804F0EABFD96F52A3.credential",
+      "bytes": 98,
+      "sha256": "7ee334d65d602e87111cb2510a04d98da24c5da47db635c5263aca65b276b56f"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-flight-matrix01_B/507117CA43106EC804F0EABFD96F52A3.credential",
+      "bytes": 98,
+      "sha256": "a4b1136ffbf083c108c936aec1ae529b382de52614968e16189112409c22f094"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-packaged-exit03_A/0019A0154457E7690155F7860A5EE14A.credential",
+      "bytes": 98,
+      "sha256": "7fa2035be0b8a2c64bb24d0e604132595786b8b734583efcd4a4f1eba97d710d"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-packaged-exit03_B/0019A0154457E7690155F7860A5EE14A.credential",
+      "bytes": 98,
+      "sha256": "41ad4a879c92f87352b2acebff17a6d503c2a7070772b3f1590abe4c6505a5c4"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-packaged-guard02_A/24851F2A42B60E9C907BBB9CCE137F70.credential",
+      "bytes": 98,
+      "sha256": "875f6d75a81f3b3b178df11ae1fa8c261d0ae2cd2fb833c6b21b67c8348a5121"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-packaged-guard02_B/24851F2A42B60E9C907BBB9CCE137F70.credential",
+      "bytes": 98,
+      "sha256": "eba29c37739321a9b4e401e5645f11049349b06ce01154fb5aa132d2752afbcc"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-packaged-guard03_A/DDD7FEA840707DB19C841292B9F08147.credential",
+      "bytes": 98,
+      "sha256": "e5fb91182310de90641f50d97044f89d6f1cea0e1c6911fc1308b65e1ecf79eb"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-packaged-guard03_B/DDD7FEA840707DB19C841292B9F08147.credential",
+      "bytes": 98,
+      "sha256": "9c93be6c644bbefe7cc52d23f786f8021fcdc5d94864235f1a04c155c5993a21"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-route-debug01_A/6EC9F141490132D1047A25935E6A9B2C.credential",
+      "bytes": 98,
+      "sha256": "86f4371dc505d347acda7f7d026b48f26bbe91d5b8207e731ca42f4970a53014"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-route-debug01_B/6EC9F141490132D1047A25935E6A9B2C.credential",
+      "bytes": 98,
+      "sha256": "10892e11ed72f3141294e88498c5193fe0d0ee2574c34198bccb434ca5da5f45"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-route-flight01_A/F9713064414A270F5F1705B3D5D33EDC.credential",
+      "bytes": 98,
+      "sha256": "94e7ffd4aaf5aa0597647a00e28ebacec5fa26ba37eabcf9d1c54af1895517a2"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-route-flight01_B/F9713064414A270F5F1705B3D5D33EDC.credential",
+      "bytes": 98,
+      "sha256": "706e218962b3a3d37e5233fc744a3a2d6274a81032c3d4f58af059057a0cc906"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-route02_A/114BB05349BAB42C32306E8777D9E2AA.credential",
+      "bytes": 98,
+      "sha256": "53cdae9fea129285ee6b61b81ff34c6301ce7f21fad44159e66c882d3d285a1b"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-route02_B/114BB05349BAB42C32306E8777D9E2AA.credential",
+      "bytes": 98,
+      "sha256": "4807433932186f06f52d726f9050a5c8dfa5fcff2cf67c7948e64e4b2c79ab67"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-route03_A/3A068C8B4AA9E6E203AFC19FB29DBF95.credential",
+      "bytes": 98,
+      "sha256": "1aa68270e8cd4e05cb7c6be5aaca945a2aced5b2ff9c9ff44c6a51106eef1602"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-route03_B/3A068C8B4AA9E6E203AFC19FB29DBF95.credential",
+      "bytes": 98,
+      "sha256": "d8de7e435d13291056315fe7ecfc677975a83630f31a5cf66911475c4fe7a7aa"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-route04b_A/4537F9EF4E8E0A2AADD8049FC9913278.credential",
+      "bytes": 98,
+      "sha256": "b09de46a0ef9aa457bd71b6a8ec82776c53f97b87a82b3ee87e868ab55a330f9"
+    },
+    {
+      "path": "Client/Windows/BrokenEdge/Saved/Extraction/Clients/overnight-route04b_B/4537F9EF4E8E0A2AADD8049FC9913278.credential",
+      "bytes": 98,
+      "sha256": "d013b0147b5a74cef6c0a7c230f12d9929d78e207de6b7d18ad8d2bce4894c67"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll",
+      "bytes": 2221984,
+      "sha256": "4b803d0bfa5d360cfcb3237d260226743d2255eacf6a98615334fb55deb7cf88"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/MsQuic/v220/win64/msquic.dll",
+      "bytes": 2536368,
+      "sha256": "150963f4a05ffddc9a8498ae0ec4ddf5bed762a83b6ad089d2fd8d499101c7ea"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/NVIDIA/NVaftermath/Win64/GFSDK_Aftermath_Lib.x64.dll",
+      "bytes": 5788312,
+      "sha256": "4177e09de4bbcc168deeb4f2d88f8961fe98009fae8046d08b418e725414de42"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Ogg/Win64/VS2015/libogg_64.dll",
+      "bytes": 49152,
+      "sha256": "284a6e70a6dce01f8a02d93e1bb78baf0efb6140459c587d8986d59fb6bd675b"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbisfile_64.dll",
+      "bytes": 37888,
+      "sha256": "a9d6f5538f44011c1f65d7ace64216a237636717cb0c8c59f4f89cc08dd3d24f"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbis_64.dll",
+      "bytes": 1714176,
+      "sha256": "0f66dcb5837e9b59c499277fd272b862043356aa9145802cf0a63e00a1bcca59"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_api_dump.dll",
+      "bytes": 8150968,
+      "sha256": "a054a2d5f8deb5ea37deb2dfd7a9b9d2ebeead0d180f35ebafe7cbb9e295dc26"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_api_dump.json",
+      "bytes": 13514,
+      "sha256": "2e34be8f7e0a6843b98b917427e72b11268efe5409c2aacaa816590d0b3204b0"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_crash_diagnostic.dll",
+      "bytes": 2879416,
+      "sha256": "6ad29d193d05c2a08840332a8151b19d484607a2b05eca80295435aed4236f7f"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_crash_diagnostic.json",
+      "bytes": 22632,
+      "sha256": "702c9a64c146547551be3cae9fe93450fbac56dbb31f500d213e0bcee702ef25"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_gfxreconstruct.dll",
+      "bytes": 8155576,
+      "sha256": "e830ce115f1364a0706803e225ce6284490dfbc6bfbc9a4654497b24f10063db"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_gfxreconstruct.json",
+      "bytes": 27601,
+      "sha256": "6dab47cf9c6faefa2dffff9ae7add2ccb875b008108d385dd9bb86107deda0e2"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_profiles.dll",
+      "bytes": 1474488,
+      "sha256": "8a1b11b70d25abb493ebd8f0a42104d0eb6ff1c3522302d0052358006d227ff9"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_profiles.json",
+      "bytes": 65485,
+      "sha256": "3b3bee7d0bc4f0cb952d8e3da6102ed0753a95baee1d8ff4cdf47f199eca2b29"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_shader_object.dll",
+      "bytes": 404920,
+      "sha256": "7d6685dc57ef61be1034ba89bd684ba4de5a9d019096e26325a54d2387dac444"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_shader_object.json",
+      "bytes": 4357,
+      "sha256": "69707937d5163cda239ba6c8f839db81e9faec25b80f92605aced1e89e147cc8"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_synchronization2.dll",
+      "bytes": 386488,
+      "sha256": "ce94fe27d8ef20f9cdc0cb80c42ae07716762d6da13e4be4631344fb1cf8d2a1"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_synchronization2.json",
+      "bytes": 1861,
+      "sha256": "ab7207d8b2cb4c37be711e97ab31ef31bc24a415a3226db22530b74cf87bca48"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_validation.dll",
+      "bytes": 19498424,
+      "sha256": "e7a002edbf2bfcce1106291c5d717b768bd09013ad3b21ffac38c7f9269fe8d3"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_validation.json",
+      "bytes": 94442,
+      "sha256": "c14cb6973b7aeb806f24529178ee791bb6a23207b76b05cfaa9680d0f8717297"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Windows/WinPixEventRuntime/x64/WinPixEventRuntime.dll",
+      "bytes": 58368,
+      "sha256": "81adcfd8253c3489be720da7e30f16004dc9a1f02a8b418c6c3aef4993032e6d"
+    },
+    {
+      "path": "Client/Windows/Engine/Binaries/ThirdParty/Windows/XAudio2_9/x64/xaudio2_9redist.dll",
+      "bytes": 847440,
+      "sha256": "0e01f400baa09694cacfd2cfbff0d721c17b56785d2d6e29b6fdd117f70ccc1e"
+    },
+    {
+      "path": "Client/Windows/Engine/Config/StagedBuild_BrokenEdge.ini",
+      "bytes": 3,
+      "sha256": "f1945cd6c19e56b3c1c78943ef5ec18116907a4ca1efc40a57d48ab1db7adfc5"
+    },
+    {
+      "path": "Client/Windows/Engine/Content/Renderer/TessellationTable.bin",
+      "bytes": 259568,
+      "sha256": "edc4f3b628a139c5e185bbaeca661c95c1f427368d3b92892c5cff36c56dd941"
+    },
+    {
+      "path": "Client/Windows/Engine/Content/Slate/Cursor/invisible.cur",
+      "bytes": 326,
+      "sha256": "fef3980fa567e9c45d5d8dcaa432a2c1a3f3bb17fe67d7ab198164f56c142aa1"
+    },
+    {
+      "path": "Client/Windows/Engine/Extras/Redist/en-us/vc_redist.arm64.exe",
+      "bytes": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    {
+      "path": "Client/Windows/Engine/Extras/Redist/en-us/vc_redist.x64.exe",
+      "bytes": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    },
+    {
+      "path": "Client/Windows/Engine/Plugins/NNE/NNERuntimeORT/Binaries/ThirdParty/Onnxruntime/Win64/onnxruntime.dll",
+      "bytes": 17328672,
+      "sha256": "8fba9fd33466c722a077731d46947d009ae20756b18977bb13158a29dd93d80a"
+    },
+    {
+      "path": "Client/Windows/Engine/Saved/Config/Windows/Manifest.ini",
+      "bytes": 25,
+      "sha256": "531bfb7088f544a87ff1268a69a3648dc0648ba49aaca9c3c67d4c4dcf87f088"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdgeServer.exe",
+      "bytes": 173568,
+      "sha256": "e9fa4aaa0667e5a6b5d24d86c95d7c126211a48deebb4a9b5b4dee4cac76c631"
+    },
+    {
+      "path": "Server/WindowsServer/Manifest_NonUFSFiles_Win64.txt",
+      "bytes": 2963,
+      "sha256": "3b895f232b2e4cb26149252310fb9aa1d9ce093366d0132f88036e66c6396281"
+    },
+    {
+      "path": "Server/WindowsServer/Manifest_UFSFiles_Win64.txt",
+      "bytes": 5762414,
+      "sha256": "afbf31e2f19790ea9270bacc697dbcef8ec514f481c08fbeae49c89dfbf4be87"
+    },
+    {
+      "path": "Server/WindowsServer/NOTICES.txt",
+      "bytes": 111,
+      "sha256": "ba49ae5586f817b36a2772269f71f899cb1f54b5f2720fad951319edd5e140b8"
+    },
+    {
+      "path": "Server/WindowsServer/StartServer.bat",
+      "bytes": 791,
+      "sha256": "bb4c3fbfd9cf5d127c95f092ba20070b471ecc1826097fe2f9761f5562cbf902"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe",
+      "bytes": 321328640,
+      "sha256": "2b97179c948d50d2d35e0689795ea7c3fb831453bc199c94ec42e88c8a606902"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Binaries/Win64/tbb12.dll",
+      "bytes": 331776,
+      "sha256": "e6856cefe45a067aaa5fdf033e6fe9704dafe8cf96e648c02230cf0cef0e745f"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Binaries/Win64/tbbmalloc.dll",
+      "bytes": 106496,
+      "sha256": "af20d7ca563e542432b856f6628d9481247197d1853bd4057caaf6c449749d42"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Binaries/Win64/D3D12/x64/D3D12Core.dll",
+      "bytes": 4821064,
+      "sha256": "560f9574372a52ab66ad95ee1222f1eb4c9f6161d8f6b7b025d89f684b07246c"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Binaries/Win64/D3D12/x64/d3d12SDKLayers.dll",
+      "bytes": 4932640,
+      "sha256": "bcec9e1315fb4dbc767371926fb5eb8281de1b3ab1fb530a636b3c193a9a2bbd"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Binaries/Win64/DML/x64/DirectML.dll",
+      "bytes": 18527776,
+      "sha256": "9c9e6d822561c6c41b90e6994b3e8857cf1d66dbfb1e0c4c799c7c89b4e92da1"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.pak",
+      "bytes": 11709121,
+      "sha256": "caabbe5582704ea220e2955e8603bba8095b41d60f3ceaf416059617cef140d3"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.ucas",
+      "bytes": 249259728,
+      "sha256": "f4d1089d50e03c80608e00689ebe57c07503fe1e178c6e1b5cad0c4f8d960e24"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.utoc",
+      "bytes": 2506817,
+      "sha256": "310bfe1d9f64c14ac45f6d71bcb32a1ae891dca11c23dd4d008b566bba6f6835"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Content/Paks/global.ucas",
+      "bytes": 3380272,
+      "sha256": "d0b7b913d01db02df9a3e42d0f6bc37f8215f2b6f893106357057c59909782f8"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Content/Paks/global.utoc",
+      "bytes": 818,
+      "sha256": "a28f72e9c21086d2e951f6564e73f0e5904282431dfb14f5538e9dce60d6f13d"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-046E16AD41BF196844C3D28DC6FB65E2/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-0923B02643EA996A6A8F4FA84E4A74A9/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-44D8C80947BAAADE55698E9C13332933/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-46594CEB479E1DCF81B89EA50DB619C1/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-49FA46174F0BF658044DB38E2C9D878E/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-6DDEC50E476A771CA47240BB18A1AC0F/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-7E743F1F408EC6C1CF47F5AFAB6105E2/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-86EAAB704C7F951D540AE988E386C112/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-A89D91D349C464B78CF0A88F1BBBC9B3/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-D2EAE969405351D52A9BF6A3418ED8E1/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-E37C55744C150B7ACA182D94BFED8A28/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Server/WindowsServer/BrokenEdge/Saved/Config/CrashReportClient/UECC-Windows-E7315AB14943B0B243B1A1AF7F18F897/CrashReportClient.ini",
+      "bytes": 239,
+      "sha256": "ce69d7e7bbd1a64729bd4d5724f3c1efc47c6c3d555da9d2c6ad741eddc3d893"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll",
+      "bytes": 2221984,
+      "sha256": "4b803d0bfa5d360cfcb3237d260226743d2255eacf6a98615334fb55deb7cf88"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/MsQuic/v220/win64/msquic.dll",
+      "bytes": 2536368,
+      "sha256": "150963f4a05ffddc9a8498ae0ec4ddf5bed762a83b6ad089d2fd8d499101c7ea"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/NVIDIA/NVaftermath/Win64/GFSDK_Aftermath_Lib.x64.dll",
+      "bytes": 5788312,
+      "sha256": "4177e09de4bbcc168deeb4f2d88f8961fe98009fae8046d08b418e725414de42"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Ogg/Win64/VS2015/libogg_64.dll",
+      "bytes": 49152,
+      "sha256": "284a6e70a6dce01f8a02d93e1bb78baf0efb6140459c587d8986d59fb6bd675b"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbisfile_64.dll",
+      "bytes": 37888,
+      "sha256": "a9d6f5538f44011c1f65d7ace64216a237636717cb0c8c59f4f89cc08dd3d24f"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbis_64.dll",
+      "bytes": 1714176,
+      "sha256": "0f66dcb5837e9b59c499277fd272b862043356aa9145802cf0a63e00a1bcca59"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_api_dump.dll",
+      "bytes": 8150968,
+      "sha256": "a054a2d5f8deb5ea37deb2dfd7a9b9d2ebeead0d180f35ebafe7cbb9e295dc26"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_api_dump.json",
+      "bytes": 13514,
+      "sha256": "2e34be8f7e0a6843b98b917427e72b11268efe5409c2aacaa816590d0b3204b0"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_crash_diagnostic.dll",
+      "bytes": 2879416,
+      "sha256": "6ad29d193d05c2a08840332a8151b19d484607a2b05eca80295435aed4236f7f"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_crash_diagnostic.json",
+      "bytes": 22632,
+      "sha256": "702c9a64c146547551be3cae9fe93450fbac56dbb31f500d213e0bcee702ef25"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_gfxreconstruct.dll",
+      "bytes": 8155576,
+      "sha256": "e830ce115f1364a0706803e225ce6284490dfbc6bfbc9a4654497b24f10063db"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_gfxreconstruct.json",
+      "bytes": 27601,
+      "sha256": "6dab47cf9c6faefa2dffff9ae7add2ccb875b008108d385dd9bb86107deda0e2"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_profiles.dll",
+      "bytes": 1474488,
+      "sha256": "8a1b11b70d25abb493ebd8f0a42104d0eb6ff1c3522302d0052358006d227ff9"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_profiles.json",
+      "bytes": 65485,
+      "sha256": "3b3bee7d0bc4f0cb952d8e3da6102ed0753a95baee1d8ff4cdf47f199eca2b29"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_shader_object.dll",
+      "bytes": 404920,
+      "sha256": "7d6685dc57ef61be1034ba89bd684ba4de5a9d019096e26325a54d2387dac444"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_shader_object.json",
+      "bytes": 4357,
+      "sha256": "69707937d5163cda239ba6c8f839db81e9faec25b80f92605aced1e89e147cc8"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_synchronization2.dll",
+      "bytes": 386488,
+      "sha256": "ce94fe27d8ef20f9cdc0cb80c42ae07716762d6da13e4be4631344fb1cf8d2a1"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_synchronization2.json",
+      "bytes": 1861,
+      "sha256": "ab7207d8b2cb4c37be711e97ab31ef31bc24a415a3226db22530b74cf87bca48"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_validation.dll",
+      "bytes": 19498424,
+      "sha256": "e7a002edbf2bfcce1106291c5d717b768bd09013ad3b21ffac38c7f9269fe8d3"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Vulkan/Win64/VkLayer_khronos_validation.json",
+      "bytes": 94442,
+      "sha256": "c14cb6973b7aeb806f24529178ee791bb6a23207b76b05cfaa9680d0f8717297"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Binaries/ThirdParty/Windows/WinPixEventRuntime/x64/WinPixEventRuntime.dll",
+      "bytes": 58368,
+      "sha256": "81adcfd8253c3489be720da7e30f16004dc9a1f02a8b418c6c3aef4993032e6d"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Config/StagedBuild_BrokenEdge.ini",
+      "bytes": 3,
+      "sha256": "f1945cd6c19e56b3c1c78943ef5ec18116907a4ca1efc40a57d48ab1db7adfc5"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Content/Renderer/TessellationTable.bin",
+      "bytes": 259568,
+      "sha256": "edc4f3b628a139c5e185bbaeca661c95c1f427368d3b92892c5cff36c56dd941"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Content/Slate/Cursor/invisible.cur",
+      "bytes": 326,
+      "sha256": "fef3980fa567e9c45d5d8dcaa432a2c1a3f3bb17fe67d7ab198164f56c142aa1"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.arm64.exe",
+      "bytes": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.x64.exe",
+      "bytes": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Plugins/NNE/NNERuntimeORT/Binaries/ThirdParty/Onnxruntime/Win64/onnxruntime.dll",
+      "bytes": 17328672,
+      "sha256": "8fba9fd33466c722a077731d46947d009ae20756b18977bb13158a29dd93d80a"
+    },
+    {
+      "path": "Server/WindowsServer/Engine/Saved/Config/WindowsServer/Manifest.ini",
+      "bytes": 25,
+      "sha256": "531bfb7088f544a87ff1268a69a3648dc0648ba49aaca9c3c67d4c4dcf87f088"
+    }
+  ]
+}

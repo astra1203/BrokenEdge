@@ -90,10 +90,10 @@ void UExtractionWidget::Refresh()
 			const FString Reason = It->UnavailableReason(GS->GetServerWorldTimeSeconds());
 			FString Rule;
 			if (It->Definition.bRequireEmptyPack) Rule = TEXT(" · 需清空背包");
-			ExitsText += FString::Printf(TEXT("%s\n%.0f 米 · %s%s\n\n"), *It->Definition.Label.ToString(),
+			ExitsText += FString::Printf(TEXT("%s%s\n%.0f 米 · %s\n\n"), *It->Definition.Label.ToString(), *Rule,
 			                             FVector::Dist2D(PC->GetPawn()->GetActorLocation(), It->GetActorLocation()) /
 			                             100,
-			                             Reason.IsEmpty() ? TEXT("可撤离") : *Reason, *Rule);
+			                             Reason.IsEmpty() ? TEXT("可撤离") : *Reason);
 			// 匹配当前撤离点 ID 后，才用其停留时长计算进度；显示以服务器发布的截止时刻为准。
 			if (PS->ExtractAt > 0 && PS->ExtractExitId == It->Definition.Id)
 			{
