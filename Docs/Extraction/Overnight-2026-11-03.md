@@ -46,6 +46,10 @@
 | 04:26–04:30 | 全新配对包通过并完成撤离反馈联网验收 | Server03/Client05均Build/Cook/Stage/PE通过，两端所有生产Source/Config哈希与当前文件一致。overnight-packaged-exit02共26项检查通过，Server/A/B均Automation Success、exit0、finish ack；无缺UI/蜂医包错误 | DevelopmentPackages-02.json、ExitFeedback-Packaged.json及4张真实HUD截图；A中等画质，B NullRHI |
 | 04:30 | 核对近距离撤离HUD | 两行倒计时与进度条无重叠；世界Label缺字遮挡已消失；地面Marker和屏幕点名、条件保留 | 本轮fixtures验证，不宣称连续路线或900秒自然开放已通过 |
 | 04:31–04:33 | 独立包守卫回归首轮 | 21项通过：巡逻、实际逐枪反应/射速/伤害、玩家伤害、墙体、烟雾三秒阻挡；随后等待守卫进入换弹超时。整轮failed，保留原始日志，正在定位 | 不计完整守卫回归通过 |
+| 04:34–04:36 | 发布独立包资源与撤离显示修复 | f006745bdf9d10ebb4e2fd5a32a593be87d14172已推送，4张截图LFS上传成功；HEAD/跟踪/GitHub于04:35核对一致 | 已推送 |
+| 04:35–04:37 | 双人完整路线首跑 | overnight-route01完成12项大厅/配装/出生/战术图检查，首段前往补给点时在实测路径全局48–52段第2局部点发生Walk stalled。两人存活、宿舍guard未发现目标；整轮failed，保留motion轨迹，未传送越障 | 几何连通不等于实走，正在核对阻挡与路线 |
+| 04:38–04:41 | 修复12个导入材质实例的Nanite使用标记 | 新进程repair写入12项；独立verify全部通过且saved0。相对路径备份齐全，参数/父材质/5个原网格哈希未变；只改实例usage位。Client06重新Cook验证中，专服复用并逐字节核对Server03 | 实际独立包视觉和日志复验待完成 |
+| 04:43–04:45 | 材质修复独立包复验通过 | Client06重新Cook/Stage/PE成功；复用同源码配置Server03，EXE SHA已核对。overnight-packaged-exit03全部26项和三进程Automation Success；A.log原12个Nanite缺usage材质警告降为0，真实截图已保存 | NaniteUsage-Repair/Verify/Packaged与Package-Run证据齐全，准备提交推送 |
 
 ## 工作包状态
 

@@ -1,0 +1,294 @@
+{
+    "result":  "passed",
+    "scope":  "Twelve persisted MIC Nanite usage overrides; same-map rendered A packaged run has no previous missing-Nanite-usage warnings. A uses bounded Medium quality; B NullRHI. Not default-performance or full official-shader parity.",
+    "source_report":  "Saved/Extraction/overnight-packaged-exit03/Report.json",
+    "source_report_sha256":  "020207d484c0d2111cad2d59509313ffb739708d0da74bf820c104e537d18f46",
+    "before_log":  "Saved/Extraction/overnight-packaged-exit02/A.log",
+    "before_log_sha256":  "2675b9b6e80cde3c2b1b647ce01d4603d930e1d31860010783a652aa4d716e5b",
+    "before_warning_materials":  [
+                                     "/Game/Maps/SpaceCenter/Assets/056a6189cab1a746/SM_H_Building_FutureTech_HBoss_01_InterWall_03E/Materials/MI_GEN_Metal_Base_01_HD.MI_GEN_Metal_Base_01_HD",
+                                     "/Game/Maps/SpaceCenter/Assets/056a6189cab1a746/SM_H_Building_FutureTech_HBoss_01_InterWall_03E/Materials/MI_GEN_Metal_Painting_05_HD.MI_GEN_Metal_Painting_05_HD",
+                                     "/Game/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/Materials/MI_H_Building_FutureTech_AutomaticWorkshop_01_Decal_HD.MI_H_Building_FutureTech_AutomaticWorkshop_01_Decal_HD",
+                                     "/Game/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/Materials/MI_H_Small_Door_11_Black_HD.MI_H_Small_Door_11_Black_HD",
+                                     "/Game/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/Materials/MI_H_Small_Door_11_decal_01A_HD.MI_H_Small_Door_11_decal_01A_HD",
+                                     "/Game/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/Materials/MI_H_Small_Door_11_HD.MI_H_Small_Door_11_HD",
+                                     "/Game/Maps/SpaceCenter/Assets/15fd3e1b7cdc4420/SM_H_FutureTech_Furniture_Folder_01_A/Materials/MI_H_FutureTech_Furniture_Folder_01_HD.MI_H_FutureTech_Furniture_Folder_01_HD",
+                                     "/Game/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/Materials/MI_H_Building_FutureTech_AutomaticWorkshop_02_Decal_HD.MI_H_Building_FutureTech_AutomaticWorkshop_02_Decal_HD",
+                                     "/Game/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/Materials/MI_H_FutureTech_Tools_Box_01_HD.MI_H_FutureTech_Tools_Box_01_HD",
+                                     "/Game/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/Materials/MI_H_FutureTech_Tools_Box_01B_HD.MI_H_FutureTech_Tools_Box_01B_HD",
+                                     "/Game/Maps/SpaceCenter/Assets/7a44c52b93b3be9a/SM_H_Customiz_ExperimentalDoor_01_L/Materials/MI_H_Building_FutureTech_AutomaticWorkshop_01_Decal_HD.MI_H_Building_FutureTech_AutomaticWorkshop_01_Decal_HD",
+                                     "/Game/Maps/SpaceCenter/Assets/7a44c52b93b3be9a/SM_H_Customiz_ExperimentalDoor_01_L/Materials/MI_H_Customiz_ExperimentalDoor_01A_HD.MI_H_Customiz_ExperimentalDoor_01A_HD"
+                                 ],
+    "after_log":  "Saved/Extraction/overnight-packaged-exit03/A.log",
+    "after_log_sha256":  "5a4f975cc0cdff66177527461868eac02b457206e19866cc5bc70186ebcab4f6",
+    "after_warning_materials":  [
+
+                                ],
+    "options":  {
+                    "tag":  "overnight-packaged-exit03",
+                    "loot_seed":  null,
+                    "guards":  0,
+                    "packaged":  true,
+                    "package_root":  "Packaged/Overnight20261103_03",
+                    "port":  27885,
+                    "isolated_room":  true,
+                    "lag":  false,
+                    "unacked":  false,
+                    "debug_hold":  false,
+                    "traversal_record":  false,
+                    "traversal_route_only":  false,
+                    "traversal_source_only":  false,
+                    "traversal_top_only":  false,
+                    "traversal_debug_point":  "vault",
+                    "traversal_route":  false,
+                    "traversal_lifecycle":  false,
+                    "optic_validation":  false,
+                    "optic_remote_only":  false,
+                    "resolution":  "1280x720",
+                    "scenario":  "exit-feedback",
+                    "players":  2,
+                    "rendered_clients":  null,
+                    "rendered_role":  "A",
+                    "performance_route":  "north",
+                    "performance_samples":  3,
+                    "performance_seconds":  180,
+                    "network_stats":  false,
+                    "bounded_rendering":  true,
+                    "streaming_loops":  10
+                },
+    "processes":  {
+                      "Server":  {
+                                     "pid":  38612,
+                                     "command":  [
+                                                     "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_03\\Server\\WindowsServer\\BrokenEdge\\Binaries\\Win64\\BrokenEdgeServer.exe",
+                                                     "/Game/Maps/Lobby",
+                                                     "-nosound",
+                                                     "-unattended",
+                                                     "-nosplash",
+                                                     "-NoLoadingScreen",
+                                                     "-ExtractionGuards=0",
+                                                     "-MatchType=Extraction",
+                                                     "-NumPublicConnections=2",
+                                                     "-MinPlayersToStart=2",
+                                                     "-port=27885",
+                                                     "-ExtractionTestPort=27885",
+                                                     "-ExtractionRoundSeconds=600",
+                                                     "-ExtractionTestRole=Server",
+                                                     "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-packaged-exit03",
+                                                     "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-packaged-exit03\\Store",
+                                                     "-ExtractionProfile=overnight-packaged-exit03_Server",
+                                                     "-ExecCmds=t.MaxFPS 30,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+                                                     "-TestExit=Automation Test Queue Empty",
+                                                     "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-packaged-exit03\\Server.log",
+                                                     "-RoomName=overnight-packaged-exit03",
+                                                     "-ExtractionTestRoom=overnight-packaged-exit03",
+                                                     "-nullrhi"
+                                                 ],
+                                     "environment_overrides":  {
+                                                                   "UE_SKIP_UBT_SDK_SETUP":  "1"
+                                                               },
+                                     "finish_command":  10,
+                                     "finish_ack":  true,
+                                     "exit_code":  0,
+                                     "finish_info_logged":  true,
+                                     "automation_success":  true
+                                 },
+                      "A":  {
+                                "pid":  16676,
+                                "command":  [
+                                                "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_03\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+                                                "/Game/Maps/Lobby",
+                                                "-nosound",
+                                                "-unattended",
+                                                "-nosplash",
+                                                "-NoLoadingScreen",
+                                                "-ExtractionGuards=0",
+                                                "-MatchType=Extraction",
+                                                "-NumPublicConnections=2",
+                                                "-MinPlayersToStart=2",
+                                                "-port=27885",
+                                                "-ExtractionTestPort=27885",
+                                                "-ExtractionRoundSeconds=600",
+                                                "-ExtractionTestRole=A",
+                                                "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-packaged-exit03",
+                                                "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-packaged-exit03\\Store",
+                                                "-ExtractionProfile=overnight-packaged-exit03_A",
+                                                "-ExecCmds=sg.ViewDistanceQuality 1,sg.AntiAliasingQuality 1,sg.ShadowQuality 1,sg.GlobalIlluminationQuality 1,sg.ReflectionQuality 1,sg.PostProcessQuality 1,sg.TextureQuality 1,sg.EffectsQuality 1,sg.FoliageQuality 1,sg.ShadingQuality 1,r.Streaming.PoolSize 768,t.MaxFPS 30,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+                                                "-TestExit=Automation Test Queue Empty",
+                                                "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-packaged-exit03\\A.log",
+                                                "-RoomName=overnight-packaged-exit03",
+                                                "-ExtractionTestRoom=overnight-packaged-exit03",
+                                                "-RenderOffscreen",
+                                                "-windowed",
+                                                "-ResX=1280",
+                                                "-ResY=720",
+                                                "-ForceRes",
+                                                "-noraytracing"
+                                            ],
+                                "environment_overrides":  {
+                                                              "UE_SKIP_UBT_SDK_SETUP":  "1"
+                                                          },
+                                "finish_command":  15,
+                                "finish_ack":  true,
+                                "exit_code":  0,
+                                "finish_info_logged":  true,
+                                "automation_success":  true
+                            },
+                      "B":  {
+                                "pid":  19348,
+                                "command":  [
+                                                "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_03\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+                                                "/Game/Maps/Lobby",
+                                                "-nosound",
+                                                "-unattended",
+                                                "-nosplash",
+                                                "-NoLoadingScreen",
+                                                "-ExtractionGuards=0",
+                                                "-MatchType=Extraction",
+                                                "-NumPublicConnections=2",
+                                                "-MinPlayersToStart=2",
+                                                "-port=27885",
+                                                "-ExtractionTestPort=27885",
+                                                "-ExtractionRoundSeconds=600",
+                                                "-ExtractionTestRole=B",
+                                                "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-packaged-exit03",
+                                                "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-packaged-exit03\\Store",
+                                                "-ExtractionProfile=overnight-packaged-exit03_B",
+                                                "-ExecCmds=t.MaxFPS 30,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+                                                "-TestExit=Automation Test Queue Empty",
+                                                "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-packaged-exit03\\B.log",
+                                                "-RoomName=overnight-packaged-exit03",
+                                                "-ExtractionTestRoom=overnight-packaged-exit03",
+                                                "-nullrhi"
+                                            ],
+                                "environment_overrides":  {
+                                                              "UE_SKIP_UBT_SDK_SETUP":  "1"
+                                                          },
+                                "finish_command":  10,
+                                "finish_ack":  true,
+                                "exit_code":  0,
+                                "finish_info_logged":  true,
+                                "automation_success":  true
+                            }
+                  },
+    "check_count":  26,
+    "checks":  [
+                   "A joined LAN lobby",
+                   "A name replicated",
+                   "B joined LAN lobby",
+                   "B name replicated",
+                   "A persistent account ready",
+                   "B persistent account ready",
+                   "All players loaded in Extraction",
+                   "Dedicated authority and Stinger pawns",
+                   "A equipped AK",
+                   "B equipped AK",
+                   "First-person backpack section hidden on each owner",
+                   "Server and owners keep both hands within two cm of weapon grips",
+                   "Exit-feedback fixture starts in an active raid with two live players and no guards",
+                   "Both spawn positions are outside all exit areas before the rule fixture",
+                   "Unopened plaza reaches authority and owner only, with observer feedback isolated",
+                   "Rendered central HUD names the unopened plaza and hides extraction progress",
+                   "Opening starts the hold on authority and owner while observer feedback stays private",
+                   "Rendered central HUD shows the plaza countdown and active progress",
+                   "Each owner receives an independent private deadline without resetting the other player",
+                   "Capacity cancels both holds for authority and each owner without leaking feedback to observers",
+                   "Rendered central HUD shows exhausted capacity and hides progress",
+                   "Leaving clears only that player while the remaining player keeps the blocked exit",
+                   "Rendered central HUD and progress disappear after leaving",
+                   "Remaining player restarts a fresh hold while the departed player stays clear",
+                   "Closing the occupied area cancels the remaining hold and retains its closed reason",
+                   "Both players leave with cleared feedback and neither is falsely marked extracted"
+               ],
+    "executables":  {
+                        "Server":  {
+                                       "path":  "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_03\\Server\\WindowsServer\\BrokenEdge\\Binaries\\Win64\\BrokenEdgeServer.exe",
+                                       "bytes":  321313792,
+                                       "sha256":  "a3ab25dbfe6fa14315560e21bc49da13f36366d7b58e5993e16b36c7e19e97a8",
+                                       "machine":  "AMD64",
+                                       "sections":  12
+                                   },
+                        "A":  {
+                                  "path":  "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_03\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+                                  "bytes":  339619840,
+                                  "sha256":  "89a6da865173d3adbf5ed9a3903cfc824385b35f8f666af2d61e241002aff437",
+                                  "machine":  "AMD64",
+                                  "sections":  13
+                              },
+                        "B":  {
+                                  "path":  "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_03\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+                                  "bytes":  339619840,
+                                  "sha256":  "89a6da865173d3adbf5ed9a3903cfc824385b35f8f666af2d61e241002aff437",
+                                  "machine":  "AMD64",
+                                  "sections":  13
+                              }
+                    },
+    "assets":  [
+                   {
+                       "package":  "/Game/Maps/SpaceCenter/Assets/056a6189cab1a746/SM_H_Building_FutureTech_HBoss_01_InterWall_03E/Materials/MI_GEN_Metal_Base_01_HD",
+                       "source":  "Content/Maps/SpaceCenter/Assets/056a6189cab1a746/SM_H_Building_FutureTech_HBoss_01_InterWall_03E/Materials/MI_GEN_Metal_Base_01_HD.uasset",
+                       "current_sha256":  "58cc940be2992f85650173c8219b443841d1a1cb516df42d587bc1f74a637db1"
+                   },
+                   {
+                       "package":  "/Game/Maps/SpaceCenter/Assets/056a6189cab1a746/SM_H_Building_FutureTech_HBoss_01_InterWall_03E/Materials/MI_GEN_Metal_Painting_05_HD",
+                       "source":  "Content/Maps/SpaceCenter/Assets/056a6189cab1a746/SM_H_Building_FutureTech_HBoss_01_InterWall_03E/Materials/MI_GEN_Metal_Painting_05_HD.uasset",
+                       "current_sha256":  "2a6eaa55f7ef0c5685c36a3f59ceaab47dbfc1d43c72e5abaece626e199bd2d3"
+                   },
+                   {
+                       "package":  "/Game/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/Materials/MI_H_Building_FutureTech_AutomaticWorkshop_01_Decal_HD",
+                       "source":  "Content/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/Materials/MI_H_Building_FutureTech_AutomaticWorkshop_01_Decal_HD.uasset",
+                       "current_sha256":  "5195f43de3658966c2d521d3939893996496e8c22c8efe85a83ea4b0de59d723"
+                   },
+                   {
+                       "package":  "/Game/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/Materials/MI_H_Small_Door_11_Black_HD",
+                       "source":  "Content/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/Materials/MI_H_Small_Door_11_Black_HD.uasset",
+                       "current_sha256":  "f4e121a04726b98f97fe8ed3c8726621b645b0c14dede3ed334a98a469ea16b0"
+                   },
+                   {
+                       "package":  "/Game/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/Materials/MI_H_Small_Door_11_HD",
+                       "source":  "Content/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/Materials/MI_H_Small_Door_11_HD.uasset",
+                       "current_sha256":  "48e0bb2795fe034b1651e12a35d02e939bcdb13449a0106c0c6eb45b604a5233"
+                   },
+                   {
+                       "package":  "/Game/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/Materials/MI_H_Small_Door_11_decal_01A_HD",
+                       "source":  "Content/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/Materials/MI_H_Small_Door_11_decal_01A_HD.uasset",
+                       "current_sha256":  "04ad522b0d28d72ce34bb198f264a666ab37d144c592dd3e1c32283c78eedeec"
+                   },
+                   {
+                       "package":  "/Game/Maps/SpaceCenter/Assets/15fd3e1b7cdc4420/SM_H_FutureTech_Furniture_Folder_01_A/Materials/MI_H_FutureTech_Furniture_Folder_01_HD",
+                       "source":  "Content/Maps/SpaceCenter/Assets/15fd3e1b7cdc4420/SM_H_FutureTech_Furniture_Folder_01_A/Materials/MI_H_FutureTech_Furniture_Folder_01_HD.uasset",
+                       "current_sha256":  "de811e3e071b8864722c1a9a0742eaa1163136be50dc41f1b9d2d31dc520c684"
+                   },
+                   {
+                       "package":  "/Game/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/Materials/MI_H_Building_FutureTech_AutomaticWorkshop_02_Decal_HD",
+                       "source":  "Content/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/Materials/MI_H_Building_FutureTech_AutomaticWorkshop_02_Decal_HD.uasset",
+                       "current_sha256":  "6927aed5f92572af44d8d37a1c7bcc1e5e5b2b6c9c37865db387cdecd713c9a1"
+                   },
+                   {
+                       "package":  "/Game/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/Materials/MI_H_FutureTech_Tools_Box_01B_HD",
+                       "source":  "Content/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/Materials/MI_H_FutureTech_Tools_Box_01B_HD.uasset",
+                       "current_sha256":  "9065db9ec5f7d861bb311920be9e385a0e582cd0b470924f7855d5b8ed8fa058"
+                   },
+                   {
+                       "package":  "/Game/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/Materials/MI_H_FutureTech_Tools_Box_01_HD",
+                       "source":  "Content/Maps/SpaceCenter/Assets/409e475f1d6c58b5/SM_H_FutureTech_Tools_Box_01/Materials/MI_H_FutureTech_Tools_Box_01_HD.uasset",
+                       "current_sha256":  "e11d94915d653c12cb049991132b810127b3e6e9b3e186c198df5b569f1fa0b6"
+                   },
+                   {
+                       "package":  "/Game/Maps/SpaceCenter/Assets/7a44c52b93b3be9a/SM_H_Customiz_ExperimentalDoor_01_L/Materials/MI_H_Building_FutureTech_AutomaticWorkshop_01_Decal_HD",
+                       "source":  "Content/Maps/SpaceCenter/Assets/7a44c52b93b3be9a/SM_H_Customiz_ExperimentalDoor_01_L/Materials/MI_H_Building_FutureTech_AutomaticWorkshop_01_Decal_HD.uasset",
+                       "current_sha256":  "7d34d3da9fcf26cd19012038d26300e779206cca7c54922bf02f4bf471bf733a"
+                   },
+                   {
+                       "package":  "/Game/Maps/SpaceCenter/Assets/7a44c52b93b3be9a/SM_H_Customiz_ExperimentalDoor_01_L/Materials/MI_H_Customiz_ExperimentalDoor_01A_HD",
+                       "source":  "Content/Maps/SpaceCenter/Assets/7a44c52b93b3be9a/SM_H_Customiz_ExperimentalDoor_01_L/Materials/MI_H_Customiz_ExperimentalDoor_01A_HD.uasset",
+                       "current_sha256":  "6bb665631c711cbd20c91d808f4bd42e9fe5d97d612632583fd9c15c6d391c66"
+                   }
+               ],
+    "server_package_reuse":  {
+                                 "source":  "Packaged/Overnight20261103_02/Server",
+                                 "target":  "Packaged/Overnight20261103_03/Server",
+                                 "reason":  "Only material instance usage flags changed; game source and config remain identical to Server03.",
+                                 "executable_sha256":  "a3ab25dbfe6fa14315560e21bc49da13f36366d7b58e5993e16b36c7e19e97a8"
+                             }
+}

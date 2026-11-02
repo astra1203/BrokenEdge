@@ -1,0 +1,28 @@
+{
+  "mode": "verify",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\repair_nanite_usage.py",
+    "-NullRHI",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-SCCProvider=None",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\NaniteUsage\\overnight-nanite-verify01\\Editor.log",
+    "-ini:Engine:[DevOptions.Shaders]:ShaderCompilerCoreCountThreshold=999,NumUnusedShaderCompilingThreads=10,NumUnusedShaderCompilingThreadsDuringGame=10"
+  ],
+  "started_utc": "2026-11-02T20:38:57.961938+00:00",
+  "script_sha256": "c7d5980dfb04e038019777bff1f2bf9965a18378f2d77d0bea1fac51f0b40815",
+  "wrapper_sha256": "c9041530807986192fd8b892b587a4fb423d94db4a65042eeee3b9f0020a34f8",
+  "manifest_sha256": "2ec130c717a9e19a72147cd2cf4ddc83c4485614241f6f46d2b12a114c6e3802",
+  "baseline_report": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\NaniteUsage\\overnight-nanite-repair01\\Report.json",
+  "shader_workers": 2,
+  "pid": 37452,
+  "exit_code": 0,
+  "finished_utc": "2026-11-02T20:39:10.500037+00:00",
+  "report_passed": true,
+  "passed": true
+}
