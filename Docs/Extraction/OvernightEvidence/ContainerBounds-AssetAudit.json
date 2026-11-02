@@ -1,0 +1,5979 @@
+{
+  "schema": 1,
+  "result": "passed_with_plan_difference",
+  "stage": "complete",
+  "started_utc": "2026-11-02T22:15:18.879461+00:00",
+  "scope": "Read-only asset and CDO export; no level load, spawn, asset edit/save, PIE or runtime validation",
+  "input_sha256": {
+    "Source/BrokenEdge/Extraction/ExtractionLootActor.cpp": "62a51d5234c95ca69e14522d2cbd3c8d08b6bcc0eb337eaa1789a2a686113fbf",
+    "Source/BrokenEdge/Extraction/ExtractionLootActor.h": "5286509bb880334ec61dad63e25f34e9b4650335ab097a8ce777340d5c1217b4",
+    "Source/BrokenEdge/Extraction/ExtractionLootLayout.cpp": "30a1167beea278ed12b360fee39396db6dfc50e4a899d9759d31637450df6e93",
+    "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp": "d13bf93ff7570e1241f704d98b7167cb8b9165808f7e8408259e717541e5edd0",
+    "Scripts/Extraction/place_7f_loot_guards.py": "ce79bc4ec652222b6e3e2af0cb3d166cf64d08b05b9100de70017c95d559c412",
+    "Config/DefaultGame.ini": "8505e7b8a4d4ba7891db93664cc182f3b16793c0d2c47af852df0fb5d6c414cd",
+    "Scripts/Extraction/export_7f_container_bounds.py": "de301f2ee16cb42fc37ea0e9e70d9ec83e08b2d00dcb929e8a27fc1b7b5a2e85",
+    "Docs/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json": "0e34445b370b57284174761ac77adfd4a3c53020c1cd5b4df0798855c9d36e27",
+    "Content/Extraction/Maps/DA_SpaceCenterGameplay.uasset": "bfc670a1cf824c5245617a27b1a56d427c25f0e28f812694f6e1a2a1b9b21631",
+    "Content/Extraction/Loot/DA_SpaceCenter_Ma1_Loot.uasset": "ffbd41b1692e37a333f95136a4914512dadb054906ba611a8936be1605398c16",
+    "Content/Blueprints/Extraction/BP_ExtractionLootActor.uasset": "109bbf99b87c3f5c856da93e4754e32d15aa2e3d44601f7b3cb1b0202dbe4400",
+    "Content/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.uasset": "18df778e0724a3f054564e97db67a7a49d939f52a5de77f04568c420297fd19c"
+  },
+  "map_definition": {
+    "config": "Config/DefaultGame.ini",
+    "configured_path": "/Game/Extraction/Maps/DA_SpaceCenterGameplay.DA_SpaceCenterGameplay",
+    "loaded_asset": "/Game/Extraction/Maps/DA_SpaceCenterGameplay.DA_SpaceCenterGameplay"
+  },
+  "layout": "/Game/Extraction/Loot/DA_SpaceCenter_Ma1_Loot.DA_SpaceCenter_Ma1_Loot",
+  "cdo": {
+    "game_mode_class": "/Script/BrokenEdge.ExtractionGameMode",
+    "loot_actor_class": "/Game/Blueprints/Extraction/BP_ExtractionLootActor.BP_ExtractionLootActor_C",
+    "path": "/Game/Blueprints/Extraction/BP_ExtractionLootActor.Default__BP_ExtractionLootActor_C",
+    "visual_offset_cm": [
+      0.0,
+      0.0,
+      -20.0
+    ],
+    "container_bounds_component": "/Game/Blueprints/Extraction/BP_ExtractionLootActor.Default__BP_ExtractionLootActor_C:ContainerBounds",
+    "container_relative_rotation_pitch_yaw_roll": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "container_relative_scale3d": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "collision_enabled_before_onrep": "<CollisionEnabled.NO_COLLISION: 0>",
+    "pawn_response": "<CollisionResponseType.ECR_BLOCK: 2>",
+    "visibility_response": "<CollisionResponseType.ECR_BLOCK: 2>"
+  },
+  "candidate_inventory": {
+    "layout_point_count": 207,
+    "layout_points": [
+      {
+        "id": "10e518d0d87ad8d3635e",
+        "kind": "LargeSafe",
+        "group": "None"
+      },
+      {
+        "id": "ab5dc53ae72028f962b2",
+        "kind": "LargeSafe",
+        "group": "None"
+      },
+      {
+        "id": "9fdd0f2bf6da236700eb",
+        "kind": "SmallSafe",
+        "group": "None"
+      },
+      {
+        "id": "43389cf951e1f4d9c716",
+        "kind": "SmallSafe",
+        "group": "None"
+      },
+      {
+        "id": "4a547c50a554af1041e8",
+        "kind": "LargeSafe",
+        "group": "None"
+      },
+      {
+        "id": "77117d6497015537ce4c",
+        "kind": "SmallSafe",
+        "group": "None"
+      },
+      {
+        "id": "d517958d36f23fe5280f",
+        "kind": "LargeSafe",
+        "group": "None"
+      },
+      {
+        "id": "f100904fb3427f45c14c",
+        "kind": "SmallSafe",
+        "group": "None"
+      },
+      {
+        "id": "afc8100db1767ce40356",
+        "kind": "LargeSafe",
+        "group": "None"
+      },
+      {
+        "id": "ab5d21758ee9f7c6b8c9",
+        "kind": "LargeSafe",
+        "group": "None"
+      },
+      {
+        "id": "d012cec396f31168aa7a",
+        "kind": "LargeSafe",
+        "group": "None"
+      },
+      {
+        "id": "5e574f814b5b7628e679",
+        "kind": "LargeSafe",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_01",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_02",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_03",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_04",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_05",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_06",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_07",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_08",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_09",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_10",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_11",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_12",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_13",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_14",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_15",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_16",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_17",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_18",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_19",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_20",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_21",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_22",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_23",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_24",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_25",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_26",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_27",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_28",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_29",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_30",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_31",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_32",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_33",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_34",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_35",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_36",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_37",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_38",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_39",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_40",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_41",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_42",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_43",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_44",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_45",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_46",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_47",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_48",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_49",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_50",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_51",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_52",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_53",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_54",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_55",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_56",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_57",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_58",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_59",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_60",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_61",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_62",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_63",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_64",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_65",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_66",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_67",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_68",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_69",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_70",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_71",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_72",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_73",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_74",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_75",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_76",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_77",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_78",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_79",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_80",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_81",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_82",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_83",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_84",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_85",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_86",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_87",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_88",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_89",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_90",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_91",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_92",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_93",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_94",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_95",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_96",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_97",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_98",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_99",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_100",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_101",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_102",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_103",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_104",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_105",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_106",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_107",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_108",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_109",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_110",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_111",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_112",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_113",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_114",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_115",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_116",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_117",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_118",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_119",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_120",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_121",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_122",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_123",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_124",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_125",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_126",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_127",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_128",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_129",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_130",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_131",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_132",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_133",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_134",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_135",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_136",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_137",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_138",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_139",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_140",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_141",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_142",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_143",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_144",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_145",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_146",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_147",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_148",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_149",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "LOOSE_150",
+        "kind": "Loose",
+        "group": "None"
+      },
+      {
+        "id": "7F_WestDorm_A1",
+        "kind": "Supply",
+        "group": "7F_WestDorm_A"
+      },
+      {
+        "id": "7F_WestDorm_A3",
+        "kind": "Supply",
+        "group": "7F_WestDorm_A"
+      },
+      {
+        "id": "7F_WestDorm_B1",
+        "kind": "Supply",
+        "group": "7F_WestDorm_B"
+      },
+      {
+        "id": "7F_WestDorm_B2",
+        "kind": "Supply",
+        "group": "7F_WestDorm_B"
+      },
+      {
+        "id": "7F_WestDorm_B3",
+        "kind": "Supply",
+        "group": "7F_WestDorm_B"
+      },
+      {
+        "id": "7F_LivingArea_A2",
+        "kind": "Supply",
+        "group": "7F_LivingArea_A"
+      },
+      {
+        "id": "7F_LivingArea_A3",
+        "kind": "Supply",
+        "group": "7F_LivingArea_A"
+      },
+      {
+        "id": "7F_LivingArea_B1",
+        "kind": "Supply",
+        "group": "7F_LivingArea_B"
+      },
+      {
+        "id": "7F_LivingArea_B2",
+        "kind": "Supply",
+        "group": "7F_LivingArea_B"
+      },
+      {
+        "id": "7F_LivingArea_B3",
+        "kind": "Supply",
+        "group": "7F_LivingArea_B"
+      },
+      {
+        "id": "7F_WestGate_A1",
+        "kind": "Supply",
+        "group": "7F_WestGate_A"
+      },
+      {
+        "id": "7F_WestGate_A2",
+        "kind": "Supply",
+        "group": "7F_WestGate_A"
+      },
+      {
+        "id": "7F_WestGate_B2",
+        "kind": "Supply",
+        "group": "7F_WestGate_B"
+      },
+      {
+        "id": "7F_WestGate_B3",
+        "kind": "Supply",
+        "group": "7F_WestGate_B"
+      },
+      {
+        "id": "7F_StaffPassage1_A1",
+        "kind": "Supply",
+        "group": "7F_StaffPassage1_A"
+      },
+      {
+        "id": "7F_StaffPassage1_A2",
+        "kind": "Supply",
+        "group": "7F_StaffPassage1_A"
+      },
+      {
+        "id": "7F_StaffPassage1_A3",
+        "kind": "Supply",
+        "group": "7F_StaffPassage1_A"
+      },
+      {
+        "id": "7F_StaffPassage1_B1",
+        "kind": "Supply",
+        "group": "7F_StaffPassage1_B"
+      },
+      {
+        "id": "7F_StaffPassage1_B2",
+        "kind": "Supply",
+        "group": "7F_StaffPassage1_B"
+      },
+      {
+        "id": "7F_StaffPassage1_B3",
+        "kind": "Supply",
+        "group": "7F_StaffPassage1_B"
+      },
+      {
+        "id": "7F_StaffPassage2_A1",
+        "kind": "Supply",
+        "group": "7F_StaffPassage2_A"
+      },
+      {
+        "id": "7F_StaffPassage2_A3",
+        "kind": "Supply",
+        "group": "7F_StaffPassage2_A"
+      },
+      {
+        "id": "7F_StaffPassage2_B1",
+        "kind": "Supply",
+        "group": "7F_StaffPassage2_B"
+      },
+      {
+        "id": "7F_StaffPassage2_B2",
+        "kind": "Supply",
+        "group": "7F_StaffPassage2_B"
+      },
+      {
+        "id": "7F_StaffPassage2_B3",
+        "kind": "Supply",
+        "group": "7F_StaffPassage2_B"
+      },
+      {
+        "id": "7F_LiftRoom_A1",
+        "kind": "Supply",
+        "group": "7F_LiftRoom_A"
+      },
+      {
+        "id": "7F_LiftRoom_A2",
+        "kind": "Supply",
+        "group": "7F_LiftRoom_A"
+      },
+      {
+        "id": "7F_LiftRoom_A3",
+        "kind": "Supply",
+        "group": "7F_LiftRoom_A"
+      },
+      {
+        "id": "7F_LiftRoom_B1",
+        "kind": "Supply",
+        "group": "7F_LiftRoom_B"
+      },
+      {
+        "id": "7F_LiftRoom_B2",
+        "kind": "Supply",
+        "group": "7F_LiftRoom_B"
+      },
+      {
+        "id": "7F_LiftRoom_B3",
+        "kind": "Supply",
+        "group": "7F_LiftRoom_B"
+      },
+      {
+        "id": "7F_Assembly_A1",
+        "kind": "Supply",
+        "group": "7F_Assembly_A"
+      },
+      {
+        "id": "7F_Assembly_A2",
+        "kind": "Supply",
+        "group": "7F_Assembly_A"
+      },
+      {
+        "id": "7F_Assembly_A3",
+        "kind": "Supply",
+        "group": "7F_Assembly_A"
+      },
+      {
+        "id": "7F_Assembly_B2",
+        "kind": "Supply",
+        "group": "7F_Assembly_B"
+      },
+      {
+        "id": "7F_Assembly_B3",
+        "kind": "Supply",
+        "group": "7F_Assembly_B"
+      },
+      {
+        "id": "7F_Canning_A3",
+        "kind": "Supply",
+        "group": "7F_Canning_A"
+      },
+      {
+        "id": "7F_Canning_B1",
+        "kind": "Supply",
+        "group": "7F_Canning_B"
+      },
+      {
+        "id": "7F_Canning_B2",
+        "kind": "Supply",
+        "group": "7F_Canning_B"
+      },
+      {
+        "id": "7F_Canning_B3",
+        "kind": "Supply",
+        "group": "7F_Canning_B"
+      },
+      {
+        "id": "7F_TestRange_A1",
+        "kind": "Supply",
+        "group": "7F_TestRange_A"
+      },
+      {
+        "id": "7F_TestRange_A3",
+        "kind": "Supply",
+        "group": "7F_TestRange_A"
+      },
+      {
+        "id": "7F_TestRange_B1",
+        "kind": "Supply",
+        "group": "7F_TestRange_B"
+      },
+      {
+        "id": "7F_TestRange_B2",
+        "kind": "Supply",
+        "group": "7F_TestRange_B"
+      },
+      {
+        "id": "7F_TestRange_B3",
+        "kind": "Supply",
+        "group": "7F_TestRange_B"
+      }
+    ],
+    "planned_count": 54,
+    "planned_unique_count": 54,
+    "planned_ids": [
+      "7F_Assembly_A1",
+      "7F_Assembly_A2",
+      "7F_Assembly_A3",
+      "7F_Assembly_B1",
+      "7F_Assembly_B2",
+      "7F_Assembly_B3",
+      "7F_Canning_A1",
+      "7F_Canning_A2",
+      "7F_Canning_A3",
+      "7F_Canning_B1",
+      "7F_Canning_B2",
+      "7F_Canning_B3",
+      "7F_LiftRoom_A1",
+      "7F_LiftRoom_A2",
+      "7F_LiftRoom_A3",
+      "7F_LiftRoom_B1",
+      "7F_LiftRoom_B2",
+      "7F_LiftRoom_B3",
+      "7F_LivingArea_A1",
+      "7F_LivingArea_A2",
+      "7F_LivingArea_A3",
+      "7F_LivingArea_B1",
+      "7F_LivingArea_B2",
+      "7F_LivingArea_B3",
+      "7F_StaffPassage1_A1",
+      "7F_StaffPassage1_A2",
+      "7F_StaffPassage1_A3",
+      "7F_StaffPassage1_B1",
+      "7F_StaffPassage1_B2",
+      "7F_StaffPassage1_B3",
+      "7F_StaffPassage2_A1",
+      "7F_StaffPassage2_A2",
+      "7F_StaffPassage2_A3",
+      "7F_StaffPassage2_B1",
+      "7F_StaffPassage2_B2",
+      "7F_StaffPassage2_B3",
+      "7F_TestRange_A1",
+      "7F_TestRange_A2",
+      "7F_TestRange_A3",
+      "7F_TestRange_B1",
+      "7F_TestRange_B2",
+      "7F_TestRange_B3",
+      "7F_WestDorm_A1",
+      "7F_WestDorm_A2",
+      "7F_WestDorm_A3",
+      "7F_WestDorm_B1",
+      "7F_WestDorm_B2",
+      "7F_WestDorm_B3",
+      "7F_WestGate_A1",
+      "7F_WestGate_A2",
+      "7F_WestGate_A3",
+      "7F_WestGate_B1",
+      "7F_WestGate_B2",
+      "7F_WestGate_B3"
+    ],
+    "prefix_count": 45,
+    "excluded_prefix_points": [],
+    "selected_count": 45,
+    "selected_ids": [
+      "7F_Assembly_A1",
+      "7F_Assembly_A2",
+      "7F_Assembly_A3",
+      "7F_Assembly_B2",
+      "7F_Assembly_B3",
+      "7F_Canning_A3",
+      "7F_Canning_B1",
+      "7F_Canning_B2",
+      "7F_Canning_B3",
+      "7F_LiftRoom_A1",
+      "7F_LiftRoom_A2",
+      "7F_LiftRoom_A3",
+      "7F_LiftRoom_B1",
+      "7F_LiftRoom_B2",
+      "7F_LiftRoom_B3",
+      "7F_LivingArea_A2",
+      "7F_LivingArea_A3",
+      "7F_LivingArea_B1",
+      "7F_LivingArea_B2",
+      "7F_LivingArea_B3",
+      "7F_StaffPassage1_A1",
+      "7F_StaffPassage1_A2",
+      "7F_StaffPassage1_A3",
+      "7F_StaffPassage1_B1",
+      "7F_StaffPassage1_B2",
+      "7F_StaffPassage1_B3",
+      "7F_StaffPassage2_A1",
+      "7F_StaffPassage2_A3",
+      "7F_StaffPassage2_B1",
+      "7F_StaffPassage2_B2",
+      "7F_StaffPassage2_B3",
+      "7F_TestRange_A1",
+      "7F_TestRange_A3",
+      "7F_TestRange_B1",
+      "7F_TestRange_B2",
+      "7F_TestRange_B3",
+      "7F_WestDorm_A1",
+      "7F_WestDorm_A3",
+      "7F_WestDorm_B1",
+      "7F_WestDorm_B2",
+      "7F_WestDorm_B3",
+      "7F_WestGate_A1",
+      "7F_WestGate_A2",
+      "7F_WestGate_B2",
+      "7F_WestGate_B3"
+    ],
+    "missing_ids": [
+      "7F_Assembly_B1",
+      "7F_Canning_A1",
+      "7F_Canning_A2",
+      "7F_LivingArea_A1",
+      "7F_StaffPassage2_A2",
+      "7F_TestRange_A2",
+      "7F_WestDorm_A2",
+      "7F_WestGate_A3",
+      "7F_WestGate_B1"
+    ],
+    "duplicate_selected_ids": []
+  },
+  "plan_comparison": {
+    "status": "current_layout_differs_from_historical_plan",
+    "historical_plan": "Docs/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json",
+    "historical_candidate_count": 54,
+    "current_candidate_count": 45,
+    "missing_ids": [
+      "7F_Assembly_B1",
+      "7F_Canning_A1",
+      "7F_Canning_A2",
+      "7F_LivingArea_A1",
+      "7F_StaffPassage2_A2",
+      "7F_TestRange_A2",
+      "7F_WestDorm_A2",
+      "7F_WestGate_A3",
+      "7F_WestGate_B1"
+    ],
+    "synthesized_candidates": 0,
+    "boundary": "Exports only actual current asset points; missing proposals are not runtime spawn candidates.",
+    "placement_rule": "place_7f_loot_guards.py rechecks each proposal with floor_at and discards failed floor/capsule probes."
+  },
+  "appearances": {
+    "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P": {
+      "bounds_origin_cm": [
+        0.0,
+        -0.023233413696289062,
+        59.308712005615234
+      ],
+      "bounds_half_extent_cm": [
+        42.32563781738281,
+        54.70507621765137,
+        59.308712005615234
+      ],
+      "bounds_sphere_radius_cm": 91.1132718125758,
+      "bounds_api": "USkeletalMesh.GetBounds"
+    }
+  },
+  "points": [
+    {
+      "id": "7F_Assembly_A1",
+      "group": "7F_Assembly_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "组装室 补给箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FSupplyRecipe.DA_Project7FSupplyRecipe",
+      "transform": {
+        "translation_cm": [
+          31300.000000005566,
+          -13399.999999996035,
+          257.9969482421875
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.777145961456971,
+          0.6293203910498374
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          31300.02272571343,
+          -13399.99516949771,
+          317.30566024780273
+        ],
+        "interaction_point_world_cm": [
+          31300.02272571343,
+          -13399.99516949771,
+          317.30566024780273
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.777145961456971,
+          0.6293203910498374
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            31362.332359687236,
+            -13430.022065685584,
+            257.9969482421875
+          ],
+          [
+            31362.332359687236,
+            -13430.022065685584,
+            376.61437225341797
+          ],
+          [
+            31255.313081586726,
+            -13452.769715471037,
+            257.9969482421875
+          ],
+          [
+            31255.313081586726,
+            -13452.769715471037,
+            376.61437225341797
+          ],
+          [
+            31344.732369840134,
+            -13347.220623524383,
+            257.9969482421875
+          ],
+          [
+            31344.732369840134,
+            -13347.220623524383,
+            376.61437225341797
+          ],
+          [
+            31237.71309173962,
+            -13369.968273309834,
+            257.9969482421875
+          ],
+          [
+            31237.71309173962,
+            -13369.968273309834,
+            376.61437225341797
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_Assembly_A2",
+      "group": "7F_Assembly_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "组装室 补给箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FSupplyRecipe.DA_Project7FSupplyRecipe",
+      "transform": {
+        "translation_cm": [
+          31300.000000005566,
+          -12899.999999995285,
+          257.9970703125
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.4999999999999999,
+          0.8660254037844386
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          31300.020120732042,
+          -12900.011616702133,
+          317.30578231811523
+        ],
+        "interaction_point_world_cm": [
+          31300.020120732042,
+          -12900.011616702133,
+          317.30578231811523
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.4999999999999999,
+          0.8660254037844386
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            31326.2332875438,
+            -12964.019232392191,
+            257.9970703125
+          ],
+          [
+            31326.2332875438,
+            -12964.019232392191,
+            376.61449432373047
+          ],
+          [
+            31231.4813161029,
+            -12909.31415617454,
+            257.9970703125
+          ],
+          [
+            31231.4813161029,
+            -12909.31415617454,
+            376.61449432373047
+          ],
+          [
+            31368.558925361183,
+            -12890.709077229727,
+            257.9970703125
+          ],
+          [
+            31368.558925361183,
+            -12890.709077229727,
+            376.61449432373047
+          ],
+          [
+            31273.806953920284,
+            -12836.004001012076,
+            257.9970703125
+          ],
+          [
+            31273.806953920284,
+            -12836.004001012076,
+            376.61449432373047
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_Assembly_A3",
+      "group": "7F_Assembly_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "组装室 补给箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FSupplyRecipe.DA_Project7FSupplyRecipe",
+      "transform": {
+        "translation_cm": [
+          30500.000000004366,
+          -12499.999999994681,
+          257.9969482421875
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.8746197071393956,
+          0.4848096202463371
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          30500.01970305662,
+          -12499.987688161189,
+          317.30566024780273
+        ],
+        "interaction_point_world_cm": [
+          30500.01970305662,
+          -12499.987688161189,
+          317.30566024780273
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.8746197071393956,
+          0.4848096202463371
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            30568.84140964348,
+            -12506.892590991749,
+            257.9969482421875
+          ],
+          [
+            30568.84140964348,
+            -12506.892590991749,
+            376.61437225341797
+          ],
+          [
+            30476.056338170536,
+            -12564.871138469907,
+            257.9969482421875
+          ],
+          [
+            30476.056338170536,
+            -12564.871138469907,
+            376.61437225341797
+          ],
+          [
+            30523.9830679427,
+            -12435.104237852473,
+            257.9969482421875
+          ],
+          [
+            30523.9830679427,
+            -12435.104237852473,
+            376.61437225341797
+          ],
+          [
+            30431.197996469757,
+            -12493.082785330631,
+            257.9969482421875
+          ],
+          [
+            30431.197996469757,
+            -12493.082785330631,
+            376.61437225341797
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_Assembly_B2",
+      "group": "7F_Assembly_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "组装室 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          30800.000000004817,
+          -12899.999999995282,
+          257.9969482421875
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.6360782202777638,
+          0.7716245833877201
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          30800.022806555266,
+          -12900.004433139607,
+          317.30566024780273
+        ],
+        "interaction_point_world_cm": [
+          30800.022806555266,
+          -12900.004433139607,
+          317.30566024780273
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.6360782202777638,
+          0.7716245833877201
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            30845.64668401248,
+            -12951.990650413,
+            257.9969482421875
+          ],
+          [
+            30845.64668401248,
+            -12951.990650413,
+            376.61437225341797
+          ],
+          [
+            30738.246704236837,
+            -12931.114209142825,
+            257.9969482421875
+          ],
+          [
+            30738.246704236837,
+            -12931.114209142825,
+            376.61437225341797
+          ],
+          [
+            30861.798908873694,
+            -12868.894657136392,
+            257.9969482421875
+          ],
+          [
+            30861.798908873694,
+            -12868.894657136392,
+            376.61437225341797
+          ],
+          [
+            30754.39892909805,
+            -12848.018215866217,
+            257.9969482421875
+          ],
+          [
+            30754.39892909805,
+            -12848.018215866217,
+            376.61437225341797
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_Assembly_B3",
+      "group": "7F_Assembly_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "组装室 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          30800.000000004817,
+          -13399.999999996035,
+          257.9969482421875
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.8241261886220158,
+          -0.5664062369248325
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          30799.97830974455,
+          -13399.991673885208,
+          317.30566024780273
+        ],
+        "interaction_point_world_cm": [
+          30799.97830974455,
+          -13399.991673885208,
+          317.30566024780273
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.8241261886220158,
+          -0.5664062369248325
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            30764.074873395526,
+            -13340.87274088605,
+            257.9969482421875
+          ],
+          [
+            30764.074873395526,
+            -13340.87274088605,
+            376.61437225341797
+          ],
+          [
+            30866.2180501692,
+            -13380.081832873728,
+            257.9969482421875
+          ],
+          [
+            30866.2180501692,
+            -13380.081832873728,
+            376.61437225341797
+          ],
+          [
+            30733.7385693199,
+            -13419.901514896686,
+            257.9969482421875
+          ],
+          [
+            30733.7385693199,
+            -13419.901514896686,
+            376.61437225341797
+          ],
+          [
+            30835.881746093575,
+            -13459.110606884366,
+            257.9969482421875
+          ],
+          [
+            30835.881746093575,
+            -13459.110606884366,
+            376.61437225341797
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_Canning_A3",
+      "group": "7F_Canning_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "罐装区 装备箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FGearRecipe.DA_Project7FGearRecipe",
+      "transform": {
+        "translation_cm": [
+          32400.000000011627,
+          600.0000000154505,
+          -552.9449442680647
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.26723837607825707,
+          -0.9636304532086231
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          32399.988033918962,
+          599.9800850929463,
+          -493.6362322624494
+        ],
+        "interaction_point_world_cm": [
+          32399.988033918962,
+          599.9800850929463,
+          -493.6362322624494
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.26723837607825707,
+          -0.9636304532086231
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            32335.532684057594,
+            574.8879975975639,
+            -552.9449442680647
+          ],
+          [
+            32335.532684057594,
+            574.8879975975639,
+            -434.3275202568342
+          ],
+          [
+            32391.88307834349,
+            668.670802629939,
+            -552.9449442680647
+          ],
+          [
+            32391.88307834349,
+            668.670802629939,
+            -434.3275202568342
+          ],
+          [
+            32408.09298949444,
+            531.2893675559537,
+            -552.9449442680647
+          ],
+          [
+            32408.09298949444,
+            531.2893675559537,
+            -434.3275202568342
+          ],
+          [
+            32464.44338378033,
+            625.0721725883288,
+            -552.9449442680647
+          ],
+          [
+            32464.44338378033,
+            625.0721725883288,
+            -434.3275202568342
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_Canning_B1",
+      "group": "7F_Canning_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "罐装区 物资箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FValuableRecipe.DA_Project7FValuableRecipe",
+      "transform": {
+        "translation_cm": [
+          31300.000000009983,
+          1100.0000000162036,
+          -572.393711385747
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.9986295347545738,
+          0.052335956242943966
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          31300.002428563013,
+          1100.0231061548286,
+          -513.0849993801318
+        ],
+        "interaction_point_world_cm": [
+          31300.002428563013,
+          1100.0231061548286,
+          -513.0849993801318
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.9986295347545738,
+          0.052335956242943966
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            31347.8144396578,
+            1150.004268363199,
+            -572.393711385747
+          ],
+          [
+            31347.8144396578,
+            1150.004268363199,
+            -453.7762873745165
+          ],
+          [
+            31336.377964557858,
+            1041.1934761907098,
+            -572.393711385747
+          ],
+          [
+            31336.377964557858,
+            1041.1934761907098,
+            -453.7762873745165
+          ],
+          [
+            31263.62689256817,
+            1158.8527361189474,
+            -572.393711385747
+          ],
+          [
+            31263.62689256817,
+            1158.8527361189474,
+            -453.7762873745165
+          ],
+          [
+            31252.190417468228,
+            1050.0419439464586,
+            -572.393711385747
+          ],
+          [
+            31252.190417468228,
+            1050.0419439464586,
+            -453.7762873745165
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_Canning_B2",
+      "group": "7F_Canning_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "罐装区 物资箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FValuableRecipe.DA_Project7FValuableRecipe",
+      "transform": {
+        "translation_cm": [
+          31900.000000010885,
+          1700.0000000171021,
+          -552.2403838603367
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.8829475928589268,
+          -0.4694715627858909
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          31899.98073863799,
+          1700.0129919771646,
+          -492.93167185472146
+        ],
+        "interaction_point_world_cm": [
+          31899.98073863799,
+          1700.0129919771646,
+          -492.93167185472146
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.8829475928589268,
+          -0.4694715627858909
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            31878.296371346427,
+            1765.6932264148684,
+            -552.2403838603367
+          ],
+          [
+            31878.296371346427,
+            1765.6932264148684,
+            -433.6229598491062
+          ],
+          [
+            31969.001498534264,
+            1704.5118456053945,
+            -552.2403838603367
+          ],
+          [
+            31969.001498534264,
+            1704.5118456053945,
+            -433.6229598491062
+          ],
+          [
+            31830.959978741717,
+            1695.5141383489345,
+            -552.2403838603367
+          ],
+          [
+            31830.959978741717,
+            1695.5141383489345,
+            -433.6229598491062
+          ],
+          [
+            31921.66510592956,
+            1634.3327575394605,
+            -552.2403838603367
+          ],
+          [
+            31921.66510592956,
+            1634.3327575394605,
+            -433.6229598491062
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_Canning_B3",
+      "group": "7F_Canning_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "罐装区 物资箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FValuableRecipe.DA_Project7FValuableRecipe",
+      "transform": {
+        "translation_cm": [
+          32300.00001503835,
+          1199.9999819640866,
+          -552.1560100250244
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.8571673007021123,
+          -0.5150380749100542
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          32299.97950115165,
+          1200.0108893911236,
+          -492.8472980194092
+        ],
+        "interaction_point_world_cm": [
+          32299.97950115165,
+          1200.0108893911236,
+          -492.8472980194092
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.8571673007021123,
+          -0.5150380749100542
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            32271.54846912015,
+            1263.0646870424225,
+            -552.1560100250244
+          ],
+          [
+            32271.54846912015,
+            1263.0646870424225,
+            -433.538586013794
+          ],
+          [
+            32368.151899847227,
+            1211.6997317939783,
+            -552.1560100250244
+          ],
+          [
+            32368.151899847227,
+            1211.6997317939783,
+            -433.538586013794
+          ],
+          [
+            32231.807102456078,
+            1188.3220469882685,
+            -552.1560100250244
+          ],
+          [
+            32231.807102456078,
+            1188.3220469882685,
+            -433.538586013794
+          ],
+          [
+            32328.410533183156,
+            1136.9570917398246,
+            -552.1560100250244
+          ],
+          [
+            32328.410533183156,
+            1136.9570917398246,
+            -433.538586013794
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_LiftRoom_A1",
+      "group": "7F_LiftRoom_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "吊装室 装备箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FGearRecipe.DA_Project7FGearRecipe",
+      "transform": {
+        "translation_cm": [
+          24500.0,
+          -13700.0,
+          -550.0458576688981
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.9876883405951377,
+          -0.1564344650402308
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          24499.99282048033,
+          -13699.977903710509,
+          -490.73714566328283
+        ],
+        "interaction_point_world_cm": [
+          24499.99282048033,
+          -13699.977903710509,
+          -490.73714566328283
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.9876883405951377,
+          -0.1564344650402308
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            24523.34209590307,
+            -13634.870943115959,
+            -550.0458576688981
+          ],
+          [
+            24523.34209590307,
+            -13634.870943115959,
+            -431.4284336576676
+          ],
+          [
+            24557.15169236273,
+            -13738.926181538398,
+            -550.0458576688981
+          ],
+          [
+            24557.15169236273,
+            -13738.926181538398,
+            -431.4284336576676
+          ],
+          [
+            24442.83394859793,
+            -13661.029625882618,
+            -550.0458576688981
+          ],
+          [
+            24442.83394859793,
+            -13661.029625882618,
+            -431.4284336576676
+          ],
+          [
+            24476.643545057592,
+            -13765.08486430506,
+            -550.0458576688981
+          ],
+          [
+            24476.643545057592,
+            -13765.08486430506,
+            -431.4284336576676
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_LiftRoom_A2",
+      "group": "7F_LiftRoom_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "吊装室 装备箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FGearRecipe.DA_Project7FGearRecipe",
+      "transform": {
+        "translation_cm": [
+          24200.0,
+          -12300.0,
+          -550.0334445474646
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.9975640502598242,
+          -0.06975647374412534
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          24199.99676653377,
+          -12299.976992692289,
+          -490.72473254184933
+        ],
+        "interaction_point_world_cm": [
+          24199.99676653377,
+          -12299.976992692289,
+          -490.72473254184933
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.9975640502598242,
+          -0.06975647374412534
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            24234.297019057976,
+            -12239.913712250716,
+            -550.0334445474646
+          ],
+          [
+            24234.297019057976,
+            -12239.913712250716,
+            -431.4160205362341
+          ],
+          [
+            24249.523969248912,
+            -12348.259092603545,
+            -550.0334445474646
+          ],
+          [
+            24249.523969248912,
+            -12348.259092603545,
+            -431.4160205362341
+          ],
+          [
+            24150.469563818628,
+            -12251.694892781032,
+            -550.0334445474646
+          ],
+          [
+            24150.469563818628,
+            -12251.694892781032,
+            -431.4160205362341
+          ],
+          [
+            24165.696514009564,
+            -12360.04027313386,
+            -550.0334445474646
+          ],
+          [
+            24165.696514009564,
+            -12360.04027313386,
+            -431.4160205362341
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_LiftRoom_A3",
+      "group": "7F_LiftRoom_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "吊装室 装备箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FGearRecipe.DA_Project7FGearRecipe",
+      "transform": {
+        "translation_cm": [
+          24200.0,
+          -13300.0,
+          -550.0387991564232
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.15643446504023087,
+          0.9876883405951377
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          24200.00717951967,
+          -13300.022096289491,
+          -490.730087150808
+        ],
+        "interaction_point_world_cm": [
+          24200.00717951967,
+          -13300.022096289491,
+          -490.730087150808
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.15643446504023087,
+          0.9876883405951377
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            24176.65790409693,
+            -13365.129056884041,
+            -550.0387991564232
+          ],
+          [
+            24176.65790409693,
+            -13365.129056884041,
+            -431.42137514519277
+          ],
+          [
+            24142.84830763727,
+            -13261.073818461602,
+            -550.0387991564232
+          ],
+          [
+            24142.84830763727,
+            -13261.073818461602,
+            -431.42137514519277
+          ],
+          [
+            24257.16605140207,
+            -13338.970374117382,
+            -550.0387991564232
+          ],
+          [
+            24257.16605140207,
+            -13338.970374117382,
+            -431.42137514519277
+          ],
+          [
+            24223.356454942408,
+            -13234.91513569494,
+            -550.0387991564232
+          ],
+          [
+            24223.356454942408,
+            -13234.91513569494,
+            -431.42137514519277
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_LiftRoom_B1",
+      "group": "7F_LiftRoom_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "吊装室 物资箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FValuableRecipe.DA_Project7FValuableRecipe",
+      "transform": {
+        "translation_cm": [
+          24700.0,
+          -13100.0,
+          -572.51227840361
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.6626200482157374,
+          -0.7489557207890023
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          24699.976939764645,
+          -13100.002831440872,
+          -513.2035663979948
+        ],
+        "interaction_point_world_cm": [
+          24699.976939764645,
+          -13100.002831440872,
+          -513.2035663979948
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.6626200482157374,
+          -0.7489557207890023
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            24640.52142919956,
+            -13064.659554229038,
+            -572.51227840361
+          ],
+          [
+            24640.52142919956,
+            -13064.659554229038,
+            -453.89485439237956
+          ],
+          [
+            24749.116054949714,
+            -13051.325810789891,
+            -572.51227840361
+          ],
+          [
+            24749.116054949714,
+            -13051.325810789891,
+            -453.89485439237956
+          ],
+          [
+            24650.83782457958,
+            -13148.679852091853,
+            -572.51227840361
+          ],
+          [
+            24650.83782457958,
+            -13148.679852091853,
+            -453.89485439237956
+          ],
+          [
+            24759.43245032973,
+            -13135.346108652706,
+            -572.51227840361
+          ],
+          [
+            24759.43245032973,
+            -13135.346108652706,
+            -453.89485439237956
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_LiftRoom_B2",
+      "group": "7F_LiftRoom_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "吊装室 物资箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FValuableRecipe.DA_Project7FValuableRecipe",
+      "transform": {
+        "translation_cm": [
+          24300.000000719585,
+          -12799.999992329227,
+          -547.7831697119964
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.6360782202777638,
+          0.7716245833877201
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          24300.022807270034,
+          -12800.004425473553,
+          -488.47445770638114
+        ],
+        "interaction_point_world_cm": [
+          24300.022807270034,
+          -12800.004425473553,
+          -488.47445770638114
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.6360782202777638,
+          0.7716245833877201
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            24345.64668472725,
+            -12851.990642746945,
+            -547.7831697119964
+          ],
+          [
+            24345.64668472725,
+            -12851.990642746945,
+            -429.1657457007659
+          ],
+          [
+            24238.246704951605,
+            -12831.11420147677,
+            -547.7831697119964
+          ],
+          [
+            24238.246704951605,
+            -12831.11420147677,
+            -429.1657457007659
+          ],
+          [
+            24361.798909588462,
+            -12768.894649470338,
+            -547.7831697119964
+          ],
+          [
+            24361.798909588462,
+            -12768.894649470338,
+            -429.1657457007659
+          ],
+          [
+            24254.398929812818,
+            -12748.018208200163,
+            -547.7831697119964
+          ],
+          [
+            24254.398929812818,
+            -12748.018208200163,
+            -429.1657457007659
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_LiftRoom_B3",
+      "group": "7F_LiftRoom_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "吊装室 物资箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FValuableRecipe.DA_Project7FValuableRecipe",
+      "transform": {
+        "translation_cm": [
+          24800.0,
+          -12600.0,
+          -572.4115375206942
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.8616291604415257,
+          -0.5075383629607042
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          24799.979679598517,
+          -12599.988736217529,
+          -513.102825515079
+        ],
+        "interaction_point_world_cm": [
+          24799.979679598517,
+          -12599.988736217529,
+          -513.102825515079
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.8616291604415257,
+          -0.5075383629607042
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            24772.653418254926,
+            -12536.448352038575,
+            -572.4115375206942
+          ],
+          [
+            24772.653418254926,
+            -12536.448352038575,
+            -453.7941135094637
+          ],
+          [
+            24868.345693735966,
+            -12589.491446491827,
+            -572.4115375206942
+          ],
+          [
+            24868.345693735966,
+            -12589.491446491827,
+            -453.7941135094637
+          ],
+          [
+            24731.613665461067,
+            -12610.48602594323,
+            -572.4115375206942
+          ],
+          [
+            24731.613665461067,
+            -12610.48602594323,
+            -453.7941135094637
+          ],
+          [
+            24827.305940942108,
+            -12663.529120396483,
+            -572.4115375206942
+          ],
+          [
+            24827.305940942108,
+            -12663.529120396483,
+            -453.7941135094637
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_LivingArea_A2",
+      "group": "7F_LivingArea_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "生活区 装备箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FGearRecipe.DA_Project7FGearRecipe",
+      "transform": {
+        "translation_cm": [
+          -16299.99995057536,
+          -17999.999947968794,
+          195.63969568244403
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.09584575252022391,
+          -0.9953961983671786
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -16300.004383719686,
+          -18000.022754519243,
+          254.94840768805926
+        ],
+        "interaction_point_world_cm": [
+          -16300.004383719686,
+          -18000.022754519243,
+          254.94840768805926
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.09584575252022391,
+          -0.9953961983671786
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -16351.990600993078,
+            -18045.64663197646,
+            195.63969568244403
+          ],
+          [
+            -16351.990600993078,
+            -18045.64663197646,
+            314.2571196936745
+          ],
+          [
+            -16331.114159722903,
+            -17938.246652200814,
+            195.63969568244403
+          ],
+          [
+            -16331.114159722903,
+            -17938.246652200814,
+            314.2571196936745
+          ],
+          [
+            -16268.894607716471,
+            -18061.79885683767,
+            195.63969568244403
+          ],
+          [
+            -16268.894607716471,
+            -18061.79885683767,
+            314.2571196936745
+          ],
+          [
+            -16248.018166446296,
+            -17954.398877062027,
+            195.63969568244403
+          ],
+          [
+            -16248.018166446296,
+            -17954.398877062027,
+            314.2571196936745
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_LivingArea_A3",
+      "group": "7F_LivingArea_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "生活区 装备箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FGearRecipe.DA_Project7FGearRecipe",
+      "transform": {
+        "translation_cm": [
+          -17100.00000015203,
+          -17899.99999992048,
+          197.77328360843603
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.9890158633619166,
+          0.14780941112961055
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -17099.99320735926,
+          -17899.977781696467,
+          257.08199561405127
+        ],
+        "interaction_point_world_cm": [
+          -17099.99320735926,
+          -17899.977781696467,
+          257.08199561405127
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.9890158633619166,
+          0.14780941112961055
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -17043.522782224587,
+            -17860.03787601635,
+            197.77328360843603
+          ],
+          [
+            -17043.522782224587,
+            -17860.03787601635,
+            316.3907076196665
+          ],
+          [
+            -17075.51121500607,
+            -17964.667325140872,
+            197.77328360843603
+          ],
+          [
+            -17075.51121500607,
+            -17964.667325140872,
+            316.3907076196665
+          ],
+          [
+            -17124.47519971245,
+            -17835.288238252062,
+            197.77328360843603
+          ],
+          [
+            -17124.47519971245,
+            -17835.288238252062,
+            316.3907076196665
+          ],
+          [
+            -17156.463632493935,
+            -17939.917687376583,
+            197.77328360843603
+          ],
+          [
+            -17156.463632493935,
+            -17939.917687376583,
+            316.3907076196665
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_LivingArea_B1",
+      "group": "7F_LivingArea_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "生活区 物资箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FValuableRecipe.DA_Project7FValuableRecipe",
+      "transform": {
+        "translation_cm": [
+          -15500.0,
+          -17000.0,
+          -202.0805419457282
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.6156614753256583,
+          -0.788010753606722
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -15500.022543282017,
+          -17000.005620671483,
+          -142.77182994011298
+        ],
+        "interaction_point_world_cm": [
+          -15500.022543282017,
+          -17000.005620671483,
+          -142.77182994011298
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.6156614753256583,
+          -0.788010753606722
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -15563.342143474852,
+            -16972.17159092287,
+            -202.0805419457282
+          ],
+          [
+            -15563.342143474852,
+            -16972.17159092287,
+            -83.46311793449775
+          ],
+          [
+            -15457.181940155673,
+            -16945.702879447872,
+            -202.0805419457282
+          ],
+          [
+            -15457.181940155673,
+            -16945.702879447872,
+            -83.46311793449775
+          ],
+          [
+            -15542.86314640836,
+            -17054.308361895095,
+            -202.0805419457282
+          ],
+          [
+            -15542.86314640836,
+            -17054.308361895095,
+            -83.46311793449775
+          ],
+          [
+            -15436.70294308918,
+            -17027.839650420097,
+            -202.0805419457282
+          ],
+          [
+            -15436.70294308918,
+            -17027.839650420097,
+            -83.46311793449775
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_LivingArea_B2",
+      "group": "7F_LivingArea_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "生活区 物资箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FValuableRecipe.DA_Project7FValuableRecipe",
+      "transform": {
+        "translation_cm": [
+          -16599.999860073734,
+          -17499.99996440232,
+          195.836546839756
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.052335956242943835,
+          0.9986295347545738
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -16599.997431520704,
+          -17500.023070540945,
+          255.14525884537125
+        ],
+        "interaction_point_world_cm": [
+          -16599.997431520704,
+          -17500.023070540945,
+          255.14525884537125
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.052335956242943835,
+          0.9986295347545738
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -16636.37296751555,
+            -17558.852700505064,
+            195.836546839756
+          ],
+          [
+            -16636.37296751555,
+            -17558.852700505064,
+            314.4539708509865
+          ],
+          [
+            -16647.80944261549,
+            -17450.041908332572,
+            195.836546839756
+          ],
+          [
+            -16647.80944261549,
+            -17450.041908332572,
+            314.4539708509865
+          ],
+          [
+            -16552.185420425918,
+            -17550.004232749314,
+            195.836546839756
+          ],
+          [
+            -16552.185420425918,
+            -17550.004232749314,
+            314.4539708509865
+          ],
+          [
+            -16563.62189552586,
+            -17441.193440576826,
+            195.836546839756
+          ],
+          [
+            -16563.62189552586,
+            -17441.193440576826,
+            314.4539708509865
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_LivingArea_B3",
+      "group": "7F_LivingArea_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "生活区 物资箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FValuableRecipe.DA_Project7FValuableRecipe",
+      "transform": {
+        "translation_cm": [
+          -17099.99979161666,
+          -17399.999978093736,
+          195.64135382934688
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.8290375725550418,
+          -0.5591929034707466
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -17100.021333262728,
+          -17399.991274703778,
+          254.95006583496212
+        ],
+        "interaction_point_world_cm": [
+          -17100.021333262728,
+          -17399.991274703778,
+          254.95006583496212
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.8290375725550418,
+          -0.5591929034707466
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -17134.887533697653,
+            -17340.25474444081,
+            195.64135382934688
+          ],
+          [
+            -17134.887533697653,
+            -17340.25474444081,
+            314.25877784057735
+          ],
+          [
+            -17033.44420683395,
+            -17381.24050892971,
+            195.64135382934688
+          ],
+          [
+            -17033.44420683395,
+            -17381.24050892971,
+            314.25877784057735
+          ],
+          [
+            -17166.598459691504,
+            -17418.742040477846,
+            195.64135382934688
+          ],
+          [
+            -17166.598459691504,
+            -17418.742040477846,
+            314.25877784057735
+          ],
+          [
+            -17065.1551328278,
+            -17459.727804966747,
+            195.64135382934688
+          ],
+          [
+            -17065.1551328278,
+            -17459.727804966747,
+            314.25877784057735
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_StaffPassage1_A1",
+      "group": "7F_StaffPassage1_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "一号员工通道 装备箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FGearRecipe.DA_Project7FGearRecipe",
+      "transform": {
+        "translation_cm": [
+          -6600.0,
+          -17500.0,
+          46.625398955794935
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.6293203910498374,
+          0.7771459614569711
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -6599.977274292136,
+          -17500.004830498325,
+          105.93411096141017
+        ],
+        "interaction_point_world_cm": [
+          -6599.977274292136,
+          -17500.004830498325,
+          105.93411096141017
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.6293203910498374,
+          0.7771459614569711
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -6555.267630165433,
+            -17552.77937647165,
+            46.625398955794935
+          ],
+          [
+            -6555.267630165433,
+            -17552.77937647165,
+            165.2428229670254
+          ],
+          [
+            -6662.286908265944,
+            -17530.0317266862,
+            46.625398955794935
+          ],
+          [
+            -6662.286908265944,
+            -17530.0317266862,
+            165.2428229670254
+          ],
+          [
+            -6537.667640318328,
+            -17469.97793431045,
+            46.625398955794935
+          ],
+          [
+            -6537.667640318328,
+            -17469.97793431045,
+            165.2428229670254
+          ],
+          [
+            -6644.68691841884,
+            -17447.230284524998,
+            46.625398955794935
+          ],
+          [
+            -6644.68691841884,
+            -17447.230284524998,
+            165.2428229670254
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_StaffPassage1_A2",
+      "group": "7F_StaffPassage1_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "一号员工通道 装备箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FGearRecipe.DA_Project7FGearRecipe",
+      "transform": {
+        "translation_cm": [
+          -6700.0,
+          -17000.0,
+          46.62551249867926
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.6691306063588582,
+          0.7431448254773944
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -6699.976893861375,
+          -17000.00242855303,
+          105.93422450429449
+        ],
+        "interaction_point_world_cm": [
+          -6699.976893861375,
+          -17000.00242855303,
+          105.93422450429449
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.6691306063588582,
+          0.7431448254773944
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -6649.995731653004,
+            -17047.814439647816,
+            46.62551249867926
+          ],
+          [
+            -6649.995731653004,
+            -17047.814439647816,
+            165.24293650990973
+          ],
+          [
+            -6758.806523825494,
+            -17036.377964547875,
+            46.62551249867926
+          ],
+          [
+            -6758.806523825494,
+            -17036.377964547875,
+            165.24293650990973
+          ],
+          [
+            -6641.147263897256,
+            -16963.626892558186,
+            46.62551249867926
+          ],
+          [
+            -6641.147263897256,
+            -16963.626892558186,
+            165.24293650990973
+          ],
+          [
+            -6749.958056069745,
+            -16952.190417458245,
+            46.62551249867926
+          ],
+          [
+            -6749.958056069745,
+            -16952.190417458245,
+            165.24293650990973
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_StaffPassage1_A3",
+      "group": "7F_StaffPassage1_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "一号员工通道 装备箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FGearRecipe.DA_Project7FGearRecipe",
+      "transform": {
+        "translation_cm": [
+          -7100.0,
+          -16100.0,
+          -284.7904666526681
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.9659258262890684,
+          -0.2588190451025209
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -7100.011616706848,
+          -16099.979879273522,
+          -225.48175464705287
+        ],
+        "interaction_point_world_cm": [
+          -7100.011616706848,
+          -16099.979879273522,
+          -225.48175464705287
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.9659258262890684,
+          -0.2588190451025209
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -7090.709077234441,
+            -16031.441074644381,
+            -284.7904666526681
+          ],
+          [
+            -7090.709077234441,
+            -16031.441074644381,
+            -166.17304264143763
+          ],
+          [
+            -7036.0040010167895,
+            -16126.193046085282,
+            -284.7904666526681
+          ],
+          [
+            -7036.0040010167895,
+            -16126.193046085282,
+            -166.17304264143763
+          ],
+          [
+            -7164.019232396907,
+            -16073.766712461764,
+            -284.7904666526681
+          ],
+          [
+            -7164.019232396907,
+            -16073.766712461764,
+            -166.17304264143763
+          ],
+          [
+            -7109.314156179255,
+            -16168.518683902665,
+            -284.7904666526681
+          ],
+          [
+            -7109.314156179255,
+            -16168.518683902665,
+            -166.17304264143763
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_StaffPassage1_B1",
+      "group": "7F_StaffPassage1_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "一号员工通道 物资箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FValuableRecipe.DA_Project7FValuableRecipe",
+      "transform": {
+        "translation_cm": [
+          -7600.0,
+          -16100.0,
+          -284.7900479821478
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.9588197348681933,
+          -0.28401534470392265
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -7600.012653824016,
+          -16099.98051481974,
+          -225.4813359765326
+        ],
+        "interaction_point_world_cm": [
+          -7600.012653824016,
+          -16099.98051481974,
+          -225.4813359765326
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.9588197348681933,
+          -0.28401534470392265
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -7594.309907038664,
+            -16031.048782941529,
+            -284.7900479821478
+          ],
+          [
+            -7594.309907038664,
+            -16031.048782941529,
+            -166.17262397091736
+          ],
+          [
+            -7534.720867195454,
+            -16122.80785762344,
+            -284.7900479821478
+          ],
+          [
+            -7534.720867195454,
+            -16122.80785762344,
+            -166.17262397091736
+          ],
+          [
+            -7665.304440452577,
+            -16077.15317201604,
+            -284.7900479821478
+          ],
+          [
+            -7665.304440452577,
+            -16077.15317201604,
+            -166.17262397091736
+          ],
+          [
+            -7605.715400609367,
+            -16168.91224669795,
+            -284.7900479821478
+          ],
+          [
+            -7605.715400609367,
+            -16168.91224669795,
+            -166.17262397091736
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_StaffPassage1_B2",
+      "group": "7F_StaffPassage1_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "一号员工通道 物资箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FValuableRecipe.DA_Project7FValuableRecipe",
+      "transform": {
+        "translation_cm": [
+          -5600.0,
+          -17300.0,
+          46.625469195448716
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.5372996083468237,
+          -0.8433914458128858
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -5600.021056623752,
+          -17300.00981886491,
+          105.93418120106395
+        ],
+        "interaction_point_world_cm": [
+          -5600.021056623752,
+          -17300.00981886491,
+          105.93418120106395
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.5372996083468237,
+          -0.8433914458128858
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -5667.488280671692,
+            -17284.76912793922,
+            46.625469195448716
+          ],
+          [
+            -5667.488280671692,
+            -17284.76912793922,
+            165.24289320667918
+          ],
+          [
+            -5568.32900753871,
+            -17238.53039950023,
+            46.625469195448716
+          ],
+          [
+            -5568.32900753871,
+            -17238.53039950023,
+            165.24289320667918
+          ],
+          [
+            -5631.7131057087945,
+            -17361.489238229595,
+            46.625469195448716
+          ],
+          [
+            -5631.7131057087945,
+            -17361.489238229595,
+            165.24289320667918
+          ],
+          [
+            -5532.5538325758125,
+            -17315.2505097906,
+            46.625469195448716
+          ],
+          [
+            -5532.5538325758125,
+            -17315.2505097906,
+            165.24289320667918
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_StaffPassage1_B3",
+      "group": "7F_StaffPassage1_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "一号员工通道 物资箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FValuableRecipe.DA_Project7FValuableRecipe",
+      "transform": {
+        "translation_cm": [
+          -7100.0,
+          -17300.0,
+          46.625433393766
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.13052619222005155,
+          -0.9914448613738103
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -7100.0060132499475,
+          -17300.02244175432,
+          105.93414539938124
+        ],
+        "interaction_point_world_cm": [
+          -7100.0060132499475,
+          -17300.02244175432,
+          105.93414539938124
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.13052619222005155,
+          -0.9914448613738103
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -7155.048155520828,
+            -17341.908806538813,
+            46.625433393766
+          ],
+          [
+            -7155.048155520828,
+            -17341.908806538813,
+            165.24285740499647
+          ],
+          [
+            -7126.730724343001,
+            -17236.22671464333,
+            46.625433393766
+          ],
+          [
+            -7126.730724343001,
+            -17236.22671464333,
+            165.24285740499647
+          ],
+          [
+            -7073.281302156893,
+            -17363.818168865313,
+            46.625433393766
+          ],
+          [
+            -7073.281302156893,
+            -17363.818168865313,
+            165.24285740499647
+          ],
+          [
+            -7044.963870979067,
+            -17258.13607696983,
+            46.625433393766
+          ],
+          [
+            -7044.963870979067,
+            -17258.13607696983,
+            165.24285740499647
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_StaffPassage2_A1",
+      "group": "7F_StaffPassage2_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "二号员工通道 补给箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FSupplyRecipe.DA_Project7FSupplyRecipe",
+      "transform": {
+        "translation_cm": [
+          15800.0,
+          -17900.0,
+          56.0
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.46947156278589064,
+          -0.8829475928589269
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          15799.980738627108,
+          -17900.012991960062,
+          115.30871200561523
+        ],
+        "interaction_point_world_cm": [
+          15799.980738627108,
+          -17900.012991960062,
+          115.30871200561523
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.46947156278589064,
+          -0.8829475928589269
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            15730.959978730833,
+            -17895.514138331833,
+            56.0
+          ],
+          [
+            15730.959978730833,
+            -17895.514138331833,
+            174.61742401123047
+          ],
+          [
+            15821.665105918673,
+            -17834.33275752236,
+            56.0
+          ],
+          [
+            15821.665105918673,
+            -17834.33275752236,
+            174.61742401123047
+          ],
+          [
+            15778.29637133554,
+            -17965.693226397765,
+            56.0
+          ],
+          [
+            15778.29637133554,
+            -17965.693226397765,
+            174.61742401123047
+          ],
+          [
+            15869.001498523381,
+            -17904.51184558829,
+            56.0
+          ],
+          [
+            15869.001498523381,
+            -17904.51184558829,
+            174.61742401123047
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_StaffPassage2_A3",
+      "group": "7F_StaffPassage2_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "二号员工通道 补给箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FSupplyRecipe.DA_Project7FSupplyRecipe",
+      "transform": {
+        "translation_cm": [
+          15800.0,
+          -16700.0,
+          -358.17087132920756
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.17364817766693036,
+          0.984807753012208
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          15800.007946295482,
+          -16700.021832267405,
+          -298.8621593235923
+        ],
+        "interaction_point_world_cm": [
+          15800.007946295482,
+          -16700.021832267405,
+          -298.8621593235923
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.17364817766693036,
+          0.984807753012208
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            15778.945094777033,
+            -16765.904009421316,
+            -358.17087132920756
+          ],
+          [
+            15778.945094777033,
+            -16765.904009421316,
+            -239.5534473179771
+          ],
+          [
+            15741.524618759828,
+            -16663.0920965388,
+            -358.17087132920756
+          ],
+          [
+            15741.524618759828,
+            -16663.0920965388,
+            -239.5534473179771
+          ],
+          [
+            15858.491273831136,
+            -16736.951567996013,
+            -358.17087132920756
+          ],
+          [
+            15858.491273831136,
+            -16736.951567996013,
+            -239.5534473179771
+          ],
+          [
+            15821.07079781393,
+            -16634.139655113497,
+            -358.17087132920756
+          ],
+          [
+            15821.07079781393,
+            -16634.139655113497,
+            -239.5534473179771
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_StaffPassage2_B1",
+      "group": "7F_StaffPassage2_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "二号员工通道 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          16100.0,
+          -17100.0,
+          -382.30210816085287
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.9588197348681932,
+          0.28401534470392276
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          16100.012653824017,
+          -17099.98051481974,
+          -322.99339615523763
+        ],
+        "interaction_point_world_cm": [
+          16100.012653824017,
+          -17099.98051481974,
+          -322.99339615523763
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.9588197348681932,
+          0.28401534470392276
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            16165.304440452577,
+            -17077.15317201604,
+            -382.30210816085287
+          ],
+          [
+            16165.304440452577,
+            -17077.15317201604,
+            -263.6846841496224
+          ],
+          [
+            16105.715400609368,
+            -17168.91224669795,
+            -382.30210816085287
+          ],
+          [
+            16105.715400609368,
+            -17168.91224669795,
+            -263.6846841496224
+          ],
+          [
+            16094.309907038663,
+            -17031.04878294153,
+            -382.30210816085287
+          ],
+          [
+            16094.309907038663,
+            -17031.04878294153,
+            -263.6846841496224
+          ],
+          [
+            16034.720867195454,
+            -17122.80785762344,
+            -382.30210816085287
+          ],
+          [
+            16034.720867195454,
+            -17122.80785762344,
+            -263.6846841496224
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_StaffPassage2_B2",
+      "group": "7F_StaffPassage2_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "二号员工通道 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          15300.0,
+          -17000.0,
+          -358.21524706945877
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.9238795325112867,
+          -0.3826834323650897
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          15299.983571495624,
+          -16999.983571495624,
+          -298.90653506384353
+        ],
+        "interaction_point_world_cm": [
+          15299.983571495624,
+          -16999.983571495624,
+          -298.90653506384353
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.9238795325112867,
+          -0.3826834323650897
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            15291.229986655515,
+            -16931.37249561808,
+            -358.21524706945877
+          ],
+          [
+            15291.229986655515,
+            -16931.37249561808,
+            -239.5978230582283
+          ],
+          [
+            15368.594647373171,
+            -17008.737156335737,
+            -358.21524706945877
+          ],
+          [
+            15368.594647373171,
+            -17008.737156335737,
+            -239.5978230582283
+          ],
+          [
+            15231.37249561808,
+            -16991.229986655515,
+            -358.21524706945877
+          ],
+          [
+            15231.37249561808,
+            -16991.229986655515,
+            -239.5978230582283
+          ],
+          [
+            15308.737156335736,
+            -17068.59464737317,
+            -358.21524706945877
+          ],
+          [
+            15308.737156335736,
+            -17068.59464737317,
+            -239.5978230582283
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_StaffPassage2_B3",
+      "group": "7F_StaffPassage2_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "二号员工通道 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          15699.999997765775,
+          -17399.999997813145,
+          56.0
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.7489557207890021,
+          -0.6626200482157375
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          15699.976937530422,
+          -17399.99716637227,
+          115.30871200561523
+        ],
+        "interaction_point_world_cm": [
+          15699.976937530422,
+          -17399.99716637227,
+          115.30871200561523
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.7489557207890021,
+          -0.6626200482157375
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            15650.837822345355,
+            -17351.320145721293,
+            56.0
+          ],
+          [
+            15650.837822345355,
+            -17351.320145721293,
+            174.61742401123047
+          ],
+          [
+            15759.432448095506,
+            -17364.65388916044,
+            56.0
+          ],
+          [
+            15759.432448095506,
+            -17364.65388916044,
+            174.61742401123047
+          ],
+          [
+            15640.521426965339,
+            -17435.340443584108,
+            56.0
+          ],
+          [
+            15640.521426965339,
+            -17435.340443584108,
+            174.61742401123047
+          ],
+          [
+            15749.116052715488,
+            -17448.674187023254,
+            56.0
+          ],
+          [
+            15749.116052715488,
+            -17448.674187023254,
+            174.61742401123047
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_TestRange_A1",
+      "group": "7F_TestRange_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "水平试车间 补给箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FSupplyRecipe.DA_Project7FSupplyRecipe",
+      "transform": {
+        "translation_cm": [
+          21300.000015453603,
+          20400.000002000714,
+          344.7793910849331
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.8038568606172174,
+          0.5948227867513413
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          21300.022233677617,
+          20400.006794793484,
+          404.0881030905483
+        ],
+        "interaction_point_world_cm": [
+          21300.022233677617,
+          20400.006794793484,
+          404.0881030905483
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.8038568606172174,
+          0.5948227867513413
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            21364.711777122022,
+            20375.524802440294,
+            344.7793910849331
+          ],
+          [
+            21364.711777122022,
+            20375.524802440294,
+            463.39681509616355
+          ],
+          [
+            21260.0823279975,
+            20343.53636965881,
+            344.7793910849331
+          ],
+          [
+            21260.0823279975,
+            20343.53636965881,
+            463.39681509616355
+          ],
+          [
+            21339.962139357733,
+            20456.477219928158,
+            344.7793910849331
+          ],
+          [
+            21339.962139357733,
+            20456.477219928158,
+            463.39681509616355
+          ],
+          [
+            21235.332690233212,
+            20424.488787146674,
+            344.7793910849331
+          ],
+          [
+            21235.332690233212,
+            20424.488787146674,
+            463.39681509616355
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_TestRange_A3",
+      "group": "7F_TestRange_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "水平试车间 补给箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FSupplyRecipe.DA_Project7FSupplyRecipe",
+      "transform": {
+        "translation_cm": [
+          21700.000024456815,
+          19799.999988555464,
+          222.77075120738752
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.6494480483301837,
+          -0.7604059656000309
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          21699.977077084994,
+          19799.99635404882,
+          282.0794632130028
+        ],
+        "interaction_point_world_cm": [
+          21699.977077084994,
+          19799.99635404882,
+          282.0794632130028
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.6494480483301837,
+          -0.7604059656000309
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            21639.324322624005,
+            19833.24313369621,
+            222.77075120738752
+          ],
+          [
+            21639.324322624005,
+            19833.24313369621,
+            341.388175218618
+          ],
+          [
+            21747.38745452709,
+            19850.358652362396,
+            222.77075120738752
+          ],
+          [
+            21747.38745452709,
+            19850.358652362396,
+            341.388175218618
+          ],
+          [
+            21652.5666996429,
+            19749.634055735245,
+            222.77075120738752
+          ],
+          [
+            21652.5666996429,
+            19749.634055735245,
+            341.388175218618
+          ],
+          [
+            21760.629831545986,
+            19766.749574401434,
+            222.77075120738752
+          ],
+          [
+            21760.629831545986,
+            19766.749574401434,
+            341.388175218618
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_TestRange_B1",
+      "group": "7F_TestRange_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "水平试车间 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          21200.00001320561,
+          19899.99999076075,
+          344.7792730955424
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.9993908270190959,
+          0.03489949670250108
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          21200.001633886623,
+          19900.023167579016,
+          404.08798510115764
+        ],
+        "interaction_point_world_cm": [
+          21200.001633886623,
+          19900.023167579016,
+          404.08798510115764
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.9993908270190959,
+          0.03489949670250108
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            21246.040201790405,
+            19951.642497737357,
+            344.7792730955424
+          ],
+          [
+            21246.040201790405,
+            19951.642497737357,
+            463.3966971067729
+          ],
+          [
+            21238.408135364713,
+            19842.49886293445,
+            344.7792730955424
+          ],
+          [
+            21238.408135364713,
+            19842.49886293445,
+            463.3966971067729
+          ],
+          [
+            21161.59513240853,
+            19957.54747222358,
+            344.7792730955424
+          ],
+          [
+            21161.59513240853,
+            19957.54747222358,
+            463.3966971067729
+          ],
+          [
+            21153.963065982836,
+            19848.403837420676,
+            344.7792730955424
+          ],
+          [
+            21153.963065982836,
+            19848.403837420676,
+            463.3966971067729
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_TestRange_B2",
+      "group": "7F_TestRange_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "水平试车间 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          20800.000004213638,
+          19599.999984016766,
+          344.77909374999945
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.32556815445715664,
+          -0.9455185755993168
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          20799.985700295885,
+          19599.98167583693,
+          404.0878057556147
+        ],
+        "interaction_point_world_cm": [
+          20799.985700295885,
+          19599.98167583693,
+          404.0878057556147
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.32556815445715664,
+          -0.9455185755993168
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            20732.95283461056,
+            19582.931752123295,
+            344.77909374999945
+          ],
+          [
+            20732.95283461056,
+            19582.931752123295,
+            463.3965177612299
+          ],
+          [
+            20800.312450474485,
+            19669.148128796063,
+            344.77909374999945
+          ],
+          [
+            20800.312450474485,
+            19669.148128796063,
+            463.3965177612299
+          ],
+          [
+            20799.658950117286,
+            19530.815222877794,
+            344.77909374999945
+          ],
+          [
+            20799.658950117286,
+            19530.815222877794,
+            463.3965177612299
+          ],
+          [
+            20867.01856598121,
+            19617.031599550566,
+            344.77909374999945
+          ],
+          [
+            20867.01856598121,
+            19617.031599550566,
+            463.3965177612299
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_TestRange_B3",
+      "group": "7F_TestRange_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "水平试车间 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          22300.000037944774,
+          19599.999984059483,
+          222.83856093688203
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.4383711467890773,
+          -0.8987940462991669
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          22299.98172976494,
+          19599.98568014173,
+          282.14727294249724
+        ],
+        "interaction_point_world_cm": [
+          22299.98172976494,
+          19599.98568014173,
+          282.14727294249724
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.4383711467890773,
+          -0.8987940462991669
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            22230.815276805803,
+            19599.65892996313,
+            222.83856093688203
+          ],
+          [
+            22230.815276805803,
+            19599.65892996313,
+            341.4559849481125
+          ],
+          [
+            22317.031653478574,
+            19667.018545827053,
+            222.83856093688203
+          ],
+          [
+            22317.031653478574,
+            19667.018545827053,
+            341.4559849481125
+          ],
+          [
+            22282.931806051303,
+            19532.952814456406,
+            222.83856093688203
+          ],
+          [
+            22282.931806051303,
+            19532.952814456406,
+            341.4559849481125
+          ],
+          [
+            22369.14818272407,
+            19600.31243032033,
+            222.83856093688203
+          ],
+          [
+            22369.14818272407,
+            19600.31243032033,
+            341.4559849481125
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_WestDorm_A1",
+      "group": "7F_WestDorm_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "宿舍楼 补给箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FSupplyRecipe.DA_Project7FSupplyRecipe",
+      "transform": {
+        "translation_cm": [
+          -15500.0,
+          -15900.0,
+          -184.44261169433594
+        ],
+        "rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.3255681544571567,
+          0.9455185755993168
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -15499.985696082247,
+          -15900.018308179835,
+          -125.1338996887207
+        ],
+        "interaction_point_world_cm": [
+          -15499.985696082247,
+          -15900.018308179835,
+          -125.1338996887207
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          -0.0,
+          0.3255681544571567,
+          0.9455185755993168
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -15499.658945903646,
+            -15969.18476113897,
+            -184.44261169433594
+          ],
+          [
+            -15499.658945903646,
+            -15969.18476113897,
+            -65.82518768310547
+          ],
+          [
+            -15567.018561767569,
+            -15882.968384466201,
+            -184.44261169433594
+          ],
+          [
+            -15567.018561767569,
+            -15882.968384466201,
+            -65.82518768310547
+          ],
+          [
+            -15432.952830396924,
+            -15917.06823189347,
+            -184.44261169433594
+          ],
+          [
+            -15432.952830396924,
+            -15917.06823189347,
+            -65.82518768310547
+          ],
+          [
+            -15500.312446260848,
+            -15830.851855220702,
+            -184.44261169433594
+          ],
+          [
+            -15500.312446260848,
+            -15830.851855220702,
+            -65.82518768310547
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_WestDorm_A3",
+      "group": "7F_WestDorm_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "宿舍楼 补给箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FSupplyRecipe.DA_Project7FSupplyRecipe",
+      "transform": {
+        "translation_cm": [
+          -15300.0,
+          -16400.0,
+          -202.13761744374438
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.190808995376545,
+          -0.981627183447664
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -15300.008703389958,
+          -16400.021541646067,
+          -142.82890543812914
+        ],
+        "interaction_point_world_cm": [
+          -15300.008703389958,
+          -16400.021541646067,
+          -142.82890543812914
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.190808995376545,
+          -0.981627183447664
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -15359.74523365293,
+            -16434.88774208099,
+            -202.13761744374438
+          ],
+          [
+            -15359.74523365293,
+            -16434.88774208099,
+            -83.5201934325139
+          ],
+          [
+            -15318.759469164024,
+            -16333.44441521729,
+            -202.13761744374438
+          ],
+          [
+            -15318.759469164024,
+            -16333.44441521729,
+            -83.5201934325139
+          ],
+          [
+            -15281.257937615892,
+            -16466.598668074843,
+            -202.13761744374438
+          ],
+          [
+            -15281.257937615892,
+            -16466.598668074843,
+            -83.5201934325139
+          ],
+          [
+            -15240.272173126987,
+            -16365.155341211139,
+            -202.13761744374438
+          ],
+          [
+            -15240.272173126987,
+            -16365.155341211139,
+            -83.5201934325139
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_WestDorm_B1",
+      "group": "7F_WestDorm_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "宿舍楼 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          -15300.0,
+          -15400.0,
+          -202.03283606162898
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.09584575252022391,
+          -0.9953961983671786
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -15300.004433144326,
+          -15400.022806550449,
+          -142.72412405601375
+        ],
+        "interaction_point_world_cm": [
+          -15300.004433144326,
+          -15400.022806550449,
+          -142.72412405601375
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.09584575252022391,
+          -0.9953961983671786
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -15351.990650417718,
+            -15445.646684007665,
+            -202.03283606162898
+          ],
+          [
+            -15351.990650417718,
+            -15445.646684007665,
+            -83.41541205039852
+          ],
+          [
+            -15331.114209147543,
+            -15338.246704232019,
+            -202.03283606162898
+          ],
+          [
+            -15331.114209147543,
+            -15338.246704232019,
+            -83.41541205039852
+          ],
+          [
+            -15268.89465714111,
+            -15461.798908868877,
+            -202.03283606162898
+          ],
+          [
+            -15268.89465714111,
+            -15461.798908868877,
+            -83.41541205039852
+          ],
+          [
+            -15248.018215870936,
+            -15354.398929093231,
+            -202.03283606162898
+          ],
+          [
+            -15248.018215870936,
+            -15354.398929093231,
+            -83.41541205039852
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_WestDorm_B2",
+      "group": "7F_WestDorm_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "宿舍楼 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          -15800.0,
+          -15300.0,
+          -184.44261169433594
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.9025852843498606,
+          -0.43051109680829497
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -15800.018055753624,
+          -15299.985378739008,
+          -125.1338996887207
+        ],
+        "interaction_point_world_cm": [
+          -15800.018055753624,
+          -15299.985378739008,
+          -125.1338996887207
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.9025852843498606,
+          -0.43051109680829497
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -15815.8954978647,
+            -15232.665160285434,
+            -184.44261169433594
+          ],
+          [
+            -15815.8954978647,
+            -15232.665160285434,
+            -65.82518768310547
+          ],
+          [
+            -15730.867839757213,
+            -15301.51920020084,
+            -184.44261169433594
+          ],
+          [
+            -15730.867839757213,
+            -15301.51920020084,
+            -65.82518768310547
+          ],
+          [
+            -15869.168271750037,
+            -15298.451557277172,
+            -184.44261169433594
+          ],
+          [
+            -15869.168271750037,
+            -15298.451557277172,
+            -65.82518768310547
+          ],
+          [
+            -15784.14061364255,
+            -15367.30559719258,
+            -184.44261169433594
+          ],
+          [
+            -15784.14061364255,
+            -15367.30559719258,
+            -65.82518768310547
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_WestDorm_B3",
+      "group": "7F_WestDorm_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "宿舍楼 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          -15500.0,
+          -14900.0,
+          -202.02909172391014
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.7826081568524141,
+          -0.6225146366376193
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -15500.022637942808,
+          -14899.994773619093,
+          -142.7203797182949
+        ],
+        "interaction_point_world_cm": [
+          -15500.022637942808,
+          -14899.994773619093,
+          -142.7203797182949
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.7826081568524141,
+          -0.6225146366376193
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -15543.804429748287,
+            -14846.44797458377,
+            -202.02909172391014
+          ],
+          [
+            -15543.804429748287,
+            -14846.44797458377,
+            -83.41166771267967
+          ],
+          [
+            -15437.198452431738,
+            -14871.059903730016,
+            -202.02909172391014
+          ],
+          [
+            -15437.198452431738,
+            -14871.059903730016,
+            -83.41166771267967
+          ],
+          [
+            -15562.84682345388,
+            -14928.92964350817,
+            -202.02909172391014
+          ],
+          [
+            -15562.84682345388,
+            -14928.92964350817,
+            -83.41166771267967
+          ],
+          [
+            -15456.24084613733,
+            -14953.541572654414,
+            -202.02909172391014
+          ],
+          [
+            -15456.24084613733,
+            -14953.541572654414,
+            -83.41166771267967
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_WestGate_A1",
+      "group": "7F_WestGate_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "西区大门 补给箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FSupplyRecipe.DA_Project7FSupplyRecipe",
+      "transform": {
+        "translation_cm": [
+          -14100.0,
+          -6000.0,
+          -220.46289088945574
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.7660444431189781,
+          -0.6427876096865393
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -14100.022880445937,
+          -5999.9959655600505,
+          -161.1541788838405
+        ],
+        "interaction_point_world_cm": [
+          -14100.022880445937,
+          -5999.9959655600505,
+          -161.1541788838405
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.7660444431189781,
+          -0.6427876096865393
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -14146.547093758625,
+            -5948.81391249198,
+            -220.46289088945574
+          ],
+          [
+            -14146.547093758625,
+            -5948.81391249198,
+            -101.84546687822527
+          ],
+          [
+            -14038.799127382092,
+            -5967.812786080631,
+            -220.46289088945574
+          ],
+          [
+            -14038.799127382092,
+            -5967.812786080631,
+            -101.84546687822527
+          ],
+          [
+            -14161.246633509783,
+            -6032.17914503947,
+            -220.46289088945574
+          ],
+          [
+            -14161.246633509783,
+            -6032.17914503947,
+            -101.84546687822527
+          ],
+          [
+            -14053.49866713325,
+            -6051.178018628122,
+            -220.46289088945574
+          ],
+          [
+            -14053.49866713325,
+            -6051.178018628122,
+            -101.84546687822527
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_WestGate_A2",
+      "group": "7F_WestGate_A",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "西区大门 补给箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FSupplyRecipe.DA_Project7FSupplyRecipe",
+      "transform": {
+        "translation_cm": [
+          -14100.0,
+          -6500.0,
+          -219.46087480966202
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.838670567945424,
+          -0.544639035015027
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -14100.021224779548,
+          -6499.990550119306,
+          -160.15216280404678
+        ],
+        "interaction_point_world_cm": [
+          -14100.021224779548,
+          -6499.990550119306,
+          -160.15216280404678
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.838670567945424,
+          -0.544639035015027
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -14132.781410826292,
+            -6439.073596889437,
+            -219.46087480966202
+          ],
+          [
+            -14132.781410826292,
+            -6439.073596889437,
+            -100.84345079843155
+          ],
+          [
+            -14032.830263049036,
+            -6483.574715009383,
+            -219.46087480966202
+          ],
+          [
+            -14032.830263049036,
+            -6483.574715009383,
+            -100.84345079843155
+          ],
+          [
+            -14167.21218651006,
+            -6516.406385229228,
+            -219.46087480966202
+          ],
+          [
+            -14167.21218651006,
+            -6516.406385229228,
+            -100.84345079843155
+          ],
+          [
+            -14067.261038732804,
+            -6560.907503349175,
+            -219.46087480966202
+          ],
+          [
+            -14067.261038732804,
+            -6560.907503349175,
+            -100.84345079843155
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_WestGate_B2",
+      "group": "7F_WestGate_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "西区大门 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          -13100.0,
+          -6100.0,
+          -222.2127984848755
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.16504760586067768,
+          -0.9862856015372313
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -13100.007564059619,
+          -6100.021967624224,
+          -162.90408647926026
+        ],
+        "interaction_point_world_cm": [
+          -13100.007564059619,
+          -6100.021967624224,
+          -162.90408647926026
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.16504760586067768,
+          -0.9862856015372313
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -13157.837471543662,
+            -6137.966753577163,
+            -222.2127984848755
+          ],
+          [
+            -13157.837471543662,
+            -6137.966753577163,
+            -103.59537447364502
+          ],
+          [
+            -13122.217010136425,
+            -6034.517422090431,
+            -222.2127984848755
+          ],
+          [
+            -13122.217010136425,
+            -6034.517422090431,
+            -103.59537447364502
+          ],
+          [
+            -13077.798117982813,
+            -6165.526513158017,
+            -222.2127984848755
+          ],
+          [
+            -13077.798117982813,
+            -6165.526513158017,
+            -103.59537447364502
+          ],
+          [
+            -13042.177656575575,
+            -6062.077181671286,
+            -222.2127984848755
+          ],
+          [
+            -13042.177656575575,
+            -6062.077181671286,
+            -103.59537447364502
+          ]
+        ]
+      }
+    },
+    {
+      "id": "7F_WestGate_B3",
+      "group": "7F_WestGate_B",
+      "enabled": true,
+      "weight": 1.0,
+      "kind": "Supply",
+      "label": "西区大门 医疗箱",
+      "reference": "项目布置：7F 探针可达地面，plan_7f_gameplay.py；非官方刷新点",
+      "appearance": "/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/SkeletalMeshes/props_collect_box_546_3P.props_collect_box_546_3P",
+      "recipe": "/Game/Extraction/Loot/DA_Project7FMedicalRecipe.DA_Project7FMedicalRecipe",
+      "transform": {
+        "translation_cm": [
+          -13600.0,
+          -6000.0,
+          -221.45190928584103
+        ],
+        "rotation_xyzw": [
+          0.0,
+          0.0,
+          0.8526401643540923,
+          -0.5224985647159487
+        ],
+        "scale3d": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "derived_native": {
+        "scope": "Asset/CDO plus native source formula; no runtime actor or sweep",
+        "local_box_center_cm": [
+          0.0,
+          -0.023233413696289062,
+          59.308712005615234
+        ],
+        "local_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_box_center_cm": [
+          -13600.020701123183,
+          -5999.989452250906,
+          -162.1431972802258
+        ],
+        "interaction_point_world_cm": [
+          -13600.020701123183,
+          -5999.989452250906,
+          -162.1431972802258
+        ],
+        "world_rotation_xyzw": [
+          0.0,
+          0.0,
+          0.8526401643540923,
+          -0.5224985647159487
+        ],
+        "world_half_extent_cm": [
+          42.32563781738281,
+          54.70507621765137,
+          59.308712005615234
+        ],
+        "world_corners_cm": [
+          [
+            -13629.547843474824,
+            -5937.441447924842,
+            -221.45190928584103
+          ],
+          [
+            -13629.547843474824,
+            -5937.441447924842,
+            -102.83448527461056
+          ],
+          [
+            -13532.062683842525,
+            -5987.112617705525,
+            -221.45190928584103
+          ],
+          [
+            -13532.062683842525,
+            -5987.112617705525,
+            -102.83448527461056
+          ],
+          [
+            -13667.978718403841,
+            -6012.866286796286,
+            -221.45190928584103
+          ],
+          [
+            -13667.978718403841,
+            -6012.866286796286,
+            -102.83448527461056
+          ],
+          [
+            -13570.493558771543,
+            -6062.537456576969,
+            -221.45190928584103
+          ],
+          [
+            -13570.493558771543,
+            -6062.537456576969,
+            -102.83448527461056
+          ]
+        ]
+      }
+    }
+  ],
+  "candidate_count": 45,
+  "group_count": 18,
+  "asset_files_unchanged": true,
+  "export_complete": true,
+  "elapsed_seconds": 0.109
+}
