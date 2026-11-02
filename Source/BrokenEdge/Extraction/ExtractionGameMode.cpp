@@ -415,7 +415,7 @@ bool AExtractionGameMode::SettlePlayer(AController* Player, EExtractionOutcome O
 	return true;
 }
 
-// 逐玩家检测可用撤离区域，以服务器世界时间推进停留倒计时。
+// 先检测所在撤离区域，再发布不可用原因或以服务器世界时间推进停留倒计时。
 // 离开区域会清空进度，换撤离点会重新计时；成功写入仓库后才消耗名额、清空背包并转为观战。
 void AExtractionGameMode::UpdateExtraction(double Now)
 {
@@ -427,20 +427,26 @@ void AExtractionGameMode::UpdateExtraction(double Now)
 		if (!PS || PS->Life != EExtractionLife::Alive || !C || C->IsDefeated()) continue;
 		AExtractionExit* Exit = nullptr;
 		for (const auto& Candidate : Exits)
-			if (IsValid(Candidate) && Candidate->Available(Now) && Candidate->Contains(C->GetActorLocation()))
+			if (IsValid(Candidate) && Candidate->Contains(C->GetActorLocation()))
 			{
 				if (!Exit || Candidate->Definition.Id == PS->ExtractExitId) Exit = Candidate;
 			}
 		if (!Exit)
 		{
-			PS->ExtractAt = 0;
-			PS->ExtractExitId = NAME_None;
-			if (!PS->ExtractBlockedReason.IsEmpty()) PS->ExtractBlockedReason.Reset();
+			if (PS->ExtractAt != 0 || !PS->ExtractExitId.IsNone() || !PS->ExtractBlockedReason.IsEmpty())
+			{
+				PS->ExtractAt = 0;
+				PS->ExtractExitId = NAME_None;
+				PS->ExtractBlockedReason.Reset();
+				PS->ForceNetUpdate();
+			}
 			continue;
 		}
+		// 地图配置顺序决定首次进入重叠区域时的选择；已有点位即使暂时不可用也保持选中，
+		// 不把另一处撤离点的可用性或停留进度偷偷转移给玩家。
+		FString Blocked = Exit->UnavailableReason(Now);
 		// 丢包撤：网格里留着任何战利品都不放行，装备槽（Slot>=0）不算背包。
-		FString Blocked;
-		if (Exit->Definition.bRequireEmptyPack && PS->Inventory)
+		if (Blocked.IsEmpty() && Exit->Definition.bRequireEmptyPack && PS->Inventory)
 		{
 			int32 Carried = 0;
 			for (const auto& Item : PS->Inventory->Contents.Items)
@@ -448,16 +454,12 @@ void AExtractionGameMode::UpdateExtraction(double Now)
 			if (Carried > 0)
 				Blocked = FString::Printf(TEXT("丢包撤：请先丢弃背包内 %d 件物资"), Carried);
 		}
-		if (PS->ExtractBlockedReason != Blocked)
-		{
-			PS->ExtractBlockedReason = Blocked;
-			PS->ForceNetUpdate();
-		}
 		if (!Blocked.IsEmpty())
 		{
-			PS->ExtractExitId = Exit->Definition.Id;
-			if (PS->ExtractAt > 0)
+			if (PS->ExtractExitId != Exit->Definition.Id || PS->ExtractBlockedReason != Blocked || PS->ExtractAt != 0)
 			{
+				PS->ExtractExitId = Exit->Definition.Id;
+				PS->ExtractBlockedReason = Blocked;
 				PS->ExtractAt = 0;
 				PS->ForceNetUpdate();
 			}
@@ -466,6 +468,7 @@ void AExtractionGameMode::UpdateExtraction(double Now)
 		if (PS->ExtractAt <= 0 || PS->ExtractExitId != Exit->Definition.Id)
 		{
 			PS->ExtractExitId = Exit->Definition.Id;
+			PS->ExtractBlockedReason.Reset();
 			PS->ExtractAt = Now + Exit->Definition.HoldSeconds;
 			PS->ForceNetUpdate();
 		}

@@ -1,0 +1,22 @@
+{
+  "task": "exit-feedback",
+  "started_utc": "2026-11-02T19:07:41.218498+00:00",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-exit-feedback02\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.ExitFeedback",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-exit-feedback02\\Automation"
+  ],
+  "pid": 30548,
+  "exit_code": 0,
+  "successful_tests": 3,
+  "result": "passed",
+  "finished_utc": "2026-11-02T19:08:00.392831+00:00"
+}

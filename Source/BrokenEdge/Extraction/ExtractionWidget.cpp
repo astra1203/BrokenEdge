@@ -82,6 +82,7 @@ void UExtractionWidget::Refresh()
 	FString ExitsText;
 	FString CountdownText;
 	float ExitFraction = 0;
+	bool bShowExitProgress = false;
 	if (PS->Life == EExtractionLife::Alive && GS->Phase == EExtractionPhase::Active && PC->GetPawn())
 	{
 		for (TActorIterator<AExtractionExit> It(GetWorld()); It; ++It)
@@ -97,12 +98,15 @@ void UExtractionWidget::Refresh()
 			if (PS->ExtractAt > 0 && PS->ExtractExitId == It->Definition.Id)
 			{
 				const double Remaining = FMath::Max(0.0, PS->ExtractAt - GS->GetServerWorldTimeSeconds());
-				CountdownText = FString::Printf(TEXT("正在撤离  %.1f\n请留在撤离区域内"), Remaining);
+				CountdownText = It->Definition.Label.ToString() + TEXT("\n") + (Remaining > 0
+					? FString::Printf(TEXT("正在撤离  %.1f\n请留在撤离区域内"), Remaining)
+					: FString(TEXT("等待服务器确认撤离")));
 				ExitFraction = FMath::Clamp(1.f - Remaining / It->Definition.HoldSeconds, 0., 1.);
+				bShowExitProgress = Remaining > 0;
 			}
 			else if (!PS->ExtractBlockedReason.IsEmpty() && PS->ExtractExitId == It->Definition.Id)
 			{
-				CountdownText = PS->ExtractBlockedReason;
+				CountdownText = It->Definition.Label.ToString() + TEXT("\n") + PS->ExtractBlockedReason;
 				ExitFraction = 0;
 			}
 		}
@@ -110,9 +114,9 @@ void UExtractionWidget::Refresh()
 	ExitStatus->SetText(FText::FromString(ExitsText));
 	ExtractionCountdown->SetText(FText::FromString(CountdownText));
 	ExtractionProgress->SetPercent(ExitFraction);
-	ExtractionProgress->SetVisibility(CountdownText.IsEmpty()
-		                                  ? ESlateVisibility::Collapsed
-		                                  : ESlateVisibility::HitTestInvisible);
+	ExtractionProgress->SetVisibility(bShowExitProgress
+		                                  ? ESlateVisibility::HitTestInvisible
+		                                  : ESlateVisibility::Collapsed);
 	if (PC->ExtractionAccount && PC->ExtractionAccount->Profile.Result.Outcome != EExtractionOutcome::None)
 	{
 		const auto& Result = PC->ExtractionAccount->Profile.Result;
