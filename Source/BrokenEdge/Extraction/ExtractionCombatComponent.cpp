@@ -402,6 +402,11 @@ void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint3
 		Weapon->Fire(End);
 		if (auto* Inventory = C->GetExtractionInteraction()->Inventory()) Inventory->RecordShot(Weapon);
 		++AcceptedShots;
+#if WITH_DEV_AUTOMATION_TESTS
+		TestShotTimes.Emplace(AcceptedShots, Now);
+		if (TestShotTimes.Num() > 64)
+			TestShotTimes.RemoveAt(0, TestShotTimes.Num() - 64, EAllowShrinking::No);
+#endif
 		// 广播已经追加散射的最终端点；客户端不得再次随机采样，以免命中与表现不一致。
 		MulticastShotEffects(Weapon, End, Weapon->GetAmmo());
 	}

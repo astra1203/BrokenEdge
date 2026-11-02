@@ -55,6 +55,10 @@ public:
 	void ServerDropWeapon();
 	uint32 GetAcceptedShots() const { return AcceptedShots; }
 	uint32 GetRejectedShots() const { return RejectedShots; }
+#if WITH_DEV_AUTOMATION_TESTS
+	// Preserve authoritative shot times across slower driver snapshots; never replicated or saved.
+	const TArray<TPair<uint32, double>>& GetTestShotTimes() const { return TestShotTimes; }
+#endif
 	// 推进开镜插值、屏息消耗恢复、散布回落和后座偿还；本地额外更新镜头表现及自动连射。
 	virtual void TickComponent(float Delta, ELevelTick Kind, FActorComponentTickFunction* Tick) override;
 	// 随机种子只同步给拥有者，使本地预测与服务器用相同射击 ID 构造散布。
@@ -116,6 +120,9 @@ private:
 	uint32 LastAcknowledgedShot = 0;
 	uint32 AcceptedShots = 0;
 	uint32 RejectedShots = 0;
+#if WITH_DEV_AUTOMATION_TESTS
+	TArray<TPair<uint32, double>> TestShotTimes;
+#endif
 	double NextShotTime = 0;
 	// 待确认预测按武器记录；弱引用避免网络回执延长已销毁武器的生命周期。
 	TMap<uint32, TWeakObjectPtr<AWeapon>> PendingShots;

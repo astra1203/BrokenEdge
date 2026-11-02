@@ -426,6 +426,7 @@ bool FGuardStandaloneCombatTest::RunTest(const FString&)
 	auto* Weapon = F.Pawn->GetEquippedWeapon();
 	if (!TestNotNull(TEXT("Real inventory AK equipped"), Weapon)) return false;
 	const int32 InitialAmmo = Weapon->GetAmmo();
+	TestTrue(TEXT("New guard has no accepted-shot history"), Combat->GetTestShotTimes().IsEmpty());
 	F.BB->SetValueAsObject(GuardBlackboard::TargetActor, Human);
 	F.BB->SetValueAsFloat(GuardBlackboard::ReactionReadyTime, 0);
 	F.World->TimeSeconds = 10;
@@ -457,10 +458,34 @@ bool FGuardStandaloneCombatTest::RunTest(const FString&)
 		FirstShotAt >= 0 && SecondShotAt - FirstShotAt >= ConfiguredInterval - .001);
 	TestTrue(TEXT("AI cadence is not delayed beyond normal polling quantization"),
 		FirstShotAt >= 0 && SecondShotAt - FirstShotAt <= ConfiguredInterval + .021);
+	const auto& ShotTimes = Combat->GetTestShotTimes();
+	TestEqual(TEXT("Each successful shot creates one authority event"),
+	          static_cast<uint32>(ShotTimes.Num()), Combat->GetAcceptedShots());
+	if (TestTrue(TEXT("Authority history includes both real shots"), ShotTimes.Num() >= 2))
+	{
+		TestEqual(TEXT("First history sequence matches first accepted shot"), ShotTimes[0].Key, 1u);
+		TestEqual(TEXT("Latest history sequence matches accepted count"), ShotTimes.Last().Key,
+		          Combat->GetAcceptedShots());
+		TestEqual(TEXT("First event preserves actual server fire time"), ShotTimes[0].Value, FirstShotAt);
+		TestEqual(TEXT("Second event preserves actual server fire time"), ShotTimes[1].Value, SecondShotAt);
+		TestTrue(TEXT("Authority times increase and respect equipped guard interval"),
+		         ShotTimes[1].Value > ShotTimes[0].Value
+		         && ShotTimes[1].Value - ShotTimes[0].Value >= ConfiguredInterval - .001);
+	}
 	TestEqual(TEXT("Real shots consume magazine ammunition"), Weapon->GetAmmo(), InitialAmmo - static_cast<int32>(Combat->GetAcceptedShots()));
 	TestTrue(TEXT("Recoil does not overwrite AI Focus rotation"), F.Guard->GetControlRotation().Equals(ControlBefore, .001f));
 	TestTrue(TEXT("AI next-fire deadline advances after accepted shot"),
 		F.BB->GetValueAsFloat(GuardBlackboard::NextFireTime) > F.World->GetTimeSeconds());
+	// Immediately retry through the production RPC while the weapon cooldown is active.
+	const uint32 AcceptedBeforeRetry = Combat->GetAcceptedShots();
+	const uint32 RejectedBeforeRetry = Combat->GetRejectedShots();
+	const int32 EventsBeforeRetry = ShotTimes.Num();
+	Combat->FireGuard(Human->GetActorLocation());
+	TestEqual(TEXT("Immediate duplicate-time fire is rejected by weapon cooldown"),
+	          Combat->GetRejectedShots(), RejectedBeforeRetry + 1);
+	TestEqual(TEXT("Rejected RPC cannot increase accepted count"), Combat->GetAcceptedShots(), AcceptedBeforeRetry);
+	TestEqual(TEXT("Rejected RPC cannot append an authority shot event"), Combat->GetTestShotTimes().Num(),
+	          EventsBeforeRetry);
 	Engage->WrappedAbortTask(*F.BT, nullptr);
 	Combat->EquipmentAmmo(Weapon, 0);
 	const int32 ReserveBefore = F.Pawn->GetCombat()->GetCarriedAmmo();
@@ -479,6 +504,7 @@ bool FGuardStandaloneCombatTest::RunTest(const FString&)
 	TestTrue(TEXT("Server reload refills magazine"), Weapon->GetAmmo() > 0);
 	TestTrue(TEXT("Server reload consumes guard's reserve"), F.Pawn->GetCombat()->GetCarriedAmmo() < ReserveBefore);
 	TestEqual(TEXT("Reload leaves combat idle"), F.Pawn->GetCombatState(), ECombatState::ECS_Unoccuiped);
+	TestEqual(TEXT("Ammo refill does not create a shot event"), Combat->GetTestShotTimes().Num(), EventsBeforeRetry);
 
 	// 在正式搜打撤模式中继续保留原阶段校验，不能因普通地图支持而提前开火。
 	auto* GS = F.World->SpawnActor<AExtractionGameState>();
@@ -488,6 +514,8 @@ bool FGuardStandaloneCombatTest::RunTest(const FString&)
 	const uint32 Before = Combat->GetAcceptedShots();
 	Combat->FireGuard(Human->GetActorLocation());
 	TestEqual(TEXT("Waiting raid rejects actual shot request"), Combat->GetAcceptedShots(), Before);
+	TestEqual(TEXT("Waiting raid rejection leaves authority history unchanged"), Combat->GetTestShotTimes().Num(),
+	          EventsBeforeRetry);
 	GS->Phase = EExtractionPhase::Active;
 	TestTrue(TEXT("Active Extraction raid allows guard"), Combat->CanAct());
 	GS->Phase = EExtractionPhase::Ended;

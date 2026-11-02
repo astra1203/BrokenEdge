@@ -42,6 +42,8 @@
 #include "BrokenEdge/Extraction/ExtractionAbilities.h"
 #include "BrokenEdge/Extraction/ExtractionHealth.h"
 #include "BrokenEdge/Extraction/ExtractionGuard.h"
+#include "BrokenEdge/Character/GuardBlackboardKeys.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "BrokenEdge/Extraction/ExtractionSmoke.h"
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
@@ -1246,6 +1248,8 @@ private:
 				}
 				if (auto* Character = Cast<ABrokenEdgeCharacter>(PS->GetPawn()))
 				{
+					Player->SetStringField(TEXT("pawn_name"), Character->GetName());
+					Player->SetArrayField(TEXT("view_position"), VectorJson(Character->GetPawnViewLocation()));
 					Player->SetNumberField(TEXT("health"), Character->GetHealth());
 					Player->SetBoolField(TEXT("knife_active"), Character->Melee->Active);
 					Player->SetBoolField(TEXT("knife_view_attached"), Character->Melee->IsViewAttached());
@@ -1447,6 +1451,12 @@ private:
 			LootActors.Add(MakeShared<FJsonValueObject>(Entry));
 		}
 		State->SetArrayField(TEXT("loot"), LootActors);
+		const auto* GuardRules = GetDefault<UExtractionRules>();
+		auto RulesJson = MakeShared<FJsonObject>();
+		RulesJson->SetNumberField(TEXT("reaction_seconds"), GuardRules->GuardReactionSeconds);
+		RulesJson->SetNumberField(TEXT("shot_interval"), GuardRules->GuardShotInterval);
+		RulesJson->SetNumberField(TEXT("damage_scale"), GuardRules->GuardDamageScale);
+		State->SetObjectField(TEXT("guard_rules"), RulesJson);
 		TArray<TSharedPtr<FJsonValue>> Guards, Smokes;
 		for (TActorIterator<ABrokenEdgeCharacter> It(World); It; ++It)
 			if (It->bExtractionGuard)
@@ -1457,12 +1467,47 @@ private:
 				J->SetArrayField(TEXT("position"), VectorJson(It->GetActorLocation()));
 				J->SetNumberField(TEXT("health"), It->GetHealth());
 				J->SetBoolField(TEXT("dead"), It->IsDefeated());
+				J->SetArrayField(TEXT("view_position"), VectorJson(It->GetPawnViewLocation()));
+				J->SetNumberField(TEXT("combat_state"), static_cast<int32>(It->GetCombatState()));
+				J->SetNumberField(TEXT("carried_ammo"), It->GetCombat()->GetCarriedAmmo());
 				J->SetNumberField(TEXT("shots"), It->GetExtractionCombat()->GetAcceptedShots());
+				if (const auto* Weapon = It->GetEquippedWeapon())
+				{
+					J->SetNumberField(TEXT("ammo"), Weapon->GetAmmo());
+					J->SetNumberField(TEXT("fire_delay"), Weapon->FireDelay);
+					J->SetNumberField(TEXT("damage"), Weapon->GetDamage());
+					J->SetNumberField(TEXT("head_damage"), Weapon->GetHeadShotDamage());
+				}
+				TArray<TSharedPtr<FJsonValue>> ShotTimes;
+				for (const auto& Shot : It->GetExtractionCombat()->GetTestShotTimes())
+				{
+					auto Entry = MakeShared<FJsonObject>();
+					Entry->SetNumberField(TEXT("sequence"), Shot.Key);
+					Entry->SetNumberField(TEXT("time"), Shot.Value);
+					ShotTimes.Add(MakeShared<FJsonValueObject>(Entry));
+				}
+				J->SetArrayField(TEXT("shot_times"), ShotTimes);
 				if (It->HasAuthority())
 					J->SetObjectField(
 						TEXT("inventory"), InventoryJson(It->GuardInventory->Contents));
 				if (const auto* AI = Cast<AExtractionGuard>(It->GetController()))
 				{
+					if (const auto* PlayerA = FindPawn(World, TEXT("EX_A")))
+					{
+						J->SetBoolField(TEXT("line_of_sight_to_A"), AI->LineOfSightTo(PlayerA));
+						J->SetBoolField(TEXT("smoke_blocked_to_A"), AExtractionSmoke::Blocks(
+							World, It->GetPawnViewLocation(), PlayerA->GetPawnViewLocation()));
+					}
+					J->SetStringField(TEXT("route"), AI->Route ? AI->Route->GetActorNameOrLabel() : TEXT("None"));
+					J->SetStringField(TEXT("route_object"), GetNameSafe(AI->Route));
+					if (const auto* Blackboard = AI->GetBlackboardComponent())
+					{
+						J->SetNumberField(
+							TEXT("reaction_ready_time"),
+							Blackboard->GetValueAsFloat(GuardBlackboard::ReactionReadyTime));
+						J->SetNumberField(
+							TEXT("next_fire_time"), Blackboard->GetValueAsFloat(GuardBlackboard::NextFireTime));
+					}
 					J->SetNumberField(TEXT("state"), static_cast<int32>(AI->State));
 					J->SetNumberField(TEXT("arrivals"), AI->PatrolArrivals);
 					J->SetStringField(TEXT("target"), GetNameSafe(AI->Target));
