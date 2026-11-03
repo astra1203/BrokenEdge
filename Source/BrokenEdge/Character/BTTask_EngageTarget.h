@@ -7,7 +7,8 @@
 class ABrokenEdgeCharacter;
 
 /**
- * 持续任务：站定、关注当前可见目标，反应时间结束后按间隔尝试射击/换弹。
+ * 持续任务：关注当前可见目标，反应时间结束后按间隔尝试射击/换弹。
+ * 交战中按规则横移换位，换弹或刚中弹时找可达掩体，换完弹再横移出来继续射击。
  * Blackboard Key 选择 TargetActor；交战分支添加 Is Set 装饰器并设置 Observer Aborts=Both。
  * Service 维护 ReactionReadyTime；任务仅在实际开枪后更新 NextFireTime。
  * 弹药、装填时间、射速和伤害仍由 ExtractionCombatComponent 决定。
@@ -39,5 +40,8 @@ private:
 	TWeakObjectPtr<ABrokenEdgeCharacter> FocusedTarget;
 
 	bool UpdateEngagement(UBehaviorTreeComponent& OwnerComp);
+	// 交战走位：只用 AIController 的导航移动，Gameplay Focus 保持朝向目标。
+	void UpdateMovement(class AExtractionGuard* Guard, ABrokenEdgeCharacter* Self, ABrokenEdgeCharacter* Target,
+	                    double Now);
 	void ReleaseFocus(UBehaviorTreeComponent& OwnerComp);
 };

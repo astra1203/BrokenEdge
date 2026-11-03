@@ -1,6 +1,7 @@
 #include "ExtractionInventoryComponent.h"
 #include "BrokenEdge/Weapon/WeaponMechanics.h"
 #include "ExtractionCombatComponent.h"
+#include "ExtractionAbilities.h"
 #include "ExtractionState.h"
 #include "ExtractionLootActor.h"
 #include "ExtractionPersistence.h"
@@ -117,11 +118,20 @@ void UExtractionInventoryComponent::InitializeGuard()
 	bInitialized = true;
 	Contents.Id = FGuid::NewGuid();
 	Contents.WeaponSlots = true;
-	auto Gun = ExtractionItems::Make(TEXT("AK"));
+	// 按配置随机配枪，弹药跟随枪的默认弹种；配置无效时回退 AK。
+	const auto& Weapons = GetDefault<UExtractionRules>()->GuardWeapons;
+	FName GunId = Weapons.IsEmpty() ? FName(TEXT("AK")) : Weapons[FMath::RandRange(0, Weapons.Num() - 1)];
+	const auto* GunDef = UExtractionItemDefinition::Get(GunId);
+	if (!GunDef || GunDef->Kind != EExtractionItemKind::Weapon)
+	{
+		GunId = TEXT("AK");
+		GunDef = UExtractionItemDefinition::Get(GunId);
+	}
+	auto Gun = ExtractionItems::Make(GunId);
 	Gun.Slot = 0;
 	ExtractionItems::SeedOrigins(Gun);
 	Contents.Items.Add(Gun);
-	ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(TEXT("Ammo"), 60));
+	ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(GunDef ? GunDef->DefaultAmmo : FName(TEXT("Ammo")), 60));
 	ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(TEXT("Medkit")));
 	SyncWeapons();
 	Changed();

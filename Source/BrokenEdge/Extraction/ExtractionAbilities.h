@@ -167,6 +167,21 @@ public:
 	/** 已发现目标的保留距离，运行时确保不小于发现距离，减少边界附近反复丢失目标。 */
 	UPROPERTY(Config, meta=(ClampMin="0", Units="cm"))
 	float GuardLoseSightRadius = 7500.f;
+	/** 守卫开局随机配枪（物品 ID，弹种取定义的 DefaultAmmo）；为空或无效时回退 AK。 */
+	UPROPERTY(Config)
+	TArray<FName> GuardWeapons = {TEXT("AK"), TEXT("M4A1"), TEXT("SCARH")};
+	/** 交战时横移换位的平均间隔（秒）；0 表示保持原来的站定射击。 */
+	UPROPERTY(Config, meta=(ClampMin="0", Units="s"))
+	float GuardStrafeInterval = 3.f;
+	/** 横移换位的最大距离，单位 cm。 */
+	UPROPERTY(Config, meta=(ClampMin="0", Units="cm"))
+	float GuardStrafeDistance = 300.f;
+	/** 换弹或刚中弹时寻找掩体的半径，单位 cm；0 表示不找掩体。 */
+	UPROPERTY(Config, meta=(ClampMin="0", Units="cm"))
+	float GuardCoverRadius = 900.f;
+	/** 两次找掩体之间的最短间隔（秒），避免连续中弹时来回跑。 */
+	UPROPERTY(Config, meta=(ClampMin="0", Units="s"))
+	float GuardCoverCooldown = 6.f;
 };
 
 UCLASS()

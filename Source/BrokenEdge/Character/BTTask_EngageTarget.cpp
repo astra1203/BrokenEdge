@@ -11,6 +11,7 @@
 #include "BrokenEdge/Extraction/ExtractionAbilities.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 #include "BrokenEdge/Extraction/ExtractionGuard.h"
+#include "BrokenEdge/Extraction/ExtractionHealth.h"
 #include "BrokenEdge/Extraction/ExtractionSmoke.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
 #include "BrokenEdge/Weapon/Weapon.h"
@@ -30,6 +31,11 @@ EBTNodeResult::Type UBTTask_EngageTarget::ExecuteTask(UBehaviorTreeComponent& Ow
 {
 	// 不在任务重进时重置黑板上的射击/反应时间；这些值由每名 NPC 自己的黑板保存。
 	FocusedTarget.Reset();
+	if (auto* Guard = Cast<AExtractionGuard>(OwnerComp.GetAIOwner()))
+	{
+		Guard->bTakingCover = false;
+		Guard->NextTacticAt = 0;
+	}
 	if (UpdateEngagement(OwnerComp)) return EBTNodeResult::InProgress;
 	ReleaseFocus(OwnerComp);
 	return EBTNodeResult::Failed;
@@ -77,10 +83,8 @@ bool UBTTask_EngageTarget::UpdateEngagement(UBehaviorTreeComponent& OwnerComp)
 		FocusedTarget = Target;
 		Guard->SetFocus(Target);
 	}
-	// 不创建自定义 MoveTo；这里只停止交战前仍在进行的路径跟随，保持原先站定射击规则。
-	Guard->StopMovement();
-
 	const double Now = Guard->GetWorld()->GetTimeSeconds();
+	UpdateMovement(Guard, C, Target, Now);
 	// 和玩家自动射击一样按武器间隔调度。每帧只检查截止时间，未到期时不做射线检测；
 	// 不再叠加固定 0.1 秒轮询，避免快射武器被轮询节奏限制成低射速。
 	const float ReactionAt = BB->GetValueAsFloat(GuardBlackboard::ReactionReadyTime);
@@ -121,6 +125,47 @@ bool UBTTask_EngageTarget::UpdateEngagement(UBehaviorTreeComponent& OwnerComp)
 		BB->SetValueAsFloat(GuardBlackboard::NextFireTime, static_cast<float>(Now + Interval));
 	}
 	return true;
+}
+
+void UBTTask_EngageTarget::UpdateMovement(AExtractionGuard* Guard, ABrokenEdgeCharacter* Self,
+                                          ABrokenEdgeCharacter* Target, double Now)
+{
+	const auto* Rules = GetDefault<UExtractionRules>();
+	auto* Weapon = Self->GetEquippedWeapon();
+	const auto* Health = Self->GetExtractionHealth();
+	const auto* SharedCombat = Self->GetCombat().Get();
+	// 空弹匣且还有备弹才算待换弹；没有备弹时不躲，避免永远留在掩体里。
+	const bool bReloading = Self->GetCombatState() == ECombatState::ECS_Reloading
+		|| (IsValid(Weapon) && Weapon->IsEmpty() && SharedCombat && SharedCombat->GetCarriedAmmo() > 0);
+	const bool bHit = Health && Health->LastBulletAt >= 0 && Now - Health->LastBulletAt < 1.0;
+	FVector Point;
+	// 换弹或刚中弹时找掩体；冷却内不重复找，避免连续中弹时来回跑。
+	if (!Guard->bTakingCover && (bReloading || bHit) && Now >= Guard->NextCoverAt
+		&& Guard->FindTacticalPoint(Target, true, Point))
+	{
+		Guard->MoveToLocation(Point, 30.f, false, true, false, true);
+		Guard->bTakingCover = true;
+		Guard->CoverUntil = Now + 2.0;
+		Guard->NextCoverAt = Now + Rules->GuardCoverCooldown;
+		return;
+	}
+	// 至少躲 2 秒且换弹完成后离开掩体，立即横移到能看见目标的位置。
+	if (Guard->bTakingCover)
+	{
+		if (bReloading || Now < Guard->CoverUntil) return;
+		Guard->bTakingCover = false;
+		Guard->NextTacticAt = 0;
+	}
+	if (Rules->GuardStrafeInterval <= 0)
+	{
+		// 关闭横移时保持原先站定射击规则。
+		Guard->StopMovement();
+		return;
+	}
+	if (Now < Guard->NextTacticAt) return;
+	Guard->NextTacticAt = Now + Rules->GuardStrafeInterval * FMath::FRandRange(.7f, 1.3f);
+	if (Guard->FindTacticalPoint(Target, false, Point)) Guard->MoveToLocation(Point, 30.f, false, true, false, true);
+	else Guard->StopMovement();
 }
 
 void UBTTask_EngageTarget::ReleaseFocus(UBehaviorTreeComponent& OwnerComp)

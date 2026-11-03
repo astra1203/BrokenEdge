@@ -1,5 +1,18 @@
 ﻿# 守卫行为树 C++ Task 使用说明
 
+## 交战走位与随机配枪（2026-11-03）
+
+`Engage Guard Target` 不再固定站定：
+
+- 每 `GuardStrafeInterval`（默认 3 s，±30%）向目标左右两侧横移最多 `GuardStrafeDistance`（300 cm），
+  目标点必须导航可达、同层且站姿眼睛能看到目标，换位途中照常开火。
+- 换弹（空弹匣且有备弹）或 1 秒内中弹时，在 `GuardCoverRadius`（900 cm）内找掩体：
+  目标眼睛到掩体点站姿眼高和胸口高度都被挡住；至少躲 2 秒且换完弹后横移出来继续射击。
+  两次找掩体间隔不少于 `GuardCoverCooldown`（6 s）。
+- 开局从 `GuardWeapons`（AK / M4A1 / SCAR-H）随机配枪，弹药为该枪默认弹种 60 发。
+- `GuardStrafeInterval=0`、`GuardCoverRadius=0`、`GuardWeapons=AK` 可恢复此前站定、全员 AK 的回归口径；
+  旧的守卫回归场景是按站定射击写的。
+
 ## 武器射速与追击（当前实现）
 
 当前默认 `GuardShotInterval=0.15`，即每发至少间隔 0.15 秒。`GuardShotInterval=0` 使用当前装备的 `Weapon.FireDelay`，与玩家长按自动射击一致。

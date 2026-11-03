@@ -86,6 +86,14 @@ public:
 	EExtractionGuardState State = EExtractionGuardState::Patrol;
 	int32 PatrolIndex = 0;
 	int32 VisibleChecks = 0, Shots = 0, PatrolArrivals = 0;
+	/**
+	 * 交战走位点：bCover 为真时找威胁者看不到的可达掩体，否则找能看到威胁者的横移点。
+	 * 都要求完整导航路径；找不到返回 false，交战任务保持站定射击。
+	 */
+	bool FindTacticalPoint(const APawn* Threat, bool bCover, FVector& Out) const;
+	// 交战走位的每名守卫状态：下次换位时刻、是否正在找掩体及掩体冷却截止时刻。
+	double NextTacticAt = 0, CoverUntil = 0, NextCoverAt = 0;
+	bool bTakingCover = false;
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;

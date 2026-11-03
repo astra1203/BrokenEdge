@@ -58,6 +58,67 @@ bool AExtractionGuard::BuildPursuitDestination(const FVector& LastSeenLocation, 
 	return TryGoal(LastSeenLocation + Offset) || TryGoal(LastSeenLocation);
 }
 
+bool AExtractionGuard::FindTacticalPoint(const APawn* Threat, bool bCover, FVector& Out) const
+{
+	auto* Me = Cast<ABrokenEdgeCharacter>(GetPawn());
+	const auto* Rules = GetDefault<UExtractionRules>();
+	auto* Nav = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
+	const float Radius = bCover ? Rules->GuardCoverRadius : Rules->GuardStrafeDistance;
+	if (!Me || !IsValid(Threat) || !Nav || Radius <= 0) return false;
+	// 导航点在地面上，眼高按胶囊半高加眼睛偏移换算。
+	const FVector From = Me->GetNavAgentLocation();
+	const FVector ThreatEye = Threat->GetPawnViewLocation();
+	const float EyeHeight = Me->GetSimpleCollisionHalfHeight() + Me->BaseEyeHeight;
+	FCollisionQueryParams Query(SCENE_QUERY_STAT(ExtractionGuardTactics), false, Me);
+	Query.AddIgnoredActor(Threat);
+	if (Me->GetEquippedWeapon()) Query.AddIgnoredActor(Me->GetEquippedWeapon());
+	// 掩体要求站姿眼睛和胸口都被挡住；横移点要求眼睛能看到目标，换位后可以继续射击。
+	auto Exposed = [&](const FVector& Ground, float Height)
+	{
+		FHitResult Hit;
+		return !GetWorld()->LineTraceSingleByChannel(Hit, ThreatEye, Ground + FVector(0, 0, Height), ECC_Visibility,
+		                                              Query);
+	};
+	TArray<FVector> Candidates;
+	if (bCover)
+	{
+		for (int32 I = 0; I < 16; ++I)
+		{
+			FNavLocation Point;
+			if (Nav->GetRandomReachablePointInRadius(From, Radius, Point)) Candidates.Add(Point.Location);
+		}
+		// 先试近处，减少暴露在开阔地的时间。
+		Candidates.Sort([&](const FVector& A, const FVector& B)
+		{
+			return FVector::DistSquared(A, From) < FVector::DistSquared(B, From);
+		});
+	}
+	else
+	{
+		const FVector Side = FVector::CrossProduct((ThreatEye - From).GetSafeNormal2D(), FVector::UpVector);
+		const float Sign = FMath::RandBool() ? 1.f : -1.f;
+		for (const float Scale : {1.f, .6f})
+			for (const float Direction : {Sign, -Sign})
+				Candidates.Add(From + Side * Direction * Radius * Scale);
+	}
+	for (const FVector& Candidate : Candidates)
+	{
+		FNavLocation Projected;
+		if (!Nav->ProjectPointToNavigation(Candidate, Projected, FVector(100, 100, 200), &Me->GetNavAgentPropertiesRef()))
+			continue;
+		const FVector Ground = Projected.Location;
+		if (FMath::Abs(Ground.Z - From.Z) > 200) continue;
+		if (bCover ? Exposed(Ground, EyeHeight) || Exposed(Ground, EyeHeight * .6f) : !Exposed(Ground, EyeHeight))
+			continue;
+		const auto* Path = UNavigationSystemV1::FindPathToLocationSynchronously(
+			GetWorld(), Me->GetNavAgentLocation(), Ground, GetPawn(), GetDefaultNavigationFilterClass());
+		if (!Path || !Path->IsValid() || Path->IsPartial() || Path->GetPathLength() > Radius * 1.5f) continue;
+		Out = Ground;
+		return true;
+	}
+	return false;
+}
+
 AExtractionGuard::AExtractionGuard()
 {
 	// 守卫不占玩家席位；不再设置自定义 TickInterval 或运行旧 AI 状态机。

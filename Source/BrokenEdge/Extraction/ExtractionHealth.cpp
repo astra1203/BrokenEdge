@@ -122,6 +122,7 @@ void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController
 	if (!C || !C->HasAuthority() || !GM || C->IsDefeated() || !FMath::IsFinite(Damage)) return;
 	Damage = GM->CalculateDamage(Attacker, C->GetController(), Damage);
 	if (Damage <= 0) return; // Friendly fire cannot damage equipment or create trauma.
+	LastBulletAt = GetWorld()->GetTimeSeconds();
 	const auto* AmmoDef = UExtractionItemDefinition::Get(Ammo);
 	if (!AmmoDef || AmmoDef->Kind != EExtractionItemKind::Ammo) return;
 	// Bullet damage is validated again in ReceiveDamage; scale only at this entry.
