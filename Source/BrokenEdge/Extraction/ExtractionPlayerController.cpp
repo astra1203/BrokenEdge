@@ -58,8 +58,8 @@ void AExtractionPlayerController::SetupInputComponent()
 	                        &ThisClass::ThrowGrenadeLow);
 	InputComponent->BindKey(EKeys::E, IE_Released, this, &ThisClass::ReleaseInteract);
 	InputComponent->BindKey(EKeys::Three, IE_Pressed, this, &ThisClass::SelectKnife);
-	InputComponent->BindKey(EKeys::One, IE_Pressed, this, &ThisClass::SelectHeldGun);
-	InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &ThisClass::SelectOtherGun);
+	InputComponent->BindKey(EKeys::One, IE_Pressed, this, &ThisClass::SelectPrimaryGun);
+	InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &ThisClass::SelectSecondaryGun);
 }
 
 // 菜单未打开时请求服务器选择刀槽；实际资格由近战组件检查。
@@ -79,6 +79,26 @@ void AExtractionPlayerController::SelectOtherGun()
 {
 	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen) C->Melee->Select(false, true);
 }
+
+// 1 / 2 固定对应主武器槽（槽 0）/ 副武器槽（槽 1）：已经拿着这把就只退出刀槽，否则切到另一把。
+void AExtractionPlayerController::SelectWeaponSlot(int32 Slot)
+{
+	auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
+	const auto* I = Interaction();
+	const auto* Inv = I ? I->Inventory() : nullptr;
+	if (!C || bMenuOpen || !Inv) return;
+	const auto* Wanted = Inv->Contents.InSlot(Slot);
+	if (!Wanted)
+	{
+		ShowItemMessage(Slot == 0 ? TEXT("主武器槽没有武器") : TEXT("副武器槽没有武器"));
+		return;
+	}
+	const AWeapon* Held = C->GetEquippedWeapon();
+	C->Melee->Select(false, !Held || Held->ExtractionItemId != Wanted->Id);
+}
+
+void AExtractionPlayerController::SelectPrimaryGun() { SelectWeaponSlot(0); }
+void AExtractionPlayerController::SelectSecondaryGun() { SelectWeaponSlot(1); }
 
 // Esc 按优先级关闭地图、取消拖动、关闭背包或取消治疗，均无待处理操作时才切换对局菜单。
 void AExtractionPlayerController::ToggleExtractionMenu()

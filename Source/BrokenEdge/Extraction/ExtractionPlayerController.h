@@ -122,6 +122,9 @@ public:
 	void SelectHeldGun();
 	// 请求退出刀槽并切换另一把枪，仍受服务器动作锁约束。
 	void SelectOtherGun();
+	void SelectWeaponSlot(int32 Slot);
+	void SelectPrimaryGun();
+	void SelectSecondaryGun();
 	// 快捷医疗只选择本人背包的 Medkit；正在治疗时同一输入改为取消。
 	void UseMedical();
 	// 把手持槽物品转换为 Drop 请求，复用背包事务而非直接销毁武器 Actor。
