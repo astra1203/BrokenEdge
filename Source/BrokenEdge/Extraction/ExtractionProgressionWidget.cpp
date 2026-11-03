@@ -163,6 +163,13 @@ public:
 			Text({85, 590}, Selling ? TEXT("查看出售明细") : TEXT("查看购买明细"), 19);
 			Text({650, 548}, TEXT("整枪含弹药和附件 · 护甲按剩余耐久折价 · 钥匙卡按开门次数"), 16);
 			Text({650, 583}, TEXT("仅操作仓库 · 钥匙卡购入后移入配装即可带入战局"), 16);
+			// 出发前选择安全箱：点击按 基础→进阶→高级→野战 顺序切换。
+			const auto* Safe = A->Profile.Loadout.InSlot(ExtractionGear::SafeSlot);
+			const auto* SafeDef = Safe ? UExtractionItemDefinition::Get(Safe->Definition) : nullptr;
+			Box({650, 612}, {555, 40}, Button);
+			Text({665, 621}, FString::Printf(TEXT("安全箱：%s（%d 格）  ·  点击切换"),
+			                                 SafeDef ? *SafeDef->Label.ToString() : TEXT("未装备"),
+			                                 SafeDef ? SafeDef->GearCells : 0), 16);
 		}
 		Text({65, 661}, A->Locked
 			                ? TEXT("已准备、切换模式或存储不可用 · 当前禁止修改")
@@ -263,6 +270,17 @@ public:
 				}
 			}
 			if (!A->Locked && Contains(P, {65, 577}, {550, 48})) Preview();
+			if (!A->Locked && Contains(P, {650, 612}, {555, 40}))
+			{
+				static const FName Safes[] = {TEXT("Safe_Basic"), TEXT("Safe_Advanced"), TEXT("Safe_Premium"), TEXT("Safe_Field")};
+				const auto* Current = A->Profile.Loadout.InSlot(ExtractionGear::SafeSlot);
+				int32 Index = INDEX_NONE;
+				for (int32 I = 0; I < UE_ARRAY_COUNT(Safes); ++I) if (Current && Current->Definition == Safes[I]) Index = I;
+				FExtractionEconomyRequest Request;
+				Request.Action = EExtractionEconomyAction::SelectSafe;
+				Request.Definition = Safes[(Index + 1) % UE_ARRAY_COUNT(Safes)];
+				A->RequestEconomy(Request);
+			}
 		}
 		return FReply::Handled().SetUserFocus(AsShared());
 	}

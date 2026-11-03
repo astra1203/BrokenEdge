@@ -7,7 +7,7 @@
 // 本文件的 Execute 修改调用者提供的候选对象，不自行回滚或写盘；Persistence 必须在副本上调用并统一提交。
 
 UENUM()
-enum class EExtractionEconomyAction : uint8 { Buy, Sell, AcceptQuest, DeliverQuest, ClaimQuest };
+enum class EExtractionEconomyAction : uint8 { Buy, Sell, AcceptQuest, DeliverQuest, ClaimQuest, SelectSafe };
 
 USTRUCT()
 struct FExtractionOffer

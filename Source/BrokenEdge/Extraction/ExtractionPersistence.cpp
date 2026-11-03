@@ -53,7 +53,7 @@ namespace
 	{
 		Loadout.GearGrids = true;
 		for (const auto& [Slot, Definition] : {TPair<int32, FName>(ExtractionGear::BagSlot, TEXT("Bag_Hike")),
-		                                       TPair<int32, FName>(ExtractionGear::SafeSlot, TEXT("Safe_Basic"))})
+		                                       TPair<int32, FName>(ExtractionGear::SafeSlot, TEXT("Safe_Field"))})
 		{
 			if (Loadout.InSlot(Slot)) continue;
 			auto Gear = ExtractionItems::Make(Definition);
@@ -61,6 +61,41 @@ namespace
 			Loadout.Items.Add(Gear);
 		}
 		++Loadout.Revision;
+	}
+
+	// 出发前切换安全箱：安全箱是可自由选择的账号装备，旧箱直接替换；箱内物品搬进新箱，放不下则整体拒绝。
+	bool SelectSafe(FExtractionContainer& Loadout, FName Safe, FString& Error)
+	{
+		const auto* D = UExtractionItemDefinition::Get(Safe);
+		if (!D || D->Kind != EExtractionItemKind::Gear || D->GearSlot != ExtractionGear::SafeSlot)
+		{
+			Error = TEXT("请选择有效的安全箱");
+			return false;
+		}
+		FExtractionContainer Next = Loadout;
+		Next.GearGrids = true;
+		TArray<FExtractionItem> Inside;
+		for (int32 Index = Next.Items.Num() - 1; Index >= 0; --Index)
+		{
+			const int32 Slot = Next.Items[Index].Slot;
+			if (Slot == ExtractionGear::SafeGrid) Inside.Add(Next.Items[Index]);
+			if (Slot == ExtractionGear::SafeGrid || Slot == ExtractionGear::SafeSlot) Next.Items.RemoveAt(Index);
+		}
+		auto Box = ExtractionItems::Make(Safe);
+		Box.Slot = ExtractionGear::SafeSlot;
+		Next.Items.Add(Box);
+		for (auto& Item : Inside)
+		{
+			Item.Rotated = false;
+			if (!ExtractionItems::AutoPlace(Next, Item, ExtractionGear::SafeGrid))
+			{
+				Error = TEXT("新安全箱放不下现有物品，请先把箱内物品移到仓库");
+				return false;
+			}
+		}
+		++Next.Revision;
+		Loadout = MoveTemp(Next);
+		return true;
 	}
 
 	// 胸挂/背包/安全箱本体直接装回出战配置（槽空时），下一局不用重新装；返回装不回去的其余物品。
@@ -450,7 +485,11 @@ bool UExtractionPersistence::Economy(FGuid Id, const FExtractionEconomyRequest& 
 	}
 	FExtractionStoreState Candidate = State;
 	auto* P = ProfileIn(Candidate, Id);
-	if (!ExtractionProgression::Execute(P->View.Progression, P->View.Stash, R, Error)) return false;
+	if (R.Action == EExtractionEconomyAction::SelectSafe)
+	{
+		if (!SelectSafe(P->View.Loadout, R.Definition, Error)) return false;
+	}
+	else if (!ExtractionProgression::Execute(P->View.Progression, P->View.Stash, R, Error)) return false;
 	P->EconomyReceipts.Add({R.Operation, R.Signature()});
 	++P->View.Revision;
 	return Commit(MoveTemp(Candidate));
