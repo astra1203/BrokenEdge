@@ -89,7 +89,8 @@ void UExtractionWidget::Refresh()
 			                                          : FLinearColor::White));
 	}
 	if (RaidInfo)
-		RaidInfo->SetText(FText::FromString(FString::Printf(TEXT("航天基地  ·  存活 %d"), GS->AlivePlayers)));
+		RaidInfo->SetText(FText::FromString(FString::Printf(TEXT("航天基地  ·  存活 %d  ·  击杀守卫 %d"),
+		                                                    GS->AlivePlayers, PS->RaidProgress.GuardKills)));
 	if (!GS->StorageError.IsEmpty()) Text = GS->StorageError;
 	if (PC->ExtractionAccount && PS->Life == EExtractionLife::Alive)
 	{
