@@ -7,6 +7,21 @@
 // 武器附件的本地视觉装配：读取已复制的配置，分别创建世界模型与本人第一人称模型。
 // 专服跳过外观创建；这些组件不参与伤害、库存或持久化，销毁表现不会消耗附件物品。
 
+// 装了瞄具时把机械瞄具（材质槽名以 FroS_ / ReaS_ 开头的前准星、后照门）隐藏，相当于折倒；
+// 否则它们会挡在红点镜片前面，开镜看不见红点。没有这类材质槽的武器不受影响。
+static void ShowIronSights(USkeletalMeshComponent* Mesh, bool bShow)
+{
+	if (!Mesh || !Mesh->GetSkeletalMeshAsset()) return;
+	const auto& Materials = Mesh->GetSkeletalMeshAsset()->GetMaterials();
+	const int32 LODs = Mesh->GetSkeletalMeshAsset()->GetLODNum();
+	for (int32 Index = 0; Index < Materials.Num(); ++Index)
+	{
+		const FString Slot = Materials[Index].MaterialSlotName.ToString();
+		if (!Slot.StartsWith(TEXT("FroS_")) && !Slot.StartsWith(TEXT("ReaS_"))) continue;
+		for (int32 LOD = 0; LOD < LODs; ++LOD) Mesh->ShowMaterialSection(Index, INDEX_NONE, bShow, LOD);
+	}
+}
+
 // 逐帧检查配置与第一人称父组件是否变化，仅发生变化时重建。
 UExtractionWeaponVisuals::UExtractionWeaponVisuals()
 {
@@ -40,6 +55,8 @@ void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActo
 	auto* C = Cast<ABrokenEdgeCharacter>(W->GetOwner());
 	auto* View = C && C->GetEquippedWeapon() == W && C->IsLocallyControlled() ? C->GetFirstPersonWeaponMesh() : nullptr;
 	uint32 Layout = HashCombine(W->ExtractionConfiguration, GetTypeHash(W->ExtractionDefinition));
+	// 第一人称枪模组件跨武器复用，换模型后要重新隐藏机械瞄具。
+	if (View) Layout = HashCombine(Layout, GetTypeHash(View->GetSkeletalMeshAsset()));
 	for (const auto& Node : W->ExtractionAssembly)
 	{
 		Layout = HashCombine(Layout, GetTypeHash(Node.Id)); Layout = HashCombine(Layout, GetTypeHash(Node.Parent));
@@ -101,6 +118,12 @@ void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActo
 				Create(D->AdapterFor(W->ExtractionDefinition), W->GetWeaponMesh(), D->AdapterMount, false);
 				Create(D->AdapterFor(W->ExtractionDefinition), View, D->AdapterMount, true);
 			}
+		bool HasOptic = false;
+		for (FName Name : Built)
+			if (const auto* D = UExtractionItemDefinition::Get(Name))
+				HasOptic |= D->AttachmentSlot == EExtractionAttachmentSlot::Optic;
+		ShowIronSights(W->GetWeaponMesh(), !HasOptic);
+		ShowIronSights(View, !HasOptic);
 	}
 	// 世界附件对第一人称拥有者隐藏，本人专用附件只在其第一人称视角显示，防止叠出两套模型。
 	const bool First = C && C->IsLocallyControlled() && C->IsFirstPersonView() && !C->IsDefeated();
