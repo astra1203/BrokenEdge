@@ -82,6 +82,23 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerThrowGrenade(bool bLow);
 	double NextGrenadeAt = 0;
+	// 鼠标中键：在准星指向处标点，服务器转发给同小队的所有玩家（含自己）。
+	void PlacePing();
+	UFUNCTION(Server, Unreliable)
+	void ServerPing(FVector_NetQuantize Location);
+	UFUNCTION(Client, Reliable)
+	void ClientPing(FVector_NetQuantize Location, const FString& Sender, bool bSelf);
+	double NextPingAt = 0;
+	struct FPing
+	{
+		double At = 0;
+		FVector Location = FVector::ZeroVector;
+		FString Sender;
+		bool bSelf = false;
+	};
+	/** 客户端当前显示的标点；每人只保留最新一个。 */
+	TArray<FPing> Pings;
+	static constexpr double PingSeconds = 8.0;
 	// 电闸由服务器再次校验距离、视线与行动能力。
 	UFUNCTION(Server, Reliable)
 	void ServerPullSwitch(class AExtractionExitSwitch* Switch);

@@ -21,6 +21,7 @@
 #include "Components/Border.h"
 #include "Components/Button.h"
 #include "Fonts/FontMeasure.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Framework/Application/SlateApplication.h"
 #include "Rendering/SlateRenderer.h"
 
@@ -359,6 +360,38 @@ int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Ge
 			                            FVector2D(Center.X - Size.X * .5f, Y))), Text, Font, ESlateDrawEffect::None,
 		                            Color.CopyWithNewOpacity(Fade));
 		Y += Size.Y + 4.f;
+	}
+
+	// 小队标点：投影到屏幕画菱形和“名字 · 距离”，屏幕外的贴边显示，最后 1 秒淡出。
+	const FVector2D Screen = Geometry.GetLocalSize();
+	for (const auto& Ping : PC->Pings)
+	{
+		const double Age = Now - Ping.At;
+		if (Age < 0 || Age >= AExtractionPlayerController::PingSeconds) continue;
+		FVector2D At;
+		const bool bInFront = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(
+			const_cast<AExtractionPlayerController*>(PC), Ping.Location, At, false);
+		if (!bInFront)
+		{
+			// 在身后：按水平方向贴到屏幕底边左右两侧。
+			const float Side = FRotator::NormalizeAxis((Ping.Location - ViewEye).Rotation().Yaw - ViewYaw) > 0 ? 1.f : -1.f;
+			At = FVector2D(Side > 0 ? Screen.X - 40.f : 40.f, Screen.Y - 120.f);
+		}
+		At.X = FMath::Clamp(At.X, 40.f, Screen.X - 40.f);
+		At.Y = FMath::Clamp(At.Y, 60.f, Screen.Y - 120.f);
+		const float Fade = FMath::Clamp(float(AExtractionPlayerController::PingSeconds - Age), 0.f, 1.f);
+		const FLinearColor Color = (Ping.bSelf ? ExtractionUIStyle::Accent() : ExtractionUIStyle::Hex(TEXT("4FC3E8")))
+			.CopyWithNewOpacity(Fade);
+		constexpr float R = 9.f;
+		Lines({At + FVector2D(0, -R), At + FVector2D(R, 0), At + FVector2D(0, R), At + FVector2D(-R, 0), At + FVector2D(0, -R)},
+		      Color, 2.5f);
+		Lines({At + FVector2D(0, R), At + FVector2D(0, R + 10.f)}, Color, 2.f);
+		const FString Label = FString::Printf(TEXT("%s · %.0fm"), *Ping.Sender, FVector::Dist(Ping.Location, ViewEye) / 100);
+		const FSlateFontInfo PingFont = ExtractionUIStyle::Font(13, true);
+		const FVector2D LabelSize = Measure->Measure(Label, PingFont);
+		FSlateDrawElement::MakeText(Out, LayerId, Geometry.ToPaintGeometry(LabelSize, FSlateLayoutTransform(
+			                            At + FVector2D(-LabelSize.X * .5f, -R - LabelSize.Y - 4.f))), Label, PingFont,
+		                            ESlateDrawEffect::None, Color);
 	}
 
 	// 阵亡回顾：本人阵亡后在屏幕上方居中显示一张卡片，写明击杀来源、武器、距离与本局受伤情况。

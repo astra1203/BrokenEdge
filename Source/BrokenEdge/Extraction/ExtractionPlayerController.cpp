@@ -53,6 +53,7 @@ void AExtractionPlayerController::SetupInputComponent()
 	InputComponent->BindKey(FInputChord(EKeys::X, false, false, true, false), IE_Pressed, this,
 	                        &ThisClass::SmokeAbilityLow);
 	InputComponent->BindKey(EKeys::G, IE_Pressed, this, &ThisClass::ThrowGrenade);
+	InputComponent->BindKey(EKeys::MiddleMouseButton, IE_Pressed, this, &ThisClass::PlacePing);
 	InputComponent->BindKey(FInputChord(EKeys::G, false, false, true, false), IE_Pressed, this,
 	                        &ThisClass::ThrowGrenadeLow);
 	InputComponent->BindKey(EKeys::E, IE_Released, this, &ThisClass::ReleaseInteract);
@@ -231,6 +232,39 @@ void AExtractionPlayerController::ServerUnlockDoor_Implementation(AExtractionKey
 void AExtractionPlayerController::ThrowGrenade()
 {
 	if (auto* I = Interaction(); I && I->CanAct() && !I->InventoryOpen && !bMenuOpen) ServerThrowGrenade(false);
+}
+
+void AExtractionPlayerController::PlacePing()
+{
+	auto* I = Interaction();
+	if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen || !GetPawn()) return;
+	FVector Eye;
+	FRotator View;
+	GetPlayerViewPoint(Eye, View);
+	FHitResult Hit;
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(ExtractionPing), false, GetPawn());
+	const FVector End = Eye + View.Vector() * 30000.f;
+	ServerPing(GetWorld()->LineTraceSingleByChannel(Hit, Eye, End, ECC_Visibility, Params) ? Hit.ImpactPoint : End);
+}
+
+void AExtractionPlayerController::ServerPing_Implementation(FVector_NetQuantize Location)
+{
+	const double Now = GetWorld()->GetTimeSeconds();
+	const auto* PS = GetPlayerState<AExtractionPlayerState>();
+	// 限频并只允许存活或倒地的玩家标点，避免刷屏。
+	if (Now < NextPingAt || !PS || (PS->Life != EExtractionLife::Alive && PS->Life != EExtractionLife::Downed)) return;
+	NextPingAt = Now + .5;
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+		if (auto* Mate = Cast<AExtractionPlayerController>(It->Get()))
+			if (const auto* MatePS = Mate->GetPlayerState<AExtractionPlayerState>(); MatePS && MatePS->ExtractionSquad == PS->
+				ExtractionSquad)
+				Mate->ClientPing(Location, PS->GetPlayerName(), Mate == this);
+}
+
+void AExtractionPlayerController::ClientPing_Implementation(FVector_NetQuantize Location, const FString& Sender, bool bSelf)
+{
+	Pings.RemoveAll([&](const FPing& P) { return P.Sender == Sender; });
+	Pings.Add({GetWorld()->GetTimeSeconds(), Location, Sender, bSelf});
 }
 
 void AExtractionPlayerController::ThrowGrenadeLow()
