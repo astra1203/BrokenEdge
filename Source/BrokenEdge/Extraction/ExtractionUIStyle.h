@@ -4,6 +4,10 @@
 #include "Rendering/DrawElements.h"
 #include "UObject/StrongObjectPtr.h"
 #include "Styling/CoreStyle.h"
+#include "Engine/Font.h"
+#include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetTree.h"
+#include "Components/TextBlock.h"
 // 背包与仓库共用的纯展示工具：统一设计坐标、品质色和物品图标绘制，不执行物品操作。
 
 /** Shared presentation for stash and raid grids; no inventory mutations. */
@@ -34,10 +38,36 @@ inline FLinearColor Rarity(int32 Level)
 	return Colors[FMath::Clamp(Level, 0, 5)];
 }
 
-// 引擎默认字体（Roboto，中文走内置回退字体）。
+// 界面字体用引擎自带的 /Engine/EngineFonts/Roboto：字母数字是 Roboto，中文由它配置的后备字体 DroidSansFallback 补齐。
+// 必须引用 UFont 资源：控件资源存不下 FCoreStyle 默认字体的运行时数据，加载后会退成只能画方框的保底字体。
+inline UFont* UIFont()
+{
+	static TStrongObjectPtr<UFont> Font(LoadObject<UFont>(nullptr, TEXT("/Engine/EngineFonts/Roboto.Roboto")));
+	return Font.Get();
+}
+
 inline FSlateFontInfo Font(float Size, bool bBold = false)
 {
+	if (UFont* Asset = UIFont()) return FSlateFontInfo(Asset, Size, bBold ? TEXT("Bold") : TEXT("Regular"));
 	return FCoreStyle::GetDefaultFontStyle(bBold ? "Bold" : "Regular", Size);
+}
+
+// 把控件里所有文本换成项目字体，保留字号、颜色与描边；原字重为粗体系时用 Bold。
+inline void ApplyFont(UUserWidget* Widget)
+{
+	UFont* Asset = UIFont();
+	if (!Asset || !Widget || !Widget->WidgetTree) return;
+	Widget->WidgetTree->ForEachWidget([Asset](UWidget* Child)
+	{
+		auto* Text = Cast<UTextBlock>(Child);
+		if (!Text) return;
+		FSlateFontInfo Info = Text->GetFont();
+		const FString Face = Info.TypefaceFontName.ToString();
+		const bool bBold = Face.Contains(TEXT("Bold")) || Face.Contains(TEXT("Black")) || Face.Contains(TEXT("Heavy"));
+		Info.FontObject = Asset;
+		Info.TypefaceFontName = bBold ? TEXT("Bold") : TEXT("Regular");
+		Text->SetFont(Info);
+	});
 }
 
 // 圆角面板笔刷：填充色 + 细描边，界面不依赖任何贴图。
