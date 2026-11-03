@@ -87,7 +87,7 @@ void UExtractionInventoryComponent::InitializeLoadout()
 	Changed();
 }
 
-// 测试用开局配枪：主武器 M4A1、副武器 SCAR-H，各补 60 发默认弹种。
+// 测试用开局配枪：主武器 M4A1、副武器 SCAR-H，各补 60 发默认弹种，并装上瞄具、握把、枪口配件。
 // 槽位上原有的其他枪挪进背包网格，装不下的枪和弹药返回为脚边补给容器，不会丢失。
 FExtractionContainer UExtractionInventoryComponent::GrantStartingSupply(FExtractionContainer& Inventory)
 {
@@ -110,6 +110,36 @@ FExtractionContainer UExtractionInventoryComponent::GrantStartingSupply(FExtract
 			Item.Slot = Slot;
 			Inventory.Items.Add(Item);
 		}
+		// 测试配件：没装任何配件的出生枪按瞄具、握把、枪口各装一件兼容配件（取兼容列表里第一件可直接装在枪身上的）。
+		if (const auto* Held = Inventory.InSlot(Slot))
+			if (auto* Mount = Inventory.Find(Held->Id); Mount && Mount->Attachments.IsEmpty())
+				for (const EExtractionAttachmentSlot Want : {EExtractionAttachmentSlot::Optic, EExtractionAttachmentSlot::Grip,
+				                                             EExtractionAttachmentSlot::Muzzle})
+				{
+					FName Socket = NAME_None;
+					bool bHasSocket = Def->MountSockets.IsEmpty();
+					for (const auto& [Name, Type] : Def->MountSockets)
+						if (Type == Want)
+						{
+							Socket = Name;
+							bHasSocket = true;
+							break;
+						}
+					if (!bHasSocket) continue;
+					for (const FName PartId : Def->CompatibleAttachments)
+					{
+						const auto* PartDef = UExtractionItemDefinition::Get(PartId);
+						if (!PartDef || PartDef->AttachmentSlot != Want || PartDef->RequiresParent) continue;
+						const FExtractionItem Part = ExtractionItems::Make(PartId);
+						FExtractionAttachment Mounted;
+						Mounted.Id = Part.Id;
+						Mounted.Definition = PartId;
+						Mounted.Origins = Part.Origins;
+						Mounted.Socket = Socket;
+						Mount->Attachments.Add(Mounted);
+						break;
+					}
+				}
 		// Fill partial stacks even when no free grid cell can hold the whole grant.
 		int32 Added = 0;
 		for (; Added < 60; ++Added)
