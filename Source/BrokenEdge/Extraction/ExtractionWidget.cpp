@@ -11,6 +11,7 @@
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionAccountComponent.h"
 #include "ExtractionExit.h"
+#include "ExtractionExitSwitch.h"
 #include "EngineUtils.h"
 #include "ExtractionState.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
@@ -488,17 +489,18 @@ int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Ge
 			if (Ring.Num() > 2) Lines(Ring, ExtractionUIStyle::Hex(TEXT("EA5A50"), .85f), 2.f);
 		}
 
-	// 撤离点标记：存活且对局进行中时，把每个撤离点投影到屏幕，可撤离为绿色、暂不可用为灰色；屏幕外贴边。
+	// 拉闸点标记：撤离点本身不标注；本局启用的电闸投影到屏幕，待拉为琥珀色、已拉为淡绿色；屏幕外贴边。
 	const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
 	const auto* Me = PC->GetPlayerState<AExtractionPlayerState>();
 	if (GS && Me && Me->Life == EExtractionLife::Alive && GS->Phase == EExtractionPhase::Active && !PC->bExtractionSpectating)
 	{
 		const FVector2D ScreenSize = Geometry.GetLocalSize();
 		const FSlateFontInfo ExitFont = ExtractionUIStyle::Font(12, true);
-		for (TActorIterator<AExtractionExit> It(GetWorld()); It; ++It)
+		for (TActorIterator<AExtractionExitSwitch> It(GetWorld()); It; ++It)
 		{
-			const bool bOpen = It->UnavailableReason(GS->GetServerWorldTimeSeconds()).IsEmpty();
-			const FVector Location = It->GetActorLocation() + FVector(0, 0, 200);
+			if (!It->bActive) continue;
+			const bool bPulled = It->bPulled;
+			const FVector Location = It->GetActorLocation() + FVector(0, 0, 160);
 			FVector2D At;
 			if (!UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(
 				const_cast<AExtractionPlayerController*>(PC), Location, At, false))
@@ -508,14 +510,15 @@ int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Ge
 			}
 			At.X = FMath::Clamp(At.X, 40.f, ScreenSize.X - 40.f);
 			At.Y = FMath::Clamp(At.Y, 80.f, ScreenSize.Y - 140.f);
-			const FLinearColor Color = bOpen ? ExtractionUIStyle::Hex(TEXT("5DBB72"), .9f) : FLinearColor(.7f, .72f, .75f, .55f);
-			// 向下的小三角，下方写“名称 · 距离”。
-			Lines({At + FVector2D(-7, -6), At + FVector2D(7, -6), At + FVector2D(0, 5), At + FVector2D(-7, -6)}, Color, 2.f);
-			const FString Label = FString::Printf(TEXT("%s · %.0fm"), *It->Definition.Label.ToString(),
+			const FLinearColor Color = bPulled ? ExtractionUIStyle::Hex(TEXT("5DBB72"), .55f) : ExtractionUIStyle::Hex(TEXT("F2A93B"), .95f);
+			// 闪电形小标记，下方写“拉闸点 · 距离”；吊桥的锁标“吊桥电闸”。
+			Lines({At + FVector2D(2, -9), At + FVector2D(-5, 1), At + FVector2D(2, 1), At + FVector2D(-2, 9)}, Color, 2.f);
+			const TCHAR* Name = It->Bridge ? TEXT("吊桥电闸") : TEXT("拉闸点");
+			const FString Label = FString::Printf(TEXT("%s%s · %.0fm"), Name, bPulled ? TEXT("（已拉）") : TEXT(""),
 			                                      FVector::Dist(It->GetActorLocation(), ViewEye) / 100);
 			const FVector2D LabelSize = Measure->Measure(Label, ExitFont);
 			FSlateDrawElement::MakeText(Out, LayerId, Geometry.ToPaintGeometry(LabelSize, FSlateLayoutTransform(
-				                            At + FVector2D(-LabelSize.X * .5f, 9.f))), Label, ExitFont,
+				                            At + FVector2D(-LabelSize.X * .5f, 11.f))), Label, ExitFont,
 			                            ESlateDrawEffect::None, Color);
 		}
 	}
