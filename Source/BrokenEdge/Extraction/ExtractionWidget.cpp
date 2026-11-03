@@ -257,6 +257,7 @@ void UExtractionWidget::Refresh()
 		if (Trauma->Bleeding || Trauma->LegFracture) VitalText += TEXT("\n");
 		// 分栏 HUD：名称、弹匣大字、备弹与弹种各占一格；旧布局仍拼成一段。
 		FString Name, Rounds, Detail;
+		bool bLowAmmo = false;
 		if (ControlledCharacter->Melee->Active)
 		{
 			Name = TEXT("战术刀");
@@ -268,8 +269,12 @@ void UExtractionWidget::Refresh()
 			const auto* Ammo = UExtractionItemDefinition::Get(Weapon->ExtractionAmmoType);
 			Name = Definition ? Definition->Label.ToString() : TEXT("步枪");
 			Rounds = FString::FromInt(Weapon->GetAmmo());
-			Detail = FString::Printf(TEXT("/ %d\n%s"), ControlledCharacter->GetCombat()->GetCarriedAmmo(),
-			                         Ammo ? *Ammo->Label.ToString() : TEXT("弹药"));
+			const int32 Carried = ControlledCharacter->GetCombat()->GetCarriedAmmo();
+			Detail = FString::Printf(TEXT("/ %d\n%s"), Carried, Ammo ? *Ammo->Label.ToString() : TEXT("弹药"));
+			// 弹匣剩三成以下转红并提示换弹；弹匣和备弹都空时提示弹药耗尽。
+			bLowAmmo = Weapon->GetAmmo() <= FMath::Max(1, FMath::FloorToInt(Weapon->GetMagCapacity() * .3f));
+			if (Weapon->GetAmmo() == 0 && Carried == 0) Detail = TEXT("弹药耗尽\n") + Detail;
+			else if (bLowAmmo && Carried > 0) Detail = TEXT("R 换弹\n") + Detail;
 		}
 		else
 		{
@@ -280,6 +285,7 @@ void UExtractionWidget::Refresh()
 		{
 			WeaponName->SetText(FText::FromString(Name));
 			AmmoText->SetText(FText::FromString(Rounds));
+			AmmoText->SetColorAndOpacity(FSlateColor(bLowAmmo ? ExtractionUIStyle::Hex(TEXT("EA5A50")) : FLinearColor::White));
 			AmmoText->SetVisibility(Rounds.IsEmpty() ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
 			WeaponText = Detail;
 		}
