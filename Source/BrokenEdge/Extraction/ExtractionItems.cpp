@@ -54,6 +54,8 @@ const TArray<FName>& UExtractionItemDefinition::Ids()
 		TEXT("SCARH"), TEXT("Ammo76251"),
 		// 通用武器流水线（Scripts/Extraction/weapon_specs.py）生成的枪械与弹种
 		TEXT("M4A1"), TEXT("Ammo55645"),
+		// 项目自定武器（Military Weapons Silver 模型），由 configure_extra_weapons.py 生成
+		TEXT("BoltSniper"), TEXT("Ammo_338"), TEXT("PumpShotgun"), TEXT("Ammo_12G"), TEXT("Pistol9"), TEXT("Ammo_9mm"),
 		// 航天基地钥匙卡：房号见 AExtractionKeyRoom::RequiredKey
 		TEXT("Key_President"), TEXT("Key_Core"), TEXT("Key_Monitor"), TEXT("Key_Contract"),
 		TEXT("Key_EastBridge"), TEXT("Key_StaffPassage"),

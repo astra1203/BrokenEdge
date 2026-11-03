@@ -27,7 +27,11 @@ UExtractionProgressionRules::UExtractionProgressionRules()
 		{TEXT("Bag_Climb"), 300, 1}, {TEXT("Bag_Hike"), 500, 1}, {TEXT("Bag_ALS"), 900, 2},
 		{TEXT("Bag_GTO"), 1600, 3},
 		{TEXT("Safe_Advanced"), 3000, 2}, {TEXT("Safe_Premium"), 6000, 3},
-		{TEXT("FragGrenade"), 250, 1}
+		{TEXT("FragGrenade"), 250, 1},
+		// 项目自定武器与弹药
+		{TEXT("Pistol9"), 600, 1}, {TEXT("Ammo_9mm"), 2, 1},
+		{TEXT("PumpShotgun"), 1800, 2}, {TEXT("Ammo_12G"), 6, 2},
+		{TEXT("BoltSniper"), 3600, 3}, {TEXT("Ammo_338"), 15, 3}
 	};
 	Quests = {
 		{TEXT("初次撤离"), TEXT("接取后成功撤离一次"), 1, 500, 100},
