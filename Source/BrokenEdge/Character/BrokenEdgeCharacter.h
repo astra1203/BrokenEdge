@@ -624,6 +624,9 @@ public:
 	TObjectPtr<class UExtractionInventoryComponent> GuardInventory;
 	UPROPERTY(Replicated)
 	bool bExtractionGuard = false;
+	/** 守卫警觉度：0 巡逻、1 搜索中、2 交战中；服务器写入，各端头顶标签据此显示。 */
+	UPROPERTY(Replicated)
+	uint8 ExtractionAlert = 0;
 	/**
 	 * 守卫身体模型相对胶囊的偏航修正。本项目 Stinger 模型使用 -90 度，使模型正面对应 Actor +X。
 	 * 替换为其他朝向的模型时，在敌人蓝图类默认值中调整；不影响玩家角色的模型配置。

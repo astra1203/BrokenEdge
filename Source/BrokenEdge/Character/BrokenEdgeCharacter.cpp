@@ -1027,12 +1027,19 @@ void ABrokenEdgeCharacter::UpdateExtractionLabel()
 	ExtractionLabel->SetVisibility(Visible);
 	if (!Visible) return;
 	const auto* PS = GetPlayerState<AExtractionPlayerState>();
+	// 守卫头顶：交战时红色“!”，搜索时琥珀色“?”，平时显示 GUARD。
 	ExtractionLabel->SetText(FText::FromString(bExtractionGuard
-		                                           ? TEXT("GUARD")
+		                                           ? (ExtractionAlert == 2 ? TEXT("!") : ExtractionAlert == 1 ? TEXT("?") : TEXT("GUARD"))
 		                                           : PS && PS->Life == EExtractionLife::Downed
 		                                           ? TEXT("REVIVE [E]")
 		                                           : TEXT("SQUADMATE")));
-	ExtractionLabel->SetTextRenderColor(bExtractionGuard ? FColor(230, 150, 80) : FColor(80, 220, 180));
+	ExtractionLabel->SetTextRenderColor(!bExtractionGuard
+		                                    ? FColor(80, 220, 180)
+		                                    : ExtractionAlert == 2
+		                                    ? FColor(234, 90, 80)
+		                                    : ExtractionAlert == 1
+		                                    ? FColor(242, 169, 59)
+		                                    : FColor(230, 150, 80));
 	ExtractionLabel->SetWorldRotation((Eye - ExtractionLabel->GetComponentLocation()).Rotation());
 }
 
@@ -1074,6 +1081,15 @@ void ABrokenEdgeCharacter::UpdateSprint()
 	{
 		const auto* GuardAI = Cast<AExtractionGuard>(Controller);
 		const bool bPursuing = GuardAI && GuardAI->State == EExtractionGuardState::Search;
+		if (HasAuthority())
+		{
+			const uint8 Alert = GuardAI && GuardAI->Target ? 2 : bPursuing ? 1 : 0;
+			if (Alert != ExtractionAlert)
+			{
+				ExtractionAlert = Alert;
+				ForceNetUpdate();
+			}
+		}
 		const auto* GuardRules = GetDefault<UExtractionRules>();
 		const float GuardSpeed = FMath::Max(0.f, GuardRules->GuardWalkSpeed);
 		GetCharacterMovement()->MaxWalkSpeed = (bPursuing
@@ -1137,6 +1153,7 @@ void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProp
 	DOREPLIFETIME(ABrokenEdgeCharacter, bSprinting);
 	DOREPLIFETIME_CONDITION(ABrokenEdgeCharacter, Stamina, COND_OwnerOnly);
 	DOREPLIFETIME(ABrokenEdgeCharacter, bExtractionGuard);
+	DOREPLIFETIME(ABrokenEdgeCharacter, ExtractionAlert);
 	DOREPLIFETIME(ABrokenEdgeCharacter, ExtractionGuardId);
 
 	DOREPLIFETIME_CONDITION(ABrokenEdgeCharacter, OverlappingWeapon, COND_OwnerOnly);
