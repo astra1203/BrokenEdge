@@ -221,7 +221,7 @@ public:
 	float GuardLoseSightRadius = 7500.f;
 	/** 守卫开局随机配枪（物品 ID，弹种取定义的 DefaultAmmo）；为空或无效时回退 AK。 */
 	UPROPERTY(Config)
-	TArray<FName> GuardWeapons = {TEXT("AK"), TEXT("M4A1"), TEXT("SCARH")};
+	TArray<FName> GuardWeapons = {TEXT("AK"), TEXT("M4A1"), TEXT("SCARH"), TEXT("PumpShotgun"), TEXT("BoltSniper")};
 	/** 交战时横移换位的平均间隔（秒）；0 表示保持原来的站定射击。 */
 	UPROPERTY(Config, meta=(ClampMin="0", Units="s"))
 	float GuardStrafeInterval = 3.f;
