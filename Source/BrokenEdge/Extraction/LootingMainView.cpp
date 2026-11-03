@@ -170,7 +170,13 @@ void ULootingWidgetPart::SetItem(const FExtractionItem& Item)
 	{
 		auto Lines = ExtractionItems::WeaponDetails(Item);
 		if (D && D->SellValue > 0)
-			Lines.Insert(TEXT("价值 ¥") + FText::AsNumber(D->SellValue * FMath::Max(1, Item.Quantity)).ToString(), 0);
+		{
+			// 总价值之外再给每格价值，背包满时方便比较该留哪件。
+			const int64 Total = int64(D->SellValue) * FMath::Max(1, Item.Quantity);
+			const int32 Cells = FMath::Max(1, Item.Size.X * Item.Size.Y);
+			Lines.Insert(FString::Printf(TEXT("价值 ¥%s  ·  每格 ¥%s"), *FText::AsNumber(Total).ToString(),
+			                             *FText::AsNumber(Total / Cells).ToString()), 0);
+		}
 		if (D) Lines.Insert(D->Label.ToString(), 0);
 		SetToolTipText(FText::FromString(FString::Join(Lines,TEXT("\n"))));
 	}
