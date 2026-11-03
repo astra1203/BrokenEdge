@@ -313,6 +313,12 @@ public:
 	/** 是否支持按住开火键连续射击。 */
 	UPROPERTY(EditAnywhere, Category = Combat)
 	bool bAutomatic = true;
+	/** 搜打撤弹道：一次开火射出的弹丸数（霰弹 > 1），每颗按 Damage 计伤。 */
+	UPROPERTY(EditAnywhere, Category = Combat, meta=(ClampMin="1", ClampMax="16"))
+	int32 Pellets = 1;
+	/** 多弹丸时每颗相对瞄准方向的随机散布半角（度）。 */
+	UPROPERTY(EditAnywhere, Category = Combat, meta=(ClampMin="0"))
+	float PelletSpreadDegrees = 3.5f;
 
 
 	[[nodiscard]] float GetDamage() const

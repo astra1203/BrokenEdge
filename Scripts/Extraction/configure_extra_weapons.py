@@ -20,7 +20,7 @@ ITEMS = '/Game/Extraction/Items'
 WEAPONS = [
     ('BoltSniper', '栓动狙击步枪', '/Game/MilitaryWeapSilver/Weapons/Sniper_Rifle_A', 5, 1.3, 3.0, False, False,
      (6, 2), 4, 9000, 'Ammo_338', '.338 狙击弹', '单发高伤害的栓动步枪，适合远距离。'),
-    ('PumpShotgun', '泵动霰弹枪', '/Game/MilitaryWeapSilver/Weapons/Shotgun_A', 6, .9, 2.2, False, True,
+    ('PumpShotgun', '泵动霰弹枪', '/Game/MilitaryWeapSilver/Weapons/Shotgun_A', 6, .9, .55, False, False,
      (5, 2), 3, 5000, 'Ammo_12G', '12 号霰弹', '近距离威力大，散布明显。'),
     ('Pistol9', '半自动手枪', '/Game/MilitaryWeapSilver/Weapons/Pistols_A', 15, .18, .7, False, False,
      (2, 2), 1, 1500, 'Ammo_9mm', '9mm 手枪弹', '轻便的副武器。'),
@@ -53,6 +53,8 @@ for (ident, label, mesh_path, magazine, interval, scale, automatic, scatter, siz
                              ('automatic', automatic), ('use_scatter', scatter),
                              ('damage', round(ak.get_editor_property('damage') * scale, 1)),
                              ('head_shot_damage', round(ak.get_editor_property('head_shot_damage') * scale, 1)),
+                             ('pellets', 8 if ident == 'PumpShotgun' else 1),
+                             ('pellet_spread_degrees', 3.5),
                              ('fire_animation', None)]:
         cdo.set_editor_property(prop, prop_value)
     assert lib.save_loaded_asset(bp, only_if_is_dirty=False)

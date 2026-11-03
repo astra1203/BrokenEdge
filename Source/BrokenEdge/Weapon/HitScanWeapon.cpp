@@ -70,11 +70,16 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 		FActorSpawnParameters Params;
 		Params.Owner = this; Params.Instigator = OwnerPawn;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		// 霰弹：同一出膛点射出 Pellets 颗弹丸，各自在瞄准方向的圆锥内随机偏转；单弹丸武器只射一颗、方向不变。
+		for (int32 Pellet = 0; Pellet < FMath::Max(1, Pellets); ++Pellet)
 		if (auto* Bullet = GetWorld()->SpawnActor<AExtractionBullet>(AExtractionBullet::StaticClass(), Start, FRotator::ZeroRotator, Params))
 			{
 			const auto* C = Cast<ABrokenEdgeCharacter>(OwnerPawn);
 			const auto& Effective = C ? C->GetExtractionCombat()->GetWeaponStats() : *Mechanics;
-			Bullet->Initialize(Effective.IsValid() ? Effective : *Mechanics, HitTarget - Start, Damage, HeadShotDamage, ExtractionAmmoType, ImpactParticles, HitSound, BeamParticles);
+			FVector Direction = HitTarget - Start;
+			if (Pellets > 1)
+				Direction = FMath::VRandCone(Direction.GetSafeNormal(), FMath::DegreesToRadians(PelletSpreadDegrees)) * Direction.Size();
+			Bullet->Initialize(Effective.IsValid() ? Effective : *Mechanics, Direction, Damage, HeadShotDamage, ExtractionAmmoType, ImpactParticles, HitSound, BeamParticles);
 			if (auto* ViewMesh = GetLocalFirstPersonMuzzleMesh(this))
 				if (auto* PC = Cast<APlayerController>(OwnerPawn->GetController()); PC && PC->PlayerCameraManager)
 					Bullet->SetVisualOrigin(UGameplayStatics::TransformWorldToFirstPerson(PC->PlayerCameraManager->GetCameraCacheView(),
