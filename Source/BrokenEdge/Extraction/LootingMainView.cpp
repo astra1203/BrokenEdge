@@ -488,7 +488,14 @@ void ULootingMainView::Refresh()
 		const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
 		const double Now = GS ? GS->GetServerWorldTimeSeconds() : 0;
 		const bool bSearching = I->Loot && I->SearchEnd > Now;
-		Text(LootTitle, I->Loot ? I->Loot->Label + (bSearching ? TEXT("  ·  搜索中") : TEXT("")) : TEXT("搜索容器以查看物资"));
+		// 未揭示的物品在客户端快照里没有定义，据此统计还剩几件没搜。
+		int32 Hidden = 0;
+		if (Loot) for (const auto& Item : Loot->Items) Hidden += Item.Definition.IsNone() ? 1 : 0;
+		FString LootLabel = I->Loot ? I->Loot->Label : TEXT("搜索容器以查看物资");
+		if (I->Loot && bSearching) LootLabel += TEXT("  ·  搜索中");
+		if (I->Loot && Hidden > 0) LootLabel += FString::Printf(TEXT("  ·  还有 %d 件未搜"), Hidden);
+		else if (I->Loot && Loot && !Loot->Items.IsEmpty()) LootLabel += TEXT("  ·  已搜完");
+		Text(LootTitle, LootLabel);
 		if (SearchProgress)
 		{
 			// 每件物品单独计时：看到新的结束时间就从当前时刻重新开始走条。
