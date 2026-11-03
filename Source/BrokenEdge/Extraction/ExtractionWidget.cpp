@@ -58,13 +58,30 @@ void UExtractionWidget::Refresh()
 		Text = FString::Printf(
 			TEXT("%s\n%d 秒后返回准备大厅"), *GS->EndReason, Seconds);
 	else
-		Text = FString::Printf(
-			TEXT("航天基地 · 小队行动\n剩余 %02d:%02d · 存活 %d\n%s"), Seconds / 60, Seconds % 60, GS->AlivePlayers,
-			PS->Life == EExtractionLife::Alive
-				? TEXT("Esc 打开对局菜单")
-				: PS->Life == EExtractionLife::Downed
-				? TEXT("倒地待救援 · Esc 打开菜单")
-				: TEXT("本次行动已结束"));
+	{
+		const TCHAR* Hint = PS->Life == EExtractionLife::Alive
+			                    ? TEXT("Esc 打开对局菜单")
+			                    : PS->Life == EExtractionLife::Downed
+			                    ? TEXT("倒地待救援 · Esc 打开菜单")
+			                    : TEXT("本次行动已结束");
+		// 分栏 HUD 把时间和存活人数放进独立大字段，整段文本只留提示。
+		Text = RaidTimer
+			       ? FString(Hint)
+			       : FString::Printf(TEXT("航天基地 · 小队行动\n剩余 %02d:%02d · 存活 %d\n%s"), Seconds / 60, Seconds % 60,
+			                         GS->AlivePlayers, Hint);
+	}
+	if (RaidTimer)
+	{
+		const bool bActive = GS->Phase == EExtractionPhase::Active;
+		RaidTimer->SetText(FText::FromString(bActive ? FString::Printf(TEXT("%02d:%02d"), Seconds / 60, Seconds % 60)
+			                                     : TEXT("--:--")));
+		// 最后五分钟转红，提醒尽快撤离。
+		RaidTimer->SetColorAndOpacity(FSlateColor(bActive && Seconds <= 300
+			                                          ? ExtractionUIStyle::Hex(TEXT("EA5A50"))
+			                                          : FLinearColor::White));
+	}
+	if (RaidInfo)
+		RaidInfo->SetText(FText::FromString(FString::Printf(TEXT("航天基地  ·  存活 %d"), GS->AlivePlayers)));
 	if (!GS->StorageError.IsEmpty()) Text = GS->StorageError;
 	if (PC->ExtractionAccount && PS->Life == EExtractionLife::Alive)
 	{
@@ -119,6 +136,8 @@ void UExtractionWidget::Refresh()
 	ExtractionProgress->SetVisibility(bShowExitProgress
 		                                  ? ESlateVisibility::HitTestInvisible
 		                                  : ESlateVisibility::Collapsed);
+	if (ExtractionCard)
+		ExtractionCard->SetVisibility(CountdownText.IsEmpty() ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
 	if (PC->ExtractionAccount && PC->ExtractionAccount->Profile.Result.Outcome != EExtractionOutcome::None)
 	{
 		const auto& Result = PC->ExtractionAccount->Profile.Result;
@@ -190,11 +209,19 @@ void UExtractionWidget::Refresh()
 	HealthProgress->SetVisibility(PC->GetPawn() ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
 	if (auto* ControlledCharacter = Cast<ABrokenEdgeCharacter>(PC->GetPawn()))
 	{
-		HealthProgress->SetPercent(
-			ControlledCharacter->GetHealth() / FMath::Max(1.f, ControlledCharacter->GetMaxHealth()));
-		VitalText = FString::Printf(TEXT("生命 %d / %d\n"),
-		                            FMath::CeilToInt(ControlledCharacter->GetHealth()),
-		                            FMath::CeilToInt(ControlledCharacter->GetMaxHealth()));
+		const float HealthFraction = ControlledCharacter->GetHealth() / FMath::Max(1.f, ControlledCharacter->GetMaxHealth());
+		HealthProgress->SetPercent(HealthFraction);
+		// 生命条按剩余比例由绿转黄再转红。
+		HealthProgress->SetFillColorAndOpacity(HealthFraction > .6f
+			                                       ? ExtractionUIStyle::Hex(TEXT("5DBB72"))
+			                                       : HealthFraction > .3f
+			                                       ? ExtractionUIStyle::Accent()
+			                                       : ExtractionUIStyle::Hex(TEXT("EA5A50")));
+		if (HealthText) HealthText->SetText(FText::AsNumber(FMath::CeilToInt(ControlledCharacter->GetHealth())));
+		else
+			VitalText = FString::Printf(TEXT("生命 %d / %d\n"),
+			                            FMath::CeilToInt(ControlledCharacter->GetHealth()),
+			                            FMath::CeilToInt(ControlledCharacter->GetMaxHealth()));
 		if (const auto* Inv = ControlledCharacter->GetExtractionInteraction()->Inventory())
 		{
 			for (int32 ArmorSlot = 2; ArmorSlot <= 3; ++ArmorSlot)
@@ -210,17 +237,35 @@ void UExtractionWidget::Refresh()
 		if (Trauma->Bleeding) VitalText += TEXT("流血 · 需绷带  ");
 		if (Trauma->LegFracture) VitalText += TEXT("腿部骨折 · 需夹板");
 		if (Trauma->Bleeding || Trauma->LegFracture) VitalText += TEXT("\n");
-		if (ControlledCharacter->Melee->Active) WeaponText = TEXT("战术刀\n左键轻击 / 右键重击");
+		// 分栏 HUD：名称、弹匣大字、备弹与弹种各占一格；旧布局仍拼成一段。
+		FString Name, Rounds, Detail;
+		if (ControlledCharacter->Melee->Active)
+		{
+			Name = TEXT("战术刀");
+			Detail = TEXT("左键轻击 / 右键重击");
+		}
 		else if (auto* Weapon = ControlledCharacter->GetEquippedWeapon())
 		{
 			const auto* Definition = UExtractionItemDefinition::Get(Weapon->ExtractionDefinition);
 			const auto* Ammo = UExtractionItemDefinition::Get(Weapon->ExtractionAmmoType);
-			WeaponText = FString::Printf(TEXT("%s\n%d / %d\n%s"),
-			                             Definition ? *Definition->Label.ToString() : TEXT("步枪"),
-			                             Weapon->GetAmmo(), ControlledCharacter->GetCombat()->GetCarriedAmmo(),
-			                             Ammo ? *Ammo->Label.ToString() : TEXT("弹药"));
+			Name = Definition ? Definition->Label.ToString() : TEXT("步枪");
+			Rounds = FString::FromInt(Weapon->GetAmmo());
+			Detail = FString::Printf(TEXT("/ %d\n%s"), ControlledCharacter->GetCombat()->GetCarriedAmmo(),
+			                         Ammo ? *Ammo->Label.ToString() : TEXT("弹药"));
 		}
-		else WeaponText = TEXT("未持枪\n靠近武器按 E 拾取");
+		else
+		{
+			Name = TEXT("未持枪");
+			Detail = TEXT("靠近武器按 E 拾取");
+		}
+		if (WeaponName && AmmoText)
+		{
+			WeaponName->SetText(FText::FromString(Name));
+			AmmoText->SetText(FText::FromString(Rounds));
+			AmmoText->SetVisibility(Rounds.IsEmpty() ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
+			WeaponText = Detail;
+		}
+		else WeaponText = Name + TEXT("\n") + (Rounds.IsEmpty() ? Detail : Rounds + TEXT(" ") + Detail);
 	}
 	Vitals->SetText(FText::FromString(VitalText));
 	WeaponStatus->SetText(FText::FromString(WeaponText));

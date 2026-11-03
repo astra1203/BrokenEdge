@@ -1,4 +1,4 @@
-"""Create missing Extraction templates without overwriting designer changes.
+"""Build (rebuilding the HUD layout in place) and validate the Extraction HUD and loot actor blueprints.
 
 Run with UnrealEditor-Cmd -run=pythonscript -script=<this file> after an Editor build.
 """

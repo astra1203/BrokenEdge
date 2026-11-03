@@ -35,6 +35,25 @@ private:
 	TObjectPtr<class UProgressBar> ExtractionProgress;
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<class UProgressBar> HealthProgress;
+	// 以下为分栏 HUD 的可选字段；缺失时对应信息仍写回上面的整段文本。
+	/** 对局剩余时间（大字）。 */
+	UPROPERTY(meta=(BindWidgetOptional))
+	TObjectPtr<class UTextBlock> RaidTimer;
+	/** 地图与存活人数。 */
+	UPROPERTY(meta=(BindWidgetOptional))
+	TObjectPtr<class UTextBlock> RaidInfo;
+	/** 当前生命值（大字）。 */
+	UPROPERTY(meta=(BindWidgetOptional))
+	TObjectPtr<class UTextBlock> HealthText;
+	/** 当前武器名称。 */
+	UPROPERTY(meta=(BindWidgetOptional))
+	TObjectPtr<class UTextBlock> WeaponName;
+	/** 弹匣内子弹数（大字）。 */
+	UPROPERTY(meta=(BindWidgetOptional))
+	TObjectPtr<class UTextBlock> AmmoText;
+	/** 撤离倒计时卡片；没有撤离进度时整张收起。 */
+	UPROPERTY(meta=(BindWidgetOptional))
+	TObjectPtr<class UWidget> ExtractionCard;
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<class UButton> Previous;
 	UPROPERTY(meta=(BindWidget))
