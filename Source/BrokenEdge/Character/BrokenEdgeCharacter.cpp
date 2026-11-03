@@ -1094,6 +1094,12 @@ void ABrokenEdgeCharacter::UpdateSprint()
 	bSprinting = ExtractionCombat->IsEnabled()
 		             ? UpdateStamina(bCanSprint, GetWorld()->GetDeltaSeconds())
 		             : bCanSprint;
+	// 冲刺脚步声会引来近处守卫，每 0.5 秒广播一次。
+	if (bSprinting && HasAuthority() && ExtractionCombat->IsEnabled() && GetWorld()->GetTimeSeconds() >= NextFootstepNoiseAt)
+	{
+		NextFootstepNoiseAt = GetWorld()->GetTimeSeconds() + .5;
+		AExtractionGuard::HearShot(GetWorld(), GetActorLocation(), GetDefault<UExtractionRules>()->GuardFootstepRadius);
+	}
 	if (bWasSprinting && !bSprinting && ExtractionCombat->IsEnabled()) ExtractionCombat->OnSprintEnded();
 	GetCharacterMovement()->MaxWalkSpeed = bSprinting
 		                                       ? SprintSpeed

@@ -55,6 +55,9 @@ public:
 	float GuardHearingRadius = 5000;
 	UPROPERTY(Config)
 	float GuardHearingSuppressedRadius = 1500;
+	/** 冲刺脚步声的听觉半径；走路和蹲行不发声。 */
+	UPROPERTY(Config)
+	float GuardFootstepRadius = 800;
 	UPROPERTY(Config)
 	float StaminaDrainPerSecond = 10;
 	UPROPERTY(Config)

@@ -348,6 +348,8 @@ private:
 	UPROPERTY(Replicated)
 	float Stamina = 100;
 	double StaminaRegenAt = 0;
+	/** 服务器：下次向守卫广播冲刺脚步声的时刻。 */
+	double NextFootstepNoiseAt = 0;
 	// 按本帧是否冲刺推进体力；返回当前是否还允许冲刺。
 	bool UpdateStamina(bool bWantsSprint, float DeltaSeconds);
 
