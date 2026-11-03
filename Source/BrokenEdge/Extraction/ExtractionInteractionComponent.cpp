@@ -364,6 +364,15 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 		if ((R.FromLoot && !IsRevealed(R.Item)) || (R.ToLoot && R.MergeInto.IsValid() && !IsRevealed(R.MergeInto)))
 			return TEXT("物品尚未搜索");
 	}
+	// 整理不针对单件物品：只重排自己携行网格里的物品，装备槽不动，医疗中不整理以免挪走正在用的物品。
+	if (R.Op == EExtractionItemOp::Sort)
+	{
+		if (R.FromLoot || R.ToLoot) return TEXT("只能整理自己的背包");
+		if (MedicalEnd > 0 || MedicalItem.IsValid()) return TEXT("当前动作尚未完成");
+		if (!ExtractionItems::Sort(Inv->Contents)) return TEXT("空间不足，无法整理");
+		Inv->Changed();
+		return {};
+	}
 	FExtractionContainer& OriginalSource = R.FromLoot ? Loot->Contents : Inv->Contents;
 	const auto* Item = OriginalSource.Find(R.Item);
 	if (!Item || R.Quantity < 1 || R.Quantity > Item->Quantity) return TEXT("物品已变化或数量无效");

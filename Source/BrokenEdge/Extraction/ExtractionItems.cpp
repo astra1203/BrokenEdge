@@ -276,6 +276,68 @@ bool ExtractionItems::AutoPlace(FExtractionContainer& Container, FExtractionItem
 	return false;
 }
 
+bool ExtractionItems::Sort(FExtractionContainer& Container)
+{
+	// 种类顺序：武器、弹药、医疗、投掷物、配件、钥匙、护甲、携行装备、其余收集品。
+	auto KindOrder = [](const UExtractionItemDefinition* D)
+	{
+		if (!D) return 99;
+		switch (D->Kind)
+		{
+		case EExtractionItemKind::Weapon: return 0;
+		case EExtractionItemKind::Ammo: return 1;
+		case EExtractionItemKind::Medical: return 2;
+		case EExtractionItemKind::Throwable: return 3;
+		case EExtractionItemKind::Attachment: return 4;
+		case EExtractionItemKind::Key: return 5;
+		case EExtractionItemKind::Armor: return 6;
+		case EExtractionItemKind::Gear: return 7;
+		default: return 8;
+		}
+	};
+	auto Area = [](const FExtractionItem& Item) { return Item.Size.X * Item.Size.Y; };
+	// 先按种类分组排；装不下时退回纯按占格从大到小，更容易塞满。
+	for (int32 Attempt = 0; Attempt < 2; ++Attempt)
+	{
+		FExtractionContainer Result = Container;
+		bool bPlaced = true;
+		for (const FGrid& Grid : Grids(Container))
+		{
+			TArray<FExtractionItem> Section;
+			for (int32 Index = Result.Items.Num() - 1; Index >= 0; --Index)
+				if (Result.Items[Index].Slot == Grid.Section) Section.Add(Result.Items[Index]), Result.Items.RemoveAt(Index);
+			Section.Sort([&](const FExtractionItem& A, const FExtractionItem& B)
+			{
+				const auto* DA = UExtractionItemDefinition::Get(A.Definition);
+				const auto* DB = UExtractionItemDefinition::Get(B.Definition);
+				if (Attempt == 0 && KindOrder(DA) != KindOrder(DB)) return KindOrder(DA) < KindOrder(DB);
+				if (Area(A) != Area(B)) return Area(A) > Area(B);
+				const int32 RA = DA ? DA->DisplayRarity : 0, RB = DB ? DB->DisplayRarity : 0;
+				if (RA != RB) return RA > RB;
+				if (A.Definition != B.Definition) return A.Definition.LexicalLess(B.Definition);
+				return A.Quantity > B.Quantity;
+			});
+			for (FExtractionItem& Item : Section)
+			{
+				Item.Rotated = false;
+				if (!AutoPlace(Result, Item, Grid.Section))
+				{
+					bPlaced = false;
+					break;
+				}
+			}
+			if (!bPlaced) break;
+		}
+		if (bPlaced)
+		{
+			++Result.Revision;
+			Container = MoveTemp(Result);
+			return true;
+		}
+	}
+	return false;
+}
+
 // 检查容器尺寸、条目与附件身份唯一性、物品合法性及占格；逐个积累已占用区域避免自我碰撞。
 bool ExtractionItems::Validate(const FExtractionContainer& Container, FString& Error)
 {

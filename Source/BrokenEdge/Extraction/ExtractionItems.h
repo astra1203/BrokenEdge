@@ -324,7 +324,7 @@ struct BROKENEDGE_API FExtractionContainer
 };
 
 UENUM()
-enum class EExtractionItemOp : uint8 { Transfer, Drop, Use, Attach, Detach, Unload, SelectAmmo, Tune };
+enum class EExtractionItemOp : uint8 { Transfer, Drop, Use, Attach, Detach, Unload, SelectAmmo, Tune, Sort };
 
 USTRUCT()
 struct BROKENEDGE_API FExtractionItemRequest
@@ -422,6 +422,8 @@ namespace ExtractionItems
 	// 在副本中先合并已有堆叠，再尝试两种朝向逐格放置；全部放下才提交，失败不保留部分堆叠。
 	// Section 为 0 时按默认顺序（胸挂、背包；不自动放进安全箱），否则只放进指定分区。
 	BROKENEDGE_API bool AutoPlace(FExtractionContainer& Container, FExtractionItem Item, int32 Section = 0);
+	// 整理各网格分区：分区内按种类、占格、品质重新排列并合并同类堆叠，物品不跨分区；任一分区放不下则整体不变并返回 false。
+	BROKENEDGE_API bool Sort(FExtractionContainer& Container);
 	// 在来源/目标副本中执行移动、拆分或合并；同容器移动也走统一校验，成功后才替换原容器。
 	BROKENEDGE_API bool Transfer(FExtractionContainer& Source, FExtractionContainer& Destination,
 	                             const FExtractionItemRequest& Request, FString& Error);

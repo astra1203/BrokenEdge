@@ -343,6 +343,10 @@ FString UInventoryWidgetBuilder::CreateInventoryWidgets()
 		                           Label(T, NAME_None,TEXT("装备"), 19, FLinearColor::White, true));
 		const FBox2D Own = Column(T, Body, FVector2D(520, 160), FVector2D(552, 760),
 		                          Label(T,TEXT("OwnTitle"),TEXT("携行"), 19, FLinearColor::White, true));
+		auto* Sort = W<UButton>(T,TEXT("SortButton"));
+		Sort->SetStyle(ButtonStyle(FLinearColor(1, 1, 1, .06f), ExtractionUIStyle::Accent(.25f), ExtractionUIStyle::Accent(.4f)));
+		Sort->SetContent(Label(T, NAME_None,TEXT("整理  T"), 13));
+		At(Body, Sort, FVector2D(Own.Max.X - 96, 176), FVector2D(96, 30), 2);
 		const FBox2D Loot = Column(T, Body, FVector2D(1092, 160), FVector2D(748, 760),
 		                           Label(T,TEXT("LootTitle"),TEXT("搜索容器以查看物资"), 19, FLinearColor::White, true));
 		auto* Search = W<UProgressBar>(T,TEXT("SearchProgress"));
@@ -357,7 +361,7 @@ FString UInventoryWidgetBuilder::CreateInventoryWidgets()
 		// 底栏：操作结果与快捷键说明。
 		At(Body, Label(T,TEXT("StatusText"),TEXT(""), 17, ExtractionUIStyle::Accent()), FVector2D(80, 940),
 		   FVector2D(1760, 30));
-		At(Body, Label(T, NAME_None,TEXT("拖动放置      R 旋转      Shift + 左键 快速转移      右键 更多操作"), 15, Muted),
+		At(Body, Label(T, NAME_None,TEXT("拖动放置      R 旋转      Shift + 左键 快速转移      右键 更多操作      T 整理背包"), 15, Muted),
 		   FVector2D(80, 984), FVector2D(1400, 30));
 		auto* Popups = W<UCanvasPanel>(T,TEXT("PopupCanvas"));
 		Popups->SetVisibility(ESlateVisibility::SelfHitTestInvisible);

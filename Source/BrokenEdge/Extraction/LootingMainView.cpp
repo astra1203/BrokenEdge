@@ -259,6 +259,7 @@ void ULootingMainView::NativeOnInitialized()
 	     })
 		if (Part) Part->Inventory = this;
 	if (SplitDialog) SplitDialog->ActionIndex = -2;
+	if (SortButton) SortButton->OnClicked.AddUniqueDynamic(this, &ThisClass::SortOwn);
 	if (ContextMenu) ContextMenu->SetVisibility(ESlateVisibility::Collapsed);
 	if (SplitDialog) SplitDialog->SetVisibility(ESlateVisibility::Collapsed);
 }
@@ -569,6 +570,15 @@ void ULootingMainView::ShowContext(FVector2D Screen)
 	P.Y = FMath::Clamp(P.Y, 0., FMath::Max(0., Limit.Y));
 	if (auto* S = Cast<UCanvasPanelSlot>(ContextMenu->Slot)) S->SetPosition(P);
 	ContextMenu->SetVisibility(ESlateVisibility::Visible);
+}
+
+void ULootingMainView::SortOwn()
+{
+	if (!PC() || !Interaction() || !Interaction()->InventoryOpen) return;
+	CancelDrag();
+	FExtractionItemRequest R;
+	R.Op = EExtractionItemOp::Sort;
+	PC()->RequestItem(R);
 }
 
 void ULootingMainView::QuickTransfer()
@@ -930,6 +940,11 @@ FReply ULootingMainView::NativeOnKeyDown(const FGeometry& G, const FKeyEvent& E)
 	{
 		if (!bRotationDown) RotateDrag();
 		bRotationDown = true;
+		return FReply::Handled();
+	}
+	if (E.GetKey() == EKeys::T && !E.IsRepeat())
+	{
+		SortOwn();
 		return FReply::Handled();
 	}
 	if (E.GetKey() == EKeys::H)

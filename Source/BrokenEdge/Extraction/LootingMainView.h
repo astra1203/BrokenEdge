@@ -91,6 +91,10 @@ public:
  UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly) TObjectPtr<UTextBlock> ValueText;
  /** 当前物品的搜索进度。 */
  UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly) TObjectPtr<UProgressBar> SearchProgress;
+ /** 携行列标题旁的“整理”按钮；快捷键 T。 */
+ UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly) TObjectPtr<UButton> SortButton;
+ // 请求服务器整理自己的携行网格。
+ UFUNCTION() void SortOwn();
  void Refresh();
  bool CancelDrag();
  bool SelectItem(FGuid Id, bool Loot);
