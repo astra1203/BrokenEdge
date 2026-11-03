@@ -394,6 +394,38 @@ int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Ge
 		                           bLow ? ExtractionUIStyle::Hex(TEXT("EA5A50")) : FLinearColor(1, 1, 1, .85f));
 	}
 
+	// 撤离点标记：存活且对局进行中时，把每个撤离点投影到屏幕，可撤离为绿色、暂不可用为灰色；屏幕外贴边。
+	const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
+	const auto* Me = PC->GetPlayerState<AExtractionPlayerState>();
+	if (GS && Me && Me->Life == EExtractionLife::Alive && GS->Phase == EExtractionPhase::Active && !PC->bExtractionSpectating)
+	{
+		const FVector2D ScreenSize = Geometry.GetLocalSize();
+		const FSlateFontInfo ExitFont = ExtractionUIStyle::Font(12, true);
+		for (TActorIterator<AExtractionExit> It(GetWorld()); It; ++It)
+		{
+			const bool bOpen = It->UnavailableReason(GS->GetServerWorldTimeSeconds()).IsEmpty();
+			const FVector Location = It->GetActorLocation() + FVector(0, 0, 200);
+			FVector2D At;
+			if (!UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(
+				const_cast<AExtractionPlayerController*>(PC), Location, At, false))
+			{
+				const float Side = FRotator::NormalizeAxis((Location - ViewEye).Rotation().Yaw - ViewYaw) > 0 ? 1.f : -1.f;
+				At = FVector2D(Side > 0 ? ScreenSize.X - 40.f : 40.f, ScreenSize.Y * .5f);
+			}
+			At.X = FMath::Clamp(At.X, 40.f, ScreenSize.X - 40.f);
+			At.Y = FMath::Clamp(At.Y, 80.f, ScreenSize.Y - 140.f);
+			const FLinearColor Color = bOpen ? ExtractionUIStyle::Hex(TEXT("5DBB72"), .9f) : FLinearColor(.7f, .72f, .75f, .55f);
+			// 向下的小三角，下方写“名称 · 距离”。
+			Lines({At + FVector2D(-7, -6), At + FVector2D(7, -6), At + FVector2D(0, 5), At + FVector2D(-7, -6)}, Color, 2.f);
+			const FString Label = FString::Printf(TEXT("%s · %.0fm"), *It->Definition.Label.ToString(),
+			                                      FVector::Dist(It->GetActorLocation(), ViewEye) / 100);
+			const FVector2D LabelSize = Measure->Measure(Label, ExitFont);
+			FSlateDrawElement::MakeText(Out, LayerId, Geometry.ToPaintGeometry(LabelSize, FSlateLayoutTransform(
+				                            At + FVector2D(-LabelSize.X * .5f, 9.f))), Label, ExitFont,
+			                            ESlateDrawEffect::None, Color);
+		}
+	}
+
 	// 小队标点：投影到屏幕画菱形和“名字 · 距离”，屏幕外的贴边显示，最后 1 秒淡出。
 	const FVector2D Screen = Geometry.GetLocalSize();
 	for (const auto& Ping : PC->Pings)
