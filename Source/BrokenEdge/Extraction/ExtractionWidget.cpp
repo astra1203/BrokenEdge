@@ -151,14 +151,24 @@ void UExtractionWidget::Refresh()
 		const auto& Result = PC->ExtractionAccount->Profile.Result;
 		Text += TEXT("\n") + UExtractionPersistence::OutcomeLabel(Result.Outcome);
 		if (!Result.ProgressMessage.IsEmpty()) Text += TEXT("\n") + Result.ProgressMessage;
-		Text += Result.Outcome == EExtractionOutcome::Extracted ? TEXT("\n已带出：") : TEXT("\n本次物资：");
+		// 先算总价值放在清单前面，一眼看到这局带出了多少。
+		int64 TotalValue = 0;
+		for (const auto& I : Result.Items)
+			if (const auto* D = UExtractionItemDefinition::Get(I.Definition))
+				TotalValue += int64(D->SellValue) * FMath::Max(1, I.Quantity);
+		Text += Result.Outcome == EExtractionOutcome::Extracted
+			        ? TEXT("\n带出总价值 ¥") + FText::AsNumber(TotalValue).ToString() + TEXT("\n已带出：")
+			        : TEXT("\n本次物资：");
 		for (FName Id : UExtractionItemDefinition::Ids())
 		{
 			int32 Count = 0;
 			for (const auto& I : Result.Items) if (I.Definition == Id) Count += I.Quantity;
 			if (Count)
-				Text += FString::Printf(TEXT("\n%s × %d"), *UExtractionItemDefinition::Get(Id)->Label.ToString(),
-				                        Count);
+			{
+				const auto* D = UExtractionItemDefinition::Get(Id);
+				Text += FString::Printf(TEXT("\n%s × %d"), *D->Label.ToString(), Count);
+				if (D->SellValue > 0) Text += TEXT("  ¥") + FText::AsNumber(int64(D->SellValue) * Count).ToString();
+			}
 		}
 		Text += FString::Printf(TEXT("\n领取区：%d 件"), Result.OverflowCount);
 	}
