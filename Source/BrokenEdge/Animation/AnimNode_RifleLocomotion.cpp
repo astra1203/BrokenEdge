@@ -3,6 +3,7 @@
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Character/BrokenEdgeAnimInstance.h"
 #include "Animation/BlendSpace.h"
+#include "Animation/AnimSequence.h"
 #include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "BrokenEdge/Weapon/WeaponPresentation.h"
@@ -16,15 +17,25 @@ void FAnimNode_RifleLocomotion::PreUpdate(const UAnimInstance* Instance)
 	auto* Character = Cast<ABrokenEdgeCharacter>(Instance->TryGetPawnOwner());
 	const auto* Weapon = Character ? Character->GetEquippedWeapon() : nullptr;
 	const auto* Set = Weapon && Weapon->Presentation ? Weapon->Presentation->Locomotion.Get() : nullptr;
+	const bool bFalling = Character && Character->GetCharacterMovement()->IsFalling();
+	// 配了官方跳跃序列时空中也由本节点驱动；否则保持旧行为，空中交回原动画路径。
 	bEnabled = Set && Set->Standing && Set->Crouching && Character && !Character->Melee->Active
-		&& !Character->IsTraversing() && !Character->IsDefeated() && !Character->GetCharacterMovement()->IsFalling();
+		&& !Character->IsTraversing() && !Character->IsDefeated() && (!bFalling || Set->JumpLoop);
 	auto* State = Cast<UBrokenEdgeAnimInstance>(const_cast<UAnimInstance*>(Instance));
 	if (State)
 	{
 		State->bRifleLocomotionEnabled = bEnabled;
 		State->RifleLocomotionAsset.Reset();
 	}
-	if (!bEnabled) return;
+	if (!bEnabled)
+	{
+		bAirborne = false;
+		LandTime = -1.f;
+		JumpAlpha = 0.f;
+		JumpPose = nullptr;
+		return;
+	}
+	UpdateJump(Character, Set, bFalling);
 	UBlendSpace* Desired = Character->bIsCrouched ? Set->Crouching : Set->Standing;
 	bStartBlend |= Player.GetBlendSpace() != Desired;
 	Player.SetBlendSpace(Desired);
@@ -73,6 +84,67 @@ void FAnimNode_RifleLocomotion::PreUpdate(const UAnimInstance* Instance)
 		         : 0.f;
 }
 
+void FAnimNode_RifleLocomotion::UpdateJump(const ABrokenEdgeCharacter* Character, const URifleLocomotionSet* Set,
+                                           bool bFalling)
+{
+	const float DeltaSeconds = FMath::Max(FrameDelta, 0.f);
+	auto Length = [](const UAnimSequence* Sequence) { return Sequence ? Sequence->GetPlayLength() : 0.f; };
+	if (bFalling && !bAirborne)
+	{
+		// 起跳瞬间记录是主动跳（向上速度）还是走下台阶，以及是否在跑动中起跳。
+		bAirborne = true;
+		AirTime = 0.f;
+		LandTime = -1.f;
+		bJumped = Character->GetVelocity().Z > 10.f;
+		bRunJump = Character->GetVelocity().Size2D() > Set->RunThreshold;
+	}
+	else if (!bFalling && bAirborne)
+	{
+		bAirborne = false;
+		LandTime = 0.f;
+	}
+	JumpPose = nullptr;
+	if (bAirborne)
+	{
+		AirTime += DeltaSeconds;
+		UAnimSequence* Start = bRunJump && Set->RunJumpStart ? Set->RunJumpStart.Get() : Set->JumpStart.Get();
+		UAnimSequence* Loop = !bJumped && Set->FallLoop ? Set->FallLoop.Get()
+			                      : bRunJump && Set->RunJumpLoop ? Set->RunJumpLoop.Get() : Set->JumpLoop.Get();
+		const float StartLength = bJumped ? Length(Start) : 0.f;
+		if (AirTime < StartLength)
+		{
+			JumpPose = Start;
+			JumpPoseTime = AirTime;
+		}
+		else if (Loop)
+		{
+			JumpPose = Loop;
+			JumpPoseTime = FMath::Fmod(AirTime - StartLength, FMath::Max(Length(Loop), .01f));
+		}
+		JumpAlpha = FMath::FInterpConstantTo(JumpAlpha, 1.f, DeltaSeconds, 1.f / .08f);
+		return;
+	}
+	if (LandTime >= 0.f)
+	{
+		UAnimSequence* Land = bRunJump && Set->RunJumpLand ? Set->RunJumpLand.Get() : Set->JumpLand.Get();
+		const float LandLength = Length(Land);
+		LandTime += DeltaSeconds;
+		if (Land && LandTime < LandLength)
+		{
+			JumpPose = Land;
+			JumpPoseTime = LandTime;
+			// 先完整播放落地冲击，再在剩余时间里淡回移动；落地后立刻移动则更快交回。
+			const float Hold = LandLength * Set->LandHoldFraction;
+			const float Fade = LandTime <= Hold ? 1.f : 1.f - (LandTime - Hold) / FMath::Max(LandLength - Hold, .01f);
+			const float Moving = Character->GetVelocity().Size2D() > Set->WalkSpeed * .5f ? .5f : 1.f;
+			JumpAlpha = FMath::Clamp(Fade * Moving, 0.f, 1.f);
+			return;
+		}
+		LandTime = -1.f;
+	}
+	JumpAlpha = 0.f;
+}
+
 void FAnimNode_RifleLocomotion::Initialize_AnyThread(const FAnimationInitializeContext& Context)
 {
 	Source.Initialize(Context);
@@ -86,6 +158,10 @@ void FAnimNode_RifleLocomotion::Initialize_AnyThread(const FAnimationInitializeC
 	SmoothedCoordinate = 0.f;
 	SmoothedAimYaw = 0.f;
 	AimYaw = 0.f;
+	bAirborne = false;
+	LandTime = -1.f;
+	JumpAlpha = 0.f;
+	JumpPose = nullptr;
 }
 
 void FAnimNode_RifleLocomotion::CacheBones_AnyThread(const FAnimationCacheBonesContext& Context)
@@ -114,6 +190,18 @@ void FAnimNode_RifleLocomotion::Evaluate_AnyThread(FPoseContext& Output)
 	if (Weight <= 0.f) return;
 	FPoseContext Movement(Output);
 	Player.Evaluate_AnyThread(Movement);
+	if (JumpPose && JumpAlpha > 0.f)
+	{
+		// 跳跃序列覆盖下半身与躯干的移动姿势，瞄准俯仰叠加仍在其后应用。
+		FPoseContext Jump(Output);
+		FAnimationPoseData JumpData(Jump);
+		JumpPose->GetAnimationPose(JumpData, FAnimExtractContext(double(JumpPoseTime), false));
+		for (int32 Index = 0; Index < Movement.Pose.GetNumBones(); ++Index)
+		{
+			const FCompactPoseBoneIndex Bone(Index);
+			Movement.Pose[Bone].Blend(Movement.Pose[Bone], Jump.Pose[Bone], JumpAlpha);
+		}
+	}
 	if (bAim)
 	{
 		FPoseContext Aim(Output);

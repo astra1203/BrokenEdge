@@ -58,6 +58,27 @@ public:
 	/** 第一人称落地；为空时直接回到循环姿势。 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="View|First Person")
 	TObjectPtr<UAnimSequence> ViewJumpLand;
+	/**
+	 * 第三人称跳跃（官方 AR_M_3P_*Jump*）：原地起跳/空中/落地与跑动起跳三段，FallLoop 用于未起跳直接坠落。
+	 * JumpLoop 为空时保持旧行为：空中回退到原有动画路径。
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Third Person|Jump")
+	TObjectPtr<UAnimSequence> JumpStart;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Third Person|Jump")
+	TObjectPtr<UAnimSequence> JumpLoop;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Third Person|Jump")
+	TObjectPtr<UAnimSequence> JumpLand;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Third Person|Jump")
+	TObjectPtr<UAnimSequence> RunJumpStart;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Third Person|Jump")
+	TObjectPtr<UAnimSequence> RunJumpLoop;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Third Person|Jump")
+	TObjectPtr<UAnimSequence> RunJumpLand;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Third Person|Jump")
+	TObjectPtr<UAnimSequence> FallLoop;
+	/** 落地动作占满权重的比例，之后在剩余时间里淡回移动混合。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0", ClampMax="1"), Category="Third Person|Jump")
+	float LandHoldFraction = .45f;
 	/** 第一人称播放速率匹配上限，避免极高速时动画抽搐。 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="1"), Category="View|First Person")
 	float ViewPlayRateMax = 2.5f;

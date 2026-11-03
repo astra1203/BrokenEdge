@@ -30,8 +30,18 @@ struct BROKENEDGE_API FAnimNode_RifleLocomotion : public FAnimNode_Base
 	bool bStartBlend = false;
 	float PoseBlend = 1.f;
 	float FrameDelta = 0.f;
+	/** 跳跃阶段：空中按起跳→循环播放，落地播放落地段再淡回移动。序列由数据资产持有。 */
+	bool bAirborne = false;
+	bool bJumped = false;
+	bool bRunJump = false;
+	float AirTime = 0.f;
+	float LandTime = -1.f;
+	class UAnimSequence* JumpPose = nullptr;
+	float JumpPoseTime = 0.f;
+	float JumpAlpha = 0.f;
 	virtual bool HasPreUpdate() const override { return true; }
 	virtual void PreUpdate(const UAnimInstance* Instance) override;
+	void UpdateJump(const class ABrokenEdgeCharacter* Character, const class URifleLocomotionSet* Set, bool bFalling);
 	virtual void Initialize_AnyThread(const FAnimationInitializeContext& Context) override;
 	virtual void CacheBones_AnyThread(const FAnimationCacheBonesContext& Context) override;
 	virtual void Update_AnyThread(const FAnimationUpdateContext& Context) override;
