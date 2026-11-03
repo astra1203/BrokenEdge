@@ -298,6 +298,25 @@ void AExtractionPlayerController::RequestItem(FExtractionItemRequest Request)
 	ServerItemOperation(Request);
 }
 
+void AExtractionPlayerController::ClientCombatHit_Implementation(uint8 Result, const FString& Victim)
+{
+	const double Now = GetWorld()->GetTimeSeconds();
+	// 同一帧里击杀优先于普通命中，标记不被后到的小结果覆盖。
+	if (Now - LastHitAt > .05 || Result >= LastHitResult) LastHitResult = Result;
+	LastHitAt = Now;
+	if (Result > 0)
+	{
+		CombatNotices.Add({Now, (Result == 2 ? TEXT("击杀  ") : TEXT("击倒  ")) + Victim});
+		if (CombatNotices.Num() > 4) CombatNotices.RemoveAt(0);
+	}
+}
+
+void AExtractionPlayerController::ClientDamaged_Implementation(FVector_NetQuantize From)
+{
+	DamageSources.Add({GetWorld()->GetTimeSeconds(), From});
+	if (DamageSources.Num() > 6) DamageSources.RemoveAt(0);
+}
+
 // 服务器将请求交给 Execute 事务入口，回执包含该序号与结果文本。
 void AExtractionPlayerController::ServerItemOperation_Implementation(FExtractionItemRequest Request)
 {

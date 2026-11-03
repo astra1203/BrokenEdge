@@ -20,6 +20,9 @@
 #include "Components/TextBlock.h"
 #include "Components/Border.h"
 #include "Components/Button.h"
+#include "Fonts/FontMeasure.h"
+#include "Framework/Application/SlateApplication.h"
+#include "Rendering/SlateRenderer.h"
 
 void UExtractionWidget::NativeOnInitialized()
 {
@@ -40,6 +43,9 @@ void UExtractionWidget::Refresh()
 	FVector Eye;
 	FRotator View;
 	PC->GetPlayerViewPoint(Eye, View);
+	// 记下相机供 NativePaint 换算受击方向。
+	ViewEye = Eye;
+	ViewYaw = View.Yaw;
 	const int32 Heading = FMath::RoundToInt(FRotator::ClampAxis(View.Yaw)) % 360;
 	// Coordinate compass uses world +X as north; source-map georeferencing is separate.
 	const TCHAR* Directions[] = {
@@ -276,6 +282,84 @@ void UExtractionWidget::Refresh()
 	Leave->SetVisibility(PC->IsMenuOpen() || PC->bExtractionSpectating || GS->Phase == EExtractionPhase::Ended
 		                     ? ESlateVisibility::Visible
 		                     : ESlateVisibility::Collapsed);
+}
+
+int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Geometry, const FSlateRect& Culling,
+                                     FSlateWindowElementList& Out, int32 LayerId, const FWidgetStyle& Style,
+                                     bool bParentEnabled) const
+{
+	LayerId = Super::NativePaint(Args, Geometry, Culling, Out, LayerId, Style, bParentEnabled) + 1;
+	const auto* PC = GetOwningPlayer<AExtractionPlayerController>();
+	if (!PC || !GetWorld()) return LayerId;
+	const double Now = GetWorld()->GetTimeSeconds();
+	const FVector2D Center = Geometry.GetLocalSize() * .5f;
+	const auto Lines = [&](const TArray<FVector2D>& Points, FLinearColor Color, float Thickness)
+	{
+		FSlateDrawElement::MakeLines(Out, LayerId, Geometry.ToPaintGeometry(), Points, ESlateDrawEffect::None, Color,
+		                             true, Thickness);
+	};
+
+	// 命中标记：准星四周四条斜线；命中白、击倒琥珀、击杀红，击杀停留更久且略大。
+	const double HitAge = Now - PC->LastHitAt;
+	const float HitSeconds = PC->LastHitResult == 2 ? .6f : PC->LastHitResult == 1 ? .45f : .22f;
+	if (HitAge >= 0 && HitAge < HitSeconds)
+	{
+		const float Fade = 1.f - float(HitAge / HitSeconds);
+		const FLinearColor Color = (PC->LastHitResult == 2
+			                            ? ExtractionUIStyle::Hex(TEXT("EA5A50"))
+			                            : PC->LastHitResult == 1
+			                            ? ExtractionUIStyle::Accent()
+			                            : FLinearColor::White).CopyWithNewOpacity(.95f * Fade);
+		const float Gap = PC->LastHitResult == 2 ? 8.f : 6.f;
+		const float Length = PC->LastHitResult == 2 ? 13.f : 9.f;
+		for (const FVector2D Dir : {FVector2D(1, 1), FVector2D(-1, 1), FVector2D(1, -1), FVector2D(-1, -1)})
+		{
+			const FVector2D Unit = Dir.GetSafeNormal();
+			Lines({Center + Unit * Gap, Center + Unit * (Gap + Length)}, Color, PC->LastHitResult == 2 ? 3.f : 2.f);
+		}
+	}
+
+	// 受击方向：以准星为圆心的红色弧段，指向伤害来源，1.6 秒内淡出。
+	constexpr double DamageSeconds = 1.6;
+	for (const auto& [At, From] : PC->DamageSources)
+	{
+		const double Age = Now - At;
+		if (Age < 0 || Age >= DamageSeconds) continue;
+		const FVector ToSource = From - ViewEye;
+		// 屏幕正上方为视线前方，顺时针为向右。
+		const float Angle = FMath::DegreesToRadians(FRotator::NormalizeAxis(ToSource.Rotation().Yaw - ViewYaw));
+		TArray<FVector2D> Arc;
+		constexpr float Radius = 150.f, Half = .32f;
+		for (int32 Step = 0; Step <= 12; ++Step)
+		{
+			const float A = Angle - Half + 2 * Half * Step / 12.f;
+			Arc.Add(Center + FVector2D(FMath::Sin(A), -FMath::Cos(A)) * Radius);
+		}
+		const float Fade = 1.f - float(Age / DamageSeconds);
+		Lines(Arc, ExtractionUIStyle::Hex(TEXT("EA5A50"), .85f * Fade), 5.f);
+	}
+
+	// 击倒/击杀提示：准星下方居中，4 秒内淡出，最新的一条在最上面。
+	constexpr double NoticeSeconds = 4.0;
+	const FSlateFontInfo Font = ExtractionUIStyle::Font(16, true);
+	const TSharedRef<FSlateFontMeasure> Measure = FSlateApplication::Get().GetRenderer()->GetFontMeasureService();
+	float Y = Center.Y + 70.f;
+	for (int32 Index = PC->CombatNotices.Num() - 1; Index >= 0; --Index)
+	{
+		const auto& [At, Text] = PC->CombatNotices[Index];
+		const double Age = Now - At;
+		if (Age < 0 || Age >= NoticeSeconds) continue;
+		const float Fade = FMath::Clamp(float((NoticeSeconds - Age) / .6), 0.f, 1.f);
+		const FVector2D Size = Measure->Measure(Text, Font);
+		const FLinearColor Color = Text.StartsWith(TEXT("击杀"))
+			                           ? ExtractionUIStyle::Hex(TEXT("EA5A50"))
+			                           : ExtractionUIStyle::Accent();
+		FSlateDrawElement::MakeText(Out, LayerId, Geometry.ToPaintGeometry(Size, FSlateLayoutTransform(
+			                            FVector2D(Center.X - Size.X * .5f, Y))), Text, Font, ESlateDrawEffect::None,
+		                            Color.CopyWithNewOpacity(Fade));
+		Y += Size.Y + 4.f;
+	}
+	return LayerId;
 }
 
 // 请求服务器选择上一位合法观战队友。

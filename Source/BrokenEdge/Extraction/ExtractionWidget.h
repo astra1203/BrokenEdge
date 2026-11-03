@@ -16,7 +16,16 @@ public:
 	// 使用同步服务器时间计算剩余秒数，进度条到零本身不会触发撤离结算。
 	void Refresh();
 
+protected:
+	// 在控件树之上绘制战斗反馈：命中标记、受击方向弧、击倒/击杀提示。
+	virtual int32 NativePaint(const FPaintArgs& Args, const FGeometry& Geometry, const FSlateRect& Culling,
+	                          FSlateWindowElementList& Out, int32 LayerId, const FWidgetStyle& Style,
+	                          bool bParentEnabled) const override;
+
 private:
+	/** Refresh 时记下的相机位置与朝向，受击方向按它换算到屏幕。 */
+	FVector ViewEye = FVector::ZeroVector;
+	float ViewYaw = 0;
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<class UTextBlock> Status;
 	UPROPERTY(meta=(BindWidget))

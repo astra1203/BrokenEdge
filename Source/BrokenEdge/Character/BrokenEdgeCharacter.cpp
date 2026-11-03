@@ -2,6 +2,8 @@
 
 
 #include "BrokenEdgeCharacter.h"
+#include "Misc/ScopeExit.h"
+#include "GameFramework/PlayerState.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 #include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
 #include "BrokenEdge/Extraction/ExtractionAbilities.h"
@@ -198,9 +200,14 @@ void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, con
 
 	if (bDefeated || BrokenEdgeGameMode == nullptr)return;
 	Damage = BrokenEdgeGameMode->CalculateDamage(InstigatorController, GetController(), Damage);
+	// 搜打撤模式在函数返回时统一发战斗反馈，覆盖倒地扣血、击倒、击杀各条返回路径。
+	bool bFeedback = false;
+	const bool bWasDowned = ExtractionAbilities->IsDowned();
+	ON_SCOPE_EXIT { if (bFeedback) NotifyCombatFeedback(InstigatorController, DamageCauser, bWasDowned); };
 	if (ExtractionInteraction->IsEnabled())
 	{
 		if (Damage <= 0) return;
+		bFeedback = true;
 		ExtractionInteraction->CancelMedical();
 		ExtractionAbilities->Damaged();
 		if (auto* GM = Cast<AExtractionGameMode>(BrokenEdgeGameMode); GM && GM->DamageDowned(this, Damage)) return;
@@ -242,6 +249,21 @@ void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, con
 
 		BrokenEdgeGameMode->PlayerDefeated(this,
 		                                   BrokenEdgePlayerController, AttackerController);
+	}
+}
+
+void ABrokenEdgeCharacter::NotifyCombatFeedback(AController* Attacker, AActor* Causer, bool bWasDowned)
+{
+	const uint8 Result = bDefeated ? 2 : !bWasDowned && ExtractionAbilities->IsDowned() ? 1 : 0;
+	if (auto* Shooter = Cast<AExtractionPlayerController>(Attacker); Shooter && Attacker != GetController())
+	{
+		const APlayerState* State = GetPlayerState();
+		Shooter->ClientCombatHit(Result, bExtractionGuard ? TEXT("守卫") : State ? State->GetPlayerName() : TEXT("敌人"));
+	}
+	if (auto* Victim = Cast<AExtractionPlayerController>(GetController()); Victim && Attacker != Victim)
+	{
+		const AActor* Source = Attacker && Attacker->GetPawn() ? Attacker->GetPawn() : Causer;
+		if (Source && Source != this) Victim->ClientDamaged(Source->GetActorLocation());
 	}
 }
 

@@ -119,6 +119,21 @@ public:
 	/** 设置一条会自动消失的提示；重复触发会重新计时。 */
 	void ShowItemMessage(const FString& Message, float Seconds = ItemMessageSeconds);
 
+	// 战斗反馈：只用于本地 HUD 表现，不参与任何结算。
+	/** 命中结果：0 命中、1 击倒、2 击杀。 */
+	UFUNCTION(Client, Unreliable)
+	void ClientCombatHit(uint8 Result, const FString& Victim);
+	/** 本人受到伤害，From 为伤害来源的世界坐标。 */
+	UFUNCTION(Client, Unreliable)
+	void ClientDamaged(FVector_NetQuantize From);
+	/** 最近一次命中的本地时间与结果，HUD 据此绘制命中标记。 */
+	double LastHitAt = -100;
+	uint8 LastHitResult = 0;
+	/** 近期受击来源（本地时间, 世界坐标）。 */
+	TArray<TPair<double, FVector>> DamageSources;
+	/** 近期击倒/击杀提示（本地时间, 文本）。 */
+	TArray<TPair<double, FString>> CombatNotices;
+
 private:
 	void EnsureLocalWidgets();
 	bool bLocalWidgetsAttempted = false;
