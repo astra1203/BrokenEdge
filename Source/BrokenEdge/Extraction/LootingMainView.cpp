@@ -203,6 +203,15 @@ FReply ULootingWidgetPart::NativeOnMouseButtonDown(const FGeometry& G, const FPo
 	return UWidgetBlueprintLibrary::DetectDragIfPressed(E, this, EKeys::LeftMouseButton).NativeReply;
 }
 
+FReply ULootingWidgetPart::NativeOnMouseButtonDoubleClick(const FGeometry& G, const FPointerEvent& E)
+{
+	if (!Inventory || !ItemId.IsValid() || E.GetEffectingButton() != EKeys::LeftMouseButton
+		|| !Inventory->SelectItem(ItemId, bLoot))
+		return Super::NativeOnMouseButtonDoubleClick(G, E);
+	Inventory->QuickTransfer();
+	return FReply::Handled();
+}
+
 void ULootingWidgetPart::NativeOnDragDetected(const FGeometry&, const FPointerEvent&, UDragDropOperation*& Out)
 {
 	if (Inventory && ItemId.IsValid()) Inventory->BeginDrag(this, Out);

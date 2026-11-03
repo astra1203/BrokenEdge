@@ -39,6 +39,8 @@ public:
  void SetBaseColor(FLinearColor Color);
  virtual void NativeOnInitialized() override;
  virtual FReply NativeOnMouseButtonDown(const FGeometry&, const FPointerEvent&) override;
+ // 双击物品等同 Shift+左键：快速转移（背包↔容器，或装备/存放）。
+ virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry&, const FPointerEvent&) override;
  virtual void NativeOnDragDetected(const FGeometry&, const FPointerEvent&, UDragDropOperation*&) override;
  virtual bool NativeOnDrop(const FGeometry&, const FDragDropEvent&, UDragDropOperation*) override;
  virtual bool NativeOnDragOver(const FGeometry&, const FDragDropEvent&, UDragDropOperation*) override;
