@@ -1,5 +1,6 @@
 #include "ExtractionExitSwitch.h"
 #include "ExtractionExit.h"
+#include "ExtractionDrawbridge.h"
 #include "ExtractionCombatComponent.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Weapon/Weapon.h"
@@ -39,6 +40,7 @@ void AExtractionExitSwitch::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>
 	DOREPLIFETIME(AExtractionExitSwitch, bActive);
 	DOREPLIFETIME(AExtractionExitSwitch, bPulled);
 	DOREPLIFETIME(AExtractionExitSwitch, Exit);
+	DOREPLIFETIME(AExtractionExitSwitch, Bridge);
 }
 
 void AExtractionExitSwitch::ResetForRound(bool bInActive)
@@ -67,9 +69,15 @@ bool AExtractionExitSwitch::CanReach(ABrokenEdgeCharacter* Character) const
 
 FString AExtractionExitSwitch::Pull(ABrokenEdgeCharacter* Character)
 {
-	if (!HasAuthority() || !IsValid(Exit) || Exit->RoundStartedAt < 0) return TEXT("电闸尚未通电");
+	if (!HasAuthority()) return {};
 	if (!Character || !Character->GetExtractionCombat()->CanAct()) return TEXT("当前无法操作");
 	if (!CanReach(Character)) return TEXT("距离电闸太远");
+	if (IsValid(Bridge))
+	{
+		Bridge->Lower();
+		return Bridge->Label.ToString() + TEXT("正在放下");
+	}
+	if (!IsValid(Exit) || Exit->RoundStartedAt < 0) return TEXT("电闸尚未通电");
 	bPulled = true;
 	OnRep_State();
 	ForceNetUpdate();
@@ -84,6 +92,7 @@ FString AExtractionExitSwitch::Pull(ABrokenEdgeCharacter* Character)
 
 FString AExtractionExitSwitch::PromptText() const
 {
+	if (IsValid(Bridge)) return TEXT("F  ") + Bridge->Label.ToString() + TEXT(" · 解锁放桥");
 	const FString Name = IsValid(Exit) ? Exit->Definition.Label.ToString() + TEXT("电闸") : TEXT("电闸");
 	const int32 Pulled = IsValid(Exit) ? Exit->PulledSwitches() : 0;
 	const int32 Required = IsValid(Exit) ? Exit->Definition.SwitchesRequired : 0;
