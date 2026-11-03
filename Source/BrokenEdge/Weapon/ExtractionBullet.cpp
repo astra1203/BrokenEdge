@@ -1,6 +1,7 @@
 #include "ExtractionBullet.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Extraction/ExtractionHealth.h"
+#include "BrokenEdge/Extraction/ExtractionItems.h"
 #include "Components/SceneComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "DrawDebugHelpers.h"
@@ -13,6 +14,10 @@
 
 static TAutoConsoleVariable<int32> CVarWeaponFlight(
 	TEXT("BrokenEdge.Weapon.DebugFlight"), 0, TEXT("Draw authoritative swept bullet paths."));
+
+static TAutoConsoleVariable<float> CVarPenetrationPerLevel(
+	TEXT("BrokenEdge.Weapon.PenetrationCmPerLevel"), 4.f,
+	TEXT("Max static obstacle thickness (cm) a bullet passes per ammo penetration level; 0 disables penetration."));
 
 static TAutoConsoleVariable<int32> CVarWeaponFlightLog(
 	TEXT("BrokenEdge.Weapon.LogFlight"), 0, TEXT("Log authoritative bullet initialization and first impact; no per-tick logging."));
@@ -83,6 +88,18 @@ void AExtractionBullet::Tick(float DeltaSeconds)
 		Distance += FVector::Distance(Start, Finish);
 		SetActorLocation(Finish);
 		if (CVarWeaponFlight.GetValueOnGameThread()) DrawDebugLine(GetWorld(), Start, Finish, FColor::Yellow, false, 3);
+		FVector Exit;
+		if (Hit.bBlockingHit && TryPenetrate(Hit, Exit))
+		{
+			if (HasAuthority() && !bPredicted)
+			{
+				Impact(Hit.ImpactPoint, Hit.ImpactNormal);
+				Impact(Exit, Velocity.GetSafeNormal());
+			}
+			Distance += FVector::Distance(Finish, Exit);
+			SetActorLocation(Exit);
+			continue;
+		}
 		if (Hit.bBlockingHit)
 		{
 			if (HasAuthority() && !bPredicted && CVarWeaponFlightLog.GetValueOnGameThread())
@@ -94,7 +111,7 @@ void AExtractionBullet::Tick(float DeltaSeconds)
 				       *Hit.ImpactNormal.ToString(), Hit.bStartPenetrating ? 1 : 0, Distance, BodyDamage);
 			if (auto* Victim = Cast<ABrokenEdgeCharacter>(Hit.GetActor()); Victim && HasAuthority() && !bPredicted)
 				Victim->GetExtractionHealth()->Bullet(
-					(Hit.BoneName == TEXT("head") ? HeadDamage : BodyDamage) * Stats.Falloff(Distance),
+					(Hit.BoneName == TEXT("head") ? HeadDamage : BodyDamage) * Stats.Falloff(Distance) * PenetrationScale,
 					Hit.BoneName, AmmoType, GetInstigatorController(), this);
 			if (HasAuthority() && !bPredicted) Impact(Hit.ImpactPoint, Hit.ImpactNormal);
 			UpdateTrail();
@@ -110,6 +127,32 @@ void AExtractionBullet::Tick(float DeltaSeconds)
 		}
 	}
 	UpdateTrail();
+}
+
+bool AExtractionBullet::TryPenetrate(const FHitResult& Hit, FVector& Exit)
+{
+	UPrimitiveComponent* Component = Hit.GetComponent();
+	if (bPenetrated || !Component || Hit.bStartPenetrating || Cast<APawn>(Hit.GetActor())) return false;
+	const auto* Ammo = UExtractionItemDefinition::Get(AmmoType);
+	const float MaxThickness = CVarPenetrationPerLevel.GetValueOnGameThread() * (Ammo ? Ammo->Penetration : 1);
+	if (MaxThickness <= 0) return false;
+	// 从最大厚度外侧反向探测同一组件：命中即为背面；探测不到说明物体比上限更厚（或远端仍在实体内）。
+	const FVector Direction = Velocity.GetSafeNormal();
+	const FVector Far = Hit.ImpactPoint + Direction * MaxThickness;
+	FHitResult Back;
+	FCollisionQueryParams Query(SCENE_QUERY_STAT(ExtractionBulletPenetration), true);
+	if (!Component->LineTraceComponent(Back, Far, Hit.ImpactPoint + Direction * .5f, Query) || Back.bStartPenetrating)
+		return false;
+	const float Thickness = FVector::Distance(Hit.ImpactPoint, Back.ImpactPoint);
+	// 出射后离开背面一个弹丸半径，避免下一步扫掠从墙体内部开始。
+	Exit = Back.ImpactPoint + Direction * (Stats.Radius + 1.f);
+	bPenetrated = true;
+	PenetrationScale = FMath::Lerp(.75f, .35f, FMath::Clamp(Thickness / MaxThickness, 0.f, 1.f));
+	Velocity *= FMath::Sqrt(PenetrationScale);
+	if (HasAuthority() && !bPredicted && CVarWeaponFlightLog.GetValueOnGameThread())
+		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_BULLET_PENETRATE Bullet=%s Actor=%s Thickness=%.2f Max=%.2f Scale=%.2f"),
+		       *GetName(), *GetNameSafe(Hit.GetActor()), Thickness, MaxThickness, PenetrationScale);
+	return true;
 }
 
 void AExtractionBullet::Impact_Implementation(FVector_NetQuantize Point, FVector_NetQuantizeNormal Normal)

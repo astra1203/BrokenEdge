@@ -19,11 +19,16 @@ public:
 
 private:
 	void UpdateTrail();
+	// 静态物体厚度不超过弹药穿透上限时，返回出射点并降低后续伤害；人物和厚墙都不穿透。
+	bool TryPenetrate(const FHitResult& Hit, FVector& Exit);
 	FResolvedWeaponStats Stats;
 	FVector Velocity = FVector::ZeroVector;
 	float Distance = 0, Accumulator = 0, BodyDamage = 0, HeadDamage = 0;
 	FName AmmoType;
 	bool bPredicted = false;
+	// 穿透后保留的伤害比例；每发子弹最多穿透一次。
+	float PenetrationScale = 1;
+	bool bPenetrated = false;
 	FVector PreviousVisual = FVector::ZeroVector;
 	UPROPERTY(Replicated) TObjectPtr<class UParticleSystem> TrailEffect;
 	UPROPERTY() TObjectPtr<class UParticleSystemComponent> TrailComponent;

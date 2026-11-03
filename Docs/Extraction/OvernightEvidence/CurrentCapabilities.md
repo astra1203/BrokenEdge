@@ -36,7 +36,7 @@
 | 差距 | 本次可确认的边界 |
 | --- | --- |
 | 撤离规则深度 | 广场开关机制、德穆兰支付/阵营条件未接入当前有效撤离配置；试验场分区语义待确认，依据见上表。 |
-| 武器与弹道深度 | [M4 构建脚本](../../../Scripts/Extraction/build_weapon.py) 将 `compatible_attachments` 设为空，尚未开放该枪附件；[ExtractionBullet::Tick](../../../Source/BrokenEdge/Weapon/ExtractionBullet.cpp) 遇首个阻挡命中即停止，没有沿弹道继续穿透墙体的实现。重力下坠已有，不能将“无穿墙”扩大为“无弹道”。 |
+| 武器与弹道深度 | 2026-11-03 起：M4A1 已开放红点/垂直握把/补偿器（官方 socket 挂点，见 [patch_m4a1_attachments.py](../../../Scripts/Extraction/patch_m4a1_attachments.py)）；子弹可穿透薄的静态物体，上限为 `BrokenEdge.Weapon.PenetrationCmPerLevel`（默认 4 cm）× 弹药穿透等级，穿透后伤害按厚度保留 75%–35%，人物不穿透、每发最多一次，见 [TryPenetrate](../../../Source/BrokenEdge/Weapon/ExtractionBullet.cpp)。项目没有表面材质类型，按厚度而非材质判定，不等同官方材质穿透表。 |
 | 遭遇与敌人类型 | 当前 [SpawnGuards](../../../Source/BrokenEdge/Extraction/ExtractionGuard.cpp) 与 [InitializeGuard](../../../Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp) 使用同类守卫和 AK 装备；[交战 Task](../../../Source/BrokenEdge/Character/BTTask_EngageTarget.cpp) 站定射击，所查链路未提供掩体选择、包抄或 Boss 专属行为。 |
 | 干员与物资内容 | 当前 [EExtractionAction](../../../Source/BrokenEdge/Extraction/ExtractionAbilities.h) 的实际能力入口为救援、治疗、烟雾；不足以表示全干员体系。7F 的 [RECIPES](../../../Scripts/Extraction/place_7f_loot_guards.py) 明确为项目配方与项目布点，不能声称使用了官方完整掉落表及概率。 |
 | 完整体验和正式交付 | 一条样板路线的连续行走、联网结算、第二局、全图导航、多人容量和打包稳定性需要各自证据；源码、站立探针、传送规则测试不能互相替代。今晚具体已完成/失败/资源中止项目只引用 [主记录](../Overnight-2026-11-03.md)，本页不预先宣布通过，也不由 LAN 测试推出公网账号、匹配或反作弊服务完成。 |
