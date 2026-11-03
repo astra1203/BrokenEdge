@@ -33,6 +33,8 @@ public:
 	bool bObstacleRequested = false;
 	virtual bool DoJump(bool bReplayingMoves, float DeltaTime) override;
 	virtual void UpdateCharacterStateBeforeMovement(float DeltaSeconds) override;
+	// 项目水体没有刷子几何，按当前水面高度算浸入比例，角色才能浮在水面。
+	virtual float ImmersionDepth() const override;
 	virtual void UpdateFromCompressedFlags(uint8 Flags) override;
 	virtual FNetworkPredictionData_Client* GetPredictionData_Client() const override;
 	virtual void PhysCustom(float DeltaTime, int32 Iterations) override;

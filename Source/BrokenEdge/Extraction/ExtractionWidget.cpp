@@ -513,7 +513,7 @@ int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Ge
 			const FLinearColor Color = bPulled ? ExtractionUIStyle::Hex(TEXT("5DBB72"), .55f) : ExtractionUIStyle::Hex(TEXT("F2A93B"), .95f);
 			// 闪电形小标记，下方写“拉闸点 · 距离”；吊桥的锁标“吊桥电闸”。
 			Lines({At + FVector2D(2, -9), At + FVector2D(-5, 1), At + FVector2D(2, 1), At + FVector2D(-2, 9)}, Color, 2.f);
-			const TCHAR* Name = It->Bridge ? TEXT("吊桥电闸") : TEXT("拉闸点");
+			const TCHAR* Name = It->Bridge ? TEXT("吊桥电闸") : It->Water ? TEXT("注水开关") : TEXT("拉闸点");
 			const FString Label = FString::Printf(TEXT("%s%s · %.0fm"), Name, bPulled ? TEXT("（已拉）") : TEXT(""),
 			                                      FVector::Dist(It->GetActorLocation(), ViewEye) / 100);
 			const FVector2D LabelSize = Measure->Measure(Label, ExitFont);

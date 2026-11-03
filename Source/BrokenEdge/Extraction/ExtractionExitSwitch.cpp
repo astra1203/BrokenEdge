@@ -1,6 +1,7 @@
 #include "ExtractionExitSwitch.h"
 #include "ExtractionExit.h"
 #include "ExtractionDrawbridge.h"
+#include "ExtractionWater.h"
 #include "ExtractionCombatComponent.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Weapon/Weapon.h"
@@ -41,6 +42,7 @@ void AExtractionExitSwitch::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>
 	DOREPLIFETIME(AExtractionExitSwitch, bPulled);
 	DOREPLIFETIME(AExtractionExitSwitch, Exit);
 	DOREPLIFETIME(AExtractionExitSwitch, Bridge);
+	DOREPLIFETIME(AExtractionExitSwitch, Water);
 }
 
 void AExtractionExitSwitch::ResetForRound(bool bInActive)
@@ -77,6 +79,14 @@ FString AExtractionExitSwitch::Pull(ABrokenEdgeCharacter* Character)
 		Bridge->Lower();
 		return Bridge->Label.ToString() + TEXT("正在放下");
 	}
+	if (IsValid(Water))
+	{
+		if (!Water->StartFill()) return TEXT("已经在注水");
+		bPulled = true;
+		OnRep_State();
+		ForceNetUpdate();
+		return Water->Label.ToString() + TEXT("开始注水");
+	}
 	if (!IsValid(Exit) || Exit->RoundStartedAt < 0) return TEXT("电闸尚未通电");
 	bPulled = true;
 	OnRep_State();
@@ -93,6 +103,7 @@ FString AExtractionExitSwitch::Pull(ABrokenEdgeCharacter* Character)
 FString AExtractionExitSwitch::PromptText() const
 {
 	if (IsValid(Bridge)) return TEXT("F  ") + Bridge->Label.ToString() + TEXT(" · 解锁放桥");
+	if (IsValid(Water)) return TEXT("F  ") + Water->Label.ToString() + TEXT(" · 注水");
 	const FString Name = IsValid(Exit) ? Exit->Definition.Label.ToString() + TEXT("电闸") : TEXT("电闸");
 	const int32 Pulled = IsValid(Exit) ? Exit->PulledSwitches() : 0;
 	const int32 Required = IsValid(Exit) ? Exit->Definition.SwitchesRequired : 0;

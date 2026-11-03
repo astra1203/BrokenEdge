@@ -29,6 +29,9 @@ public:
 	// 吊桥的锁：与 Exit 二选一，拉下后放下这座桥。
 	UPROPERTY(Replicated)
 	TObjectPtr<class AExtractionDrawbridge> Bridge;
+	// 注水开关：与 Exit / Bridge 三选一，拉下后这片水体开始注水。
+	UPROPERTY(Replicated)
+	TObjectPtr<class AExtractionWater> Water;
 	// 服务器开局重置：设置是否启用并清除已拉状态。
 	void ResetForRound(bool bInActive);
 	// 启用、未拉下、两米内且视线无遮挡才可交互。

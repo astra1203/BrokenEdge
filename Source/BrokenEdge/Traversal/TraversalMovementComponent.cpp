@@ -7,6 +7,7 @@
 #include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
 #include "BrokenEdge/Extraction/ExtractionPlayerController.h"
+#include "BrokenEdge/Extraction/ExtractionWater.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Animation/AnimInstance.h"
@@ -516,6 +517,16 @@ bool UTraversalMovementComponent::BodyBlocked(const FVector& Feet, const FVector
 	InitCollisionParams(Query, Response);
 	return GetWorld()->SweepTestByChannel(Center, Center + Offset, FQuat::Identity, UpdatedComponent->GetCollisionObjectType(),
 	                                      FCollisionShape::MakeBox(Extent), Query, Response);
+}
+
+float UTraversalMovementComponent::ImmersionDepth() const
+{
+	const auto* Water = Cast<AExtractionWater>(GetPhysicsVolume());
+	if (!Water || !CharacterOwner) return Super::ImmersionDepth();
+	const float Half = CharacterOwner->GetSimpleCollisionHalfHeight();
+	if (Half <= 0.f || Buoyancy == 0.f) return 1.f;
+	const float Bottom = UpdatedComponent->GetComponentLocation().Z - Half;
+	return FMath::Clamp((Water->SurfaceWorldZ() - Bottom) / (2.f * Half), 0.f, 1.f);
 }
 
 void UTraversalMovementComponent::UpdateAutoCrouch()

@@ -108,7 +108,7 @@ public:
 			const auto P = Project(FVector2D(It->GetActorLocation()));
 			const FLinearColor C = It->bPulled ? FLinearColor(.25f, .9f, .4f) : FLinearColor(1, .3f, .2f);
 			Box(P - FVector2D(4), {8, 8}, C, 2);
-			Text(P + FVector2D(7, -9), TEXT("闸"), 12, C);
+			Text(P + FVector2D(7, -9), It->Water ? TEXT("水") : TEXT("闸"), 12, C);
 		}
 		// 小队标点：与 HUD 同一份数据，自己的琥珀色、队友的青色，过期不画。
 		if (const auto* Pinger = Cast<AExtractionPlayerController>(PC))
