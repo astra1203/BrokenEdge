@@ -5,6 +5,7 @@
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionState.h"
+#include "ExtractionPlayerController.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "Net/UnrealNetwork.h"
 // 当前角色的创伤组件：处理弹药倍率、护甲吸收、出血与腿部骨折；护甲耐久仍保存在物品实例。
@@ -176,9 +177,14 @@ void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController
 				const auto* Armor = UExtractionItemDefinition::Get(Item.Definition);
 				if (Armor && Armor->Kind == EExtractionItemKind::Armor && Item.Durability > 0)
 				{
+					const float DurabilityBefore = Item.Durability;
 					Damage = Absorb(Damage, AmmoDef->Penetration, Armor->ArmorLevel, Item.Durability);
 					++Inv->Contents.Revision;
 					Inv->Changed();
+					// 这一枪把护甲打到耐久 0：提醒本人护甲已失效。
+					if (DurabilityBefore > 0 && Item.Durability <= 0)
+						if (auto* Owner = Cast<AExtractionPlayerController>(C->GetController()))
+							Owner->ClientItemResult(0, Armor->Label.ToString() + TEXT(" 已损坏，不再提供防护"));
 				}
 				break;
 			}
