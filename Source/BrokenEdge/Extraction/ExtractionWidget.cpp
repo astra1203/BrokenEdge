@@ -362,6 +362,21 @@ int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Ge
 		Y += Size.Y + 4.f;
 	}
 
+	// 体力条：底部居中，体力不满时显示，低于起跑门槛时变红。
+	if (const auto* Runner = Cast<ABrokenEdgeCharacter>(PC->GetPawn()); Runner && Runner->GetStaminaFraction() < .999f)
+	{
+		const float Fraction = FMath::Clamp(Runner->GetStaminaFraction(), 0.f, 1.f);
+		const FVector2D BarSize(220.f, 4.f);
+		const FVector2D BarAt(Center.X - BarSize.X * .5f, Geometry.GetLocalSize().Y - 54.f);
+		static const FSlateBrush BarBrush = ExtractionUIStyle::Panel(FLinearColor::White, 2.f);
+		FSlateDrawElement::MakeBox(Out, LayerId, Geometry.ToPaintGeometry(BarSize, FSlateLayoutTransform(BarAt)), &BarBrush,
+		                           ESlateDrawEffect::None, FLinearColor(1, 1, 1, .15f));
+		const bool bLow = Runner->GetStamina() < GetDefault<UExtractionRules>()->StaminaSprintMin;
+		FSlateDrawElement::MakeBox(Out, LayerId, Geometry.ToPaintGeometry(FVector2D(BarSize.X * Fraction, BarSize.Y),
+			                           FSlateLayoutTransform(BarAt)), &BarBrush, ESlateDrawEffect::None,
+		                           bLow ? ExtractionUIStyle::Hex(TEXT("EA5A50")) : FLinearColor(1, 1, 1, .85f));
+	}
+
 	// 小队标点：投影到屏幕画菱形和“名字 · 距离”，屏幕外的贴边显示，最后 1 秒淡出。
 	const FVector2D Screen = Geometry.GetLocalSize();
 	for (const auto& Ping : PC->Pings)

@@ -344,6 +344,18 @@ private:
 	bool bSprintRequested = false;
 	UPROPERTY(Replicated)
 	bool bSprinting = false;
+	/** 搜打撤体力：服务器与本地各自按同一规则推进，服务器值只同步给本人用于校正。 */
+	UPROPERTY(Replicated)
+	float Stamina = 100;
+	double StaminaRegenAt = 0;
+	// 按本帧是否冲刺推进体力；返回当前是否还允许冲刺。
+	bool UpdateStamina(bool bWantsSprint, float DeltaSeconds);
+
+public:
+	float GetStamina() const { return Stamina; }
+	float GetStaminaFraction() const;
+
+private:
 	UPROPERTY(Transient)
 	TObjectPtr<USkeletalMeshComponent> DedicatedFirstPersonMesh = nullptr;
 	UPROPERTY(Transient)

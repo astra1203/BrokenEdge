@@ -1084,12 +1084,16 @@ void ABrokenEdgeCharacter::UpdateSprint()
 	// 治疗允许移动施放但要降速，且不能边治疗边冲刺；倍率来自 UExtractionRules。
 	const bool bHealing = ExtractionAbilities && ExtractionAbilities->Action == EExtractionAction::Heal;
 	const bool bWasSprinting = bSprinting;
-	bSprinting = bSprintRequested && !bHealing && !bFractureHinders && !bIsCrouched && !IsAiming() &&
+	const bool bCanSprint = bSprintRequested && !bHealing && !bFractureHinders && !bIsCrouched && !IsAiming() &&
 		!bDisableGameplay
 		&& (!ExtractionCombat->IsEnabled() || ExtractionCombat->CanSprintWithWeapon())
 		&& !bDefeated
 		&& GetCombatState() == ECombatState::ECS_Unoccuiped
 		&& FVector::DotProduct(Acceleration.GetSafeNormal2D(), GetActorForwardVector()) > 0.5f;
+	// 只有搜打撤模式有体力限制，其他模式照旧。
+	bSprinting = ExtractionCombat->IsEnabled()
+		             ? UpdateStamina(bCanSprint, GetWorld()->GetDeltaSeconds())
+		             : bCanSprint;
 	if (bWasSprinting && !bSprinting && ExtractionCombat->IsEnabled()) ExtractionCombat->OnSprintEnded();
 	GetCharacterMovement()->MaxWalkSpeed = bSprinting
 		                                       ? SprintSpeed
@@ -1100,10 +1104,32 @@ void ABrokenEdgeCharacter::UpdateSprint()
 	GetCharacterMovement()->MaxWalkSpeed *= FractureScale;
 }
 
+bool ABrokenEdgeCharacter::UpdateStamina(bool bWantsSprint, float DeltaSeconds)
+{
+	const auto* Rules = GetDefault<UExtractionRules>();
+	const double Now = GetWorld()->GetTimeSeconds();
+	// 已经在跑就能跑到体力见底；从静止或走路起跑需要体力不低于门槛，避免见底后抖动式起跑。
+	const bool bAllowed = bWantsSprint && Stamina > 0 && (bSprinting || Stamina >= Rules->StaminaSprintMin);
+	if (bAllowed)
+	{
+		Stamina = FMath::Max(0.f, Stamina - Rules->StaminaDrainPerSecond * DeltaSeconds);
+		StaminaRegenAt = Now + Rules->StaminaRegenDelay;
+	}
+	else if (Now >= StaminaRegenAt)
+		Stamina = FMath::Min(Rules->StaminaMax, Stamina + Rules->StaminaRegenPerSecond * DeltaSeconds);
+	return bAllowed;
+}
+
+float ABrokenEdgeCharacter::GetStaminaFraction() const
+{
+	return Stamina / FMath::Max(1.f, GetDefault<UExtractionRules>()->StaminaMax);
+}
+
 void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ABrokenEdgeCharacter, bSprinting);
+	DOREPLIFETIME_CONDITION(ABrokenEdgeCharacter, Stamina, COND_OwnerOnly);
 	DOREPLIFETIME(ABrokenEdgeCharacter, bExtractionGuard);
 	DOREPLIFETIME(ABrokenEdgeCharacter, ExtractionGuardId);
 

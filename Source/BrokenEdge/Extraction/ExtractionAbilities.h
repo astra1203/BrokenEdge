@@ -47,6 +47,17 @@ public:
 	 */
 	UPROPERTY(Config, meta=(ClampMin="0.05", ClampMax="1"))
 	float HealMoveSpeedScale = .4f;
+	// 体力：冲刺每秒消耗，停止冲刺满 StaminaRegenDelay 秒后每秒恢复；低于 StaminaSprintMin 不能重新起跑。
+	UPROPERTY(Config)
+	float StaminaMax = 100;
+	UPROPERTY(Config)
+	float StaminaDrainPerSecond = 10;
+	UPROPERTY(Config)
+	float StaminaRegenPerSecond = 16;
+	UPROPERTY(Config)
+	float StaminaRegenDelay = 1.2f;
+	UPROPERTY(Config)
+	float StaminaSprintMin = 20;
 	UPROPERTY(Config)
 	float HealCooldown = 20;
 	// 激素飞镖弹道照官方 BulletId 2007：初速 2900 cm/s、无重力、最远 10000 cm、半径 1 cm。
