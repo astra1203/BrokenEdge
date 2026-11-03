@@ -50,6 +50,11 @@ public:
 	// 体力：冲刺每秒消耗，停止冲刺满 StaminaRegenDelay 秒后每秒恢复；低于 StaminaSprintMin 不能重新起跑。
 	UPROPERTY(Config)
 	float StaminaMax = 100;
+	// 趴下：沿用蹲姿碰撞与动画，移速与视线高度单独降低（厘米/秒、厘米）。
+	UPROPERTY(Config)
+	float ProneSpeed = 90;
+	UPROPERTY(Config)
+	float ProneEyeHeight = 25;
 	// 守卫听觉：玩家开枪时，这个半径内且当前没有目标的守卫会去枪声位置搜索；装消音器时用较小半径。
 	UPROPERTY(Config)
 	float GuardHearingRadius = 5000;

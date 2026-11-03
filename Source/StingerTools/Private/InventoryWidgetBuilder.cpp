@@ -311,7 +311,7 @@ FString UInventoryWidgetBuilder::CreateInventoryWidgets()
 		auto* D = Label(T,TEXT("Detail"),TEXT(""), 16, ExtractionUIStyle::Accent());
 		D->SetJustification(ETextJustify::Center);
 		V->AddChildToVerticalBox(D);
-		auto* Hint = Label(T, NAME_None,TEXT("Tab 背包    H 医疗    E 交互    1 主武器    2 副武器    3 战术刀"), 14, Muted);
+		auto* Hint = Label(T, NAME_None,TEXT("Tab 背包    H 医疗    E 交互    1 主武器    2 副武器    3 战术刀    Z 趴下    V 激素枪"), 14, Muted);
 		Hint->SetJustification(ETextJustify::Center);
 		V->AddChildToVerticalBox(Hint)->SetPadding(FMargin(0, 14));
 	}, All);

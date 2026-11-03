@@ -206,7 +206,7 @@ void UExtractionWidget::Refresh()
 		const auto* A = C->GetExtractionAbilities();
 		if (PS->Life == EExtractionLife::Alive)
 		{
-			Text += FString::Printf(TEXT("\nZ 激素枪(对准队友，否则自用) %.0fs · X 蜂巢烟雾(Alt+X 低抛) %.0fs"),
+			Text += FString::Printf(TEXT("\nV 激素枪(对准队友，否则自用) %.0fs · X 蜂巢烟雾(Alt+X 低抛) %.0fs"),
 			                        FMath::Max(0.0, A->HealReadyAt - Now), FMath::Max(0.0, A->SmokeReadyAt - Now));
 			if (C->GetExtractionHealth()->Painkiller) Text += TEXT("\n激素生效 · 止痛中，骨折暂不影响移动");
 			if (A->RescueFocus()) Text += TEXT("\n按住 E 救援队友 · 5 秒");

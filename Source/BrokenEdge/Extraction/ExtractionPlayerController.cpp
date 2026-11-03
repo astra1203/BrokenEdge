@@ -47,7 +47,9 @@ void AExtractionPlayerController::SetupInputComponent()
 	InputComponent->BindKey(EKeys::Tab, IE_Pressed, this, &ThisClass::ToggleInventory);
 	InputComponent->BindKey(EKeys::M, IE_Pressed, this, &ThisClass::ToggleTacticalMap);
 	InputComponent->BindKey(EKeys::H, IE_Pressed, this, &ThisClass::UseMedical);
-	InputComponent->BindKey(EKeys::Z, IE_Pressed, this, &ThisClass::HealAbility);
+	// Z 趴下；激素枪改到 V。
+	InputComponent->BindKey(EKeys::Z, IE_Pressed, this, &ThisClass::ToggleProne);
+	InputComponent->BindKey(EKeys::V, IE_Pressed, this, &ThisClass::HealAbility);
 	InputComponent->BindKey(EKeys::X, IE_Pressed, this, &ThisClass::SmokeAbility);
 	// 官方蜂巢烟雾支持低抛；组合键要求修饰键完全匹配，单按 X 不会触发这一条。
 	InputComponent->BindKey(FInputChord(EKeys::X, false, false, true, false), IE_Pressed, this,
@@ -98,6 +100,12 @@ void AExtractionPlayerController::SelectWeaponSlot(int32 Slot)
 }
 
 void AExtractionPlayerController::SelectPrimaryGun() { SelectWeaponSlot(0); }
+
+void AExtractionPlayerController::ToggleProne()
+{
+	auto* I = Interaction();
+	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen && (!I || !I->InventoryOpen)) C->ToggleProne();
+}
 void AExtractionPlayerController::SelectSecondaryGun() { SelectWeaponSlot(1); }
 
 // Esc 按优先级关闭地图、取消拖动、关闭背包或取消治疗，均无待处理操作时才切换对局菜单。

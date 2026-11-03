@@ -1043,9 +1043,51 @@ void ABrokenEdgeCharacter::UpdateExtractionLabel()
 	ExtractionLabel->SetWorldRotation((Eye - ExtractionLabel->GetComponentLocation()).Rotation());
 }
 
+void ABrokenEdgeCharacter::ToggleProne()
+{
+	if (!ExtractionCombat->IsEnabled() || IsTraversing() || bDisableGameplay || ExtractionAbilities->IsDowned()) return;
+	bProne = !bProne;
+	if (!HasAuthority()) ServerSetProne(bProne);
+}
+
+void ABrokenEdgeCharacter::ServerSetProne_Implementation(bool bNewProne)
+{
+	bProne = bNewProne && ExtractionCombat->IsEnabled() && !ExtractionAbilities->IsDowned();
+}
+
+void ABrokenEdgeCharacter::ApplyProne(bool bNewProne)
+{
+	if (bNewProne == bProneApplied) return;
+	auto* Movement = GetCharacterMovement();
+	if (bNewProne)
+	{
+		ProneSavedCrouchSpeed = Movement->MaxWalkSpeedCrouched;
+		ProneSavedEyeHeight = CrouchedEyeHeight;
+		Movement->MaxWalkSpeedCrouched = GetDefault<UExtractionRules>()->ProneSpeed;
+		CrouchedEyeHeight = GetDefault<UExtractionRules>()->ProneEyeHeight;
+		Crouch();
+	}
+	else
+	{
+		Movement->MaxWalkSpeedCrouched = ProneSavedCrouchSpeed;
+		CrouchedEyeHeight = ProneSavedEyeHeight;
+		UnCrouch();
+	}
+	// 已经蹲着时 Crouch/UnCrouch 不会重算视线，这里直接同步。
+	if (bIsCrouched) BaseEyeHeight = CrouchedEyeHeight;
+	bProneApplied = bNewProne;
+}
+
 void ABrokenEdgeCharacter::UpdateSprint()
 {
 	if (!bEnableSprint || (!HasAuthority() && !IsLocallyControlled()) || !Combat) return;
+	// 倒地优先于趴下：先退出趴下恢复原值，再交给倒地逻辑。
+	if (ExtractionAbilities->IsDowned() && bProne)
+	{
+		bProne = false;
+		ApplyProne(false);
+	}
+	if (!ExtractionAbilities->IsDowned()) ApplyProne(bProne);
 	if (ExtractionAbilities->IsDowned())
 	{
 		if (!bWasExtractionDowned) ExtractionSavedCrouchSpeed = GetCharacterMovement()->MaxWalkSpeedCrouched;
@@ -1100,7 +1142,7 @@ void ABrokenEdgeCharacter::UpdateSprint()
 	// 治疗允许移动施放但要降速，且不能边治疗边冲刺；倍率来自 UExtractionRules。
 	const bool bHealing = ExtractionAbilities && ExtractionAbilities->Action == EExtractionAction::Heal;
 	const bool bWasSprinting = bSprinting;
-	const bool bCanSprint = bSprintRequested && !bHealing && !bFractureHinders && !bIsCrouched && !IsAiming() &&
+	const bool bCanSprint = bSprintRequested && !bProne && !bHealing && !bFractureHinders && !bIsCrouched && !IsAiming() &&
 		!bDisableGameplay
 		&& (!ExtractionCombat->IsEnabled() || ExtractionCombat->CanSprintWithWeapon())
 		&& !bDefeated
@@ -1154,6 +1196,7 @@ void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProp
 	DOREPLIFETIME_CONDITION(ABrokenEdgeCharacter, Stamina, COND_OwnerOnly);
 	DOREPLIFETIME(ABrokenEdgeCharacter, bExtractionGuard);
 	DOREPLIFETIME(ABrokenEdgeCharacter, ExtractionAlert);
+	DOREPLIFETIME(ABrokenEdgeCharacter, bProne);
 	DOREPLIFETIME(ABrokenEdgeCharacter, ExtractionGuardId);
 
 	DOREPLIFETIME_CONDITION(ABrokenEdgeCharacter, OverlappingWeapon, COND_OwnerOnly);
@@ -1607,6 +1650,12 @@ void ABrokenEdgeCharacter::Jump()
 		return;
 	}
 	if (ExtractionAbilities->IsDowned()) return;
+	// 趴着时空格先起身，不直接起跳。
+	if (bProne)
+	{
+		ToggleProne();
+		return;
+	}
 	if (ExtractionInteraction->IsEnabled())
 		if (auto* PC = Cast<AExtractionPlayerController>(Controller)) PC->ServerCancelMedical();
 	if (Combat && Combat->bHoldingTheFlag) return;
@@ -1671,6 +1720,12 @@ void ABrokenEdgeCharacter::CrouchButtonPressed()
 	if (Combat && Combat->bHoldingTheFlag) return;
 	if (bDisableGameplay) return;
 	if (Combat == nullptr) return;
+	// 趴着时按蹲键回到站立。
+	if (bProne)
+	{
+		ToggleProne();
+		return;
+	}
 
 	if (bIsCrouched)
 	{

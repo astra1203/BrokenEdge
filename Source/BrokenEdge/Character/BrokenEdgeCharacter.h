@@ -356,8 +356,20 @@ private:
 public:
 	float GetStamina() const { return Stamina; }
 	float GetStaminaFraction() const;
+	/** 搜打撤趴下（Z 切换）：本地立即生效并请求服务器，服务器值复制给其他端。 */
+	void ToggleProne();
+	bool IsProne() const { return bProne; }
 
 private:
+	UPROPERTY(Replicated)
+	bool bProne = false;
+	UFUNCTION(Server, Reliable)
+	void ServerSetProne(bool bNewProne);
+	// 进入/退出趴下时切换蹲姿与移速、视线高度，并保存原值以便恢复。
+	void ApplyProne(bool bNewProne);
+	bool bProneApplied = false;
+	float ProneSavedCrouchSpeed = 0, ProneSavedEyeHeight = 0;
+
 	UPROPERTY(Transient)
 	TObjectPtr<USkeletalMeshComponent> DedicatedFirstPersonMesh = nullptr;
 	UPROPERTY(Transient)
