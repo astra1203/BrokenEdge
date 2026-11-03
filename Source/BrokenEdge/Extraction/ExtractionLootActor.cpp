@@ -37,6 +37,10 @@ AExtractionLootActor::AExtractionLootActor()
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(RootComponent);
 	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LidMesh"));
+	LidMesh->SetupAttachment(RootComponent);
+	LidMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	LidMesh->SetVisibility(false);
 	ContainerMesh = CreateDefaultSubobject<UPoseableMeshComponent>(TEXT("ContainerMesh"));
 	ContainerMesh->SetupAttachment(RootComponent);
 	ContainerMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -102,6 +106,9 @@ void AExtractionLootActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(AExtractionLootActor, ContainerAppearance);
 	DOREPLIFETIME(AExtractionLootActor, AccessDoor);
 	DOREPLIFETIME(AExtractionLootActor, bOpened);
+	DOREPLIFETIME(AExtractionLootActor, ContainerStatic);
+	DOREPLIFETIME(AExtractionLootActor, ContainerLid);
+	DOREPLIFETIME(AExtractionLootActor, LidHinge);
 }
 
 // 服务器第一次打开时置位；监听服务器本地也立即开始开门。
@@ -135,6 +142,12 @@ void AExtractionLootActor::Tick(float DeltaSeconds)
 
 void AExtractionLootActor::ApplyDoorPose()
 {
+	if (ContainerStatic && LidMesh->GetStaticMesh())
+	{
+		const float Eased = FMath::InterpEaseInOut(0.f, 1.f, DoorProgress, 2.f);
+		LidMesh->SetRelativeRotation(FQuat(FVector::ForwardVector, FMath::DegreesToRadians(LidOpenDegrees * Eased)));
+		return;
+	}
 	const auto* Asset = ContainerMesh ? ContainerMesh->GetSkinnedAsset() : nullptr;
 	if (!Asset) return;
 	const FString MeshName = Asset->GetName();
@@ -163,9 +176,29 @@ void AExtractionLootActor::OnRep_Appearance()
 	InteractionBounds->SetBoxExtent(Loose ? LooseInteractionExtent : ContainerInteractionExtent);
 	WeaponMesh->SetVisibility(false);
 	ContainerMesh->SetVisibility(false);
+	LidMesh->SetVisibility(false);
 	Mesh->SetVisibility(true);
 	ContainerBounds->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	InteractionBounds->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	if (ContainerStatic && !Loose)
+	{
+		// 静态外观按原尺寸摆放（网格原点在箱底中心），盖子单独挂在铰链处。
+		const FVector Base = VisualOffset - FVector(0, 0, -20);
+		Mesh->SetStaticMesh(ContainerStatic);
+		Mesh->SetRelativeScale3D(FVector::OneVector);
+		Mesh->SetRelativeLocation(Base);
+		LidMesh->SetStaticMesh(ContainerLid);
+		LidMesh->SetRelativeLocation(Base + LidHinge);
+		LidMesh->SetVisibility(ContainerLid != nullptr);
+		const auto Bounds = ContainerStatic->GetBounds();
+		InteractionBounds->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		ContainerBounds->SetRelativeLocation(Bounds.Origin + Base);
+		ContainerBounds->SetBoxExtent(Bounds.BoxExtent.ComponentMax(FVector(5)));
+		ContainerBounds->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		DoorProgress = bOpened ? 1.f : DoorProgress;
+		ApplyDoorPose();
+		return;
+	}
 	if (ContainerAppearance && !Loose)
 	{
 		ContainerMesh->SetSkinnedAssetAndUpdate(ContainerAppearance);
@@ -215,6 +248,8 @@ void AExtractionLootActor::OnRep_Appearance()
 // 返回容器外观中心的世界位置或交互盒位置，供距离和视线判断使用。
 FVector AExtractionLootActor::InteractionPoint() const
 {
+	if (ContainerStatic)
+		return GetActorTransform().TransformPosition(ContainerStatic->GetBounds().Origin + VisualOffset - FVector(0, 0, -20));
 	return ContainerAppearance
 		       ? GetActorTransform().TransformPosition(
 			       ContainerAppearance->GetBounds().Origin + VisualOffset - FVector(0, 0, -20))

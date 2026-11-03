@@ -76,6 +76,18 @@ public:
 	FName SourcePointId;
 	UPROPERTY(ReplicatedUsing=OnRep_Appearance)
 	TObjectPtr<class USkeletalMesh> ContainerAppearance;
+	// 静态网格外观（航空箱等），优先于 ContainerAppearance；盖子绕 LidHinge 处的 X 轴掀开。
+	UPROPERTY(ReplicatedUsing=OnRep_Appearance)
+	TObjectPtr<UStaticMesh> ContainerStatic;
+	UPROPERTY(ReplicatedUsing=OnRep_Appearance)
+	TObjectPtr<UStaticMesh> ContainerLid;
+	UPROPERTY(ReplicatedUsing=OnRep_Appearance)
+	FVector LidHinge = FVector::ZeroVector;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UStaticMeshComponent> LidMesh;
+	/** 盖子全开角度（度，负值让前沿向上向后翻）。 */
+	UPROPERTY(EditDefaultsOnly, Category="Extraction|Appearance")
+	float LidOpenDegrees = -105.f;
 	// 关联门尚未打开时，交互距离满足也不能搜索该容器。
 	UPROPERTY(Replicated)
 	TObjectPtr<class AExtractionKeyRoom> AccessDoor;

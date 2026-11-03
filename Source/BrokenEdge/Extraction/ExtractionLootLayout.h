@@ -56,6 +56,13 @@ struct BROKENEDGE_API FExtractionLootPoint
 	FString Reference;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<class USkeletalMesh> Appearance;
+	/** 静态网格外观（如航空箱），设置后优先于 Appearance；LidAppearance 为可掀开的盖子，LidHinge 是铰链在箱体网格中的位置。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<class UStaticMesh> StaticAppearance;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<class UStaticMesh> LidAppearance;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector LidHinge = FVector::ZeroVector;
 	// 内容配方引用与外观、位置来源独立；配方缺失时该容器可能为空。
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UExtractionLootRecipe> Recipe;

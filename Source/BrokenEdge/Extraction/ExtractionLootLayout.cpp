@@ -114,6 +114,9 @@ void UExtractionLootLayout::Spawn(UWorld* World, int32 Seed) const
 		Actor->SeedContents = false; // Authored floor/elevation must not be replaced by a downward trace.
 		Actor->SourcePointId = P.Id;
 		Actor->ContainerAppearance = P.Appearance;
+		Actor->ContainerStatic = P.StaticAppearance;
+		Actor->ContainerLid = P.LidAppearance;
+		Actor->LidHinge = P.LidHinge;
 		Actor->Label = P.Label.ToString();
 		FExtractionContainer Contents;
 		Contents.Id = FGuid::NewGuid();
