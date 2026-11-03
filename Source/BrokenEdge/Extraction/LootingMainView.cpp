@@ -97,20 +97,37 @@ void ULootingWidgetPart::SetItem(const FExtractionItem& Item)
 {
 	ItemId = Item.Id;
 	const auto* D = UExtractionItemDefinition::Get(Item.Definition);
+	auto* Texture = Icon && D && !D->Icon.IsNull() ? D->Icon.LoadSynchronous() : nullptr;
+	// 有图标时只显示图标（名称放进悬停提示），没有图标的物品退回显示名称。
 	Text(Label, D ? D->Label.ToString() : TEXT("未搜索"));
-	Text(Detail, D && D->Kind == EExtractionItemKind::Weapon
-		             ? FString::Printf(TEXT("%d / %d"), Item.Magazine, D->MagazineCapacity)
+	if (Label) Label->SetVisibility(Texture ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
+	const bool bWeapon = D && D->Kind == EExtractionItemKind::Weapon;
+	Text(Detail, bWeapon ? FString::Printf(TEXT("%d / %d"), Item.Magazine, D->MagazineCapacity)
 		             : FString::Printf(TEXT("×%d"), Item.Quantity));
+	if (Detail)
+		Detail->SetVisibility(bWeapon || Item.Quantity > 1 ? ESlateVisibility::HitTestInvisible
+			                      : ESlateVisibility::Collapsed);
 	if (Icon)
 	{
-		auto* Texture = D && !D->Icon.IsNull() ? D->Icon.LoadSynchronous() : nullptr;
-		Icon->SetBrushFromTexture(Texture, true);
+		if (Texture)
+		{
+			// 按物品占格尺寸等比缩放，长枪图标不会被压扁。
+			const float Cell = Inventory ? Inventory->CellSize : 64.f;
+			const FVector2D Area = FVector2D(Item.Extent()) * Cell * .9f;
+			const float Fit = FMath::Min(Area.X / FMath::Max(1, Texture->GetSizeX()),
+			                             Area.Y / FMath::Max(1, Texture->GetSizeY()));
+			FSlateBrush Brush;
+			Brush.SetResourceObject(Texture);
+			Brush.ImageSize = FVector2D(Texture->GetSizeX(), Texture->GetSizeY()) * Fit;
+			Icon->SetBrush(Brush);
+		}
 		Icon->SetVisibility(Texture ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
 	}
 	if (RarityBar) RarityBar->SetBrushColor(ExtractionUIStyle::Rarity(D ? D->DisplayRarity : 0));
 	if (Item.Id.IsValid())
 	{
-		const auto Lines = ExtractionItems::WeaponDetails(Item);
+		auto Lines = ExtractionItems::WeaponDetails(Item);
+		if (D) Lines.Insert(D->Label.ToString(), 0);
 		SetToolTipText(FText::FromString(FString::Join(Lines,TEXT("\n"))));
 	}
 	else SetToolTipText(FText::GetEmpty());
