@@ -469,12 +469,16 @@ void ULootingMainView::Refresh()
 			LastOwnId = Own->Id;
 			LastOwnRevision = Own->Revision;
 		}
+		// 搜出一件物品时服务器只更新快照里的揭示内容、不改容器版本，所以还要比较已揭示件数。
+		int32 RevealedCount = 0;
+		if (Loot) for (const auto& Item : Loot->Items) RevealedCount += Item.Definition.IsNone() ? 0 : 1;
 		if (!bWasOpen || (Loot ? Loot->Id : FGuid()) != LastLootId || (Loot ? Loot->Revision : INDEX_NONE) !=
-			LastLootRevision)
+			LastLootRevision || RevealedCount != LastLootRevealed)
 		{
 			RebuildContainer(LootContainer, true);
 			LastLootId = Loot ? Loot->Id : FGuid();
 			LastLootRevision = Loot ? Loot->Revision : INDEX_NONE;
+			LastLootRevealed = RevealedCount;
 		}
 		int32 OwnCells = 0, UsedCells = 0;
 		int64 Value = 0;
