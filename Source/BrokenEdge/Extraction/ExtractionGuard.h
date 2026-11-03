@@ -91,6 +91,10 @@ public:
 	 * 都要求完整导航路径；找不到返回 false，交战任务保持站定射击。
 	 */
 	bool FindTacticalPoint(const APawn* Threat, bool bCover, FVector& Out) const;
+	/** 服务器：通知 Radius 内的守卫听到 Location 处的枪声。 */
+	static void HearShot(UWorld* World, const FVector& Location, float Radius);
+	/** 当前没有可见目标时，把枪声位置作为搜索点进入搜索；已在交战的守卫不受影响。 */
+	void Hear(const FVector& Location);
 	// 交战走位的每名守卫状态：下次换位时刻、是否正在找掩体及掩体冷却截止时刻。
 	double NextTacticAt = 0, CoverUntil = 0, NextCoverAt = 0;
 	bool bTakingCover = false;

@@ -409,6 +409,19 @@ void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint3
 #endif
 		// 广播已经追加散射的最终端点；客户端不得再次随机采样，以免命中与表现不一致。
 		MulticastShotEffects(Weapon, End, Weapon->GetAmmo());
+		// 玩家枪声会引来附近守卫；装了消音/消声类枪口配件时听觉半径缩小。
+		if (!C->bExtractionGuard)
+		{
+			bool bSuppressed = false;
+			if (const auto* Inventory = C->GetExtractionInteraction()->Inventory())
+				if (const auto* Item = Inventory->Contents.Find(Weapon->ExtractionItemId))
+					for (const auto& Part : Item->Attachments)
+						if (const auto* D = UExtractionItemDefinition::Get(Part.Definition))
+							bSuppressed |= D->Label.ToString().Contains(TEXT("消音")) || D->Label.ToString().Contains(TEXT("消声"));
+			const auto* Rules = GetDefault<UExtractionRules>();
+			AExtractionGuard::HearShot(GetWorld(), C->GetActorLocation(),
+			                           bSuppressed ? Rules->GuardHearingSuppressedRadius : Rules->GuardHearingRadius);
+		}
 	}
 	else ++RejectedShots;
 	// Never expose or overwrite an unrelated player's weapon from a forged request.

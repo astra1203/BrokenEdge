@@ -4,6 +4,8 @@
 #include "ExtractionSmoke.h"
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionPatrolArea.h"
+#include "BrokenEdge/Character/GuardBlackboardKeys.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "NavigationSystem.h"
@@ -144,6 +146,36 @@ AExtractionGuard::AExtractionGuard()
 	SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
 	ApplySightRules();
 	Perception->SetDominantSense(SightConfig->GetSenseImplementation());
+}
+
+void AExtractionGuard::HearShot(UWorld* World, const FVector& Location, float Radius)
+{
+	if (!World || Radius <= 0) return;
+	for (TActorIterator<AExtractionGuard> It(World); It; ++It)
+		if (const APawn* Pawn = It->GetPawn(); Pawn && FVector::DistSquared(Pawn->GetActorLocation(), Location) <= Radius * Radius)
+			It->Hear(Location);
+}
+
+void AExtractionGuard::Hear(const FVector& Location)
+{
+	auto* Board = GetBlackboardComponent();
+	const auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
+	if (!Board || !C || C->IsDefeated() || Target || !Board->GetValueAsBool(GuardBlackboard::CanRunAI)) return;
+	// 枪声位置投影到导航网格，投不上就原样交给搜索移动。
+	FVector Destination = Location;
+	FNavLocation Projected;
+	if (const auto* Nav = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
+		Nav && Nav->ProjectPointToNavigation(Location, Projected, FVector(500, 500, 300)))
+		Destination = Projected.Location;
+	// 复用丢失目标后的搜索分支：写好最后已知位置并标记搜索中，感知 Service 会按追击时长自然结束搜索。
+	Board->PauseObserverNotifications();
+	Board->SetValueAsVector(GuardBlackboard::LastKnownLocation, Destination);
+	Board->SetValueAsBool(GuardBlackboard::HasLastKnownLocation, true);
+	Board->SetValueAsFloat(GuardBlackboard::LastSeenTime, static_cast<float>(GetWorld()->GetTimeSeconds()));
+	Board->SetValueAsBool(GuardBlackboard::SearchActive, true);
+	Board->SetValueAsBool(GuardBlackboard::ReturningToRoute, false);
+	Board->ResumeObserverNotifications(true);
+	State = EExtractionGuardState::Search;
 }
 
 void AExtractionGuard::ApplySightRules()
