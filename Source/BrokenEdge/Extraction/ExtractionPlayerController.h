@@ -59,6 +59,12 @@ public:
 	// 先确认门对象有效且属于同一世界，再由门执行完整权限和库存版本校验。
 	UFUNCTION(Server, Reliable)
 	void ServerUnlockDoor(class AExtractionKeyRoom* Door, int32 InventoryRevision);
+	// G / Alt+G：投出背包里的一枚破片手雷，服务器扣除物品并生成投掷物。
+	void ThrowGrenade();
+	void ThrowGrenadeLow();
+	UFUNCTION(Server, Reliable)
+	void ServerThrowGrenade(bool bLow);
+	double NextGrenadeAt = 0;
 	// 电闸由服务器再次校验距离、视线与行动能力。
 	UFUNCTION(Server, Reliable)
 	void ServerPullSwitch(class AExtractionExitSwitch* Switch);

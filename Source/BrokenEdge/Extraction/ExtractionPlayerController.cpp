@@ -8,6 +8,7 @@
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionKeyRoom.h"
 #include "ExtractionExitSwitch.h"
+#include "ExtractionFragGrenade.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionSmoke.h"
 #include "ExtractionInventoryComponent.h"
@@ -51,6 +52,9 @@ void AExtractionPlayerController::SetupInputComponent()
 	// 官方蜂巢烟雾支持低抛；组合键要求修饰键完全匹配，单按 X 不会触发这一条。
 	InputComponent->BindKey(FInputChord(EKeys::X, false, false, true, false), IE_Pressed, this,
 	                        &ThisClass::SmokeAbilityLow);
+	InputComponent->BindKey(EKeys::G, IE_Pressed, this, &ThisClass::ThrowGrenade);
+	InputComponent->BindKey(FInputChord(EKeys::G, false, false, true, false), IE_Pressed, this,
+	                        &ThisClass::ThrowGrenadeLow);
 	InputComponent->BindKey(EKeys::E, IE_Released, this, &ThisClass::ReleaseInteract);
 	InputComponent->BindKey(EKeys::Three, IE_Pressed, this, &ThisClass::SelectKnife);
 	InputComponent->BindKey(EKeys::One, IE_Pressed, this, &ThisClass::SelectHeldGun);
@@ -222,6 +226,57 @@ void AExtractionPlayerController::ServerUnlockDoor_Implementation(AExtractionKey
 {
 	if (IsValid(Door) && Door->GetWorld() == GetWorld())
 		ClientItemResult(0, Door->Unlock(Interaction(), Revision));
+}
+
+void AExtractionPlayerController::ThrowGrenade()
+{
+	if (auto* I = Interaction(); I && I->CanAct() && !I->InventoryOpen && !bMenuOpen) ServerThrowGrenade(false);
+}
+
+void AExtractionPlayerController::ThrowGrenadeLow()
+{
+	if (auto* I = Interaction(); I && I->CanAct() && !I->InventoryOpen && !bMenuOpen) ServerThrowGrenade(true);
+}
+
+// 服务器校验行动能力与投掷间隔，从背包（不含安全箱）取出一枚投掷物再生成手雷。
+void AExtractionPlayerController::ServerThrowGrenade_Implementation(bool bLow)
+{
+	auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
+	auto* I = Interaction();
+	auto* Inv = I ? I->Inventory() : nullptr;
+	const double Now = GetWorld()->GetTimeSeconds();
+	const auto* R = GetDefault<UExtractionRules>();
+	if (!C || !I || !Inv || !I->CanAct() || Now < NextGrenadeAt
+		|| C->GetCombatState() != ECombatState::ECS_Unoccuiped) return;
+	const auto* Item = Inv->Contents.Items.FindByPredicate([](const FExtractionItem& Entry)
+	{
+		const auto* D = UExtractionItemDefinition::Get(Entry.Definition);
+		return D && D->Kind == EExtractionItemKind::Throwable && Entry.Slot != ExtractionGear::SafeGrid;
+	});
+	if (!Item)
+	{
+		ClientItemResult(0, TEXT("没有可投掷的手雷"));
+		return;
+	}
+	FVector Eye;
+	FRotator View;
+	C->GetActorEyesViewPoint(Eye, View);
+	View.Pitch = FMath::Clamp(View.Pitch + R->FragThrowPitch, -89.f, 89.f);
+	const FVector From = Eye + View.Vector() * 40.f;
+	FActorSpawnParameters Params;
+	Params.Owner = C;
+	Params.Instigator = C;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	auto* Grenade = GetWorld()->SpawnActor<AExtractionFragGrenade>(From, View, Params);
+	if (!Grenade) return;
+	const FGuid Used = Item->Id;
+	if (Item->Quantity > 1) Inv->Contents.Find(Used)->Quantity -= 1;
+	else Inv->Contents.Items.RemoveAll([&](const FExtractionItem& Entry) { return Entry.Id == Used; });
+	++Inv->Contents.Revision;
+	Inv->Changed();
+	NextGrenadeAt = Now + R->FragThrowInterval;
+	Grenade->Launch(View.Vector() * (bLow ? R->FragThrowLowSpeed : R->FragThrowSpeed) + C->GetVelocity());
+	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_FRAG_THROW Player=%s Low=%d"), *GetNameSafe(PlayerState), bLow ? 1 : 0);
 }
 
 void AExtractionPlayerController::ServerPullSwitch_Implementation(AExtractionExitSwitch* Switch)

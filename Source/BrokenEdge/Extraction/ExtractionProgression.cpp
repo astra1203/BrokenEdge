@@ -26,7 +26,8 @@ UExtractionProgressionRules::UExtractionProgressionRules()
 		{TEXT("Rig_Hurricane"), 1200, 3},
 		{TEXT("Bag_Climb"), 300, 1}, {TEXT("Bag_Hike"), 500, 1}, {TEXT("Bag_ALS"), 900, 2},
 		{TEXT("Bag_GTO"), 1600, 3},
-		{TEXT("Safe_Advanced"), 3000, 2}, {TEXT("Safe_Premium"), 6000, 3}
+		{TEXT("Safe_Advanced"), 3000, 2}, {TEXT("Safe_Premium"), 6000, 3},
+		{TEXT("FragGrenade"), 250, 1}
 	};
 	Quests = {
 		{TEXT("初次撤离"), TEXT("接取后成功撤离一次"), 1, 500, 100},

@@ -9,7 +9,7 @@
 
 // 物品类别决定能否装备、堆叠、治疗或装配；不能用 UI 分类替代这些规则。
 UENUM(BlueprintType)
-enum class EExtractionItemKind : uint8 { Weapon, Ammo, Medical, Valuable, Armor, Attachment, Key, Gear };
+enum class EExtractionItemKind : uint8 { Weapon, Ammo, Medical, Valuable, Armor, Attachment, Key, Gear, Throwable };
 
 /**
  * 胸挂、背包、安全箱：装备槽 4/5/6，各自提供一块网格（Slot -2/-1/-3）。

@@ -115,6 +115,36 @@ float UExtractionHealth::Absorb(float Damage, int32 Penetration, int32 ArmorLeve
 }
 
 // 服务器先过滤友军等无效伤害，再应用弹药/守卫倍率、护甲和生命损失，最后依据实际掉血产生创伤。
+void UExtractionHealth::Explosion(float Damage, AController* Attacker, AActor* Causer)
+{
+	auto* C = Character();
+	auto* GM = GetWorld()->GetAuthGameMode<AExtractionGameMode>();
+	if (!C || !C->HasAuthority() || !GM || C->IsDefeated() || !FMath::IsFinite(Damage)) return;
+	Damage = GM->CalculateDamage(Attacker, C->GetController(), Damage);
+	if (Damage <= 0) return;
+	LastBulletAt = GetWorld()->GetTimeSeconds();
+	if (C->GetExtractionAbilities()->IsDowned())
+	{
+		C->ReceiveDamage(C, Damage, nullptr, Attacker, Causer);
+		return;
+	}
+	C->GetExtractionInteraction()->CancelMedical();
+	C->GetExtractionAbilities()->Damaged();
+	const float Before = C->GetHealth();
+	C->ReceiveDamage(C, Damage, nullptr, Attacker, Causer);
+	if (Before - C->GetHealth() >= GetDefault<UExtractionEquipmentRules>()->TraumaThreshold && C->GetHealth() > 0
+		&& !C->IsDefeated())
+	{
+		if (!Bleeding)
+			NextBleed = GetWorld()->GetTimeSeconds() + GetDefault<UExtractionEquipmentRules>()->BleedingInterval;
+		Bleeding = true;
+		BleedInstigator = Attacker;
+		C->ForceNetUpdate();
+	}
+	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_EXPLOSION_HIT Victim=%s Damage=%.1f Health=%.1f"), *C->GetName(), Damage,
+	       C->GetHealth());
+}
+
 void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController* Attacker, AActor* Causer)
 {
 	auto* C = Character();

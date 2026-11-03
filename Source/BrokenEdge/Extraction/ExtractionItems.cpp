@@ -61,6 +61,8 @@ const TArray<FName>& UExtractionItemDefinition::Ids()
 		TEXT("Rig_Pouch"), TEXT("Rig_Ammo"), TEXT("Rig_Assault"), TEXT("Rig_Hurricane"),
 		TEXT("Bag_Climb"), TEXT("Bag_Hike"), TEXT("Bag_ALS"), TEXT("Bag_GTO"),
 		TEXT("Safe_Basic"), TEXT("Safe_Advanced"), TEXT("Safe_Premium"),
+		// 投掷物：官方增强型破片手雷 21010000001
+		TEXT("FragGrenade"),
 		// 航天基地官方收集品（GameItem.SourceMapId=3902），由 generate_collectibles.py 生成
 #include "ExtractionCollectibles.inl"
 	};

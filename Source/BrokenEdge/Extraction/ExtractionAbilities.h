@@ -129,6 +129,27 @@ public:
 	// 落地到起烟的延迟；延迟让对手有机会抢在成烟前穿过去。
 	UPROPERTY(Config)
 	float SmokeFuseSeconds = 1.5f;
+	// 破片手雷：伤害/半径照官方 DamageExplodeValue（ExplodeValueId 1）：800 cm 半径、200 cm 内满伤 110、
+	// 外圈衰减到 1。引信时长解包数据里没找到，取项目值 4 秒（拔销即计时）。
+	UPROPERTY(Config)
+	float FragDamage = 110;
+	UPROPERTY(Config)
+	float FragMinDamage = 1;
+	UPROPERTY(Config)
+	float FragRadius = 800;
+	UPROPERTY(Config)
+	float FragFullRadius = 200;
+	UPROPERTY(Config)
+	float FragFuseSeconds = 4;
+	// 高抛 / 低抛（Alt+G）初速 cm/s，沿准星上抬 FragThrowPitch 度；两次投掷的最短间隔。
+	UPROPERTY(Config)
+	float FragThrowSpeed = 1800;
+	UPROPERTY(Config)
+	float FragThrowLowSpeed = 900;
+	UPROPERTY(Config)
+	float FragThrowPitch = 10;
+	UPROPERTY(Config)
+	float FragThrowInterval = 1;
 	// 守卫数量与反应/射击节奏调参；GuardDamageScale 是伤害倍率。
 	// 按路线名排序轮流分配，8 个刚好核心区 4 条 + 7F 新区域 4 条各一名。
 	UPROPERTY(Config)

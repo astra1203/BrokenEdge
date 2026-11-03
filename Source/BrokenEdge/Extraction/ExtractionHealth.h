@@ -55,6 +55,8 @@ public:
 	void ClearStim();
 	// 服务器先过滤友军等无效伤害，再应用弹药/守卫倍率、护甲和生命损失，最后依据实际掉血产生创伤。
 	void Bullet(float Damage, FName Bone, FName Ammo, AController* Attacker, AActor* Causer);
+	// 爆炸伤害：不经过弹药/护甲部位计算，按官方爆炸主要伤及四肢的特点只扣生命并可能造成出血。
+	void Explosion(float Damage, AController* Attacker, AActor* Causer);
 	// 最近一次实际掉血中弹的服务器时间，守卫据此决定是否找掩体；-1 表示本局未中弹。
 	double LastBulletAt = -1;
 	// 按治疗类型检查是否缺血、出血或骨折，供医疗开始与完成时复核。
