@@ -590,7 +590,7 @@ protected:
 	void ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
 	                   class AController* InstigatorController, AActor* DamageCauser);
 	// 搜打撤模式：把这次伤害的结果（命中/击倒/击杀）发给攻击者，把伤害来源方向发给受击者。
-	void NotifyCombatFeedback(AController* Attacker, AActor* Causer, bool bWasDowned);
+	void NotifyCombatFeedback(AController* Attacker, AActor* Causer, bool bWasDowned, float Damage);
 
 public:
 	/**

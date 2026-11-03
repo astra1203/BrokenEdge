@@ -7,6 +7,23 @@
 // 撤离控制器把本地输入转为服务器 RPC，并管理 HUD、背包、观战和离开会话。
 // 本地界面只读复制状态；物品结果、撤离成功和观战资格由服务器决定。HUD 实现位于 ExtractionWidget。
 
+/** 阵亡回顾：服务器按本局受到的伤害记录，阵亡时发给本人展示。 */
+USTRUCT()
+struct FExtractionDeathRecap
+{
+	GENERATED_BODY()
+	/** 最后一次造成伤害的来源名称（玩家名或“守卫”）。 */
+	UPROPERTY() FString Killer;
+	UPROPERTY() FString Weapon;
+	/** 最后一次受击时与攻击者的水平距离（米）。 */
+	UPROPERTY() float Distance = 0;
+	/** 本局受击次数与总伤害。 */
+	UPROPERTY() int32 Hits = 0;
+	UPROPERTY() float Damage = 0;
+	/** 倒地后流血耗尽而阵亡。 */
+	UPROPERTY() bool bBledOut = false;
+};
+
 UCLASS()
 class BROKENEDGE_API AExtractionPlayerController : public ABrokenEdgePlayerController
 {
@@ -133,6 +150,15 @@ public:
 	TArray<TPair<double, FVector>> DamageSources;
 	/** 近期击倒/击杀提示（本地时间, 文本）。 */
 	TArray<TPair<double, FString>> CombatNotices;
+	// 服务器：记录一次受击，供阵亡回顾使用。
+	void RecordDamage(const FString& Killer, const FString& Weapon, float Distance, float Damage);
+	// 服务器：本人最终阵亡时调用，把回顾发给客户端。
+	void SendDeathRecap(bool bBledOut);
+	UFUNCTION(Client, Reliable)
+	void ClientDeathRecap(const FExtractionDeathRecap& Recap);
+	/** 客户端收到的阵亡回顾与收到时刻；未阵亡时 ReceivedAt 为负。 */
+	FExtractionDeathRecap DeathRecap;
+	double DeathRecapAt = -1;
 
 private:
 	void EnsureLocalWidgets();

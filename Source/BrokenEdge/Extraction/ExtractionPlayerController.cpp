@@ -311,6 +311,28 @@ void AExtractionPlayerController::ClientCombatHit_Implementation(uint8 Result, c
 	}
 }
 
+void AExtractionPlayerController::RecordDamage(const FString& Killer, const FString& Weapon, float Distance, float Damage)
+{
+	DeathRecap.Killer = Killer;
+	DeathRecap.Weapon = Weapon;
+	DeathRecap.Distance = Distance;
+	++DeathRecap.Hits;
+	DeathRecap.Damage += Damage;
+}
+
+void AExtractionPlayerController::SendDeathRecap(bool bBledOut)
+{
+	DeathRecap.bBledOut = bBledOut;
+	ClientDeathRecap(DeathRecap);
+	DeathRecap = FExtractionDeathRecap();
+}
+
+void AExtractionPlayerController::ClientDeathRecap_Implementation(const FExtractionDeathRecap& Recap)
+{
+	DeathRecap = Recap;
+	DeathRecapAt = GetWorld()->GetTimeSeconds();
+}
+
 void AExtractionPlayerController::ClientDamaged_Implementation(FVector_NetQuantize From)
 {
 	DamageSources.Add({GetWorld()->GetTimeSeconds(), From});

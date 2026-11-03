@@ -360,6 +360,52 @@ int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Ge
 		                            Color.CopyWithNewOpacity(Fade));
 		Y += Size.Y + 4.f;
 	}
+
+	// 阵亡回顾：本人阵亡后在屏幕上方居中显示一张卡片，写明击杀来源、武器、距离与本局受伤情况。
+	const auto* PS = PC->GetPlayerState<AExtractionPlayerState>();
+	if (PS && PS->Life == EExtractionLife::Dead && PC->DeathRecapAt >= 0)
+	{
+		const auto& Recap = PC->DeathRecap;
+		TArray<TPair<FString, FSlateFontInfo>> RecapLines;
+		RecapLines.Add({TEXT("你已阵亡"), ExtractionUIStyle::Font(24, true)});
+		if (Recap.Hits == 0) RecapLines.Add({TEXT("没有记录到受击来源"), ExtractionUIStyle::Font(15)});
+		else
+		{
+			RecapLines.Add({(Recap.bBledOut ? TEXT("倒地后失血过多 · 最后击倒你的是 ") : TEXT("击杀者 ")) + Recap.Killer,
+			           ExtractionUIStyle::Font(17, true)});
+			RecapLines.Add({FString::Printf(TEXT("%s  ·  %.0f 米"), *Recap.Weapon, Recap.Distance), ExtractionUIStyle::Font(15)});
+			RecapLines.Add({FString::Printf(TEXT("本局受击 %d 次 · 共 %.0f 点伤害"), Recap.Hits, Recap.Damage),
+			           ExtractionUIStyle::Font(14)});
+		}
+		float Width = 0, Height = 0;
+		TArray<FVector2D> Sizes;
+		for (const auto& [Text, LineFont] : RecapLines)
+		{
+			Sizes.Add(Measure->Measure(Text, LineFont));
+			Width = FMath::Max(Width, Sizes.Last().X);
+			Height += Sizes.Last().Y + 6.f;
+		}
+		const FVector2D CardSize(Width + 64.f, Height + 36.f);
+		const FVector2D CardAt(Center.X - CardSize.X * .5f, Geometry.GetLocalSize().Y * .16f);
+		static const FSlateBrush Card = ExtractionUIStyle::Panel(FLinearColor::White, 6.f, FLinearColor(1, 1, 1, .1f));
+		FSlateDrawElement::MakeBox(Out, LayerId, Geometry.ToPaintGeometry(CardSize, FSlateLayoutTransform(CardAt)), &Card,
+		                           ESlateDrawEffect::None, ExtractionUIStyle::Hex(TEXT("0B0E12"), .86f));
+		static const FSlateBrush Stripe = ExtractionUIStyle::Panel(FLinearColor::White, 1.f);
+		FSlateDrawElement::MakeBox(Out, LayerId + 1, Geometry.ToPaintGeometry(FVector2D(CardSize.X, 3),
+			                           FSlateLayoutTransform(CardAt)), &Stripe, ESlateDrawEffect::None,
+		                           ExtractionUIStyle::Hex(TEXT("EA5A50")));
+		float LineY = CardAt.Y + 20.f;
+		for (int32 Index = 0; Index < RecapLines.Num(); ++Index)
+		{
+			const FLinearColor Color = Index == 0 ? ExtractionUIStyle::Hex(TEXT("EA5A50"))
+				                           : Index == 1 ? FLinearColor::White : ExtractionUIStyle::Muted();
+			FSlateDrawElement::MakeText(Out, LayerId + 1, Geometry.ToPaintGeometry(Sizes[Index], FSlateLayoutTransform(
+				                            FVector2D(Center.X - Sizes[Index].X * .5f, LineY))), RecapLines[Index].Key,
+			                            RecapLines[Index].Value, ESlateDrawEffect::None, Color);
+			LineY += Sizes[Index].Y + 6.f;
+		}
+		++LayerId;
+	}
 	return LayerId;
 }
 

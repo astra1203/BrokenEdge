@@ -22,6 +22,7 @@
 #include "Animation/AnimMontage.h"
 #include "BrokenEdge/Weapon/WeaponPresentation.h"
 #include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
+#include "BrokenEdge/Extraction/ExtractionFragGrenade.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -203,7 +204,7 @@ void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, con
 	// 搜打撤模式在函数返回时统一发战斗反馈，覆盖倒地扣血、击倒、击杀各条返回路径。
 	bool bFeedback = false;
 	const bool bWasDowned = ExtractionAbilities->IsDowned();
-	ON_SCOPE_EXIT { if (bFeedback) NotifyCombatFeedback(InstigatorController, DamageCauser, bWasDowned); };
+	ON_SCOPE_EXIT { if (bFeedback) NotifyCombatFeedback(InstigatorController, DamageCauser, bWasDowned, Damage); };
 	if (ExtractionInteraction->IsEnabled())
 	{
 		if (Damage <= 0) return;
@@ -252,7 +253,7 @@ void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, con
 	}
 }
 
-void ABrokenEdgeCharacter::NotifyCombatFeedback(AController* Attacker, AActor* Causer, bool bWasDowned)
+void ABrokenEdgeCharacter::NotifyCombatFeedback(AController* Attacker, AActor* Causer, bool bWasDowned, float Damage)
 {
 	const uint8 Result = bDefeated ? 2 : !bWasDowned && ExtractionAbilities->IsDowned() ? 1 : 0;
 	if (auto* Shooter = Cast<AExtractionPlayerController>(Attacker); Shooter && Attacker != GetController())
@@ -264,6 +265,20 @@ void ABrokenEdgeCharacter::NotifyCombatFeedback(AController* Attacker, AActor* C
 	{
 		const AActor* Source = Attacker && Attacker->GetPawn() ? Attacker->GetPawn() : Causer;
 		if (Source && Source != this) Victim->ClientDamaged(Source->GetActorLocation());
+		// 阵亡回顾：攻击者名称、所用武器、距离。
+		const auto* Shooter = Attacker ? Cast<ABrokenEdgeCharacter>(Attacker->GetPawn()) : nullptr;
+		FString Name = TEXT("未知来源");
+		if (Shooter && Shooter->bExtractionGuard) Name = TEXT("守卫");
+		else if (const APlayerState* State = Attacker ? Attacker->GetPlayerState<APlayerState>() : nullptr)
+			Name = State->GetPlayerName();
+		FString Weapon = TEXT("未知");
+		if (Causer && Causer->IsA<AExtractionFragGrenade>()) Weapon = TEXT("破片手雷");
+		else if (Shooter && Shooter->Melee && Shooter->Melee->Active) Weapon = TEXT("战术刀");
+		else if (Shooter)
+			if (auto* Gun = const_cast<ABrokenEdgeCharacter*>(Shooter)->GetEquippedWeapon())
+				if (const auto* D = UExtractionItemDefinition::Get(Gun->ExtractionDefinition)) Weapon = D->Label.ToString();
+		Victim->RecordDamage(Name, Weapon, Source ? FVector::Dist2D(Source->GetActorLocation(), GetActorLocation()) / 100 : 0,
+		                     Damage);
 	}
 }
 

@@ -796,6 +796,7 @@ void AExtractionGameMode::DefeatCombatant(ABrokenEdgeCharacter* C, AController* 
 		return;
 	}
 	if (!SettlePlayer(PC, EExtractionOutcome::Dead)) return;
+	if (auto* Victim = Cast<AExtractionPlayerController>(PC)) Victim->SendDeathRecap(PS->Life == EExtractionLife::Downed && !Attacker);
 	PS->Life = EExtractionLife::Dead;
 	PS->BleedAt = 0;
 	PS->DownHealth = 0;
