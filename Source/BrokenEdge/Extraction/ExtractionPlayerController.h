@@ -163,6 +163,9 @@ public:
 	/** 本人受到伤害，From 为伤害来源的世界坐标。 */
 	UFUNCTION(Client, Unreliable)
 	void ClientDamaged(FVector_NetQuantize From);
+	/** 队友状态变化（倒地、阵亡、撤离）的提示，与击杀提示同列显示。 */
+	UFUNCTION(Client, Reliable)
+	void ClientSquadNotice(const FString& Text);
 	/** 最近一次命中的本地时间与结果，HUD 据此绘制命中标记。 */
 	double LastHitAt = -100;
 	uint8 LastHitResult = 0;

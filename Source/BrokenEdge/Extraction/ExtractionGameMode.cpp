@@ -547,6 +547,7 @@ void AExtractionGameMode::UpdateExtraction(double Now)
 		Exit->Consume();
 		PS->ExtractExitId = NAME_None;
 		PS->Life = EExtractionLife::Extracted;
+		NotifySquad(PS, TEXT("队友 ") + PS->GetPlayerName() + TEXT(" 已成功撤离"));
 		PS->ForceNetUpdate();
 		PS->Inventory->ClearSettled();
 		PC->BeginExtractionSpectating();
@@ -758,6 +759,16 @@ bool AExtractionGameMode::DamageDowned(ABrokenEdgeCharacter* C, float Damage)
 	return true;
 }
 
+void AExtractionGameMode::NotifySquad(const AExtractionPlayerState* PS, const FString& Text)
+{
+	if (!PS) return;
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+		if (auto* Mate = Cast<AExtractionPlayerController>(It->Get()))
+			if (const auto* MatePS = Mate->GetPlayerState<AExtractionPlayerState>();
+				MatePS && MatePS != PS && MatePS->ExtractionSquad == PS->ExtractionSquad)
+				Mate->ClientSquadNotice(Text);
+}
+
 // 先取消动作；守卫走击杀统计和尸体回收，玩家则依据救援条件选择倒地或持久化死亡。
 void AExtractionGameMode::DefeatCombatant(ABrokenEdgeCharacter* C, AController* Attacker, bool bFinal)
 {
@@ -787,6 +798,7 @@ void AExtractionGameMode::DefeatCombatant(ABrokenEdgeCharacter* C, AController* 
 	if (!bFinal && PS->Life == EExtractionLife::Alive && HasRescuer(PS))
 	{
 		PS->Life = EExtractionLife::Downed;
+		NotifySquad(PS, TEXT("队友 ") + PS->GetPlayerName() + TEXT(" 倒地，需要救援"));
 		PS->DownHealth = GetDefault<UExtractionRules>()->DownHealth;
 		PS->BleedAt = GetWorld()->GetTimeSeconds() + GetDefault<UExtractionRules>()->BleedSeconds;
 		PS->ExtractAt = 0;
@@ -798,6 +810,7 @@ void AExtractionGameMode::DefeatCombatant(ABrokenEdgeCharacter* C, AController* 
 	if (!SettlePlayer(PC, EExtractionOutcome::Dead)) return;
 	if (auto* Victim = Cast<AExtractionPlayerController>(PC)) Victim->SendDeathRecap(PS->Life == EExtractionLife::Downed && !Attacker);
 	PS->Life = EExtractionLife::Dead;
+	NotifySquad(PS, TEXT("队友 ") + PS->GetPlayerName() + TEXT(" 阵亡"));
 	PS->BleedAt = 0;
 	PS->DownHealth = 0;
 	PS->ForceNetUpdate();

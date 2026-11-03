@@ -374,6 +374,8 @@ int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Ge
 		const FVector2D Size = Measure->Measure(Text, Font);
 		const FLinearColor Color = Text.StartsWith(TEXT("击杀"))
 			                           ? ExtractionUIStyle::Hex(TEXT("EA5A50"))
+			                           : Text.StartsWith(TEXT("队友"))
+			                           ? ExtractionUIStyle::Hex(TEXT("4FC3E8"))
 			                           : ExtractionUIStyle::Accent();
 		FSlateDrawElement::MakeText(Out, LayerId, Geometry.ToPaintGeometry(Size, FSlateLayoutTransform(
 			                            FVector2D(Center.X - Size.X * .5f, Y))), Text, Font, ESlateDrawEffect::None,

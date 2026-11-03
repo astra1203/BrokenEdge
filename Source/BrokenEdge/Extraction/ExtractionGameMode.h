@@ -47,6 +47,8 @@ public:
 	// 伤害作用于独立的倒地生命；降至零时强制最终死亡，返回值表示是否处理了倒地伤害。
 	bool DamageDowned(class ABrokenEdgeCharacter* Character, float Damage);
 	// 先取消动作；守卫走击杀统计和尸体回收，玩家则依据救援条件选择倒地或持久化死亡。
+	// 向同小队其他玩家发送状态提示（倒地、阵亡、撤离）。
+	void NotifySquad(const class AExtractionPlayerState* PS, const FString& Text);
 	void DefeatCombatant(ABrokenEdgeCharacter* Character, AController* Attacker, bool bFinal = false);
 	// 判断是否仍有在线、存活且有 Pawn 的同小队成员；不等同于当前已在救援距离内。
 	bool HasRescuer(const class AExtractionPlayerState* Player) const;

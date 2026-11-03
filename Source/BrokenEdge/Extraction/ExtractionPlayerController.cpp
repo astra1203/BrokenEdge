@@ -375,6 +375,12 @@ void AExtractionPlayerController::ClientDeathRecap_Implementation(const FExtract
 	DeathRecapAt = GetWorld()->GetTimeSeconds();
 }
 
+void AExtractionPlayerController::ClientSquadNotice_Implementation(const FString& Text)
+{
+	CombatNotices.Add({GetWorld()->GetTimeSeconds(), Text});
+	if (CombatNotices.Num() > 4) CombatNotices.RemoveAt(0);
+}
+
 void AExtractionPlayerController::ClientDamaged_Implementation(FVector_NetQuantize From)
 {
 	DamageSources.Add({GetWorld()->GetTimeSeconds(), From});
