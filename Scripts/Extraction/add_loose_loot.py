@@ -29,9 +29,9 @@ LOOSE_KIND = 'Loose'
 POOL = [('Ammo', 30), ('AmmoAP', 20), ('Ammo76251', 30), ('Bandage', 1), ('Splint', 1),
         ('Medkit', 1), ('Electronics', 1), ('Tools', 1), ('Document', 1)]
 
-SITE_COUNT = 150            # 候选点总数；实际每局刷 LOOSE_SPAWN_COUNT 个
-LOOSE_SPAWN_COUNT = 30      # 7F 起覆盖整个官方可玩区，按面积从 10 放大
-MIN_SPACING = 3000.0        # 候选点之间的最小平面间距（cm）
+SITE_COUNT = 260            # 候选点总数；实际每局刷 LOOSE_SPAWN_COUNT 个
+LOOSE_SPAWN_COUNT = 60      # 11-04 按需求加密：每局 60 个露天散落点
+MIN_SPACING = 2200.0        # 候选点之间的最小平面间距（cm）
 GRID = 2000.0               # 网格步长（cm）
 # 官方可玩区（MapRegionData_SpaceCenter 换算到工程坐标），7F 地图已还原到这个范围。
 X_RANGE = (-28000.0, 39000.0)
