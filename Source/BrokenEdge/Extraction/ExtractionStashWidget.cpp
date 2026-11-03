@@ -122,8 +122,8 @@ public:
 			FSlateDrawElement::MakeText(Draw, Layer + Z,
 			                            G.ToPaintGeometry(FVector2D(1100, 60) * Scale,
 			                                              FSlateLayoutTransform(CanvasOffset + P * Scale)), T,
-			                            FCoreStyle::GetDefaultFontStyle(
-				                            "Regular", FMath::Max(8, FMath::RoundToInt(Font * Scale))),
+			                            ExtractionUIStyle::Font(
+				                            FMath::Max(8, FMath::RoundToInt(Font * Scale))),
 			                            ESlateDrawEffect::None, FLinearColor::White);
 		};
 		Box({50, 45}, {1180, 630}, FLinearColor(.018, .03, .045, 1));

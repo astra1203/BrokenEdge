@@ -26,6 +26,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Import")
 	static class USkeleton* CreateSourceSkeleton(const FString& PackageName, const TArray<FName>& Names,
 	                                             const TArray<int32>& Parents, const TArray<FTransform>& ReferencePose);
+	/** 从 TTF 文件生成字体：每个文件一个 Inline 字体面，按 Typefaces 名称组成一个运行时 UFont 并保存。 */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|UI")
+	static class UFont* CreateFontFromFiles(const TArray<FString>& Files, const TArray<FName>& Typefaces,
+	                                        const FString& PackagePath, const FString& AssetName);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Setup")
 	static bool AssignMeshSkeleton(USkeletalMesh* Mesh, class USkeleton* Skeleton);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Setup")

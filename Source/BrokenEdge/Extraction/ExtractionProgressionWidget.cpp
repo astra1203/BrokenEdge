@@ -81,8 +81,8 @@ public:
 			FSlateDrawElement::MakeText(Draw, Layer + Z,
 			                            G.ToPaintGeometry(FVector2D(1160, 70) * Scale,
 			                                              FSlateLayoutTransform(CanvasOffset + At * Scale)),
-			                            Value, FCoreStyle::GetDefaultFontStyle(
-				                            "Regular", FMath::Max(8, FMath::RoundToInt(Font * Scale))),
+			                            Value, ExtractionUIStyle::Font(
+				                            FMath::Max(8, FMath::RoundToInt(Font * Scale))),
 			                            ESlateDrawEffect::None, FLinearColor::White);
 		};
 		const FLinearColor Button(.1, .25, .32), Selected(.12, .42, .39);

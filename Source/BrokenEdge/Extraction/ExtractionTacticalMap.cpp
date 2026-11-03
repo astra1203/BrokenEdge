@@ -48,8 +48,8 @@ public:
 			FSlateDrawElement::MakeText(Draw, Layer + 3,
 			                            G.ToPaintGeometry(FVector2D(1000, 40) * Scale,
 			                                              FSlateLayoutTransform(CanvasOffset + P * Scale)),
-			                            Value, FCoreStyle::GetDefaultFontStyle(
-				                            "Regular", FMath::Max(8, FMath::RoundToInt(Font * Scale))),
+			                            Value, ExtractionUIStyle::Font(
+				                            FMath::Max(8, FMath::RoundToInt(Font * Scale))),
 			                            ESlateDrawEffect::None, C);
 		};
 		const FVector2D Span = D->OverviewMax - D->OverviewMin;

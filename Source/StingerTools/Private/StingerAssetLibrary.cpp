@@ -1,4 +1,8 @@
 #include "StingerAssetLibrary.h"
+#include "Engine/Font.h"
+#include "Engine/FontFace.h"
+#include "Misc/FileHelper.h"
+#include "UObject/SavePackage.h"
 #include "AnimGraphNode_RifleLocomotion.h"
 #include "Animation/BlendSpace.h"
 #include "Engine/GameViewportClient.h"
@@ -843,4 +847,38 @@ bool UStingerAssetLibrary::ConfigureMeleeUpperBodySlot(UAnimBlueprint* Blueprint
 		return Blueprint->Status != BS_Error;
 	}
 	return false;
+}
+
+UFont* UStingerAssetLibrary::CreateFontFromFiles(const TArray<FString>& Files, const TArray<FName>& Typefaces,
+                                                 const FString& PackagePath, const FString& AssetName)
+{
+	if (Files.IsEmpty() || Files.Num() != Typefaces.Num()) return nullptr;
+	auto Save = [](UObject* Asset)
+	{
+		FAssetRegistryModule::AssetCreated(Asset);
+		Asset->MarkPackageDirty();
+		FSavePackageArgs Args;
+		Args.TopLevelFlags = RF_Public | RF_Standalone;
+		const FString File = FPackageName::LongPackageNameToFilename(Asset->GetPackage()->GetName(),
+		                                                             FPackageName::GetAssetPackageExtension());
+		return UPackage::SavePackage(Asset->GetPackage(), Asset, *File, Args);
+	};
+	const FString FontName = PackagePath / AssetName;
+	UFont* Font = NewObject<UFont>(CreatePackage(*FontName), *AssetName, RF_Public | RF_Standalone);
+	Font->FontCacheType = EFontCacheType::Runtime;
+	for (int32 Index = 0; Index < Files.Num(); ++Index)
+	{
+		TArray<uint8> Bytes;
+		if (!FFileHelper::LoadFileToArray(Bytes, *Files[Index])) return nullptr;
+		const FString FaceName = AssetName + TEXT("_") + Typefaces[Index].ToString();
+		UFontFace* Face = NewObject<UFontFace>(CreatePackage(*(PackagePath / FaceName)), *FaceName,
+		                                       RF_Public | RF_Standalone);
+		Face->LoadingPolicy = EFontLoadingPolicy::Inline;
+		Face->InitializeFromBulkData(Files[Index], EFontHinting::Default, Bytes.GetData(), Bytes.Num());
+		if (!Save(Face)) return nullptr;
+		FTypefaceEntry& Entry = Font->GetMutableInternalCompositeFont().DefaultTypeface.Fonts.Emplace_GetRef(
+			Typefaces[Index]);
+		Entry.Font = FFontData(Face);
+	}
+	return Save(Font) ? Font : nullptr;
 }

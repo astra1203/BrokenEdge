@@ -1,4 +1,5 @@
 #include "ExtractionWidget.h"
+#include "ExtractionUIStyle.h"
 #include "ExtractionPlayerController.h"
 #include "BrokenEdge/Traversal/ExtractionTraversalComponent.h"
 #include "ExtractionRegionStream.h"
@@ -23,6 +24,7 @@
 void UExtractionWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	ExtractionUIStyle::ApplyFont(this);
 	Previous->OnClicked.AddUniqueDynamic(this, &ThisClass::PreviousClicked);
 	Next->OnClicked.AddUniqueDynamic(this, &ThisClass::NextClicked);
 	Leave->OnClicked.AddUniqueDynamic(this, &ThisClass::LeaveClicked);

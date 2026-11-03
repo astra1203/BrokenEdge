@@ -87,6 +87,7 @@ namespace
 void ULootingWidgetPart::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	ExtractionUIStyle::ApplyFont(this);
 	SetIsFocusable(true);
 	if (ActionButton) ActionButton->OnClicked.AddDynamic(this, &ThisClass::ClickAction);
 }
@@ -208,6 +209,7 @@ ULootingWidgetPart* ULootingMainView::MakePart(TSubclassOf<ULootingWidgetPart> C
 void ULootingMainView::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	ExtractionUIStyle::ApplyFont(this);
 	SetIsFocusable(true);
 	for (auto* Part : {
 		     OwnContainer.Get(), LootContainer.Get(), ContextMenu.Get(), SplitDialog.Get(), InteractionPrompt.Get()
