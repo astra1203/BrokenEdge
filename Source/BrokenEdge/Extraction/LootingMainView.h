@@ -95,6 +95,10 @@ public:
  UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly) TObjectPtr<UButton> SortButton;
  // 请求服务器整理自己的携行网格。
  UFUNCTION() void SortOwn();
+ /** 搜索容器列标题旁的“全部拾取”按钮；快捷键 F。 */
+ UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly) TObjectPtr<UButton> TakeAllButton;
+ // 请求服务器把容器里已搜出的物品全部放进携行网格。
+ UFUNCTION() void TakeAllLoot();
  void Refresh();
  bool CancelDrag();
  bool SelectItem(FGuid Id, bool Loot);

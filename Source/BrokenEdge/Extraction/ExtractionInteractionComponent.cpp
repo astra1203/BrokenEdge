@@ -344,6 +344,47 @@ FVector UExtractionInteractionComponent::DropPosition() const
 	return Point;
 }
 
+// 全部拾取：把容器里已揭示的物品逐件自动放进携行网格（胸挂优先、再背包，不进安全箱），放不下的留在原处。
+FString UExtractionInteractionComponent::TakeAll(const FExtractionItemRequest& R)
+{
+	auto* Inv = Inventory();
+	if (!InventoryOpen || R.Session != Session || !Loot || !CanReach(Loot)) return TEXT("搜索已关闭或超出距离");
+	if (R.LootRevision != Loot->Contents.Revision)
+	{
+		RefreshLootView();
+		return TEXT("容器已变化，请重试");
+	}
+	if (MedicalEnd > 0 || Character()->GetExtractionAbilities()->Action != EExtractionAction::None)
+		return TEXT("当前动作尚未完成");
+	const FExtractionContainer BeforeInventory = Inv->Contents, BeforeLoot = Loot->Contents;
+	int32 Moved = 0, Left = 0;
+	for (const auto& Item : BeforeLoot.Items)
+	{
+		if (!IsRevealed(Item.Id)) continue;
+		FExtractionItemRequest Move;
+		Move.Item = Item.Id;
+		Move.FromLoot = true;
+		Move.Quantity = Item.Quantity;
+		Move.Slot = -1;
+		Move.AutoPlace = true;
+		FString Error;
+		if (ExtractionItems::Transfer(Loot->Contents, Inv->Contents, Move, Error)) ++Moved;
+		else ++Left;
+	}
+	if (!Moved) return Left ? TEXT("背包空间不足") : TEXT("没有可拾取的物品");
+	if (!Inv->SyncWeapons())
+	{
+		Inv->Contents = BeforeInventory;
+		Loot->Contents = BeforeLoot;
+		return TEXT("武器生成失败，操作已撤回");
+	}
+	Loot->Changed();
+	RefreshLootView();
+	Inv->Changed();
+	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_TAKE_ALL Sequence=%u Moved=%d Left=%d"), R.Sequence, Moved, Left);
+	return Left ? FString::Printf(TEXT("已拾取 %d 件，%d 件放不下"), Moved, Left) : FString();
+}
+
 // 服务器事务入口：依次校验序号、背包版本、容器会话、距离和搜索权限，再执行转移/丢弃/装配。
 // 保存原库存用于武器生成失败时回滚；成功后才通知容器和背包更新，返回空字符串表示成功。
 FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R)
@@ -353,6 +394,7 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 	if (!CanAct()) return TEXT("当前无法操作物品");
 	auto* Inv = Inventory();
 	if (R.InventoryRevision != Inv->Contents.Revision) return TEXT("背包已变化，请重试");
+	if (R.Op == EExtractionItemOp::TakeAll) return TakeAll(R);
 	if (R.FromLoot || R.ToLoot)
 	{
 		if (!InventoryOpen || R.Session != Session || !Loot || !CanReach(Loot)) return TEXT("搜索已关闭或超出距离");

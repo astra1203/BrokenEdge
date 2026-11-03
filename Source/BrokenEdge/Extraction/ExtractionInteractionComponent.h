@@ -88,6 +88,8 @@ public:
 	 * 返回空字符串表示成功，否则返回可展示的错误信息。
 	 */
 	FString Execute(const FExtractionItemRequest& Request);
+	// 全部拾取：把当前容器里已揭示的物品逐件自动放进携行网格，返回提示文本（空表示全部放下）。
+	FString TakeAll(const FExtractionItemRequest& Request);
 	/** 服务器取消能力动作并清除治疗时间和物品 ID，不消耗医疗物品。 */
 	void CancelMedical();
 	/** 停止角色的开火和瞄准输入。 */

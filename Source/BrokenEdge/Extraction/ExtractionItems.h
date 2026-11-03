@@ -324,7 +324,7 @@ struct BROKENEDGE_API FExtractionContainer
 };
 
 UENUM()
-enum class EExtractionItemOp : uint8 { Transfer, Drop, Use, Attach, Detach, Unload, SelectAmmo, Tune, Sort };
+enum class EExtractionItemOp : uint8 { Transfer, Drop, Use, Attach, Detach, Unload, SelectAmmo, Tune, Sort, TakeAll };
 
 USTRUCT()
 struct BROKENEDGE_API FExtractionItemRequest

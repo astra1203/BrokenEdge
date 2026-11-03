@@ -260,6 +260,7 @@ void ULootingMainView::NativeOnInitialized()
 		if (Part) Part->Inventory = this;
 	if (SplitDialog) SplitDialog->ActionIndex = -2;
 	if (SortButton) SortButton->OnClicked.AddUniqueDynamic(this, &ThisClass::SortOwn);
+	if (TakeAllButton) TakeAllButton->OnClicked.AddUniqueDynamic(this, &ThisClass::TakeAllLoot);
 	if (ContextMenu) ContextMenu->SetVisibility(ESlateVisibility::Collapsed);
 	if (SplitDialog) SplitDialog->SetVisibility(ESlateVisibility::Collapsed);
 }
@@ -583,6 +584,16 @@ void ULootingMainView::SortOwn()
 	CancelDrag();
 	FExtractionItemRequest R;
 	R.Op = EExtractionItemOp::Sort;
+	PC()->RequestItem(R);
+}
+
+void ULootingMainView::TakeAllLoot()
+{
+	if (!PC() || !Interaction() || !Interaction()->InventoryOpen || !Interaction()->Loot) return;
+	CancelDrag();
+	FExtractionItemRequest R;
+	R.Op = EExtractionItemOp::TakeAll;
+	R.FromLoot = true;
 	PC()->RequestItem(R);
 }
 
@@ -945,6 +956,11 @@ FReply ULootingMainView::NativeOnKeyDown(const FGeometry& G, const FKeyEvent& E)
 	{
 		if (!bRotationDown) RotateDrag();
 		bRotationDown = true;
+		return FReply::Handled();
+	}
+	if (E.GetKey() == EKeys::F && !E.IsRepeat())
+	{
+		TakeAllLoot();
 		return FReply::Handled();
 	}
 	if (E.GetKey() == EKeys::T && !E.IsRepeat())
