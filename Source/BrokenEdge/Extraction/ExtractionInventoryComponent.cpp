@@ -24,6 +24,24 @@ void UExtractionInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeP
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION(UExtractionInventoryComponent, Contents, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UExtractionInventoryComponent, bHoldingSecondary, COND_OwnerOnly);
+}
+
+// 想拿副武器但副武器槽空时退回主武器槽，反之亦然；有枪就一定握着一把。
+int32 UExtractionInventoryComponent::HeldSlot() const
+{
+	const bool Has0 = Contents.InSlot(0) != nullptr, Has1 = Contents.InSlot(1) != nullptr;
+	if (bHoldingSecondary) return Has1 ? 1 : Has0 ? 0 : -1;
+	return Has0 ? 0 : Has1 ? 1 : -1;
+}
+
+// 服务器改手持槽后重新分配手持/背负的武器 Actor。
+void UExtractionInventoryComponent::SetHeldSlot(int32 Slot)
+{
+	if (!GetOwner()->HasAuthority()) return;
+	bHoldingSecondary = Slot == 1;
+	SyncWeapons();
+	GetOwner()->ForceNetUpdate();
 }
 
 // 玩家通过 PlayerState 找当前 Pawn；守卫组件直接取所属角色，统一后续装备操作入口。
@@ -194,7 +212,7 @@ void UExtractionInventoryComponent::SyncReserve()
 	if (auto* C = Character())
 	{
 		auto* Combat = C->GetCombat().Get();
-		const auto* Gun = Contents.InSlot(0);
+		const auto* Gun = HeldGun();
 		Combat->CarriedAmmo = Contents.Count(Gun ? Gun->MagazineAmmo : FName(TEXT("Ammo")));
 		Combat->CarriedAmmoMap.FindOrAdd(EWeaponType::EWT_AssaultRifle) = Combat->CarriedAmmo;
 		Combat->UpdateCarriedAmmo();
@@ -253,8 +271,10 @@ bool UExtractionInventoryComponent::SyncWeapons()
 		}
 	}
 	AWeapon* Old[2] = {Combat->EquippedWeapon, Combat->SecondaryWeapon};
-	Combat->EquippedWeapon = Desired[0];
-	Combat->SecondaryWeapon = Desired[1];
+	// 槽位固定为主/副武器；手持哪一把由 HeldSlot 决定，另一把背在身上。
+	const int32 Held = FMath::Max(0, HeldSlot());
+	Combat->EquippedWeapon = Desired[Held];
+	Combat->SecondaryWeapon = Desired[1 - Held];
 	for (int32 Slot = 0; Slot < 2; ++Slot)
 	{
 		if (!Desired[Slot]) continue;
@@ -266,13 +286,13 @@ bool UExtractionInventoryComponent::SyncWeapons()
 		for (const auto& Part : State->Attachments) Desired[Slot]->ExtractionParts.Add(Part.Definition);
 		if (Created.Contains(Desired[Slot]) || Desired[Slot]->GetAmmo() != State->Magazine)
 			C->GetExtractionCombat()->EquipmentAmmo(Desired[Slot], State->Magazine);
-		Desired[Slot]->SetWeaponState(Slot == 0 ? EWeaponState::EWS_Equipped : EWeaponState::EWS_EquippedSecondary);
-		if (Slot == 0) Combat->AttachActorToRightHand(Desired[Slot]);
+		Desired[Slot]->SetWeaponState(Slot == Held ? EWeaponState::EWS_Equipped : EWeaponState::EWS_EquippedSecondary);
+		if (Slot == Held) Combat->AttachActorToRightHand(Desired[Slot]);
 		else Combat->AttachActorToBackpack(Desired[Slot]);
 		Desired[Slot]->ForceNetUpdate();
 	}
 	C->RefreshFirstPersonWorldWeapons();
-	if (Desired[0])
+	if (Desired[Held])
 	{
 		C->GetCharacterMovement()->bOrientRotationToMovement = false;
 		C->bUseControllerRotationYaw = true;
@@ -291,14 +311,22 @@ void UExtractionInventoryComponent::CaptureWeapons()
 	auto* Combat = C->GetCombat().Get();
 	AWeapon* Weapons[2] = {Combat->EquippedWeapon, Combat->SecondaryWeapon};
 	bool ChangedState = false;
-	for (int32 Slot = 0; Slot < 2; ++Slot)
-		if (auto* W = Weapons[Slot])
+	// 槽位固定不随切枪交换，只写回弹匣；切枪结果记在手持槽 bHoldingSecondary 上。
+	for (auto* W : Weapons)
+		if (W)
 			if (auto* I = Contents.Find(W->ExtractionItemId))
 			{
-				ChangedState |= I->Slot != Slot || I->Magazine != W->GetAmmo();
-				I->Slot = Slot;
+				ChangedState |= I->Magazine != W->GetAmmo();
 				I->Magazine = W->GetAmmo();
 			}
+	if (const auto* W = Combat->EquippedWeapon)
+		if (const auto* I = Contents.Find(W->ExtractionItemId); I && (I->Slot == 0 || I->Slot == 1)
+			&& bHoldingSecondary != (I->Slot == 1))
+		{
+			bHoldingSecondary = I->Slot == 1;
+			SyncReserve();
+			GetOwner()->ForceNetUpdate();
+		}
 	if (ChangedState)
 	{
 		++Contents.Revision;

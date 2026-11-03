@@ -82,7 +82,7 @@ void AExtractionPlayerController::SelectOtherGun()
 	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen) C->Melee->Select(false, true);
 }
 
-// 1 / 2 固定对应主武器槽（槽 0）/ 副武器槽（槽 1）：已经拿着这把就只退出刀槽，否则切到另一把。
+// 1 / 2 固定对应主武器槽（槽 0）/ 副武器槽（槽 1），切枪不会交换两把枪的槽位。
 void AExtractionPlayerController::SelectWeaponSlot(int32 Slot)
 {
 	auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
@@ -95,8 +95,8 @@ void AExtractionPlayerController::SelectWeaponSlot(int32 Slot)
 		ShowItemMessage(Slot == 0 ? TEXT("主武器槽没有武器") : TEXT("副武器槽没有武器"));
 		return;
 	}
-	const AWeapon* Held = C->GetEquippedWeapon();
-	C->Melee->Select(false, !Held || Held->ExtractionItemId != Wanted->Id);
+	// 槽位固定，手持哪一把看 HeldSlot；已拿着这一槽就只收刀，否则切到这一槽。
+	C->Melee->Select(false, Inv->HeldSlot() != Slot);
 }
 
 void AExtractionPlayerController::SelectPrimaryGun() { SelectWeaponSlot(0); }
@@ -482,7 +482,7 @@ void AExtractionPlayerController::DropEquippedItem()
 {
 	auto* I = Interaction();
 	if (!I || !I->CanAct()) return;
-	if (const auto* Item = I->Inventory()->Contents.InSlot(0))
+	if (const auto* Item = I->Inventory()->HeldGun())
 	{
 		FExtractionItemRequest R;
 		R.Item = Item->Id;

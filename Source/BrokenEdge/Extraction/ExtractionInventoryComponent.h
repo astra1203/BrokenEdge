@@ -38,6 +38,15 @@ public:
 	void CaptureWeapons();
 	// 从背包当前弹种总量刷新旧战斗组件的备弹显示，备弹不再是可独立增减的另一份库存。
 	void SyncReserve();
+	// 主副武器槽位固定（槽 0 主武器 / 槽 1 副武器），手上拿哪一把单独记录在 bHoldingSecondary。
+	// 返回当前应握在手里的槽位；两槽都空时返回 -1。
+	int32 HeldSlot() const;
+	const FExtractionItem* HeldGun() const { const int32 S = HeldSlot(); return S < 0 ? nullptr : Contents.InSlot(S); }
+	// 服务器：手持槽改为 Slot，由 SyncWeapons 重新分配手持/背负的武器 Actor。
+	void SetHeldSlot(int32 Slot);
+	// true 表示当前手持副武器槽；复制给拥有者，供 1/2 键判断是否需要切换。
+	UPROPERTY(ReplicatedUsing=OnRep_Contents)
+	bool bHoldingSecondary = false;
 	// 按弹匣空位和同弹种备弹决定装填数量；来源批次随子弹从背包转入弹匣，返回实际装入发数。
 	int32 Reload(class AWeapon* Weapon);
 	// 服务器接受射击后记录弹匣余量，并从弹匣来源中消耗一发，保持数量与来源守恒。
