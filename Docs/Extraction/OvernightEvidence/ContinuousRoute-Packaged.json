@@ -1,0 +1,6036 @@
+{
+  "result": "passed",
+  "tag": "overnight-route09",
+  "source_report": "Saved/Extraction/overnight-route09/Report.json",
+  "source_report_sha256": "263cca0dbdfc919108f9c70333f8fa6d9453f70c9d74152471a7177938a47bb7",
+  "started_utc": "2026-11-02T22:54:12.076741+00:00",
+  "base_commit": "4d39944957c600eb33adaf0a37e6a36d62c5b86c",
+  "options": {
+    "tag": "overnight-route09",
+    "loot_seed": 17848,
+    "guards": null,
+    "packaged": true,
+    "package_root": "Packaged/Overnight20261103_05",
+    "port": 27900,
+    "isolated_room": true,
+    "lag": false,
+    "unacked": false,
+    "debug_hold": false,
+    "traversal_record": false,
+    "traversal_route_only": false,
+    "traversal_source_only": false,
+    "traversal_top_only": false,
+    "traversal_debug_point": "vault",
+    "traversal_route": false,
+    "traversal_lifecycle": false,
+    "optic_validation": false,
+    "optic_remote_only": false,
+    "resolution": "1280x720",
+    "scenario": "overnight-route",
+    "players": 2,
+    "rendered_clients": null,
+    "rendered_role": "A",
+    "performance_route": "north",
+    "performance_samples": 3,
+    "performance_seconds": 180,
+    "network_stats": false,
+    "flight_diagnostics": true,
+    "bounded_rendering": true,
+    "streaming_loops": 10
+  },
+  "scope": "One normal first raid with input-driven movement, authored spawn group, selected seed, natural guard defeat, unchanged 900/1020/10 exit timing, settlement and sale; normal preparation and entry into a second raid only. No claim of all random routes, all-map navigation, public matchmaking or default-quality performance.",
+  "checks": [
+    "A joined LAN lobby",
+    "A name replicated",
+    "B joined LAN lobby",
+    "B name replicated",
+    "A lobby account unlocked before raid 1",
+    "B lobby account unlocked before raid 1",
+    "Both clients joined the same squad for raid 1",
+    "A original weapon has one loadout owner before raid 1",
+    "B original weapon has one loadout owner before raid 1",
+    "Both clients entered active raid 1",
+    "Both players retain their original equipped weapons in raid 1",
+    "Tactical map opens through input",
+    "Authoritative ground and endpoint 7F_WestDorm_A:A",
+    "Authoritative ground and endpoint 7F_WestDorm_A:B",
+    "One authoritative owner after taking Bandage",
+    "Authoritative ground and endpoint 7F_WestDorm_B:A",
+    "Authoritative ground and endpoint 7F_WestDorm_B:B",
+    "One authoritative owner after taking Splint",
+    "Authoritative ground and endpoint 7F_LivingArea_B:A",
+    "Authoritative ground and endpoint 7F_LivingArea_B:B",
+    "One authoritative owner after taking Document",
+    "One authoritative owner after taking Tools",
+    "Authoritative ground and endpoint existing dorm guard encounter:A",
+    "Authoritative ground and endpoint existing dorm guard encounter:B",
+    "Authoritative ground and endpoint dorm to square through measured floors:A",
+    "Authoritative ground and endpoint dorm to square through measured floors:B",
+    "Both players extract after the full production hold timer",
+    "Ordinary round returns both accounts to lobby",
+    "Exported identity and quantity have one stash owner Bandage",
+    "Exported identity and quantity have one stash owner Splint",
+    "Exported identity and quantity have one stash owner Document",
+    "Exported identity and quantity have one stash owner Tools",
+    "A original weapon returns once to the stash",
+    "B original weapon returns once to the stash",
+    "Normal sale removes the entire identity and credits the exact production quote",
+    "A lobby account unlocked before raid 2",
+    "B lobby account unlocked before raid 2",
+    "Both clients joined the same squad for raid 2",
+    "A original weapon has one loadout owner before raid 2",
+    "B original weapon has one loadout owner before raid 2",
+    "Both clients entered active raid 2",
+    "Both players retain their original equipped weapons in raid 2",
+    "Next raid preserves exported identity and quantity once Bandage",
+    "Next raid preserves exported identity and quantity once Splint",
+    "Next raid preserves exported identity and quantity once Document",
+    "Next raid cannot restore a sold item"
+  ],
+  "input_sha256": {
+    "Scripts/Extraction/run_network.py": "c2d510da864759d269d422c12e289426fe3d678bad836974b1eb65038c7caa99",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "0cc9d9e0296a7088ca27c867a34fa5db0a5716e4864fe7f85df8e70b398bb081",
+    "Source/BrokenEdge/Extraction/ExtractionPlayerController.h": "ed9b35840938b5911440866ad73605914d367d7811d63462db217cb86cd00a16",
+    "Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp": "7424b9a01d7530402b4a90b9c1333170f26529dc524732377a28d1f7f30d6876",
+    "Scripts/Extraction/inventory_scenarios.py": "0611959d5952ffacc537ecae6042ab09f439b5a765ae6340839174269d109627",
+    "Scripts/Extraction/storage_scenarios.py": "ceb2cd257a8ad388a1a48c66738ce3eb6faf13a185d8534d61afa92feb190e5a",
+    "Scripts/Extraction/phase5_scenarios.py": "af5611c3c37941e905d66de5d179f94a31fd4176b0842b933cd2b596785dc846",
+    "Scripts/Extraction/equipment_scenarios.py": "42f0754672ea7e0bfaedab798a5b8a86df68dfc8ca69a25b8e1aa022aabb0fa1",
+    "Scripts/Extraction/optic_scenarios.py": "36198225c22a9d5753b1f8916bb1d1a966c53be98635046b7a3f48a58bb75b69",
+    "Scripts/Extraction/verify_optic_capture.py": "d5797b8ba70eacf4795db88318dbb1d313974ad03f4026e6df6f40208d479804",
+    "Scripts/Extraction/optic_calibration.py": "b623f055937e6a08f425e4929b0a2bad2d18aa7f032d953a76f5224dcc73f7ed",
+    "Content/Extraction/Items/DA_Item_RedDot.uasset": "96ee9d449054d01688ad238b4b4009faeb9a7af511675919a2b904c97a1a9b4c",
+    "Scripts/Extraction/progression_scenarios.py": "fb2e528cd7458880a21e412d19c6ab069a24399b5b0da72a44a06800d3f2136f",
+    "Scripts/Extraction/streaming_scenarios.py": "cac7daff10b44ae80bb5556a8a57574139817b118d05fa7d0136583b7fec4d79",
+    "Scripts/Extraction/north_combat_scenarios.py": "017a9597931bc0d289e5cdc62ced3567496529c80ac485c4fffe3f403718683c",
+    "Scripts/Extraction/resource_guard.py": "b39fa21872e405def8645e26060c80c4ba12e7d147edbdb08ee7c122f04bc433",
+    "Scripts/SpaceCenter/north_route.json": "57ed4b492ba3ce84999b2a68d58f95f8bc5d0e9ae02b1f024386cdb6d958e9c6",
+    "Scripts/SpaceCenter/route.json": "ea51685ea6904efb0d8547ae4d0768b529cb3be6e12396483b1f4996c356d8c9",
+    "Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap": "674c0e223b8645e99b423c8739e156625499b4e4ea61ff43cdd8be3b290477ed",
+    "BrokenEdge.uproject": "f341e1a1916de17662ebb1921a015005d084c2f98d481b4ca77b2a25ba1bab77",
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "7cd9aecb8490a270aa72c08bd383e990529f4bbea49bdbe461756ac9defb5b21",
+    "Scripts/Extraction/overnight_route_scenarios.py": "9b6bdb1ed8cf45d4c56523f665cf114cba23732bbe462e3f2aab46f5d1149d3d",
+    "Scripts/Extraction/overnight_route.json": "c7339854a385c07dea6146863004c8a3d318d96957d73cb9b8b6356955440f43",
+    "Source/BrokenEdge/Weapon/ExtractionBullet.cpp": "76f346bc64b332f839672f3e9c75374b672a88f9e3ff96b0e8d4292d4947ae71",
+    "Scripts/Extraction/overnight_route_plan.py": "30a23d16cc5b412c79209e9367d1fa19085765c58050a4e095b6c608dc0a8bb0",
+    "Scripts/Extraction/exit_feedback_scenarios.py": "3e6a3606809e43c0ea6c1b72ecb710ec33046b9c9461a67abaa126ffa09c52c4"
+  },
+  "executables": {
+    "Server": {
+      "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_05\\Server\\WindowsServer\\BrokenEdge\\Binaries\\Win64\\BrokenEdgeServer.exe",
+      "bytes": 321328640,
+      "sha256": "2b97179c948d50d2d35e0689795ea7c3fb831453bc199c94ec42e88c8a606902",
+      "machine": "AMD64",
+      "sections": 12
+    },
+    "A": {
+      "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_05\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+      "bytes": 339632640,
+      "sha256": "acf1fcc54372261efcd663938142930b37ad2f837c0c7dcb9489b66323b3e87d",
+      "machine": "AMD64",
+      "sections": 13
+    },
+    "B": {
+      "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_05\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+      "bytes": 339632640,
+      "sha256": "acf1fcc54372261efcd663938142930b37ad2f837c0c7dcb9489b66323b3e87d",
+      "machine": "AMD64",
+      "sections": 13
+    }
+  },
+  "processes": {
+    "Server": {
+      "pid": 16908,
+      "command": [
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_05\\Server\\WindowsServer\\BrokenEdge\\Binaries\\Win64\\BrokenEdgeServer.exe",
+        "/Game/Maps/Lobby",
+        "-nosound",
+        "-unattended",
+        "-nosplash",
+        "-NoLoadingScreen",
+        "-ExtractionGuards=8",
+        "-MatchType=Extraction",
+        "-NumPublicConnections=2",
+        "-MinPlayersToStart=2",
+        "-port=27900",
+        "-ExtractionTestPort=27900",
+        "-ExtractionRoundSeconds=1800",
+        "-ExtractionTestRole=Server",
+        "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-route09",
+        "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-route09\\Store",
+        "-ExtractionProfile=overnight-route09_Server",
+        "-ExecCmds=BrokenEdge.Weapon.LogFlight 1,t.MaxFPS 30,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-route09\\Server.log",
+        "-ExtractionTestTimeout=4200",
+        "-ExtractionTestSpawnGroup=OfficialWestDorm",
+        "-RoomName=overnight-route09",
+        "-ExtractionTestRoom=overnight-route09",
+        "-ExtractionLootSeed=17848",
+        "-nullrhi",
+        "-ExtractionFlightDiagnostics"
+      ],
+      "environment_overrides": {
+        "UE_SKIP_UBT_SDK_SETUP": "1"
+      },
+      "finish_command": 1,
+      "finish_ack": true,
+      "exit_code": 0,
+      "finish_info_logged": true,
+      "automation_success": true
+    },
+    "A": {
+      "pid": 36088,
+      "command": [
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_05\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+        "/Game/Maps/Lobby",
+        "-nosound",
+        "-unattended",
+        "-nosplash",
+        "-NoLoadingScreen",
+        "-ExtractionGuards=8",
+        "-MatchType=Extraction",
+        "-NumPublicConnections=2",
+        "-MinPlayersToStart=2",
+        "-port=27900",
+        "-ExtractionTestPort=27900",
+        "-ExtractionRoundSeconds=1800",
+        "-ExtractionTestRole=A",
+        "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-route09",
+        "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-route09\\Store",
+        "-ExtractionProfile=overnight-route09_A",
+        "-ExecCmds=BrokenEdge.Weapon.LogFlight 1,sg.ViewDistanceQuality 1,sg.AntiAliasingQuality 1,sg.ShadowQuality 1,sg.GlobalIlluminationQuality 1,sg.ReflectionQuality 1,sg.PostProcessQuality 1,sg.TextureQuality 1,sg.EffectsQuality 1,sg.FoliageQuality 1,sg.ShadingQuality 1,r.Streaming.PoolSize 768,t.MaxFPS 30,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-route09\\A.log",
+        "-ExtractionTestTimeout=4200",
+        "-RoomName=overnight-route09",
+        "-ExtractionTestRoom=overnight-route09",
+        "-ExtractionLootSeed=17848",
+        "-RenderOffscreen",
+        "-windowed",
+        "-ResX=1280",
+        "-ResY=720",
+        "-ForceRes",
+        "-noraytracing",
+        "-ExtractionFlightDiagnostics"
+      ],
+      "environment_overrides": {
+        "UE_SKIP_UBT_SDK_SETUP": "1"
+      },
+      "finish_command": 345,
+      "finish_ack": true,
+      "exit_code": 0,
+      "finish_info_logged": true,
+      "automation_success": true
+    },
+    "B": {
+      "pid": 39236,
+      "command": [
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\Overnight20261103_05\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+        "/Game/Maps/Lobby",
+        "-nosound",
+        "-unattended",
+        "-nosplash",
+        "-NoLoadingScreen",
+        "-ExtractionGuards=8",
+        "-MatchType=Extraction",
+        "-NumPublicConnections=2",
+        "-MinPlayersToStart=2",
+        "-port=27900",
+        "-ExtractionTestPort=27900",
+        "-ExtractionRoundSeconds=1800",
+        "-ExtractionTestRole=B",
+        "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-route09",
+        "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-route09\\Store",
+        "-ExtractionProfile=overnight-route09_B",
+        "-ExecCmds=BrokenEdge.Weapon.LogFlight 1,t.MaxFPS 30,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\overnight-route09\\B.log",
+        "-ExtractionTestTimeout=4200",
+        "-RoomName=overnight-route09",
+        "-ExtractionTestRoom=overnight-route09",
+        "-ExtractionLootSeed=17848",
+        "-nullrhi",
+        "-ExtractionFlightDiagnostics"
+      ],
+      "environment_overrides": {
+        "UE_SKIP_UBT_SDK_SETUP": "1"
+      },
+      "finish_command": 304,
+      "finish_ack": true,
+      "exit_code": 0,
+      "finish_info_logged": true,
+      "automation_success": true
+    }
+  },
+  "route": {
+    "result": "passed",
+    "first_raid": "completed",
+    "second_raid": "normal preparation and spawn verified",
+    "fixed_spawn_group": "OfficialWestDorm",
+    "search_groups": [
+      "7F_WestDorm_A",
+      "7F_WestDorm_B",
+      "7F_LivingArea_B"
+    ],
+    "guard_route": "ExtractionPatrol_7F_WestDorm",
+    "exit": "OfficialExitSquare",
+    "teleports": 0,
+    "injected_items": 0,
+    "skipped_time": 0,
+    "boundary": "Graph planning is separate from the recorded input-driven traversal result.",
+    "legs": [
+      {
+        "destination": "7F_WestDorm_A3",
+        "label": "7F_WestDorm_A",
+        "seconds": 78.38,
+        "result": "passed",
+        "points": {
+          "A": 123,
+          "B": 112
+        },
+        "completed": {
+          "A": 123,
+          "B": 112
+        },
+        "segments": {
+          "A": 31,
+          "B": 28
+        }
+      },
+      {
+        "destination": "7F_WestDorm_B2",
+        "label": "7F_WestDorm_B",
+        "seconds": 10.88,
+        "result": "passed",
+        "points": {
+          "A": 17,
+          "B": 17
+        },
+        "completed": {
+          "A": 17,
+          "B": 17
+        },
+        "segments": {
+          "A": 5,
+          "B": 5
+        }
+      },
+      {
+        "destination": "7F_LivingArea_B2",
+        "label": "7F_LivingArea_B",
+        "seconds": 52.5,
+        "result": "passed",
+        "points": {
+          "A": 98,
+          "B": 84
+        },
+        "completed": {
+          "A": 98,
+          "B": 84
+        },
+        "segments": {
+          "A": 25,
+          "B": 21
+        }
+      },
+      {
+        "destination": "ExtractionPatrol_7F_WestDorm",
+        "label": "existing dorm guard encounter",
+        "seconds": 40.26,
+        "result": "passed",
+        "points": {
+          "A": 70,
+          "B": 70
+        },
+        "completed": {
+          "A": 70,
+          "B": 70
+        },
+        "segments": {
+          "A": 18,
+          "B": 18
+        }
+      },
+      {
+        "destination": "OfficialExitSquare",
+        "label": "dorm to square through measured floors",
+        "seconds": 577.36,
+        "result": "passed",
+        "points": {
+          "A": 725,
+          "B": 731
+        },
+        "completed": {
+          "A": 725,
+          "B": 731
+        },
+        "segments": {
+          "A": 182,
+          "B": 183
+        }
+      }
+    ],
+    "encounters": [
+      {
+        "trigger": {
+          "shooter": "A",
+          "guard": "GUARD_6",
+          "route": "ExtractionPatrol_7F_WestDorm",
+          "world_time": 67.35315591841936,
+          "target": "BP_StingerCharacter_C_2147481881",
+          "guard_state": 1,
+          "guard_health": 100,
+          "guard_shots": 0,
+          "player_health": {
+            "A": 80,
+            "B": 80
+          },
+          "reason": "actual visible target"
+        },
+        "pause": {
+          "label": "7F_WestDorm_A",
+          "destination": "7F_WestDorm_A3",
+          "moving": "A",
+          "completed": {
+            "A": 116,
+            "B": 0
+          },
+          "original_start": 112,
+          "original_end": 116,
+          "endpoint": [
+            -15600.0,
+            -16900.0,
+            -202.1969
+          ]
+        },
+        "shooter": "A",
+        "guard": "GUARD_6",
+        "result": "passed",
+        "stopped_positions": {
+          "A": [
+            -15628.120260530344,
+            -16900.034477831807,
+            -108.02756180753104
+          ],
+          "B": [
+            -22629.56,
+            -20995.22,
+            278.1500163078308
+          ]
+        },
+        "aim_mode": {
+          "action": "held RightMouseButton through ordinary input",
+          "target": "body",
+          "owner_alpha": 1,
+          "server_alpha": 1
+        },
+        "route": "ExtractionPatrol_7F_WestDorm",
+        "accepted_shots": 5,
+        "accepted_before": 0,
+        "accepted_after": 5,
+        "guard_health_before": 100,
+        "guard_health_after": 0,
+        "guard_dead_before": false,
+        "guard_dead_after": true,
+        "guard_kills_before": 0,
+        "guard_kills_after": 1,
+        "kills_added": 1,
+        "world_time_after": 70.3463148213923,
+        "medical": [
+          {
+            "role": "A",
+            "item": "BF0AFE084D17788173273FA3ECCC3E96",
+            "health_before": 65,
+            "health_after": 100,
+            "result": "passed"
+          },
+          {
+            "role": "B",
+            "item": "988EF8284B0B6D2BEB84EBB83C8FE5D0",
+            "health_before": 80,
+            "health_after": 100,
+            "result": "passed"
+          }
+        ]
+      }
+    ],
+    "jumps": [
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 1,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "first bridge recovery"
+        },
+        "original_start": 252,
+        "original_end": 256,
+        "original_local_index": 3,
+        "original_global_index": 255,
+        "target": [
+          2700.0,
+          -18600.0,
+          395.0148
+        ],
+        "trigger": {
+          "world_time": 307.3818509206176,
+          "position": [
+            2610.8172411437363,
+            -18600.142365265223,
+            471.30605467476585
+          ],
+          "feet_z": 379.30605467476585,
+          "bridge_progress_cm": 410.8172411437363,
+          "signed_bridge_progress_cm": 410.8172411437363,
+          "stationary_since": 305.34765642136335,
+          "movement_scope": {
+            "measured_edge_distance_cm": 0.1423652652229066,
+            "observed_input_edge_distance_cm": 0.14354766424901008,
+            "measured_floor_delta_cm": 15.54874146077998,
+            "observed_start": {
+              "world_time": 305.21458292007446,
+              "position": [
+                2598.8495946562502,
+                -18599.99865893202,
+                471.5258970492635
+              ],
+              "feet_z": 379.5258970492635,
+              "previous_measured_point": [
+                2600.0,
+                -18600.0,
+                359.966
+              ],
+              "target": [
+                2700.0,
+                -18600.0,
+                395.0148
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 307.9736285209656,
+          "position": [
+            2614.6855628690987,
+            -18600.136321012524,
+            535.7053710764524
+          ],
+          "feet_z": 443.70537107645237
+        },
+        "landing": {
+          "world_time": 308.6061490215361,
+          "position": [
+            2657.556611772644,
+            -18600.068823373498,
+            489.1648916110018
+          ],
+          "feet_z": 397.1648916110018
+        },
+        "original_completion": {
+          "world_time": 308.6061490215361,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 308.473000921309,
+          "position": [
+            2644.551281715223,
+            -18600.089430833985,
+            525.2088959543943
+          ],
+          "feet_z": 433.2088959543943
+        },
+        "return_points": [],
+        "original_completed": 256,
+        "endpoint": [
+          2700.0,
+          -18600.0,
+          395.0148
+        ],
+        "world_time_after": 308.6061490215361,
+        "role_recovery_seconds": 1.2242981009185314
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 2,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 500.39814158001303,
+          "projected_progress_cm": 499.6700379585691,
+          "clamped_progress_cm": 499.6700379585691,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            2700.0,
+            -18600.0,
+            395.0148
+          ],
+          "previous_global_index": 255,
+          "previous_landing": {
+            "world_time": 308.6061490215361,
+            "position": [
+              2657.556611772644,
+              -18600.068823373498,
+              489.1648916110018
+            ],
+            "feet_z": 397.1648916110018
+          },
+          "current_world_time": 312.84322042018175,
+          "current_position": [
+            3110.4872791023054,
+            -18627.126680398516,
+            505.27944722992646
+          ]
+        },
+        "original_start": 260,
+        "original_end": 264,
+        "original_local_index": 0,
+        "original_global_index": 260,
+        "target": [
+          3200.0,
+          -18600.0,
+          443.6607
+        ],
+        "trigger": {
+          "world_time": 312.84322042018175,
+          "position": [
+            3110.4872791023054,
+            -18627.126680398516,
+            505.27944722992646
+          ],
+          "feet_z": 413.27944722992646,
+          "bridge_progress_cm": 910.4872791023054,
+          "signed_bridge_progress_cm": 910.4872791023054,
+          "stationary_since": 310.8046201206744,
+          "movement_scope": {
+            "measured_edge_distance_cm": 27.126680398516328,
+            "observed_input_edge_distance_cm": 27.127425576798075,
+            "measured_floor_delta_cm": -1.2820994097673974,
+            "observed_start": {
+              "world_time": 310.23843932151794,
+              "position": [
+                3073.77294789145,
+                -18599.998949179786,
+                499.344937208459
+              ],
+              "feet_z": 407.344937208459,
+              "previous_measured_point": [
+                3100.0,
+                -18600.0,
+                411.1523
+              ],
+              "target": [
+                3200.0,
+                -18600.0,
+                443.6607
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 313.5575131215155,
+          "position": [
+            3115.653222847388,
+            -18625.561083161487,
+            577.8994368861586
+          ],
+          "feet_z": 485.8994368861586
+        },
+        "landing": {
+          "world_time": 314.3246870189905,
+          "position": [
+            3146.033947101762,
+            -18616.40387533813,
+            521.2942954715146
+          ],
+          "feet_z": 429.2942954715146
+        },
+        "original_completion": {
+          "world_time": 333.9547602199018,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 314.1231121197343,
+          "position": [
+            3150.204585210537,
+            -18615.09262025425,
+            527.6880239924617
+          ],
+          "feet_z": 435.6880239924617
+        },
+        "return_points": [],
+        "original_completed": 264,
+        "endpoint": [
+          3400.0,
+          -18500.0,
+          543.0012
+        ],
+        "world_time_after": 333.9547602199018,
+        "role_recovery_seconds": 26.57290929928422
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 3,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 37.12901789432617,
+          "projected_progress_cm": 35.56573233885456,
+          "clamped_progress_cm": 35.56573233885456,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            3200.0,
+            -18600.0,
+            443.6607
+          ],
+          "previous_global_index": 260,
+          "previous_landing": {
+            "world_time": 314.3246870189905,
+            "position": [
+              3146.033947101762,
+              -18616.40387533813,
+              521.2942954715146
+            ],
+            "feet_z": 429.2942954715146
+          },
+          "current_world_time": 316.35684502124786,
+          "current_position": [
+            3146.05301144116,
+            -18616.4663495876,
+            521.2942954715146
+          ]
+        },
+        "original_start": 260,
+        "original_end": 264,
+        "original_local_index": 0,
+        "original_global_index": 260,
+        "target": [
+          3200.0,
+          -18600.0,
+          443.6607
+        ],
+        "trigger": {
+          "world_time": 316.35684502124786,
+          "position": [
+            3146.05301144116,
+            -18616.4663495876,
+            521.2942954715146
+          ],
+          "feet_z": 429.2942954715146,
+          "bridge_progress_cm": 946.0530114411599,
+          "signed_bridge_progress_cm": 946.0530114411599,
+          "stationary_since": 314.3246870189905,
+          "movement_scope": {
+            "measured_edge_distance_cm": 16.466349587601144,
+            "observed_input_edge_distance_cm": 16.46679868716399,
+            "measured_floor_delta_cm": 3.170898300176532,
+            "observed_start": {
+              "world_time": 310.23843932151794,
+              "position": [
+                3073.77294789145,
+                -18599.998949179786,
+                499.344937208459
+              ],
+              "feet_z": 407.344937208459,
+              "previous_measured_point": [
+                3100.0,
+                -18600.0,
+                411.1523
+              ],
+              "target": [
+                3200.0,
+                -18600.0,
+                443.6607
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 316.95584531873465,
+          "position": [
+            3148.7190498197783,
+            -18615.652573629577,
+            577.6825316201467
+          ],
+          "feet_z": 485.68253162014673
+        },
+        "landing": {
+          "world_time": 317.78721471875906,
+          "position": [
+            3182.809922348421,
+            -18609.776396775233,
+            537.8110724314045
+          ],
+          "feet_z": 445.81107243140445
+        },
+        "original_completion": {
+          "world_time": 333.9547602199018,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 317.58599742129445,
+          "position": [
+            3185.9959499151223,
+            -18605.83444906735,
+            543.6987389590348
+          ],
+          "feet_z": 451.6987389590348
+        },
+        "return_points": [],
+        "original_completed": 264,
+        "endpoint": [
+          3400.0,
+          -18500.0,
+          543.0012
+        ],
+        "world_time_after": 333.9547602199018,
+        "role_recovery_seconds": 26.57290929928422
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 4,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 47.40929047986882,
+          "projected_progress_cm": 53.946988558840076,
+          "clamped_progress_cm": 53.946988558840076,
+          "same_original_target": false,
+          "completed_original_point": true,
+          "previous_target": [
+            3200.0,
+            -18600.0,
+            443.6607
+          ],
+          "previous_global_index": 260,
+          "previous_landing": {
+            "world_time": 317.78721471875906,
+            "position": [
+              3182.809922348421,
+              -18609.776396775233,
+              537.8110724314045
+            ],
+            "feet_z": 445.81107243140445
+          },
+          "current_world_time": 320.78057742118835,
+          "current_position": [
+            3190.3015109395014,
+            -18633.487251912386,
+            537.8110724314045
+          ]
+        },
+        "original_start": 260,
+        "original_end": 264,
+        "original_local_index": 1,
+        "original_global_index": 261,
+        "target": [
+          3300.0,
+          -18600.0,
+          493.2117
+        ],
+        "trigger": {
+          "world_time": 320.78057742118835,
+          "position": [
+            3190.3015109395014,
+            -18633.487251912386,
+            537.8110724314045
+          ],
+          "feet_z": 445.81107243140445,
+          "bridge_progress_cm": 1000.0,
+          "signed_bridge_progress_cm": 990.3015109395014,
+          "stationary_since": 318.55662202090025,
+          "movement_scope": {
+            "measured_edge_distance_cm": 34.86340102027023,
+            "observed_input_edge_distance_cm": 24.251586324582163,
+            "measured_floor_delta_cm": 2.150372431404435,
+            "observed_start": {
+              "world_time": 317.78721471875906,
+              "position": [
+                3182.809922348421,
+                -18609.776396775233,
+                537.8110724314045
+              ],
+              "feet_z": 445.81107243140445,
+              "previous_measured_point": [
+                3200.0,
+                -18600.0,
+                443.6607
+              ],
+              "target": [
+                3300.0,
+                -18600.0,
+                493.2117
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 321.3466719202697,
+          "position": [
+            3194.0010921711482,
+            -18632.35718633272,
+            602.210388833091
+          ],
+          "feet_z": 510.210388833091
+        },
+        "landing": {
+          "world_time": 322.0166068188846,
+          "position": [
+            3244.054250144782,
+            -18617.06806374345,
+            569.7392632667038
+          ],
+          "feet_z": 477.7392632667038
+        },
+        "original_completion": {
+          "world_time": 333.9547602199018,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 321.8146274201572,
+          "position": [
+            3219.898160792676,
+            -18624.44672727506,
+            600.0356683239543
+          ],
+          "feet_z": 508.03566832395427
+        },
+        "return_points": [],
+        "original_completed": 264,
+        "endpoint": [
+          3400.0,
+          -18500.0,
+          543.0012
+        ],
+        "world_time_after": 333.9547602199018,
+        "role_recovery_seconds": 26.57290929928422
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 5,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 121.5377486624282,
+          "projected_progress_cm": 179.89111304219114,
+          "clamped_progress_cm": 179.89111304219114,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            3300.0,
+            -18600.0,
+            493.2117
+          ],
+          "previous_global_index": 261,
+          "previous_landing": {
+            "world_time": 322.0166068188846,
+            "position": [
+              3244.054250144782,
+              -18617.06806374345,
+              569.7392632667038
+            ],
+            "feet_z": 477.7392632667038
+          },
+          "current_world_time": 325.12212311849,
+          "current_position": [
+            3234.082450972333,
+            -18520.10888695781,
+            571.3308825000589
+          ]
+        },
+        "original_start": 260,
+        "original_end": 264,
+        "original_local_index": 2,
+        "original_global_index": 262,
+        "target": [
+          3300.0,
+          -18500.0,
+          510.3187
+        ],
+        "trigger": {
+          "world_time": 325.12212311849,
+          "position": [
+            3234.082450972333,
+            -18520.10888695781,
+            571.3308825000589
+          ],
+          "feet_z": 479.3308825000589,
+          "bridge_progress_cm": 1179.8911130421911,
+          "signed_bridge_progress_cm": 1179.8911130421911,
+          "stationary_since": 323.1179224215448,
+          "movement_scope": {
+            "measured_edge_distance_cm": 65.91754902766706,
+            "observed_input_edge_distance_cm": 55.500296376109674,
+            "measured_floor_delta_cm": -27.547790208068704,
+            "observed_start": {
+              "world_time": 322.14940401911736,
+              "position": [
+                3261.3969933459084,
+                -18609.65996356106,
+                571.3308825000589
+              ],
+              "feet_z": 479.3308825000589,
+              "previous_measured_point": [
+                3300.0,
+                -18600.0,
+                493.2117
+              ],
+              "target": [
+                3300.0,
+                -18500.0,
+                510.3187
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 325.7901799194515,
+          "position": [
+            3238.9246190008034,
+            -18518.630056654732,
+            642.6524234959091
+          ],
+          "feet_z": 550.6524234959091
+        },
+        "landing": {
+          "world_time": 326.58910432085395,
+          "position": [
+            3271.8933643289984,
+            -18514.041417093682,
+            587.3614124689997
+          ],
+          "feet_z": 495.3614124689997
+        },
+        "original_completion": {
+          "world_time": 333.9547602199018,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 326.38866052031517,
+          "position": [
+            3269.7331326435383,
+            -18509.654898323126,
+            588.4462621093372
+          ],
+          "feet_z": 496.4462621093372
+        },
+        "return_points": [],
+        "original_completed": 264,
+        "endpoint": [
+          3400.0,
+          -18500.0,
+          543.0012
+        ],
+        "world_time_after": 333.9547602199018,
+        "role_recovery_seconds": 26.57290929928422
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 6,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "observed completed original point at turn",
+          "actual_xy_progress_cm": 47.458352455308585,
+          "projected_progress_cm": 20.108886957808863,
+          "clamped_progress_cm": 20.108886957808863,
+          "same_original_target": false,
+          "completed_original_point": true,
+          "previous_target": [
+            3300.0,
+            -18500.0,
+            510.3187
+          ],
+          "previous_global_index": 262,
+          "previous_landing": {
+            "world_time": 326.58910432085395,
+            "position": [
+              3271.8933643289984,
+              -18514.041417093682,
+              587.3614124689997
+            ],
+            "feet_z": 495.3614124689997
+          },
+          "current_world_time": 329.1844829209149,
+          "current_position": [
+            3278.646608501858,
+            -18536.428540185007,
+            587.3614124689997
+          ]
+        },
+        "original_start": 260,
+        "original_end": 264,
+        "original_local_index": 3,
+        "original_global_index": 263,
+        "target": [
+          3400.0,
+          -18500.0,
+          543.0012
+        ],
+        "trigger": {
+          "world_time": 329.1844829209149,
+          "position": [
+            3278.646608501858,
+            -18536.428540185007,
+            587.3614124689997
+          ],
+          "feet_z": 495.3614124689997,
+          "bridge_progress_cm": 1200.0,
+          "signed_bridge_progress_cm": 1178.6466085018578,
+          "stationary_since": 327.11985601857305,
+          "movement_scope": {
+            "measured_edge_distance_cm": 42.22565415104388,
+            "observed_input_edge_distance_cm": 22.989644028693608,
+            "measured_floor_delta_cm": -14.957287531000304,
+            "observed_start": {
+              "world_time": 326.58910432085395,
+              "position": [
+                3271.8933643289984,
+                -18514.041417093682,
+                587.3614124689997
+              ],
+              "feet_z": 495.3614124689997,
+              "previous_measured_point": [
+                3300.0,
+                -18500.0,
+                510.3187
+              ],
+              "target": [
+                3400.0,
+                -18500.0,
+                543.0012
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 329.7514371201396,
+          "position": [
+            3280.391330501425,
+            -18535.909178378875,
+            634.6497127056867
+          ],
+          "feet_z": 542.6497127056867
+        },
+        "landing": {
+          "world_time": 330.5839264206588,
+          "position": [
+            3314.415326244131,
+            -18525.957097938393,
+            604.403263097884
+          ],
+          "feet_z": 512.403263097884
+        },
+        "original_completion": {
+          "world_time": 333.9547602199018,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 330.4499205201864,
+          "position": [
+            3314.665083465915,
+            -18525.686951741813,
+            606.1636581944485
+          ],
+          "feet_z": 514.1636581944485
+        },
+        "return_points": [],
+        "original_completed": 264,
+        "endpoint": [
+          3400.0,
+          -18500.0,
+          543.0012
+        ],
+        "world_time_after": 333.9547602199018,
+        "role_recovery_seconds": 26.57290929928422
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 7,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 37.40184283731693,
+          "projected_progress_cm": 36.03706841791018,
+          "clamped_progress_cm": 14.683676919768004,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            3400.0,
+            -18500.0,
+            543.0012
+          ],
+          "previous_global_index": 263,
+          "previous_landing": {
+            "world_time": 330.5839264206588,
+            "position": [
+              3314.415326244131,
+              -18525.957097938393,
+              604.403263097884
+            ],
+            "feet_z": 512.403263097884
+          },
+          "current_world_time": 332.71792931854725,
+          "current_position": [
+            3314.683676919768,
+            -18526.417169276374,
+            604.403263097884
+          ]
+        },
+        "original_start": 260,
+        "original_end": 264,
+        "original_local_index": 3,
+        "original_global_index": 263,
+        "target": [
+          3400.0,
+          -18500.0,
+          543.0012
+        ],
+        "trigger": {
+          "world_time": 332.71792931854725,
+          "position": [
+            3314.683676919768,
+            -18526.417169276374,
+            604.403263097884
+          ],
+          "feet_z": 512.403263097884,
+          "bridge_progress_cm": 1214.683676919768,
+          "signed_bridge_progress_cm": 1214.683676919768,
+          "stationary_since": 330.5839264206588,
+          "movement_scope": {
+            "measured_edge_distance_cm": 26.417169276373897,
+            "observed_input_edge_distance_cm": 16.964282920154925,
+            "measured_floor_delta_cm": -2.7144296114191775,
+            "observed_start": {
+              "world_time": 326.58910432085395,
+              "position": [
+                3271.8933643289984,
+                -18514.041417093682,
+                587.3614124689997
+              ],
+              "feet_z": 495.3614124689997,
+              "previous_measured_point": [
+                3300.0,
+                -18500.0,
+                510.3187
+              ],
+              "target": [
+                3400.0,
+                -18500.0,
+                543.0012
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 333.3172279186547,
+          "position": [
+            3319.5196905161433,
+            -18524.9185538781,
+            675.7248040937342
+          ],
+          "feet_z": 583.7248040937342
+        },
+        "landing": {
+          "world_time": 333.9547602199018,
+          "position": [
+            3361.8510640017867,
+            -18511.80063208737,
+            633.2218790708175
+          ],
+          "feet_z": 541.2218790708175
+        },
+        "original_completion": {
+          "world_time": 333.9547602199018,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 333.7522979192436,
+          "position": [
+            3344.243727790826,
+            -18517.256908138435,
+            666.6260788459148
+          ],
+          "feet_z": 574.6260788459148
+        },
+        "return_points": [],
+        "original_completed": 264,
+        "endpoint": [
+          3400.0,
+          -18500.0,
+          543.0012
+        ],
+        "world_time_after": 333.9547602199018,
+        "role_recovery_seconds": 26.57290929928422
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 8,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 80.12803422279086,
+          "projected_progress_cm": 85.316323080232,
+          "clamped_progress_cm": 85.316323080232,
+          "same_original_target": false,
+          "completed_original_point": true,
+          "previous_target": [
+            3400.0,
+            -18500.0,
+            543.0012
+          ],
+          "previous_global_index": 263,
+          "previous_landing": {
+            "world_time": 333.9547602199018,
+            "position": [
+              3361.8510640017867,
+              -18511.80063208737,
+              633.2218790708175
+            ],
+            "feet_z": 541.2218790708175
+          },
+          "current_world_time": 337.0952568203211,
+          "current_position": [
+            3394.5686793408877,
+            -18532.65321422381,
+            637.1942186306316
+          ]
+        },
+        "original_start": 264,
+        "original_end": 268,
+        "original_local_index": 0,
+        "original_global_index": 264,
+        "target": [
+          3500.0,
+          -18500.0,
+          592.7188
+        ],
+        "trigger": {
+          "world_time": 337.0952568203211,
+          "position": [
+            3394.5686793408877,
+            -18532.65321422381,
+            637.1942186306316
+          ],
+          "feet_z": 545.1942186306316,
+          "bridge_progress_cm": 1300.0,
+          "signed_bridge_progress_cm": 1294.5686793408877,
+          "stationary_since": 334.9576447196305,
+          "movement_scope": {
+            "measured_edge_distance_cm": 33.101837460300324,
+            "observed_input_edge_distance_cm": 23.56232508543483,
+            "measured_floor_delta_cm": 2.1930186306315136,
+            "observed_start": {
+              "world_time": 334.45523561909795,
+              "position": [
+                3368.6525231330975,
+                -18511.2186498456,
+                636.0695954844026
+              ],
+              "feet_z": 544.0695954844026,
+              "previous_measured_point": [
+                3400.0,
+                -18500.0,
+                543.0012
+              ],
+              "target": [
+                3500.0,
+                -18500.0,
+                592.7188
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 337.6629683189094,
+          "position": [
+            3396.3074678174653,
+            -18532.114298237026,
+            684.4825188673186
+          ],
+          "feet_z": 592.4825188673186
+        },
+        "landing": {
+          "world_time": 338.50131592154503,
+          "position": [
+            3429.4879715850184,
+            -18521.66624718872,
+            653.7489568588396
+          ],
+          "feet_z": 561.7489568588396
+        },
+        "original_completion": {
+          "world_time": 361.3774854205549,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 338.2986105196178,
+          "position": [
+            3432.44166584635,
+            -18520.914950386643,
+            671.1869837077452
+          ],
+          "feet_z": 579.1869837077452
+        },
+        "return_points": [],
+        "original_completed": 268,
+        "endpoint": [
+          3800.0,
+          -18500.0,
+          707.941
+        ],
+        "world_time_after": 361.8462554216385,
+        "role_recovery_seconds": 54.46440450102091
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 9,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 36.60879087590735,
+          "projected_progress_cm": 34.87920268786729,
+          "clamped_progress_cm": 29.447882028754975,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            3500.0,
+            -18500.0,
+            592.7188
+          ],
+          "previous_global_index": 264,
+          "previous_landing": {
+            "world_time": 338.50131592154503,
+            "position": [
+              3429.4879715850184,
+              -18521.66624718872,
+              653.7489568588396
+            ],
+            "feet_z": 561.7489568588396
+          },
+          "current_world_time": 340.7016093209386,
+          "current_position": [
+            3429.447882028755,
+            -18521.53364637004,
+            653.7489568588396
+          ]
+        },
+        "original_start": 264,
+        "original_end": 268,
+        "original_local_index": 0,
+        "original_global_index": 264,
+        "target": [
+          3500.0,
+          -18500.0,
+          592.7188
+        ],
+        "trigger": {
+          "world_time": 340.7016093209386,
+          "position": [
+            3429.447882028755,
+            -18521.53364637004,
+            653.7489568588396
+          ],
+          "feet_z": 561.7489568588396,
+          "bridge_progress_cm": 1329.447882028755,
+          "signed_bridge_progress_cm": 1329.447882028755,
+          "stationary_since": 338.50131592154503,
+          "movement_scope": {
+            "measured_edge_distance_cm": 21.533646370040515,
+            "observed_input_edge_distance_cm": 15.451391181720961,
+            "measured_floor_delta_cm": 4.106976663311343,
+            "observed_start": {
+              "world_time": 334.45523561909795,
+              "position": [
+                3368.6525231330975,
+                -18511.2186498456,
+                636.0695954844026
+              ],
+              "feet_z": 544.0695954844026,
+              "previous_measured_point": [
+                3400.0,
+                -18500.0,
+                543.0012
+              ],
+              "target": [
+                3500.0,
+                -18500.0,
+                592.7188
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 341.33234171941876,
+          "position": [
+            3434.289828777482,
+            -18520.0543137169,
+            725.0704978546898
+          ],
+          "feet_z": 633.0704978546898
+        },
+        "landing": {
+          "world_time": 342.2974052205682,
+          "position": [
+            3468.3598751015566,
+            -18519.50999743576,
+            669.9458101453525
+          ],
+          "feet_z": 577.9458101453525
+        },
+        "original_completion": {
+          "world_time": 361.3774854205549,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 342.0335980206728,
+          "position": [
+            3463.8977899514343,
+            -18511.45537638722,
+            667.8157475652439
+          ],
+          "feet_z": 575.8157475652439
+        },
+        "return_points": [],
+        "original_completed": 268,
+        "endpoint": [
+          3800.0,
+          -18500.0,
+          707.941
+        ],
+        "world_time_after": 361.8462554216385,
+        "role_recovery_seconds": 54.46440450102091
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 10,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 47.353513431305636,
+          "projected_progress_cm": 70.55211797124502,
+          "clamped_progress_cm": 70.55211797124502,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            3500.0,
+            -18500.0,
+            592.7188
+          ],
+          "previous_global_index": 264,
+          "previous_landing": {
+            "world_time": 342.2974052205682,
+            "position": [
+              3468.3598751015566,
+              -18519.50999743576,
+              669.9458101453525
+            ],
+            "feet_z": 577.9458101453525
+          },
+          "current_world_time": 345.0577246211469,
+          "current_position": [
+            3473.8975998472797,
+            -18537.860857403844,
+            669.9458101453525
+          ]
+        },
+        "original_start": 264,
+        "original_end": 268,
+        "original_local_index": 1,
+        "original_global_index": 265,
+        "target": [
+          3600.0,
+          -18500.0,
+          625.346
+        ],
+        "trigger": {
+          "world_time": 345.0577246211469,
+          "position": [
+            3473.8975998472797,
+            -18537.860857403844,
+            669.9458101453525
+          ],
+          "feet_z": 577.9458101453525,
+          "bridge_progress_cm": 1400.0,
+          "signed_bridge_progress_cm": 1373.8975998472797,
+          "stationary_since": 342.9960773214698,
+          "movement_scope": {
+            "measured_edge_distance_cm": 45.986735229704806,
+            "observed_input_edge_distance_cm": 18.96444111957341,
+            "measured_floor_delta_cm": -14.772989854647449,
+            "observed_start": {
+              "world_time": 342.2974052205682,
+              "position": [
+                3468.3598751015566,
+                -18519.50999743576,
+                669.9458101453525
+              ],
+              "feet_z": 577.9458101453525,
+              "previous_measured_point": [
+                3500.0,
+                -18500.0,
+                592.7188
+              ],
+              "target": [
+                3600.0,
+                -18500.0,
+                625.346
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 345.6266882196069,
+          "position": [
+            3474.8793805505725,
+            -18537.569938346092,
+            707.0453188112039
+          ],
+          "feet_z": 615.0453188112039
+        },
+        "landing": {
+          "world_time": 346.5258067212999,
+          "position": [
+            3545.0662953317114,
+            -18516.613264792624,
+            703.4943489747614
+          ],
+          "feet_z": 611.4943489747614
+        },
+        "original_completion": {
+          "world_time": 361.3774854205549,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 346.2596600204706,
+          "position": [
+            3508.9846611149387,
+            -18527.32305253158,
+            714.4380411531689
+          ],
+          "feet_z": 622.4380411531689
+        },
+        "return_points": [],
+        "original_completed": 268,
+        "endpoint": [
+          3800.0,
+          -18500.0,
+          707.941
+        ],
+        "world_time_after": 361.8462554216385,
+        "role_recovery_seconds": 54.46440450102091
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 11,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 74.28147883058945,
+          "projected_progress_cm": 71.21324608555051,
+          "clamped_progress_cm": 45.110845932830216,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            3600.0,
+            -18500.0,
+            625.346
+          ],
+          "previous_global_index": 265,
+          "previous_landing": {
+            "world_time": 346.5258067212999,
+            "position": [
+              3545.0662953317114,
+              -18516.613264792624,
+              703.4943489747614
+            ],
+            "feet_z": 611.4943489747614
+          },
+          "current_world_time": 348.6575939208269,
+          "current_position": [
+            3545.11084593283,
+            -18516.73240078207,
+            703.4943489747614
+          ]
+        },
+        "original_start": 264,
+        "original_end": 268,
+        "original_local_index": 1,
+        "original_global_index": 265,
+        "target": [
+          3600.0,
+          -18500.0,
+          625.346
+        ],
+        "trigger": {
+          "world_time": 348.6575939208269,
+          "position": [
+            3545.11084593283,
+            -18516.73240078207,
+            703.4943489747614
+          ],
+          "feet_z": 611.4943489747614,
+          "bridge_progress_cm": 1445.1108459328302,
+          "signed_bridge_progress_cm": 1445.1108459328302,
+          "stationary_since": 346.5258067212999,
+          "movement_scope": {
+            "measured_edge_distance_cm": 16.732400782071636,
+            "observed_input_edge_distance_cm": 8.50454474307349,
+            "measured_floor_delta_cm": 4.057143050564946,
+            "observed_start": {
+              "world_time": 342.2974052205682,
+              "position": [
+                3468.3598751015566,
+                -18519.50999743576,
+                669.9458101453525
+              ],
+              "feet_z": 577.9458101453525,
+              "previous_measured_point": [
+                3500.0,
+                -18500.0,
+                592.7188
+              ],
+              "target": [
+                3600.0,
+                -18500.0,
+                625.346
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 349.31924011930823,
+          "position": [
+            3548.8106542949945,
+            -18515.603079044406,
+            767.8936653764479
+          ],
+          "feet_z": 675.8936653764479
+        },
+        "landing": {
+          "world_time": 350.11637081950903,
+          "position": [
+            3583.9547093652304,
+            -18514.121482242,
+            719.4964384053576
+          ],
+          "feet_z": 627.4964384053576
+        },
+        "original_completion": {
+          "world_time": 361.3774854205549,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 349.8834469206631,
+          "position": [
+            3582.1205988138117,
+            -18506.709947455816,
+            737.487114051875
+          ],
+          "feet_z": 645.487114051875
+        },
+        "return_points": [],
+        "original_completed": 268,
+        "endpoint": [
+          3800.0,
+          -18500.0,
+          707.941
+        ],
+        "world_time_after": 361.8462554216385,
+        "role_recovery_seconds": 54.46440450102091
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 12,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 48.28607494140395,
+          "projected_progress_cm": 54.889154067169784,
+          "clamped_progress_cm": 54.889154067169784,
+          "same_original_target": false,
+          "completed_original_point": true,
+          "previous_target": [
+            3600.0,
+            -18500.0,
+            625.346
+          ],
+          "previous_global_index": 265,
+          "previous_landing": {
+            "world_time": 350.11637081950903,
+            "position": [
+              3583.9547093652304,
+              -18514.121482242,
+              719.4964384053576
+            ],
+            "feet_z": 627.4964384053576
+          },
+          "current_world_time": 352.9798922203481,
+          "current_position": [
+            3590.1836127490114,
+            -18534.052641103182,
+            719.4964384053576
+          ]
+        },
+        "original_start": 264,
+        "original_end": 268,
+        "original_local_index": 2,
+        "original_global_index": 266,
+        "target": [
+          3700.0,
+          -18500.0,
+          675.3441
+        ],
+        "trigger": {
+          "world_time": 352.9798922203481,
+          "position": [
+            3590.1836127490114,
+            -18534.052641103182,
+            719.4964384053576
+          ],
+          "feet_z": 627.4964384053576,
+          "bridge_progress_cm": 1500.0,
+          "signed_bridge_progress_cm": 1490.1836127490114,
+          "stationary_since": 350.75141302123666,
+          "movement_scope": {
+            "measured_edge_distance_cm": 35.43929774647796,
+            "observed_input_edge_distance_cm": 20.537645303675042,
+            "measured_floor_delta_cm": 2.1504384053575905,
+            "observed_start": {
+              "world_time": 350.11637081950903,
+              "position": [
+                3583.9547093652304,
+                -18514.121482242,
+                719.4964384053576
+              ],
+              "feet_z": 627.4964384053576,
+              "previous_measured_point": [
+                3600.0,
+                -18500.0,
+                625.346
+              ],
+              "target": [
+                3700.0,
+                -18500.0,
+                675.3441
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 353.5801564194262,
+          "position": [
+            3595.0190852251567,
+            -18532.552062476887,
+            790.8179794012078
+          ],
+          "feet_z": 698.8179794012078
+        },
+        "landing": {
+          "world_time": 354.14772801846266,
+          "position": [
+            3631.0639555745174,
+            -18521.36635884598,
+            744.1304787847768
+          ],
+          "feet_z": 652.1304787847768
+        },
+        "original_completion": {
+          "world_time": 361.3774854205549,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 354.0475927218795,
+          "position": [
+            3622.4032291112358,
+            -18524.05401782513,
+            773.3952208927342
+          ],
+          "feet_z": 681.3952208927342
+        },
+        "return_points": [],
+        "original_completed": 268,
+        "endpoint": [
+          3800.0,
+          -18500.0,
+          707.941
+        ],
+        "world_time_after": 361.8462554216385,
+        "role_recovery_seconds": 54.46440450102091
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 13,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 115.04585351939568,
+          "projected_progress_cm": 105.09620732358735,
+          "clamped_progress_cm": 105.09620732358735,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            3700.0,
+            -18500.0,
+            675.3441
+          ],
+          "previous_global_index": 266,
+          "previous_landing": {
+            "world_time": 354.14772801846266,
+            "position": [
+              3631.0639555745174,
+              -18521.36635884598,
+              744.1304787847768
+            ],
+            "feet_z": 652.1304787847768
+          },
+          "current_world_time": 356.98230592161417,
+          "current_position": [
+            3705.0962073235874,
+            -18528.51693697946,
+            769.3391744450728
+          ]
+        },
+        "original_start": 264,
+        "original_end": 268,
+        "original_local_index": 3,
+        "original_global_index": 267,
+        "target": [
+          3800.0,
+          -18500.0,
+          707.941
+        ],
+        "trigger": {
+          "world_time": 356.98230592161417,
+          "position": [
+            3705.0962073235874,
+            -18528.51693697946,
+            769.3391744450728
+          ],
+          "feet_z": 677.3391744450728,
+          "bridge_progress_cm": 1605.0962073235874,
+          "signed_bridge_progress_cm": 1605.0962073235874,
+          "stationary_since": 354.91312962025404,
+          "movement_scope": {
+            "measured_edge_distance_cm": 28.516936979460297,
+            "observed_input_edge_distance_cm": 22.876303252421433,
+            "measured_floor_delta_cm": 0.3338688400102683,
+            "observed_start": {
+              "world_time": 354.3832401186228,
+              "position": [
+                3686.2776937839203,
+                -18506.711421825785,
+                769.5436815823905
+              ],
+              "feet_z": 677.5436815823905,
+              "previous_measured_point": [
+                3700.0,
+                -18500.0,
+                675.3441
+              ],
+              "target": [
+                3800.0,
+                -18500.0,
+                707.941
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 357.5802797190845,
+          "position": [
+            3707.765537011134,
+            -18527.714178132985,
+            825.7274105937049
+          ],
+          "feet_z": 733.7274105937049
+        },
+        "landing": {
+          "world_time": 358.3807490207255,
+          "position": [
+            3740.281181976462,
+            -18518.057025093916,
+            785.8038855211589
+          ],
+          "feet_z": 693.8038855211589
+        },
+        "original_completion": {
+          "world_time": 361.3774854205549,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 358.24892292171717,
+          "position": [
+            3741.153928918494,
+            -18517.70846997864,
+            788.3741473911448
+          ],
+          "feet_z": 696.3741473911448
+        },
+        "return_points": [],
+        "original_completed": 268,
+        "endpoint": [
+          3800.0,
+          -18500.0,
+          707.941
+        ],
+        "world_time_after": 361.8462554216385,
+        "role_recovery_seconds": 54.46440450102091
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 14,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 36.80400171389609,
+          "projected_progress_cm": 35.318880078418715,
+          "clamped_progress_cm": 35.318880078418715,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            3800.0,
+            -18500.0,
+            707.941
+          ],
+          "previous_global_index": 267,
+          "previous_landing": {
+            "world_time": 358.3807490207255,
+            "position": [
+              3740.281181976462,
+              -18518.057025093916,
+              785.8038855211589
+            ],
+            "feet_z": 693.8038855211589
+          },
+          "current_world_time": 360.4810889214277,
+          "current_position": [
+            3740.415087402006,
+            -18518.167480367505,
+            785.8038855211589
+          ]
+        },
+        "original_start": 264,
+        "original_end": 268,
+        "original_local_index": 3,
+        "original_global_index": 267,
+        "target": [
+          3800.0,
+          -18500.0,
+          707.941
+        ],
+        "trigger": {
+          "world_time": 360.4810889214277,
+          "position": [
+            3740.415087402006,
+            -18518.167480367505,
+            785.8038855211589
+          ],
+          "feet_z": 693.8038855211589,
+          "bridge_progress_cm": 1640.415087402006,
+          "signed_bridge_progress_cm": 1640.415087402006,
+          "stationary_since": 358.3807490207255,
+          "movement_scope": {
+            "measured_edge_distance_cm": 18.16748036750505,
+            "observed_input_edge_distance_cm": 14.62557701278892,
+            "measured_floor_delta_cm": 5.285719895814395,
+            "observed_start": {
+              "world_time": 354.3832401186228,
+              "position": [
+                3686.2776937839203,
+                -18506.711421825785,
+                769.5436815823905
+              ],
+              "feet_z": 677.5436815823905,
+              "previous_measured_point": [
+                3700.0,
+                -18500.0,
+                675.3441
+              ],
+              "target": [
+                3800.0,
+                -18500.0,
+                707.941
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 361.01161482185125,
+          "position": [
+            3743.0810877744625,
+            -18517.35357990665,
+            842.192121669791
+          ],
+          "feet_z": 750.192121669791
+        },
+        "landing": {
+          "world_time": 361.8462554216385,
+          "position": [
+            3774.536555700129,
+            -18507.689664212256,
+            802.0821864600437
+          ],
+          "feet_z": 710.0821864600437
+        },
+        "original_completion": {
+          "world_time": 361.3774854205549,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 361.7122209183872,
+          "position": [
+            3774.536555700129,
+            -18507.689664212256,
+            799.9373424048679
+          ],
+          "feet_z": 707.9373424048679
+        },
+        "return_points": [],
+        "original_completed": 268,
+        "endpoint": [
+          3800.0,
+          -18500.0,
+          707.941
+        ],
+        "world_time_after": 361.8462554216385,
+        "role_recovery_seconds": 54.46440450102091
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 15,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 103.15369720321804,
+          "projected_progress_cm": 144.22604658301043,
+          "clamped_progress_cm": 144.22604658301043,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            3800.0,
+            -18500.0,
+            707.941
+          ],
+          "previous_global_index": 267,
+          "previous_landing": {
+            "world_time": 361.8462554216385,
+            "position": [
+              3774.536555700129,
+              -18507.689664212256,
+              802.0821864600437
+            ],
+            "feet_z": 710.0821864600437
+          },
+          "current_world_time": 365.35127772018313,
+          "current_position": [
+            3748.8456307775955,
+            -18415.358866014984,
+            802.0821864600437
+          ]
+        },
+        "original_start": 268,
+        "original_end": 272,
+        "original_local_index": 0,
+        "original_global_index": 268,
+        "target": [
+          3800.0,
+          -18400.0,
+          724.7417
+        ],
+        "trigger": {
+          "world_time": 365.35127772018313,
+          "position": [
+            3748.8456307775955,
+            -18415.358866014984,
+            802.0821864600437
+          ],
+          "feet_z": 710.0821864600437,
+          "bridge_progress_cm": 1784.6411339850165,
+          "signed_bridge_progress_cm": 1784.6411339850165,
+          "stationary_since": 363.28060792014,
+          "movement_scope": {
+            "measured_edge_distance_cm": 51.15436922240451,
+            "observed_input_edge_distance_cm": 46.24747729153506,
+            "measured_floor_delta_cm": -12.07911653737699,
+            "observed_start": {
+              "world_time": 362.3114566206932,
+              "position": [
+                3774.536555700129,
+                -18507.689664212256,
+                802.0821864600437
+              ],
+              "feet_z": 710.0821864600437,
+              "previous_measured_point": [
+                3800.0,
+                -18500.0,
+                707.941
+              ],
+              "target": [
+                3800.0,
+                -18400.0,
+                724.7417
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 365.95224272087216,
+          "position": [
+            3752.5501338257486,
+            -18414.2450407728,
+            866.4815028617302
+          ],
+          "feet_z": 774.4815028617302
+        },
+        "landing": {
+          "world_time": 366.6171836219728,
+          "position": [
+            3781.1594030223705,
+            -18408.888754778385,
+            819.0182442663769
+          ],
+          "feet_z": 727.0182442663769
+        },
+        "original_completion": {
+          "world_time": 378.71181711927056,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 366.3519624210894,
+          "position": [
+            3772.7610907191633,
+            -18408.774397765603,
+            877.6837246017642
+          ],
+          "feet_z": 785.6837246017642
+        },
+        "return_points": [],
+        "original_completed": 272,
+        "endpoint": [
+          4000.0,
+          -18300.0,
+          823.824
+        ],
+        "world_time_after": 378.71181711927056,
+        "role_recovery_seconds": 71.32996619865298
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 16,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "observed completed original point at turn",
+          "actual_xy_progress_cm": 47.03911775860346,
+          "projected_progress_cm": 15.358866014983505,
+          "clamped_progress_cm": 15.358866014983505,
+          "same_original_target": false,
+          "completed_original_point": true,
+          "previous_target": [
+            3800.0,
+            -18400.0,
+            724.7417
+          ],
+          "previous_global_index": 268,
+          "previous_landing": {
+            "world_time": 366.6171836219728,
+            "position": [
+              3781.1594030223705,
+              -18408.888754778385,
+              819.0182442663769
+            ],
+            "feet_z": 727.0182442663769
+          },
+          "current_world_time": 369.4118869192898,
+          "current_position": [
+            3792.5414368486195,
+            -18432.77595909366,
+            819.0182442663769
+          ]
+        },
+        "original_start": 268,
+        "original_end": 272,
+        "original_local_index": 1,
+        "original_global_index": 269,
+        "target": [
+          3900.0,
+          -18400.0,
+          773.9978
+        ],
+        "trigger": {
+          "world_time": 369.4118869192898,
+          "position": [
+            3792.5414368486195,
+            -18432.77595909366,
+            819.0182442663769
+          ],
+          "feet_z": 727.0182442663769,
+          "bridge_progress_cm": 1800.0,
+          "signed_bridge_progress_cm": 1792.5414368486195,
+          "stationary_since": 367.35028192028403,
+          "movement_scope": {
+            "measured_edge_distance_cm": 33.61389086065914,
+            "observed_input_edge_distance_cm": 24.66962104937459,
+            "measured_floor_delta_cm": 2.2765442663768454,
+            "observed_start": {
+              "world_time": 366.6171836219728,
+              "position": [
+                3781.1594030223705,
+                -18408.888754778385,
+                819.0182442663769
+              ],
+              "feet_z": 727.0182442663769,
+              "previous_measured_point": [
+                3800.0,
+                -18400.0,
+                724.7417
+              ],
+              "target": [
+                3900.0,
+                -18400.0,
+                773.9978
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 369.98026622086763,
+          "position": [
+            3795.207475227238,
+            -18431.962183135634,
+            875.406480415009
+          ],
+          "feet_z": 783.406480415009
+        },
+        "landing": {
+          "world_time": 370.6814076192677,
+          "position": [
+            3846.297476308114,
+            -18416.36757845609,
+            850.6198889070138
+          ],
+          "feet_z": 758.6198889070138
+        },
+        "original_completion": {
+          "world_time": 378.71181711927056,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 370.4482421204448,
+          "position": [
+            3819.58268326032,
+            -18424.52194580513,
+            888.4757391129574
+          ],
+          "feet_z": 796.4757391129574
+        },
+        "return_points": [],
+        "original_completed": 272,
+        "endpoint": [
+          4000.0,
+          -18300.0,
+          823.824
+        ],
+        "world_time_after": 378.71181711927056,
+        "role_recovery_seconds": 71.32996619865298
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 17,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 80.2182239163979,
+          "projected_progress_cm": 100.0,
+          "clamped_progress_cm": 100.0,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            3900.0,
+            -18400.0,
+            773.9978
+          ],
+          "previous_global_index": 269,
+          "previous_landing": {
+            "world_time": 370.6814076192677,
+            "position": [
+              3846.297476308114,
+              -18416.36757845609,
+              850.6198889070138
+            ],
+            "feet_z": 758.6198889070138
+          },
+          "current_world_time": 373.6104415208101,
+          "current_position": [
+            3872.5274656533174,
+            -18438.87502823209,
+            852.1562816491323
+          ]
+        },
+        "original_start": 268,
+        "original_end": 272,
+        "original_local_index": 2,
+        "original_global_index": 270,
+        "target": [
+          4000.0,
+          -18400.0,
+          807.1825
+        ],
+        "trigger": {
+          "world_time": 373.6104415208101,
+          "position": [
+            3872.5274656533174,
+            -18438.87502823209,
+            852.1562816491323
+          ],
+          "feet_z": 760.1562816491323,
+          "bridge_progress_cm": 1900.0,
+          "signed_bridge_progress_cm": 1872.5274656533174,
+          "stationary_since": 371.58404932171106,
+          "movement_scope": {
+            "measured_edge_distance_cm": 47.60260458709693,
+            "observed_input_edge_distance_cm": 28.009555966835627,
+            "measured_floor_delta_cm": -13.84151835086766,
+            "observed_start": {
+              "world_time": 370.8140299208462,
+              "position": [
+                3864.1623764075207,
+                -18411.472235270743,
+                852.1562816491323
+              ],
+              "feet_z": 760.1562816491323,
+              "previous_measured_point": [
+                3900.0,
+                -18400.0,
+                773.9978
+              ],
+              "target": [
+                4000.0,
+                -18400.0,
+                807.1825
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 374.2099889218807,
+          "position": [
+            3875.1958258032596,
+            -18438.06885805681,
+            908.5445177977645
+          ],
+          "feet_z": 816.5445177977645
+        },
+        "landing": {
+          "world_time": 375.0417511202395,
+          "position": [
+            3907.7753628723876,
+            -18428.11799705953,
+            868.1479963964575
+          ],
+          "feet_z": 776.1479963964575
+        },
+        "original_completion": {
+          "world_time": 378.71181711927056,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 374.94220631942153,
+          "position": [
+            3905.862281434912,
+            -18428.704767964475,
+            866.1375239811767
+          ],
+          "feet_z": 774.1375239811767
+        },
+        "return_points": [],
+        "original_completed": 272,
+        "endpoint": [
+          4000.0,
+          -18300.0,
+          823.824
+        ],
+        "world_time_after": 378.71181711927056,
+        "role_recovery_seconds": 71.32996619865298
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 18,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 36.93668730590742,
+          "projected_progress_cm": 35.32783980580143,
+          "clamped_progress_cm": 7.855305459118881,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            4000.0,
+            -18400.0,
+            807.1825
+          ],
+          "previous_global_index": 270,
+          "previous_landing": {
+            "world_time": 375.0417511202395,
+            "position": [
+              3907.7753628723876,
+              -18428.11799705953,
+              868.1479963964575
+            ],
+            "feet_z": 776.1479963964575
+          },
+          "current_world_time": 377.1110286191106,
+          "current_position": [
+            3907.855305459119,
+            -18428.092514434742,
+            868.1479963964575
+          ]
+        },
+        "original_start": 268,
+        "original_end": 272,
+        "original_local_index": 2,
+        "original_global_index": 270,
+        "target": [
+          4000.0,
+          -18400.0,
+          807.1825
+        ],
+        "trigger": {
+          "world_time": 377.1110286191106,
+          "position": [
+            3907.855305459119,
+            -18428.092514434742,
+            868.1479963964575
+          ],
+          "feet_z": 776.1479963964575,
+          "bridge_progress_cm": 1907.8553054591189,
+          "signed_bridge_progress_cm": 1907.8553054591189,
+          "stationary_since": 375.0417511202395,
+          "movement_scope": {
+            "measured_edge_distance_cm": 28.092514434742043,
+            "observed_input_edge_distance_cm": 20.238338527924174,
+            "measured_floor_delta_cm": -0.4565631542346864,
+            "observed_start": {
+              "world_time": 370.8140299208462,
+              "position": [
+                3864.1623764075207,
+                -18411.472235270743,
+                852.1562816491323
+              ],
+              "feet_z": 760.1562816491323,
+              "previous_measured_point": [
+                3900.0,
+                -18400.0,
+                773.9978
+              ],
+              "target": [
+                4000.0,
+                -18400.0,
+                807.1825
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 377.67746042087674,
+          "position": [
+            3910.52136857964,
+            -18427.279003138472,
+            924.5362325450897
+          ],
+          "feet_z": 832.5362325450897
+        },
+        "landing": {
+          "world_time": 378.347228821367,
+          "position": [
+            3954.103339139391,
+            -18413.980583798282,
+            896.2389988732186
+          ],
+          "feet_z": 804.2389988732186
+        },
+        "original_completion": {
+          "world_time": 378.71181711927056,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 378.14572631940246,
+          "position": [
+            3934.8968028244058,
+            -18419.841185572564,
+            937.605491243038
+          ],
+          "feet_z": 845.605491243038
+        },
+        "return_points": [],
+        "original_completed": 272,
+        "endpoint": [
+          4000.0,
+          -18300.0,
+          823.824
+        ],
+        "world_time_after": 378.71181711927056,
+        "role_recovery_seconds": 71.32996619865298
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 19,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 220.57025772806386,
+          "projected_progress_cm": 295.78796760129353,
+          "clamped_progress_cm": 295.78796760129353,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            4000.0,
+            -18400.0,
+            807.1825
+          ],
+          "previous_global_index": 270,
+          "previous_landing": {
+            "world_time": 378.347228821367,
+            "position": [
+              3954.103339139391,
+              -18413.980583798282,
+              896.2389988732186
+            ],
+            "feet_z": 804.2389988732186
+          },
+          "current_world_time": 382.1475781202316,
+          "current_position": [
+            4003.6432730604124,
+            -18229.40707496562,
+            934.6956016107756
+          ]
+        },
+        "original_start": 272,
+        "original_end": 276,
+        "original_local_index": 1,
+        "original_global_index": 273,
+        "target": [
+          4100.0,
+          -18200.0,
+          873.117
+        ],
+        "trigger": {
+          "world_time": 382.1475781202316,
+          "position": [
+            4003.6432730604124,
+            -18229.40707496562,
+            934.6956016107756
+          ],
+          "feet_z": 842.6956016107756,
+          "bridge_progress_cm": 2203.6432730604124,
+          "signed_bridge_progress_cm": 2203.6432730604124,
+          "stationary_since": 380.14595142006874,
+          "movement_scope": {
+            "measured_edge_distance_cm": 29.407074965620268,
+            "observed_input_edge_distance_cm": 1.2722692743193618,
+            "measured_floor_delta_cm": 1.0456252139828166,
+            "observed_start": {
+              "world_time": 379.4132909215987,
+              "position": [
+                3998.224488101305,
+                -18229.661108638767,
+                934.7854559261052
+              ],
+              "feet_z": 842.7854559261052,
+              "previous_measured_point": [
+                4000.0,
+                -18200.0,
+                840.4602
+              ],
+              "target": [
+                4100.0,
+                -18200.0,
+                873.117
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 382.7151151187718,
+          "position": [
+            4006.309185795188,
+            -18228.592887495386,
+            991.0838377594077
+          ],
+          "feet_z": 899.0838377594077
+        },
+        "landing": {
+          "world_time": 383.4862851202488,
+          "position": [
+            4038.3108911168024,
+            -18218.810261679035,
+            950.7326062402415
+          ],
+          "feet_z": 858.7326062402415
+        },
+        "original_completion": {
+          "world_time": 387.78110022097826,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 383.3541682213545,
+          "position": [
+            4044.5568655979196,
+            -18216.91176684239,
+            957.1000450982957
+          ],
+          "feet_z": 865.1000450982957
+        },
+        "return_points": [],
+        "original_completed": 276,
+        "endpoint": [
+          4300.0,
+          -18200.0,
+          907.0364
+        ],
+        "world_time_after": 387.78110022097826,
+        "role_recovery_seconds": 80.39924930036068
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 20,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 37.00829493384874,
+          "projected_progress_cm": 35.39533554531363,
+          "clamped_progress_cm": 35.39533554531363,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            4100.0,
+            -18200.0,
+            873.117
+          ],
+          "previous_global_index": 273,
+          "previous_landing": {
+            "world_time": 383.4862851202488,
+            "position": [
+              4038.3108911168024,
+              -18218.810261679035,
+              950.7326062402415
+            ],
+            "feet_z": 858.7326062402415
+          },
+          "current_world_time": 385.577453520149,
+          "current_position": [
+            4039.038608605726,
+            -18218.600405009274,
+            950.7326062402415
+          ]
+        },
+        "original_start": 272,
+        "original_end": 276,
+        "original_local_index": 1,
+        "original_global_index": 273,
+        "target": [
+          4100.0,
+          -18200.0,
+          873.117
+        ],
+        "trigger": {
+          "world_time": 385.577453520149,
+          "position": [
+            4039.038608605726,
+            -18218.600405009274,
+            950.7326062402415
+          ],
+          "feet_z": 858.7326062402415,
+          "bridge_progress_cm": 2239.038608605726,
+          "signed_bridge_progress_cm": 2239.038608605726,
+          "stationary_since": 383.4862851202488,
+          "movement_scope": {
+            "measured_edge_distance_cm": 18.600405009274255,
+            "observed_input_edge_distance_cm": 0.8007131905334886,
+            "measured_floor_delta_cm": 5.52364590508671,
+            "observed_start": {
+              "world_time": 379.4132909215987,
+              "position": [
+                3998.224488101305,
+                -18229.661108638767,
+                934.7854559261052
+              ],
+              "feet_z": 842.7854559261052,
+              "previous_measured_point": [
+                4000.0,
+                -18200.0,
+                840.4602
+              ],
+              "target": [
+                4100.0,
+                -18200.0,
+                873.117
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 387.281507819891,
+          "position": [
+            4182.761463017624,
+            -18174.784892902208,
+            1001.4920700973629
+          ],
+          "feet_z": 909.4920700973629
+        },
+        "landing": {
+          "world_time": 387.4136429205537,
+          "position": [
+            4196.723521521384,
+            -18177.784681928984,
+            1001.1863774545382
+          ],
+          "feet_z": 909.1863774545382
+        },
+        "original_completion": {
+          "world_time": 387.78110022097826,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "A",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 387.281507819891,
+          "position": [
+            4182.761463017624,
+            -18174.784892902208,
+            1001.4920700973629
+          ],
+          "feet_z": 909.4920700973629
+        },
+        "return_points": [],
+        "original_completed": 276,
+        "endpoint": [
+          4300.0,
+          -18200.0,
+          907.0364
+        ],
+        "world_time_after": 387.78110022097826,
+        "role_recovery_seconds": 80.39924930036068
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 1,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "first bridge recovery"
+        },
+        "original_start": 260,
+        "original_end": 264,
+        "original_local_index": 0,
+        "original_global_index": 260,
+        "target": [
+          2700.0,
+          -18600.0,
+          395.0148
+        ],
+        "trigger": {
+          "world_time": 595.8798621147871,
+          "position": [
+            2611.022226935632,
+            -18600.146133946582,
+            471.55199048914443
+          ],
+          "feet_z": 379.55199048914443,
+          "bridge_progress_cm": 411.0222269356318,
+          "signed_bridge_progress_cm": 411.0222269356318,
+          "stationary_since": 593.845163218677,
+          "movement_scope": {
+            "measured_edge_distance_cm": 0.14613394658226753,
+            "observed_input_edge_distance_cm": 0.14052800359301448,
+            "measured_floor_delta_cm": 15.722832214928701,
+            "observed_start": {
+              "world_time": 593.4481214210391,
+              "position": [
+                2572.374401228766,
+                -18600.00804090472,
+                454.3515616375104
+              ],
+              "feet_z": 362.3515616375104,
+              "previous_measured_point": [
+                2600.0,
+                -18600.0,
+                359.966
+              ],
+              "target": [
+                2700.0,
+                -18600.0,
+                395.0148
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 596.4147310182452,
+          "position": [
+            2612.84261362992,
+            -18600.14328959237,
+            518.8402907258314
+          ],
+          "feet_z": 426.84029072583144
+        },
+        "landing": {
+          "world_time": 597.1495882160962,
+          "position": [
+            2658.1635629310194,
+            -18600.07247560909,
+            489.16489064229216
+          ],
+          "feet_z": 397.16489064229216
+        },
+        "original_completion": {
+          "world_time": 597.9525078162551,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 596.9167944155633,
+          "position": [
+            2639.2951077812963,
+            -18600.10195757026,
+            541.0094853357249
+          ],
+          "feet_z": 449.0094853357249
+        },
+        "return_points": [],
+        "original_completed": 264,
+        "endpoint": [
+          3000.0,
+          -18600.0,
+          395.0478
+        ],
+        "world_time_after": 597.9525078162551,
+        "role_recovery_seconds": 2.072645701467991
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 2,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 500.19565210064934,
+          "projected_progress_cm": 499.46712574283447,
+          "clamped_progress_cm": 499.46712574283447,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            2700.0,
+            -18600.0,
+            395.0148
+          ],
+          "previous_global_index": 260,
+          "previous_landing": {
+            "world_time": 597.1495882160962,
+            "position": [
+              2658.1635629310194,
+              -18600.07247560909,
+              489.16489064229216
+            ],
+            "feet_z": 397.16489064229216
+          },
+          "current_world_time": 601.4578975178301,
+          "current_position": [
+            3110.4893526784663,
+            -18627.132809966155,
+            505.2796898233364
+          ]
+        },
+        "original_start": 264,
+        "original_end": 268,
+        "original_local_index": 1,
+        "original_global_index": 265,
+        "target": [
+          3200.0,
+          -18600.0,
+          443.6607
+        ],
+        "trigger": {
+          "world_time": 601.4578975178301,
+          "position": [
+            3110.4893526784663,
+            -18627.132809966155,
+            505.2796898233364
+          ],
+          "feet_z": 413.2796898233364,
+          "bridge_progress_cm": 910.4893526784663,
+          "signed_bridge_progress_cm": 910.4893526784663,
+          "stationary_since": 599.4195791147649,
+          "movement_scope": {
+            "measured_edge_distance_cm": 27.132809966155037,
+            "observed_input_edge_distance_cm": 12.64478872402503,
+            "measured_floor_delta_cm": -1.2825309027901426,
+            "observed_start": {
+              "world_time": 598.9514350146055,
+              "position": [
+                3106.695670375626,
+                -18614.9342875935,
+                505.2796898233364
+              ],
+              "feet_z": 413.2796898233364,
+              "previous_measured_point": [
+                3100.0,
+                -18600.0,
+                411.1523
+              ],
+              "target": [
+                3200.0,
+                -18600.0,
+                443.6607
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 602.0587484166026,
+          "position": [
+            3114.1914037202273,
+            -18626.010861844316,
+            569.6790062250229
+          ],
+          "feet_z": 477.67900622502293
+        },
+        "landing": {
+          "world_time": 602.7933930158615,
+          "position": [
+            3145.999489204363,
+            -18616.398905025173,
+            521.2942540476599
+          ],
+          "feet_z": 429.29425404765993
+        },
+        "original_completion": {
+          "world_time": 614.8312681205571,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 602.6602343171835,
+          "position": [
+            3151.4297095999164,
+            -18614.72547526328,
+            527.6841333108566
+          ],
+          "feet_z": 435.6841333108566
+        },
+        "return_points": [],
+        "original_completed": 268,
+        "endpoint": [
+          3300.0,
+          -18500.0,
+          510.3187
+        ],
+        "world_time_after": 615.0658286213875,
+        "role_recovery_seconds": 19.18596650660038
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 3,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 37.12865770678222,
+          "projected_progress_cm": 35.565671432524255,
+          "clamped_progress_cm": 35.565671432524255,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            3200.0,
+            -18600.0,
+            443.6607
+          ],
+          "previous_global_index": 265,
+          "previous_landing": {
+            "world_time": 602.7933930158615,
+            "position": [
+              3145.999489204363,
+              -18616.398905025173,
+              521.2942540476599
+            ],
+            "feet_z": 429.29425404765993
+          },
+          "current_world_time": 604.95611891523,
+          "current_position": [
+            3146.0550241109904,
+            -18616.473530503587,
+            521.2942540476599
+          ]
+        },
+        "original_start": 264,
+        "original_end": 268,
+        "original_local_index": 1,
+        "original_global_index": 265,
+        "target": [
+          3200.0,
+          -18600.0,
+          443.6607
+        ],
+        "trigger": {
+          "world_time": 604.95611891523,
+          "position": [
+            3146.0550241109904,
+            -18616.473530503587,
+            521.2942540476599
+          ],
+          "feet_z": 429.29425404765993,
+          "bridge_progress_cm": 946.0550241109905,
+          "signed_bridge_progress_cm": 946.0550241109905,
+          "stationary_since": 602.7933930158615,
+          "movement_scope": {
+            "measured_edge_distance_cm": 16.473530503586517,
+            "observed_input_edge_distance_cm": 7.74057307058458,
+            "measured_floor_delta_cm": 3.1702025895626775,
+            "observed_start": {
+              "world_time": 598.9514350146055,
+              "position": [
+                3106.695670375626,
+                -18614.9342875935,
+                505.2796898233364
+              ],
+              "feet_z": 413.2796898233364,
+              "previous_measured_point": [
+                3100.0,
+                -18600.0,
+                411.1523
+              ],
+              "target": [
+                3200.0,
+                -18600.0,
+                443.6607
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 605.5555767156184,
+          "position": [
+            3149.7548324731547,
+            -18615.34420876592,
+            585.6935704493465
+          ],
+          "feet_z": 493.69357044934645
+        },
+        "landing": {
+          "world_time": 606.3549386151135,
+          "position": [
+            3182.812330596098,
+            -18609.79011800714,
+            537.8110530699198
+          ],
+          "feet_z": 445.8110530699198
+        },
+        "original_completion": {
+          "world_time": 614.8312681205571,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 606.2219103164971,
+          "position": [
+            3179.7013261184807,
+            -18608.380546130713,
+            536.5948783002259
+          ],
+          "feet_z": 444.5948783002259
+        },
+        "return_points": [],
+        "original_completed": 268,
+        "endpoint": [
+          3300.0,
+          -18500.0,
+          510.3187
+        ],
+        "world_time_after": 615.0658286213875,
+        "role_recovery_seconds": 19.18596650660038
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 4,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 47.404492933830646,
+          "projected_progress_cm": 53.94497588900947,
+          "clamped_progress_cm": 53.94497588900947,
+          "same_original_target": false,
+          "completed_original_point": true,
+          "previous_target": [
+            3200.0,
+            -18600.0,
+            443.6607
+          ],
+          "previous_global_index": 265,
+          "previous_landing": {
+            "world_time": 606.3549386151135,
+            "position": [
+              3182.812330596098,
+              -18609.79011800714,
+              537.8110530699198
+            ],
+            "feet_z": 445.8110530699198
+          },
+          "current_world_time": 609.0757450200617,
+          "current_position": [
+            3190.290609573364,
+            -18633.514625806256,
+            537.8110530699198
+          ]
+        },
+        "original_start": 264,
+        "original_end": 268,
+        "original_local_index": 2,
+        "original_global_index": 266,
+        "target": [
+          3300.0,
+          -18600.0,
+          493.2117
+        ],
+        "trigger": {
+          "world_time": 609.0757450200617,
+          "position": [
+            3190.290609573364,
+            -18633.514625806256,
+            537.8110530699198
+          ],
+          "feet_z": 445.8110530699198,
+          "bridge_progress_cm": 1000.0,
+          "signed_bridge_progress_cm": 990.2906095733638,
+          "stationary_since": 607.0047727189958,
+          "movement_scope": {
+            "measured_edge_distance_cm": 34.89272711311358,
+            "observed_input_edge_distance_cm": 24.26473160357445,
+            "measured_floor_delta_cm": 2.150353069919788,
+            "observed_start": {
+              "world_time": 606.3549386151135,
+              "position": [
+                3182.812330596098,
+                -18609.79011800714,
+                537.8110530699198
+              ],
+              "feet_z": 445.8110530699198,
+              "previous_measured_point": [
+                3200.0,
+                -18600.0,
+                443.6607
+              ],
+              "target": [
+                3300.0,
+                -18600.0,
+                493.2117
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 609.7082194201648,
+          "position": [
+            3195.132708538313,
+            -18632.03556938581,
+            609.13259406577
+          ],
+          "feet_z": 517.13259406577
+        },
+        "landing": {
+          "world_time": 610.4065516218543,
+          "position": [
+            3261.2106927209825,
+            -18611.85154021522,
+            571.3304010233546
+          ],
+          "feet_z": 479.3304010233546
+        },
+        "original_completion": {
+          "world_time": 614.8312681205571,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 610.2739447206259,
+          "position": [
+            3231.2043228978446,
+            -18621.01721697285,
+            560.2127195205825
+          ],
+          "feet_z": 468.2127195205825
+        },
+        "return_points": [],
+        "original_completed": 268,
+        "endpoint": [
+          3300.0,
+          -18500.0,
+          510.3187
+        ],
+        "world_time_after": 615.0658286213875,
+        "role_recovery_seconds": 19.18596650660038
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 5,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 121.54881515195682,
+          "projected_progress_cm": 179.86893712065284,
+          "clamped_progress_cm": 179.86893712065284,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            3300.0,
+            -18600.0,
+            493.2117
+          ],
+          "previous_global_index": 266,
+          "previous_landing": {
+            "world_time": 610.4065516218543,
+            "position": [
+              3261.2106927209825,
+              -18611.85154021522,
+              571.3304010233546
+            ],
+            "feet_z": 479.3304010233546
+          },
+          "current_world_time": 613.7010769210756,
+          "current_position": [
+            3234.0888072856474,
+            -18520.131062879347,
+            571.3304010233546
+          ]
+        },
+        "original_start": 264,
+        "original_end": 268,
+        "original_local_index": 3,
+        "original_global_index": 267,
+        "target": [
+          3300.0,
+          -18500.0,
+          510.3187
+        ],
+        "trigger": {
+          "world_time": 613.7010769210756,
+          "position": [
+            3234.0888072856474,
+            -18520.131062879347,
+            571.3304010233546
+          ],
+          "feet_z": 479.3304010233546,
+          "bridge_progress_cm": 1179.8689371206528,
+          "signed_bridge_progress_cm": 1179.8689371206528,
+          "stationary_since": 611.6750247217715,
+          "movement_scope": {
+            "measured_edge_distance_cm": 65.91119271435264,
+            "observed_input_edge_distance_cm": 55.67691536258794,
+            "measured_floor_delta_cm": -27.544478049875465,
+            "observed_start": {
+              "world_time": 610.4065516218543,
+              "position": [
+                3261.2106927209825,
+                -18611.85154021522,
+                571.3304010233546
+              ],
+              "feet_z": 479.3304010233546,
+              "previous_measured_point": [
+                3300.0,
+                -18600.0,
+                493.2117
+              ],
+              "target": [
+                3300.0,
+                -18500.0,
+                510.3187
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 614.3320076204836,
+          "position": [
+            3235.829811520603,
+            -18519.599348613072,
+            618.6187012600417
+          ],
+          "feet_z": 526.6187012600417
+        },
+        "landing": {
+          "world_time": 615.0658286213875,
+          "position": [
+            3267.1213754877303,
+            -18509.996133107976,
+            587.3613693390737
+          ],
+          "feet_z": 495.3613693390737
+        },
+        "original_completion": {
+          "world_time": 614.8312681205571,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 614.8312681205571,
+          "position": [
+            3261.0743752586914,
+            -18511.889513261674,
+            640.7878958699351
+          ],
+          "feet_z": 548.7878958699351
+        },
+        "return_points": [],
+        "original_completed": 268,
+        "endpoint": [
+          3300.0,
+          -18500.0,
+          510.3187
+        ],
+        "world_time_after": 615.0658286213875,
+        "role_recovery_seconds": 19.18596650660038
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 6,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "observed completed original point at turn",
+          "actual_xy_progress_cm": 47.46120327088713,
+          "projected_progress_cm": 20.131062879347155,
+          "clamped_progress_cm": 20.131062879347155,
+          "same_original_target": false,
+          "completed_original_point": true,
+          "previous_target": [
+            3300.0,
+            -18500.0,
+            510.3187
+          ],
+          "previous_global_index": 267,
+          "previous_landing": {
+            "world_time": 615.0658286213875,
+            "position": [
+              3267.1213754877303,
+              -18509.996133107976,
+              587.3613693390737
+            ],
+            "feet_z": 495.3613693390737
+          },
+          "current_world_time": 618.3925267197192,
+          "current_position": [
+            3278.6545452505557,
+            -18536.454690404,
+            587.3613693390737
+          ]
+        },
+        "original_start": 268,
+        "original_end": 272,
+        "original_local_index": 0,
+        "original_global_index": 268,
+        "target": [
+          3400.0,
+          -18500.0,
+          543.0012
+        ],
+        "trigger": {
+          "world_time": 618.3925267197192,
+          "position": [
+            3278.6545452505557,
+            -18536.454690404,
+            587.3613693390737
+          ],
+          "feet_z": 495.3613693390737,
+          "bridge_progress_cm": 1200.0,
+          "signed_bridge_progress_cm": 1178.6545452505557,
+          "stationary_since": 616.3603245206177,
+          "movement_scope": {
+            "measured_edge_distance_cm": 42.244205412246245,
+            "observed_input_edge_distance_cm": 26.540718679757134,
+            "measured_floor_delta_cm": -14.957330660926289,
+            "observed_start": {
+              "world_time": 615.5677477195859,
+              "position": [
+                3270.621580588659,
+                -18510.477625098734,
+                587.3613693390737
+              ],
+              "feet_z": 495.3613693390737,
+              "previous_measured_point": [
+                3300.0,
+                -18500.0,
+                510.3187
+              ],
+              "target": [
+                3400.0,
+                -18500.0,
+                543.0012
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 619.024153418839,
+          "position": [
+            3282.3597723838207,
+            -18535.34336703674,
+            651.7606857407602
+          ],
+          "feet_z": 559.7606857407602
+        },
+        "landing": {
+          "world_time": 619.7549870200455,
+          "position": [
+            3314.4028442241543,
+            -18525.929249364006,
+            604.4032098518861
+          ],
+          "feet_z": 512.4032098518861
+        },
+        "original_completion": {
+          "world_time": 643.6586431190372,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 619.6549518220127,
+          "position": [
+            3314.567574156982,
+            -18525.743334437426,
+            606.0629552333627
+          ],
+          "feet_z": 514.0629552333627
+        },
+        "return_points": [],
+        "original_completed": 272,
+        "endpoint": [
+          3700.0,
+          -18500.0,
+          675.3441
+        ],
+        "world_time_after": 643.6586431190372,
+        "role_recovery_seconds": 47.77878100425005
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 7,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 37.40174549714859,
+          "projected_progress_cm": 36.03620813453608,
+          "clamped_progress_cm": 14.690753385091739,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            3400.0,
+            -18500.0,
+            543.0012
+          ],
+          "previous_global_index": 268,
+          "previous_landing": {
+            "world_time": 619.7549870200455,
+            "position": [
+              3314.4028442241543,
+              -18525.929249364006,
+              604.4032098518861
+            ],
+            "feet_z": 512.4032098518861
+          },
+          "current_world_time": 621.8262378200889,
+          "current_position": [
+            3314.6907533850917,
+            -18526.440586873585,
+            604.4032098518861
+          ]
+        },
+        "original_start": 268,
+        "original_end": 272,
+        "original_local_index": 0,
+        "original_global_index": 268,
+        "target": [
+          3400.0,
+          -18500.0,
+          543.0012
+        ],
+        "trigger": {
+          "world_time": 621.8262378200889,
+          "position": [
+            3314.6907533850917,
+            -18526.440586873585,
+            604.4032098518861
+          ],
+          "feet_z": 512.4032098518861,
+          "bridge_progress_cm": 1214.6907533850917,
+          "signed_bridge_progress_cm": 1214.6907533850917,
+          "stationary_since": 619.7549870200455,
+          "movement_scope": {
+            "measured_edge_distance_cm": 26.440586873584834,
+            "observed_input_edge_distance_cm": 19.468138179829054,
+            "measured_floor_delta_cm": -2.7167956231965036,
+            "observed_start": {
+              "world_time": 615.5677477195859,
+              "position": [
+                3270.621580588659,
+                -18510.477625098734,
+                587.3613693390737
+              ],
+              "feet_z": 495.3613693390737,
+              "previous_measured_point": [
+                3300.0,
+                -18500.0,
+                510.3187
+              ],
+              "target": [
+                3400.0,
+                -18500.0,
+                543.0012
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 622.5575385205448,
+          "position": [
+            3319.526766981467,
+            -18524.94197147531,
+            675.7247508477363
+          ],
+          "feet_z": 583.7247508477363
+        },
+        "landing": {
+          "world_time": 623.157586120069,
+          "position": [
+            3360.8774000651056,
+            -18512.127967909568,
+            632.6235681465122
+          ],
+          "feet_z": 540.6235681465122
+        },
+        "original_completion": {
+          "world_time": 643.6586431190372,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 622.9233087189496,
+          "position": [
+            3339.251181986907,
+            -18518.829641255343,
+            680.0047479936067
+          ],
+          "feet_z": 588.0047479936067
+        },
+        "return_points": [],
+        "original_completed": 272,
+        "endpoint": [
+          3700.0,
+          -18500.0,
+          675.3441
+        ],
+        "world_time_after": 643.6586431190372,
+        "role_recovery_seconds": 47.77878100425005
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 8,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 80.26085308692173,
+          "projected_progress_cm": 85.30924661490826,
+          "clamped_progress_cm": 85.30924661490826,
+          "same_original_target": false,
+          "completed_original_point": true,
+          "previous_target": [
+            3400.0,
+            -18500.0,
+            543.0012
+          ],
+          "previous_global_index": 268,
+          "previous_landing": {
+            "world_time": 623.157586120069,
+            "position": [
+              3360.8774000651056,
+              -18512.127967909568,
+              632.6235681465122
+            ],
+            "feet_z": 540.6235681465122
+          },
+          "current_world_time": 626.1553503200412,
+          "current_position": [
+            3394.712274799435,
+            -18532.634184275277,
+            637.4025343867639
+          ]
+        },
+        "original_start": 268,
+        "original_end": 272,
+        "original_local_index": 1,
+        "original_global_index": 269,
+        "target": [
+          3500.0,
+          -18500.0,
+          592.7188
+        ],
+        "trigger": {
+          "world_time": 626.1553503200412,
+          "position": [
+            3394.712274799435,
+            -18532.634184275277,
+            637.4025343867639
+          ],
+          "feet_z": 545.4025343867639,
+          "bridge_progress_cm": 1300.0,
+          "signed_bridge_progress_cm": 1294.712274799435,
+          "stationary_since": 624.1216316185892,
+          "movement_scope": {
+            "measured_edge_distance_cm": 33.05979463199132,
+            "observed_input_edge_distance_cm": 23.367140327151585,
+            "measured_floor_delta_cm": 2.4013343867638923,
+            "observed_start": {
+              "world_time": 623.157586120069,
+              "position": [
+                3360.8774000651056,
+                -18512.127967909568,
+                632.6235681465122
+              ],
+              "feet_z": 540.6235681465122,
+              "previous_measured_point": [
+                3400.0,
+                -18500.0,
+                543.0012
+              ],
+              "target": [
+                3500.0,
+                -18500.0,
+                592.7188
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 626.7555896192789,
+          "position": [
+            3397.374799139013,
+            -18531.809103887466,
+            693.7907705353961
+          ],
+          "feet_z": 601.7907705353961
+        },
+        "landing": {
+          "world_time": 627.5899360217154,
+          "position": [
+            3429.4831151726744,
+            -18521.695057879217,
+            653.7297430736477
+          ],
+          "feet_z": 561.7297430736477
+        },
+        "original_completion": {
+          "world_time": 643.6586431190372,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 627.3560673184693,
+          "position": [
+            3432.5853250991354,
+            -18520.89783671794,
+            671.3952994638776
+          ],
+          "feet_z": 579.3952994638776
+        },
+        "return_points": [],
+        "original_completed": 272,
+        "endpoint": [
+          3700.0,
+          -18500.0,
+          675.3441
+        ],
+        "world_time_after": 643.6586431190372,
+        "role_recovery_seconds": 47.77878100425005
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 9,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 36.452823570661245,
+          "projected_progress_cm": 34.730508913999074,
+          "clamped_progress_cm": 29.442783713433982,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            3500.0,
+            -18500.0,
+            592.7188
+          ],
+          "previous_global_index": 269,
+          "previous_landing": {
+            "world_time": 627.5899360217154,
+            "position": [
+              3429.4831151726744,
+              -18521.695057879217,
+              653.7297430736477
+            ],
+            "feet_z": 561.7297430736477
+          },
+          "current_world_time": 629.5907884202898,
+          "current_position": [
+            3429.442783713434,
+            -18521.561691473365,
+            653.7297430736477
+          ]
+        },
+        "original_start": 268,
+        "original_end": 272,
+        "original_local_index": 1,
+        "original_global_index": 269,
+        "target": [
+          3500.0,
+          -18500.0,
+          592.7188
+        ],
+        "trigger": {
+          "world_time": 629.5907884202898,
+          "position": [
+            3429.442783713434,
+            -18521.561691473365,
+            653.7297430736477
+          ],
+          "feet_z": 561.7297430736477,
+          "bridge_progress_cm": 1329.442783713434,
+          "signed_bridge_progress_cm": 1329.442783713434,
+          "stationary_since": 627.5899360217154,
+          "movement_scope": {
+            "measured_edge_distance_cm": 21.5616914733655,
+            "observed_input_edge_distance_cm": 15.352663539889903,
+            "measured_floor_delta_cm": 4.090297638137372,
+            "observed_start": {
+              "world_time": 623.157586120069,
+              "position": [
+                3360.8774000651056,
+                -18512.127967909568,
+                632.6235681465122
+              ],
+              "feet_z": 540.6235681465122,
+              "previous_measured_point": [
+                3400.0,
+                -18500.0,
+                543.0012
+              ],
+              "target": [
+                3500.0,
+                -18500.0,
+                592.7188
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 630.1898919194937,
+          "position": [
+            3431.1837083871337,
+            -18521.029796586845,
+            701.0180433103347
+          ],
+          "feet_z": 609.0180433103347
+        },
+        "landing": {
+          "world_time": 631.0223326198757,
+          "position": [
+            3465.894768713406,
+            -18511.546970720745,
+            669.9457831249425
+          ],
+          "feet_z": 577.9457831249425
+        },
+        "original_completion": {
+          "world_time": 643.6586431190372,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 630.9217947199941,
+          "position": [
+            3462.936048473277,
+            -18511.56361446444,
+            668.5307936247851
+          ],
+          "feet_z": 576.5307936247851
+        },
+        "return_points": [],
+        "original_completed": 272,
+        "endpoint": [
+          3700.0,
+          -18500.0,
+          675.3441
+        ],
+        "world_time_after": 643.6586431190372,
+        "role_recovery_seconds": 47.77878100425005
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 10,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 47.36632172871759,
+          "projected_progress_cm": 70.55721628656602,
+          "clamped_progress_cm": 70.55721628656602,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            3500.0,
+            -18500.0,
+            592.7188
+          ],
+          "previous_global_index": 269,
+          "previous_landing": {
+            "world_time": 631.0223326198757,
+            "position": [
+              3465.894768713406,
+              -18511.546970720745,
+              669.9457831249425
+            ],
+            "feet_z": 577.9457831249425
+          },
+          "current_world_time": 634.3197607211769,
+          "current_position": [
+            3473.905994349745,
+            -18537.889316347162,
+            669.9457831249425
+          ]
+        },
+        "original_start": 268,
+        "original_end": 272,
+        "original_local_index": 2,
+        "original_global_index": 270,
+        "target": [
+          3600.0,
+          -18500.0,
+          625.346
+        ],
+        "trigger": {
+          "world_time": 634.3197607211769,
+          "position": [
+            3473.905994349745,
+            -18537.889316347162,
+            669.9457831249425
+          ],
+          "feet_z": 577.9457831249425,
+          "bridge_progress_cm": 1400.0,
+          "signed_bridge_progress_cm": 1373.905994349745,
+          "stationary_since": 632.2543182186782,
+          "movement_scope": {
+            "measured_edge_distance_cm": 46.005406466315065,
+            "observed_input_edge_distance_cm": 26.932490073636384,
+            "measured_floor_delta_cm": -14.773016875057465,
+            "observed_start": {
+              "world_time": 631.0223326198757,
+              "position": [
+                3465.894768713406,
+                -18511.546970720745,
+                669.9457831249425
+              ],
+              "feet_z": 577.9457831249425,
+              "previous_measured_point": [
+                3500.0,
+                -18500.0,
+                592.7188
+              ],
+              "target": [
+                3600.0,
+                -18500.0,
+                625.346
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 634.9505236186087,
+          "position": [
+            3476.5755770137293,
+            -18537.087243815353,
+            726.3340192735747
+          ],
+          "feet_z": 634.3340192735747
+        },
+        "landing": {
+          "world_time": 635.7836465202272,
+          "position": [
+            3545.0738504491815,
+            -18516.637904120766,
+            703.4943927906655
+          ],
+          "feet_z": 611.4943927906655
+        },
+        "original_completion": {
+          "world_time": 643.6586431190372,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 635.5828431211412,
+          "position": [
+            3514.8759160500704,
+            -18525.579958308004,
+            692.3502266124627
+          ],
+          "feet_z": 600.3502266124627
+        },
+        "return_points": [],
+        "original_completed": 272,
+        "endpoint": [
+          3700.0,
+          -18500.0,
+          675.3441
+        ],
+        "world_time_after": 643.6586431190372,
+        "role_recovery_seconds": 47.77878100425005
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 11,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 74.28165842972213,
+          "projected_progress_cm": 71.21240353523672,
+          "clamped_progress_cm": 45.11839788498173,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            3600.0,
+            -18500.0,
+            625.346
+          ],
+          "previous_global_index": 270,
+          "previous_landing": {
+            "world_time": 635.7836465202272,
+            "position": [
+              3545.0738504491815,
+              -18516.637904120766,
+              703.4943927906655
+            ],
+            "feet_z": 611.4943927906655
+          },
+          "current_world_time": 638.0116714201868,
+          "current_position": [
+            3545.1183978849817,
+            -18516.757388801278,
+            703.4943927906655
+          ]
+        },
+        "original_start": 268,
+        "original_end": 272,
+        "original_local_index": 2,
+        "original_global_index": 270,
+        "target": [
+          3600.0,
+          -18500.0,
+          625.346
+        ],
+        "trigger": {
+          "world_time": 638.0116714201868,
+          "position": [
+            3545.1183978849817,
+            -18516.757388801278,
+            703.4943927906655
+          ],
+          "feet_z": 611.4943927906655,
+          "bridge_progress_cm": 1445.1183978849817,
+          "signed_bridge_progress_cm": 1445.1183978849817,
+          "stationary_since": 635.7836465202272,
+          "movement_scope": {
+            "measured_edge_distance_cm": 16.757388801277557,
+            "observed_input_edge_distance_cm": 11.9875191521248,
+            "measured_floor_delta_cm": 4.054722875936818,
+            "observed_start": {
+              "world_time": 631.0223326198757,
+              "position": [
+                3465.894768713406,
+                -18511.546970720745,
+                669.9457831249425
+              ],
+              "feet_z": 577.9457831249425,
+              "previous_measured_point": [
+                3500.0,
+                -18500.0,
+                592.7188
+              ],
+              "target": [
+                3600.0,
+                -18500.0,
+                625.346
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 638.5798818208277,
+          "position": [
+            3547.7844362636,
+            -18515.943612843254,
+            759.8826289392977
+          ],
+          "feet_z": 667.8826289392977
+        },
+        "landing": {
+          "world_time": 639.3486846201122,
+          "position": [
+            3582.8018352549157,
+            -18510.78668613204,
+            719.4964845797246
+          ],
+          "feet_z": 627.4964845797246
+        },
+        "original_completion": {
+          "world_time": 643.6586431190372,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 639.2481575198472,
+          "position": [
+            3580.7527694273545,
+            -18507.782552678793,
+            719.9222721479882
+          ],
+          "feet_z": 627.9222721479882
+        },
+        "return_points": [],
+        "original_completed": 272,
+        "endpoint": [
+          3700.0,
+          -18500.0,
+          675.3441
+        ],
+        "world_time_after": 643.6586431190372,
+        "role_recovery_seconds": 47.77878100425005
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 12,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 48.28734086178526,
+          "projected_progress_cm": 54.88160211501827,
+          "clamped_progress_cm": 54.88160211501827,
+          "same_original_target": false,
+          "completed_original_point": true,
+          "previous_target": [
+            3600.0,
+            -18500.0,
+            625.346
+          ],
+          "previous_global_index": 270,
+          "previous_landing": {
+            "world_time": 639.3486846201122,
+            "position": [
+              3582.8018352549157,
+              -18510.78668613204,
+              719.4964845797246
+            ],
+            "feet_z": 627.4964845797246
+          },
+          "current_world_time": 642.2571137212217,
+          "current_position": [
+            3590.191822609808,
+            -18534.079446158234,
+            719.4964845797246
+          ]
+        },
+        "original_start": 268,
+        "original_end": 272,
+        "original_local_index": 3,
+        "original_global_index": 271,
+        "target": [
+          3700.0,
+          -18500.0,
+          675.3441
+        ],
+        "trigger": {
+          "world_time": 642.2571137212217,
+          "position": [
+            3590.191822609808,
+            -18534.079446158234,
+            719.4964845797246
+          ],
+          "feet_z": 627.4964845797246,
+          "bridge_progress_cm": 1500.0,
+          "signed_bridge_progress_cm": 1490.1918226098078,
+          "stationary_since": 640.1817278191447,
+          "movement_scope": {
+            "measured_edge_distance_cm": 35.46278322649567,
+            "observed_input_edge_distance_cm": 23.872023094070038,
+            "measured_floor_delta_cm": 2.150484579724548,
+            "observed_start": {
+              "world_time": 639.3486846201122,
+              "position": [
+                3582.8018352549157,
+                -18510.78668613204,
+                719.4964845797246
+              ],
+              "feet_z": 627.4964845797246,
+              "previous_measured_point": [
+                3600.0,
+                -18500.0,
+                625.346
+              ],
+              "target": [
+                3700.0,
+                -18500.0,
+                675.3441
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 642.8577724210918,
+          "position": [
+            3591.9312154248655,
+            -18533.539665259086,
+            766.7936141735141
+          ],
+          "feet_z": 674.7936141735141
+        },
+        "landing": {
+          "world_time": 643.5259923189878,
+          "position": [
+            3631.091890578684,
+            -18521.38704265256,
+            744.1496890249125
+          ],
+          "feet_z": 652.1496890249125
+        },
+        "original_completion": {
+          "world_time": 643.6586431190372,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 643.4259082190692,
+          "position": [
+            3622.4249457138517,
+            -18524.07663137084,
+            773.3566971605468
+          ],
+          "feet_z": 681.3566971605468
+        },
+        "return_points": [],
+        "original_completed": 272,
+        "endpoint": [
+          3700.0,
+          -18500.0,
+          675.3441
+        ],
+        "world_time_after": 643.6586431190372,
+        "role_recovery_seconds": 47.77878100425005
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 13,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 115.2008850567311,
+          "projected_progress_cm": 105.25745882375327,
+          "clamped_progress_cm": 105.25745882375327,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            3700.0,
+            -18500.0,
+            675.3441
+          ],
+          "previous_global_index": 271,
+          "previous_landing": {
+            "world_time": 643.5259923189878,
+            "position": [
+              3631.091890578684,
+              -18521.38704265256,
+              744.1496890249125
+            ],
+            "feet_z": 652.1496890249125
+          },
+          "current_world_time": 647.0965754203498,
+          "current_position": [
+            3705.2574588237535,
+            -18528.49882965698,
+            769.5740676914736
+          ]
+        },
+        "original_start": 272,
+        "original_end": 276,
+        "original_local_index": 0,
+        "original_global_index": 272,
+        "target": [
+          3800.0,
+          -18500.0,
+          707.941
+        ],
+        "trigger": {
+          "world_time": 647.0965754203498,
+          "position": [
+            3705.2574588237535,
+            -18528.49882965698,
+            769.5740676914736
+          ],
+          "feet_z": 677.5740676914736,
+          "bridge_progress_cm": 1605.2574588237533,
+          "signed_bridge_progress_cm": 1605.2574588237533,
+          "stationary_since": 644.8580858185887,
+          "movement_scope": {
+            "measured_edge_distance_cm": 28.49882965697907,
+            "observed_input_edge_distance_cm": 21.8195048456685,
+            "measured_floor_delta_cm": 0.5161990961535139,
+            "observed_start": {
+              "world_time": 644.2574417218566,
+              "position": [
+                3673.1938077828445,
+                -18508.868469948895,
+                765.4425292714315
+              ],
+              "feet_z": 673.4425292714315,
+              "previous_measured_point": [
+                3700.0,
+                -18500.0,
+                675.3441
+              ],
+              "target": [
+                3800.0,
+                -18500.0,
+                707.941
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 647.6962629184127,
+          "position": [
+            3708.9635306653277,
+            -18527.384286942233,
+            833.9836371095314
+          ],
+          "feet_z": 741.9836371095314
+        },
+        "landing": {
+          "world_time": 648.695334520191,
+          "position": [
+            3740.414320985081,
+            -18518.165362852316,
+            785.8038636627002
+          ],
+          "feet_z": 693.8038636627002
+        },
+        "original_completion": {
+          "world_time": 668.9015976190567,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 648.4292377196252,
+          "position": [
+            3739.197359600123,
+            -18518.39527701371,
+            783.7025968017383
+          ],
+          "feet_z": 691.7025968017383
+        },
+        "return_points": [],
+        "original_completed": 276,
+        "endpoint": [
+          4000.0,
+          -18400.0,
+          807.1825
+        ],
+        "world_time_after": 669.1340879201889,
+        "role_recovery_seconds": 73.2542258054018
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 14,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 36.64436489452465,
+          "projected_progress_cm": 35.16575205317463,
+          "clamped_progress_cm": 35.16575205317463,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            3800.0,
+            -18500.0,
+            707.941
+          ],
+          "previous_global_index": 272,
+          "previous_landing": {
+            "world_time": 648.695334520191,
+            "position": [
+              3740.414320985081,
+              -18518.165362852316,
+              785.8038636627002
+            ],
+            "feet_z": 693.8038636627002
+          },
+          "current_world_time": 650.7946371212602,
+          "current_position": [
+            3740.423210876928,
+            -18518.194492654642,
+            785.8038636627002
+          ]
+        },
+        "original_start": 272,
+        "original_end": 276,
+        "original_local_index": 0,
+        "original_global_index": 272,
+        "target": [
+          3800.0,
+          -18500.0,
+          707.941
+        ],
+        "trigger": {
+          "world_time": 650.7946371212602,
+          "position": [
+            3740.423210876928,
+            -18518.194492654642,
+            785.8038636627002
+          ],
+          "feet_z": 693.8038636627002,
+          "bridge_progress_cm": 1640.423210876928,
+          "signed_bridge_progress_cm": 1640.423210876928,
+          "stationary_since": 648.695334520191,
+          "movement_scope": {
+            "measured_edge_distance_cm": 18.19449265464209,
+            "observed_input_edge_distance_cm": 13.993677599833537,
+            "measured_floor_delta_cm": 5.283050036358873,
+            "observed_start": {
+              "world_time": 644.2574417218566,
+              "position": [
+                3673.1938077828445,
+                -18508.868469948895,
+                765.4425292714315
+              ],
+              "feet_z": 673.4425292714315,
+              "previous_measured_point": [
+                3700.0,
+                -18500.0,
+                675.3441
+              ],
+              "target": [
+                3800.0,
+                -18500.0,
+                707.941
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 651.527679219842,
+          "position": [
+            3744.1246603292316,
+            -18517.064481028912,
+            850.213433080758
+          ],
+          "feet_z": 758.213433080758
+        },
+        "landing": {
+          "world_time": 652.4952359199524,
+          "position": [
+            3758.809056815196,
+            -18448.486280690253,
+            802.0821407235363
+          ],
+          "feet_z": 710.0821407235363
+        },
+        "original_completion": {
+          "world_time": 668.9015976190567,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 652.2293322198093,
+          "position": [
+            3772.4118556686567,
+            -18502.24383535179,
+            800.1898536957194
+          ],
+          "feet_z": 708.1898536957194
+        },
+        "return_points": [],
+        "original_completed": 276,
+        "endpoint": [
+          4000.0,
+          -18400.0,
+          807.1825
+        ],
+        "world_time_after": 669.1340879201889,
+        "role_recovery_seconds": 73.2542258054018
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 15,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 103.21260755166604,
+          "projected_progress_cm": 144.25124089228166,
+          "clamped_progress_cm": 144.25124089228166,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            3800.0,
+            -18500.0,
+            707.941
+          ],
+          "previous_global_index": 272,
+          "previous_landing": {
+            "world_time": 652.4952359199524,
+            "position": [
+              3758.809056815196,
+              -18448.486280690253,
+              802.0821407235363
+            ],
+            "feet_z": 710.0821407235363
+          },
+          "current_world_time": 655.1628902219236,
+          "current_position": [
+            3748.8388291392275,
+            -18415.32554823079,
+            802.0821407235363
+          ]
+        },
+        "original_start": 272,
+        "original_end": 276,
+        "original_local_index": 1,
+        "original_global_index": 273,
+        "target": [
+          3800.0,
+          -18400.0,
+          724.7417
+        ],
+        "trigger": {
+          "world_time": 655.1628902219236,
+          "position": [
+            3748.8388291392275,
+            -18415.32554823079,
+            802.0821407235363
+          ],
+          "feet_z": 710.0821407235363,
+          "bridge_progress_cm": 1784.6744517692096,
+          "signed_bridge_progress_cm": 1784.6744517692096,
+          "stationary_since": 653.1267420202494,
+          "movement_scope": {
+            "measured_edge_distance_cm": 51.16117086077247,
+            "observed_input_edge_distance_cm": null,
+            "measured_floor_delta_cm": -12.084759894853278,
+            "observed_start": null,
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 655.763330720365,
+          "position": [
+            3751.5094725759327,
+            -18414.522571412035,
+            858.4801673105122
+          ],
+          "feet_z": 766.4801673105122
+        },
+        "landing": {
+          "world_time": 656.5311429202557,
+          "position": [
+            3785.558639822249,
+            -18410.391404917085,
+            819.0183613619839
+          ],
+          "feet_z": 727.0183613619839
+        },
+        "original_completion": {
+          "world_time": 668.9015976190567,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 656.3979616202414,
+          "position": [
+            3788.731849715489,
+            -18405.47374204732,
+            824.4199195824436
+          ],
+          "feet_z": 732.4199195824436
+        },
+        "return_points": [],
+        "original_completed": 276,
+        "endpoint": [
+          4000.0,
+          -18400.0,
+          807.1825
+        ],
+        "world_time_after": 669.1340879201889,
+        "role_recovery_seconds": 73.2542258054018
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 16,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "observed completed original point at turn",
+          "actual_xy_progress_cm": 47.03708912184713,
+          "projected_progress_cm": 15.325548230790446,
+          "clamped_progress_cm": 15.325548230790446,
+          "same_original_target": false,
+          "completed_original_point": true,
+          "previous_target": [
+            3800.0,
+            -18400.0,
+            724.7417
+          ],
+          "previous_global_index": 273,
+          "previous_landing": {
+            "world_time": 656.5311429202557,
+            "position": [
+              3785.558639822249,
+              -18410.391404917085,
+              819.0183613619839
+            ],
+            "feet_z": 727.0183613619839
+          },
+          "current_world_time": 659.4661489203572,
+          "current_position": [
+            3792.5317621947333,
+            -18432.74437006419,
+            819.0183613619839
+          ]
+        },
+        "original_start": 272,
+        "original_end": 276,
+        "original_local_index": 2,
+        "original_global_index": 274,
+        "target": [
+          3900.0,
+          -18400.0,
+          773.9978
+        ],
+        "trigger": {
+          "world_time": 659.4661489203572,
+          "position": [
+            3792.5317621947333,
+            -18432.74437006419,
+            819.0183613619839
+          ],
+          "feet_z": 727.0183613619839,
+          "bridge_progress_cm": 1800.0,
+          "signed_bridge_progress_cm": 1792.5317621947333,
+          "stationary_since": 657.3976199217141,
+          "movement_scope": {
+            "measured_edge_distance_cm": 33.585240014276515,
+            "observed_input_edge_distance_cm": 22.891955944928704,
+            "measured_floor_delta_cm": 2.2766613619838836,
+            "observed_start": {
+              "world_time": 656.5311429202557,
+              "position": [
+                3785.558639822249,
+                -18410.391404917085,
+                819.0183613619839
+              ],
+              "feet_z": 727.0183613619839,
+              "previous_measured_point": [
+                3800.0,
+                -18400.0,
+                724.7417
+              ],
+              "target": [
+                3900.0,
+                -18400.0,
+                773.9978
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 660.0334865190089,
+          "position": [
+            3795.199021147161,
+            -18431.930221540777,
+            875.4163879489598
+          ],
+          "feet_z": 783.4163879489598
+        },
+        "landing": {
+          "world_time": 660.8638404197991,
+          "position": [
+            3864.1551324892976,
+            -18411.44025885615,
+            852.1572408565544
+          ],
+          "feet_z": 760.1572408565544
+        },
+        "original_completion": {
+          "world_time": 668.9015976190567,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 660.6308058202267,
+          "position": [
+            3830.472159946617,
+            -18421.163522700575,
+            852.9529722903006
+          ],
+          "feet_z": 760.9529722903006
+        },
+        "return_points": [],
+        "original_completed": 276,
+        "endpoint": [
+          4000.0,
+          -18400.0,
+          807.1825
+        ],
+        "world_time_after": 669.1340879201889,
+        "role_recovery_seconds": 73.2542258054018
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 17,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 80.22377830341344,
+          "projected_progress_cm": 100.0,
+          "clamped_progress_cm": 100.0,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            3900.0,
+            -18400.0,
+            773.9978
+          ],
+          "previous_global_index": 274,
+          "previous_landing": {
+            "world_time": 660.8638404197991,
+            "position": [
+              3864.1551324892976,
+              -18411.44025885615,
+              852.1572408565544
+            ],
+            "feet_z": 760.1572408565544
+          },
+          "current_world_time": 664.1979856193066,
+          "current_position": [
+            3872.5227573717993,
+            -18438.851357525928,
+            852.1572408565544
+          ]
+        },
+        "original_start": 272,
+        "original_end": 276,
+        "original_local_index": 3,
+        "original_global_index": 275,
+        "target": [
+          4000.0,
+          -18400.0,
+          807.1825
+        ],
+        "trigger": {
+          "world_time": 664.1979856193066,
+          "position": [
+            3872.5227573717993,
+            -18438.851357525928,
+            852.1572408565544
+          ],
+          "feet_z": 760.1572408565544,
+          "bridge_progress_cm": 1900.0,
+          "signed_bridge_progress_cm": 1872.5227573717993,
+          "stationary_since": 662.0331660211086,
+          "movement_scope": {
+            "measured_edge_distance_cm": 47.585994200567654,
+            "observed_input_edge_distance_cm": 28.016608197509804,
+            "measured_floor_delta_cm": -13.840559143445603,
+            "observed_start": {
+              "world_time": 660.8638404197991,
+              "position": [
+                3864.1551324892976,
+                -18411.44025885615,
+                852.1572408565544
+              ],
+              "feet_z": 760.1572408565544,
+              "previous_measured_point": [
+                3900.0,
+                -18400.0,
+                773.9978
+              ],
+              "target": [
+                4000.0,
+                -18400.0,
+                807.1825
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 664.8319548219442,
+          "position": [
+            3876.2286454719933,
+            -18437.720180021788,
+            916.5941416119449
+          ],
+          "feet_z": 824.5941416119449
+        },
+        "landing": {
+          "world_time": 665.6351126208901,
+          "position": [
+            3907.7533628575397,
+            -18428.09127846686,
+            868.1479779381441
+          ],
+          "feet_z": 776.1479779381441
+        },
+        "original_completion": {
+          "world_time": 668.9015976190567,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 665.3679248206317,
+          "position": [
+            3907.6322914567068,
+            -18428.134597045344,
+            896.4213304300989
+          ],
+          "feet_z": 804.4213304300989
+        },
+        "return_points": [],
+        "original_completed": 276,
+        "endpoint": [
+          4000.0,
+          -18400.0,
+          807.1825
+        ],
+        "world_time_after": 669.1340879201889,
+        "role_recovery_seconds": 73.2542258054018
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 18,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 36.93425508714911,
+          "projected_progress_cm": 35.32318749913884,
+          "clamped_progress_cm": 7.845944870938183,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            4000.0,
+            -18400.0,
+            807.1825
+          ],
+          "previous_global_index": 275,
+          "previous_landing": {
+            "world_time": 665.6351126208901,
+            "position": [
+              3907.7533628575397,
+              -18428.09127846686,
+              868.1479779381441
+            ],
+            "feet_z": 776.1479779381441
+          },
+          "current_world_time": 667.7032243199646,
+          "current_position": [
+            3907.845944870938,
+            -18428.06193568121,
+            868.1479779381441
+          ]
+        },
+        "original_start": 272,
+        "original_end": 276,
+        "original_local_index": 3,
+        "original_global_index": 275,
+        "target": [
+          4000.0,
+          -18400.0,
+          807.1825
+        ],
+        "trigger": {
+          "world_time": 667.7032243199646,
+          "position": [
+            3907.845944870938,
+            -18428.06193568121,
+            868.1479779381441
+          ],
+          "feet_z": 776.1479779381441,
+          "bridge_progress_cm": 1907.8459448709382,
+          "signed_bridge_progress_cm": 1907.8459448709382,
+          "stationary_since": 665.6351126208901,
+          "movement_scope": {
+            "measured_edge_distance_cm": 28.061935681209434,
+            "observed_input_edge_distance_cm": 20.229515549552357,
+            "measured_floor_delta_cm": -0.45347532944208524,
+            "observed_start": {
+              "world_time": 660.8638404197991,
+              "position": [
+                3864.1551324892976,
+                -18411.44025885615,
+                852.1572408565544
+              ],
+              "feet_z": 760.1572408565544,
+              "previous_measured_point": [
+                3900.0,
+                -18400.0,
+                773.9978
+              ],
+              "target": [
+                4000.0,
+                -18400.0,
+                807.1825
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 668.3346025198698,
+          "position": [
+            3912.690603030195,
+            -18426.583657050523,
+            939.4797360251794
+          ],
+          "feet_z": 847.4797360251794
+        },
+        "landing": {
+          "world_time": 669.0018870197237,
+          "position": [
+            3963.797449372133,
+            -18410.989128738,
+            900.7692943581669
+          ],
+          "feet_z": 808.7692943581669
+        },
+        "original_completion": {
+          "world_time": 668.9015976190567,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": true
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 668.9015976190567,
+          "position": [
+            3948.797327609236,
+            -18415.566202853624,
+            890.419059311402
+          ],
+          "feet_z": 798.419059311402
+        },
+        "return_points": [],
+        "original_completed": 276,
+        "endpoint": [
+          4000.0,
+          -18400.0,
+          807.1825
+        ],
+        "world_time_after": 669.1340879201889,
+        "role_recovery_seconds": 73.2542258054018
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 19,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "measured polyline progress",
+          "actual_xy_progress_cm": 220.49716374362535,
+          "projected_progress_cm": 295.65676585047413,
+          "clamped_progress_cm": 295.65676585047413,
+          "same_original_target": false,
+          "completed_original_point": false,
+          "previous_target": [
+            4000.0,
+            -18400.0,
+            807.1825
+          ],
+          "previous_global_index": 275,
+          "previous_landing": {
+            "world_time": 669.0018870197237,
+            "position": [
+              3963.797449372133,
+              -18410.989128738,
+              900.7692943581669
+            ],
+            "feet_z": 808.7692943581669
+          },
+          "current_world_time": 672.9265494197607,
+          "current_position": [
+            4003.5027107214123,
+            -18229.394418542623,
+            934.5073086684614
+          ]
+        },
+        "original_start": 276,
+        "original_end": 280,
+        "original_local_index": 2,
+        "original_global_index": 278,
+        "target": [
+          4100.0,
+          -18200.0,
+          873.117
+        ],
+        "trigger": {
+          "world_time": 672.9265494197607,
+          "position": [
+            4003.5027107214123,
+            -18229.394418542623,
+            934.5073086684614
+          ],
+          "feet_z": 842.5073086684614,
+          "bridge_progress_cm": 2203.5027107214123,
+          "signed_bridge_progress_cm": 2203.5027107214123,
+          "stationary_since": 670.7917687185109,
+          "movement_scope": {
+            "measured_edge_distance_cm": 29.39441854262259,
+            "observed_input_edge_distance_cm": 18.67497516691538,
+            "measured_floor_delta_cm": 0.9032354335912487,
+            "observed_start": {
+              "world_time": 670.2608409188688,
+              "position": [
+                3997.919805813122,
+                -18211.220635010613,
+                934.5073086684614
+              ],
+              "feet_z": 842.5073086684614,
+              "previous_measured_point": [
+                4000.0,
+                -18200.0,
+                840.4602
+              ],
+              "target": [
+                4100.0,
+                -18200.0,
+                873.117
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 673.4607693217695,
+          "position": [
+            4005.2445120282287,
+            -18228.862460845306,
+            981.804438262251
+          ],
+          "feet_z": 889.804438262251
+        },
+        "landing": {
+          "world_time": 674.3181294202805,
+          "position": [
+            4039.019822551675,
+            -18218.538762489305,
+            950.7325691821951
+          ],
+          "feet_z": 858.7325691821951
+        },
+        "original_completion": {
+          "world_time": 677.8184171207249,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 674.161124419421,
+          "position": [
+            4039.6801668309904,
+            -18218.341644675485,
+            953.1038550232653
+          ],
+          "feet_z": 861.1038550232653
+        },
+        "return_points": [],
+        "original_completed": 280,
+        "endpoint": [
+          4200.0,
+          -18200.0,
+          907.0364
+        ],
+        "world_time_after": 678.4853621199727,
+        "role_recovery_seconds": 82.6055000051856
+      },
+      {
+        "result": "passed",
+        "source_run": "overnight-route06",
+        "source_log": "A.log:1356-1389",
+        "source_log_sha256": "2bfddece12c77016820441aed2584e4077377bfa55060ea418ade59f44463663",
+        "attempt": 20,
+        "scope": "30 measured bridge polyline points",
+        "progress_evidence": {
+          "kind": "signed progress on same measured edge",
+          "actual_xy_progress_cm": 37.139071068005364,
+          "projected_progress_cm": 35.521604156728245,
+          "clamped_progress_cm": 35.521604156728245,
+          "same_original_target": true,
+          "completed_original_point": false,
+          "previous_target": [
+            4100.0,
+            -18200.0,
+            873.117
+          ],
+          "previous_global_index": 278,
+          "previous_landing": {
+            "world_time": 674.3181294202805,
+            "position": [
+              4039.019822551675,
+              -18218.538762489305,
+              950.7325691821951
+            ],
+            "feet_z": 858.7325691821951
+          },
+          "current_world_time": 676.5513880215585,
+          "current_position": [
+            4039.0243148781406,
+            -18218.553466650512,
+            950.7325691821951
+          ]
+        },
+        "original_start": 276,
+        "original_end": 280,
+        "original_local_index": 2,
+        "original_global_index": 278,
+        "target": [
+          4100.0,
+          -18200.0,
+          873.117
+        ],
+        "trigger": {
+          "world_time": 676.5513880215585,
+          "position": [
+            4039.0243148781406,
+            -18218.553466650512,
+            950.7325691821951
+          ],
+          "feet_z": 858.7325691821951,
+          "bridge_progress_cm": 2239.0243148781406,
+          "signed_bridge_progress_cm": 2239.0243148781406,
+          "stationary_since": 674.3181294202805,
+          "movement_scope": {
+            "measured_edge_distance_cm": 18.553466650511837,
+            "observed_input_edge_distance_cm": 11.780079322584314,
+            "measured_floor_delta_cm": 5.528276721070483,
+            "observed_start": {
+              "world_time": 670.2608409188688,
+              "position": [
+                3997.919805813122,
+                -18211.220635010613,
+                934.5073086684614
+              ],
+              "feet_z": 842.5073086684614,
+              "previous_measured_point": [
+                4000.0,
+                -18200.0,
+                840.4602
+              ],
+              "target": [
+                4100.0,
+                -18200.0,
+                873.117
+              ]
+            },
+            "allowed": true
+          }
+        },
+        "input": {
+          "action": "Jump",
+          "duration": 0.08
+        },
+        "falling": {
+          "world_time": 678.2836717218161,
+          "position": [
+            4182.63881066276,
+            -18174.723517358463,
+            1001.4916996977189
+          ],
+          "feet_z": 909.4916996977189
+        },
+        "landing": {
+          "world_time": 678.4853621199727,
+          "position": [
+            4182.63881066276,
+            -18174.723517358463,
+            1001.1863617194261
+          ],
+          "feet_z": 909.1863617194261
+        },
+        "original_completion": {
+          "world_time": 677.8184171207249,
+          "walk_count": 4,
+          "walk_index": 4,
+          "falling": false
+        },
+        "return_segments": [],
+        "role": "B",
+        "label": "dorm to square through measured floors",
+        "destination": "OfficialExitSquare",
+        "last_falling": {
+          "world_time": 678.2836717218161,
+          "position": [
+            4182.63881066276,
+            -18174.723517358463,
+            1001.4916996977189
+          ],
+          "feet_z": 909.4916996977189
+        },
+        "return_points": [],
+        "original_completed": 280,
+        "endpoint": [
+          4200.0,
+          -18200.0,
+          907.0364
+        ],
+        "world_time_after": 678.4853621199727,
+        "role_recovery_seconds": 82.6055000051856
+      }
+    ],
+    "acquired": [
+      {
+        "item": "63AE40F7430BD6E762788BB1E4C10D30",
+        "definition": "Bandage",
+        "quantity": 1,
+        "source_point": "7F_WestDorm_A3",
+        "sell_after_return": false
+      },
+      {
+        "item": "59D36F5545965444EB4E14852C82D35B",
+        "definition": "Splint",
+        "quantity": 1,
+        "source_point": "7F_WestDorm_B2",
+        "sell_after_return": false
+      },
+      {
+        "item": "9BD4EDBB4CF2FECDC842659BD5E38933",
+        "definition": "Document",
+        "quantity": 1,
+        "source_point": "7F_LivingArea_B2",
+        "sell_after_return": false
+      },
+      {
+        "item": "2B7F8FD54DD2C0C3419858952EE7AB54",
+        "definition": "Tools",
+        "quantity": 1,
+        "source_point": "7F_LivingArea_B2",
+        "sell_after_return": true
+      }
+    ],
+    "brought_weapons": {
+      "A": "7C664AAB43CE3AF47C86CB8893145996",
+      "B": "929B7D844FC9760BA6CB7C85C77EA7B9"
+    },
+    "screenshots": [
+      "A-overnight-lobby-equipped.png",
+      "A-overnight-spawn.png",
+      "A-overnight-map.png",
+      "A-overnight-7F_WestDorm_A.png",
+      "A-overnight-7F_WestDorm_B.png",
+      "A-overnight-7F_LivingArea_B.png",
+      "A-overnight-combat.png",
+      "A-overnight-square-closed.png",
+      "A-overnight-settlement.png",
+      "A-overnight-return-lobby.png",
+      "A-overnight-sale.png",
+      "A-overnight-second-raid.png"
+    ],
+    "second_raid_completed": false,
+    "bridge_recovery_limits": {
+      "max_attempts_per_role": 36,
+      "max_server_seconds_per_role": 180,
+      "source": "overnight-route06 observed jumps and measured bridge heights",
+      "derivation": "About 530 cm remaining ascent / observed minimum 16 cm per jump = 34 jumps rounded up; allow 2 additional attempts. 36 * observed upper-stair cycle about 4.9 s = 176.4 s, bounded at 180 s.",
+      "boundary": "Finite test input budget, not a production rule or a guarantee of traversal; real progress, falling/landing, original endpoints and all raid checks remain required."
+    },
+    "weapon_preparation": [
+      {
+        "raid": 1,
+        "role": "A",
+        "weapon": "7C664AAB43CE3AF47C86CB8893145996",
+        "result": "passed",
+        "before": {
+          "weapon": "7C664AAB43CE3AF47C86CB8893145996",
+          "ammo_type": "Ammo",
+          "ammo": 30,
+          "carried_ammo": 60,
+          "accepted": 0
+        },
+        "action": "already loaded; no reload needed",
+        "after": {
+          "weapon": "7C664AAB43CE3AF47C86CB8893145996",
+          "ammo_type": "Ammo",
+          "ammo": 30,
+          "carried_ammo": 60,
+          "accepted": 0
+        }
+      },
+      {
+        "raid": 1,
+        "role": "B",
+        "weapon": "929B7D844FC9760BA6CB7C85C77EA7B9",
+        "result": "passed",
+        "before": {
+          "weapon": "929B7D844FC9760BA6CB7C85C77EA7B9",
+          "ammo_type": "Ammo",
+          "ammo": 30,
+          "carried_ammo": 60,
+          "accepted": 0
+        },
+        "action": "already loaded; no reload needed",
+        "after": {
+          "weapon": "929B7D844FC9760BA6CB7C85C77EA7B9",
+          "ammo_type": "Ammo",
+          "ammo": 30,
+          "carried_ammo": 60,
+          "accepted": 0
+        }
+      },
+      {
+        "raid": 2,
+        "role": "A",
+        "weapon": "7C664AAB43CE3AF47C86CB8893145996",
+        "result": "passed",
+        "before": {
+          "weapon": "7C664AAB43CE3AF47C86CB8893145996",
+          "ammo_type": "Ammo",
+          "ammo": 25,
+          "carried_ammo": 60,
+          "accepted": 0
+        },
+        "action": "already loaded; no reload needed",
+        "after": {
+          "weapon": "7C664AAB43CE3AF47C86CB8893145996",
+          "ammo_type": "Ammo",
+          "ammo": 25,
+          "carried_ammo": 60,
+          "accepted": 0
+        }
+      },
+      {
+        "raid": 2,
+        "role": "B",
+        "weapon": "929B7D844FC9760BA6CB7C85C77EA7B9",
+        "result": "passed",
+        "before": {
+          "weapon": "929B7D844FC9760BA6CB7C85C77EA7B9",
+          "ammo_type": "Ammo",
+          "ammo": 30,
+          "carried_ammo": 60,
+          "accepted": 0
+        },
+        "action": "already loaded; no reload needed",
+        "after": {
+          "weapon": "929B7D844FC9760BA6CB7C85C77EA7B9",
+          "ammo_type": "Ammo",
+          "ammo": 30,
+          "carried_ammo": 60,
+          "accepted": 0
+        }
+      }
+    ],
+    "authored_guard": {
+      "name": "GUARD_6",
+      "route": "ExtractionPatrol_7F_WestDorm"
+    },
+    "combat": {
+      "guard": "GUARD_6",
+      "route": "ExtractionPatrol_7F_WestDorm",
+      "shooter": "A",
+      "accepted_shots": 5,
+      "accepted_before": 0,
+      "accepted_after": 5,
+      "guard_health_before": 100,
+      "guard_health_after": 0,
+      "guard_dead_before": false,
+      "guard_dead_after": true,
+      "guard_kills_before": 0,
+      "guard_kills_after": 1,
+      "kills_added": 1,
+      "encounter_index": 0,
+      "actor_at_authored_node": "reclaimed_after_verified_defeat",
+      "authored_node_visited": true
+    },
+    "hold_deadlines": {
+      "A": 941.4511922188103,
+      "B": 941.4511922188103
+    },
+    "hold_observation": {
+      "nominal_poll_seconds": 0.15,
+      "boundary": "Sampled authority snapshots, not per-frame observation; file publication and scheduling may add latency."
+    },
+    "sale": {
+      "item": "2B7F8FD54DD2C0C3419858952EE7AB54",
+      "definition": "Tools",
+      "quantity": 1,
+      "quote": 200,
+      "credits_before": 2000,
+      "credits_after": 2200,
+      "result": "passed",
+      "ownership_scope": "all live server player, account, loot and guard containers"
+    },
+    "raid_ids": [
+      "1a29b088-46f2-e5c0-3899-82a2775f27ae",
+      "3f5c29be-47bd-9ed6-e07c-5a841fd9ef33"
+    ]
+  },
+  "raw_evidence_sha256": {
+    "Saved/Extraction/overnight-route09/Report.json": "263cca0dbdfc919108f9c70333f8fa6d9453f70c9d74152471a7177938a47bb7",
+    "Saved/Extraction/overnight-route09/OvernightMotion.jsonl": "e9ec94055ab6b0c43a964554f33f938a771bb009fb5c43ad6a6097d8839a9445",
+    "Saved/Extraction/overnight-route09-resources/Report.json": "addd9f6de3acea367a9e4e0b6a67fe13f1e28d7d0ba5db6be562c10ab0431801",
+    "Saved/Extraction/overnight-route09/Server.log": "498c2bf6cd43649269db7a93010eeff98d750e49ed22316b4aa9bc388f647d4d",
+    "Saved/Extraction/overnight-route09/A.log": "b4489d2f65f445cbbc996779bc2944c943c26dc54b7fb6da0346261f5725a7b0",
+    "Saved/Extraction/overnight-route09/B.log": "4a2ffc7508e10f3d7b40637e781f436af27d49a3d94a602df9c1bdbbac83f574"
+  },
+  "motion": {
+    "artifact": "ContinuousRoute-Motion.jsonl.gz",
+    "rows": 5222,
+    "compressed_sha256": "6b0300ede080d8ff419318ae5473bd0a5498dbb9c73573cd2b589f307a4a63c7",
+    "uncompressed_sha256": "e9ec94055ab6b0c43a964554f33f938a771bb009fb5c43ad6a6097d8839a9445",
+    "first": {
+      "stage": "7F_WestDorm_A:A",
+      "monotonic": 307300.312,
+      "world_time": 33.64459751546383,
+      "players": {
+        "A": {
+          "position": [
+            -22629.56,
+            -21381,
+            278.1500163078308
+          ],
+          "capsule_half": 92,
+          "health": 80,
+          "life": 0,
+          "falling": false,
+          "extract_at": 0
+        },
+        "B": {
+          "position": [
+            -22629.56,
+            -20995.22,
+            278.1500163078308
+          ],
+          "capsule_half": 92,
+          "health": 80,
+          "life": 0,
+          "falling": false,
+          "extract_at": 0
+        }
+      },
+      "progress": {
+        "A": [
+          0,
+          4
+        ],
+        "B": [
+          0,
+          0
+        ]
+      },
+      "original_start": 0,
+      "original_end": 4,
+      "global_completed": 0,
+      "trigger": null
+    },
+    "last": {
+      "stage": "ordinary extraction hold",
+      "monotonic": 308208.234,
+      "world_time": 941.6313853189349,
+      "players": {
+        "A": {
+          "position": null,
+          "capsule_half": null,
+          "health": null,
+          "life": 3,
+          "falling": null,
+          "extract_at": 0
+        },
+        "B": {
+          "position": null,
+          "capsule_half": null,
+          "health": null,
+          "life": 3,
+          "falling": null,
+          "extract_at": 0
+        }
+      },
+      "progress": {
+        "A": [
+          1,
+          1
+        ],
+        "B": [
+          3,
+          3
+        ]
+      }
+    }
+  },
+  "resources": {
+    "result": "passed",
+    "exit_code": 0,
+    "limits": {
+      "start_c_gib": 40,
+      "start_d_gib": 32.0,
+      "start_ram_gib": 8,
+      "stop_c_gib": 25,
+      "stop_d_gib": 25.0,
+      "stop_ram_gib": 2.0,
+      "critical_ram_gib": 1.0,
+      "low_ram_seconds": 15
+    },
+    "samples": 197,
+    "minima": {
+      "c_free_gib": 133.61077117919922,
+      "d_free_gib": 33.64072036743164,
+      "ram_free_gib": 11.838207244873047
+    }
+  },
+  "screenshots": [
+    {
+      "file": "ContinuousRoute-square-closed.png",
+      "source": "Saved/Extraction/overnight-route09/A-overnight-square-closed.png",
+      "sha256": "b1fc98d8783b498e631280a05cdc229e4db64e48181f3603e9654fdd525c2d58"
+    },
+    {
+      "file": "ContinuousRoute-settlement.png",
+      "source": "Saved/Extraction/overnight-route09/A-overnight-settlement.png",
+      "sha256": "c1586cd7faee0c4ae507cc001a9ea684ede858b69799665b5ef0281e823febf6"
+    },
+    {
+      "file": "ContinuousRoute-return-lobby.png",
+      "source": "Saved/Extraction/overnight-route09/A-overnight-return-lobby.png",
+      "sha256": "0c2436fcaf9f1107c1a0cb86888e51cc383f0d87299c00fcc43499f76306f1f1"
+    },
+    {
+      "file": "ContinuousRoute-sale.png",
+      "source": "Saved/Extraction/overnight-route09/A-overnight-sale.png",
+      "sha256": "e474dd45ed5771c1bbf77d1d91f2da6edb6e89613f50b2a51ebf38f16979b592"
+    },
+    {
+      "file": "ContinuousRoute-second-raid.png",
+      "source": "Saved/Extraction/overnight-route09/A-overnight-second-raid.png",
+      "sha256": "d0a7902cab9efd870ae50912215e1a80e8597fb1ba345608ea8625351c6923bb"
+    }
+  ]
+}
