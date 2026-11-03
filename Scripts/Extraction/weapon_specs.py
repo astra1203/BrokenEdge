@@ -13,7 +13,9 @@ family shares one generic 1P set (idle / aim pose) with per-gun fire, reload and
 """
 from pathlib import Path
 
-DEFAULT_SOURCE = Path('E:/MyFiles/三角洲解包资产/网盘上传压缩包')
+_SOURCES = [Path('D:/司晨/源代码和素材/三角洲解包资产/网盘上传压缩包'),
+            Path('E:/MyFiles/三角洲解包资产/网盘上传压缩包')]
+DEFAULT_SOURCE = next((p for p in _SOURCES if p.is_dir()), _SOURCES[-1])
 GENERIC_AR = 'Guns/AR/Anims/Male/1P/'
 
 WEAPONS = {

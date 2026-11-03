@@ -27,6 +27,23 @@ FTransform UExtractionItemDefinition::Placement(FName WeaponDefinition, bool bFi
 	return bFirstPerson ? FirstPersonMount : Mount;
 }
 
+FTransform UExtractionItemDefinition::GripFor(FName WeaponDefinition) const
+{
+	const FTransform* Explicit = SupportGripByWeapon.Find(WeaponDefinition);
+	return Explicit ? *Explicit : SupportGrip;
+}
+
+UStaticMesh* UExtractionItemDefinition::AdapterFor(FName WeaponDefinition) const
+{
+	return AdapterFreeWeapons.Contains(WeaponDefinition) ? nullptr : AdapterMesh.Get();
+}
+
+FVector UExtractionItemDefinition::AimOffsetFor(FName WeaponDefinition) const
+{
+	const FVector* Explicit = OpticAimOffsetByWeapon.Find(WeaponDefinition);
+	return Explicit ? *Explicit : OpticAimOffset;
+}
+
 // 返回可识别的定义白名单，未知名称不会被当作任意资源路径加载。
 const TArray<FName>& UExtractionItemDefinition::Ids()
 {

@@ -170,7 +170,7 @@ gun = duplicate('/Game/Extraction/Items/DA_Item_AK', '/Game/Extraction/Items/DA_
 for prop, value in {'item_id': WEAPON, 'label': SPEC['label'], 'weapon_class': bp.generated_class(),
                     'magazine_capacity': SPEC['magazine'], 'default_ammo': SPEC['ammo'],
                     'compatible_ammo': [SPEC['ammo']],
-                    # 附件挂点尚未按这把枪校准，先不开放改装，避免配件浮在空中。
+                    # 新枪先不开放改装，避免配件浮在空中；按官方挂点校准后再开放（M4A1 见 patch_m4a1_attachments.py）。
                     'compatible_attachments': [], 'description': SPEC['description']}.items():
     gun.set_editor_property(prop, value)
 assert lib.save_loaded_asset(gun)

@@ -13,12 +13,12 @@ ADAPTER_BOTTOM = 12.4
 LENS_CENTER = (0.0000162516, 2.1473472938, 1.5397197800)
 
 
-def settings(aim):
+def settings(aim, mount=MOUNT):
     rotation = aim.rotation.inversed() * unreal.Rotator(yaw=-90).quaternion()
-    first = unreal.Transform(location=unreal.Vector(*MOUNT), rotation=rotation.rotator())
+    first = unreal.Transform(location=unreal.Vector(*mount), rotation=rotation.rotator())
     center = aim.transform_location(first.transform_location(unreal.Vector(*LENS_CENTER)))
     return {
-        'mount': unreal.Transform(location=unreal.Vector(*MOUNT)),
+        'mount': unreal.Transform(location=unreal.Vector(*mount)),
         'first_person_mount': first,
         'adapter_mount': unreal.Transform(
             location=unreal.Vector(0, 12, (ADAPTER_BOTTOM + MOUNT[2]) / 2),

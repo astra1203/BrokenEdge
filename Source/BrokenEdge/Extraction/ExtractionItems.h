@@ -201,6 +201,17 @@ public:
 	FTransform SupportGrip = FTransform::Identity;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FVector OpticAimOffset = FVector::ZeroVector;
+	/** 按宿主武器覆盖握把支撑手与瞄具瞄准偏移；未列出的武器沿用 SupportGrip / OpticAimOffset。 */
+	UPROPERTY(EditAnywhere, Category="Gunsmith")
+	TMap<FName, FTransform> SupportGripByWeapon;
+	UPROPERTY(EditAnywhere, Category="Gunsmith")
+	TMap<FName, FVector> OpticAimOffsetByWeapon;
+	/** 自带导轨的宿主武器不需要 AK 坐标系下的转接座。 */
+	UPROPERTY(EditAnywhere, Category="Gunsmith")
+	TArray<FName> AdapterFreeWeapons;
+	UStaticMesh* AdapterFor(FName WeaponDefinition) const;
+	FTransform GripFor(FName WeaponDefinition) const;
+	FVector AimOffsetFor(FName WeaponDefinition) const;
 	// 按固定目录加载白名单定义；未知 ID 返回空指针，调用方需处理缺失资源。
 	static const UExtractionItemDefinition* Get(FName Id);
 	// 返回可识别的定义白名单，未知名称不会被当作任意资源路径加载。

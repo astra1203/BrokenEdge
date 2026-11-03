@@ -84,10 +84,10 @@ void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActo
 					USceneComponent* ViewHost = Node.Parent.IsValid() ? static_cast<USceneComponent*>(ViewNodes.FindRef(Node.Parent)) : View;
 					WorldNodes.Add(Node.Id, Create(D->WorldMesh, WorldHost, D->Placement(W->ExtractionDefinition, false), false, Node.Socket));
 					ViewNodes.Add(Node.Id, Create(D->FirstPersonMesh, ViewHost, D->Placement(W->ExtractionDefinition, true), true, Node.Socket));
-					if (D->AdapterMesh)
+					if (UStaticMesh* Adapter = D->AdapterFor(W->ExtractionDefinition))
 					{
-						Create(D->AdapterMesh, WorldHost, D->AdapterMount, false, Node.Socket);
-						Create(D->AdapterMesh, ViewHost, D->AdapterMount, true, Node.Socket);
+						Create(Adapter, WorldHost, D->AdapterMount, false, Node.Socket);
+						Create(Adapter, ViewHost, D->AdapterMount, true, Node.Socket);
 					}
 					Finished.Add(Node.Id);
 				}
@@ -98,8 +98,8 @@ void UExtractionWeaponVisuals::TickComponent(float Delta, ELevelTick Kind, FActo
 			{
 				Create(D->WorldMesh, W->GetWeaponMesh(), D->Placement(W->ExtractionDefinition, false), false);
 				Create(D->FirstPersonMesh, View, D->Placement(W->ExtractionDefinition, true), true);
-				Create(D->AdapterMesh, W->GetWeaponMesh(), D->AdapterMount, false);
-				Create(D->AdapterMesh, View, D->AdapterMount, true);
+				Create(D->AdapterFor(W->ExtractionDefinition), W->GetWeaponMesh(), D->AdapterMount, false);
+				Create(D->AdapterFor(W->ExtractionDefinition), View, D->AdapterMount, true);
 			}
 	}
 	// 世界附件对第一人称拥有者隐藏，本人专用附件只在其第一人称视角显示，防止叠出两套模型。
@@ -119,7 +119,7 @@ FTransform AWeapon::EquipmentGrip(bool FirstPerson) const
 	for (FName Name : ExtractionParts)
 		if (const auto* D = UExtractionItemDefinition::Get(Name); D && D->AttachmentSlot
 			== EExtractionAttachmentSlot::Grip)
-			return D->SupportGrip;
+			return D->GripFor(ExtractionDefinition);
 	const auto* C = Cast<ABrokenEdgeCharacter>(GetOwner());
 	const auto* Mesh = FirstPerson && C && C->GetFirstPersonWeaponMesh()
 		                   ? C->GetFirstPersonWeaponMesh()
@@ -133,6 +133,6 @@ FVector AWeapon::EquipmentAimOffset() const
 	for (FName Name : ExtractionParts)
 		if (const auto* D = UExtractionItemDefinition::Get(Name); D && D->AttachmentSlot
 			== EExtractionAttachmentSlot::Optic)
-			return D->OpticAimOffset;
+			return D->AimOffsetFor(ExtractionDefinition);
 	return FVector::ZeroVector;
 }

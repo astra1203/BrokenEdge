@@ -27,7 +27,9 @@ import json
 import os
 import zipfile
 
-SHARE = r'\\Desktop-m9pa1sf\三角洲解包资产'
+# 本机副本优先；网络共享在引擎自带 Python 中可能无法访问。
+SHARES = [r'D:\司晨\源代码和素材\三角洲解包资产', r'\\Desktop-m9pa1sf\三角洲解包资产']
+SHARE = next((s for s in SHARES if os.path.isdir(s)), SHARES[-1])
 ZIP = '网盘上传压缩包/可用资源_DeltaForce_DataTables_001.zip'
 MEMBER = 'WeaponPartsMeshSocketNameInfo.json'
 
