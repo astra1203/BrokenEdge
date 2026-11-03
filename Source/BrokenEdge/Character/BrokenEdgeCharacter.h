@@ -371,6 +371,28 @@ private:
 	void ApplyProne(bool bNewProne);
 	bool bProneApplied = false;
 	float ProneSavedCrouchSpeed = 0, ProneSavedEyeHeight = 0;
+	/**
+	 * 第三人称趴姿动画（AnimStarterPack 重定向到 Stinger，retarget_prone.py 生成）：
+	 * 趴下先播 StandToProne，再循环 ProneIdle；起身播 ProneToStand；趴着开火 / 换弹改用趴姿版本。
+	 */
+	UPROPERTY(EditDefaultsOnly, Category="Extraction|Prone")
+	TSoftObjectPtr<class UAnimSequence> StandToProneAnim;
+	UPROPERTY(EditDefaultsOnly, Category="Extraction|Prone")
+	TSoftObjectPtr<class UAnimSequence> ProneIdleAnim;
+	UPROPERTY(EditDefaultsOnly, Category="Extraction|Prone")
+	TSoftObjectPtr<class UAnimSequence> ProneToStandAnim;
+	UPROPERTY(EditDefaultsOnly, Category="Extraction|Prone")
+	TSoftObjectPtr<class UAnimSequence> ProneFireAnim;
+	UPROPERTY(EditDefaultsOnly, Category="Extraction|Prone")
+	TSoftObjectPtr<class UAnimSequence> ProneReloadAnim;
+	// 各端按复制的 bProne 播放趴姿动画（含模拟代理），被其他蒙太奇打断后自动接回趴姿待机。
+	void UpdateProneAnimation();
+	// 当前处于趴姿表现时返回趴姿序列（未加载则同步加载），否则返回空。
+	class UAnimSequence* ProneAnim(const TSoftObjectPtr<class UAnimSequence>& Anim) const;
+	bool bProneAnimating = false;
+	double ProneIdleAt = 0;
+	UPROPERTY(Transient)
+	TObjectPtr<class UAnimMontage> ProneMontage;
 
 	UPROPERTY(Transient)
 	TObjectPtr<USkeletalMeshComponent> DedicatedFirstPersonMesh = nullptr;

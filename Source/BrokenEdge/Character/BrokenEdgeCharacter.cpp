@@ -56,6 +56,12 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter(const FObjectInitializer& ObjectIniti
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	// 趴姿动画默认路径（retarget_prone.py 生成），蓝图可覆盖。
+	StandToProneAnim = TSoftObjectPtr<UAnimSequence>(FSoftObjectPath(TEXT("/Game/Characters/Stinger/Animations/Prone/Stand_To_Prone_Stinger.Stand_To_Prone_Stinger")));
+	ProneIdleAnim = TSoftObjectPtr<UAnimSequence>(FSoftObjectPath(TEXT("/Game/Characters/Stinger/Animations/Prone/Prone_Idle_Stinger.Prone_Idle_Stinger")));
+	ProneToStandAnim = TSoftObjectPtr<UAnimSequence>(FSoftObjectPath(TEXT("/Game/Characters/Stinger/Animations/Prone/Prone_To_Stand_Stinger.Prone_To_Stand_Stinger")));
+	ProneFireAnim = TSoftObjectPtr<UAnimSequence>(FSoftObjectPath(TEXT("/Game/Characters/Stinger/Animations/Prone/Prone_Fire_1_Stinger.Prone_Fire_1_Stinger")));
+	ProneReloadAnim = TSoftObjectPtr<UAnimSequence>(FSoftObjectPath(TEXT("/Game/Characters/Stinger/Animations/Prone/Prone_Reload_Rifle_Stinger.Prone_Reload_Rifle_Stinger")));
 
 	// 固定第一人称：相机始终挂在胶囊体，位置由角色眼高更新。
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -312,6 +318,7 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	UpdateSprint();
+	UpdateProneAnimation();
 	DiagnoseStuckMovement(DeltaTime);
 	UpdateExtractionLabel();
 	// 控制权和组件可能晚于 BeginPlay 就绪；初始化成功或明确失败后不再重复创建。
@@ -1098,6 +1105,48 @@ void ABrokenEdgeCharacter::ApplyProne(bool bNewProne)
 	bProneApplied = bNewProne;
 }
 
+UAnimSequence* ABrokenEdgeCharacter::ProneAnim(const TSoftObjectPtr<UAnimSequence>& Anim) const
+{
+	if (!bProneAnimating || Anim.IsNull()) return nullptr;
+	return Anim.LoadSynchronous();
+}
+
+void ABrokenEdgeCharacter::UpdateProneAnimation()
+{
+	auto* Anim = GetMesh() ? GetMesh()->GetAnimInstance() : nullptr;
+	if (!Anim) return;
+	const bool bWant = bProne && !ExtractionAbilities->IsDowned() && !IsTraversing() && !bDefeated;
+	const double Now = GetWorld()->GetTimeSeconds();
+	if (bWant != bProneAnimating)
+	{
+		bProneAnimating = bWant;
+		if (ProneMontage) Anim->Montage_Stop(.2f, ProneMontage);
+		ProneMontage = nullptr;
+		if (bWant)
+		{
+			if (auto* Down = StandToProneAnim.LoadSynchronous())
+			{
+				ProneMontage = Anim->PlaySlotAnimationAsDynamicMontage(Down, TEXT("DefaultSlot"), .15f, .25f, 1.f, 1);
+				ProneIdleAt = Now + FMath::Max(.1f, Down->GetPlayLength() - .25f);
+			}
+			else ProneIdleAt = Now;
+		}
+		else if (auto* Up = ProneToStandAnim.LoadSynchronous())
+			Anim->PlaySlotAnimationAsDynamicMontage(Up, TEXT("DefaultSlot"), .1f, .25f, 1.f, 1);
+		return;
+	}
+	if (!bProneAnimating || Now < ProneIdleAt) return;
+	// 过渡播完、或被开火 / 换弹等蒙太奇打断且已结束时，循环趴姿待机。
+	const bool bIdlePlaying = ProneMontage && Anim->Montage_IsPlaying(ProneMontage)
+		&& ProneMontage->SlotAnimTracks.Num() > 0 && ProneMontage->SlotAnimTracks[0].AnimTrack.AnimSegments.Num() > 0
+		&& ProneMontage->SlotAnimTracks[0].AnimTrack.AnimSegments[0].GetAnimReference() == ProneIdleAnim.Get();
+	if (bIdlePlaying) return;
+	if (ProneMontage && Anim->Montage_IsPlaying(ProneMontage) && Now < ProneIdleAt + .05) return;
+	if (Anim->IsAnyMontagePlaying() && !(ProneMontage && Anim->Montage_IsPlaying(ProneMontage))) return;
+	if (auto* Idle = ProneIdleAnim.LoadSynchronous())
+		ProneMontage = Anim->PlaySlotAnimationAsDynamicMontage(Idle, TEXT("DefaultSlot"), .25f, .2f, 1.f, 100000);
+}
+
 void ABrokenEdgeCharacter::UpdateSprint()
 {
 	if (!bEnableSprint || (!HasAuthority() && !IsLocallyControlled()) || !Combat) return;
@@ -1517,6 +1566,20 @@ void ABrokenEdgeCharacter::PlayReloadMontage()
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance == nullptr)return;
 
+	if (auto* Reload = ProneAnim(ProneReloadAnim))
+	{
+		// 趴着换弹：身体播趴姿换弹并按武器换弹时间缩放，第一人称照常。
+		float Rate = 1.f;
+		if (ExtractionCombat->IsEnabled() && ExtractionCombat->GetWeaponStats().IsValid())
+		{
+			const auto& Stats = ExtractionCombat->GetWeaponStats();
+			Rate = Reload->GetPlayLength() / FMath::Max(.1f, Combat->EquippedWeapon->IsEmpty() ? Stats.EmptyReload : Stats.Reload);
+		}
+		AnimInstance->PlaySlotAnimationAsDynamicMontage(Reload, TEXT("DefaultSlot"), .1f, .2f, Rate, 1);
+		PlayFirstPersonMontage(GetViewReloadMontage(), GetReloadMontage(), FName("Rifle"));
+		return;
+	}
+
 	AnimInstance->Montage_Play(GetReloadMontage());
 
 	FName SectionName;
@@ -1571,6 +1634,16 @@ void ABrokenEdgeCharacter::PlayReloadMontage()
 
 void ABrokenEdgeCharacter::PlayFireMontage(bool bAiming)
 {
+	if (auto* Fire = ProneAnim(ProneFireAnim))
+	{
+		// 趴着开火：身体播趴姿开火，第一人称照常播武器开火。
+		if (auto* Anim = GetMesh()->GetAnimInstance())
+			Anim->PlaySlotAnimationAsDynamicMontage(Fire, TEXT("DefaultSlot"), .05f, .1f, 1.f, 1);
+		const auto* Profile = Combat && Combat->EquippedWeapon ? Combat->EquippedWeapon->Presentation.Get() : nullptr;
+		PlayFirstPersonMontage(Profile && Profile->ViewFire ? Profile->ViewFire.Get() : FirstPersonFireMontage.Get(),
+		                       Profile && Profile->BodyFire ? Profile->BodyFire.Get() : static_cast<UAnimMontage*>(FireWeaponMontage));
+		return;
+	}
 	if (Combat && Combat->EquippedWeapon && Combat->EquippedWeapon->Presentation)
 	{
 		const auto* Profile = Combat->EquippedWeapon->Presentation.Get();
