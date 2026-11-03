@@ -231,7 +231,11 @@ void AExtractionPlayerController::ServerUnlockDoor_Implementation(AExtractionKey
 
 void AExtractionPlayerController::ThrowGrenade()
 {
-	if (auto* I = Interaction(); I && I->CanAct() && !I->InventoryOpen && !bMenuOpen) ServerThrowGrenade(false);
+	if (auto* I = Interaction(); I && I->CanAct() && !I->InventoryOpen && !bMenuOpen)
+	{
+		bAimingGrenade = true;
+		bAimingGrenadeLow = false;
+	}
 }
 
 void AExtractionPlayerController::PlacePing()
@@ -269,7 +273,11 @@ void AExtractionPlayerController::ClientPing_Implementation(FVector_NetQuantize 
 
 void AExtractionPlayerController::ThrowGrenadeLow()
 {
-	if (auto* I = Interaction(); I && I->CanAct() && !I->InventoryOpen && !bMenuOpen) ServerThrowGrenade(true);
+	if (auto* I = Interaction(); I && I->CanAct() && !I->InventoryOpen && !bMenuOpen)
+	{
+		bAimingGrenade = true;
+		bAimingGrenadeLow = true;
+	}
 }
 
 // 服务器校验行动能力与投掷间隔，从背包（不含安全箱）取出一枚投掷物再生成手雷。
@@ -521,6 +529,17 @@ void AExtractionPlayerController::GetPlayerViewPoint(FVector& OutLocation, FRota
 void AExtractionPlayerController::Tick(float Delta)
 {
 	Super::Tick(Delta);
+	// 手雷瞄准：打开背包/菜单或失去行动能力即取消；松开 G 时投出。
+	if (bAimingGrenade && IsLocalController())
+	{
+		const auto* I = Interaction();
+		if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen) bAimingGrenade = false;
+		else if (!IsInputKeyDown(EKeys::G))
+		{
+			bAimingGrenade = false;
+			ServerThrowGrenade(bAimingGrenadeLow);
+		}
+	}
 	// 一次性提示到点自动消失；界面里直接给 ItemMessage 赋值的也按文本变化重新计时。
 	const double Now = GetWorld()->GetTimeSeconds();
 	if (ItemMessage.IsEmpty())

@@ -76,9 +76,12 @@ public:
 	// 先确认门对象有效且属于同一世界，再由门执行完整权限和库存版本校验。
 	UFUNCTION(Server, Reliable)
 	void ServerUnlockDoor(class AExtractionKeyRoom* Door, int32 InventoryRevision);
-	// G / Alt+G：投出背包里的一枚破片手雷，服务器扣除物品并生成投掷物。
+	// G / Alt+G：按下进入瞄准（HUD 画预计轨迹与落点），松开 G 投出；服务器扣除物品并生成投掷物。
 	void ThrowGrenade();
 	void ThrowGrenadeLow();
+	/** 本地手雷瞄准状态：按住 G 期间为真，Low 表示按下时带 Alt（低抛）。 */
+	bool bAimingGrenade = false;
+	bool bAimingGrenadeLow = false;
 	UFUNCTION(Server, Reliable)
 	void ServerThrowGrenade(bool bLow);
 	double NextGrenadeAt = 0;

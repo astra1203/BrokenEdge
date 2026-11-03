@@ -22,6 +22,8 @@
 #include "Components/Button.h"
 #include "Fonts/FontMeasure.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/GameplayStaticsTypes.h"
 #include "Framework/Application/SlateApplication.h"
 #include "Rendering/SlateRenderer.h"
 
@@ -393,6 +395,44 @@ int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Ge
 			                           FSlateLayoutTransform(BarAt)), &BarBrush, ESlateDrawEffect::None,
 		                           bLow ? ExtractionUIStyle::Hex(TEXT("EA5A50")) : FLinearColor(1, 1, 1, .85f));
 	}
+
+	// 手雷瞄准：按住 G 时按服务器同样的出手点、仰角与初速预测轨迹，画出弧线和预计落点的满伤圈。
+	if (PC->bAimingGrenade)
+		if (const APawn* Thrower = PC->GetPawn())
+		{
+			const auto* Rules = GetDefault<UExtractionRules>();
+			FVector Eye;
+			FRotator Aim;
+			Thrower->GetActorEyesViewPoint(Eye, Aim);
+			Aim.Pitch = FMath::Clamp(Aim.Pitch + Rules->FragThrowPitch, -89.f, 89.f);
+			FPredictProjectilePathParams Params(5.f, Eye + Aim.Vector() * 40.f,
+			                                    Aim.Vector() * (PC->bAimingGrenadeLow ? Rules->FragThrowLowSpeed : Rules->FragThrowSpeed)
+			                                    + Thrower->GetVelocity(), Rules->FragFuseSeconds, ECC_Visibility,
+			                                    const_cast<APawn*>(Thrower));
+			Params.SimFrequency = 20.f;
+			FPredictProjectilePathResult Result;
+			UGameplayStatics::PredictProjectilePath(GetWorld(), Params, Result);
+			auto Project = [&](const FVector& World, FVector2D& Out2D)
+			{
+				return UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(
+					const_cast<AExtractionPlayerController*>(PC), World, Out2D, false);
+			};
+			TArray<FVector2D> Arc;
+			for (const auto& Point : Result.PathData)
+				if (FVector2D At; Project(Point.Location, At)) Arc.Add(At);
+			if (Arc.Num() > 1) Lines(Arc, ExtractionUIStyle::Accent(.85f), 2.f);
+			const FVector Landing = Result.HitResult.bBlockingHit
+				                        ? Result.HitResult.ImpactPoint
+				                        : Result.LastTraceDestination.Location;
+			TArray<FVector2D> Ring;
+			for (int32 Step = 0; Step <= 32; ++Step)
+			{
+				const float A = 2 * PI * Step / 32.f;
+				if (FVector2D At; Project(Landing + FVector(FMath::Cos(A), FMath::Sin(A), 0) * Rules->FragFullRadius + FVector(0, 0, 5), At))
+					Ring.Add(At);
+			}
+			if (Ring.Num() > 2) Lines(Ring, ExtractionUIStyle::Hex(TEXT("EA5A50"), .85f), 2.f);
+		}
 
 	// 撤离点标记：存活且对局进行中时，把每个撤离点投影到屏幕，可撤离为绿色、暂不可用为灰色；屏幕外贴边。
 	const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
