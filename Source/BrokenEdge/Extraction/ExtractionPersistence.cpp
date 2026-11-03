@@ -295,13 +295,28 @@ bool UExtractionPersistence::Load(const FString& Directory)
 		if (!Commit(MoveTemp(Migrated))) return false;
 		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=4"));
 	}
+	// 第 5 版：默认安全箱改为 3×3 野战安全箱，旧档案里的 2×2 基础安全箱一次性升级（箱内物品原样搬入，必定放得下）。
+	if (State.Version < 5)
+	{
+		FExtractionStoreState Migrated = State;
+		Migrated.Version = 5;
+		for (auto& Profile : Migrated.Profiles)
+			if (const auto* Safe = Profile.View.Loadout.InSlot(ExtractionGear::SafeSlot);
+				Safe && Safe->Definition == TEXT("Safe_Basic"))
+			{
+				FString Ignored;
+				if (SelectSafe(Profile.View.Loadout, TEXT("Safe_Field"), Ignored)) ++Profile.View.Revision;
+			}
+		if (!Commit(MoveTemp(Migrated))) return false;
+		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=5"));
+	}
 	return Recover();
 }
 
 // 检查存储版本、档案与出战身份唯一性、容器合法性及物品来源；不接受客户端自行拼出的结果状态。
 bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) const
 {
-	if (Candidate.Version < 1 || Candidate.Version > 4 || !Candidate.Id.IsValid()) return false;
+	if (Candidate.Version < 1 || Candidate.Version > 5 || !Candidate.Id.IsValid()) return false;
 	TSet<FGuid> Profiles, Items;
 	for (const auto& P : Candidate.Profiles)
 	{
