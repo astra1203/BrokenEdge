@@ -43,6 +43,23 @@ public:
 	TObjectPtr<UStaticMeshComponent> Mesh;
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class USkeletalMeshComponent> WeaponMesh;
+	// 容器外观（保险箱等）用可摆姿态的网格显示，打开后直接转动门骨骼，不需要动画蓝图。
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UPoseableMeshComponent> ContainerMesh;
+	/**
+	 * 打开后要转动的门骨骼：键为“网格名:骨骼名”，值为绕 Z 轴的开门角度（度，符号决定朝外开）。
+	 * 大保险门铰链在右侧，-100°；小保险门铰链在左侧，+100°。
+	 */
+	UPROPERTY(EditDefaultsOnly, Category="Extraction|Appearance")
+	TMap<FString, float> DoorBones = {
+		{TEXT("props_collect_box_546_3P:Bone002"), -100.f},
+		{TEXT("props_collect_SmallSafeBox_802_3P:Point001"), 100.f}};
+	// 任何玩家第一次打开容器后为 true；复制给所有人，门保持打开。
+	UPROPERTY(ReplicatedUsing=OnRep_Opened)
+	bool bOpened = false;
+	// 服务器：打开容器界面时调用，记录已打开以播放开门。
+	void MarkOpened();
+	virtual void Tick(float DeltaSeconds) override;
 	UPROPERTY(EditAnywhere, ReplicatedUsing=OnRep_Appearance)
 	bool Loose = false;
 	UPROPERTY(EditAnywhere, ReplicatedUsing=OnRep_Appearance)
@@ -86,4 +103,9 @@ private:
 	// 依据整箱/散落物/枪械切换模型和查询边界；不移动作为根组件的交互盒，以免改变配置点位。
 	UFUNCTION()
 	void OnRep_Appearance();
+	UFUNCTION()
+	void OnRep_Opened();
+	// 把门骨骼摆到 DoorProgress（0 关 / 1 全开）对应的角度。
+	void ApplyDoorPose();
+	float DoorProgress = 0.f;
 };

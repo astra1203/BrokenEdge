@@ -186,6 +186,7 @@ void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootAct
 	}
 	InventoryOpen = true;
 	Loot = Target;
+	Target->MarkOpened();
 	SeenRevision = -1;
 	RefreshLootView();
 	GetOwner()->ForceNetUpdate();

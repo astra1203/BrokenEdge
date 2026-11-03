@@ -4,6 +4,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/PoseableMeshComponent.h"
 #include "Engine/SkeletalMesh.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "Net/UnrealNetwork.h"
@@ -36,6 +37,13 @@ AExtractionLootActor::AExtractionLootActor()
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(RootComponent);
 	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ContainerMesh = CreateDefaultSubobject<UPoseableMeshComponent>(TEXT("ContainerMesh"));
+	ContainerMesh->SetupAttachment(RootComponent);
+	ContainerMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ContainerMesh->SetVisibility(false);
+	// 只在开门过程中逐帧更新门骨骼。
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = false;
 }
 
 // 各端刷新外观，服务器初始化容器 ID；只有 SeedContents 开启且内容为空时才生成默认物资。
@@ -93,6 +101,57 @@ void AExtractionLootActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(AExtractionLootActor, SourcePointId);
 	DOREPLIFETIME(AExtractionLootActor, ContainerAppearance);
 	DOREPLIFETIME(AExtractionLootActor, AccessDoor);
+	DOREPLIFETIME(AExtractionLootActor, bOpened);
+}
+
+// 服务器第一次打开时置位；监听服务器本地也立即开始开门。
+void AExtractionLootActor::MarkOpened()
+{
+	if (!HasAuthority() || bOpened || Loose) return;
+	bOpened = true;
+	ForceNetUpdate();
+	OnRep_Opened();
+}
+
+// 开门用 0.6 秒插值；专服没有画面，直接跳到全开。
+void AExtractionLootActor::OnRep_Opened()
+{
+	if (!bOpened) return;
+	if (GetNetMode() == NM_DedicatedServer)
+	{
+		DoorProgress = 1.f;
+		return;
+	}
+	SetActorTickEnabled(true);
+}
+
+void AExtractionLootActor::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	DoorProgress = FMath::Min(1.f, DoorProgress + DeltaSeconds / .6f);
+	ApplyDoorPose();
+	if (DoorProgress >= 1.f) SetActorTickEnabled(false);
+}
+
+void AExtractionLootActor::ApplyDoorPose()
+{
+	const auto* Asset = ContainerMesh ? ContainerMesh->GetSkinnedAsset() : nullptr;
+	if (!Asset) return;
+	const FString MeshName = Asset->GetName();
+	// 先慢后快再缓停，看起来像门被拉开。
+	const float Eased = FMath::InterpEaseInOut(0.f, 1.f, DoorProgress, 2.f);
+	for (const auto& Door : DoorBones)
+	{
+		FString Name, Bone;
+		if (!Door.Key.Split(TEXT(":"), &Name, &Bone) || Name != MeshName) continue;
+		const FName BoneName(*Bone);
+		const int32 Index = ContainerMesh->GetBoneIndex(BoneName);
+		if (Index == INDEX_NONE) continue;
+		// 参考姿态的局部旋转再叠加绕 Z 的开门角度，铰链就是骨骼原点。
+		const FTransform Ref = Asset->GetRefSkeleton().GetRefBonePose()[Index];
+		const FQuat Open = FQuat(FVector::UpVector, FMath::DegreesToRadians(Door.Value * Eased));
+		ContainerMesh->SetBoneRotationByName(BoneName, (Open * Ref.GetRotation()).Rotator(), EBoneSpaces::ComponentSpace);
+	}
 }
 
 // 依据整箱/散落物/枪械切换模型和查询边界；不移动作为根组件的交互盒，以免改变配置点位。
@@ -103,13 +162,14 @@ void AExtractionLootActor::OnRep_Appearance()
 	WeaponMesh->SetRelativeTransform(FTransform::Identity);
 	InteractionBounds->SetBoxExtent(Loose ? LooseInteractionExtent : ContainerInteractionExtent);
 	WeaponMesh->SetVisibility(false);
+	ContainerMesh->SetVisibility(false);
 	Mesh->SetVisibility(true);
 	ContainerBounds->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	InteractionBounds->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	if (ContainerAppearance && !Loose)
 	{
-		WeaponMesh->SetSkeletalMeshAsset(ContainerAppearance);
-		WeaponMesh->SetVisibility(true);
+		ContainerMesh->SetSkinnedAssetAndUpdate(ContainerAppearance);
+		ContainerMesh->SetVisibility(true);
 		Mesh->SetVisibility(false);
 		const auto Bounds = ContainerAppearance->GetBounds();
 		// The interaction box is the actor root; changing its location would move the authored point.
@@ -117,7 +177,13 @@ void AExtractionLootActor::OnRep_Appearance()
 		ContainerBounds->SetRelativeLocation(Bounds.Origin + VisualOffset - FVector(0, 0, -20));
 		ContainerBounds->SetBoxExtent(Bounds.BoxExtent.ComponentMax(FVector(5)));
 		ContainerBounds->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		WeaponMesh->SetRelativeLocation(VisualOffset - FVector(0, 0, -20));
+		ContainerMesh->SetRelativeLocation(VisualOffset - FVector(0, 0, -20));
+		if (bOpened && GetNetMode() != NM_DedicatedServer)
+		{
+			// 晚加入或重新显示时直接摆成全开。
+			DoorProgress = 1.f;
+			ApplyDoorPose();
+		}
 		return;
 	}
 	if (const auto* Def = Loose ? UExtractionItemDefinition::Get(LooseDefinition) : nullptr)
