@@ -445,6 +445,7 @@ void ULootingMainView::Refresh()
 	{
 		const auto* Own = Container(false);
 		const auto* Loot = Container(true);
+		if (I->Loot) SearchedLoot.Add(I->Loot.Get());
 		if (Own && (!bWasOpen || Own->Id != LastOwnId || Own->Revision != LastOwnRevision))
 		{
 			RebuildEquipment(EquipmentList, false);
@@ -529,7 +530,11 @@ void ULootingMainView::UpdatePrompt()
 			if (const auto* D = UExtractionItemDefinition::Get(I->Focus->LooseDefinition))
 				Label = D->
 				        Label.ToString();
-		Prompt = TEXT("E  ") + Label + (I->Focus->Loose ? TEXT(" · 拾取") : TEXT(" · 搜索"));
+		Prompt = TEXT("E  ") + Label + (I->Focus->Loose
+			                                ? TEXT(" · 拾取")
+			                                : SearchedLoot.Contains(I->Focus.Get())
+			                                ? TEXT(" · 再次查看（已搜过）")
+			                                : TEXT(" · 搜索"));
 	}
 	const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
 	const double Now = GS ? GS->GetServerWorldTimeSeconds() : 0;

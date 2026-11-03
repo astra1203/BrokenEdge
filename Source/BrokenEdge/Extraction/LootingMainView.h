@@ -138,4 +138,6 @@ private:
  FGuid LastOwnId, LastLootId;
  int32 LastOwnRevision=INDEX_NONE, LastLootRevision=INDEX_NONE;
  double SearchSeen=0, SearchStart=0;
+ /** 本局打开过的容器；交互提示据此标出“已搜过”。 */
+ TSet<TWeakObjectPtr<AActor>> SearchedLoot;
 };
