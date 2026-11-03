@@ -3,7 +3,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "InventoryWidgetBuilder.generated.h"
 
-/** Creates designer-editable inventory templates once; never replaces existing assets. */
+/** Builds the project's own inventory layout; existing templates are rebuilt in place at the same asset paths. */
 UCLASS()
 class STINGERTOOLS_API UInventoryWidgetBuilder : public UBlueprintFunctionLibrary
 {

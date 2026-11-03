@@ -26,6 +26,8 @@ public:
  UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly) TObjectPtr<UButton> ActionButton;
  UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly) TObjectPtr<USpinBox> SplitAmount;
  UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly) TObjectPtr<UProgressBar> Progress;
+ /** 卡片/格子/槽位的底板；悬停时提亮。 */
+ UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly) TObjectPtr<UBorder> Background;
  UPROPERTY(BlueprintReadOnly) FGuid ItemId;
  UPROPERTY(BlueprintReadOnly) bool bLoot = false;
  UPROPERTY(BlueprintReadOnly) int32 EquipmentSlot = -1;
@@ -33,12 +35,20 @@ public:
  UPROPERTY(Transient) TObjectPtr<ULootingMainView> Inventory;
  FVector2D GrabFraction = FVector2D::ZeroVector;
  void SetItem(const FExtractionItem& Item);
+ // 设置底板常态颜色；悬停时在此基础上提亮。
+ void SetBaseColor(FLinearColor Color);
  virtual void NativeOnInitialized() override;
  virtual FReply NativeOnMouseButtonDown(const FGeometry&, const FPointerEvent&) override;
  virtual void NativeOnDragDetected(const FGeometry&, const FPointerEvent&, UDragDropOperation*&) override;
  virtual bool NativeOnDrop(const FGeometry&, const FDragDropEvent&, UDragDropOperation*) override;
  virtual bool NativeOnDragOver(const FGeometry&, const FDragDropEvent&, UDragDropOperation*) override;
+ virtual void NativeOnMouseEnter(const FGeometry&, const FPointerEvent&) override;
+ virtual void NativeOnMouseLeave(const FPointerEvent&) override;
  UFUNCTION() void ClickAction();
+private:
+ FLinearColor BaseColor = FLinearColor::Transparent;
+ bool bHovered = false;
+ void ApplyBackground();
 };
 
 UCLASS()
@@ -77,6 +87,10 @@ public:
  UPROPERTY(meta=(BindWidget), BlueprintReadOnly) TObjectPtr<UTextBlock> StatusText;
  UPROPERTY(meta=(BindWidget), BlueprintReadOnly) TObjectPtr<UTextBlock> LootTitle;
  UPROPERTY(meta=(BindWidget), BlueprintReadOnly) TObjectPtr<UTextBlock> OwnTitle;
+ /** 携行物品总价值与占用格数。 */
+ UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly) TObjectPtr<UTextBlock> ValueText;
+ /** 当前物品的搜索进度。 */
+ UPROPERTY(meta=(BindWidgetOptional), BlueprintReadOnly) TObjectPtr<UProgressBar> SearchProgress;
  void Refresh();
  bool CancelDrag();
  bool SelectItem(FGuid Id, bool Loot);
@@ -86,6 +100,8 @@ public:
  void BeginDrag(ULootingWidgetPart* Source, UDragDropOperation*& Out);
  bool PlaceAt(FVector2D ScreenPosition, UDragDropOperation* Operation = nullptr);
  void UpdateDragRotation();
+ // 拖拽经过时更新旋转与落点预览。
+ void DragOver(FVector2D ScreenPosition);
  bool HasPendingPlacement() const { return bPendingPlacement; }
  virtual void NativeOnInitialized() override;
  virtual FReply NativeOnKeyDown(const FGeometry&, const FKeyEvent&) override;
@@ -105,6 +121,10 @@ private:
  ULootingWidgetPart* MakePart(TSubclassOf<ULootingWidgetPart> Class);
  void UpdatePrompt();
  void RotateDrag();
+ // 鼠标落点对应的放置请求；Canvas 为命中的容器或装备槽画布，At/Size 为预览框，未命中返回 false。
+ bool ResolveDrop(FVector2D Screen, FExtractionItemRequest& Out, UCanvasPanel*& Canvas, FVector2D& At, FVector2D& Size) const;
+ void HidePreview();
+ UPROPERTY(Transient) TObjectPtr<UBorder> DropPreview;
  UPROPERTY(Transient) TArray<TObjectPtr<ULootingWidgetPart>> EquipmentTargets;
  UPROPERTY(Transient) TObjectPtr<ULootingDragDropOperation> ActiveDrag;
  FGuid Selected;
@@ -113,4 +133,5 @@ private:
  uint32 LastSession=0;
  FGuid LastOwnId, LastLootId;
  int32 LastOwnRevision=INDEX_NONE, LastLootRevision=INDEX_NONE;
+ double SearchSeen=0, SearchStart=0;
 };

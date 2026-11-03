@@ -14,6 +14,8 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/VerticalBox.h"
 #include "Components/VerticalBoxSlot.h"
+#include "Components/HorizontalBox.h"
+#include "Components/HorizontalBoxSlot.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
 #include "Components/Border.h"
@@ -87,12 +89,39 @@ namespace
 void ULootingWidgetPart::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	ExtractionUIStyle::ApplyFont(this);
 	SetIsFocusable(true);
 	if (ActionButton) ActionButton->OnClicked.AddDynamic(this, &ThisClass::ClickAction);
 }
 
 void ULootingWidgetPart::ClickAction() { if (Inventory) Inventory->MenuAction(ActionIndex); }
+
+void ULootingWidgetPart::SetBaseColor(FLinearColor Color)
+{
+	BaseColor = Color;
+	ApplyBackground();
+}
+
+void ULootingWidgetPart::ApplyBackground()
+{
+	if (!Background || BaseColor.A <= 0) return;
+	FLinearColor Color = BaseColor;
+	if (bHovered) Color = FMath::Lerp(Color, FLinearColor::White, .08f).CopyWithNewOpacity(BaseColor.A);
+	Background->SetBrushColor(Color);
+}
+
+void ULootingWidgetPart::NativeOnMouseEnter(const FGeometry& G, const FPointerEvent& E)
+{
+	Super::NativeOnMouseEnter(G, E);
+	bHovered = true;
+	ApplyBackground();
+}
+
+void ULootingWidgetPart::NativeOnMouseLeave(const FPointerEvent& E)
+{
+	Super::NativeOnMouseLeave(E);
+	bHovered = false;
+	ApplyBackground();
+}
 
 void ULootingWidgetPart::SetItem(const FExtractionItem& Item)
 {
@@ -100,7 +129,8 @@ void ULootingWidgetPart::SetItem(const FExtractionItem& Item)
 	const auto* D = UExtractionItemDefinition::Get(Item.Definition);
 	auto* Texture = Icon && D && !D->Icon.IsNull() ? D->Icon.LoadSynchronous() : nullptr;
 	// 有图标时只显示图标（名称放进悬停提示），没有图标的物品退回显示名称。
-	Text(Label, D ? D->Label.ToString() : TEXT("未搜索"));
+	// 未揭示的物品只显示问号，搜索完成后才露出图标。
+	Text(Label, D ? D->Label.ToString() : TEXT("?"));
 	if (Label) Label->SetVisibility(Texture ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
 	const bool bWeapon = D && D->Kind == EExtractionItemKind::Weapon;
 	Text(Detail, bWeapon ? FString::Printf(TEXT("%d / %d"), Item.Magazine, D->MagazineCapacity)
@@ -124,10 +154,22 @@ void ULootingWidgetPart::SetItem(const FExtractionItem& Item)
 		}
 		Icon->SetVisibility(Texture ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
 	}
-	if (RarityBar) RarityBar->SetBrushColor(ExtractionUIStyle::Rarity(D ? D->DisplayRarity : 0));
+	const FLinearColor Rarity = ExtractionUIStyle::Rarity(D ? D->DisplayRarity : 0);
+	if (RarityBar)
+	{
+		RarityBar->SetBrushColor(Rarity);
+		RarityBar->SetVisibility(D ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
+	}
+	// 底板按品质轻微着色：深色打底，品质越高颜色越明显。
+	SetBaseColor(D
+		             ? FMath::Lerp(ExtractionUIStyle::Hex(TEXT("1A1E24")), Rarity, .14f + .03f * D->DisplayRarity).
+		             CopyWithNewOpacity(.96f)
+		             : ExtractionUIStyle::Hex(TEXT("15181D"), .96f));
 	if (Item.Id.IsValid())
 	{
 		auto Lines = ExtractionItems::WeaponDetails(Item);
+		if (D && D->SellValue > 0)
+			Lines.Insert(TEXT("价值 ¥") + FText::AsNumber(D->SellValue * FMath::Max(1, Item.Quantity)).ToString(), 0);
 		if (D) Lines.Insert(D->Label.ToString(), 0);
 		SetToolTipText(FText::FromString(FString::Join(Lines,TEXT("\n"))));
 	}
@@ -170,9 +212,9 @@ bool ULootingWidgetPart::NativeOnDrop(const FGeometry&, const FDragDropEvent& E,
 	return Inventory && Inventory->PlaceAt(E.GetScreenSpacePosition(), Op);
 }
 
-bool ULootingWidgetPart::NativeOnDragOver(const FGeometry&, const FDragDropEvent&, UDragDropOperation*)
+bool ULootingWidgetPart::NativeOnDragOver(const FGeometry&, const FDragDropEvent& E, UDragDropOperation*)
 {
-	if (Inventory) Inventory->UpdateDragRotation();
+	if (Inventory) Inventory->DragOver(E.GetScreenSpacePosition());
 	return Inventory != nullptr;
 }
 
@@ -209,7 +251,6 @@ ULootingWidgetPart* ULootingMainView::MakePart(TSubclassOf<ULootingWidgetPart> C
 void ULootingMainView::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	ExtractionUIStyle::ApplyFont(this);
 	SetIsFocusable(true);
 	for (auto* Part : {
 		     OwnContainer.Get(), LootContainer.Get(), ContextMenu.Get(), SplitDialog.Get(), InteractionPrompt.Get()
@@ -239,6 +280,7 @@ bool ULootingMainView::CancelDrag()
 	}
 	Selected.Invalidate();
 	bPendingPlacement = false;
+	HidePreview();
 	if (ContextMenu) ContextMenu->SetVisibility(ESlateVisibility::Collapsed);
 	if (SplitDialog) SplitDialog->SetVisibility(ESlateVisibility::Collapsed);
 	return Busy;
@@ -279,7 +321,9 @@ void ULootingMainView::RebuildEquipment(UVerticalBox* List, bool Loot)
 		TEXT("手持武器"), TEXT("背负武器"), TEXT("头盔"), TEXT("胸甲"), TEXT("胸挂"), TEXT("背包"), TEXT("安全箱")
 	};
 	// 携行容器多出胸挂、背包、安全箱三个槽；守卫等固定网格容器仍只有前四个。
+	// 两把武器各占一整行，其余装备两个一行。
 	const int32 SlotCount = C->GearGrids ? ExtractionGear::SafeSlot + 1 : 4;
+	UHorizontalBox* Row = nullptr;
 	for (int32 N = 0; N < SlotCount; ++N)
 	{
 		auto* EquipmentView = MakePart(SlotClass);
@@ -287,7 +331,21 @@ void ULootingMainView::RebuildEquipment(UVerticalBox* List, bool Loot)
 		EquipmentView->bLoot = Loot;
 		EquipmentView->EquipmentSlot = N;
 		Text(EquipmentView->Label, Names[N]);
-		List->AddChildToVerticalBox(EquipmentView)->SetPadding(FMargin(0, 0, 0, 12));
+		EquipmentView->SetBaseColor(ExtractionUIStyle::Hex(TEXT("12151A"), .92f));
+		if (EquipmentView->ContentSize) EquipmentView->ContentSize->SetHeightOverride(N < 2 ? 128 : 100);
+		if (N < 2) List->AddChildToVerticalBox(EquipmentView)->SetPadding(FMargin(0, 0, 0, 10));
+		else
+		{
+			if (!Row || Row->GetChildrenCount() == 2)
+			{
+				Row = WidgetTree->ConstructWidget<UHorizontalBox>();
+				List->AddChildToVerticalBox(Row)->SetPadding(FMargin(0, 0, 0, 10));
+			}
+			const bool bLeft = Row->GetChildrenCount() == 0;
+			auto* RowSlot = Row->AddChildToHorizontalBox(EquipmentView);
+			RowSlot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+			RowSlot->SetPadding(FMargin(bLeft ? 0 : 5, 0, bLeft ? 5 : 0, 0));
+		}
 		EquipmentTargets.Add(EquipmentView);
 		if (const auto* Item = C->InSlot(N); Item && EquipmentView->ItemCanvas)
 		{
@@ -333,7 +391,7 @@ void ULootingMainView::RebuildContainer(ULootingWidgetPart* Panel, bool Loot)
 			if (auto* Title = WidgetTree->ConstructWidget<UTextBlock>())
 			{
 				Text(Title, GridTitle(*C, View.Grid));
-				Title->SetColorAndOpacity(FSlateColor(FLinearColor(.75f, .78f, .8f)));
+				Title->SetColorAndOpacity(FSlateColor(ExtractionUIStyle::Muted()));
 				FSlateFontInfo Font = Title->GetFont();
 				Font.Size = FMath::Max(9, FMath::RoundToInt(CellSize * .22f));
 				Title->SetFont(Font);
@@ -398,16 +456,36 @@ void ULootingMainView::Refresh()
 			LastLootId = Loot ? Loot->Id : FGuid();
 			LastLootRevision = Loot ? Loot->Revision : INDEX_NONE;
 		}
-		int32 OwnCells = 0;
-		if (Own) for (const auto& Grid : ExtractionItems::Grids(*Own)) OwnCells += Grid.Cells;
-		Text(OwnTitle, Own ? FString::Printf(TEXT("携行  /  共 %d 格"), OwnCells) : TEXT("携行"));
+		int32 OwnCells = 0, UsedCells = 0;
+		int64 Value = 0;
+		if (Own)
+		{
+			for (const auto& Grid : ExtractionItems::Grids(*Own)) OwnCells += Grid.Cells;
+			for (const auto& Item : Own->Items)
+			{
+				if (Item.Slot < 0) UsedCells += Item.Extent().X * Item.Extent().Y;
+				if (const auto* D = UExtractionItemDefinition::Get(Item.Definition))
+					Value += int64(D->SellValue) * FMath::Max(1, Item.Quantity);
+			}
+		}
+		Text(OwnTitle, TEXT("携行"));
+		Text(ValueText, FString::Printf(TEXT("携行价值  ¥%s      已用 %d / %d 格"), *FText::AsNumber(Value).ToString(),
+		                                UsedCells, OwnCells));
 		const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
 		const double Now = GS ? GS->GetServerWorldTimeSeconds() : 0;
-		Text(LootTitle, I->Loot
-			                ? I->Loot->Label + (I->SearchEnd > Now
-				                                    ? FString::Printf(TEXT("  · 搜索中 %.1fs"), I->SearchEnd - Now)
-				                                    : TEXT(""))
-			                : TEXT("搜索容器以查看物资"));
+		const bool bSearching = I->Loot && I->SearchEnd > Now;
+		Text(LootTitle, I->Loot ? I->Loot->Label + (bSearching ? TEXT("  ·  搜索中") : TEXT("")) : TEXT("搜索容器以查看物资"));
+		if (SearchProgress)
+		{
+			// 每件物品单独计时：看到新的结束时间就从当前时刻重新开始走条。
+			if (bSearching && I->SearchEnd != SearchSeen)
+			{
+				SearchSeen = I->SearchEnd;
+				SearchStart = Now;
+			}
+			SearchProgress->SetVisibility(bSearching ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Hidden);
+			SearchProgress->SetPercent(bSearching ? (Now - SearchStart) / FMath::Max(.05, SearchSeen - SearchStart) : 0);
+		}
 		Text(StatusText, bPendingPlacement ? TEXT("选择目标格子放置拆分物品 · R 旋转 · Esc 取消") : PC()->ItemMessage);
 		if (!bWasOpen) SetUserFocus(GetOwningPlayer());
 		UpdateDragRotation();
@@ -484,7 +562,7 @@ void ULootingMainView::ShowContext(FVector2D Screen)
 		}
 	const auto& G = PopupCanvas->GetCachedGeometry();
 	FVector2D P = G.AbsoluteToLocal(Screen);
-	const FVector2D Limit = G.GetLocalSize() - FVector2D(300, Labels.Num() * 42 + 24);
+	const FVector2D Limit = G.GetLocalSize() - FVector2D(240, Labels.Num() * 40 + 12);
 	P.X = FMath::Clamp(P.X, 0., FMath::Max(0., Limit.X));
 	P.Y = FMath::Clamp(P.Y, 0., FMath::Max(0., Limit.Y));
 	if (auto* S = Cast<UCanvasPanelSlot>(ContextMenu->Slot)) S->SetPosition(P);
@@ -687,32 +765,24 @@ void ULootingMainView::UpdateDragRotation()
 	bRotationDown = Down;
 }
 
-// 处理拖拽松手或拆分后的点击放置；返回 true 表示事件已处理，不代表物品移动成功。
-bool ULootingMainView::PlaceAt(FVector2D Screen, UDragDropOperation* Operation)
+// 把鼠标落点换算成放置请求；只读，不提交。装备槽优先于容器网格命中。
+bool ULootingMainView::ResolveDrop(FVector2D Screen, FExtractionItemRequest& R, UCanvasPanel*& Canvas, FVector2D& At,
+                                   FVector2D& Size) const
 {
-	// 仅接收当前物品拖拽；没有拖拽且没有待放置物品时，不处理此次事件。
-	if (Operation && (Operation != ActiveDrag || !Cast<ULootingDragDropOperation>(Operation))) return false;
-	if (!ActiveDrag && !bPendingPlacement) return false;
-	auto* I = Interaction();
 	const auto* C = Container(SelectedLoot);
 	const auto* Item = C ? C->Find(Selected) : nullptr;
-	// 背包关闭、交互不可用或源物品已消失时，结束本次放置并清理拖拽状态。
-	if (!I || !I->InventoryOpen || !I->CanAct() || !Item)
-	{
-		CancelDrag();
-		return true;
-	}
-	auto R = Request();
+	if (!Item) return false;
+	R = Request();
 	// 使用鼠标指定的目标槽位或格子，关闭自动寻找空位。
 	R.AutoPlace = false;
-	// 装备槽优先于容器网格命中；命中后提交请求并结束本次拖拽。
 	for (const auto& Target : EquipmentTargets)
-		if (Contains(Target, Screen))
+		if (Contains(Target, Screen) && Target->ItemCanvas)
 		{
 			R.ToLoot = Target->bLoot;
 			R.Slot = Target->EquipmentSlot;
-			PC()->RequestItem(R);
-			CancelDrag();
+			Canvas = Target->ItemCanvas;
+			At = FVector2D::ZeroVector;
+			Size = Canvas->GetCachedGeometry().GetLocalSize();
 			return true;
 		}
 	// 依次检查自身容器和战利品容器，只处理鼠标所在的物品画布。
@@ -722,37 +792,107 @@ bool ULootingMainView::PlaceAt(FVector2D Screen, UDragDropOperation* Operation)
 		const auto* Target = Container(Side != 0);
 		if (!Panel || !Target || !Contains(Panel->ItemCanvas, Screen)) continue;
 		// 将屏幕位置转换为画布局部坐标，再按格子尺寸换算为网格单位。
-		const FVector2D Canvas = Panel->ItemCanvas->GetCachedGeometry().AbsoluteToLocal(Screen) / CellSize;
+		const FVector2D Local = Panel->ItemCanvas->GetCachedGeometry().AbsoluteToLocal(Screen) / CellSize;
 		FVector2D Extent;
 		const auto Views = GridLayout(*Target, Extent);
-		// 按纵向位置定位具体分区；未命中分区则结束查找，由函数末尾取消放置。
-		const auto* View = GridAt(Views, Canvas.Y);
-		if (!View) break;
+		// 按纵向位置定位具体分区。
+		const auto* View = GridAt(Views, Local.Y);
+		if (!View) return false;
 		// 换算到该分区自己的格子坐标；松手位置减去抓取点得到物品左上角。
-		const FVector2D Local(Canvas.X, Canvas.Y - View->Top);
+		const FVector2D InGrid(Local.X, Local.Y - View->Top);
 		// 旋转后交换宽高，并将抓取比例换算为格子偏移；点击放置时偏移为零。
 		const FIntPoint Ext = Rotated ? FIntPoint(Item->Size.Y, Item->Size.X) : Item->Size;
 		const FVector2D Offset = ActiveDrag ? ActiveDrag->GrabFraction * FVector2D(Ext) : FVector2D::ZeroVector;
 		R.ToLoot = Side != 0;
 		R.Slot = View->Grid.Section;
-		// 扣除抓取偏移后向下取整，得到物品左上角所在的目标格子。
-		R.Cell = FIntPoint(FMath::FloorToInt(Local.X - Offset.X), FMath::FloorToInt(Local.Y - Offset.Y));
-		// 用鼠标落点查找同分区内的其他物品作为合并候选，而非用左上角格子判断。
-		// MergeInto 仅记录候选物品，是否能合并仍由请求处理逻辑判定。
+		R.Cell = FIntPoint(FMath::FloorToInt(InGrid.X - Offset.X), FMath::FloorToInt(InGrid.Y - Offset.Y));
+		// 用鼠标落点查找同分区内的其他物品作为合并候选；能否合并仍由请求处理逻辑判定。
 		for (const auto& Other : Target->Items)
-			if (Other.Id.IsValid() && Other.Id != Selected && Other.Slot == View->Grid.Section && Local.X >= Other.Cell.X
-				&& Local.Y >= Other.Cell.Y && Local.X < Other.Cell.X + Other.Extent().X
-				&& Local.Y < Other.Cell.Y + Other.Extent().Y)
+			if (Other.Id.IsValid() && Other.Id != Selected && Other.Slot == View->Grid.Section && InGrid.X >= Other.Cell.X
+				&& InGrid.Y >= Other.Cell.Y && InGrid.X < Other.Cell.X + Other.Extent().X
+				&& InGrid.Y < Other.Cell.Y + Other.Extent().Y)
 			{
 				R.MergeInto = Other.Id;
 				break;
 			}
-		// 提交放置请求后清理本地拖拽状态，实际结果由请求处理逻辑决定。
-		PC()->RequestItem(R);
-		CancelDrag();
+		Canvas = Panel->ItemCanvas;
+		At = FVector2D(R.Cell.X, View->Top + R.Cell.Y) * CellSize;
+		Size = FVector2D(Ext) * CellSize - FVector2D(2);
 		return true;
 	}
-	// 未命中有效目标时取消放置；此次事件仍视为已处理。
+	return false;
+}
+
+void ULootingMainView::HidePreview()
+{
+	if (DropPreview) DropPreview->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void ULootingMainView::DragOver(FVector2D Screen)
+{
+	UpdateDragRotation();
+	FExtractionItemRequest R;
+	UCanvasPanel* Canvas = nullptr;
+	FVector2D At, Size;
+	if ((!ActiveDrag && !bPendingPlacement) || !WidgetTree || !ResolveDrop(Screen, R, Canvas, At, Size))
+	{
+		HidePreview();
+		return;
+	}
+	// 落点预览：可放下为绿色，可合并为琥珀色，放不下为红色。只用本地快照判断，最终结果以服务器为准。
+	const auto* Source = Container(SelectedLoot);
+	const auto* Item = Source ? Source->Find(Selected) : nullptr;
+	const auto* Target = Container(R.ToLoot);
+	bool bValid = false;
+	if (Item && Target && !R.MergeInto.IsValid())
+	{
+		FExtractionContainer Copy = *Target;
+		// 整组移动时原位置会空出来；拆分时原物品仍在，不能扣掉。
+		if (R.ToLoot == SelectedLoot && R.Quantity >= Item->Quantity)
+			Copy.Items.RemoveAll([this](const FExtractionItem& X) { return X.Id == Selected; });
+		FExtractionItem Moved = *Item;
+		Moved.Slot = R.Slot;
+		Moved.Cell = R.Cell;
+		Moved.Rotated = R.Rotated;
+		bValid = ExtractionItems::Fits(Copy, Moved);
+	}
+	const FLinearColor Color = R.MergeInto.IsValid()
+		                           ? ExtractionUIStyle::Accent()
+		                           : bValid
+		                           ? ExtractionUIStyle::Hex(TEXT("5DBB72"))
+		                           : ExtractionUIStyle::Hex(TEXT("EA5A50"));
+	if (!DropPreview)
+	{
+		DropPreview = WidgetTree->ConstructWidget<UBorder>();
+		DropPreview->SetBrush(ExtractionUIStyle::Panel(FLinearColor::White, 3.f, FLinearColor::White, 2.f));
+	}
+	DropPreview->SetBrushColor(Color.CopyWithNewOpacity(.3f));
+	if (DropPreview->GetParent() != Canvas)
+	{
+		DropPreview->RemoveFromParent();
+		Canvas->AddChildToCanvas(DropPreview)->SetZOrder(100);
+	}
+	if (auto* S = Cast<UCanvasPanelSlot>(DropPreview->Slot))
+	{
+		S->SetPosition(At);
+		S->SetSize(Size);
+	}
+	DropPreview->SetVisibility(ESlateVisibility::HitTestInvisible);
+}
+
+// 处理拖拽松手或拆分后的点击放置；返回 true 表示事件已处理，不代表物品移动成功。
+bool ULootingMainView::PlaceAt(FVector2D Screen, UDragDropOperation* Operation)
+{
+	// 仅接收当前物品拖拽；没有拖拽且没有待放置物品时，不处理此次事件。
+	if (Operation && (Operation != ActiveDrag || !Cast<ULootingDragDropOperation>(Operation))) return false;
+	if (!ActiveDrag && !bPendingPlacement) return false;
+	// 背包关闭、交互不可用、源物品已消失或未命中目标时只结束本次放置。
+	const auto* I = Interaction();
+	FExtractionItemRequest R;
+	UCanvasPanel* Canvas = nullptr;
+	FVector2D At, Size;
+	if (I && I->InventoryOpen && I->CanAct() && ResolveDrop(Screen, R, Canvas, At, Size)) PC()->RequestItem(R);
+	// 实际结果由请求处理逻辑决定。
 	CancelDrag();
 	return true;
 }
@@ -818,8 +958,8 @@ bool ULootingMainView::NativeOnDrop(const FGeometry&, const FDragDropEvent& E, U
 	return PlaceAt(E.GetScreenSpacePosition(), Op);
 }
 
-bool ULootingMainView::NativeOnDragOver(const FGeometry&, const FDragDropEvent&, UDragDropOperation*)
+bool ULootingMainView::NativeOnDragOver(const FGeometry&, const FDragDropEvent& E, UDragDropOperation*)
 {
-	UpdateDragRotation();
+	DragOver(E.GetScreenSpacePosition());
 	return ActiveDrag != nullptr;
 }

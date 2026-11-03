@@ -1,5 +1,6 @@
 #include "InventoryWidgetBuilder.h"
 #include "BrokenEdge/Extraction/LootingMainView.h"
+#include "BrokenEdge/Extraction/ExtractionUIStyle.h"
 #include "Blueprint/WidgetTree.h"
 #include "Blueprint/WidgetBlueprintGeneratedClass.h"
 #include "WidgetBlueprint.h"
@@ -20,6 +21,7 @@
 #include "Components/VerticalBoxSlot.h"
 #include "Components/ScrollBox.h"
 #include "Components/Button.h"
+#include "Components/ButtonSlot.h"
 #include "Components/SpinBox.h"
 #include "Components/ProgressBar.h"
 #include "UObject/SavePackage.h"
@@ -42,30 +44,46 @@
 namespace
 {
 	const FString Folder = TEXT("/Game/UI/Looting/");
-	FLinearColor Surface(.025f, .035f, .04f, .96f), Muted(.55f, .62f, .64f, 1), Accent(.22f, .85f, .7f, 1);
+	// 项目自有界面风格：石墨色圆角面板、细描边、琥珀色强调，不使用任何贴图。
+	const FLinearColor Screen = ExtractionUIStyle::Hex(TEXT("07090C"), .9f);
+	const FLinearColor Surface = ExtractionUIStyle::Hex(TEXT("0E1115"), .94f);
+	const FLinearColor CellColor = ExtractionUIStyle::Hex(TEXT("161A20"), .92f);
+	const FLinearColor Line = FLinearColor(1, 1, 1, .07f);
 
 	template <class T>
 	T* W(UWidgetTree* Tree, FName Name = NAME_None) { return Tree->ConstructWidget<T>(T::StaticClass(), Name); }
 
-	UTextBlock* Label(UWidgetTree* T, FName Name, const FString& Value, int32 Size = 20,
-	                  FLinearColor Color = FLinearColor::White)
+	UTextBlock* Label(UWidgetTree* T, FName Name, const FString& Value, int32 Size = 18,
+	                  FLinearColor Color = FLinearColor::White, bool bBold = false)
 	{
 		auto* X = W<UTextBlock>(T, Name);
 		X->SetText(FText::FromString(Value));
-		auto Font = X->GetFont();
-		Font.Size = Size;
-		X->SetFont(Font);
+		X->SetFont(ExtractionUIStyle::Font(Size, bBold));
 		X->SetColorAndOpacity(Color);
 		X->SetVisibility(ESlateVisibility::HitTestInvisible);
 		return X;
 	}
 
-	UBorder* Border(UWidgetTree* T, FName Name, FLinearColor Color)
+	// 圆角底板：形状与描边放在笔刷里，填充色走 BrushColor，运行时可单独改色（悬停、品质）。
+	UBorder* Border(UWidgetTree* T, FName Name, FLinearColor Color, float Radius = 4.f, FLinearColor Outline = Line,
+	                FMargin Padding = FMargin(0))
 	{
 		auto* B = W<UBorder>(T, Name);
+		B->SetBrush(ExtractionUIStyle::Panel(FLinearColor::White, Radius, Outline));
 		B->SetBrushColor(Color);
-		B->SetPadding(FMargin(10));
+		B->SetPadding(Padding);
 		return B;
+	}
+
+	FButtonStyle ButtonStyle(FLinearColor Normal, FLinearColor Hovered, FLinearColor Pressed)
+	{
+		FButtonStyle Style;
+		Style.SetNormal(ExtractionUIStyle::Panel(Normal, 3.f));
+		Style.SetHovered(ExtractionUIStyle::Panel(Hovered, 3.f));
+		Style.SetPressed(ExtractionUIStyle::Panel(Pressed, 3.f));
+		Style.SetNormalPadding(FMargin(12, 0));
+		Style.SetPressedPadding(FMargin(12, 0));
+		return Style;
 	}
 
 	void At(UCanvasPanel* C, UWidget* X, FVector2D Position, FVector2D Size, int32 Z = 0)
@@ -84,22 +102,46 @@ namespace
 		S->SetZOrder(Z);
 	}
 
+	UOverlaySlot* Stack(UOverlay* O, UWidget* X, EHorizontalAlignment H = HAlign_Fill, EVerticalAlignment V = VAlign_Fill,
+	                    FMargin Padding = FMargin(0))
+	{
+		auto* S = O->AddChildToOverlay(X);
+		S->SetHorizontalAlignment(H);
+		S->SetVerticalAlignment(V);
+		S->SetPadding(Padding);
+		return S;
+	}
+
+	// 新建或就地重建控件蓝图：资产路径不变，引用它的类与关卡不受影响，控件树整体换成新布局。
 	UWidgetBlueprint* Create(const TCHAR* Name, UClass* Parent, TFunction<void(UWidgetTree*)> Layout,
 	                         TArray<UWidgetBlueprint*>& All)
 	{
 		const FString Path = Folder + Name;
-		if (auto* Existing = LoadObject<UWidgetBlueprint>(nullptr, *(Path + TEXT(".") + Name)))
+		auto* BP = LoadObject<UWidgetBlueprint>(nullptr, *(Path + TEXT(".") + Name));
+		if (BP)
 		{
-			All.Add(Existing);
-			return Existing;
+			TArray<UWidget*> Old;
+			BP->WidgetTree->GetAllWidgets(Old);
+			for (UWidget* X : Old)
+			{
+				X->Rename(nullptr, GetTransientPackage(), REN_DontCreateRedirectors | REN_NonTransactional);
+				X->MarkAsGarbage();
+			}
+			BP->WidgetTree->RootWidget = nullptr;
 		}
-		auto* Package = CreatePackage(*Path);
-		auto* BP = CastChecked<UWidgetBlueprint>(FKismetEditorUtilities::CreateBlueprint(
-			Parent, Package, FName(Name), BPTYPE_Normal, UWidgetBlueprint::StaticClass(),
-			UWidgetBlueprintGeneratedClass::StaticClass()));
+		else
+		{
+			auto* Package = CreatePackage(*Path);
+			BP = CastChecked<UWidgetBlueprint>(FKismetEditorUtilities::CreateBlueprint(
+				Parent, Package, FName(Name), BPTYPE_Normal, UWidgetBlueprint::StaticClass(),
+				UWidgetBlueprintGeneratedClass::StaticClass()));
+			FAssetRegistryModule::AssetCreated(BP);
+		}
 		Layout(BP->WidgetTree);
+		BP->WidgetVariableNameToGuidMap.Reset();
+		BP->WidgetTree->ForEachWidget([BP](UWidget* X) { BP->OnVariableAdded(X->GetFName()); });
+		FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(BP);
 		FKismetEditorUtilities::CompileBlueprint(BP);
-		FAssetRegistryModule::AssetCreated(BP);
 		BP->MarkPackageDirty();
 		All.Add(BP);
 		return BP;
@@ -122,133 +164,87 @@ namespace
 		return UPackage::SavePackage(BP->GetOutermost(), BP, *Filename, Args);
 	}
 
-	// Upgrade only the affected slots; retain the rest of each designer-authored tree.
-	bool RepairWeaponLayout(UWidgetBlueprint* Item, UWidgetBlueprint* Equipment, UWidgetBlueprint* Container)
+	// 一列面板：圆角底板 + 左侧强调竖条 + 标题，返回内容区矩形。
+	FBox2D Column(UWidgetTree* T, UCanvasPanel* Body, FVector2D Position, FVector2D Size, UTextBlock* Title)
 	{
-		auto FillOverlay = [](UWidgetBlueprint* BP, const TCHAR* Name)
-		{
-			auto* Widget = BP->WidgetTree->FindWidget(FName(Name));
-			auto* Slot = Widget ? Cast<UOverlaySlot>(Widget->Slot) : nullptr;
-			if (!Slot) return false;
-			if (Slot->GetHorizontalAlignment() != HAlign_Fill || Slot->GetVerticalAlignment() != VAlign_Fill)
-			{
-				Slot->SetHorizontalAlignment(HAlign_Fill);
-				Slot->SetVerticalAlignment(VAlign_Fill);
-				BP->MarkPackageDirty();
-			}
-			return true;
-		};
-		auto* Canvas = Cast<UCanvasPanel>(Equipment->WidgetTree->FindWidget(TEXT("ItemCanvas")));
-		auto* CanvasSlot = Canvas ? Cast<UOverlaySlot>(Canvas->Slot) : nullptr;
-		auto* Header = Cast<UTextBlock>(Equipment->WidgetTree->FindWidget(TEXT("Label")));
-		auto* HeaderSlot = Header ? Cast<UOverlaySlot>(Header->Slot) : nullptr;
-		auto* Size = Cast<USizeBox>(Equipment->WidgetTree->FindWidget(TEXT("ContentSize")));
-		if (!CanvasSlot || !HeaderSlot || !Size) return false;
-		const bool LegacyEquipment = CanvasSlot->GetHorizontalAlignment() != HAlign_Fill ||
-			CanvasSlot->GetVerticalAlignment() != VAlign_Fill;
-		if (!FillOverlay(Equipment, TEXT("ItemCanvas")) || !FillOverlay(Container, TEXT("GridCanvas")) ||
-			!FillOverlay(Container, TEXT("ItemCanvas")))
-			return false;
-		if (LegacyEquipment)
-		{
-			CanvasSlot->SetPadding(FMargin(0, 26, 0, 0));
-			HeaderSlot->SetVerticalAlignment(VAlign_Top);
-			Size->SetHeightOverride(FMath::Max(176.f, Size->GetHeightOverride()));
-		}
-		auto* Icon = Cast<UImage>(Item->WidgetTree->FindWidget(TEXT("Icon")));
-		if (!Icon) return false;
-		if (!Item->WidgetTree->FindWidget(TEXT("WeaponIconFit")))
-		{
-			auto* Overlay = Cast<UOverlay>(Icon->GetParent());
-			if (!Overlay) return false;
-			Icon->RemoveFromParent();
-			auto* Fit = W<UScaleBox>(Item->WidgetTree, TEXT("WeaponIconFit"));
-			Item->OnVariableAdded(Fit->GetFName());
-			Fit->SetStretch(EStretch::ScaleToFit);
-			Fit->SetVisibility(ESlateVisibility::HitTestInvisible);
-			Fit->SetContent(Icon);
-			auto* Inner = CastChecked<UScaleBoxSlot>(Icon->Slot);
-			Inner->SetHorizontalAlignment(HAlign_Center);
-			Inner->SetVerticalAlignment(VAlign_Center);
-			auto* FitSlot = Overlay->AddChildToOverlay(Fit);
-			FitSlot->SetHorizontalAlignment(HAlign_Fill);
-			FitSlot->SetVerticalAlignment(VAlign_Fill);
-			FitSlot->SetPadding(FMargin(8, 24, 8, 24));
-			if (auto* Title = Cast<UTextBlock>(Item->WidgetTree->FindWidget(TEXT("Label"))))
-				Title->SetAutoWrapText(false);
-			FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(Item);
-		}
-		return true;
+		At(Body, Border(T, NAME_None, Surface, 6.f), Position, Size);
+		At(Body, Border(T, NAME_None, ExtractionUIStyle::Accent(), 1.f, FLinearColor::Transparent),
+		   Position + FVector2D(18, 22), FVector2D(4, 20), 1);
+		At(Body, Title, Position + FVector2D(32, 17), FVector2D(Size.X - 50, 30), 1);
+		return FBox2D(Position + FVector2D(16, 62), Position + Size - FVector2D(16, 16));
 	}
 }
 
 FString UInventoryWidgetBuilder::CreateInventoryWidgets()
 {
 	TArray<UWidgetBlueprint*> All;
+	const FLinearColor Muted = ExtractionUIStyle::Muted();
 	auto* Item = Create(TEXT("WBP_LootingSlotView"), ULootingWidgetPart::StaticClass(), [](UWidgetTree* T)
 	{
 		auto* Size = W<USizeBox>(T,TEXT("ContentSize"));
 		T->RootWidget = Size;
-		auto* BG = Border(T,TEXT("CardBackground"), FLinearColor(.07f, .095f, .10f, 1));
-		BG->SetPadding(FMargin(4));
+		auto* BG = Border(T,TEXT("Background"), CellColor, 3.f, FLinearColor(1, 1, 1, .06f));
 		Size->SetContent(BG);
 		auto* O = W<UOverlay>(T);
 		BG->SetContent(O);
+		auto* Fit = W<UScaleBox>(T,TEXT("WeaponIconFit"));
+		Fit->SetStretch(EStretch::ScaleToFit);
+		Fit->SetVisibility(ESlateVisibility::HitTestInvisible);
 		auto* Image = W<UImage>(T,TEXT("Icon"));
 		Image->SetVisibility(ESlateVisibility::HitTestInvisible);
-		O->AddChildToOverlay(Image)->SetPadding(FMargin(8, 18, 8, 24));
-		auto* Bar = Border(T,TEXT("RarityBar"), Accent);
-		Bar->SetPadding(FMargin(0));
-		auto* BS = W<USizeBox>(T);
-		BS->SetHeightOverride(3);
-		BS->SetContent(Bar);
-		O->AddChildToOverlay(BS)->SetVerticalAlignment(VAlign_Top);
-		auto* Title = Label(T,TEXT("Label"),TEXT("物品名称"), 13);
+		Fit->SetContent(Image);
+		auto* Inner = CastChecked<UScaleBoxSlot>(Image->Slot);
+		Inner->SetHorizontalAlignment(HAlign_Center);
+		Inner->SetVerticalAlignment(VAlign_Center);
+		Stack(O, Fit, HAlign_Fill, VAlign_Fill, FMargin(6, 6, 6, 9));
+		auto* Bar = Border(T,TEXT("RarityBar"), ExtractionUIStyle::Rarity(0), 1.f, FLinearColor::Transparent);
+		auto* BarSize = W<USizeBox>(T);
+		BarSize->SetHeightOverride(3);
+		BarSize->SetContent(Bar);
+		Stack(O, BarSize, HAlign_Fill, VAlign_Bottom, FMargin(4, 0, 4, 3));
+		auto* Title = Label(T,TEXT("Label"),TEXT("?"), 13, ExtractionUIStyle::Muted());
 		Title->SetAutoWrapText(true);
-		auto* TS = O->AddChildToOverlay(Title);
-		TS->SetVerticalAlignment(VAlign_Top);
-		TS->SetPadding(FMargin(4, 5, 4, 0));
-		auto* Detail = Label(T,TEXT("Detail"),TEXT("×1"), 14);
-		auto* DS = O->AddChildToOverlay(Detail);
-		DS->SetVerticalAlignment(VAlign_Bottom);
-		DS->SetHorizontalAlignment(HAlign_Right);
-		DS->SetPadding(FMargin(4));
+		Title->SetJustification(ETextJustify::Center);
+		Stack(O, Title, HAlign_Fill, VAlign_Center, FMargin(4));
+		Stack(O, Label(T,TEXT("Detail"),TEXT("×1"), 12), HAlign_Right, VAlign_Bottom, FMargin(0, 0, 6, 7));
 	}, All);
 	auto* Cell = Create(TEXT("WBP_LootingGridCell"), ULootingWidgetPart::StaticClass(), [](UWidgetTree* T)
 	{
-		T->RootWidget = Border(T,TEXT("CellBackground"), FLinearColor(.055f, .075f, .08f, 1));
+		T->RootWidget = Border(T,TEXT("Background"), CellColor.CopyWithNewOpacity(.75f), 2.f, FLinearColor(1, 1, 1, .045f));
 	}, All);
-	auto* Slot = Create(TEXT("WBP_LootEquipSlot"), ULootingWidgetPart::StaticClass(), [](UWidgetTree* T)
+	auto* Slot = Create(TEXT("WBP_LootEquipSlot"), ULootingWidgetPart::StaticClass(), [Muted](UWidgetTree* T)
 	{
 		auto* S = W<USizeBox>(T,TEXT("ContentSize"));
-		S->SetHeightOverride(108);
+		S->SetHeightOverride(100);
 		T->RootWidget = S;
-		auto* BG = Border(T,TEXT("SlotBackground"), Surface);
+		auto* BG = Border(T,TEXT("Background"), ExtractionUIStyle::Hex(TEXT("12151A"), .92f), 4.f, Line, FMargin(8, 6, 8, 8));
 		S->SetContent(BG);
 		auto* O = W<UOverlay>(T);
 		BG->SetContent(O);
-		O->AddChildToOverlay(Label(T,TEXT("Label"),TEXT("装备槽"), 18, Muted))->SetVerticalAlignment(VAlign_Center);
-		O->AddChildToOverlay(W<UCanvasPanel>(T,TEXT("ItemCanvas")));
+		Stack(O, Label(T,TEXT("Label"),TEXT("装备槽"), 12, Muted), HAlign_Left, VAlign_Top);
+		Stack(O, W<UCanvasPanel>(T,TEXT("ItemCanvas")), HAlign_Fill, VAlign_Fill, FMargin(0, 20, 0, 0));
 	}, All);
 	auto* Action = Create(TEXT("WBP_LootingMenuAction"), ULootingWidgetPart::StaticClass(), [](UWidgetTree* T)
 	{
 		auto* S = W<USizeBox>(T);
-		S->SetHeightOverride(42);
+		S->SetHeightOverride(40);
 		T->RootWidget = S;
 		auto* B = W<UButton>(T,TEXT("ActionButton"));
+		B->SetStyle(ButtonStyle(FLinearColor::Transparent, ExtractionUIStyle::Accent(.18f), ExtractionUIStyle::Accent(.3f)));
 		S->SetContent(B);
-		B->SetBackgroundColor(FLinearColor(.06f, .09f, .10f, 1));
-		B->SetContent(Label(T,TEXT("Label"),TEXT("操作"), 18));
+		auto* Text = Label(T,TEXT("Label"),TEXT("操作"), 15);
+		B->SetContent(Text);
+		if (auto* BS = Cast<UButtonSlot>(Text->Slot)) BS->SetHorizontalAlignment(HAlign_Left);
 	}, All);
 	auto* Container = Create(TEXT("WBP_LootingBackpackV2_Pc"), ULootingWidgetPart::StaticClass(), [](UWidgetTree* T)
 	{
-		auto* BG = Border(T,TEXT("ContainerBackground"), Surface);
+		auto* BG = Border(T,TEXT("Background"), FLinearColor::Transparent, 0.f, FLinearColor::Transparent);
 		T->RootWidget = BG;
 		auto* Scroll = W<UScrollBox>(T);
 		BG->SetContent(Scroll);
 		auto* V = W<UVerticalBox>(T);
 		Scroll->AddChild(V);
-		V->AddChildToVerticalBox(W<UVerticalBox>(T,TEXT("Entries")));
+		V->AddChildToVerticalBox(W<UVerticalBox>(T,TEXT("Entries")))->SetPadding(FMargin(0, 0, 0, 6));
 		auto* Size = W<USizeBox>(T,TEXT("ContentSize"));
 		Size->SetWidthOverride(384);
 		Size->SetHeightOverride(256);
@@ -257,64 +253,68 @@ FString UInventoryWidgetBuilder::CreateInventoryWidgets()
 		Size->SetContent(O);
 		auto* Cells = W<UCanvasPanel>(T,TEXT("GridCanvas"));
 		Cells->SetVisibility(ESlateVisibility::HitTestInvisible);
-		O->AddChildToOverlay(Cells);
-		O->AddChildToOverlay(W<UCanvasPanel>(T,TEXT("ItemCanvas")));
+		Stack(O, Cells);
+		Stack(O, W<UCanvasPanel>(T,TEXT("ItemCanvas")));
 	}, All);
 	auto* Menu = Create(TEXT("WBP_LootingContextMenu"), ULootingWidgetPart::StaticClass(), [](UWidgetTree* T)
 	{
 		auto* S = W<USizeBox>(T);
-		S->SetWidthOverride(300);
+		S->SetWidthOverride(240);
 		S->SetMaxDesiredHeight(700);
 		T->RootWidget = S;
-		auto* B = Border(T,TEXT("MenuBackground"), FLinearColor(.035f, .055f, .06f, 1));
+		auto* B = Border(T,TEXT("Background"), ExtractionUIStyle::Hex(TEXT("101318"), .98f), 5.f,
+		                 FLinearColor(1, 1, 1, .1f), FMargin(6));
 		S->SetContent(B);
 		auto* Scroll = W<UScrollBox>(T);
 		B->SetContent(Scroll);
 		Scroll->AddChild(W<UVerticalBox>(T,TEXT("Entries")));
 	}, All);
-	auto* Split = Create(TEXT("WBP_LootingSplitDialog"), ULootingWidgetPart::StaticClass(), [](UWidgetTree* T)
+	auto* Split = Create(TEXT("WBP_LootingSplitDialog"), ULootingWidgetPart::StaticClass(), [Muted](UWidgetTree* T)
 	{
-		auto* B = Border(T,TEXT("SplitBackground"), Surface);
-		B->SetPadding(FMargin(28));
+		auto* B = Border(T,TEXT("Background"), ExtractionUIStyle::Hex(TEXT("101318"), .98f), 6.f,
+		                 FLinearColor(1, 1, 1, .1f), FMargin(26));
 		T->RootWidget = B;
 		auto* V = W<UVerticalBox>(T);
 		B->SetContent(V);
-		V->AddChildToVerticalBox(Label(T,TEXT("Label"),TEXT("拆分数量"), 26));
+		V->AddChildToVerticalBox(Label(T,TEXT("Label"),TEXT("拆分数量"), 22, FLinearColor::White, true));
 		auto* Spin = W<USpinBox>(T,TEXT("SplitAmount"));
 		Spin->SetDelta(1);
 		Spin->SetMinValue(1);
 		Spin->SetMaxValue(99);
-		V->AddChildToVerticalBox(Spin)->SetPadding(FMargin(0, 24));
+		V->AddChildToVerticalBox(Spin)->SetPadding(FMargin(0, 20));
 		auto* Button = W<UButton>(T,TEXT("ActionButton"));
-		Button->SetContent(Label(T, NAME_None,TEXT("确认并选择目标格子"), 20));
-		V->AddChildToVerticalBox(Button);
-		V->AddChildToVerticalBox(Label(T,TEXT("Detail"),TEXT("Enter 确认 · Esc 取消"), 16, Muted))->SetPadding(
-			FMargin(0, 16, 0, 0));
+		Button->SetStyle(ButtonStyle(ExtractionUIStyle::Accent(.9f), ExtractionUIStyle::Accent(), ExtractionUIStyle::Accent(.75f)));
+		auto* Confirm = Label(T, NAME_None,TEXT("确认并选择目标格子"), 16, ExtractionUIStyle::Hex(TEXT("15110A")), true);
+		Button->SetContent(Confirm);
+		auto* ButtonSize = W<USizeBox>(T);
+		ButtonSize->SetHeightOverride(44);
+		ButtonSize->SetContent(Button);
+		V->AddChildToVerticalBox(ButtonSize);
+		V->AddChildToVerticalBox(Label(T,TEXT("Detail"),TEXT("Enter 确认 · Esc 取消"), 14, Muted))->SetPadding(
+			FMargin(0, 14, 0, 0));
 	}, All);
-	auto* Prompt = Create(TEXT("WBP_LootingInteractionPrompt"), ULootingWidgetPart::StaticClass(),
-	                      [](UWidgetTree* T)
-	                      {
-		                      auto* V = W<UVerticalBox>(T);
-		                      T->RootWidget = V;
-		                      auto* L = Label(T,TEXT("Label"),TEXT("E 交互"), 22);
-		                      L->SetJustification(ETextJustify::Center);
-		                      V->AddChildToVerticalBox(L);
-		                      auto* P = W<UProgressBar>(T,TEXT("Progress"));
-		                      P->SetFillColorAndOpacity(Accent);
-		                      auto* S = W<USizeBox>(T);
-		                      S->SetHeightOverride(6);
-		                      S->SetContent(P);
-		                      V->AddChildToVerticalBox(S)->SetPadding(FMargin(90, 14));
-		                      auto* D = Label(T,TEXT("Detail"),TEXT(""), 18, FLinearColor(1, .7f, .3f, 1));
-		                      D->SetJustification(ETextJustify::Center);
-		                      V->AddChildToVerticalBox(D);
-		                      auto* Hint = Label(T, NAME_None,TEXT("Tab 背包    H 医疗    E 交互    1 当前枪    2 切枪    3 战术刀"),
-		                                         16, Muted);
-		                      Hint->SetJustification(ETextJustify::Center);
-		                      V->AddChildToVerticalBox(Hint)->SetPadding(FMargin(0, 16));
-	                      }, All);
-	const bool HadRoot = FindPackage(nullptr, *(Folder + TEXT("WBP_LootingPickupView_Pc"))) ||
-		FPackageName::DoesPackageExist(Folder + TEXT("WBP_LootingPickupView_Pc"));
+	auto* Prompt = Create(TEXT("WBP_LootingInteractionPrompt"), ULootingWidgetPart::StaticClass(), [Muted](UWidgetTree* T)
+	{
+		auto* V = W<UVerticalBox>(T);
+		T->RootWidget = V;
+		auto* L = Label(T,TEXT("Label"),TEXT("E 交互"), 20, FLinearColor::White, true);
+		L->SetJustification(ETextJustify::Center);
+		L->SetShadowOffset(FVector2D(1, 1));
+		L->SetShadowColorAndOpacity(FLinearColor(0, 0, 0, .7f));
+		V->AddChildToVerticalBox(L);
+		auto* P = W<UProgressBar>(T,TEXT("Progress"));
+		P->SetFillColorAndOpacity(ExtractionUIStyle::Accent());
+		auto* S = W<USizeBox>(T);
+		S->SetHeightOverride(4);
+		S->SetContent(P);
+		V->AddChildToVerticalBox(S)->SetPadding(FMargin(120, 12));
+		auto* D = Label(T,TEXT("Detail"),TEXT(""), 16, ExtractionUIStyle::Accent());
+		D->SetJustification(ETextJustify::Center);
+		V->AddChildToVerticalBox(D);
+		auto* Hint = Label(T, NAME_None,TEXT("Tab 背包    H 医疗    E 交互    1 当前枪    2 切枪    3 战术刀"), 14, Muted);
+		Hint->SetJustification(ETextJustify::Center);
+		V->AddChildToVerticalBox(Hint)->SetPadding(FMargin(0, 14));
+	}, All);
 	auto* Root = Create(TEXT("WBP_LootingPickupView_Pc"), ULootingMainView::StaticClass(), [&](UWidgetTree* T)
 	{
 		auto* Scale = W<UScaleBox>(T);
@@ -328,24 +328,37 @@ FString UInventoryWidgetBuilder::CreateInventoryWidgets()
 		Size->SetContent(Canvas);
 		auto* Body = W<UCanvasPanel>(T,TEXT("InventoryBody"));
 		Fill(Canvas, Body);
-		auto* BG = Border(T,TEXT("ScreenBackground"), FLinearColor(.008f, .015f, .02f, .94f));
-		Fill(Body, BG);
-		At(Body, Label(T, NAME_None,TEXT("战地物资"), 38), FVector2D(80, 65), FVector2D(700, 60));
-		At(Body, Label(T, NAME_None,TEXT("装备"), 25, Accent), FVector2D(80, 150), FVector2D(430, 45));
-		At(Body, Label(T,TEXT("OwnTitle"),TEXT("背包"), 25, Accent), FVector2D(550, 150), FVector2D(500, 45));
-		At(Body, Label(T,TEXT("LootTitle"),TEXT("战利品 / 搜索容器"), 25, Accent), FVector2D(1090, 150), FVector2D(750, 45));
-		auto* EquipBG = Border(T,TEXT("EquipmentBackground"), Surface);
-		At(Body, EquipBG, FVector2D(80, 210), FVector2D(430, 670));
+		auto* Back = W<UBorder>(T,TEXT("ScreenBackground"));
+		Back->SetBrushColor(Screen);
+		Fill(Body, Back);
+		// 顶栏：标题、携行价值、关闭提示，下方一条分隔线。
+		At(Body, Label(T, NAME_None,TEXT("背包"), 34, FLinearColor::White, true), FVector2D(80, 44), FVector2D(400, 50));
+		At(Body, Label(T,TEXT("ValueText"),TEXT(""), 17, Muted), FVector2D(80, 96), FVector2D(1000, 30));
+		auto* Close = Label(T, NAME_None,TEXT("Tab / Esc 关闭"), 15, Muted);
+		Close->SetJustification(ETextJustify::Right);
+		At(Body, Close, FVector2D(1540, 60), FVector2D(300, 30));
+		At(Body, Border(T, NAME_None, Line, 0.f, FLinearColor::Transparent), FVector2D(80, 140), FVector2D(1760, 1));
+		// 三列：装备、携行网格、战利品/搜索容器。
+		const FBox2D Gear = Column(T, Body, FVector2D(80, 160), FVector2D(420, 760),
+		                           Label(T, NAME_None,TEXT("装备"), 19, FLinearColor::White, true));
+		const FBox2D Own = Column(T, Body, FVector2D(520, 160), FVector2D(552, 760),
+		                          Label(T,TEXT("OwnTitle"),TEXT("携行"), 19, FLinearColor::White, true));
+		const FBox2D Loot = Column(T, Body, FVector2D(1092, 160), FVector2D(748, 760),
+		                           Label(T,TEXT("LootTitle"),TEXT("搜索容器以查看物资"), 19, FLinearColor::White, true));
+		auto* Search = W<UProgressBar>(T,TEXT("SearchProgress"));
+		Search->SetFillColorAndOpacity(ExtractionUIStyle::Accent());
+		Search->SetVisibility(ESlateVisibility::Hidden);
+		At(Body, Search, FVector2D(Loot.Min.X, Loot.Min.Y - 12), FVector2D(Loot.GetSize().X, 3), 1);
 		auto* Scroll = W<UScrollBox>(T);
-		EquipBG->SetContent(Scroll);
+		At(Body, Scroll, Gear.Min, Gear.GetSize(), 1);
 		Scroll->AddChild(W<UVerticalBox>(T,TEXT("EquipmentList")));
-		At(Body, Part(T, Container,TEXT("OwnContainer")), FVector2D(550, 210), FVector2D(500, 670));
-		At(Body, Part(T, Container,TEXT("LootContainer")), FVector2D(1090, 210), FVector2D(750, 670));
-		At(Body, Label(T,TEXT("StatusText"),TEXT(""), 20, FLinearColor(1, .7f, .3f, 1)), FVector2D(80, 900),
-		   FVector2D(1760, 42));
-		At(Body, Label(T, NAME_None,TEXT("拖动放置  ·  R 旋转  ·  Shift 点击快捷转移  ·  右键操作"), 18, Muted), FVector2D(80, 970),
-		   FVector2D(1400, 40));
-		At(Body, Label(T, NAME_None,TEXT("Tab / Esc 关闭"), 18, Muted), FVector2D(1580, 970), FVector2D(260, 40));
+		At(Body, Part(T, Container,TEXT("OwnContainer")), Own.Min, Own.GetSize(), 1);
+		At(Body, Part(T, Container,TEXT("LootContainer")), Loot.Min, Loot.GetSize(), 1);
+		// 底栏：操作结果与快捷键说明。
+		At(Body, Label(T,TEXT("StatusText"),TEXT(""), 17, ExtractionUIStyle::Accent()), FVector2D(80, 940),
+		   FVector2D(1760, 30));
+		At(Body, Label(T, NAME_None,TEXT("拖动放置      R 旋转      Shift + 左键 快速转移      右键 更多操作"), 15, Muted),
+		   FVector2D(80, 984), FVector2D(1400, 30));
 		auto* Popups = W<UCanvasPanel>(T,TEXT("PopupCanvas"));
 		Popups->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		Fill(Body, Popups, 10);
@@ -355,24 +368,18 @@ FString UInventoryWidgetBuilder::CreateInventoryWidgets()
 		CS->SetZOrder(1);
 		Context->SetVisibility(ESlateVisibility::Collapsed);
 		auto* Dialog = Part(T, Split,TEXT("SplitDialog"));
-		At(Popups, Dialog, FVector2D(710, 350), FVector2D(500, 300), 2);
+		At(Popups, Dialog, FVector2D(730, 370), FVector2D(460, 270), 2);
 		Dialog->SetVisibility(ESlateVisibility::Collapsed);
 		auto* Hints = Part(T, Prompt,TEXT("InteractionPrompt"));
 		Hints->SetVisibility(ESlateVisibility::HitTestInvisible);
 		At(Canvas, Hints, FVector2D(460, 820), FVector2D(1000, 230), 20);
 	}, All);
-	if (!HadRoot)
-	{
-		auto* CDO = CastChecked<ULootingMainView>(Root->GeneratedClass->GetDefaultObject());
-		CDO->ItemClass = Item->GeneratedClass;
-		CDO->CellClass = Cell->GeneratedClass;
-		CDO->SlotClass = Slot->GeneratedClass;
-		CDO->ActionClass = Action->GeneratedClass;
-	}
-	if (!RepairWeaponLayout(Item, Slot, Container))
-		return TEXT(
-			"FAILED: unexpected weapon layout; designer tree retained");
-	for (auto* BP : All) if (BP->GetOutermost()->IsDirty() && !Save(BP)) return TEXT("FAILED: ") + BP->GetPathName();
+	auto* CDO = CastChecked<ULootingMainView>(Root->GeneratedClass->GetDefaultObject());
+	CDO->ItemClass = Item->GeneratedClass;
+	CDO->CellClass = Cell->GeneratedClass;
+	CDO->SlotClass = Slot->GeneratedClass;
+	CDO->ActionClass = Action->GeneratedClass;
+	for (auto* BP : All) if (!Save(BP)) return TEXT("FAILED: ") + BP->GetPathName();
 	return ValidateInventoryWidgets();
 }
 

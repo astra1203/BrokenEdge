@@ -24,7 +24,6 @@
 void UExtractionWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	ExtractionUIStyle::ApplyFont(this);
 	Previous->OnClicked.AddUniqueDynamic(this, &ThisClass::PreviousClicked);
 	Next->OnClicked.AddUniqueDynamic(this, &ThisClass::NextClicked);
 	Leave->OnClicked.AddUniqueDynamic(this, &ThisClass::LeaveClicked);

@@ -1,4 +1,4 @@
-"""Create missing inventory Widget Blueprints; existing designer edits are preserved."""
+"""Build (or rebuild in place) the project's own inventory Widget Blueprints and validate their bindings."""
 import json
 from pathlib import Path
 import unreal
