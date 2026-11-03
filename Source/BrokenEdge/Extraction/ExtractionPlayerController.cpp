@@ -7,6 +7,7 @@
 #include "ExtractionMeleeComponent.h"
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionKeyRoom.h"
+#include "ExtractionExitSwitch.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionSmoke.h"
 #include "ExtractionInventoryComponent.h"
@@ -194,7 +195,8 @@ void AExtractionPlayerController::Interact()
 	auto* I = Interaction();
 	auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
 	if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen) return;
-	if (I->DoorFocus) ServerUnlockDoor(I->DoorFocus, I->Inventory()->Contents.Revision);
+	if (I->SwitchFocus) ServerPullSwitch(I->SwitchFocus);
+	else if (I->DoorFocus) ServerUnlockDoor(I->DoorFocus, I->Inventory()->Contents.Revision);
 	else if (I->Focus) RequestOpenInventory(I->Focus, true);
 	else if (C) ServerSwapExtractionWeapons();
 }
@@ -204,6 +206,11 @@ void AExtractionPlayerController::InteractDoor()
 	// F 键专用入口：只开门，不做换枪/救人，避免和现有 Interact 语义互相干扰。
 	auto* I = Interaction();
 	if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen) return;
+	if (I->SwitchFocus)
+	{
+		ServerPullSwitch(I->SwitchFocus);
+		return;
+	}
 	auto* Inventory = I->Inventory();
 	if (!Inventory || !I->DoorFocus) return;
 	if (!I->DoorFocus->IsInInteractionRange(GetPawn())) return;
@@ -215,6 +222,12 @@ void AExtractionPlayerController::ServerUnlockDoor_Implementation(AExtractionKey
 {
 	if (IsValid(Door) && Door->GetWorld() == GetWorld())
 		ClientItemResult(0, Door->Unlock(Interaction(), Revision));
+}
+
+void AExtractionPlayerController::ServerPullSwitch_Implementation(AExtractionExitSwitch* Switch)
+{
+	if (IsValid(Switch) && Switch->GetWorld() == GetWorld())
+		ClientItemResult(0, Switch->Pull(Cast<ABrokenEdgeCharacter>(GetPawn())));
 }
 
 // 统一填入递增请求序号、当前交互会话和两侧容器版本，再发送物品 RPC。

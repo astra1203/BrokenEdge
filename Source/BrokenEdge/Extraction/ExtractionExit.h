@@ -28,6 +28,12 @@ public:
 	UPROPERTY(ReplicatedUsing=OnRep_Definition, BlueprintReadOnly) FExtractionExitDefinition Definition;
 	UPROPERTY(Replicated, BlueprintReadOnly) double RoundStartedAt = -1;
 	UPROPERTY(Replicated, BlueprintReadOnly) int32 UsedCapacity = 0;
+	// 电闸全部拉下的服务器时刻；-1 表示尚未通电，仅电闸式撤离点使用。
+	UPROPERTY(Replicated, BlueprintReadOnly) double SwitchedOpenAt = -1;
+	UPROPERTY(Replicated) TArray<TObjectPtr<class AExtractionExitSwitch>> Switches;
+	// 服务器在电闸拉下后调用；本局启用的电闸全部拉下时记录开放时刻。
+	void SwitchPulled(double ServerTime);
+	int32 PulledSwitches() const;
 	// 把世界位置变换到撤离点局部坐标，再减去 BoundsOffset 检测半尺寸；不是依靠碰撞重叠事件。
 	bool Contains(const FVector& Position) const;
 	UPROPERTY(VisibleAnywhere) TObjectPtr<class UStaticMeshComponent> Marker;

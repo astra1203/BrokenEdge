@@ -1,4 +1,5 @@
 #include "ExtractionTacticalMap.h"
+#include "ExtractionExitSwitch.h"
 #include "ExtractionUIStyle.h"
 #include "ExtractionMapDefinition.h"
 #include "ExtractionExit.h"
@@ -98,6 +99,15 @@ public:
 			if (It->Definition.bRequireEmptyPack) Detail += TEXT("  ·  需清空背包");
 			Text({940, 166.f + Row * 75}, Detail, 13);
 			++Row;
+		}
+		// 本局启用的电闸：红色待拉，绿色已拉；未启用的电闸不标注。
+		for (TActorIterator<AExtractionExitSwitch> It(PC->GetWorld()); It; ++It)
+		{
+			if (!It->bActive) continue;
+			const auto P = Project(FVector2D(It->GetActorLocation()));
+			const FLinearColor C = It->bPulled ? FLinearColor(.25f, .9f, .4f) : FLinearColor(1, .3f, .2f);
+			Box(P - FVector2D(4), {8, 8}, C, 2);
+			Text(P + FVector2D(7, -9), TEXT("闸"), 12, C);
 		}
 		int32 MemberRow = 0;
 		// 撤离点数量由数据决定，小队列表必须跟着往下排，否则四个以上出口会压在小队标题上。

@@ -57,6 +57,16 @@ struct BROKENEDGE_API FExtractionExitDefinition
 	/** 丢包撤：网格内不得留有任何物品，装备槽（武器/头盔/护甲）不计。 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bRequireEmptyPack = false;
+	/**
+	 * 电闸式开放（官方广场撤离点）：每局从 SwitchLocations 随机启用 SwitchesRequired 个电闸，
+	 * 全部拉下后开放 SwitchOpenSeconds 秒（0 表示开到局末）。SwitchesRequired 为 0 时不启用该机制。
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Switch")
+	TArray<FVector> SwitchLocations;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Switch", meta=(ClampMin="0"))
+	int32 SwitchesRequired = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Switch", meta=(ClampMin="0"))
+	float SwitchOpenSeconds = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EExtractionReferenceStatus ReferenceStatus = EExtractionReferenceStatus::Temporary;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -70,7 +80,8 @@ struct BROKENEDGE_API FExtractionExitDefinition
 			&& FMath::IsFinite(OpensAfterSeconds) && OpensAfterSeconds >= 0
 			&& FMath::IsFinite(ClosesAfterSeconds) && (ClosesAfterSeconds == 0 || ClosesAfterSeconds >
 				OpensAfterSeconds)
-			&& Capacity >= 0;
+			&& Capacity >= 0 && SwitchesRequired >= 0 && SwitchesRequired <= SwitchLocations.Num()
+			&& FMath::IsFinite(SwitchOpenSeconds) && SwitchOpenSeconds >= 0;
 	}
 };
 

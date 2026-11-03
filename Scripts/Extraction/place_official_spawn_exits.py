@@ -44,8 +44,8 @@ CAPSULE_HALF = 92.0
 GROUND_NORMAL_MIN = 0.7
 
 # 撤离时序照官方 GameplayConfig 原值，不折算：试验场 FirstDelayTime 540s、
-# 广场 ExpectedOpenTime 900s + LimitedTime 120s 后关闭（官方是开关式开放，项目没有开关逻辑，
-# 以 ExpectedOpenTime 作为开放时刻）。单局时长不在解包数据里，按官方玩法 30 分钟，
+# 广场为电闸式：4 个 BP_ExitTriggerSquare 每局随机启用 2 个，全部拉下后开放 LimitedTime 120s
+# （与 patch_square_switches.py 写入的数据一致）。单局时长不在解包数据里，按官方玩法 30 分钟，
 # 与 AExtractionGameMode 默认 RoundSeconds 一致。--open-at-start 可退回开局全开（仅调试用）。
 ROUND_SECONDS = 1800.0
 
@@ -388,7 +388,13 @@ def main():
                 print('  MISS EXIT  %-22s authored=%s' % (row['id'], row['world']))
                 continue
             # 默认照官方原值（OPEN_TIME_SCALE=1）；--open-at-start 时一律 0（开局即开、整局不关）。
-            if official_timing:
+            switch = row['open_type'] == 'Switch' and official_timing
+            if switch:
+                sys.path.insert(0, str(project / 'Scripts/Extraction'))
+                import patch_square_switches
+                switch_locations, switches_required, switch_window = patch_square_switches.switch_settings(payload)
+                opens, closes = 0.0, 0.0
+            elif official_timing:
                 opens = round(row['open_seconds'] * OPEN_TIME_SCALE, 1)
                 closes = (round(opens + row['close_seconds_after_open'] * OPEN_TIME_SCALE, 1)
                           if row['close_seconds_after_open'] else 0.0)
@@ -410,6 +416,10 @@ def main():
                 set_prop(definition, int(row['capacity']), 'capacity')
                 set_prop(definition, bool(row['require_empty_pack']),
                          'require_empty_pack', 'bRequireEmptyPack', 'b_require_empty_pack')
+                if switch:
+                    set_prop(definition, switch_locations, 'switch_locations')
+                    set_prop(definition, switches_required, 'switches_required')
+                    set_prop(definition, switch_window, 'switch_open_seconds')
                 set_prop(definition, status('VERIFIED' if found['state'] == 'authored' else 'INFERRED'),
                          'reference_status')
                 set_prop(definition, '官方 %s / PlayerExitId=%s。%s' % (

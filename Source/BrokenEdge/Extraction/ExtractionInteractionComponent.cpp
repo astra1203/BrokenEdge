@@ -3,6 +3,7 @@
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionLootActor.h"
 #include "ExtractionKeyRoom.h"
+#include "ExtractionExitSwitch.h"
 #include "ExtractionState.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionCombatComponent.h"
@@ -85,6 +86,7 @@ void UExtractionInteractionComponent::UpdateFocus()
 {
 	Focus = nullptr;
 	DoorFocus = nullptr;
+	SwitchFocus = nullptr;
 	if (!CanAct() || InventoryOpen) return;
 	auto* C = Character();
 	const FVector Forward = C->GetControlRotation().Vector().GetSafeNormal2D();
@@ -112,6 +114,20 @@ void UExtractionInteractionComponent::UpdateFocus()
 		if (Dot >= -.5f && Score < Best)
 		{
 			DoorFocus = *It;
+			Focus = nullptr;
+			Best = Score;
+		}
+	}
+	for (TActorIterator<AExtractionExitSwitch> It(GetWorld()); It; ++It)
+	{
+		if (!It->CanReach(C)) continue;
+		const FVector Delta = It->GetActorLocation() - C->GetActorLocation();
+		const float Dot = FVector::DotProduct(Forward, Delta.GetSafeNormal2D());
+		const float Score = Delta.Size2D();
+		if (Dot >= -.5f && Score < Best)
+		{
+			SwitchFocus = *It;
+			DoorFocus = nullptr;
 			Focus = nullptr;
 			Best = Score;
 		}

@@ -54,8 +54,9 @@
 3. 门槛：出生组 ≥2、撤离点 ≥1（`AExtractionGameMode::bMapConfigurationValid` 的硬要求）。
    达不到就只写报告不动资产；`--fallback-legacy` 可把旧配置组/撤离点以 `Legacy_*`、Temporary 兜底。
 
-时序默认照官方原值、不折算：试验场 540 s 开；广场 900 s 开（官方为开关式，项目以 ExpectedOpenTime
-作开放时刻）、开后 120 s 关。单局时长解包数据里没有，按官方玩法 30 分钟（`AExtractionGameMode`
+时序默认照官方原值、不折算：试验场 540 s 开；广场为电闸式（2026-11-03 起）：4 个 BP_ExitTriggerSquare
+每局随机启用 2 个（地图上红灯/战术图“闸”标记），按 F 拉下，全部拉下后开放 120 s，数据由
+`Scripts/Extraction/patch_square_switches.py` 写入。单局时长解包数据里没有，按官方玩法 30 分钟（`AExtractionGameMode`
 默认 RoundSeconds = 1800）。`--open-at-start` 退回开局全开，仅供调试。
 
 德穆兰撤离点按项目决定不启用（2026-10-28），脚本 `EXCLUDED_EXITS` 中记录原因，报告列入 dropped_exits。

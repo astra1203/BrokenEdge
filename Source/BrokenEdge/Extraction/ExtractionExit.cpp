@@ -1,4 +1,6 @@
 #include "ExtractionExit.h"
+#include "ExtractionExitSwitch.h"
+#include "Engine/World.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -53,6 +55,8 @@ void AExtractionExit::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME(AExtractionExit, Definition);
 	DOREPLIFETIME(AExtractionExit, RoundStartedAt);
 	DOREPLIFETIME(AExtractionExit, UsedCapacity);
+	DOREPLIFETIME(AExtractionExit, SwitchedOpenAt);
+	DOREPLIFETIME(AExtractionExit, Switches);
 }
 
 // 仅服务器接受有效定义，设置 Actor 变换并主动更新本地表现；客户端通过 OnRep 更新。
@@ -62,6 +66,24 @@ void AExtractionExit::Configure(const FExtractionExitDefinition& InDefinition)
 	Definition = InDefinition;
 	SetActorTransform(Definition.Transform);
 	OnRep_Definition();
+	for (AExtractionExitSwitch* Old : Switches) if (IsValid(Old)) Old->Destroy();
+	Switches.Reset();
+	if (Definition.SwitchesRequired > 0)
+		for (const FVector& Location : Definition.SwitchLocations)
+		{
+			// 源数据是开关 Actor 原点，向下贴到地面，避免闸箱悬空或埋进地板。
+			FVector Ground = Location;
+			FHitResult Hit;
+			FCollisionQueryParams Params(SCENE_QUERY_STAT(ExtractionSwitchGround), false, this);
+			if (GetWorld()->LineTraceSingleByChannel(Hit, Location + FVector(0, 0, 50), Location - FVector(0, 0, 400),
+			                                         ECC_Visibility, Params))
+				Ground = Hit.ImpactPoint;
+			if (auto* Switch = GetWorld()->SpawnActor<AExtractionExitSwitch>(Ground, FRotator::ZeroRotator))
+			{
+				Switch->Exit = this;
+				Switches.Add(Switch);
+			}
+		}
 	ForceNetUpdate();
 }
 
@@ -79,6 +101,13 @@ void AExtractionExit::StartRound(double ServerTime)
 	if (!HasAuthority()) return;
 	RoundStartedAt = ServerTime;
 	UsedCapacity = 0;
+	SwitchedOpenAt = -1;
+	// 每局随机挑选启用的电闸，其余保持断电外观。
+	TArray<int32> Order;
+	for (int32 I = 0; I < Switches.Num(); ++I) Order.Add(I);
+	for (int32 I = Order.Num() - 1; I > 0; --I) Order.Swap(I, FMath::RandRange(0, I));
+	for (int32 I = 0; I < Order.Num(); ++I)
+		if (IsValid(Switches[Order[I]])) Switches[Order[I]]->ResetForRound(I < Definition.SwitchesRequired);
 	ForceNetUpdate();
 }
 
@@ -90,8 +119,30 @@ FString AExtractionExit::UnavailableReason(double ServerTime) const
 	const double Elapsed = ServerTime - RoundStartedAt;
 	if (Elapsed < Definition.OpensAfterSeconds)
 		return FString::Printf(TEXT("%.0f 秒后开放"), FMath::CeilToDouble(Definition.OpensAfterSeconds - Elapsed));
+	if (Definition.SwitchesRequired > 0)
+	{
+		if (SwitchedOpenAt < 0)
+			return FString::Printf(TEXT("需拉下电闸 %d/%d"), PulledSwitches(), Definition.SwitchesRequired);
+		if (Definition.SwitchOpenSeconds > 0 && ServerTime - SwitchedOpenAt >= Definition.SwitchOpenSeconds)
+			return TEXT("已关闭");
+	}
 	if (Definition.ClosesAfterSeconds > 0 && Elapsed >= Definition.ClosesAfterSeconds) return TEXT("已关闭");
 	return {};
+}
+
+int32 AExtractionExit::PulledSwitches() const
+{
+	int32 Pulled = 0;
+	for (const AExtractionExitSwitch* Switch : Switches) Pulled += IsValid(Switch) && Switch->bActive && Switch->bPulled;
+	return Pulled;
+}
+
+void AExtractionExit::SwitchPulled(double ServerTime)
+{
+	if (!HasAuthority() || SwitchedOpenAt >= 0 || PulledSwitches() < Definition.SwitchesRequired) return;
+	SwitchedOpenAt = ServerTime;
+	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_SWITCH_OPEN Exit=%s At=%.1f"), *Definition.Id.ToString(), ServerTime);
+	ForceNetUpdate();
 }
 
 // 复用不可用原因作为单一判断依据，避免 UI 提示与服务器条件分叉。
