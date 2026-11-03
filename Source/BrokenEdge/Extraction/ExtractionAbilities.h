@@ -82,6 +82,13 @@ public:
 		"/Game/Extraction/Abilities/MedicalGun/3P/Support_C101_MedicalGun_01_3P/SkeletalMeshes/Support_C101_MedicalGun_01_3P.Support_C101_MedicalGun_01_3P"));
 	UPROPERTY(Config)
 	FName StimGunBone = TEXT("Weapon_RightHand_Joint");
+	// 官方蜂巢烟雾投掷装置（Surport_C101_SmokeScreen_M），烟雾动作期间同样挂在右手。
+	UPROPERTY(Config)
+	FSoftObjectPath SmokeDeviceViewMesh = FSoftObjectPath(TEXT(
+		"/Game/Extraction/Abilities/SmokeScreen/1P/Surport_C101_SmokeScreen_M_1P/SkeletalMeshes/Surport_C101_SmokeScreen_M_1P.Surport_C101_SmokeScreen_M_1P"));
+	UPROPERTY(Config)
+	FSoftObjectPath SmokeDeviceWorldMesh = FSoftObjectPath(TEXT(
+		"/Game/Extraction/Abilities/SmokeScreen/3P/Surport_C101_SmokeScreen_M_3P/SkeletalMeshes/Surport_C101_SmokeScreen_M_3P.Surport_C101_SmokeScreen_M_3P"));
 	// 烟雾投掷的施放、遮挡半径、存续时间和个人冷却参数。出手 0.433 s 取官方 PreFireTime。
 	UPROPERTY(Config)
 	float SmokeCastSeconds = .4333f;
@@ -295,6 +302,13 @@ private:
 	TObjectPtr<USkeletalMeshComponent> WorldStimGun;
 	UPROPERTY(Transient)
 	TObjectPtr<USkeletalMeshComponent> ViewStimGun;
+	UPROPERTY(Transient)
+	TObjectPtr<USkeletalMeshComponent> WorldSmokeDevice;
+	UPROPERTY(Transient)
+	TObjectPtr<USkeletalMeshComponent> ViewSmokeDevice;
+	// 烟雾装置显示到投掷动作播完为止（本地时间），动作本身在出手瞬间就已结束。
+	double SmokePropUntil = 0;
+	EExtractionAction LastPresented = EExtractionAction::None;
 	TWeakObjectPtr<class AWeapon> HiddenGun;
 	// 持有异步加载句柄，保证模型在角色存续期间不被回收。
 	TSharedPtr<struct FStreamableHandle> StimGunLoad;

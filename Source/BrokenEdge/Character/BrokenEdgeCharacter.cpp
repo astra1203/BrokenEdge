@@ -1189,7 +1189,8 @@ void ABrokenEdgeCharacter::PlayAbilityMontage(uint8 ActionKind, float Seconds)
 	if (Body == nullptr) return;
 	// 持续型动作（救援）按源节奏循环，短动作（治疗、烟雾）拉伸到与服务器结算同时长。
 	const bool bLooping = ActionKind == 1;
-	const float Rate = bLooping
+	// 烟雾投掷按官方原速播放：0.433 s 出手与服务器生成投掷物同步，后半段收手动作完整播完。
+	const float Rate = bLooping || ActionKind == 3
 		                   ? 1.f
 		                   : FMath::Clamp(ThirdPerson->GetPlayLength() / FMath::Max(Seconds, .1f), .5f, 2.5f);
 	Body->Montage_Play(ThirdPerson, Rate);

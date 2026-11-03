@@ -10,6 +10,7 @@
 #include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Animation/AnimMontage.h"
 #include "Engine/AssetManager.h"
 #include "Engine/SkeletalMesh.h"
 #include "Engine/StreamableManager.h"
@@ -34,7 +35,7 @@ void UExtractionAbilities::BeginPlay()
 	if (GetNetMode() == NM_DedicatedServer) return;
 	const auto* R = GetDefault<UExtractionRules>();
 	StimGunLoad = UAssetManager::GetStreamableManager().RequestAsyncLoad(
-		TArray<FSoftObjectPath>{R->StimGunViewMesh, R->StimGunWorldMesh});
+		TArray<FSoftObjectPath>{R->StimGunViewMesh, R->StimGunWorldMesh, R->SmokeDeviceViewMesh, R->SmokeDeviceWorldMesh});
 }
 
 // 返回组件所属角色，用于生命状态、距离和动作互斥检查。
@@ -159,10 +160,19 @@ void UExtractionAbilities::RefreshAbilityMontage()
 	RefreshStimGun();
 	if (Action == EExtractionAction::None)
 	{
-		C->StopAbilityMontage();
+		// 烟雾在出手时就结算完成，收手动作继续播放，不随动作结束被打断。
+		if (LastPresented != EExtractionAction::Smoke) C->StopAbilityMontage();
+		LastPresented = EExtractionAction::None;
 		return;
 	}
+	LastPresented = Action;
 	const auto* R = GetDefault<UExtractionRules>();
+	if (Action == EExtractionAction::Smoke)
+	{
+		SmokePropUntil = GetWorld()->GetTimeSeconds() + (C->SmokeMontage ? C->SmokeMontage->GetPlayLength()
+			                                                 : R->SmokeCastSeconds);
+		RefreshStimGun();
+	}
 	const float Seconds = Action == EExtractionAction::Revive
 		                      ? R->ReviveSeconds
 		                      : Action == EExtractionAction::Heal
@@ -203,11 +213,13 @@ void UExtractionAbilities::RefreshStimGun()
 	auto* C = Character();
 	if (!C || GetNetMode() == NM_DedicatedServer) return;
 	const auto* R = GetDefault<UExtractionRules>();
-	// 救援官方也是端着激素枪（MedicalGun Rescue 动作），烟雾用另一套道具，不显示枪。
+	// 救援官方也是端着激素枪（MedicalGun Rescue 动作）；烟雾换成蜂巢烟雾装置，直到投掷动作播完。
 	const bool bShow = (Action == EExtractionAction::Heal || Action == EExtractionAction::Revive) && !C->IsDefeated();
+	const bool bSmoke = !C->IsDefeated() && !bShow
+		&& (Action == EExtractionAction::Smoke || GetWorld()->GetTimeSeconds() < SmokePropUntil);
 	auto* Gun = C->GetEquippedWeapon();
-	if (HiddenGun.IsValid() && (HiddenGun != Gun || !bShow)) HiddenGun->SetActorHiddenInGame(false);
-	HiddenGun = bShow ? Gun : nullptr;
+	if (HiddenGun.IsValid() && (HiddenGun != Gun || !(bShow || bSmoke))) HiddenGun->SetActorHiddenInGame(false);
+	HiddenGun = bShow || bSmoke ? Gun : nullptr;
 	if (HiddenGun.IsValid()) HiddenGun->SetActorHiddenInGame(true);
 	if (bShow && !WorldStimGun) WorldStimGun = MakeStimGun(C->GetMesh(), R->StimGunWorldMesh, false);
 	if (WorldStimGun)
@@ -224,6 +236,20 @@ void UExtractionAbilities::RefreshStimGun()
 	if (bShow && !ViewStimGun && IsValid(Arms) && C->IsLocallyControlled() && C->IsFirstPersonView())
 		ViewStimGun = MakeStimGun(Arms, R->StimGunViewMesh, true);
 	if (ViewStimGun) ViewStimGun->SetVisibility(bShow && C->IsFirstPersonView());
+	if (bSmoke && !WorldSmokeDevice) WorldSmokeDevice = MakeStimGun(C->GetMesh(), R->SmokeDeviceWorldMesh, false);
+	if (WorldSmokeDevice)
+	{
+		WorldSmokeDevice->SetVisibility(bSmoke);
+		WorldSmokeDevice->SetOwnerNoSee(C->IsLocallyControlled() && C->IsFirstPersonView());
+	}
+	if (ViewSmokeDevice && ViewSmokeDevice->GetAttachParent() != Arms)
+	{
+		ViewSmokeDevice->DestroyComponent();
+		ViewSmokeDevice = nullptr;
+	}
+	if (bSmoke && !ViewSmokeDevice && IsValid(Arms) && C->IsLocallyControlled() && C->IsFirstPersonView())
+		ViewSmokeDevice = MakeStimGun(Arms, R->SmokeDeviceViewMesh, true);
+	if (ViewSmokeDevice) ViewSmokeDevice->SetVisibility(bSmoke && C->IsFirstPersonView());
 }
 
 // 校验序号、动作种类、冷却和目标，再锁定救援者或计算烟雾落点并设定完成时刻。
@@ -406,7 +432,11 @@ void UExtractionAbilities::TickComponent(float Delta, ELevelTick Tick, FActorCom
 {
 	Super::TickComponent(Delta, Tick, Function);
 	// 表现每端都维护：手臂重建或换枪后重新挂接、重新隐藏。
-	if (Action != EExtractionAction::None || HiddenGun.IsValid()) RefreshStimGun();
+	if (Action != EExtractionAction::None || HiddenGun.IsValid() || SmokePropUntil > 0)
+	{
+		RefreshStimGun();
+		if (GetWorld()->GetTimeSeconds() >= SmokePropUntil) SmokePropUntil = 0;
+	}
 	if (!GetOwner()->HasAuthority() || Action == EExtractionAction::None) return;
 	const auto* C = Character();
 	// 治疗允许边走边施放（移速由角色按 HealMoveSpeedScale 降低）；救援与烟雾仍需站定，
@@ -428,5 +458,7 @@ void UExtractionAbilities::EndPlay(const EEndPlayReason::Type Reason)
 	if (HiddenGun.IsValid()) HiddenGun->SetActorHiddenInGame(false);
 	if (WorldStimGun) WorldStimGun->DestroyComponent();
 	if (ViewStimGun) ViewStimGun->DestroyComponent();
+	if (WorldSmokeDevice) WorldSmokeDevice->DestroyComponent();
+	if (ViewSmokeDevice) ViewSmokeDevice->DestroyComponent();
 	Super::EndPlay(Reason);
 }
