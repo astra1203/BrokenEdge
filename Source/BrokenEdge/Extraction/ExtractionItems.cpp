@@ -60,7 +60,9 @@ const TArray<FName>& UExtractionItemDefinition::Ids()
 		// 携行装备：官方 EquipmentPart / LOC_GameItem 中的胸挂、背包、安全箱
 		TEXT("Rig_Pouch"), TEXT("Rig_Ammo"), TEXT("Rig_Assault"), TEXT("Rig_Hurricane"),
 		TEXT("Bag_Climb"), TEXT("Bag_Hike"), TEXT("Bag_ALS"), TEXT("Bag_GTO"),
-		TEXT("Safe_Basic"), TEXT("Safe_Advanced"), TEXT("Safe_Premium")
+		TEXT("Safe_Basic"), TEXT("Safe_Advanced"), TEXT("Safe_Premium"),
+		// 航天基地官方收集品（GameItem.SourceMapId=3902），由 generate_collectibles.py 生成
+#include "ExtractionCollectibles.inl"
 	};
 	return Names;
 }
@@ -68,7 +70,8 @@ const TArray<FName>& UExtractionItemDefinition::Ids()
 // 按固定目录加载白名单定义；未知 ID 返回空指针，调用方需处理缺失资源。
 const UExtractionItemDefinition* UExtractionItemDefinition::Get(FName Id)
 {
-	if (!Ids().Contains(Id)) return nullptr;
+	static const TSet<FName> Known(Ids());
+	if (!Known.Contains(Id)) return nullptr;
 	return LoadObject<UExtractionItemDefinition>(nullptr,
 	                                             *FString::Printf(
 		                                             TEXT("/Game/Extraction/Items/DA_Item_%s.DA_Item_%s"),

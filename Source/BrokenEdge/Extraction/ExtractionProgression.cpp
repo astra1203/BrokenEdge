@@ -80,6 +80,7 @@ int64 UExtractionProgressionRules::SellPrice(const FExtractionItem& I, int32 Qua
 	if (I.Definition == TEXT("Tools")) return int64(ToolsSellPrice) * Quantity;
 	const auto* O = Offer(I.Definition);
 	const auto* D = UExtractionItemDefinition::Get(I.Definition);
+	if (D && D->SellValue > 0 && !O) return int64(D->SellValue) * Quantity;
 	if (!O || !D) return -1;
 	int64 Value = int64(O->Price / 2) * Quantity;
 	if (D->Kind == EExtractionItemKind::Armor)

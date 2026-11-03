@@ -39,6 +39,7 @@
 | 武器与弹道深度 | 2026-11-03 起：M4A1 已开放红点/垂直握把/补偿器（官方 socket 挂点，见 [patch_m4a1_attachments.py](../../../Scripts/Extraction/patch_m4a1_attachments.py)）；子弹可穿透薄的静态物体，上限为 `BrokenEdge.Weapon.PenetrationCmPerLevel`（默认 4 cm）× 弹药穿透等级，穿透后伤害按厚度保留 75%–35%，人物不穿透、每发最多一次，见 [TryPenetrate](../../../Source/BrokenEdge/Weapon/ExtractionBullet.cpp)。项目没有表面材质类型，按厚度而非材质判定，不等同官方材质穿透表。 |
 | 遭遇与敌人类型 | 当前 [SpawnGuards](../../../Source/BrokenEdge/Extraction/ExtractionGuard.cpp) 与 [InitializeGuard](../../../Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp) 使用同类守卫和 AK 装备；[交战 Task](../../../Source/BrokenEdge/Character/BTTask_EngageTarget.cpp) 站定射击，所查链路未提供掩体选择、包抄或 Boss 专属行为。 |
 | 干员与物资内容 | 当前 [EExtractionAction](../../../Source/BrokenEdge/Extraction/ExtractionAbilities.h) 的实际能力入口为救援、治疗、烟雾；不足以表示全干员体系。7F 的 [RECIPES](../../../Scripts/Extraction/place_7f_loot_guards.py) 明确为项目配方与项目布点，不能声称使用了官方完整掉落表及概率。 |
+| 收集品（2026-11-03） | 新增 320 种航天基地官方收集品（GameItem.SourceMapId=3902，`Col_<官方ID>`），名称/尺寸/堆叠/品质取官方表，回收价=官方指导价÷50；物资箱、保险箱、钥匙房和散落点每局按品质权重额外随机抽取，见 [generate_collectibles.py](../../../Scripts/Extraction/generate_collectibles.py)、[configure_collectibles.py](../../../Scripts/Extraction/configure_collectibles.py)。世界模型为占位方块，未导入官方道具模型和图标；掉落权重为项目值。 |
 | 完整体验和正式交付 | 一条样板路线的连续行走、联网结算、第二局、全图导航、多人容量和打包稳定性需要各自证据；源码、站立探针、传送规则测试不能互相替代。今晚具体已完成/失败/资源中止项目只引用 [主记录](../Overnight-2026-11-03.md)，本页不预先宣布通过，也不由 LAN 测试推出公网账号、匹配或反作弊服务完成。 |
 
 本页不修改旧盘点；旧盘点保留为历史快照。后续实现应从上述当前接口和资产继续，优先补证据与可玩闭环，避免重复开发已经存在的安全箱、携行分区、M4A1 或子弹重力。

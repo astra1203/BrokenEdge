@@ -128,6 +128,9 @@ public:
 	FName DisplayCategory;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Presentation", meta=(ClampMin="0", ClampMax="5"))
 	int32 DisplayRarity = 0;
+	/** 回收单价（项目货币）；大于 0 时出售直接用它，收集品按官方指导价折算写入。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy", meta=(ClampMin="0"))
+	int32 SellValue = 0;
 	// 必须同时属于武器兼容列表且目标定义确实是弹药，防止仅凭名称通过检查。
 	bool SupportsAmmo(FName Id) const;
 	// 检查武器白名单、附件类型及有效槽位；具体父子装配仍由 ValidateItem 校验。

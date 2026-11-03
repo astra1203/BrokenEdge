@@ -1,11 +1,43 @@
 #include "ExtractionLootLayout.h"
 #include "ExtractionLootActor.h"
+#include "ExtractionItems.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 // 布局记录点位来源，Recipe 记录项目掉落内容，两者分离以免把兼容调参误称为源游戏规则。
 // 服务器开局按固定种子选择点位；组名为空的固定点全选，有组名的候选按权重每组选一个。
 
 const FName UExtractionLootLayout::LooseKind(TEXT("Loose"));
+
+TArray<FName> UExtractionLootRecipe::RollPool(FRandomStream& Random) const
+{
+	TArray<FName> Result;
+	if (PoolRolls.Y <= 0) return Result;
+	TArray<FName> Candidates;
+	TArray<float> Weights;
+	float Total = 0;
+	for (const FName Id : UExtractionItemDefinition::Ids())
+	{
+		const auto* D = UExtractionItemDefinition::Get(Id);
+		if (!D || D->Kind != EExtractionItemKind::Valuable || D->SellValue <= 0
+			|| (!PoolCategories.IsEmpty() && !PoolCategories.Contains(D->DisplayCategory)))
+			continue;
+		const float W = QualityWeights.IsValidIndex(D->DisplayRarity) ? QualityWeights[D->DisplayRarity] : 0.f;
+		if (W <= 0) continue;
+		Candidates.Add(Id);
+		Weights.Add(W);
+		Total += W;
+	}
+	if (Candidates.IsEmpty()) return Result;
+	const int32 Count = Random.RandRange(FMath::Max(0, PoolRolls.X), FMath::Max(PoolRolls.X, PoolRolls.Y));
+	for (int32 N = 0; N < Count; ++N)
+	{
+		float Pick = Random.FRandRange(0, Total);
+		int32 I = 0;
+		while (I < Weights.Num() - 1 && Pick >= Weights[I]) Pick -= Weights[I++];
+		Result.Add(Candidates[I]);
+	}
+	return Result;
+}
 
 // 校验唯一 ID、变换和权重后，对组名及点位排序再按种子抽取；排序避免容器遍历顺序影响重现。
 // 输出是 Points 索引，失败时清空选择并返回错误文本。
@@ -93,6 +125,15 @@ void UExtractionLootLayout::Spawn(UWorld* World, int32 Seed) const
 					UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_LOOT_RECIPE_INVALID point=%s item=%s"),
 						*P.Id.ToString(), *Stack.Item.ToString());
 			}
+		if (P.Recipe)
+		{
+			// 每个点位独立的随机流：同一种子可复现，不同点位不会抽到同一序列。
+			FRandomStream PoolRandom(Seed ^ int32(GetTypeHash(P.Id)));
+			for (const FName Id : P.Recipe->RollPool(PoolRandom))
+				if (!ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(Id)))
+					UE_LOG(LogTemp, Display, TEXT("EXTRACTION_LOOT_POOL_FULL point=%s item=%s"), *P.Id.ToString(),
+					       *Id.ToString());
+		}
 		Actor->SetContents(Contents);
 		UGameplayStatics::FinishSpawningActor(Actor, P.Transform);
 		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_LOOT_SELECTED seed=%d variant=%s group=%s point=%s"),
@@ -117,6 +158,27 @@ void UExtractionLootLayout::SpawnLoose(UWorld* World, int32 Seed) const
 	for (int32 N = 0; N < Count; ++N)
 	{
 		const auto& P = Points[Candidates[N]];
+		// 有收集品池的散落点一半概率改放一件随机收集品。
+		if (P.Recipe && P.Recipe->PoolRolls.Y > 0 && (P.Recipe->Items.IsEmpty() || Random.FRand() < .5f))
+		{
+			const TArray<FName> Pool = P.Recipe->RollPool(Random);
+			if (!Pool.IsEmpty())
+			{
+				if (auto* Actor = AExtractionLootActor::SpawnContainer(World, P.Transform.GetLocation(), true, Pool[0]))
+				{
+					FExtractionContainer Contents;
+					Contents.Id = FGuid::NewGuid();
+					if (ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(Pool[0])))
+					{
+						Actor->SetContents(Contents);
+						Actor->SetLifeSpan(0);
+						++Placed;
+					}
+					else Actor->Destroy();
+				}
+				continue;
+			}
+		}
 		if (!P.Recipe || P.Recipe->Items.IsEmpty())
 		{
 			UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_LOOT_LOOSE_INVALID point=%s recipe empty"),

@@ -21,6 +21,15 @@ class BROKENEDGE_API UExtractionLootRecipe : public UDataAsset
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<FExtractionLootStack> Items;
+	/**
+	 * 随机收集品：每局在固定 Items 之外再从收集品池抽 [X, Y] 件，按品质（DisplayRarity 0-5）权重挑选，
+	 * PoolCategories 非空时只抽这些 DisplayCategory。Y 为 0 表示不抽。
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Pool") FIntPoint PoolRolls = FIntPoint::ZeroValue;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Pool") TArray<FName> PoolCategories;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Pool") TArray<float> QualityWeights = {40, 30, 16, 9, 4, 1};
+	// 按种子抽取收集品定义 ID；池为空或未配置时返回空数组。
+	TArray<FName> RollPool(FRandomStream& Random) const;
 };
 
 USTRUCT(BlueprintType)
