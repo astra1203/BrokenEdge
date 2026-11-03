@@ -78,7 +78,7 @@ void UExtractionInventoryComponent::InitializeLoadout()
 		}
 		if (auto* Supply = AExtractionLootActor::SpawnContainer(GetWorld(), Position, false))
 		{
-			Supply->Label = TEXT("开局补给 · SCAR-H / 7.62×51");
+			Supply->Label = TEXT("开局补给");
 			Supply->SetContents(Overflow);
 		}
 		else UE_LOG(LogTemp, Error, TEXT("EXTRACTION_STARTING_SUPPLY_SPAWN_FAILED"));
@@ -87,25 +87,35 @@ void UExtractionInventoryComponent::InitializeLoadout()
 	Changed();
 }
 
-// 补充 SCAR-H 副武器与 60 发 7.62×51 弹；逐发填补零散堆叠，返回装不下的补给容器。
+// 测试用开局配枪：主武器 M4A1、副武器 SCAR-H，各补 60 发默认弹种。
+// 槽位上原有的其他枪挪进背包网格，装不下的枪和弹药返回为脚边补给容器，不会丢失。
 FExtractionContainer UExtractionInventoryComponent::GrantStartingSupply(FExtractionContainer& Inventory)
 {
 	FExtractionContainer Overflow;
 	Overflow.Id = FGuid::NewGuid();
-	const auto* Secondary = Inventory.InSlot(1);
-	if (!Secondary)
+	const TPair<int32, FName> Guns[] = {{0, TEXT("M4A1")}, {1, TEXT("SCARH")}};
+	for (const auto& [Slot, Gun] : Guns)
 	{
-		auto Gun = ExtractionItems::Make(TEXT("SCARH"));
-		Gun.Slot = 1;
-		Inventory.Items.Add(Gun);
+		const auto* Def = UExtractionItemDefinition::Get(Gun);
+		if (!Def) continue;
+		if (const auto* Current = Inventory.InSlot(Slot); Current && Current->Definition != Gun)
+		{
+			FExtractionItem Moved = *Current;
+			Inventory.Items.RemoveAll([&](const FExtractionItem& I) { return I.Id == Moved.Id; });
+			if (!ExtractionItems::AutoPlace(Inventory, Moved)) ExtractionItems::AutoPlace(Overflow, Moved);
+		}
+		if (!Inventory.InSlot(Slot))
+		{
+			auto Item = ExtractionItems::Make(Gun);
+			Item.Slot = Slot;
+			Inventory.Items.Add(Item);
+		}
+		// Fill partial stacks even when no free grid cell can hold the whole grant.
+		int32 Added = 0;
+		for (; Added < 60; ++Added)
+			if (!ExtractionItems::AutoPlace(Inventory, ExtractionItems::Make(Def->DefaultAmmo))) break;
+		if (Added < 60) ExtractionItems::AutoPlace(Overflow, ExtractionItems::Make(Def->DefaultAmmo, 60 - Added));
 	}
-	else if (Secondary->Definition != TEXT("SCARH"))
-		ExtractionItems::AutoPlace(Overflow, ExtractionItems::Make(TEXT("SCARH")));
-	// Fill partial stacks even when no free grid cell can hold the whole grant.
-	int32 Added = 0;
-	for (; Added < 60; ++Added)
-		if (!ExtractionItems::AutoPlace(Inventory, ExtractionItems::Make(TEXT("Ammo76251")))) break;
-	if (Added < 60) ExtractionItems::AutoPlace(Overflow, ExtractionItems::Make(TEXT("Ammo76251"), 60 - Added));
 	++Inventory.Revision;
 	return Overflow;
 }
