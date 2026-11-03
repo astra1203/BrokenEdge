@@ -1,6 +1,7 @@
 #include "ExtractionTacticalMap.h"
 #include "ExtractionExitSwitch.h"
 #include "ExtractionUIStyle.h"
+#include "ExtractionPlayerController.h"
 #include "ExtractionMapDefinition.h"
 #include "ExtractionExit.h"
 #include "ExtractionState.h"
@@ -109,6 +110,18 @@ public:
 			Box(P - FVector2D(4), {8, 8}, C, 2);
 			Text(P + FVector2D(7, -9), TEXT("闸"), 12, C);
 		}
+		// 小队标点：与 HUD 同一份数据，自己的琥珀色、队友的青色，过期不画。
+		if (const auto* Pinger = Cast<AExtractionPlayerController>(PC))
+			for (const auto& Ping : Pinger->Pings)
+			{
+				if (PC->GetWorld()->GetTimeSeconds() - Ping.At >= AExtractionPlayerController::PingSeconds) continue;
+				const auto P = Project(FVector2D(Ping.Location));
+				const FLinearColor C = Ping.bSelf ? ExtractionUIStyle::Accent() : ExtractionUIStyle::Hex(TEXT("4FC3E8"));
+				Box(P - FVector2D(3), {6, 6}, C, 2);
+				Box(P - FVector2D(.5f, 9), {1, 18}, C, 2);
+				Box(P - FVector2D(9, .5f), {18, 1}, C, 2);
+				Text(P + FVector2D(8, -22), Ping.Sender.Left(12), 12, C);
+			}
 		int32 MemberRow = 0;
 		// 撤离点数量由数据决定，小队列表必须跟着往下排，否则四个以上出口会压在小队标题上。
 		const float ListBottom = 140.f + Row * 75.f + 28.f;
