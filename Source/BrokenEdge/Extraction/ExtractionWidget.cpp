@@ -55,8 +55,7 @@ void UExtractionWidget::Refresh()
 	const TCHAR* Directions[] = {
 		TEXT("N"), TEXT("NE"), TEXT("E"), TEXT("SE"), TEXT("S"), TEXT("SW"), TEXT("W"), TEXT("NW")
 	};
-	Compass->SetText(
-		FText::FromString(FString::Printf(TEXT("—   %s   %03d°   —"), Directions[((Heading + 22) / 45) % 8], Heading)));
+	Compass->SetText(FText::FromString(FString::Printf(TEXT("%s  %03d°"), Directions[((Heading + 22) / 45) % 8], Heading)));
 	// 只给"在烟里"的信号太生硬，改为按距烟心的深度渐变：烟心最浓 .55，边缘接近 0。
 	const float Haze = AExtractionSmoke::Haze(GetWorld(), Eye);
 	SmokeHaze->SetVisibility(Haze > .01f ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
@@ -396,6 +395,59 @@ int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Ge
 		FSlateDrawElement::MakeBox(Out, LayerId, Geometry.ToPaintGeometry(FVector2D(BarSize.X * Fraction, BarSize.Y),
 			                           FSlateLayoutTransform(BarAt)), &BarBrush, ESlateDrawEffect::None,
 		                           bLow ? ExtractionUIStyle::Hex(TEXT("EA5A50")) : FLinearColor(1, 1, 1, .85f));
+	}
+
+	// 方位刻度条：指南针卡片下方，视线左右各 60°，每 5° 一小格、15° 一中格、45° 标方位字；
+	// 撤离点（绿/灰）与小队标点（琥珀/青）按方位画在刻度条上，超出视野的贴在两端。
+	{
+		constexpr float HalfSpan = 60.f, StripWidth = 480.f;
+		const float StripY = 72.f;
+		const float Left = Center.X - StripWidth * .5f;
+		auto ToX = [&](float Bearing, bool bClamp) -> float
+		{
+			const float Delta = FRotator::NormalizeAxis(Bearing - ViewYaw);
+			if (!bClamp && FMath::Abs(Delta) > HalfSpan) return -1.f;
+			return float(Center.X + FMath::Clamp(Delta, -HalfSpan, HalfSpan) / HalfSpan * StripWidth * .5f);
+		};
+		Lines({FVector2D(Left, StripY), FVector2D(Left + StripWidth, StripY)}, FLinearColor(1, 1, 1, .25f), 1.f);
+		const FSlateFontInfo TickFont = ExtractionUIStyle::Font(11, true);
+		static const TCHAR* Names[] = {TEXT("N"), TEXT("NE"), TEXT("E"), TEXT("SE"), TEXT("S"), TEXT("SW"), TEXT("W"), TEXT("NW")};
+		for (int32 Degree = 0; Degree < 360; Degree += 5)
+		{
+			const float X = ToX(Degree, false);
+			if (X < 0) continue;
+			const bool bMajor = Degree % 45 == 0, bMid = Degree % 15 == 0;
+			const float Height = bMajor ? 10.f : bMid ? 6.f : 3.f;
+			// 越靠两端越淡，读起来不会太杂。
+			const float Edge = 1.f - FMath::Abs(X - Center.X) / (StripWidth * .5f);
+			Lines({FVector2D(X, StripY), FVector2D(X, StripY + Height)}, FLinearColor(1, 1, 1, .2f + .6f * Edge), 1.f);
+			if (bMajor)
+			{
+				const FString Name = Names[Degree / 45];
+				const FVector2D NameSize = Measure->Measure(Name, TickFont);
+				FSlateDrawElement::MakeText(Out, LayerId, Geometry.ToPaintGeometry(NameSize, FSlateLayoutTransform(
+					                            FVector2D(X - NameSize.X * .5f, StripY + 12.f))), Name, TickFont,
+				                            ESlateDrawEffect::None,
+				                            (Degree == 0 ? ExtractionUIStyle::Accent() : FLinearColor::White).CopyWithNewOpacity(.3f + .7f * Edge));
+			}
+		}
+		// 视线正中的小三角。
+		Lines({FVector2D(Center.X - 5, StripY - 7), FVector2D(Center.X + 5, StripY - 7), FVector2D(Center.X, StripY - 1),
+		       FVector2D(Center.X - 5, StripY - 7)}, ExtractionUIStyle::Accent(), 1.5f);
+		auto Pin = [&](const FVector& World, FLinearColor Color)
+		{
+			const float X = ToX((World - ViewEye).Rotation().Yaw, true);
+			Lines({FVector2D(X - 4, StripY - 4), FVector2D(X, StripY - 9), FVector2D(X + 4, StripY - 4), FVector2D(X, StripY + 1),
+			       FVector2D(X - 4, StripY - 4)}, Color, 2.f);
+		};
+		if (const auto* State = GetWorld()->GetGameState<AExtractionGameState>())
+			for (TActorIterator<AExtractionExit> It(GetWorld()); It; ++It)
+				Pin(It->GetActorLocation(), It->UnavailableReason(State->GetServerWorldTimeSeconds()).IsEmpty()
+					                            ? ExtractionUIStyle::Hex(TEXT("5DBB72"))
+					                            : FLinearColor(.7f, .72f, .75f, .6f));
+		for (const auto& Ping : PC->Pings)
+			if (Now - Ping.At < AExtractionPlayerController::PingSeconds)
+				Pin(Ping.Location, Ping.bSelf ? ExtractionUIStyle::Accent() : ExtractionUIStyle::Hex(TEXT("4FC3E8")));
 	}
 
 	// 手雷瞄准：按住 G 时按服务器同样的出手点、仰角与初速预测轨迹，画出弧线和预计落点的满伤圈。
