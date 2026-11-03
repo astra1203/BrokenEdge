@@ -64,6 +64,8 @@ void UExtractionTraversalComponent::StopVisuals()
 		StowedWeapon->SetActorHiddenInGame(bWeaponWasHidden);
 	}
 	StowedWeapon = nullptr;
+	if (bLadderBodyView) C->SetLadderBodyView(false);
+	bLadderBodyView = false;
 	ViewMontage = nullptr;
 	BodyMontage = nullptr;
 }
@@ -108,6 +110,12 @@ void UExtractionTraversalComponent::TickComponent(float Delta, ELevelTick Tick, 
 			bWeaponWasHidden = StowedWeapon->IsHidden();
 			StowedWeapon->SetActorHiddenInGame(true);
 			StowedWeapon->GetWeaponMesh()->SetVisibility(false);
+		}
+		if (S.Kind == EExtractionTraversal::Ladder || S.Kind == EExtractionTraversal::LadderEnter
+			|| S.Kind == EExtractionTraversal::LadderExit)
+		{
+			C->SetLadderBodyView(true);
+			bLadderBodyView = true;
 		}
 		RemoteElapsed = S.Elapsed;
 		LastRepElapsed = S.Elapsed;

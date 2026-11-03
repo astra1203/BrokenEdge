@@ -752,6 +752,26 @@ bool ABrokenEdgeCharacter::CreateFirstPersonBody()
 	return true;
 }
 
+void ABrokenEdgeCharacter::SetLadderBodyView(bool bOn)
+{
+	if (!IsLocallyControlled() || !bFirstPersonView || !DedicatedFirstPersonMesh) return;
+	if (bOn)
+	{
+		GetMesh()->SetOwnerNoSee(false);
+		// 世界表示图元在拥有者第一人称画面里会被隐藏，爬梯期间临时当普通图元渲染。
+		GetMesh()->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::None);
+		GetMesh()->HideBoneByName(FirstPersonHeadBone, PBO_None);
+	}
+	else
+	{
+		GetMesh()->UnHideBoneByName(FirstPersonHeadBone);
+		GetMesh()->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::WorldSpaceRepresentation);
+		GetMesh()->SetOwnerNoSee(true);
+	}
+	DedicatedFirstPersonMesh->SetHiddenInGame(bOn);
+	if (FirstPersonWeaponMesh) FirstPersonWeaponMesh->SetHiddenInGame(bOn);
+}
+
 void ABrokenEdgeCharacter::UpdateFirstPersonBodyPose()
 {
 	if (!FirstPersonBody || !GetMesh()) return;

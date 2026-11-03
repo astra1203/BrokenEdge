@@ -66,6 +66,8 @@ private:
 	uint16 LastSerial = MAX_uint16;
 	bool bWasActive = false, bWeaponWasVisible = true;
 	bool bWeaponWasHidden = false;
+	// 本次表现是否切到了“看完整身体”的爬梯视角，结束时据此还原。
+	bool bLadderBodyView = false;
 	float RemoteElapsed = 0;
 	float LastRepElapsed = -1;
 	void StopVisuals();

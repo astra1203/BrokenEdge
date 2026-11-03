@@ -325,6 +325,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
 	float FirstPersonAimInterpSpeed = 20.f;
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return DedicatedFirstPersonMesh; }
+	// 爬梯时第一人称改看自己的完整身体（隐藏头部），而不是只有两条胳膊的手臂网格；仅本地第一人称生效。
+	void SetLadderBodyView(bool bOn);
 	USkeletalMeshComponent* GetFirstPersonWeaponMesh() const { return FirstPersonWeaponMesh; }
 	bool UsesFirstPersonWeaponFit() const;
 	FTransform GetFirstPersonGripTarget(FName Socket) const;
