@@ -234,7 +234,8 @@ void AExtractionPlayerController::ThrowGrenade()
 	if (auto* I = Interaction(); I && I->CanAct() && !I->InventoryOpen && !bMenuOpen)
 	{
 		bAimingGrenade = true;
-		bAimingGrenadeLow = false;
+		// Alt+G 会同时触发 G 和 Alt+G 两条绑定，直接读 Alt 键状态，与触发顺序无关。
+		bAimingGrenadeLow = IsInputKeyDown(EKeys::LeftAlt) || IsInputKeyDown(EKeys::RightAlt);
 	}
 }
 
