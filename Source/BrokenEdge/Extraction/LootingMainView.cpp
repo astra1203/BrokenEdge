@@ -112,8 +112,8 @@ void ULootingWidgetPart::SetItem(const FExtractionItem& Item)
 		if (Texture)
 		{
 			// 按物品占格尺寸等比缩放，长枪图标不会被压扁。
-			const float Cell = Inventory ? Inventory->CellSize : 64.f;
-			const FVector2D Area = FVector2D(Item.Extent()) * Cell * .9f;
+			const float CellPixels = Inventory ? Inventory->CellSize : 64.f;
+			const FVector2D Area = FVector2D(Item.Extent()) * CellPixels * .9f;
 			const float Fit = FMath::Min(Area.X / FMath::Max(1, Texture->GetSizeX()),
 			                             Area.Y / FMath::Max(1, Texture->GetSizeY()));
 			FSlateBrush Brush;
