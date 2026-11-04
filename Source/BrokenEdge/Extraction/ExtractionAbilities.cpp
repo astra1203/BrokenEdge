@@ -49,6 +49,8 @@ void UExtractionAbilities::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(UExtractionAbilities, ActionEnd);
 	DOREPLIFETIME(UExtractionAbilities, Target);
 	DOREPLIFETIME(UExtractionAbilities, Rescuer);
+	DOREPLIFETIME(UExtractionAbilities, bStimDrawn);
+	DOREPLIFETIME(UExtractionAbilities, bHealDart);
 	DOREPLIFETIME_CONDITION(UExtractionAbilities, HealReadyAt, COND_OwnerOnly);
 	DOREPLIFETIME_CONDITION(UExtractionAbilities, SmokeReadyAt, COND_OwnerOnly);
 }
@@ -130,6 +132,37 @@ ABrokenEdgeCharacter* UExtractionAbilities::HealFocus() const
 	return C;
 }
 
+ABrokenEdgeCharacter* UExtractionAbilities::DartFocus() const
+{
+	auto* Focus = HealFocus();
+	return Focus == Character() ? nullptr : Focus;
+}
+
+void UExtractionAbilities::SetStimDrawn(bool bDrawn)
+{
+	if (bDrawn == bStimDrawn) return;
+	ServerSetStimDrawn(bDrawn);
+}
+
+void UExtractionAbilities::ServerSetStimDrawn_Implementation(bool bDrawn)
+{
+	// 冷却中或不能行动时拿不出来；收起总是允许。
+	if (bDrawn && (!CanStart() || Action != EExtractionAction::None || GetWorld()->GetTimeSeconds() < HealReadyAt)) return;
+	bStimDrawn = bDrawn;
+	if (bDrawn) Character()->GetCombat()->FireButtonPressed(false);
+	OnRep_StimDrawn();
+	GetOwner()->ForceNetUpdate();
+}
+
+void UExtractionAbilities::OnRep_StimDrawn() { RefreshStimGun(); }
+
+void UExtractionAbilities::FireStimDart()
+{
+	if (!bStimDrawn) return;
+	// 射飞镖时 Other 为空表示没瞄准队友：照样射出，打空就浪费这一发。
+	ServerBegin(++LocalSequence, EExtractionAction::Heal, DartFocus(), false);
+}
+
 // 递增本地序号并发送动作请求，序号用于服务器拒绝旧消息。
 void UExtractionAbilities::Request(EExtractionAction Kind, ABrokenEdgeCharacter* Other, bool bLowThrow)
 {
@@ -179,7 +212,7 @@ void UExtractionAbilities::RefreshAbilityMontage()
 		                      ? R->HealSeconds
 		                      : R->SmokeCastSeconds;
 	// 激素枪对准队友是射击动作，否则是给自己扎针；Target 与 Action 同批复制。
-	const bool bHealOther = Action == EExtractionAction::Heal && IsValid(Target) && Target != C;
+	const bool bHealOther = Action == EExtractionAction::Heal && bHealDart;
 	C->PlayAbilityMontage(bHealOther ? ExtractionHealOtherPresentation : static_cast<uint8>(Action), Seconds);
 }
 
@@ -214,7 +247,8 @@ void UExtractionAbilities::RefreshStimGun()
 	if (!C || GetNetMode() == NM_DedicatedServer) return;
 	const auto* R = GetDefault<UExtractionRules>();
 	// 救援官方也是端着激素枪（MedicalGun Rescue 动作）；烟雾换成蜂巢烟雾装置，直到投掷动作播完。
-	const bool bShow = (Action == EExtractionAction::Heal || Action == EExtractionAction::Revive) && !C->IsDefeated();
+	const bool bShow = (Action == EExtractionAction::Heal || Action == EExtractionAction::Revive || bStimDrawn)
+		&& !C->IsDefeated();
 	const bool bSmoke = !C->IsDefeated() && !bShow
 		&& (Action == EExtractionAction::Smoke || GetWorld()->GetTimeSeconds() < SmokePropUntil);
 	auto* Gun = C->GetEquippedWeapon();
@@ -267,6 +301,10 @@ void UExtractionAbilities::ServerBegin_Implementation(uint32 Sequence, EExtracti
 		SmokeReadyAt)) return;
 	auto* C = Character();
 	C->GetExtractionInteraction()->CancelMedical();
+	// 治疗分两种：拿着激素枪开火 = 射飞镖（目标可为空）；长按 V = 给自己打针（目标是自己）。
+	const bool bDart = Kind == EExtractionAction::Heal && Other != C;
+	if (bDart && !bStimDrawn) return;
+	bHealDart = bDart;
 	Action = Kind;
 	Target = Other;
 	if (!ValidTarget())
@@ -303,6 +341,8 @@ void UExtractionAbilities::ServerBegin_Implementation(uint32 Sequence, EExtracti
 bool UExtractionAbilities::ValidTarget() const
 {
 	if (Action == EExtractionAction::Smoke) return true;
+	// 没瞄准队友的飞镖也照样射出。
+	if (Action == EExtractionAction::Heal && bHealDart && !IsValid(Target)) return true;
 	const auto* C = Character();
 	const auto* R = GetDefault<UExtractionRules>();
 	if (!IsValid(Target) || !Friendly(C, Target)) return false;
@@ -326,6 +366,7 @@ void UExtractionAbilities::Cancel()
 	Action = EExtractionAction::None;
 	ActionEnd = 0;
 	Target = nullptr;
+	bHealDart = false;
 	// 取消、完成、受伤都会经过这里，统一收表现。
 	RefreshAbilityMontage();
 	GetOwner()->ForceNetUpdate();
@@ -361,7 +402,7 @@ void UExtractionAbilities::Complete()
 	{
 		// 一发激素弹，出手即进入冷却。自用直接上效果（官方 UseForMe 由动画通知 AddBuff）；
 		// 射向队友则沿当前准星发射飞镖，由飞镖命中时施加效果，打空就浪费这一发。
-		if (Target == Character()) Target->GetExtractionHealth()->ApplyStim();
+		if (!bHealDart) Character()->GetExtractionHealth()->ApplyStim();
 		else
 		{
 			auto* C = Character();
@@ -380,6 +421,9 @@ void UExtractionAbilities::Complete()
 				Dart->Launch(C, Direction);
 		}
 		HealReadyAt = Now + R->HealCooldown;
+		// 一发打完收起激素枪，换回原来的枪。
+		bStimDrawn = false;
+		OnRep_StimDrawn();
 	}
 	else if (Action == EExtractionAction::Smoke)
 	{
@@ -432,10 +476,17 @@ void UExtractionAbilities::TickComponent(float Delta, ELevelTick Tick, FActorCom
 {
 	Super::TickComponent(Delta, Tick, Function);
 	// 表现每端都维护：手臂重建或换枪后重新挂接、重新隐藏。
-	if (Action != EExtractionAction::None || HiddenGun.IsValid() || SmokePropUntil > 0)
+	if (Action != EExtractionAction::None || HiddenGun.IsValid() || SmokePropUntil > 0 || bStimDrawn)
 	{
 		RefreshStimGun();
 		if (GetWorld()->GetTimeSeconds() >= SmokePropUntil) SmokePropUntil = 0;
+	}
+	// 倒地、死亡或不能行动时自动收起激素枪。
+	if (GetOwner()->HasAuthority() && bStimDrawn && (IsDowned() || Character()->IsDefeated()
+		|| !Character()->GetExtractionCombat()->CanAct()))
+	{
+		bStimDrawn = false;
+		OnRep_StimDrawn();
 	}
 	if (!GetOwner()->HasAuthority() || Action == EExtractionAction::None) return;
 	const auto* C = Character();

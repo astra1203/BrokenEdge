@@ -2014,6 +2014,7 @@ void ABrokenEdgeCharacter::AimButtonReleased()
 void ABrokenEdgeCharacter::ReloadButtonPressed()
 {
 	if (Melee->Active) return;
+	if (ExtractionAbilities->bStimDrawn) return;
 	if (Combat && Combat->bHoldingTheFlag) return;
 	if (bDisableGameplay) return;
 	if (Combat)
@@ -2046,6 +2047,12 @@ void ABrokenEdgeCharacter::FireButtonPressed()
 	if (ExtractionInteraction->IsEnabled() && ExtractionInteraction->InventoryOpen) return;
 	if (Combat && Combat->bHoldingTheFlag) return;
 	if (bDisableGameplay) return;
+	// 手上是激素枪：左键射飞镖，不开枪。
+	if (ExtractionAbilities->bStimDrawn)
+	{
+		ExtractionAbilities->FireStimDart();
+		return;
+	}
 	if (Combat)
 	{
 		Combat->FireButtonPressed(true);

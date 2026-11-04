@@ -266,6 +266,25 @@ public:
 	double HealReadyAt = 0;
 	UPROPERTY(Replicated)
 	double SmokeReadyAt = 0;
+	/**
+	 * 激素枪已拿在手上（轻点 V 切出/收起）：此时左键射飞镖，打中队友才给队友回血；
+	 * 长按 V 是直接给自己打针，不需要先切出来。打完一发自动收起。
+	 */
+	UPROPERTY(ReplicatedUsing=OnRep_StimDrawn)
+	bool bStimDrawn = false;
+	UFUNCTION()
+	void OnRep_StimDrawn();
+	/** 本次治疗是射飞镖（true）还是给自己打针（false）；与 Action 同批复制，决定表现。 */
+	UPROPERTY(Replicated)
+	bool bHealDart = false;
+	/** 本地：切出/收起激素枪（冷却中、不能行动时服务器拒绝）。 */
+	void SetStimDrawn(bool bDrawn);
+	UFUNCTION(Server, Reliable)
+	void ServerSetStimDrawn(bool bDrawn);
+	/** 本地：拿着激素枪时按左键，沿准星射一发飞镖；准星下是队友就以他为目标。 */
+	void FireStimDart();
+	/** 准星下的队友；没有返回空（不再默认自己）。 */
+	ABrokenEdgeCharacter* DartFocus() const;
 	// 目标身上的救援占用者，同一倒地角色同一时间只允许一名救援者。
 	UPROPERTY(Replicated)
 	TObjectPtr<ABrokenEdgeCharacter> Rescuer;

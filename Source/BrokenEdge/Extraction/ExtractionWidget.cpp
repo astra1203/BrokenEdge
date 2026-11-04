@@ -222,7 +222,9 @@ void UExtractionWidget::Refresh()
 		{
 			const double HealIn = FMath::Max(0.0, A->HealReadyAt - Now), SmokeIn = FMath::Max(0.0, A->SmokeReadyAt - Now);
 			HintText += HealIn > 0 ? FString::Printf(TEXT("\nV 激素枪 · %.0fs"), HealIn)
-				            : FString(TEXT("\nV 激素枪（对准队友，否则自用）"));
+				            : A->bStimDrawn
+				            ? FString(TEXT("\n左键 射激素飞镖给队友 · V 收起"))
+				            : FString(TEXT("\nV 切出激素枪 · 长按 V 给自己打针"));
 			HintText += SmokeIn > 0 ? FString::Printf(TEXT("\nX 蜂巢烟雾 · %.0fs"), SmokeIn)
 				            : FString(TEXT("\nX 蜂巢烟雾（Alt+X 低抛）"));
 			if (C->GetExtractionHealth()->Painkiller) Text += TEXT("\n激素生效 · 止痛中，骨折暂不影响移动");

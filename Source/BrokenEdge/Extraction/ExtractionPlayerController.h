@@ -112,6 +112,11 @@ public:
 	void ReleaseInteract();
 	// 选择本地治疗焦点后发请求，服务器仍检查友方、距离和血量。
 	void HealAbility();
+	// V：轻点切出/收起激素枪，长按（HealHoldSeconds）给自己打针。
+	void HealReleased();
+	double HealDownAt = -1;
+	bool bHealHoldUsed = false;
+	static constexpr double HealHoldSeconds = .35;
 	// 发起烟雾能力请求，落点与冷却在服务器处理。
 	void SmokeAbility();
 	void SmokeAbilityLow();

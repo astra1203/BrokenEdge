@@ -51,6 +51,7 @@ void AExtractionPlayerController::SetupInputComponent()
 	// Z 趴下；激素枪改到 V。
 	InputComponent->BindKey(EKeys::Z, IE_Pressed, this, &ThisClass::ToggleProne);
 	InputComponent->BindKey(EKeys::V, IE_Pressed, this, &ThisClass::HealAbility);
+	InputComponent->BindKey(EKeys::V, IE_Released, this, &ThisClass::HealReleased);
 	InputComponent->BindKey(EKeys::X, IE_Pressed, this, &ThisClass::SmokeAbility);
 	// 官方蜂巢烟雾支持低抛；组合键要求修饰键完全匹配，单按 X 不会触发这一条。
 	InputComponent->BindKey(FInputChord(EKeys::X, false, false, true, false), IE_Pressed, this,
@@ -90,6 +91,8 @@ void AExtractionPlayerController::SelectWeaponSlot(int32 Slot)
 	const auto* I = Interaction();
 	const auto* Inv = I ? I->Inventory() : nullptr;
 	if (!C || bMenuOpen || !Inv) return;
+	// 拿着激素枪时按 1/2 先收起激素枪，回到对应的枪。
+	if (C->GetExtractionAbilities()->bStimDrawn) C->GetExtractionAbilities()->SetStimDrawn(false);
 	const auto* Wanted = Inv->Contents.InSlot(Slot);
 	if (!Wanted)
 	{
@@ -198,8 +201,24 @@ void AExtractionPlayerController::ReleaseInteract()
 // 选择本地治疗焦点后发请求，服务器仍检查友方、距离和血量。
 void AExtractionPlayerController::HealAbility()
 {
+	// 按下只记时刻；松开时判断是轻点（切枪）还是长按（Tick 里到时就给自己打针）。
 	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
-		C->GetExtractionAbilities()->Request(EExtractionAction::Heal, C->GetExtractionAbilities()->HealFocus());
+	{
+		HealDownAt = GetWorld()->GetTimeSeconds();
+		bHealHoldUsed = false;
+	}
+}
+
+void AExtractionPlayerController::HealReleased()
+{
+	auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
+	if (C && HealDownAt >= 0 && !bHealHoldUsed && !bMenuOpen)
+	{
+		auto* Abilities = C->GetExtractionAbilities();
+		Abilities->SetStimDrawn(!Abilities->bStimDrawn);
+	}
+	HealDownAt = -1;
+	bHealHoldUsed = false;
 }
 
 // 发起烟雾能力请求（高抛），出手方向与冷却在服务器处理。
@@ -578,6 +597,14 @@ void AExtractionPlayerController::GetPlayerViewPoint(FVector& OutLocation, FRota
 void AExtractionPlayerController::Tick(float Delta)
 {
 	Super::Tick(Delta);
+	// 长按 V 到时：给自己打针（播自用动作），松开时不再切枪。
+	if (HealDownAt >= 0 && !bHealHoldUsed && IsLocalController()
+		&& GetWorld()->GetTimeSeconds() - HealDownAt >= HealHoldSeconds)
+	{
+		bHealHoldUsed = true;
+		if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
+			C->GetExtractionAbilities()->Request(EExtractionAction::Heal, C);
+	}
 	// 手雷瞄准：打开背包/菜单或失去行动能力即取消；松开 G 时投出。
 	if (bAimingGrenade && IsLocalController())
 	{
