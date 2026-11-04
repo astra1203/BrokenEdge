@@ -218,6 +218,9 @@ protected:
 
 public:
 	virtual void Jump() override;
+	virtual void StopJumping() override;
+	// 游泳时按住空格上浮（本地输入，经移动组件加速度同步）。
+	bool bSwimUp = false;
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void CrouchButtonPressed();

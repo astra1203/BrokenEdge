@@ -24,7 +24,8 @@ AExtractionWater::AExtractionWater(const FObjectInitializer& ObjectInitializer) 
 	Extent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	Extent->SetCollisionResponseToAllChannels(ECR_Ignore);
 	Extent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-	Extent->SetGenerateOverlapEvents(false);
+	// 角色胶囊按自己记录的重叠组件找物理体积，只认开启重叠事件的组件；关掉就永远进不了水。
+	Extent->SetGenerateOverlapEvents(true);
 	Extent->SetCanEverAffectNavigation(false);
 	SetRootComponent(Extent);
 	if (GetBrushComponent())
@@ -118,6 +119,11 @@ void AExtractionWater::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	ApplySurface();
+	// 水面上涨时站着不动的角色不会触发移动重叠更新，主动让池里的胶囊重新判定物理体积。
+	TArray<UPrimitiveComponent*> Inside;
+	Extent->GetOverlappingComponents(Inside);
+	for (UPrimitiveComponent* Component : Inside)
+		if (Component && Component->GetShouldUpdatePhysicsVolume()) Component->UpdatePhysicsVolume(true);
 	if (SurfaceZ() >= FullZ) SetActorTickEnabled(false);
 }
 

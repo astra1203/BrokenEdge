@@ -319,6 +319,11 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	UpdateSprint();
 	UpdateProneAnimation();
+	if (bSwimUp)
+	{
+		if (GetCharacterMovement()->IsSwimming()) AddMovementInput(FVector::UpVector, 1.f);
+		else bSwimUp = false;
+	}
 	DiagnoseStuckMovement(DeltaTime);
 	UpdateExtractionLabel();
 	// 控制权和组件可能晚于 BeginPlay 就绪；初始化成功或明确失败后不再重复创建。
@@ -1743,6 +1748,11 @@ void ABrokenEdgeCharacter::Jump()
 		return;
 	}
 	if (ExtractionAbilities->IsDowned()) return;
+	if (GetCharacterMovement()->IsSwimming())
+	{
+		bSwimUp = true;
+		return;
+	}
 	// 趴着时空格先起身，不直接起跳。
 	if (bProne)
 	{
@@ -1764,6 +1774,12 @@ void ABrokenEdgeCharacter::Jump()
 	}
 }
 
+void ABrokenEdgeCharacter::StopJumping()
+{
+	bSwimUp = false;
+	Super::StopJumping();
+}
+
 void ABrokenEdgeCharacter::Move(const FInputActionValue& Value)
 {
 	if (bDisableGameplay) return;
@@ -1782,8 +1798,10 @@ void ABrokenEdgeCharacter::Move(const FInputActionValue& Value)
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		// get forward vector；游泳时沿视线方向前进，低头下潜、抬头上浮。
+		const bool bSwimming = GetCharacterMovement()->IsSwimming();
+		const FVector ForwardDirection = bSwimming ? Rotation.Vector()
+			: FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
 		// get right vector
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
