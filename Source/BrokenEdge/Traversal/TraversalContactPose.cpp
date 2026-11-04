@@ -86,6 +86,8 @@ void FTraversalContactPose::Apply(FCompactPose& LocalPose) const
 				Target = Contact + Lateral;
 			}
 			if (bFoot) Target -= Facing * 6.f;
+			// 实测的是横杆上表面；手要握住横杆，腕骨在横杆下方、靠人这一侧，掌心才包在杆上。
+			else Target -= FVector::UpVector * 7.5f + Facing * 5.f;
 		}
 		else Target.Z += 3.f;
 		Target = MeshToWorld.InverseTransformPosition(Target);
@@ -105,7 +107,39 @@ void FTraversalContactPose::Apply(FCompactPose& LocalPose) const
 		}
 		// Retain the source reaching pose until the moving body makes this contact reachable.
 		if (FVector::Distance(Upper.GetLocation(), Target) > Reach * .98f) return;
+		const FTransform TipBefore = Tip;
 		AnimationCore::SolveTwoBoneIK(Upper, Lower, Tip, Lower.GetLocation(), Target, false, 1., 1.);
+		// 爬梯握杆：手指朝上并越过横杆、掌心朝梯子、拇指朝内。用本手中指/食指/小指的指根位置求出手的
+		// 实际朝向，再转到目标朝向，不依赖骨骼轴向约定；缺手指骨骼时只定位不转手。
+		if (bLadder && !bFoot)
+		{
+			FBoneReference Middle, Index, Pinky;
+			Middle.BoneName = FName(FString(TipName) + TEXT("Middle1"));
+			Index.BoneName = FName(FString(TipName) + TEXT("Index1"));
+			Pinky.BoneName = FName(FString(TipName) + TEXT("Pinky1"));
+			Middle.Initialize(Bones);
+			Index.Initialize(Bones);
+			Pinky.Initialize(Bones);
+			if (Middle.IsValidToEvaluate(Bones) && Index.IsValidToEvaluate(Bones) && Pinky.IsValidToEvaluate(Bones))
+			{
+				const FVector MiddleAt = Pose.GetComponentSpaceTransform(Middle.GetCompactPoseIndex(Bones)).GetLocation();
+				const FVector IndexAt = Pose.GetComponentSpaceTransform(Index.GetCompactPoseIndex(Bones)).GetLocation();
+				const FVector PinkyAt = Pose.GetComponentSpaceTransform(Pinky.GetCompactPoseIndex(Bones)).GetLocation();
+				const FVector FingerLocal = TipBefore.InverseTransformVectorNoScale(MiddleAt - TipBefore.GetLocation());
+				const FVector AcrossLocal = TipBefore.InverseTransformVectorNoScale(IndexAt - PinkyAt);
+				const FVector CurrentFinger = Tip.TransformVectorNoScale(FingerLocal).GetSafeNormal();
+				const FVector CurrentAcross = Tip.TransformVectorNoScale(AcrossLocal).GetSafeNormal();
+				const FVector WantFinger = MeshToWorld.InverseTransformVectorNoScale(
+					(FVector::UpVector * .55f + Facing * .85f).GetSafeNormal());
+				const FVector WantAcross = MeshToWorld.InverseTransformVectorNoScale(bRight ? -Right : Right);
+				if (!CurrentFinger.IsNearlyZero() && !CurrentAcross.IsNearlyZero())
+				{
+					const FQuat Current = FRotationMatrix::MakeFromXY(CurrentFinger, CurrentAcross).ToQuat();
+					const FQuat Want = FRotationMatrix::MakeFromXY(WantFinger, WantAcross).ToQuat();
+					Tip.SetRotation((Want * Current.Inverse() * Tip.GetRotation()).GetNormalized());
+				}
+			}
+		}
 		TArray<FBoneTransform> Changes;
 		Changes.Emplace(U, Upper);
 		Changes.Emplace(L, Lower);

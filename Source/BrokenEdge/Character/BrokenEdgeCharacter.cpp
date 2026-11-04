@@ -775,16 +775,19 @@ void ABrokenEdgeCharacter::SetLadderBodyView(bool bOn)
 		GetMesh()->SetOwnerNoSee(false);
 		// 世界表示图元在拥有者第一人称画面里会被隐藏，爬梯期间临时当普通图元渲染。
 		GetMesh()->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::None);
-		GetMesh()->HideBoneByName(FirstPersonHeadBone, PBO_None);
+		// 从脖子起隐藏（没有 Neck 骨骼才只藏头），否则低头会看到头被藏后留下的脖子断口和模型内壁。
+		LadderHiddenBone = GetMesh()->GetBoneIndex(TEXT("Neck")) != INDEX_NONE ? FName(TEXT("Neck")) : FirstPersonHeadBone;
+		GetMesh()->HideBoneByName(LadderHiddenBone, PBO_None);
 	}
 	else
 	{
-		GetMesh()->UnHideBoneByName(FirstPersonHeadBone);
+		GetMesh()->UnHideBoneByName(LadderHiddenBone.IsNone() ? FirstPersonHeadBone : LadderHiddenBone);
 		GetMesh()->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::WorldSpaceRepresentation);
 		GetMesh()->SetOwnerNoSee(true);
 	}
 	DedicatedFirstPersonMesh->SetHiddenInGame(bOn);
 	if (FirstPersonWeaponMesh) FirstPersonWeaponMesh->SetHiddenInGame(bOn);
+	bLadderBodyView = bOn;
 }
 
 void ABrokenEdgeCharacter::UpdateFirstPersonBodyPose()
@@ -798,7 +801,20 @@ void ABrokenEdgeCharacter::UpdateFirstPersonCameraLocation()
 {
 	// BaseEyeHeight is updated by ACharacter when entering or leaving crouch.
 	const FRotator ViewYaw(0.f, GetViewRotation().Yaw, 0.f);
-	FollowCamera->SetWorldLocation(GetPawnViewLocation() + ViewYaw.RotateVector(FirstPersonCameraOffset));
+	FVector Target = GetPawnViewLocation() + ViewYaw.RotateVector(FirstPersonCameraOffset);
+	// 爬梯显示整个身体时，爬梯动作会把身体往梯子推几十厘米，相机仍在胶囊眼高就会落进脖子和后背里。
+	// 做法同“真第一人称”游戏：相机跟着头骨，放在脸前一点；头和脖子已隐藏。
+	if (bLadderBodyView && GetMesh())
+	{
+		const FName Bone = GetMesh()->GetBoneIndex(FirstPersonHeadBone) != INDEX_NONE ? FirstPersonHeadBone : FName(TEXT("Head"));
+		if (GetMesh()->GetBoneIndex(Bone) != INDEX_NONE)
+			Target = GetMesh()->GetBoneLocation(Bone) + GetActorForwardVector() * 14.f + FVector(0, 0, 6.f);
+	}
+	const bool bBlend = bLadderBodyView || LadderCameraBlend > 0.f;
+	LadderCameraBlend = bLadderBodyView ? .25f : FMath::Max(0.f, LadderCameraBlend - GetWorld()->GetDeltaSeconds());
+	FollowCamera->SetWorldLocation(bBlend
+		? FMath::VInterpTo(FollowCamera->GetComponentLocation(), Target, GetWorld()->GetDeltaSeconds(), 20.f)
+		: Target);
 }
 
 void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
