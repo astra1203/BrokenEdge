@@ -691,3 +691,9 @@ void UTraversalMovementComponent::EndPlay(const EEndPlayReason::Type Reason)
 	if (IsValid(State.Ladder)) State.Ladder->Release(CharacterOwner);
 	Super::EndPlay(Reason);
 }
+
+void UTraversalMovementComponent::PhysicsVolumeChanged(APhysicsVolume* NewVolume)
+{
+	if (const auto* C = Cast<ABrokenEdgeCharacter>(CharacterOwner); C && C->IsOnZipline() && IsFlying()) return;
+	Super::PhysicsVolumeChanged(NewVolume);
+}

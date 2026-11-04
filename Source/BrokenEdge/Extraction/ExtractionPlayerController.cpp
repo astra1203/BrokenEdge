@@ -8,6 +8,7 @@
 #include "ExtractionInteractionComponent.h"
 #include "ExtractionKeyRoom.h"
 #include "ExtractionExitSwitch.h"
+#include "ExtractionZipline.h"
 #include "ExtractionFragGrenade.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionSmoke.h"
@@ -228,7 +229,8 @@ void AExtractionPlayerController::Interact()
 	auto* I = Interaction();
 	auto* C = Cast<ABrokenEdgeCharacter>(GetPawn());
 	if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen) return;
-	if (I->SwitchFocus) ServerPullSwitch(I->SwitchFocus);
+	if (I->ZiplineFocus) ServerUseZipline(I->ZiplineFocus);
+	else if (I->SwitchFocus) ServerPullSwitch(I->SwitchFocus);
 	else if (I->DoorFocus) ServerUnlockDoor(I->DoorFocus, I->Inventory()->Contents.Revision);
 	else if (I->Focus) RequestOpenInventory(I->Focus, true);
 	else if (C) ServerSwapExtractionWeapons();
@@ -239,6 +241,11 @@ void AExtractionPlayerController::InteractDoor()
 	// F 键专用入口：只开门，不做换枪/救人，避免和现有 Interact 语义互相干扰。
 	auto* I = Interaction();
 	if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen) return;
+	if (I->ZiplineFocus)
+	{
+		ServerUseZipline(I->ZiplineFocus);
+		return;
+	}
 	if (I->SwitchFocus)
 	{
 		ServerPullSwitch(I->SwitchFocus);
@@ -348,6 +355,13 @@ void AExtractionPlayerController::ServerThrowGrenade_Implementation(bool bLow)
 	NextGrenadeAt = Now + R->FragThrowInterval;
 	Grenade->Launch(View.Vector() * (bLow ? R->FragThrowLowSpeed : R->FragThrowSpeed) + C->GetVelocity());
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_FRAG_THROW Player=%s Low=%d"), *GetNameSafe(PlayerState), bLow ? 1 : 0);
+}
+
+void AExtractionPlayerController::ServerUseZipline_Implementation(AExtractionZipline* Line)
+{
+	if (!IsValid(Line) || Line->GetWorld() != GetWorld()) return;
+	const FString Error = Line->Use(Cast<ABrokenEdgeCharacter>(GetPawn()));
+	if (!Error.IsEmpty()) ClientItemResult(0, Error);
 }
 
 void AExtractionPlayerController::ServerPullSwitch_Implementation(AExtractionExitSwitch* Switch)

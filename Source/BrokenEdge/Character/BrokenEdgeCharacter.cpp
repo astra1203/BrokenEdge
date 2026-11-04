@@ -47,6 +47,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
+#include "BrokenEdge/Extraction/ExtractionZipline.h"
+#include "GameFramework/PhysicsVolume.h"
 
 
 // Sets default values
@@ -319,6 +321,7 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	UpdateSprint();
 	UpdateProneAnimation();
+	TickZipline();
 	if (bSwimUp)
 	{
 		if (GetCharacterMovement()->IsSwimming()) AddMovementInput(FVector::UpVector, 1.f);
@@ -1271,6 +1274,9 @@ void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProp
 	DOREPLIFETIME(ABrokenEdgeCharacter, bExtractionGuard);
 	DOREPLIFETIME(ABrokenEdgeCharacter, ExtractionAlert);
 	DOREPLIFETIME(ABrokenEdgeCharacter, bProne);
+	DOREPLIFETIME(ABrokenEdgeCharacter, Zipline);
+	DOREPLIFETIME(ABrokenEdgeCharacter, ZipFrom);
+	DOREPLIFETIME(ABrokenEdgeCharacter, ZipTo);
 	DOREPLIFETIME(ABrokenEdgeCharacter, ExtractionGuardId);
 
 	DOREPLIFETIME_CONDITION(ABrokenEdgeCharacter, OverlappingWeapon, COND_OwnerOnly);
@@ -1748,6 +1754,13 @@ void ABrokenEdgeCharacter::Jump()
 		return;
 	}
 	if (ExtractionAbilities->IsDowned()) return;
+	// 滑索上按空格松手：本地立即落下，服务器随后确认。
+	if (Zipline)
+	{
+		ApplyZipline(false);
+		ServerEndZipline();
+		return;
+	}
 	if (GetCharacterMovement()->IsSwimming())
 	{
 		bSwimUp = true;
@@ -1785,6 +1798,8 @@ void ABrokenEdgeCharacter::Move(const FInputActionValue& Value)
 	if (bDisableGameplay) return;
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
+	// 滑索上 WASD 不起作用，移动输入由 TickZipline 沿索方向给出。
+	if (Zipline) return;
 	if (IsTraversing())
 	{
 		const auto* Movement = CastChecked<UTraversalMovementComponent>(GetCharacterMovement());
@@ -2302,4 +2317,76 @@ UAnimMontage* ABrokenEdgeCharacter::GetViewSwapMontage() const
 	return Weapon && Weapon->Presentation && Weapon->Presentation->ViewSwap
 		       ? Weapon->Presentation->ViewSwap.Get()
 		       : FirstPersonSwapMontage.Get();
+}
+
+void ABrokenEdgeCharacter::StartZipline(AExtractionZipline* Line, const FVector& From, const FVector& To)
+{
+	if (!HasAuthority() || !IsValid(Line)) return;
+	if (bIsCrouched) UnCrouch();
+	Zipline = Line;
+	ZipFrom = From;
+	ZipTo = To;
+	ZipStartedAt = GetWorld()->GetTimeSeconds();
+	OnRep_Zipline();
+	ForceNetUpdate();
+}
+
+void ABrokenEdgeCharacter::EndZipline()
+{
+	if (!HasAuthority() || !Zipline) return;
+	Zipline = nullptr;
+	OnRep_Zipline();
+	ForceNetUpdate();
+}
+
+void ABrokenEdgeCharacter::ServerEndZipline_Implementation() { EndZipline(); }
+
+void ABrokenEdgeCharacter::OnRep_Zipline() { ApplyZipline(Zipline != nullptr); }
+
+void ABrokenEdgeCharacter::ApplyZipline(bool bOn)
+{
+	if (bOn == bZipApplied || !(HasAuthority() || IsLocallyControlled())) return;
+	bZipApplied = bOn;
+	auto* Movement = GetCharacterMovement();
+	if (bOn)
+	{
+		ZipSavedFlySpeed = Movement->MaxFlySpeed;
+		Movement->MaxFlySpeed = 1100.f;
+		Movement->Velocity = FVector::ZeroVector;
+		Movement->SetMovementMode(MOVE_Flying);
+		return;
+	}
+	Movement->MaxFlySpeed = ZipSavedFlySpeed > 0 ? ZipSavedFlySpeed : Movement->MaxFlySpeed;
+	// 落点在水里（池子注了水）就直接游泳，否则正常下落。
+	const auto* Volume = Movement->GetPhysicsVolume();
+	Movement->SetMovementMode(Volume && Volume->bWaterVolume ? MOVE_Swimming : MOVE_Falling);
+}
+
+void ABrokenEdgeCharacter::TickZipline()
+{
+	if (!Zipline) return;
+	const FVector At = GetActorLocation();
+	const FVector Span = ZipTo - ZipFrom;
+	const float Length = Span.Size();
+	const FVector Dir = Span.GetSafeNormal();
+	const bool bArrived = FVector::Dist(At, ZipTo) < 110.f;
+	// 本地操控端：朝索上前方 2.5 米的点加输入，既沿索前进又把偏离拉回索下。
+	if (IsLocallyControlled() && bZipApplied)
+	{
+		if (bArrived)
+		{
+			ApplyZipline(false);
+			if (!HasAuthority()) ServerEndZipline();
+		}
+		else
+		{
+			const float Along = FMath::Clamp(FVector::DotProduct(At - ZipFrom, Dir), 0.f, Length);
+			const FVector Aim = ZipFrom + Dir * FMath::Min(Length, Along + 250.f);
+			AddMovementInput((Aim - At).GetSafeNormal(), 1.f);
+		}
+	}
+	// 服务器兜底：到端点、卡住超时或滑索失效都结束。
+	if (HasAuthority() && (bArrived || !IsValid(Zipline) || ExtractionAbilities->IsDowned()
+		|| GetWorld()->GetTimeSeconds() - ZipStartedAt > Length / 300.f + 4.f))
+		EndZipline();
 }

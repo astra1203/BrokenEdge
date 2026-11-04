@@ -364,8 +364,31 @@ public:
 	/** 搜打撤趴下（Z 切换）：本地立即生效并请求服务器，服务器值复制给其他端。 */
 	void ToggleProne();
 	bool IsProne() const { return bProne; }
+	/**
+	 * 滑索：服务器开始/结束并复制给所有端。骑乘时切到飞行模式，本地操控端每帧沿 ZipFrom→ZipTo
+	 * 加移动输入（服务器按同样输入模拟），到端点或按空格松手后落下（在水里则直接游泳）。
+	 */
+	void StartZipline(class AExtractionZipline* Line, const FVector& From, const FVector& To);
+	void EndZipline();
+	bool IsOnZipline() const { return Zipline != nullptr; }
+	UFUNCTION(Server, Reliable)
+	void ServerEndZipline();
 
 private:
+	UPROPERTY(ReplicatedUsing=OnRep_Zipline)
+	TObjectPtr<class AExtractionZipline> Zipline;
+	UPROPERTY(Replicated)
+	FVector ZipFrom = FVector::ZeroVector;
+	UPROPERTY(Replicated)
+	FVector ZipTo = FVector::ZeroVector;
+	UFUNCTION()
+	void OnRep_Zipline();
+	// 进出飞行模式与滑行速度，只在服务器和本地操控端生效；重复调用无副作用。
+	void ApplyZipline(bool bOn);
+	void TickZipline();
+	bool bZipApplied = false;
+	float ZipSavedFlySpeed = 0;
+	double ZipStartedAt = 0;
 	UPROPERTY(Replicated)
 	bool bProne = false;
 	UFUNCTION(Server, Reliable)

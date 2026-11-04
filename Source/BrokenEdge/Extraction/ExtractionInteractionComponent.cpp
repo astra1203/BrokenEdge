@@ -4,6 +4,7 @@
 #include "ExtractionLootActor.h"
 #include "ExtractionKeyRoom.h"
 #include "ExtractionExitSwitch.h"
+#include "ExtractionZipline.h"
 #include "ExtractionState.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionCombatComponent.h"
@@ -87,6 +88,7 @@ void UExtractionInteractionComponent::UpdateFocus()
 	Focus = nullptr;
 	DoorFocus = nullptr;
 	SwitchFocus = nullptr;
+	ZiplineFocus = nullptr;
 	if (!CanAct() || InventoryOpen) return;
 	auto* C = Character();
 	const FVector Forward = C->GetControlRotation().Vector().GetSafeNormal2D();
@@ -127,6 +129,21 @@ void UExtractionInteractionComponent::UpdateFocus()
 		if (Dot >= -.5f && Score < Best)
 		{
 			SwitchFocus = *It;
+			DoorFocus = nullptr;
+			Focus = nullptr;
+			Best = Score;
+		}
+	}
+	// 滑索端点：站在立柱旁就优先挂索。
+	for (TActorIterator<AExtractionZipline> It(GetWorld()); It; ++It)
+	{
+		bool bFromTop = false;
+		if (!It->CanReach(C, bFromTop)) continue;
+		const float Score = FVector::Dist2D(C->GetActorLocation(), bFromTop ? It->TopWorld() : It->BottomWorld()) - 50.f;
+		if (Score < Best)
+		{
+			ZiplineFocus = *It;
+			SwitchFocus = nullptr;
 			DoorFocus = nullptr;
 			Focus = nullptr;
 			Best = Score;

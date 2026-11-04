@@ -64,6 +64,9 @@ public:
 	/** 本地选中的撤离电闸，与其他焦点互斥，不参与复制。 */
 	UPROPERTY(Transient)
 	TObjectPtr<class AExtractionExitSwitch> SwitchFocus;
+	/** 本地选中的滑索端点，与其他焦点互斥，不参与复制。 */
+	UPROPERTY(Transient)
+	TObjectPtr<class AExtractionZipline> ZiplineFocus;
 	/** 交互反馈文本，不参与网络复制；直接拾取时记录操作错误。 */
 	FString Message;
 	/** 当前世界是否使用撤离模式的 GameState。 */

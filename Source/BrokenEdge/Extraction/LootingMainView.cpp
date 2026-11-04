@@ -5,6 +5,8 @@
 #include "ExtractionLootActor.h"
 #include "ExtractionKeyRoom.h"
 #include "ExtractionExitSwitch.h"
+#include "ExtractionZipline.h"
+#include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "ExtractionState.h"
 #include "ExtractionGunsmith.h"
 #include "ExtractionUIStyle.h"
@@ -532,7 +534,8 @@ void ULootingMainView::UpdatePrompt()
 	auto* I = Interaction();
 	if (!I || !I->CanAct()) return;
 	FString Prompt;
-	if (I->SwitchFocus) Prompt = I->SwitchFocus->PromptText();
+	if (I->ZiplineFocus) Prompt = I->ZiplineFocus->PromptText(Cast<ABrokenEdgeCharacter>(GetOwningPlayerPawn()));
+	else if (I->SwitchFocus) Prompt = I->SwitchFocus->PromptText();
 	else if (I->DoorFocus)
 	{
 		auto* Door = I->DoorFocus.Get();

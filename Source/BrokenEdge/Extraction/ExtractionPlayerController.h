@@ -105,6 +105,9 @@ public:
 	// 电闸由服务器再次校验距离、视线与行动能力。
 	UFUNCTION(Server, Reliable)
 	void ServerPullSwitch(class AExtractionExitSwitch* Switch);
+	// 滑索由服务器再次校验距离后开始骑乘。
+	UFUNCTION(Server, Reliable)
+	void ServerUseZipline(class AExtractionZipline* Line);
 	// 释放交互键时取消救援请求，不直接修改目标生命或进度。
 	void ReleaseInteract();
 	// 选择本地治疗焦点后发请求，服务器仍检查友方、距离和血量。
