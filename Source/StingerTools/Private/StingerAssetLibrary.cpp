@@ -12,6 +12,11 @@
 #include "Animation/AnimBlueprint.h"
 #include "Animation/AnimData/IAnimationDataController.h"
 #include "Engine/SkeletalMesh.h"
+#include "Rendering/SkeletalMeshRenderData.h"
+#include "AnimationRuntime.h"
+#include "IImageWrapper.h"
+#include "IImageWrapperModule.h"
+#include "Misc/FileHelper.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Kismet2/BlueprintEditorUtils.h"
@@ -381,6 +386,124 @@ bool UStingerAssetLibrary::ConfigureThirdPersonGripIK(UAnimBlueprint* Blueprint)
 	FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(Blueprint);
 	FKismetEditorUtilities::CompileBlueprint(Blueprint);
 	return Blueprint->Status != BS_Error;
+}
+
+FString UStingerAssetLibrary::DescribeSkeletalVertices(USkeletalMesh* Mesh)
+{
+	TArray<TSharedPtr<FJsonValue>> Points;
+	if (Mesh && Mesh->GetResourceForRendering() && Mesh->GetResourceForRendering()->LODRenderData.Num())
+	{
+		const auto& Positions = Mesh->GetResourceForRendering()->LODRenderData[0].StaticVertexBuffers.
+		                              PositionVertexBuffer;
+		for (uint32 I = 0; I < Positions.GetNumVertices(); ++I)
+		{
+			const auto P = Positions.VertexPosition(I);
+			Points.Add(MakeShared<FJsonValueArray>(TArray<TSharedPtr<FJsonValue>>{
+				MakeShared<FJsonValueNumber>(P.X), MakeShared<FJsonValueNumber>(P.Y), MakeShared<FJsonValueNumber>(P.Z)
+			}));
+		}
+	}
+	FString Result;
+	FJsonSerializer::Serialize(Points, TJsonWriterFactory<>::Create(&Result));
+	return Result;
+}
+
+int32 UStingerAssetLibrary::RenderWeaponIcon(USkeletalMesh* Mesh, const FString& File, int32 Height, float Margin)
+{
+	if (!Mesh || !Mesh->GetResourceForRendering() || !Mesh->GetResourceForRendering()->LODRenderData.Num()) return 0;
+	const auto& Lod = Mesh->GetResourceForRendering()->LODRenderData[0];
+	const auto& Positions = Lod.StaticVertexBuffers.PositionVertexBuffer;
+	const auto* Indices = Lod.MultiSizeIndexContainer.GetIndexBuffer();
+	if (!Indices || Indices->Num() < 3 || Positions.GetNumVertices() == 0) return 0;
+	FBox Bounds(ForceInit);
+	for (uint32 I = 0; I < Positions.GetNumVertices(); ++I) Bounds += FVector(Positions.VertexPosition(I));
+	// 长轴为前后方向；枪口一侧放在右边。
+	const bool bAlongY = Bounds.GetExtent().Y > Bounds.GetExtent().X;
+	float Sign = 1.f;
+	if (const auto* Muzzle = Mesh->FindSocket(TEXT("MuzzleFlash")))
+	{
+		const FVector At = Muzzle->GetSocketLocalTransform().GetLocation()
+			+ (Mesh->GetRefSkeleton().FindBoneIndex(Muzzle->BoneName) != INDEX_NONE
+				   ? FAnimationRuntime::GetComponentSpaceTransformRefPose(
+					   Mesh->GetRefSkeleton(), Mesh->GetRefSkeleton().FindBoneIndex(Muzzle->BoneName)).GetLocation()
+				   : FVector::ZeroVector);
+		Sign = (bAlongY ? At.Y - Bounds.GetCenter().Y : At.X - Bounds.GetCenter().X) < 0 ? -1.f : 1.f;
+	}
+	// 投影：U 沿枪身（枪口为正），V 向下，深度取侧向（离观察者近的覆盖远的）。
+	const auto Project = [&](const FVector& P) { return FVector(bAlongY ? P.Y * Sign : P.X * Sign, -P.Z,
+	                                                            bAlongY ? -P.X * Sign : P.Y * Sign); };
+	FBox Flat(ForceInit);
+	for (uint32 I = 0; I < Positions.GetNumVertices(); ++I) Flat += Project(FVector(Positions.VertexPosition(I)));
+	const int32 Super = 4;
+	const double Inner = 1. - 2. * Margin;
+	const double Scale = Height * Inner / FMath::Max(1., Flat.GetSize().Y);
+	const int32 Width = FMath::Clamp(FMath::CeilToInt(Flat.GetSize().X * Scale + Height * 2. * Margin), 8, 4096);
+	const int32 W = Width * Super, H = Height * Super;
+	TArray<float> Depth;
+	Depth.Init(TNumericLimits<float>::Lowest(), W * H);
+	TArray<float> Shade;
+	Shade.Init(-1.f, W * H);
+	const FVector Light = FVector(.35, -.75, .55).GetSafeNormal(); // 投影空间：右上偏前方打光
+	const auto ToPixel = [&](const FVector& P)
+	{
+		return FVector((P.X - Flat.Min.X) * Scale * Super + Height * Margin * Super,
+		               (P.Y - Flat.Min.Y) * Scale * Super + Height * Margin * Super, P.Z);
+	};
+	for (int32 T = 0; T + 2 < Indices->Num(); T += 3)
+	{
+		const FVector A = Project(FVector(Positions.VertexPosition(Indices->Get(T))));
+		const FVector B = Project(FVector(Positions.VertexPosition(Indices->Get(T + 1))));
+		const FVector C = Project(FVector(Positions.VertexPosition(Indices->Get(T + 2))));
+		FVector N = FVector::CrossProduct(B - A, C - A).GetSafeNormal();
+		if (N.Z < 0) N = -N; // 双面：法线朝观察者
+		const float Lit = .45f + .55f * FMath::Max(0.f, static_cast<float>(FVector::DotProduct(N, Light)));
+		const FVector PA = ToPixel(A), PB = ToPixel(B), PC = ToPixel(C);
+		const double Area = (PB.X - PA.X) * (PC.Y - PA.Y) - (PB.Y - PA.Y) * (PC.X - PA.X);
+		if (FMath::Abs(Area) < 1e-9) continue;
+		const int32 X0 = FMath::Max(0, FMath::FloorToInt(FMath::Min3(PA.X, PB.X, PC.X)));
+		const int32 X1 = FMath::Min(W - 1, FMath::CeilToInt(FMath::Max3(PA.X, PB.X, PC.X)));
+		const int32 Y0 = FMath::Max(0, FMath::FloorToInt(FMath::Min3(PA.Y, PB.Y, PC.Y)));
+		const int32 Y1 = FMath::Min(H - 1, FMath::CeilToInt(FMath::Max3(PA.Y, PB.Y, PC.Y)));
+		for (int32 Y = Y0; Y <= Y1; ++Y)
+			for (int32 X = X0; X <= X1; ++X)
+			{
+				const double Px = X + .5, Py = Y + .5;
+				const double U = ((PB.X - Px) * (PC.Y - Py) - (PB.Y - Py) * (PC.X - Px)) / Area;
+				const double V = ((PC.X - Px) * (PA.Y - Py) - (PC.Y - Py) * (PA.X - Px)) / Area;
+				const double Wt = 1. - U - V;
+				if (U < 0 || V < 0 || Wt < 0) continue;
+				const float Z = U * PA.Z + V * PB.Z + Wt * PC.Z;
+				const int32 Index = Y * W + X;
+				if (Z <= Depth[Index]) continue;
+				Depth[Index] = Z;
+				Shade[Index] = Lit;
+			}
+	}
+	TArray<FColor> Pixels;
+	Pixels.SetNumZeroed(Width * Height);
+	const FLinearColor Base = FLinearColor(FColor(0xC9, 0xCF, 0xD6));
+	for (int32 Y = 0; Y < Height; ++Y)
+		for (int32 X = 0; X < Width; ++X)
+		{
+			float Cover = 0, Lum = 0;
+			for (int32 Sy = 0; Sy < Super; ++Sy)
+				for (int32 Sx = 0; Sx < Super; ++Sx)
+					if (const float S = Shade[(Y * Super + Sy) * W + X * Super + Sx]; S >= 0.f)
+					{
+						Cover += 1;
+						Lum += S;
+					}
+			if (Cover <= 0) continue;
+			FLinearColor C = Base * (Lum / Cover);
+			C.A = Cover / (Super * Super);
+			Pixels[Y * Width + X] = C.ToFColor(true);
+		}
+	auto& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
+	const TSharedPtr<IImageWrapper> Png = ImageWrapperModule.CreateImageWrapper(EImageFormat::PNG);
+	if (!Png.IsValid() || !Png->SetRaw(Pixels.GetData(), Pixels.Num() * sizeof(FColor), Width, Height,
+	                                   ERGBFormat::BGRA, 8))
+		return 0;
+	return FFileHelper::SaveArrayToFile(Png->GetCompressed(), *File) ? Width : 0;
 }
 
 FString UStingerAssetLibrary::DescribeLadderVertices(UStaticMesh* Mesh)

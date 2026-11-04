@@ -136,7 +136,9 @@ void ULootingWidgetPart::SetItem(const FExtractionItem& Item)
 	Text(Label, D ? D->Label.ToString() : TEXT("?"));
 	if (Label) Label->SetVisibility(Texture ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
 	const bool bWeapon = D && D->Kind == EExtractionItemKind::Weapon;
-	Text(Detail, bWeapon ? FString::Printf(TEXT("%d / %d"), Item.Magazine, D->MagazineCapacity)
+	// 枪的剪影彼此相近，角上同时写枪名，一眼能认出是哪把。
+	Text(Detail, bWeapon ? FString::Printf(TEXT("%s  %d/%d"), *D->Label.ToString(), Item.Magazine,
+	                                       D->MagazineCapacity)
 		             : FString::Printf(TEXT("×%d"), Item.Quantity));
 	if (Detail)
 		Detail->SetVisibility(bWeapon || Item.Quantity > 1 ? ESlateVisibility::HitTestInvisible

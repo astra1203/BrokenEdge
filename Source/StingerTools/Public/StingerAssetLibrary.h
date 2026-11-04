@@ -55,6 +55,15 @@ public:
 	static bool ConfigureTraversalSlot(UAnimBlueprint* Blueprint);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static FString DescribeLadderVertices(class UStaticMesh* Mesh);
+	/** 骨骼网格 LOD0 参考姿势顶点（组件空间），JSON [[x,y,z],...]。 */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static FString DescribeSkeletalVertices(class USkeletalMesh* Mesh);
+	/**
+	 * 把枪的骨骼网格按侧视图光栅化成物品图标 PNG（透明底、浅灰带明暗），枪口朝右。
+	 * 长轴取 X/Y 中较长的那个；有 MuzzleFlash 插槽时据此判断枪口方向。返回写出的宽度，失败返回 0。
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static int32 RenderWeaponIcon(class USkeletalMesh* Mesh, const FString& File, int32 Height, float Margin = .06f);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static TArray<FVector> TraceTraversalSurface(UObject* WorldContext, FVector Start, FVector End);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")

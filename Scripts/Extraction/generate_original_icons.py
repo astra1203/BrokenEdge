@@ -127,6 +127,9 @@ def main():
         textures[design] = texture
 
     for name, definition in definitions.items():
+        icon = definition.get_editor_property('icon')
+        if icon and icon.get_name().startswith('T_ItemIcon_W_'):
+            continue  # 枪械图标由 generate_weapon_icons.py 按枪模生成，保留
         definition.set_editor_property('icon', textures[plan[name]])
         assert lib.save_loaded_asset(definition, only_if_is_dirty=False), name
 
