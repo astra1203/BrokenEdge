@@ -408,9 +408,53 @@ namespace ExtractionItems
 		int32 Section = -1;
 		int32 Width = 0;
 		int32 Cells = 0;
-		int32 Rows() const { return Width > 0 ? (Cells + Width - 1) / Width : 0; }
-		// 格子是否存在：列在宽度内且线性序号小于总格数。
-		bool Has(int32 X, int32 Y) const { return X >= 0 && Y >= 0 && X < Width && Y * Width + X < Cells; }
+		/** 分仓（项目自定布局）：每个矩形是一个独立口袋，物品不能跨口袋；为空表示整块网格。 */
+		TArray<FIntRect, TInlineAllocator<8>> Pockets;
+		int32 Rows() const
+		{
+			if (!Pockets.IsEmpty())
+			{
+				int32 Bottom = 0;
+				for (const FIntRect& P : Pockets) Bottom = FMath::Max(Bottom, P.Max.Y);
+				return Bottom;
+			}
+			return Width > 0 ? (Cells + Width - 1) / Width : 0;
+		}
+		// 格子是否存在：有分仓时在某个口袋里；否则列在宽度内且线性序号小于总格数。
+		bool Has(int32 X, int32 Y) const
+		{
+			if (!Pockets.IsEmpty())
+			{
+				for (const FIntRect& P : Pockets)
+					if (X >= P.Min.X && X < P.Max.X && Y >= P.Min.Y && Y < P.Max.Y) return true;
+				return false;
+			}
+			return X >= 0 && Y >= 0 && X < Width && Y * Width + X < Cells;
+		}
+		// 矩形（左上角 + 尺寸）是否整个放得进网格；有分仓时必须整个落在同一个口袋里。
+		bool Holds(FIntPoint Cell, FIntPoint Size) const
+		{
+			if (Size.X <= 0 || Size.Y <= 0) return false;
+			if (!Pockets.IsEmpty())
+			{
+				for (const FIntRect& P : Pockets)
+					if (Cell.X >= P.Min.X && Cell.Y >= P.Min.Y && Cell.X + Size.X <= P.Max.X && Cell.Y + Size.Y <= P.Max.Y)
+						return true;
+				return false;
+			}
+			// 网格只有最后一行可能不满，检查左上和右下两个角即可覆盖。
+			return Has(Cell.X, Cell.Y) && Has(Cell.X + Size.X - 1, Cell.Y + Size.Y - 1);
+		}
+	};
+	// 胸挂/背包的分仓布局（项目自定）；没有登记的装备返回空，按整块网格排。
+	BROKENEDGE_API const TArray<FIntRect>* PocketLayout(FName Definition);
+	// 校验第 6 版以前的存档时按旧的整块网格判定（分仓是第 6 版加的），作用域内有效。
+	struct BROKENEDGE_API FLegacyGridScope
+	{
+		explicit FLegacyGridScope(bool bLegacy);
+		~FLegacyGridScope();
+	private:
+		bool bPrevious;
 	};
 	// 列出容器当前可用的网格分区；玩家携行容器按胸挂、背包、安全箱顺序，未装备的分区不存在。
 	BROKENEDGE_API TArray<FGrid> Grids(const FExtractionContainer& Container);

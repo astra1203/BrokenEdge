@@ -177,18 +177,35 @@ bool FExtractionGearContainers::RunTest(const FString&)
 	TestTrue(TEXT("Rig grid exists"), ExtractionItems::GridOf(C, ExtractionGear::RigGrid, Rig));
 	TestTrue(TEXT("Backpack grid exists"), ExtractionItems::GridOf(C, ExtractionGear::BagGrid, Bag));
 	TestTrue(TEXT("Safe grid exists"), ExtractionItems::GridOf(C, ExtractionGear::SafeGrid, Safe));
-	// 10 格胸挂按 6 列排：第一行 6 格、第二行只有 4 格。
+	// 10 格弹挂是五个 1×2 弹匣袋；物品不能跨袋。
 	TestEqual(TEXT("Rig keeps official cell count"), Rig.Cells, 10);
 	TestEqual(TEXT("Rig has two rows"), Rig.Rows(), 2);
-	TestTrue(TEXT("Partial row cell exists"), Rig.Has(3, 1));
-	TestFalse(TEXT("Cells beyond the count do not exist"), Rig.Has(4, 1));
-	TestEqual(TEXT("24-cell backpack equals the legacy 6x4"), Bag.Width * Bag.Rows(), 24);
+	TestEqual(TEXT("Rig has five pouches"), Rig.Pockets.Num(), 5);
+	TestTrue(TEXT("Pouch cell exists"), Rig.Has(4, 1));
+	TestFalse(TEXT("Cells beyond the pouches do not exist"), Rig.Has(5, 0));
+	TestFalse(TEXT("A 2x1 item cannot straddle two pouches"), Rig.Holds(FIntPoint(0, 0), FIntPoint(2, 1)));
+	TestTrue(TEXT("A 1x2 item fits one pouch"), Rig.Holds(FIntPoint(3, 0), FIntPoint(1, 2)));
+	TestEqual(TEXT("Backpack keeps 24 cells"), Bag.Cells, 24);
+	TestFalse(TEXT("Backpack main compartment and front pocket are separate"),
+	          Bag.Holds(FIntPoint(0, 2), FIntPoint(1, 2)));
 	TestEqual(TEXT("Basic safe box is 2x2"), Safe.Cells, 4);
+	{
+		// 所有分仓布局的总格数必须和描述一致。
+		for (FName Id : {FName(TEXT("Rig_Pouch")), FName(TEXT("Rig_Ammo")), FName(TEXT("Rig_Assault")), FName(TEXT("Rig_Hurricane")),
+		                 FName(TEXT("Bag_Climb")), FName(TEXT("Bag_Hike")), FName(TEXT("Bag_ALS")), FName(TEXT("Bag_GTO"))})
+		{
+			const auto* D = UExtractionItemDefinition::Get(Id);
+			const auto* Layout = ExtractionItems::PocketLayout(Id);
+			int32 Cells = 0;
+			if (Layout) for (const FIntRect& R : *Layout) Cells += R.Area();
+			TestTrue(*FString::Printf(TEXT("%s pockets match its cell count"), *Id.ToString()), D && Layout && Cells == D->GearCells);
+		}
+	}
 
 	auto Beyond = ExtractionItems::Make(TEXT("Medkit"));
 	Beyond.Slot = ExtractionGear::RigGrid;
 	Beyond.Cell = FIntPoint(5, 1);
-	TestFalse(TEXT("Missing cell in the partial row rejects placement"), ExtractionItems::Fits(C, Beyond));
+	TestFalse(TEXT("Missing cell beyond the pouches rejects placement"), ExtractionItems::Fits(C, Beyond));
 
 	TestTrue(TEXT("Auto place succeeds"), ExtractionItems::AutoPlace(C, ExtractionItems::Make(TEXT("Medkit"))));
 	TestTrue(TEXT("Auto place fills the rig first"),

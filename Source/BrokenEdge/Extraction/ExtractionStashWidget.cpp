@@ -146,6 +146,17 @@ public:
 						if (L.Grid.Has(X, Y))
 							Box(L.At + FVector2D(X, Y) * L.CellSize, FVector2D(L.CellSize - 2),
 							    FLinearColor(.085, .12, .15));
+				// 分仓：口袋之间画一道琥珀分隔线（四边细框）。
+				for (const FIntRect& P : L.Grid.Pockets)
+				{
+					const FVector2D Corner = L.At + FVector2D(P.Min.X, P.Min.Y) * L.CellSize - FVector2D(1);
+					const FVector2D S = FVector2D(P.Width(), P.Height()) * L.CellSize;
+					const FLinearColor Edge(.95, .66, .23, .55);
+					Box(Corner, FVector2D(S.X, 1), Edge, 1);
+					Box(Corner + FVector2D(0, S.Y - 1), FVector2D(S.X, 1), Edge, 1);
+					Box(Corner, FVector2D(1, S.Y), Edge, 1);
+					Box(Corner + FVector2D(S.X - 1, 0), FVector2D(1, S.Y), Edge, 1);
+				}
 			}
 			if (Side)
 				for (int32 I = 0; I <= ExtractionGear::SafeSlot; ++I)

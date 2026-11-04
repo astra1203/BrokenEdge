@@ -224,7 +224,7 @@ bool FExtractionEquipmentMigration::RunTest(const FString&)
 	FFileHelper::LoadFileToArray(Before, *(Directory / TEXT("Store.journal")));
 	auto* S = EquipmentStore(Directory);
 	if (!TestTrue(TEXT("Legacy store loads"), S->IsAvailable())) return false;
-	TestEqual(TEXT("Migrated version"), S->TestState().Version, 5);
+	TestEqual(TEXT("Migrated version"), S->TestState().Version, 6);
 	// 版本 4：旧出战配置迁移为携行容器，补 24 格背包（与旧 6×4 一致）与基础安全箱。
 	const auto& Loadout = S->View(P.View.Profile)->Loadout;
 	TestTrue(TEXT("Migrated loadout uses gear grids"), Loadout.GearGrids);

@@ -428,6 +428,16 @@ void ULootingMainView::RebuildContainer(ULootingWidgetPart* Panel, bool Loot)
 						CanvasChild(Panel->GridCanvas, GridPart, FVector2D(X, View.Top + Y) * CellSize,
 						            FVector2D(CellSize - 2));
 					}
+		// 分仓：每个口袋描一圈琥珀细边，相邻口袋一眼能分开。
+		if (WidgetTree)
+			for (const FIntRect& Pocket : View.Grid.Pockets)
+				if (auto* Frame = WidgetTree->ConstructWidget<UBorder>())
+				{
+					Frame->SetBrush(ExtractionUIStyle::Panel(FLinearColor::Transparent, 3.f, ExtractionUIStyle::Accent(.55f)));
+					Frame->SetVisibility(ESlateVisibility::HitTestInvisible);
+					CanvasChild(Panel->GridCanvas, Frame, FVector2D(Pocket.Min.X, View.Top + Pocket.Min.Y) * CellSize - FVector2D(1),
+					            FVector2D(Pocket.Width(), Pocket.Height()) * CellSize);
+				}
 	}
 	for (const auto& Item : C->Items)
 	{

@@ -181,7 +181,55 @@ bool ExtractionItems::GridOf(const FExtractionContainer& Container, int32 Sectio
 	if (!D || D->Kind != EExtractionItemKind::Gear || D->GearCells <= 0) return false;
 	Out.Width = FMath::Clamp(D->GearWidth, 1, 8);
 	Out.Cells = D->GearCells;
+	if (const TArray<FIntRect>* Layout = PocketLayout(Gear->Definition))
+	{
+		Out.Pockets.Append(*Layout);
+		Out.Width = 0;
+		Out.Cells = 0;
+		for (const FIntRect& P : *Layout)
+		{
+			Out.Width = FMath::Max(Out.Width, P.Max.X);
+			Out.Cells += P.Area();
+		}
+	}
 	return true;
+}
+
+// 每种胸挂、背包的口袋排法（项目自定，总格数与描述一致）：胸挂以竖排弹匣袋为主，
+// 背包是一个主仓加若干侧袋/顶袋。坐标为 (列, 行, 宽, 高)。
+namespace { bool GLegacyGearGrids = false; }
+
+ExtractionItems::FLegacyGridScope::FLegacyGridScope(bool bLegacy) : bPrevious(GLegacyGearGrids)
+{
+	GLegacyGearGrids = bLegacy;
+}
+
+ExtractionItems::FLegacyGridScope::~FLegacyGridScope() { GLegacyGearGrids = bPrevious; }
+
+const TArray<FIntRect>* ExtractionItems::PocketLayout(FName Definition)
+{
+	if (GLegacyGearGrids) return nullptr;
+	auto R = [](int32 X, int32 Y, int32 W, int32 H) { return FIntRect(X, Y, X + W, Y + H); };
+	static const TMap<FName, TArray<FIntRect>> Layouts = {
+		// 便携胸包 6：一个 2×2 主袋 + 一个 1×2 侧袋。
+		{TEXT("Rig_Pouch"), {R(0, 0, 2, 2), R(2, 0, 1, 2)}},
+		// 简易携行弹挂 10：五个 1×2 弹匣袋。
+		{TEXT("Rig_Ammo"), {R(0, 0, 1, 2), R(1, 0, 1, 2), R(2, 0, 1, 2), R(3, 0, 1, 2), R(4, 0, 1, 2)}},
+		// 突击者战术背心 16：四个 1×2 弹匣袋 + 两个 2×2 杂物袋。
+		{TEXT("Rig_Assault"), {R(0, 0, 1, 2), R(1, 0, 1, 2), R(2, 0, 1, 2), R(3, 0, 1, 2), R(4, 0, 2, 2), R(6, 0, 2, 2)}},
+		// 飓风战术胸挂 22：上排六个 1×2 弹匣袋，下排两个 2×2 和一个 2×1。
+		{TEXT("Rig_Hurricane"), {R(0, 0, 1, 2), R(1, 0, 1, 2), R(2, 0, 1, 2), R(3, 0, 1, 2), R(4, 0, 1, 2), R(5, 0, 1, 2),
+		                         R(0, 2, 2, 2), R(2, 2, 2, 2), R(4, 2, 2, 1)}},
+		// 大型登山包 16：4×3 主仓 + 2×2 顶袋。
+		{TEXT("Bag_Climb"), {R(0, 0, 4, 3), R(0, 3, 2, 2)}},
+		// 野战徒步背包 24：6×3 主仓 + 两个 3×1 前袋。
+		{TEXT("Bag_Hike"), {R(0, 0, 6, 3), R(0, 3, 3, 1), R(3, 3, 3, 1)}},
+		// ALS 背负系统 28：5×4 主仓 + 1×4 侧袋 + 2×2 顶袋。
+		{TEXT("Bag_ALS"), {R(0, 0, 5, 4), R(5, 0, 1, 4), R(0, 4, 2, 2)}},
+		// GTO 重型战术包 45：6×5 主仓 + 2×3、2×2 两个侧袋 + 5×1 底袋。
+		{TEXT("Bag_GTO"), {R(0, 0, 6, 5), R(6, 0, 2, 3), R(6, 3, 2, 2), R(0, 5, 5, 1)}},
+	};
+	return Layouts.Find(Definition);
 }
 
 TArray<ExtractionItems::FGrid> ExtractionItems::Grids(const FExtractionContainer& Container)
@@ -213,10 +261,7 @@ bool ExtractionItems::Fits(const FExtractionContainer& Container, const FExtract
 	FGrid Grid;
 	if (!GridOf(Container, Item.Slot, Grid)) return false;
 	const FIntPoint Size = Item.Extent();
-	// 矩形四角都要落在存在的格子上；网格只有最后一行可能不满，检查右下角即可覆盖。
-	if (Size.X <= 0 || Size.Y <= 0 || !Grid.Has(Item.Cell.X, Item.Cell.Y)
-		|| !Grid.Has(Item.Cell.X + Size.X - 1, Item.Cell.Y + Size.Y - 1))
-		return false;
+	if (!Grid.Holds(Item.Cell, Size)) return false;
 	for (const auto& Other : Container.Items)
 	{
 		if (Other.Slot != Item.Slot) continue;

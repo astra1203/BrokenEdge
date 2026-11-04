@@ -47,13 +47,17 @@ namespace
 		return ExtractionItems::ValidateItem(I, true, Why);
 	}
 
-	// 把出战配置变成携行容器：缺背包时装上 24 格野战徒步背包（6 列 × 4 行，与旧固定网格完全一致，
-	// 原有物品摆放不变），缺安全箱时装上基础安全箱。新建档案与旧档案迁移共用。
-	void EquipDefaultGear(FExtractionContainer& Loadout)
+	// 把出战配置变成携行容器：缺背包时装上 24 格野战徒步背包，缺安全箱时装上野战安全箱。
+	// bStarterKit 时再补入门胸挂、头盔与护甲（新建档案、第 6 版迁移），出发前四件携行装备齐全。
+	void EquipDefaultGear(FExtractionContainer& Loadout, bool bStarterKit = false)
 	{
 		Loadout.GearGrids = true;
-		for (const auto& [Slot, Definition] : {TPair<int32, FName>(ExtractionGear::BagSlot, TEXT("Bag_Hike")),
-		                                       TPair<int32, FName>(ExtractionGear::SafeSlot, TEXT("Safe_Field"))})
+		TArray<TPair<int32, FName>> Defaults = {TPair<int32, FName>(ExtractionGear::BagSlot, TEXT("Bag_Hike")),
+		                                        TPair<int32, FName>(ExtractionGear::SafeSlot, TEXT("Safe_Field"))};
+		if (bStarterKit)
+			Defaults.Append({TPair<int32, FName>(ExtractionGear::RigSlot, TEXT("Rig_Pouch")),
+			                 TPair<int32, FName>(2, TEXT("Helmet2")), TPair<int32, FName>(3, TEXT("Vest2"))});
+		for (const auto& [Slot, Definition] : Defaults)
 		{
 			if (Loadout.InSlot(Slot)) continue;
 			auto Gear = ExtractionItems::Make(Definition);
@@ -310,13 +314,50 @@ bool UExtractionPersistence::Load(const FString& Directory)
 		if (!Commit(MoveTemp(Migrated))) return false;
 		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=5"));
 	}
+	// 第 6 版：胸挂/背包分仓。跨口袋或越界的物品先在原分区重新找位置，再试另一个分区，都不行就存进仓库
+	// （仓库满了进领取区），物品不会丢；同时补齐入门胸挂、头盔和护甲。
+	if (State.Version < 6)
+	{
+		FExtractionStoreState Migrated = State;
+		Migrated.Version = 6;
+		int32 Moved = 0;
+		for (auto& Profile : Migrated.Profiles)
+		{
+			auto& Loadout = Profile.View.Loadout;
+			TArray<FExtractionItem> Packed;
+			for (int32 Index = Loadout.Items.Num() - 1; Index >= 0; --Index)
+				if (Loadout.Items[Index].Slot == ExtractionGear::RigGrid || Loadout.Items[Index].Slot == ExtractionGear::BagGrid)
+				{
+					Packed.Insert(Loadout.Items[Index], 0);
+					Loadout.Items.RemoveAt(Index);
+				}
+			EquipDefaultGear(Loadout, true);
+			TArray<FExtractionItem> Homeless;
+			for (const auto& Item : Packed)
+				if (ExtractionItems::Fits(Loadout, Item)) Loadout.Items.Add(Item);
+				else Homeless.Add(Item);
+			TArray<FExtractionItem> ToStash;
+			for (const auto& Item : Homeless)
+			{
+				++Moved;
+				if (!ExtractionItems::AutoPlace(Loadout, Item, Item.Slot) && !ExtractionItems::AutoPlace(Loadout, Item))
+					ToStash.Add(Item);
+			}
+			if (!ToStash.IsEmpty()) Deposit(Profile.View, ToStash);
+			++Loadout.Revision;
+			++Profile.View.Revision;
+		}
+		if (!Commit(MoveTemp(Migrated))) return false;
+		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=6 Repacked=%d"), Moved);
+	}
 	return Recover();
 }
 
 // 检查存储版本、档案与出战身份唯一性、容器合法性及物品来源；不接受客户端自行拼出的结果状态。
 bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) const
 {
-	if (Candidate.Version < 1 || Candidate.Version > 5 || !Candidate.Id.IsValid()) return false;
+	if (Candidate.Version < 1 || Candidate.Version > 6 || !Candidate.Id.IsValid()) return false;
+	const ExtractionItems::FLegacyGridScope Grids(Candidate.Version < 6);
 	TSet<FGuid> Profiles, Items;
 	for (const auto& P : Candidate.Profiles)
 	{
@@ -457,7 +498,7 @@ bool UExtractionPersistence::OpenProfile(FGuid Requested, const FString& Credent
 	P.View.Stash.Height = 12;
 	P.View.Loadout.Id = FGuid::NewGuid();
 	P.View.Loadout.WeaponSlots = true;
-	EquipDefaultGear(P.View.Loadout);
+	EquipDefaultGear(P.View.Loadout, true);
 	Issued = FGuid::NewGuid().ToString(EGuidFormats::Digits) + FGuid::NewGuid().ToString(EGuidFormats::Digits);
 	P.CredentialHash = Hash(Issued);
 	for (int32 Kit = 0; Kit < 3; ++Kit)
