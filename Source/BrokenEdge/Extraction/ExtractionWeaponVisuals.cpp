@@ -14,6 +14,9 @@ static void ShowIronSights(USkeletalMeshComponent* Mesh, bool bShow)
 	if (!Mesh || !Mesh->GetSkeletalMeshAsset()) return;
 	const auto& Materials = Mesh->GetSkeletalMeshAsset()->GetMaterials();
 	const int32 LODs = Mesh->GetSkeletalMeshAsset()->GetLODNum();
+	// 第一人称枪模组件在主副武器之间复用，隐藏状态按材质序号记在组件上、换模型不会清掉；
+	// 先全部显示，否则上一把枪隐藏的序号会把这把枪的枪管等部件也藏掉。
+	for (int32 LOD = 0; LOD < LODs; ++LOD) Mesh->ShowAllMaterialSections(LOD);
 	for (int32 Index = 0; Index < Materials.Num(); ++Index)
 	{
 		const FString Slot = Materials[Index].MaterialSlotName.ToString();
