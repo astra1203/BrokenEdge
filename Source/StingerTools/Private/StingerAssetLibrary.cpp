@@ -51,6 +51,8 @@
 #include "StaticMeshResources.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "UObject/UObjectIterator.h"
+#include "EngineUtils.h"
+#include "BrokenEdge/Extraction/ExtractionWater.h"
 #include "MeshDescription.h"
 #include "AssetCompilingManager.h"
 
@@ -635,6 +637,13 @@ int32 UStingerAssetLibrary::RenderLevelOverview(UObject* WorldContext, FVector2D
 		else Raster(Tris, Component->GetComponentTransform());
 		++Drawn;
 	}
+	// 文件名以 .r32 结尾时只输出原始高度（float32，行优先，北在上；无几何处为 -3.4e38），供脚本分析地形。
+	if (File.EndsWith(TEXT(".r32")))
+	{
+		TArray<uint8> Raw;
+		Raw.Append(reinterpret_cast<const uint8*>(Height.GetData()), Height.Num() * sizeof(float));
+		return FFileHelper::SaveArrayToFile(Raw, *File) ? Drawn : 0;
+	}
 	// 高度分档上色 + 西北向山体阴影 + 高差处描边（墙、楼边、台阶）。
 	TArray<float> Known;
 	for (int32 I = 0; I < Height.Num(); I += 7)
@@ -735,6 +744,27 @@ int32 UStingerAssetLibrary::RenderLevelOverview(UObject* WorldContext, FVector2D
 			C.A = 1;
 			Pixels[Y * Size + X] = C.ToFColor(true);
 		}
+	// 开局就有水的水体：水面以下的地面涂成水色，越深越暗。
+	for (TActorIterator<AExtractionWater> It(World); It; ++It)
+	{
+		if (!It->bStartsFull && It->StartZ <= It->BottomZ) continue;
+		const FVector O = It->GetActorLocation();
+		const float Surface = It->SurfaceWorldZ();
+		const int32 X0 = FMath::Max(0, FMath::FloorToInt((O.Y - It->HalfSize.Y - Min.Y) / Cell));
+		const int32 X1 = FMath::Min(Size - 1, FMath::CeilToInt((O.Y + It->HalfSize.Y - Min.Y) / Cell));
+		const int32 Y0 = FMath::Max(0, FMath::FloorToInt((Max.X - (O.X + It->HalfSize.X)) / Cell));
+		const int32 Y1 = FMath::Min(Size - 1, FMath::CeilToInt((Max.X - (O.X - It->HalfSize.X)) / Cell));
+		for (int32 Y = Y0; Y <= Y1; ++Y)
+			for (int32 X = X0; X <= X1; ++X)
+			{
+				const float H = Height[Y * Size + X];
+				if (H <= -1e30f || H >= Surface) continue;
+				const float Depth = FMath::Clamp((Surface - H) / 1500.f, 0.f, 1.f);
+				FLinearColor C = FMath::Lerp(FLinearColor(.10f, .30f, .40f), FLinearColor(.035f, .12f, .19f), Depth);
+				C.A = 1;
+				Pixels[Y * Size + X] = C.ToFColor(true);
+			}
+	}
 	auto& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
 	const TSharedPtr<IImageWrapper> Png = ImageWrapperModule.CreateImageWrapper(EImageFormat::PNG);
 	if (!Png.IsValid() || !Png->SetRaw(Pixels.GetData(), Pixels.Num() * sizeof(FColor), Size, Size, ERGBFormat::BGRA, 8))

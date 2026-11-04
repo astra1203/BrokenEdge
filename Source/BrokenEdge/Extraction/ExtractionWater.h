@@ -40,6 +40,9 @@ public:
 	/** true：开局即满水；false：空池，等电闸注水。 */
 	UPROPERTY(EditAnywhere, Category="Water")
 	bool bStartsFull = true;
+	/** 不满水开局时的初始水面（相对原点，默认等于池底即空池）；注水从这里涨到 FullZ。 */
+	UPROPERTY(EditAnywhere, Category="Water")
+	float StartZ = -100000.f;
 	UPROPERTY(EditAnywhere, Category="Water", meta=(ClampMin="0.1"))
 	float FillSeconds = 25.f;
 	/** 注水电闸相对 Actor 原点的位置；为空表示不生成电闸。 */

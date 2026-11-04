@@ -2,8 +2,7 @@
 
 浮力室：池沿楼面 Z=491，浅区池底 -110、深区池底约 -720；池子在世界 X -2225..175、Y -7348..-4048
 （probe 网格 150 cm，见提交说明）。默认空池，池子西侧池沿放一个注水电闸，拉下后 30 秒注满到 Z=450。
-中控桥下：桥面约 Z=1500，沟底 -2300..-3300，两侧地面约 50，沟里零星平台顶在 -266..-370；
-水面定在 -600（低于这些平台），开局即满水。
+河道：见下方 RIVER（36 号），水面 -600，开局即满水。浮力室深坑：见 ME_BuoyancyPitWater（40 号）。
 
 Also creates /Game/Extraction/MapEvents/Water/M_ExtractionWater (translucent surface).
 Re-running deletes the previous ExtractionWater actors first.
@@ -12,6 +11,7 @@ Re-running deletes the previous ExtractionWater actors first.
         -script="Scripts/Extraction/place_water.py" -NullRHI -unattended -nosound
 """
 import json
+from pathlib import Path
 
 import unreal
 
@@ -22,10 +22,22 @@ WATERS = [
     {'label': 'ME_BuoyancyPoolWater', 'name': '浮力室', 'location': (-1025, -5698, 0),
      'half': (1200, 1650), 'bottom': -720, 'full': 450, 'starts_full': False, 'fill_seconds': 30,
      'switches': [(-1275, -1425, 491)]},
-    {'label': 'ME_BridgeRavineWater', 'name': '中控桥下水域', 'location': (4859, -16048, 0),
-     'half': (4000, 1850), 'bottom': -3400, 'full': -600, 'starts_full': True, 'fill_seconds': 1,
+    # 40 号：深区中间有个约 48 米深的测试坑（X -2000..-1100、Y -6000..-5000，坑底约 -5500，probe_pool.py 实测），
+    # 原来没有水，掉下去就出不来。开局即满水，水面略低于深区池底 -709，游上来按空格翻到池底，再走滑索上池边。
+    {'label': 'ME_BuoyancyPitWater', 'name': '浮力室深坑', 'location': (-1550, -5550, 0),
+     'half': (560, 620), 'bottom': -5560, 'full': -735, 'starts_full': True, 'fill_seconds': 1,
      'switches': []},
 ]
+
+
+# 36 号：中控桥下是一整条河（绕中心区的护城河一直连到东边的大河），原来只铺了桥下一块。
+# 河道由高度图连通分析得到（低于水面 -600 的连通区域，桥面处膨胀跨过），切成矩形水体，
+# 数据在 river_water_boxes.json（生成方法见其中 source 字段）；高于水面的岸被盒子罩住也无妨，只有水面以下算水。
+RIVER = json.loads((Path(unreal.Paths.project_dir()) / 'Scripts/Extraction/river_water_boxes.json').read_text(encoding='utf-8'))
+for index, box in enumerate(RIVER['boxes']):
+    WATERS.append({'label': 'ME_RiverWater_%03d' % index, 'name': '河道', 'location': (box['center'][0], box['center'][1], 0),
+                   'half': tuple(box['half']), 'bottom': box['bottom'], 'full': RIVER['surface'], 'starts_full': True,
+                   'fill_seconds': 1, 'switches': []})
 
 
 def build_material():

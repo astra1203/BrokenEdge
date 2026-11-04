@@ -1846,7 +1846,9 @@ void ABrokenEdgeCharacter::Jump()
 	}
 	if (GetCharacterMovement()->IsSwimming())
 	{
+		// 按住空格上浮；同时走一次跳跃输入，靠岸时由翻越组件判定能否攀上岸（不会在水里起跳）。
 		bSwimUp = true;
+		Super::Jump();
 		return;
 	}
 	// 趴着时空格先起身，不直接起跳。

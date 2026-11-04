@@ -221,14 +221,18 @@ FVector UTraversalMovementComponent::SnapFacingToNormal(const FVector& Preferred
 
 bool UTraversalMovementComponent::TryObstacle()
 {
-	if (!CanTraverse() || Active() || !IsMovingOnGround()) return false;
+	// 水里也能攀：游到岸边按空格从水中翻上去（只做攀上，不做跨越）。
+	const bool bWater = IsSwimming();
+	if (!CanTraverse() || Active() || !(IsMovingOnGround() || bWater)) return false;
 	const auto* Rules = GetDefault<UExtractionTraversalRules>();
+	// 浮在水面时胶囊有一半在水下，岸沿相对脚底更高；河道两侧平台比水面高 3~4 米，水里放宽到约 4.4 米。
+	const float MantleLimit = Rules->MantleHeight + (bWater ? 260.f : 0.f);
 	const float Half = CharacterOwner->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 	const float Radius = CharacterOwner->GetCapsuleComponent()->GetScaledCapsuleRadius();
 	FVector Feet = UpdatedComponent->GetComponentLocation() - FVector(0, 0, Half);
 	// Walking deliberately floats the capsule above the floor. Measure obstacle height
 	// from the supporting surface, otherwise an over-limit ledge can pass the probe.
-	if (CurrentFloor.IsWalkableFloor()) Feet.Z -= CurrentFloor.GetDistanceToFloor();
+	if (!bWater && CurrentFloor.IsWalkableFloor()) Feet.Z -= CurrentFloor.GetDistanceToFloor();
 	const FVector Camera = FRotator(0, CharacterOwner->GetControlRotation().Yaw, 0).Vector();
 	const FCollisionQueryParams Params(SCENE_QUERY_STAT(TraversalProbe), false, CharacterOwner);
 	FHitResult Front, Top;
@@ -242,12 +246,12 @@ bool UTraversalMovementComponent::TryObstacle()
 	// 但角色一定正对障碍面攀爬，避免斜切过边缘。
 	const FVector Facing = SnapFacingToNormal(Camera, Front.ImpactNormal);
 	const FVector Lip = Front.ImpactPoint + Facing * 5.f;
-	if (!GetWorld()->LineTraceSingleByChannel(Top, FVector(Lip.X, Lip.Y, Feet.Z + Rules->MantleHeight + 12.f),
+	if (!GetWorld()->LineTraceSingleByChannel(Top, FVector(Lip.X, Lip.Y, Feet.Z + MantleLimit + 12.f),
 	                                          FVector(Lip.X, Lip.Y, Feet.Z + MaxStepHeight), ECC_Pawn,
 	                                          Params) || !IsWalkable(Top))
 		return false;
 	const float Height = Top.ImpactPoint.Z - Feet.Z;
-	if (Height <= MaxStepHeight || Height > Rules->MantleHeight + .1f)
+	if (Height <= MaxStepHeight || Height > MantleLimit + .1f)
 	{
 		LastRejection = TEXT("height");
 		return false;
@@ -262,7 +266,7 @@ bool UTraversalMovementComponent::TryObstacle()
 	Candidate.Kind = EExtractionTraversal::Mantle;
 	Candidate.Duration = Rules->MantleSeconds;
 	bool Found = false;
-	if (Height <= Rules->VaultHeight + .1f)
+	if (!bWater && Height <= Rules->VaultHeight + .1f)
 	{
 		// Find the far edge, then require a clear landing at approximately the departure floor height.
 		for (float Depth = 10.f; Depth <= Rules->VaultDepth; Depth += 5.f)
@@ -299,8 +303,20 @@ bool UTraversalMovementComponent::TryObstacle()
 	return StartPath(Candidate);
 }
 
+bool UTraversalMovementComponent::CanAttemptJump() const
+{
+	return Super::CanAttemptJump() || (IsSwimming() && Enabled() && !Active());
+}
+
 bool UTraversalMovementComponent::DoJump(bool bReplayingMoves, float DeltaTime)
 {
+	if (IsSwimming())
+	{
+		// 水里不起跳：能攀上岸就攀，否则什么都不做（上浮由角色的按住空格处理）。
+		if (!Enabled() || Active() || !TryObstacle()) return false;
+		bObstacleRequested = true;
+		return true;
+	}
 	if (Enabled())
 	{
 		if (Active()) return false;

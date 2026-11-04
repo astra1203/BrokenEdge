@@ -32,6 +32,8 @@ public:
 	bool bLadderInputBlocked = false, bDetachRequested = false, bJumpDetachRequested = false;
 	bool bObstacleRequested = false;
 	virtual bool DoJump(bool bReplayingMoves, float DeltaTime) override;
+	// 游泳时也接受跳跃输入，用来从水里攀上岸；DoJump 在水里只做上岸判定，不会起跳。
+	virtual bool CanAttemptJump() const override;
 	virtual void UpdateCharacterStateBeforeMovement(float DeltaSeconds) override;
 	// 项目水体没有刷子几何，按当前水面高度算浸入比例，角色才能浮在水面。
 	virtual float ImmersionDepth() const override;

@@ -94,9 +94,10 @@ double AExtractionWater::ServerNow() const
 float AExtractionWater::SurfaceZ() const
 {
 	if (bStartsFull) return FullZ;
-	if (FillStartedAt < 0) return BottomZ;
+	const float From = FMath::Clamp(StartZ, BottomZ, FullZ);
+	if (FillStartedAt < 0) return From;
 	const float Alpha = FMath::Clamp(static_cast<float>((ServerNow() - FillStartedAt) / FMath::Max(.1f, FillSeconds)), 0.f, 1.f);
-	return FMath::Lerp(BottomZ, FullZ, Alpha);
+	return FMath::Lerp(From, FullZ, Alpha);
 }
 
 bool AExtractionWater::StartFill()
