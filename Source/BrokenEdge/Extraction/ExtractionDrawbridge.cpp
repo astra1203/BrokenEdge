@@ -17,12 +17,15 @@ AExtractionDrawbridge::AExtractionDrawbridge()
 	Others->SetupAttachment(RootComponent);
 	Others->SetRelativeLocation(FVector(-.464079, -.02123, -186.39844));
 	// 官方类默认的两个转轴（DoorProxy1/2），竖起时分别 Roll +70 / -70。
+	// 实测放平后桥面比两岸路面低 186 cm，正好是 Others 的 Z 偏移：转轴值本来就相对根节点，
+	// 挂在 Others 下要把这段偏移加回去，桥面才和两岸齐平（probe_drawbridge.py）。
+	constexpr double HingeLift = 186.39844;
 	Hinge1 = CreateDefaultSubobject<USceneComponent>(TEXT("Hinge1"));
 	Hinge1->SetupAttachment(Others);
-	Hinge1->SetRelativeLocation(FVector(1278, 123.61722, -490.76404));
+	Hinge1->SetRelativeLocation(FVector(1278, 123.61722, -490.76404 + HingeLift));
 	Hinge2 = CreateDefaultSubobject<USceneComponent>(TEXT("Hinge2"));
 	Hinge2->SetupAttachment(Others);
-	Hinge2->SetRelativeLocation(FVector(1278, -3646.8914, -492));
+	Hinge2->SetRelativeLocation(FVector(1278, -3646.8914, -492 + HingeLift));
 	Deck1 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Deck1"));
 	Deck1->SetupAttachment(Hinge1);
 	Deck2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Deck2"));
