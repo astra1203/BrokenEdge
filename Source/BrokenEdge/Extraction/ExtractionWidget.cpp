@@ -27,6 +27,10 @@
 #include "Kismet/GameplayStaticsTypes.h"
 #include "Framework/Application/SlateApplication.h"
 #include "Rendering/SlateRenderer.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SceneCaptureComponent2D.h"
+#include "Engine/TextureRenderTarget2D.h"
+#include "Styling/CoreStyle.h"
 
 void UExtractionWidget::NativeOnInitialized()
 {
@@ -63,6 +67,9 @@ void UExtractionWidget::Refresh()
 	SmokeHaze->SetBrushColor(FLinearColor(.34f, .34f, .34f, Haze * .55f));
 	const int32 Seconds = FMath::Max(0, FMath::CeilToInt(GS->Deadline - GS->GetServerWorldTimeSeconds()));
 	FString Text;
+	// 按键提示放进右侧中间的卡片；旧布局没有该卡片时仍并入整段文本。
+	FString Hints;
+	FString& HintText = KeyHints ? Hints : Text;
 	if (GS->Phase == EExtractionPhase::Waiting) Text = TEXT("等待其他玩家加载…");
 	else if (GS->Phase == EExtractionPhase::Ended)
 		Text = FString::Printf(
@@ -75,7 +82,11 @@ void UExtractionWidget::Refresh()
 			                    ? TEXT("倒地待救援 · Esc 打开菜单")
 			                    : TEXT("本次行动已结束");
 		// 分栏 HUD 把时间和存活人数放进独立大字段，整段文本只留提示。
-		Text = RaidTimer
+		if (KeyHints)
+			HintText = FString(Hint) + TEXT("\nTab 背包 · M 地图") + TEXT("\nE 搜索/拾取 · F 开门/拉闸")
+				+ TEXT("\nR 换弹 · 1/2 主副武器 · 3 刀") + TEXT("\nCtrl 蹲下 · Z 趴下 · Shift 冲刺")
+				+ TEXT("\nH 治疗 · G 手雷 · 中键 标点");
+		else Text = RaidTimer
 			       ? FString(Hint)
 			       : FString::Printf(TEXT("航天基地 · 小队行动\n剩余 %02d:%02d · 存活 %d\n%s"), Seconds / 60, Seconds % 60,
 			                         GS->AlivePlayers, Hint);
@@ -203,14 +214,17 @@ void UExtractionWidget::Refresh()
 	if (auto* C = Cast<ABrokenEdgeCharacter>(PC->GetPawn()))
 	{
 		const FString TraversalPrompt = C->GetTraversal()->Prompt();
-		if (!TraversalPrompt.IsEmpty()) Text += TEXT("\n") + TraversalPrompt;
+		if (!TraversalPrompt.IsEmpty()) HintText += TEXT("\n") + TraversalPrompt;
 		const auto* A = C->GetExtractionAbilities();
 		if (PS->Life == EExtractionLife::Alive)
 		{
-			Text += FString::Printf(TEXT("\nV 激素枪(对准队友，否则自用) %.0fs · X 蜂巢烟雾(Alt+X 低抛) %.0fs"),
-			                        FMath::Max(0.0, A->HealReadyAt - Now), FMath::Max(0.0, A->SmokeReadyAt - Now));
+			const double HealIn = FMath::Max(0.0, A->HealReadyAt - Now), SmokeIn = FMath::Max(0.0, A->SmokeReadyAt - Now);
+			HintText += HealIn > 0 ? FString::Printf(TEXT("\nV 激素枪 · %.0fs"), HealIn)
+				            : FString(TEXT("\nV 激素枪（对准队友，否则自用）"));
+			HintText += SmokeIn > 0 ? FString::Printf(TEXT("\nX 蜂巢烟雾 · %.0fs"), SmokeIn)
+				            : FString(TEXT("\nX 蜂巢烟雾（Alt+X 低抛）"));
 			if (C->GetExtractionHealth()->Painkiller) Text += TEXT("\n激素生效 · 止痛中，骨折暂不影响移动");
-			if (A->RescueFocus()) Text += TEXT("\n按住 E 救援队友 · 5 秒");
+			if (A->RescueFocus()) HintText += TEXT("\n按住 E 救援队友 · 5 秒");
 		}
 		if (A->Action != EExtractionAction::None)
 			Text += FString::Printf(
@@ -224,7 +238,17 @@ void UExtractionWidget::Refresh()
 			Text += FString::Printf(
 				TEXT("\n队友正在救援 · %.1f 秒"), FMath::Max(0.0, A->Rescuer->GetExtractionAbilities()->ActionEnd - Now));
 	}
+	Text.TrimStartAndEndInline();
 	Status->SetText(FText::FromString(Text));
+	if (KeyHints)
+	{
+		Hints.TrimStartAndEndInline();
+		KeyHints->SetText(FText::FromString(Hints));
+		// 文本外面是卡片的竖排盒和边框，提示为空时整张卡片收起。
+		if (UWidget* Card = KeyHints->GetParent() ? KeyHints->GetParent()->GetParent() : nullptr)
+			Card->SetVisibility(Hints.IsEmpty() ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
+	}
+	UpdateMinimap(PS->Life == EExtractionLife::Alive || PS->Life == EExtractionLife::Downed ? PC->GetPawn() : nullptr);
 	FString VitalText;
 	FString WeaponText;
 	HealthProgress->SetVisibility(PC->GetPawn() ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
@@ -312,6 +336,7 @@ int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Ge
 	LayerId = Super::NativePaint(Args, Geometry, Culling, Out, LayerId, Style, bParentEnabled) + 1;
 	const auto* PC = GetOwningPlayer<AExtractionPlayerController>();
 	if (!PC || !GetWorld()) return LayerId;
+	PaintMinimap(Geometry, Out, LayerId);
 	const double Now = GetWorld()->GetTimeSeconds();
 	const FVector2D Center = Geometry.GetLocalSize() * .5f;
 	const auto Lines = [&](const TArray<FVector2D>& Points, FLinearColor Color, float Thickness)
@@ -619,4 +644,135 @@ void UExtractionWidget::NextClicked()
 void UExtractionWidget::LeaveClicked()
 {
 	if (auto* PC = GetOwningPlayer<AExtractionPlayerController>()) PC->ServerLeaveExtraction();
+}
+
+void UExtractionWidget::NativeDestruct()
+{
+	if (MiniCapture) MiniCapture->DestroyComponent();
+	MiniCapture = nullptr;
+	Super::NativeDestruct();
+}
+
+// 小地图采集相机放在玩家脚底上方 MiniEyeHeight，正交俯视：比相机高的屋顶和上层楼板被裁掉，
+// 看到的是当前楼层的平面。只输出基础色、关掉光照阴影等，开销远小于主画面。
+void UExtractionWidget::UpdateMinimap(const APawn* Pawn)
+{
+	if (!Pawn || !GetWorld())
+	{
+		if (MiniCapture) MiniCapture->bCaptureEveryFrame = false;
+		return;
+	}
+	if (!MiniCapture)
+	{
+		MiniTarget = NewObject<UTextureRenderTarget2D>(this);
+		MiniTarget->RenderTargetFormat = RTF_RGBA16f;
+		MiniTarget->ClearColor = FLinearColor(.02f, .03f, .035f, 1);
+		MiniTarget->InitAutoFormat(MiniPixels, MiniPixels);
+		MiniCapture = NewObject<USceneCaptureComponent2D>(GetOwningPlayer());
+		MiniCapture->ProjectionType = ECameraProjectionMode::Orthographic;
+		MiniCapture->OrthoWidth = MiniWorld;
+		// 自动正交裁剪面会把相机往后挪，屋顶又会出现；关掉后近裁剪面就在相机处。
+		MiniCapture->bAutoCalculateOrthoPlanes = false;
+		MiniCapture->CaptureSource = SCS_BaseColor;
+		MiniCapture->TextureTarget = MiniTarget;
+		MiniCapture->bCaptureOnMovement = false;
+		auto& Flags = MiniCapture->ShowFlags;
+		Flags.SetSkeletalMeshes(false);
+		Flags.SetParticles(false);
+		Flags.SetTranslucency(false);
+		Flags.SetFog(false);
+		Flags.SetVolumetricFog(false);
+		Flags.SetAtmosphere(false);
+		Flags.SetDynamicShadows(false);
+		Flags.SetGlobalIllumination(false);
+		Flags.SetLighting(false);
+		Flags.SetPostProcessing(false);
+		Flags.SetAmbientOcclusion(false);
+		Flags.SetScreenSpaceReflections(false);
+		Flags.SetDecals(false);
+		MiniCapture->RegisterComponentWithWorld(GetWorld());
+		MiniBrush.SetResourceObject(MiniTarget);
+		MiniBrush.ImageSize = FVector2D(MiniPixels);
+		MiniBrush.DrawAs = ESlateBrushDrawType::Image;
+	}
+	MiniCapture->bCaptureEveryFrame = true;
+	const auto* Capsule = Cast<ACharacter>(Pawn) ? Cast<ACharacter>(Pawn)->GetCapsuleComponent() : nullptr;
+	const FVector Feet = Pawn->GetActorLocation() - FVector(0, 0, Capsule ? Capsule->GetScaledCapsuleHalfHeight() : 90.f);
+	MiniCenter = Feet;
+	// 俯仰 -90：画面上方是世界 +X（北），右方是 +Y，和战术地图一致。
+	MiniCapture->SetWorldLocationAndRotation(Feet + FVector(0, 0, MiniEyeHeight), FRotator(-90, 0, 0));
+}
+
+void UExtractionWidget::PaintMinimap(const FGeometry& Geometry, FSlateWindowElementList& Out, int32 LayerId) const
+{
+	const auto* PC = GetOwningPlayer<AExtractionPlayerController>();
+	if (!MiniCapture || !MiniCapture->bCaptureEveryFrame || !PC || !PC->GetPawn()) return;
+	const FVector2D At(24, 24), Size(MiniSize, MiniSize);
+	const FSlateBrush* White = FCoreStyle::Get().GetBrush("WhiteBrush");
+	auto Box = [&](FVector2D P, FVector2D S, FLinearColor C, int32 Z)
+	{
+		FSlateDrawElement::MakeBox(Out, LayerId + Z, Geometry.ToPaintGeometry(S, FSlateLayoutTransform(P)), White,
+		                           ESlateDrawEffect::None, C);
+	};
+	Box(At - FVector2D(3), Size + FVector2D(6), ExtractionUIStyle::Hex(TEXT("0B0E12"), .85f), 0);
+	FSlateDrawElement::MakeBox(Out, LayerId + 1, Geometry.ToPaintGeometry(Size, FSlateLayoutTransform(At)), &MiniBrush,
+	                           ESlateDrawEffect::None, FLinearColor(.72f, .78f, .78f, .95f));
+	const FLinearColor Edge(1, 1, 1, .12f);
+	Box(At, {Size.X, 1}, Edge, 2);
+	Box(At + FVector2D(0, Size.Y - 1), {Size.X, 1}, Edge, 2);
+	Box(At, {1, Size.Y}, Edge, 2);
+	Box(At + FVector2D(Size.X - 1, 0), {1, Size.Y}, Edge, 2);
+	const FVector2D Mid = At + Size * .5f;
+	const float PerCm = MiniSize / MiniWorld;
+	// 世界 → 小地图：X 朝上、Y 朝右；超出边框的标记不画。
+	auto Project = [&](const FVector& World, FVector2D& P)
+	{
+		const FVector D = World - MiniCenter;
+		P = Mid + FVector2D(D.Y, -D.X) * PerCm;
+		return P.X >= At.X + 4 && P.Y >= At.Y + 4 && P.X <= At.X + Size.X - 4 && P.Y <= At.Y + Size.Y - 4;
+	};
+	auto Label = [&](FVector2D P, const FString& Value, FLinearColor C)
+	{
+		FSlateDrawElement::MakeText(Out, LayerId + 4, Geometry.ToPaintGeometry(FVector2D(60, 16), FSlateLayoutTransform(P)),
+		                            Value, ExtractionUIStyle::Font(10), ESlateDrawEffect::None, C);
+	};
+	FVector2D P;
+	// 本局启用的电闸：琥珀待拉、绿色已拉。
+	for (TActorIterator<AExtractionExitSwitch> It(GetWorld()); It; ++It)
+		if (It->bActive && Project(It->GetActorLocation(), P))
+		{
+			const FLinearColor C = It->bPulled ? FLinearColor(.25f, .9f, .4f) : ExtractionUIStyle::Accent();
+			Box(P - FVector2D(3.5f), {7, 7}, C, 3);
+			Label(P + FVector2D(5, -8), It->Water ? TEXT("水") : TEXT("闸"), C);
+		}
+	// 小队标点。
+	for (const auto& Ping : PC->Pings)
+		if (GetWorld()->GetTimeSeconds() - Ping.At < AExtractionPlayerController::PingSeconds && Project(Ping.Location, P))
+		{
+			const FLinearColor C = Ping.bSelf ? ExtractionUIStyle::Accent() : ExtractionUIStyle::Hex(TEXT("4FC3E8"));
+			Box(P - FVector2D(.5f, 6), {1, 12}, C, 3);
+			Box(P - FVector2D(6, .5f), {12, 1}, C, 3);
+		}
+	// 队友：青色圆点，带楼层高差。
+	const auto* Local = PC->GetPlayerState<AExtractionPlayerState>();
+	for (TActorIterator<APawn> It(GetWorld()); It; ++It)
+	{
+		const auto* Mate = It->GetPlayerState<AExtractionPlayerState>();
+		if (!Mate || !Local || Mate == Local || Local->ExtractionSquad <= 0 || Mate->ExtractionSquad != Local->ExtractionSquad
+			|| !Project(It->GetActorLocation(), P))
+			continue;
+		const FLinearColor C = ExtractionUIStyle::Hex(TEXT("4FC3E8"));
+		Box(P - FVector2D(3.5f), {7, 7}, C, 3);
+		const float Rise = (It->GetActorLocation().Z - PC->GetPawn()->GetActorLocation().Z) / 100.f;
+		if (FMath::Abs(Rise) >= 2.f) Label(P + FVector2D(5, -8), FString::Printf(TEXT("%+.0fm"), Rise), C);
+	}
+	// 自己：中心的朝向箭头。偏航 0 朝 +X，即画面上方。
+	const float Yaw = FMath::DegreesToRadians(PC->GetControlRotation().Yaw);
+	const FVector2D Fwd(FMath::Sin(Yaw), -FMath::Cos(Yaw)), Right(-Fwd.Y, Fwd.X);
+	const TArray<FVector2D> Arrow = {Mid + Fwd * 9.f, Mid - Fwd * 5.f + Right * 6.f, Mid - Fwd * 2.f, Mid - Fwd * 5.f - Right * 6.f,
+	                                 Mid + Fwd * 9.f};
+	FSlateDrawElement::MakeLines(Out, LayerId + 5, Geometry.ToPaintGeometry(), Arrow, ESlateDrawEffect::None,
+	                             FLinearColor::White, true, 2.f);
+	Label(FVector2D(Mid.X - 4, At.Y + 2), TEXT("N"), FLinearColor(1, 1, 1, .7f));
+	Label(At + FVector2D(6, Size.Y - 18), FString::Printf(TEXT("%.0fm"), MiniWorld / 100.f), FLinearColor(1, 1, 1, .5f));
 }

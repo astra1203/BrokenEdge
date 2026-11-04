@@ -123,8 +123,10 @@ namespace
 		HazeSlot->SetAnchors(FAnchors(0, 0, 1, 1));
 		HazeSlot->SetOffsets(FMargin(0));
 
-		// 左上：对局时间、地图与存活人数、提示与事件文本、观战/离开按钮。
-		auto* Raid = CardAt(T, Canvas, TEXT("RaidCard"), FAnchors(0, 0), FVector2D(0, 0), FVector2D(24, 24));
+		// 左上角留给小地图（UExtractionWidget::PaintMinimap 直接绘制，边长 MiniSize）；
+		// 其下：对局时间、地图与存活人数、任务与事件文本、观战/离开按钮。
+		auto* Raid = CardAt(T, Canvas, TEXT("RaidCard"), FAnchors(0, 0), FVector2D(0, 0),
+		                    FVector2D(24, 24 + UExtractionWidget::MiniSize + 14));
 		Raid->AddChildToVerticalBox(Heading(T, Label(T, TEXT("RaidTimer"), TEXT("--:--"), 28, FLinearColor::White, true)));
 		Raid->AddChildToVerticalBox(Label(T, TEXT("RaidInfo"), TEXT("航天基地"), 13, Muted))->SetPadding(FMargin(11, 0, 0, 8));
 		auto* Status = Label(T, TEXT("Status"), TEXT("正在加载航天基地…"), 14, FLinearColor(1, 1, 1, .9f));
@@ -164,6 +166,14 @@ namespace
 		ExitStatus->SetWrapTextAt(280);
 		ExitStatus->SetMinDesiredWidth(280);
 		Exits->AddChildToVerticalBox(ExitStatus);
+
+		// 右侧中间：按键提示与技能冷却。
+		auto* Hints = CardAt(T, Canvas, TEXT("HintCard"), FAnchors(1, .5f), FVector2D(1, .5f), FVector2D(-24, 0));
+		Hints->AddChildToVerticalBox(Heading(T, Label(T, NAME_None, TEXT("操作"), 13, Muted, true)))->SetPadding(
+			FMargin(0, 0, 0, 6));
+		auto* KeyHints = Label(T, TEXT("KeyHints"), TEXT(""), 13, FLinearColor(1, 1, 1, .82f));
+		KeyHints->SetMinDesiredWidth(200);
+		Hints->AddChildToVerticalBox(KeyHints);
 
 		// 中下：撤离倒计时，只在撤离中或被阻止时出现。
 		auto* Extract = CardAt(T, Canvas, TEXT("ExtractionCard"), FAnchors(.5f, .72f), FVector2D(.5f, 0), FVector2D(0, 0));

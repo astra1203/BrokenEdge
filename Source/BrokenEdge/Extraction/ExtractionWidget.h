@@ -15,6 +15,14 @@ public:
 	// 读取 GameState、PlayerState 和本人账号快照更新倒计时、撤离点、任务、生命与武器信息。
 	// 使用同步服务器时间计算剩余秒数，进度条到零本身不会触发撤离结算。
 	void Refresh();
+	virtual void NativeDestruct() override;
+
+	/** 小地图：左上角边长（控件单位）、覆盖的世界范围（厘米）与采集分辨率。 */
+	static constexpr float MiniSize = 230.f;
+	static constexpr float MiniWorld = 8000.f;
+	static constexpr int32 MiniPixels = 384;
+	/** 采集相机比脚底高多少：低于大多数天花板，能看到当前楼层而不是屋顶。 */
+	static constexpr float MiniEyeHeight = 240.f;
 
 protected:
 	// 在控件树之上绘制战斗反馈：命中标记、受击方向弧、击倒/击杀提示。
@@ -63,6 +71,9 @@ private:
 	/** 撤离倒计时卡片；没有撤离进度时整张收起。 */
 	UPROPERTY(meta=(BindWidgetOptional))
 	TObjectPtr<class UWidget> ExtractionCard;
+	/** 右侧中间的按键提示。 */
+	UPROPERTY(meta=(BindWidgetOptional))
+	TObjectPtr<class UTextBlock> KeyHints;
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<class UButton> Previous;
 	UPROPERTY(meta=(BindWidget))
@@ -78,4 +89,13 @@ private:
 	// 按钮只提交离开请求，会话清理由服务器确认后的客户端链路处理。
 	UFUNCTION()
 	void LeaveClicked();
+	// 小地图：本地俯视正交采集（基础色，不算光照），跟随玩家；只在本机创建。
+	void UpdateMinimap(const class APawn* Pawn);
+	void PaintMinimap(const FGeometry& Geometry, FSlateWindowElementList& Out, int32 LayerId) const;
+	UPROPERTY(Transient)
+	TObjectPtr<class UTextureRenderTarget2D> MiniTarget;
+	UPROPERTY(Transient)
+	TObjectPtr<class USceneCaptureComponent2D> MiniCapture;
+	FSlateBrush MiniBrush;
+	FVector MiniCenter = FVector::ZeroVector;
 };
