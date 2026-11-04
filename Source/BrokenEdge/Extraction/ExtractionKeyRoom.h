@@ -54,6 +54,11 @@ public:
 	bool bFitDoorMesh = true;
 	UPROPERTY(EditAnywhere)
 	FVector Slide = FVector(180, 0, 0);
+	/** 双开门：门洞按宽度对半分成两扇（第二扇镜像），开门时各自往两侧滑开半个门洞宽，忽略 Slide。 */
+	UPROPERTY(EditAnywhere, Category="KeyRoom|Door")
+	bool bDoubleDoor = false;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UStaticMeshComponent> DoorMeshB;
 	UPROPERTY(EditAnywhere)
 	FVector LootOffset = FVector(0, 400, 25);
 	/** 房号：与 UExtractionItemDefinition::KeyRoomId 对应；留空表示沿用旧的一次性钥匙。 */
@@ -97,6 +102,9 @@ public:
 
 private:
 	FVector ClosedLocation;
+	FVector ClosedLocationB;
+	// 当前开门进度 0~1 时两扇门的位置。
+	void PlaceLeaves(float Alpha);
 	/** 按门洞尺寸缩放并对齐门扇模型；模型为空时套用默认门扇。 */
 	void FitDoorMesh();
 	/** 按门洞尺寸和 InteractionZonePadding 重算交互碰撞盒。 */

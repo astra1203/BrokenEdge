@@ -65,6 +65,13 @@ AExtractionKeyRoom::AExtractionKeyRoom()
 	InteractionZone->bVisualizeComponent = true;
 #endif
 	// 构造期硬引用，保证打包时门扇模型一定被 cook 进包。
+	DoorMeshB = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DoorMeshB"));
+	DoorMeshB->SetupAttachment(Barrier);
+	DoorMeshB->SetCollisionProfileName(TEXT("BlockAllDynamic"));
+	DoorMeshB->SetGenerateOverlapEvents(false);
+	DoorMeshB->SetCanEverAffectNavigation(false);
+	DoorMeshB->SetVisibility(false);
+	DoorMeshB->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> DoorModel(DefaultDoorMeshPath);
 	if (DoorModel.Succeeded()) DoorMesh->SetStaticMesh(DoorModel.Object);
 }
@@ -121,11 +128,22 @@ void AExtractionKeyRoom::FitDoorMesh()
 		return Wanted > 1.e-4 && Source > 1.e-4 ? Wanted / Source : 1.0;
 	};
 	// 只按门洞的宽、高做等比缩放；厚度沿用模型自身比例，免得门扇被压成一块砖。
-	const double Ratio = FMath::Min(Axis(Target.X, Native.X), Axis(Target.Z, Native.Z));
+	// 双开门每扇只占一半宽度，第二扇沿宽度方向镜像。
+	const double LeafWidth = bDoubleDoor ? Target.X * .5 : Target.X;
+	const double Ratio = FMath::Min(Axis(LeafWidth, Native.X), Axis(Target.Z, Native.Z));
 	const FVector Scale(Ratio);
 	DoorMesh->SetRelativeScale3D(Scale);
 	// 模型轴心常在底面或门轴处，按包围盒中心重新对齐到门洞中心。
-	DoorMesh->SetRelativeLocation(DoorMeshOffset - FVector(Bounds.Origin) * Scale);
+	const FVector Half(bDoubleDoor ? LeafWidth * .5 : 0., 0., 0.);
+	DoorMesh->SetRelativeLocation(DoorMeshOffset - FVector(Bounds.Origin) * Scale - Half);
+	if (DoorMeshB)
+	{
+		DoorMeshB->SetStaticMesh(DoorMesh->GetStaticMesh());
+		const FVector Mirror(-Ratio, Ratio, Ratio);
+		DoorMeshB->SetRelativeScale3D(Mirror);
+		DoorMeshB->SetRelativeLocation(DoorMeshOffset - FVector(Bounds.Origin) * Mirror + Half);
+		DoorMeshB->SetVisibility(bDoubleDoor);
+	}
 }
 
 void AExtractionKeyRoom::ApplyDoorState(bool bOpen)
@@ -134,6 +152,10 @@ void AExtractionKeyRoom::ApplyDoorState(bool bOpen)
 	DoorMesh->SetCollisionEnabled(!bOpen && bDoorBlocks
 		? ECollisionEnabled::QueryAndPhysics
 		: ECollisionEnabled::NoCollision);
+	if (DoorMeshB)
+		DoorMeshB->SetCollisionEnabled(bDoubleDoor && !bOpen && bDoorBlocks
+			                               ? ECollisionEnabled::QueryAndPhysics
+			                               : ECollisionEnabled::NoCollision);
 }
 
 // 记录关门相对位置并刷新表现；服务器生成一次机密宝箱和文件来源批次，供撤离任务核验。
@@ -144,6 +166,7 @@ void AExtractionKeyRoom::BeginPlay()
 	FitDoorMesh();
 	RefreshInteractionZone();
 	ClosedLocation = DoorMesh->GetRelativeLocation();
+	if (DoorMeshB) ClosedLocationB = DoorMeshB->GetRelativeLocation();
 	// 客户端也要拿到房名与卡名，交互提示才显示得出来。
 	RequiredCardLabel = NSLOCTEXT("Extraction", "LegacyKey", "一次性钥匙");
 	if (!RequiredKey.IsNone())
@@ -270,7 +293,21 @@ FString AExtractionKeyRoom::Unlock(UExtractionInteractionComponent* I, int32 Rev
 void AExtractionKeyRoom::OnRep_Door()
 {
 	ApplyDoorState(Open);
-	DoorMesh->SetRelativeLocation(Open ? ClosedLocation + Slide : ClosedLocation);
+	PlaceLeaves(Open ? 1.f : 0.f);
+}
+
+void AExtractionKeyRoom::PlaceLeaves(float Alpha)
+{
+	if (!bDoubleDoor || !DoorMeshB)
+	{
+		DoorMesh->SetRelativeLocation(ClosedLocation + Slide * Alpha);
+		return;
+	}
+	// 双开门：两扇各往外滑半个门洞宽，正好让出整个门洞。
+	const FVector Size = DoorSize.IsNearlyZero() ? Barrier->GetUnscaledBoxExtent() * 2.0 : DoorSize;
+	const FVector Travel(Size.X * .5 * Alpha, 0, 0);
+	DoorMesh->SetRelativeLocation(ClosedLocation - Travel);
+	DoorMeshB->SetRelativeLocation(ClosedLocationB + Travel);
 }
 
 // 使用同步服务器时间插值门模型；仅服务器在到时后发布 Open 并移除阻挡。
@@ -279,7 +316,7 @@ void AExtractionKeyRoom::Tick(float Delta)
 	Super::Tick(Delta);
 	if (!Unlocked || !GetWorld()->GetGameState()) return;
 	const double Now = GetWorld()->GetGameState()->GetServerWorldTimeSeconds();
-	DoorMesh->SetRelativeLocation(ClosedLocation + Slide * FMath::Clamp(float(1 - (OpenAt - Now) / .8), 0.f, 1.f));
+	PlaceLeaves(FMath::Clamp(float(1 - (OpenAt - Now) / .8), 0.f, 1.f));
 	if (HasAuthority() && !Open && Now >= OpenAt)
 	{
 		Open = true;
