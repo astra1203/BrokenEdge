@@ -186,7 +186,7 @@ void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootAct
 	}
 	InventoryOpen = true;
 	Loot = Target;
-	Target->MarkOpened();
+	if (Target) Target->MarkOpened(); // Tab 打开自己背包时没有容器
 	SeenRevision = -1;
 	RefreshLootView();
 	GetOwner()->ForceNetUpdate();
