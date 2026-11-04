@@ -64,6 +64,13 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static int32 RenderWeaponIcon(class USkeletalMesh* Mesh, const FString& File, int32 Height, float Margin = .06f);
+	/**
+	 * 烘焙关卡俯视地图：把所有带碰撞的静态网格（含实例化网格）按最高点光栅化成高度图，
+	 * 再做山体阴影和墙边描线，写成 Size×Size 的 PNG。上方 = 世界 +X（北），右方 = +Y。
+	 * 返回参与绘制的组件数，0 表示失败。
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation", meta = (WorldContext = "WorldContext"))
+	static int32 RenderLevelOverview(UObject* WorldContext, FVector2D Min, FVector2D Max, int32 Size, const FString& File);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static TArray<FVector> TraceTraversalSurface(UObject* WorldContext, FVector Start, FVector End);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")

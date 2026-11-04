@@ -1,4 +1,6 @@
 #include "ExtractionWidget.h"
+#include "ExtractionMapDefinition.h"
+#include "Engine/Texture2D.h"
 #include "ExtractionUIStyle.h"
 #include "ExtractionPlayerController.h"
 #include "BrokenEdge/Traversal/ExtractionTraversalComponent.h"
@@ -648,65 +650,33 @@ void UExtractionWidget::LeaveClicked()
 
 void UExtractionWidget::NativeDestruct()
 {
-	if (MiniCapture) MiniCapture->DestroyComponent();
-	MiniCapture = nullptr;
+	MiniOverview = nullptr;
 	Super::NativeDestruct();
 }
 
-// 小地图采集相机放在玩家脚底上方 MiniEyeHeight，正交俯视：比相机高的屋顶和上层楼板被裁掉，
-// 看到的是当前楼层的平面。只输出基础色、关掉光照阴影等，开销远小于主画面。
+// 小地图底图来自离线烘焙的整图俯视地图（Scripts/Extraction/bake_overview_map.py），不再每帧采集场景。
 void UExtractionWidget::UpdateMinimap(const APawn* Pawn)
 {
-	if (!Pawn || !GetWorld())
+	bMiniActive = Pawn != nullptr;
+	if (!Pawn) return;
+	if (!bMiniLoaded)
 	{
-		if (MiniCapture) MiniCapture->bCaptureEveryFrame = false;
-		return;
+		bMiniLoaded = true;
+		if (const auto* Map = LoadObject<UExtractionMapDefinition>(
+			nullptr, TEXT("/Game/Extraction/Maps/DA_SpaceCenterGameplay.DA_SpaceCenterGameplay")))
+		{
+			MiniOverview = Map->OverviewTexture.LoadSynchronous();
+			MiniMin = Map->OverviewTextureMin;
+			MiniMax = Map->OverviewTextureMax;
+		}
 	}
-	if (!MiniCapture)
-	{
-		MiniTarget = NewObject<UTextureRenderTarget2D>(this);
-		MiniTarget->RenderTargetFormat = RTF_RGBA16f;
-		MiniTarget->ClearColor = FLinearColor(.02f, .03f, .035f, 1);
-		MiniTarget->InitAutoFormat(MiniPixels, MiniPixels);
-		MiniCapture = NewObject<USceneCaptureComponent2D>(GetOwningPlayer());
-		MiniCapture->ProjectionType = ECameraProjectionMode::Orthographic;
-		MiniCapture->OrthoWidth = MiniWorld;
-		// 自动正交裁剪面会把相机往后挪，屋顶又会出现；关掉后近裁剪面就在相机处。
-		MiniCapture->bAutoCalculateOrthoPlanes = false;
-		MiniCapture->CaptureSource = SCS_BaseColor;
-		MiniCapture->TextureTarget = MiniTarget;
-		MiniCapture->bCaptureOnMovement = false;
-		auto& Flags = MiniCapture->ShowFlags;
-		Flags.SetSkeletalMeshes(false);
-		Flags.SetParticles(false);
-		Flags.SetTranslucency(false);
-		Flags.SetFog(false);
-		Flags.SetVolumetricFog(false);
-		Flags.SetAtmosphere(false);
-		Flags.SetDynamicShadows(false);
-		Flags.SetGlobalIllumination(false);
-		Flags.SetLighting(false);
-		Flags.SetPostProcessing(false);
-		Flags.SetAmbientOcclusion(false);
-		Flags.SetScreenSpaceReflections(false);
-		Flags.SetDecals(false);
-		MiniCapture->RegisterComponentWithWorld(GetWorld());
-		MiniBrush.SetResourceObject(MiniTarget);
-		MiniBrush.ImageSize = FVector2D(MiniPixels);
-		MiniBrush.DrawAs = ESlateBrushDrawType::Image;
-	}
-	MiniCapture->bCaptureEveryFrame = true;
-	const auto* Capsule = Cast<ACharacter>(Pawn) ? Cast<ACharacter>(Pawn)->GetCapsuleComponent() : nullptr;
-	const FVector Feet = Pawn->GetActorLocation() - FVector(0, 0, Capsule ? Capsule->GetScaledCapsuleHalfHeight() : 90.f);
-	MiniCenter = Feet;
-	// 俯仰 -90：画面上方是世界 +X（北），右方是 +Y，和战术地图一致。
-	MiniCapture->SetWorldLocationAndRotation(Feet + FVector(0, 0, MiniEyeHeight), FRotator(-90, 0, 0));
+	MiniCenter = Pawn->GetActorLocation();
 }
 
 void UExtractionWidget::PaintMinimap(const FGeometry& Geometry, FSlateWindowElementList& Out, int32 LayerId) const
 {
 	const auto* PC = GetOwningPlayer<AExtractionPlayerController>();
-	if (!MiniCapture || !MiniCapture->bCaptureEveryFrame || !PC || !PC->GetPawn()) return;
+	if (!bMiniActive || !PC || !PC->GetPawn()) return;
 	const FVector2D At(24, 24), Size(MiniSize, MiniSize);
 	const FSlateBrush* White = FCoreStyle::Get().GetBrush("WhiteBrush");
 	auto Box = [&](FVector2D P, FVector2D S, FLinearColor C, int32 Z)
@@ -715,8 +685,29 @@ void UExtractionWidget::PaintMinimap(const FGeometry& Geometry, FSlateWindowElem
 		                           ESlateDrawEffect::None, C);
 	};
 	Box(At - FVector2D(3), Size + FVector2D(6), ExtractionUIStyle::Hex(TEXT("0B0E12"), .85f), 0);
-	FSlateDrawElement::MakeBox(Out, LayerId + 1, Geometry.ToPaintGeometry(Size, FSlateLayoutTransform(At)), &MiniBrush,
-	                           ESlateDrawEffect::None, FLinearColor(.72f, .78f, .78f, .95f));
+	// 截取俯视图：视野内的世界范围与俯视图范围求交，只画相交的那一块（地图边缘外留空）。
+	if (MiniOverview && MiniMax.X > MiniMin.X && MiniMax.Y > MiniMin.Y)
+	{
+		const double Half = MiniWorld * .5;
+		// 屏幕左右 = 世界 Y，屏幕上下 = 世界 -X。
+		const double Left = FMath::Max(MiniCenter.Y - Half, MiniMin.Y), Right = FMath::Min(MiniCenter.Y + Half, MiniMax.Y);
+		const double TopX = FMath::Min(MiniCenter.X + Half, MiniMax.X), BottomX = FMath::Max(MiniCenter.X - Half, MiniMin.X);
+		if (Right > Left && TopX > BottomX)
+		{
+			const FVector2D Span = MiniMax - MiniMin;
+			FSlateBrush Brush;
+			Brush.SetResourceObject(MiniOverview);
+			Brush.SetUVRegion(FBox2f(
+				FVector2f((Left - MiniMin.Y) / Span.Y, (MiniMax.X - TopX) / Span.X),
+				FVector2f((Right - MiniMin.Y) / Span.Y, (MiniMax.X - BottomX) / Span.X)));
+			const float PerCm = MiniSize / MiniWorld;
+			const FVector2D Offset((Left - (MiniCenter.Y - Half)) * PerCm, ((MiniCenter.X + Half) - TopX) * PerCm);
+			const FVector2D Draw((Right - Left) * PerCm, (TopX - BottomX) * PerCm);
+			Brush.ImageSize = Draw;
+			FSlateDrawElement::MakeBox(Out, LayerId + 1, Geometry.ToPaintGeometry(Draw, FSlateLayoutTransform(At + Offset)),
+			                           &Brush, ESlateDrawEffect::None, FLinearColor(1, 1, 1, .92f));
+		}
+	}
 	const FLinearColor Edge(1, 1, 1, .12f);
 	Box(At, {Size.X, 1}, Edge, 2);
 	Box(At + FVector2D(0, Size.Y - 1), {Size.X, 1}, Edge, 2);

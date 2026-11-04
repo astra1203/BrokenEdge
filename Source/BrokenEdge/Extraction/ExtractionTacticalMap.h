@@ -15,4 +15,6 @@ public:
 
 	UPROPERTY(Transient)
 	TObjectPtr<class UExtractionMapDefinition> Definition;
+	UPROPERTY(Transient)
+	TObjectPtr<class UTexture2D> Overview;
 };

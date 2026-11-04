@@ -99,6 +99,13 @@ public:
 	FVector2D OverviewMin = FVector2D(-12000,-12000);
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FVector2D OverviewMax = FVector2D(12000,12000);
+	/** 烘焙的俯视地图（Scripts/Extraction/bake_overview_map.py）：上 = +X（北），右 = +Y，覆盖 Min..Max 的正方形。 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Overview")
+	TSoftObjectPtr<class UTexture2D> OverviewTexture;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Overview")
+	FVector2D OverviewTextureMin = FVector2D::ZeroVector;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Overview")
+	FVector2D OverviewTextureMax = FVector2D::ZeroVector;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName MapId;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

@@ -20,9 +20,6 @@ public:
 	/** 小地图：左上角边长（控件单位）、覆盖的世界范围（厘米）与采集分辨率。 */
 	static constexpr float MiniSize = 230.f;
 	static constexpr float MiniWorld = 8000.f;
-	static constexpr int32 MiniPixels = 384;
-	/** 采集相机比脚底高多少：低于大多数天花板，能看到当前楼层而不是屋顶。 */
-	static constexpr float MiniEyeHeight = 240.f;
 
 protected:
 	// 在控件树之上绘制战斗反馈：命中标记、受击方向弧、击倒/击杀提示。
@@ -89,13 +86,12 @@ private:
 	// 按钮只提交离开请求，会话清理由服务器确认后的客户端链路处理。
 	UFUNCTION()
 	void LeaveClicked();
-	// 小地图：本地俯视正交采集（基础色，不算光照），跟随玩家；只在本机创建。
+	// 小地图：从烘焙的整图俯视地图（地图定义 OverviewTexture）里截取玩家周围一块，北朝上。
 	void UpdateMinimap(const class APawn* Pawn);
 	void PaintMinimap(const FGeometry& Geometry, FSlateWindowElementList& Out, int32 LayerId) const;
 	UPROPERTY(Transient)
-	TObjectPtr<class UTextureRenderTarget2D> MiniTarget;
-	UPROPERTY(Transient)
-	TObjectPtr<class USceneCaptureComponent2D> MiniCapture;
-	FSlateBrush MiniBrush;
+	TObjectPtr<class UTexture2D> MiniOverview;
+	FVector2D MiniMin = FVector2D::ZeroVector, MiniMax = FVector2D::ZeroVector;
+	bool bMiniLoaded = false, bMiniActive = false;
 	FVector MiniCenter = FVector::ZeroVector;
 };

@@ -6,6 +6,7 @@
 #include "ExtractionExit.h"
 #include "ExtractionState.h"
 #include "EngineUtils.h"
+#include "Engine/Texture2D.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/PlayerController.h"
 #include "Widgets/SLeafWidget.h"
@@ -53,23 +54,37 @@ public:
 				                            FMath::Max(8, FMath::RoundToInt(Font * Scale))),
 			                            ESlateDrawEffect::None, C);
 		};
-		const FVector2D Span = D->OverviewMax - D->OverviewMin;
+		// 有烘焙俯视图时按俯视图覆盖的范围投影（整张可玩区），否则退回旧的楼层矩形范围。
+		UTexture2D* Overview = Owner->Overview;
+		const bool bImage = Overview && D->OverviewTextureMax.X > D->OverviewTextureMin.X;
+		const FVector2D MinXY = bImage ? D->OverviewTextureMin : D->OverviewMin;
+		const FVector2D MaxXY = bImage ? D->OverviewTextureMax : D->OverviewMax;
+		const FVector2D Span = MaxXY - MinXY;
 		const double Zoom = FMath::Min(840. / FMath::Max(1., Span.Y), 520. / FMath::Max(1., Span.X));
 		const FVector2D Origin = FVector2D(70, 120) + (FVector2D(840, 520) - FVector2D(Span.Y, Span.X) * Zoom) * .5;
 		auto Project = [&](FVector2D P)
 		{
-			return Origin + FVector2D(P.Y - D->OverviewMin.Y, D->OverviewMax.X - P.X) * Zoom;
+			return Origin + FVector2D(P.Y - MinXY.Y, MaxXY.X - P.X) * Zoom;
 		};
 		Box({35, 35}, {1210, 650}, FLinearColor(.009f, .02f, .024f, .98f));
 		Text({65, 62},TEXT("航天基地  /  战术地图"), 26);
-		Text({65, 660},TEXT("M / Esc 关闭   ·   ↑ 北   ·   建筑平面投影，标记高度以当前位置为基准"), 14);
+		Text({65, 660},TEXT("M / Esc 关闭   ·   ↑ 北   ·   俯视地图，标记高度以当前位置为基准"), 14);
 		Box({65, 115}, {850, 530}, FLinearColor(.025f, .045f, .048f));
 		for (int32 I = 1; I < 10; ++I)
 		{
 			Box({65.f + I * 85, 115}, {1, 530}, FLinearColor(.04f, .065f, .068f));
 			Box({65, 115.f + I * 53}, {850, 1}, FLinearColor(.04f, .065f, .068f));
 		}
-		for (int32 I = 0; I + 1 < D->FloorBounds.Num(); I += 2)
+		if (bImage)
+		{
+			FSlateBrush Brush;
+			Brush.SetResourceObject(Overview);
+			Brush.ImageSize = FVector2D(Span.Y, Span.X) * Zoom;
+			FSlateDrawElement::MakeBox(Draw, Layer + 1, G.ToPaintGeometry(Brush.ImageSize * Scale,
+			                                                              FSlateLayoutTransform(CanvasOffset + Origin * Scale)),
+			                           &Brush, ESlateDrawEffect::None, FLinearColor::White);
+		}
+		for (int32 I = 0; !bImage && I + 1 < D->FloorBounds.Num(); I += 2)
 		{
 			const auto A = Project(D->FloorBounds[I]), B = Project(D->FloorBounds[I + 1]);
 			const FVector2D P(FMath::Min(A.X, B.X), FMath::Min(A.Y, B.Y));
@@ -150,5 +165,6 @@ TSharedRef<SWidget> UExtractionTacticalMap::RebuildWidget()
 {
 	Definition = LoadObject<UExtractionMapDefinition>(
 		nullptr,TEXT("/Game/Extraction/Maps/DA_SpaceCenterGameplay.DA_SpaceCenterGameplay"));
+	Overview = Definition ? Definition->OverviewTexture.LoadSynchronous() : nullptr;
 	return SNew(SExtractionTacticalMap).Owner(this);
 }

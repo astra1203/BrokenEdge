@@ -49,6 +49,8 @@
 #include "AnimGraphNode_TraversalContact.h"
 #include "Engine/StaticMesh.h"
 #include "StaticMeshResources.h"
+#include "Components/InstancedStaticMeshComponent.h"
+#include "UObject/UObjectIterator.h"
 #include "MeshDescription.h"
 #include "AssetCompilingManager.h"
 
@@ -504,6 +506,242 @@ int32 UStingerAssetLibrary::RenderWeaponIcon(USkeletalMesh* Mesh, const FString&
 	                                   ERGBFormat::BGRA, 8))
 		return 0;
 	return FFileHelper::SaveArrayToFile(Png->GetCompressed(), *File) ? Width : 0;
+}
+
+int32 UStingerAssetLibrary::RenderLevelOverview(UObject* WorldContext, FVector2D Min, FVector2D Max, int32 Size,
+                                                const FString& File)
+{
+	UWorld* World = GEngine ? GEngine->GetWorldFromContextObject(WorldContext, EGetWorldErrorMode::LogAndReturnNull) : nullptr;
+	if (!World || Size < 16 || Max.X <= Min.X || Max.Y <= Min.Y) return 0;
+	struct FTris
+	{
+		TArray<FVector3f> Positions;
+		TArray<uint32> Indices;
+	};
+	TMap<const UStaticMesh*, FTris> Cache;
+	const auto Load = [&](const UStaticMesh* Mesh) -> const FTris&
+	{
+		if (const FTris* Found = Cache.Find(Mesh)) return *Found;
+		FTris& Out = Cache.Add(Mesh);
+		// 优先用渲染数据里较粗的 LOD（俯视 15 cm 一像素足够），没有 CPU 副本时退回源网格描述。
+		if (const auto* Render = Mesh->GetRenderData(); Render && Render->LODResources.Num())
+		{
+			const auto& Lod = Render->LODResources[FMath::Min(2, Render->LODResources.Num() - 1)];
+			const auto& Buffer = Lod.VertexBuffers.PositionVertexBuffer;
+			if (Buffer.GetVertexData() && Buffer.GetNumVertices() && Lod.IndexBuffer.GetNumIndices())
+			{
+				Lod.IndexBuffer.GetCopy(Out.Indices);
+				if (Out.Indices.Num())
+				{
+					Out.Positions.SetNum(Buffer.GetNumVertices());
+					for (uint32 I = 0; I < Buffer.GetNumVertices(); ++I) Out.Positions[I] = Buffer.VertexPosition(I);
+					return Out;
+				}
+			}
+		}
+		if (const auto* Description = Mesh->GetMeshDescription(0))
+		{
+			const FVector3f Scale(Mesh->GetSourceModel(0).BuildSettings.BuildScale3D);
+			const auto Positions = Description->GetVertexPositions();
+			TMap<FVertexID, uint32> Remap;
+			for (const FTriangleID Triangle : Description->Triangles().GetElementIDs())
+				for (const FVertexID Vertex : Description->GetTriangleVertices(Triangle))
+				{
+					const uint32* Index = Remap.Find(Vertex);
+					if (!Index)
+					{
+						Index = &Remap.Add(Vertex, Out.Positions.Num());
+						Out.Positions.Add(Positions[Vertex] * Scale);
+					}
+					Out.Indices.Add(*Index);
+				}
+		}
+		return Out;
+	};
+	const double Cell = FMath::Max(Max.X - Min.X, Max.Y - Min.Y) / Size;
+	TArray<float> Height;
+	Height.Init(TNumericLimits<float>::Lowest(), Size * Size);
+	const FBox Area(FVector(Min.X, Min.Y, -1e6), FVector(Max.X, Max.Y, 1e6));
+	int32 Drawn = 0;
+	const auto Raster = [&](const FTris& Tris, const FTransform& ToWorld)
+	{
+		TArray<FVector> World;
+		World.SetNum(Tris.Positions.Num());
+		for (int32 I = 0; I < Tris.Positions.Num(); ++I)
+		{
+			const FVector P = ToWorld.TransformPosition(FVector(Tris.Positions[I]));
+			// 像素空间：列 = Y，行 = 北在上。
+			World[I] = FVector((P.Y - Min.Y) / Cell, (Max.X - P.X) / Cell, P.Z);
+		}
+		for (int32 T = 0; T + 2 < Tris.Indices.Num(); T += 3)
+		{
+			const FVector& A = World[Tris.Indices[T]];
+			const FVector& B = World[Tris.Indices[T + 1]];
+			const FVector& C = World[Tris.Indices[T + 2]];
+			const double Det = (B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X);
+			const int32 X0 = FMath::Max(0, FMath::FloorToInt(FMath::Min3(A.X, B.X, C.X)));
+			const int32 X1 = FMath::Min(Size - 1, FMath::FloorToInt(FMath::Max3(A.X, B.X, C.X)));
+			const int32 Y0 = FMath::Max(0, FMath::FloorToInt(FMath::Min3(A.Y, B.Y, C.Y)));
+			const int32 Y1 = FMath::Min(Size - 1, FMath::FloorToInt(FMath::Max3(A.Y, B.Y, C.Y)));
+			if (X0 > X1 || Y0 > Y1) continue;
+			if (FMath::Abs(Det) < 1e-6)
+			{
+				// 竖直面在俯视里退化成线：墙体只有几厘米厚时靠它留下轮廓。
+				const float Top = FMath::Max3(A.Z, B.Z, C.Z);
+				if (X1 - X0 <= 2 && Y1 - Y0 <= 2)
+					for (int32 Y = Y0; Y <= Y1; ++Y)
+						for (int32 X = X0; X <= X1; ++X)
+							Height[Y * Size + X] = FMath::Max(Height[Y * Size + X], Top);
+				continue;
+			}
+			for (int32 Y = Y0; Y <= Y1; ++Y)
+				for (int32 X = X0; X <= X1; ++X)
+				{
+					const double Px = X + .5, Py = Y + .5;
+					double U = ((B.X - Px) * (C.Y - Py) - (B.Y - Py) * (C.X - Px)) / Det;
+					double V = ((C.X - Px) * (A.Y - Py) - (C.Y - Py) * (A.X - Px)) / Det;
+					double W = 1. - U - V;
+					// 小于一个像素的三角形也要落点，放宽半个像素。
+					const double Slack = .5 / FMath::Max(1., FMath::Abs(Det));
+					if (U < -Slack || V < -Slack || W < -Slack) continue;
+					U = FMath::Clamp(U, 0., 1.);
+					V = FMath::Clamp(V, 0., 1.);
+					W = FMath::Clamp(W, 0., 1.);
+					const float Z = (U * A.Z + V * B.Z + W * C.Z) / FMath::Max(1e-6, U + V + W);
+					float& H = Height[Y * Size + X];
+					H = FMath::Max(H, Z);
+				}
+		}
+	};
+	for (TObjectIterator<UStaticMeshComponent> It; It; ++It)
+	{
+		UStaticMeshComponent* Component = *It;
+		if (Component->GetWorld() != World || !Component->IsRegistered() || !Component->GetStaticMesh()
+			|| Component->bHiddenInGame || !Component->IsVisible()
+			|| Component->GetCollisionEnabled() == ECollisionEnabled::NoCollision)
+			continue;
+		const FBox Bounds = Component->Bounds.GetBox();
+		if (!Bounds.Intersect(Area) || Bounds.GetSize().X > 4 * (Max.X - Min.X)) continue;
+		const FTris& Tris = Load(Component->GetStaticMesh());
+		if (Tris.Indices.IsEmpty()) continue;
+		if (const auto* Instanced = Cast<UInstancedStaticMeshComponent>(Component))
+		{
+			for (int32 I = 0; I < Instanced->GetInstanceCount(); ++I)
+			{
+				FTransform Instance;
+				if (Instanced->GetInstanceTransform(I, Instance, true)) Raster(Tris, Instance);
+			}
+		}
+		else Raster(Tris, Component->GetComponentTransform());
+		++Drawn;
+	}
+	// 高度分档上色 + 西北向山体阴影 + 高差处描边（墙、楼边、台阶）。
+	TArray<float> Known;
+	for (int32 I = 0; I < Height.Num(); I += 7)
+		if (Height[I] > -1e30f) Known.Add(Height[I]);
+	if (Known.IsEmpty()) return 0;
+	Known.Sort();
+	const float Low = Known[Known.Num() * 5 / 100], High = FMath::Max(Low + 100.f, Known[Known.Num() * 97 / 100]);
+	const FLinearColor Empty(.035f, .05f, .058f), Ground(.10f, .14f, .145f), Top(.50f, .56f, .54f), Edge(.80f, .86f, .82f);
+	const FVector Sun = FVector(1, -1, 1.4).GetSafeNormal(); // 北 = 行减小，西 = 列减小
+	TArray<FColor> Pixels;
+	Pixels.SetNumUninitialized(Size * Size);
+	const auto At = [&](int32 X, int32 Y)
+	{
+		X = FMath::Clamp(X, 0, Size - 1);
+		Y = FMath::Clamp(Y, 0, Size - 1);
+		return Height[Y * Size + X];
+	};
+	// 局部地面：约 22 m 半径内的最低点（可分离滑动最小值），再做一次盒式平滑。
+	// 颜色主要按“比周围地面高多少”分档，山地地形本身再高也是地面色，建筑和平台才会亮。
+	TArray<float> Floor = Height;
+	for (float& H : Floor)
+		if (H <= -1e30f) H = TNumericLimits<float>::Max();
+	const int32 Reach = FMath::Max(4, FMath::RoundToInt(2200. / Cell));
+	const auto SlideMin = [&](TArray<float>& Data, bool bRows)
+	{
+		TArray<float> Line, Out;
+		Line.SetNumUninitialized(Size);
+		Out.SetNumUninitialized(Size);
+		for (int32 A = 0; A < Size; ++A)
+		{
+			for (int32 B = 0; B < Size; ++B) Line[B] = Data[bRows ? A * Size + B : B * Size + A];
+			TArray<int32> Queue;
+			int32 Head = 0;
+			for (int32 B = 0; B < Size + Reach; ++B)
+			{
+				if (B < Size)
+				{
+					while (Queue.Num() > Head && Line[Queue.Last()] >= Line[B]) Queue.Pop(EAllowShrinking::No);
+					Queue.Add(B);
+				}
+				const int32 Center = B - Reach;
+				if (Center < 0) continue;
+				while (Queue[Head] < Center - Reach) ++Head;
+				Out[Center] = Line[Queue[Head]];
+			}
+			for (int32 B = 0; B < Size; ++B) Data[bRows ? A * Size + B : B * Size + A] = Out[B];
+		}
+	};
+	SlideMin(Floor, true);
+	SlideMin(Floor, false);
+	{
+		const int32 Blur = Reach / 2;
+		TArray<double> Sum;
+		Sum.SetNumZeroed((Size + 1) * (Size + 1));
+		for (int32 Y = 0; Y < Size; ++Y)
+			for (int32 X = 0; X < Size; ++X)
+			{
+				const float F = Floor[Y * Size + X];
+				Sum[(Y + 1) * (Size + 1) + X + 1] = (F > 1e30f ? 0. : F) + Sum[Y * (Size + 1) + X + 1]
+					+ Sum[(Y + 1) * (Size + 1) + X] - Sum[Y * (Size + 1) + X];
+			}
+		for (int32 Y = 0; Y < Size; ++Y)
+			for (int32 X = 0; X < Size; ++X)
+			{
+				const int32 X0 = FMath::Max(0, X - Blur), X1 = FMath::Min(Size, X + Blur + 1);
+				const int32 Y0 = FMath::Max(0, Y - Blur), Y1 = FMath::Min(Size, Y + Blur + 1);
+				const double Total = Sum[Y1 * (Size + 1) + X1] - Sum[Y0 * (Size + 1) + X1] - Sum[Y1 * (Size + 1) + X0]
+					+ Sum[Y0 * (Size + 1) + X0];
+				if (Floor[Y * Size + X] < 1e30f)
+					Floor[Y * Size + X] = FMath::Min(Height[Y * Size + X],
+					                                 static_cast<float>(Total / ((X1 - X0) * (Y1 - Y0))));
+			}
+	}
+	for (int32 Y = 0; Y < Size; ++Y)
+		for (int32 X = 0; X < Size; ++X)
+		{
+			const float H = At(X, Y);
+			if (H <= -1e30f)
+			{
+				Pixels[Y * Size + X] = Empty.ToFColor(true);
+				continue;
+			}
+			float Rise = 0;
+			for (const FIntPoint D : {FIntPoint(1, 0), FIntPoint(-1, 0), FIntPoint(0, 1), FIntPoint(0, -1)})
+			{
+				const float N = At(X + D.X, Y + D.Y);
+				Rise = FMath::Max(Rise, N <= -1e30f ? 300.f : FMath::Abs(N - H));
+			}
+			const float L = At(X - 1, Y) <= -1e30f ? H : At(X - 1, Y), R = At(X + 1, Y) <= -1e30f ? H : At(X + 1, Y);
+			const float U = At(X, Y - 1) <= -1e30f ? H : At(X, Y - 1), Dn = At(X, Y + 1) <= -1e30f ? H : At(X, Y + 1);
+			// 坡度按 3 倍夸张，平地上的台阶和路缘也看得出来。
+			const FVector Normal = FVector(-(R - L) / (2 * Cell) * 3, (Dn - U) / (2 * Cell) * 3, 1).GetSafeNormal();
+			const float Shade = .62f + .38f * FMath::Max(0.f, static_cast<float>(FVector::DotProduct(Normal, Sun)));
+			const float Absolute = FMath::Clamp((H - Low) / (High - Low), 0.f, 1.f);
+			const float Relative = FMath::Clamp((H - Floor[Y * Size + X] - 350.f) / 900.f, 0.f, 1.f);
+			FLinearColor C = FMath::Lerp(Ground, Top, FMath::Pow(Relative, .7f)) * Shade * (.85f + .3f * Absolute);
+			C = FMath::Lerp(C, Edge, FMath::Clamp((Rise - 90.f) / 260.f, 0.f, .8f));
+			C.A = 1;
+			Pixels[Y * Size + X] = C.ToFColor(true);
+		}
+	auto& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
+	const TSharedPtr<IImageWrapper> Png = ImageWrapperModule.CreateImageWrapper(EImageFormat::PNG);
+	if (!Png.IsValid() || !Png->SetRaw(Pixels.GetData(), Pixels.Num() * sizeof(FColor), Size, Size, ERGBFormat::BGRA, 8))
+		return 0;
+	UE_LOG(LogTemp, Display, TEXT("LEVEL_OVERVIEW components=%d meshes=%d low=%.0f high=%.0f"), Drawn, Cache.Num(), Low,
+	       High);
+	return FFileHelper::SaveArrayToFile(Png->GetCompressed(), *File) ? Drawn : 0;
 }
 
 FString UStingerAssetLibrary::DescribeLadderVertices(UStaticMesh* Mesh)
