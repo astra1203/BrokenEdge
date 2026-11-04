@@ -826,10 +826,13 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 	const FVector AimOffset = GetViewWeaponFit().bEnabled
 		                          ? FVector::ZeroVector
 		                          : (IsAiming() ? FirstPersonAimMeshOffset : FVector::ZeroVector);
-	DedicatedFirstPersonMesh->SetRelativeLocation(FMath::VInterpTo(DedicatedFirstPersonMesh->GetRelativeLocation(),
-	                                                               FirstPersonMeshTransform.GetLocation() + AimOffset,
-	                                                               GetWorld()->GetDeltaSeconds(),
-	                                                               FirstPersonAimInterpSpeed));
+	// 切枪放下：手和枪（枪跟右手走）一起往下、往后退出画面，单独叠加，不参与插值。
+	const FVector SwapOffset = FVector(-12.f, 0.f, -42.f) * SyncFirstPersonSwap();
+	DedicatedFirstPersonMesh->SetRelativeLocation(FMath::VInterpTo(
+		DedicatedFirstPersonMesh->GetRelativeLocation() - ViewSwapOffsetApplied,
+		FirstPersonMeshTransform.GetLocation() + AimOffset, GetWorld()->GetDeltaSeconds(),
+		FirstPersonAimInterpSpeed) + SwapOffset);
+	ViewSwapOffsetApplied = SwapOffset;
 	AWeapon* Weapon = GetEquippedWeapon();
 	// 持有者或掉落状态的复制可能先于装备槽清理到达，不能继续把这类武器当作当前持枪。
 	if (!IsValid(Weapon) || Weapon->GetOwner() != this || Weapon->GetWeaponState() == EWeaponState::EWS_Dropped)
@@ -896,12 +899,14 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 	{
 		FTransform Target = IsAiming() ? GetViewWeaponFit().Aim : GetViewWeaponFit().Hip;
 		if (IsAiming() && Weapon) Target.AddToTranslation(Weapon->EquipmentAimOffset());
+		Target.AddToTranslation(SwapOffset);
 		// 撤离战斗使用组件提供的瞄准进度混合姿势，再叠加视觉后坐力旋转。
 		if (ExtractionCombat->IsEnabled())
 		{
 			FTransform Aim = GetViewWeaponFit().Aim;
 			if (Weapon) Aim.AddToTranslation(Weapon->EquipmentAimOffset());
 			ViewWeaponTarget.Blend(GetViewWeaponFit().Hip, Aim, ExtractionCombat->GetAimAlpha());
+			ViewWeaponTarget.AddToTranslation(SwapOffset);
 			ViewWeaponTarget.SetRotation(
 				ViewWeaponTarget.GetRotation() * ExtractionCombat->GetVisualKick().Quaternion());
 		}
@@ -1354,8 +1359,70 @@ void ABrokenEdgeCharacter::PlaySwapMontage()
 				Rate = GetSwapMontage()->GetPlayLength() / FMath::Max(
 					.1f, ExtractionCombat->GetWeaponStats().Unequip + Next->Equip);
 		AnimInstance->Montage_Play(GetSwapMontage(), Rate);
-		PlayFirstPersonMontage(GetViewSwapMontage(), GetSwapMontage());
 	}
+	// 第一人称不再播旧枪自己的“拔枪+拉栓”：旧枪先放下，换到新枪后播新枪的拔枪动作。
+	if (DedicatedFirstPersonMesh)
+	{
+		if (auto* View = DedicatedFirstPersonMesh->GetAnimInstance(); View && ViewActionMontage)
+			View->Montage_Stop(.1f, ViewActionMontage);
+		ViewActionMontage = nullptr;
+		ViewActionThirdPersonMontage = nullptr;
+		ViewSwapUnequip = .45f;
+		ViewSwapEquip = .4f;
+		if (ExtractionCombat->IsEnabled() && ExtractionCombat->GetWeaponStats().IsValid())
+		{
+			ViewSwapUnequip = ExtractionCombat->GetWeaponStats().Unequip;
+			if (Combat->SecondaryWeapon)
+				if (const auto* Next = WeaponMechanics::Find(Combat->SecondaryWeapon->ExtractionDefinition))
+					ViewSwapEquip = Next->Equip;
+		}
+		ViewSwapUnequip = FMath::Max(.15f, ViewSwapUnequip);
+		ViewSwapEquip = FMath::Max(.15f, ViewSwapEquip);
+		const AWeapon* Next = Combat->SecondaryWeapon;
+		ViewSwapDraw = Next && Next->Presentation && Next->Presentation->ViewSwap
+			               ? Next->Presentation->ViewSwap.Get()
+			               : FirstPersonSwapMontage.Get();
+		ViewSwapFrom = Combat->EquippedWeapon;
+		ViewSwapStart = GetWorld()->GetTimeSeconds();
+		ViewSwapDrawStart = -1.f;
+	}
+}
+
+float ABrokenEdgeCharacter::SyncFirstPersonSwap()
+{
+	if (ViewSwapStart < 0.f || !DedicatedFirstPersonMesh) return 0.f;
+	UAnimInstance* View = DedicatedFirstPersonMesh->GetAnimInstance();
+	const float Now = GetWorld()->GetTimeSeconds();
+	const bool bChanged = GetEquippedWeapon() != ViewSwapFrom.Get();
+	const bool bSwapping = Combat && Combat->CombatState == ECombatState::ECS_SwappingWeapon;
+	const auto End = [&]
+	{
+		ViewSwapStart = -1.f;
+		ViewSwapDrawStart = -1.f;
+		ViewSwapFrom.Reset();
+		return 0.f;
+	};
+	// 被取消（死亡、翻越、切枪中断）或超时都直接恢复。
+	if (bDefeated || IsTraversing() || Melee->Active || Now - ViewSwapStart > ViewSwapUnequip + ViewSwapEquip + 2.f
+		|| (!bSwapping && !bChanged && Now - ViewSwapStart > .2f))
+	{
+		if (View && ViewSwapDraw && View->Montage_IsPlaying(ViewSwapDraw) && ViewSwapDrawStart < 0.f)
+			View->Montage_Stop(.1f, ViewSwapDraw);
+		return End();
+	}
+	if (!bChanged)
+		return FMath::SmoothStep(0.f, 1.f, (Now - ViewSwapStart) / ViewSwapUnequip);
+	if (ViewSwapDrawStart < 0.f)
+	{
+		ViewSwapDrawStart = Now;
+		// 源拔枪动作较长（含拉栓），按装备时间加快，但不超过 2.5 倍，余下部分在可开火后自然收尾。
+		if (View && ViewSwapDraw)
+			View->Montage_Play(ViewSwapDraw, FMath::Clamp(
+				                   ViewSwapDraw->GetPlayLength() / (ViewSwapEquip + .35f), 1.f, 2.5f));
+	}
+	const float Raise = (Now - ViewSwapDrawStart) / (ViewSwapDraw && View ? .12f : ViewSwapEquip);
+	if (Raise >= 1.f) return End();
+	return 1.f - FMath::SmoothStep(0.f, 1.f, Raise);
 }
 
 /**

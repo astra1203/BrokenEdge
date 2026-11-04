@@ -345,6 +345,13 @@ private:
 	void UpdateFirstPersonWeapon();
 	void PlayFirstPersonMontage(UAnimMontage* Montage, UAnimMontage* ThirdPersonMontage, FName Section = NAME_None);
 	void SyncFirstPersonAction();
+	// 第一人称切枪：先把手里的枪放下，等换枪落地后再播新枪的拔枪动作；返回放下程度 0~1。
+	float SyncFirstPersonSwap();
+	float ViewSwapStart = -1.f, ViewSwapUnequip = .45f, ViewSwapEquip = .4f, ViewSwapDrawStart = -1.f;
+	TWeakObjectPtr<AWeapon> ViewSwapFrom;
+	UPROPERTY(Transient)
+	TObjectPtr<UAnimMontage> ViewSwapDraw;
+	FVector ViewSwapOffsetApplied = FVector::ZeroVector;
 	void UpdateFirstPersonWeaponPose();
 	void SprintPressed();
 	void SprintReleased();
