@@ -52,6 +52,7 @@
 #include "Components/InstancedStaticMeshComponent.h"
 #include "UObject/UObjectIterator.h"
 #include "EngineUtils.h"
+#include "PhysicsEngine/BodySetup.h"
 #include "BrokenEdge/Extraction/ExtractionWater.h"
 #include "MeshDescription.h"
 #include "AssetCompilingManager.h"
@@ -390,6 +391,38 @@ bool UStingerAssetLibrary::ConfigureThirdPersonGripIK(UAnimBlueprint* Blueprint)
 	FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(Blueprint);
 	FKismetEditorUtilities::CompileBlueprint(Blueprint);
 	return Blueprint->Status != BS_Error;
+}
+
+FString UStingerAssetLibrary::DescribeComponentCollision(UPrimitiveComponent* Component, FVector Start, FVector End)
+{
+	if (!Component) return TEXT("null");
+	FString Out = FString::Printf(TEXT("class=%s registered=%d physicsState=%d enabled=%d objType=%d visibilityResp=%d pawnResp=%d mobility=%d"),
+	                              *Component->GetClass()->GetName(), Component->IsRegistered(),
+	                              Component->IsPhysicsStateCreated(), static_cast<int32>(Component->GetCollisionEnabled()),
+	                              static_cast<int32>(Component->GetCollisionObjectType()),
+	                              static_cast<int32>(Component->GetCollisionResponseToChannel(ECC_Visibility)),
+	                              static_cast<int32>(Component->GetCollisionResponseToChannel(ECC_Pawn)),
+	                              static_cast<int32>(Component->Mobility.GetValue()));
+	if (const auto* Instanced = Cast<UInstancedStaticMeshComponent>(Component))
+		Out += FString::Printf(TEXT(" instances=%d bodies=%d disableCollision=%d"), Instanced->GetInstanceCount(),
+		                       Instanced->InstanceBodies.Num(), Instanced->bDisableCollision ? 1 : 0);
+	if (const UStaticMesh* Mesh = Cast<UStaticMeshComponent>(Component) ? Cast<UStaticMeshComponent>(Component)->GetStaticMesh().Get() : nullptr)
+		if (const UBodySetup* Body = Mesh->GetBodySetup())
+			Out += FString::Printf(TEXT(" flag=%d boxes=%d convex=%d trimesh=%d"), static_cast<int32>(Body->CollisionTraceFlag),
+			                       Body->AggGeom.BoxElems.Num(), Body->AggGeom.ConvexElems.Num(), Body->TriMeshGeometries.Num());
+	FHitResult Hit;
+	const bool bHit = Component->LineTraceComponent(Hit, Start, End, FCollisionQueryParams(NAME_None, true));
+	Out += FString::Printf(TEXT(" trace=%d at=%s"), bHit, *Hit.ImpactPoint.ToString());
+	return Out;
+}
+
+bool UStingerAssetLibrary::EnableInstancedCollision(UInstancedStaticMeshComponent* Component)
+{
+	if (!Component) return false;
+	Component->Modify();
+	Component->bDisableCollision = false;
+	Component->RecreatePhysicsState();
+	return Component->IsPhysicsStateCreated();
 }
 
 FString UStingerAssetLibrary::DescribeSkeletalVertices(USkeletalMesh* Mesh)

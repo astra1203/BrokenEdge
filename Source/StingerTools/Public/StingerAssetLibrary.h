@@ -58,6 +58,12 @@ public:
 	/** 骨骼网格 LOD0 参考姿势顶点（组件空间），JSON [[x,y,z],...]。 */
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static FString DescribeSkeletalVertices(class USkeletalMesh* Mesh);
+	/** 诊断某个组件的碰撞：物理状态、实例体数量、网格碰撞几何，以及对它单独做一次线检测的结果。 */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static FString DescribeComponentCollision(class UPrimitiveComponent* Component, FVector Start, FVector End);
+	/** 实例化网格的 bDisableCollision 没有编辑器可见性，Python 改不到；这里清掉它并重建物理状态。 */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static bool EnableInstancedCollision(class UInstancedStaticMeshComponent* Component);
 	/**
 	 * 把枪的骨骼网格按侧视图光栅化成物品图标 PNG（透明底、浅灰带明暗），枪口朝右。
 	 * 长轴取 X/Y 中较长的那个；有 MuzzleFlash 插槽时据此判断枪口方向。返回写出的宽度，失败返回 0。
