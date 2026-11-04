@@ -234,10 +234,17 @@ bool ExtractionItems::AutoPlace(FExtractionContainer& Container, FExtractionItem
 	const auto* D = UExtractionItemDefinition::Get(Item.Definition);
 	if (!D || Item.Quantity <= 0 || Item.Quantity > D->MaxStack) return false;
 	FExtractionContainer Candidate = Container;
-	// 默认顺序先胸挂再背包；安全箱只接受明确指定，避免捡东西时被自动塞进去。
+	// 默认顺序先胸挂再背包；有胸挂或背包时安全箱只接受明确指定，避免捡东西时被自动塞进去。
+	// 身上只剩安全箱（没胸挂也没背包）时，Shift/双击转移和拾取就放进安全箱。
 	TArray<int32> Sections;
 	if (Section < 0) Sections.Add(Section);
-	else if (Container.GearGrids) Sections = {ExtractionGear::RigGrid, ExtractionGear::BagGrid};
+	else if (Container.GearGrids)
+	{
+		FGrid Probe;
+		if (GridOf(Container, ExtractionGear::RigGrid, Probe) || GridOf(Container, ExtractionGear::BagGrid, Probe))
+			Sections = {ExtractionGear::RigGrid, ExtractionGear::BagGrid};
+		else Sections = {ExtractionGear::SafeGrid};
+	}
 	else Sections.Add(-1);
 	if (D->MaxStack > 1)
 		for (auto& Other : Candidate.Items)

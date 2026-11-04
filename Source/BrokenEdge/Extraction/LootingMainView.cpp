@@ -784,7 +784,10 @@ void ULootingMainView::BeginDrag(ULootingWidgetPart* Source, UDragDropOperation*
 		}
 		Op->DefaultDragVisual = Visual;
 	}
-	Op->Pivot = EDragPivot::MouseDown;
+	// 按抓取点在物品上的比例摆放拖拽图像，和落点换算（ResolveDrop）用同一个比例；
+	// MouseDown 用源控件的像素偏移，源控件（装备槽、旋转过的格子）尺寸和拖拽图像不同时会错开。
+	Op->Pivot = EDragPivot::TopLeft;
+	Op->Offset = -Source->GrabFraction;
 	ActiveDrag = Op;
 	Out = Op;
 	SetUserFocus(GetOwningPlayer());
