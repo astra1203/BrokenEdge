@@ -46,9 +46,7 @@ for path in lib.list_assets('/Game/UVB80',recursive=True,include_folder=False):
     mesh=unreal.load_asset(path)
     if not isinstance(mesh,unreal.StaticMesh): continue
     if name=='SM_Door':
-        sml.remove_collisions(mesh)
-        sml.add_simple_collisions(mesh,unreal.ScriptCollisionShapeType.BOX)
-        mesh.get_editor_property('body_setup').set_editor_property('collision_trace_flag',unreal.CollisionTraceFlag.CTF_USE_SIMPLE_AS_COMPLEX)
+        assert helper.configure_door_collision(mesh), path
     elif name in ('SM_SmallStairSmall','SM_SmallStairBig'):
         # The detailed riser edges snag a standing capsule on diagonal/side entry.
         # One convex hull bridges the risers for movement; precise traces keep the render mesh.

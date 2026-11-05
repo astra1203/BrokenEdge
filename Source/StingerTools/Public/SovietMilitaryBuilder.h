@@ -19,6 +19,9 @@ public:
 	/** Smooth the two solid entrance stairs without filling openings in other architecture. */
 	UFUNCTION(BlueprintCallable)
 	static bool ConfigureStairCollision(class UStaticMesh* Mesh);
+	/** Build a real moving-door box; editor subsystems can be unavailable in commandlets. */
+	UFUNCTION(BlueprintCallable)
+	static bool ConfigureDoorCollision(class UStaticMesh* Mesh);
 	UFUNCTION(BlueprintCallable)
 	static int32 ConfigureBackdrop(float MinimumDistance);
 	/** Ground position or invalid (NaN); tests floor, capsule clearance and optional nav projection. */

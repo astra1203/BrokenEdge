@@ -18,10 +18,30 @@
 #include "K2Node_AddComponent.h"
 #include "StaticMeshResources.h"
 
+bool USovietMilitaryBuilder::ConfigureDoorCollision(UStaticMesh* Mesh)
+{
+	if (!Mesh || Mesh->GetName() != TEXT("SM_Door") || !Mesh->GetBodySetup()) return false;
+	FAssetCompilingManager::Get().FinishAllCompilation();
+	const FBox Bounds = Mesh->GetBoundingBox();
+	if (!Bounds.IsValid || Bounds.GetSize().GetMin() <= 0) return false;
+	Mesh->Modify();
+	auto* Body = Mesh->GetBodySetup();
+	Body->Modify();
+	Body->AggGeom.EmptyElements();
+	FKBoxElem& Box = Body->AggGeom.BoxElems.AddDefaulted_GetRef();
+	Box.Center = Bounds.GetCenter();
+	Box.X = FMath::Max(2., Bounds.GetSize().X);
+	Box.Y = FMath::Max(2., Bounds.GetSize().Y);
+	Box.Z = FMath::Max(2., Bounds.GetSize().Z);
+	Body->CollisionTraceFlag = CTF_UseSimpleAsComplex;
+	return RefreshCollision(Mesh) && Body->AggGeom.BoxElems.Num() == 1;
+}
+
 bool USovietMilitaryBuilder::ConfigureStairCollision(UStaticMesh* Mesh)
 {
-	if (!Mesh || (Mesh->GetName() != TEXT("SM_SmallStairSmall") && Mesh->GetName() != TEXT("SM_SmallStairBig"))) return
-		false;
+	if (!Mesh || (Mesh->GetName() != TEXT("SM_SmallStairSmall") && Mesh->GetName() != TEXT("SM_SmallStairBig")))
+		return
+			false;
 	FAssetCompilingManager::Get().FinishAllCompilation();
 	const auto* Data = Mesh->GetRenderData();
 	if (!Data || Data->LODResources.IsEmpty() || !Mesh->GetBodySetup()) return false;

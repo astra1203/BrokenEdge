@@ -3,9 +3,12 @@
 #include "Templates/UnrealTemplate.h"
 #include "BrokenEdge/Extraction/ExtractionMapRegistry.h"
 #include "BrokenEdge/Extraction/ExtractionLootLayout.h"
+#include "Engine/StaticMesh.h"
+#include "PhysicsEngine/BodySetup.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionMapRegistryTest, "BrokenEdge.Extraction.Maps.Registry",
-	EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+                                 EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+
 bool FExtractionMapRegistryTest::RunTest(const FString&)
 {
 	const auto* Registry = GetDefault<UExtractionMapRegistry>();
@@ -15,7 +18,8 @@ bool FExtractionMapRegistryTest::RunTest(const FString&)
 	TestFalse(TEXT("Error is actionable"), Error.IsEmpty());
 	for (FName Id : {FName(TEXT("SpaceCenter")), FName(TEXT("SovietMilitary"))})
 	{
-		TestTrue(*FString::Printf(TEXT("Valid registered map %s: %s"), *Id.ToString(), *Error), Registry->Validate(Id, Error));
+		TestTrue(*FString::Printf(TEXT("Valid registered map %s: %s"), *Id.ToString(), *Error),
+		         Registry->Validate(Id, Error));
 		auto* D = Registry->Find(Id);
 		if (!TestNotNull(TEXT("Definition resolves"), D)) continue;
 		TestFalse(TEXT("Localized map title"), D->DisplayName.IsEmpty());
@@ -29,6 +33,24 @@ bool FExtractionMapRegistryTest::RunTest(const FString&)
 	}
 	if (const auto* D = Registry->Find(TEXT("SovietMilitary")))
 	{
+		const auto* DoorMesh = LoadObject<
+			UStaticMesh>(nullptr, TEXT("/Game/UVB80/Assets/UVB80/Buildings/Door/SM_Door"));
+		if (TestNotNull(TEXT("Military door mesh loads"), DoorMesh) && TestNotNull(
+			TEXT("Military door body exists"), DoorMesh->GetBodySetup()))
+		{
+			const auto* Body = DoorMesh->GetBodySetup();
+			TestEqual(TEXT("Moving door uses authored simple collision"), Body->CollisionTraceFlag.GetValue(),
+			          CTF_UseSimpleAsComplex);
+			TestEqual(TEXT("Moving door has a real collision box"), Body->AggGeom.BoxElems.Num(), 1);
+			if (Body->AggGeom.BoxElems.Num() == 1)
+			{
+				const auto& Box = Body->AggGeom.BoxElems[0];
+				TestTrue(TEXT("Door box has nonzero dimensions"), Box.X > 0 && Box.Y > 0 && Box.Z > 0);
+				TestTrue(
+					TEXT("Door box follows off-center hinge geometry"),
+					Box.Center.Equals(DoorMesh->GetBoundingBox().GetCenter(), .1));
+			}
+		}
 		TestEqual(TEXT("Four squad spawn candidates"), D->SpawnGroups.Num(), 4);
 		TestEqual(TEXT("Three extraction zones"), D->Exits.Num(), 3);
 		TestEqual(TEXT("Six guards"), D->GuardCount, 6);
