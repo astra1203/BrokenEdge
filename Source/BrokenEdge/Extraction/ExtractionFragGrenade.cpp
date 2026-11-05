@@ -1,4 +1,6 @@
 #include "ExtractionFragGrenade.h"
+#include "ExtractionBreakableGlass.h"
+#include "ExtractionItems.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionHealth.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
@@ -30,6 +32,11 @@ AExtractionFragGrenade::AExtractionFragGrenade()
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> Sphere(TEXT("/Engine/BasicShapes/Sphere"));
 	if (Sphere.Succeeded()) Shell->SetStaticMesh(Sphere.Object);
 	Shell->SetRelativeScale3D(FVector(.1f));
+	Visual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Visual"));
+	Visual->SetupAttachment(Shell);
+	Visual->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Visual->SetCanEverAffectNavigation(false);
+	Visual->SetRelativeScale3D(FVector(10.f));
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> Effect(
 		TEXT("/Game/MilitaryWeapSilver/FX/P_Grenade_Explosion_01"));
 	if (Effect.Succeeded()) ExplosionEffect = Effect.Object;
@@ -46,6 +53,17 @@ AExtractionFragGrenade::AExtractionFragGrenade()
 	Flight->Bounciness = .35f;
 	Flight->Friction = .6f;
 	Flight->BounceVelocityStopSimulatingThreshold = 10.f;
+}
+
+void AExtractionFragGrenade::BeginPlay()
+{
+	Super::BeginPlay();
+	if (const auto* Definition = UExtractionItemDefinition::Get(TEXT("FragGrenade")); Definition && Definition->
+		WorldMesh)
+	{
+		Visual->SetStaticMesh(Definition->WorldMesh);
+		Shell->SetVisibility(false);
+	}
 }
 
 void AExtractionFragGrenade::Launch(const FVector& Velocity)
@@ -77,6 +95,23 @@ void AExtractionFragGrenade::Explode()
 	const FVector Origin = GetActorLocation() + FVector(0, 0, 15);
 	const float Radius = FMath::Max(1.f, Rules->FragRadius);
 	const float Full = FMath::Clamp(Rules->FragFullRadius, 0.f, Radius);
+	TArray<AExtractionBreakableGlass*> Panes;
+	for (TActorIterator<AExtractionBreakableGlass> It(GetWorld()); It; ++It)
+		if (!It->IsBroken() && It->Pane->Bounds.GetBox().ComputeSquaredDistanceToPoint(Origin) <= FMath::Square(Radius))
+			Panes.Add(*It);
+	Panes.Sort([&](const AExtractionBreakableGlass& A, const AExtractionBreakableGlass& B)
+	{
+		return A.Pane->Bounds.GetBox().ComputeSquaredDistanceToPoint(Origin) < B.Pane->Bounds.GetBox().
+			ComputeSquaredDistanceToPoint(Origin);
+	});
+	for (auto* Glass : Panes)
+	{
+		const FVector Point = Glass->Pane->Bounds.Origin;
+		FCollisionQueryParams Query(SCENE_QUERY_STAT(ExtractionGlassExplosion), true, this);
+		FHitResult Hit;
+		if (!GetWorld()->LineTraceSingleByChannel(Hit, Origin, Point, ECC_Visibility, Query) || Hit.GetActor() == Glass)
+			Glass->Break(Point, Point - Origin);
+	}
 	for (TActorIterator<ABrokenEdgeCharacter> It(GetWorld()); It; ++It)
 	{
 		auto* Victim = *It;
@@ -95,7 +130,7 @@ void AExtractionFragGrenade::Explode()
 
 void AExtractionFragGrenade::MulticastExplode_Implementation(FVector_NetQuantize Location)
 {
-	Shell->SetHiddenInGame(true);
+	Shell->SetHiddenInGame(true, true);
 	if (GetNetMode() == NM_DedicatedServer) return;
 	if (ExplosionEffect) UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, Location);
 	if (ExplosionSound) UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, Location);

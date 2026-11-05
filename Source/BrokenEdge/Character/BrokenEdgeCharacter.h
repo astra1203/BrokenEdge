@@ -398,11 +398,6 @@ private:
 	// 进出飞行模式与滑行速度，只在服务器和本地操控端生效；重复调用无副作用。
 	void ApplyZipline(bool bOn);
 	void TickZipline();
-	// 低门楣自动下蹲：站着往前走时头顶被挡、蹲下能过，就自动蹲下钻过去；出来后自动站起（只处理自动蹲下的那次）。
-	void TickAutoCrouch();
-	// 以当前脚底为准，向 Dir 方向扫一段胶囊（底部抬高避开地面和台阶）：顶高 TopHeight，返回是否被挡及命中。
-	bool SweepBody(const FVector& Dir, float TopHeight, float Distance, FHitResult& Hit) const;
-	bool bAutoCrouched = false;
 	bool bZipApplied = false;
 	float ZipSavedFlySpeed = 0;
 	double ZipStartedAt = 0;

@@ -57,11 +57,6 @@ public:
 
 private:
 	FTraversalMoveResponse ResponseData;
-	// 低矮门洞自动蹲：前方头部高度有遮挡而下半身通畅时蹲下，头顶空出后自动站起；手动蹲 / 趴不受影响。
-	void UpdateAutoCrouch();
-	bool HeadBlocked(const FVector& Feet, const FVector& Offset) const;
-	bool BodyBlocked(const FVector& Feet, const FVector& Offset) const;
-	bool bAutoCrouched = false;
 	bool TryObstacle();
 	bool TryLadder();
 	AExtractionLadder* FindLadderEntry(bool& bTop, bool bRequireMovement) const;

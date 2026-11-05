@@ -493,7 +493,6 @@ void UTraversalMovementComponent::UpdateCharacterStateBeforeMovement(float Delta
 		bLadderInputBlocked = PC && PC->IsMenuOpen();
 	}
 	UpdateLadderReentry();
-	UpdateAutoCrouch();
 	if (Active() && (!CanTraverse() || (OnLadder() && !IsValid(State.Ladder)))) Finish();
 	if (bDetachRequested && OnLadder()) Finish(bJumpDetachRequested);
 	else if (bObstacleRequested && !Active()) TryObstacle();
@@ -502,38 +501,6 @@ void UTraversalMovementComponent::UpdateCharacterStateBeforeMovement(float Delta
 	Super::UpdateCharacterStateBeforeMovement(DeltaSeconds);
 }
 
-// 头部区：蹲姿头顶到站姿头顶之间的胶囊；Offset 为水平探测位移，0 表示原地重叠检测。
-bool UTraversalMovementComponent::HeadBlocked(const FVector& Feet, const FVector& Offset) const
-{
-	const auto* Default = CharacterOwner->GetClass()->GetDefaultObject<ACharacter>()->GetCapsuleComponent();
-	const float Stand = Default->GetScaledCapsuleHalfHeight(), Radius = Default->GetScaledCapsuleRadius() * .8f;
-	const float Bottom = 2.f * GetCrouchedHalfHeight() + 4.f, Top = 2.f * Stand;
-	const float Half = FMath::Max(Radius, (Top - Bottom) * .5f);
-	const FVector Center = Feet + FVector(0, 0, Top - Half);
-	FCollisionQueryParams Query(SCENE_QUERY_STAT(ExtractionAutoCrouch), false, CharacterOwner);
-	FCollisionResponseParams Response;
-	InitCollisionParams(Query, Response);
-	const auto Channel = UpdatedComponent->GetCollisionObjectType();
-	const auto Shape = FCollisionShape::MakeCapsule(Radius, Half);
-	if (Offset.IsNearlyZero())
-		return GetWorld()->OverlapBlockingTestByChannel(Center, FQuat::Identity, Channel, Shape, Query, Response);
-	return GetWorld()->SweepTestByChannel(Center, Center + Offset, FQuat::Identity, Channel, Shape, Query, Response);
-}
-
-// 身体区：台阶高度以上到蹲姿头顶之间；这里也挡住说明是墙或高障碍，蹲下也过不去。
-bool UTraversalMovementComponent::BodyBlocked(const FVector& Feet, const FVector& Offset) const
-{
-	const float Radius = CharacterOwner->GetCapsuleComponent()->GetScaledCapsuleRadius() * .8f;
-	const float Bottom = MaxStepHeight + 4.f, Top = 2.f * GetCrouchedHalfHeight();
-	if (Top <= Bottom) return false;
-	const FVector Extent(Radius, Radius, (Top - Bottom) * .5f);
-	const FVector Center = Feet + FVector(0, 0, Bottom + Extent.Z);
-	FCollisionQueryParams Query(SCENE_QUERY_STAT(ExtractionAutoCrouchBody), false, CharacterOwner);
-	FCollisionResponseParams Response;
-	InitCollisionParams(Query, Response);
-	return GetWorld()->SweepTestByChannel(Center, Center + Offset, FQuat::Identity, UpdatedComponent->GetCollisionObjectType(),
-	                                      FCollisionShape::MakeBox(Extent), Query, Response);
-}
 
 float UTraversalMovementComponent::ImmersionDepth() const
 {
@@ -543,39 +510,6 @@ float UTraversalMovementComponent::ImmersionDepth() const
 	if (Half <= 0.f || Buoyancy == 0.f) return 1.f;
 	const float Bottom = UpdatedComponent->GetComponentLocation().Z - Half;
 	return FMath::Clamp((Water->SurfaceWorldZ() - Bottom) / (2.f * Half), 0.f, 1.f);
-}
-
-void UTraversalMovementComponent::UpdateAutoCrouch()
-{
-	if (!CharacterOwner || !CanEverCrouch()) return;
-	const auto* C = Cast<ABrokenEdgeCharacter>(CharacterOwner);
-	// 玩家自己蹲 / 趴时不接管；自动蹲期间玩家按了起立（bWantsToCrouch 被清掉）也视为交还控制。
-	if (bAutoCrouched && !bWantsToCrouch) bAutoCrouched = false;
-	if ((bWantsToCrouch && !bAutoCrouched) || (C && C->IsProne())) return;
-	if (!IsMovingOnGround() || Active())
-	{
-		return;
-	}
-	const FVector Feet = UpdatedComponent->GetComponentLocation()
-		- FVector(0, 0, CharacterOwner->GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
-	const FVector Move = Acceleration.GetSafeNormal2D();
-	const FVector Probe = Move * (CharacterOwner->GetCapsuleComponent()->GetScaledCapsuleRadius() + 30.f);
-	if (!bAutoCrouched)
-	{
-		if (Move.IsNearlyZero()) return;
-		if (HeadBlocked(Feet, Probe) && !BodyBlocked(Feet, Probe))
-		{
-			bWantsToCrouch = true;
-			bAutoCrouched = true;
-		}
-		return;
-	}
-	// 自动蹲着：头顶和前进方向的头部区都空了才站起，避免在门洞下反复蹲起。
-	if (!HeadBlocked(Feet, FVector::ZeroVector) && (Move.IsNearlyZero() || !HeadBlocked(Feet, Probe)))
-	{
-		bWantsToCrouch = false;
-		bAutoCrouched = false;
-	}
 }
 
 FVector UTraversalMovementComponent::PathPosition(float Fraction) const

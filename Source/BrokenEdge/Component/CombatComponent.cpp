@@ -243,7 +243,7 @@ void UCombatComponent::Fire()
 		bCanFire = false;
 		if (EquippedWeapon == nullptr)return;
 
-		CrosshairShootingFactor = .75f;
+		if (!Character || !Character->GetExtractionCombat()->IsEnabled()) NotifyLocalShot();
 
 		switch (EquippedWeapon->FireType)
 		{
@@ -259,6 +259,12 @@ void UCombatComponent::Fire()
 		}
 		StartFireTimer();
 	}
+}
+
+void UCombatComponent::NotifyLocalShot()
+{
+	if (Character && Character->IsLocallyControlled())
+		CrosshairShootingFactor = FMath::Min(2.f, CrosshairShootingFactor + .65f);
 }
 
 void UCombatComponent::FireProjectileWeapon()
@@ -639,6 +645,8 @@ void UCombatComponent::AttachActorToRightHand(AActor* ActorToAttach)
 	if (const USkeletalMeshSocket* HandSocket = Character->GetMesh()->GetSocketByName(FName("RightHandSocket")))
 	{
 		HandSocket->AttachActor(ActorToAttach, Character->GetMesh());
+		if (const auto* Weapon = Cast<AWeapon>(ActorToAttach); Weapon && Weapon->Presentation)
+			ActorToAttach->SetActorRelativeTransform(Weapon->Presentation->WorldHandTransform);
 	}
 }
 
@@ -648,6 +656,8 @@ void UCombatComponent::AttachActorToBackpack(AActor* ActorToAttach)
 	if (const USkeletalMeshSocket* BackpackSocket = Character->GetMesh()->GetSocketByName(FName("BackpackSocket")))
 	{
 		BackpackSocket->AttachActor(ActorToAttach, Character->GetMesh());
+		if (const auto* Weapon = Cast<AWeapon>(ActorToAttach); Weapon && Weapon->Presentation)
+			ActorToAttach->SetActorRelativeTransform(Weapon->Presentation->WorldBackTransform);
 	}
 }
 
@@ -786,7 +796,12 @@ void UCombatComponent::SetHUDCrosshairs(float DeltaTime)
 	// 叠加的屏幕十字会盖住照门缺口与前准星，反而看不清瞄准关系。
 	const bool AimDownSights = EquippedWeapon && Character->GetExtractionCombat()->IsEnabled()
 		&& Character->IsFirstPersonView() && bAiming && !Character->Melee->Active;
-	if (EquippedWeapon && !AimDownSights)
+	HUDPackage.bProceduralCrosshair = EquippedWeapon && Character->GetExtractionCombat()->IsEnabled()
+		&& !AimDownSights && !Character->Melee->Active && Character->GetExtractionCombat()->CanAct()
+		&& !Character->GetExtractionInteraction()->InventoryOpen && !Character->IsSprinting();
+	HUDPackage.AngularSpread = Character->GetExtractionCombat()->GetCrosshairAngularSpread();
+	if (EquippedWeapon && !AimDownSights && (!Character->GetExtractionCombat()->IsEnabled() || HUDPackage.
+		bProceduralCrosshair))
 	{
 		HUDPackage.CrosshairsCenter = EquippedWeapon->CrosshairsCenter;
 		HUDPackage.CrosshairsLeft = EquippedWeapon->CrosshairsLeft;
@@ -830,10 +845,11 @@ void UCombatComponent::SetHUDCrosshairs(float DeltaTime)
 		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, 0.f, DeltaTime, 30.f);
 	}
 
-	CrosshairShootingFactor = FMath::FInterpTo(CrosshairShootingFactor, 0.f, DeltaTime, 40.f);
+	CrosshairShootingFactor = FMath::FInterpTo(CrosshairShootingFactor, 0.f, DeltaTime, 8.f);
+	HUDPackage.ShotPulse = CrosshairShootingFactor;
 
 	HUDPackage.CrosshairSpread =
-		0.5f +
+		(Character->bIsCrouched ? .35f : .5f) +
 		CrosshairVelocityFactor +
 		CrosshairInAirFactor -
 		CrosshairAimFactor +

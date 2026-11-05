@@ -2,6 +2,9 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
 #include "BrokenEdge/Extraction/ExtractionDoor.h"
+#include "BrokenEdge/Extraction/ExtractionBreakableGlass.h"
+#include "BrokenEdge/UI/BrokenEdgeHUD.h"
+#include "BrokenEdge/Extraction/LootingMainView.h"
 #include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
@@ -400,6 +403,57 @@ public:
 					Command->TryGetNumberField(TEXT("pitch"), Pitch);
 					PC->SetControlRotation(FRotator(Pitch, Command->GetNumberField(TEXT("yaw")), 0));
 				}
+				else if (Op == TEXT("glass_probe") && Role == TEXT("Server"))
+				{
+					GlassSites.Empty();
+					const auto* Subject = FindPawn(World, TEXT("EX_A"));
+					if (Subject)
+						for (TActorIterator<AExtractionBreakableGlass> It(World); It; ++It)
+						{
+							if (It->IsBroken() || !It->Pane->GetStaticMesh()) continue;
+							const FVector Size = It->Pane->GetStaticMesh()->GetBoundingBox().GetSize();
+							const FVector Axis = Size.X <= Size.Y && Size.X <= Size.Z
+								                     ? FVector::ForwardVector
+								                     : Size.Y <= Size.Z
+								                     ? FVector::RightVector
+								                     : FVector::UpVector;
+							const FVector Normal = It->Pane->GetComponentTransform().TransformVectorNoScale(Axis).
+							                           GetSafeNormal();
+							if (FMath::Abs(Normal.Z) > .2f) continue;
+							for (const float Side : {-1.f, 1.f})
+								for (const float Distance : {90.f, 350.f})
+								{
+									const FVector Center = It->Pane->Bounds.Origin;
+									const FVector Offset = Center + Normal * Side * Distance;
+									FHitResult Ground, Sight;
+									FCollisionQueryParams Query(SCENE_QUERY_STAT(GlassSiteProbe), false, Subject);
+									if (!World->LineTraceSingleByChannel(
+										Ground, Offset + FVector(0, 0, 100), Offset - FVector(0, 0, 1200), ECC_Pawn,
+										Query) || Ground.ImpactNormal.Z < .7f) continue;
+									const auto* Capsule = Subject->GetCapsuleComponent();
+									const FVector Standing = Ground.ImpactPoint + FVector(
+										0, 0, Capsule->GetScaledCapsuleHalfHeight() + 3);
+									if (World->OverlapBlockingTestByChannel(
+										Standing, FQuat::Identity, ECC_Pawn,
+										FCollisionShape::MakeCapsule(Capsule->GetScaledCapsuleRadius(),
+										                             Capsule->GetScaledCapsuleHalfHeight()),
+										Query)) continue;
+									const FVector Eye = Standing + FVector(0, 0, Subject->BaseEyeHeight);
+									if (!World->LineTraceSingleByChannel(Sight, Eye, Center, ECC_Visibility, Query) ||
+										Sight.GetActor() != *It) continue;
+									if (FMath::Abs(Eye.Z - Center.Z) > 120) continue;
+									auto Site = MakeShared<FJsonObject>();
+									Site->SetStringField(TEXT("id"), It->PaneId.ToString());
+									Site->SetStringField(TEXT("name"), It->GetName());
+									Site->SetArrayField(TEXT("center"), VectorJson(Center));
+									Site->SetArrayField(TEXT("standing"), VectorJson(Standing));
+									Site->SetArrayField(TEXT("normal"), VectorJson(Normal * Side));
+									Site->SetNumberField(TEXT("distance"), Distance);
+									GlassSites.Add(MakeShared<FJsonValueObject>(Site));
+								}
+							if (GlassSites.Num() >= 80) break;
+						}
+				}
 				else if (Op == TEXT("fixture") && (Role == TEXT("Server") || World->GetNetMode() == NM_Standalone))
 				{
 					for (const auto& Value : Command->GetArrayField(TEXT("players")))
@@ -761,6 +815,7 @@ private:
 	double LastFrame = 0;
 	TArray<FVector> WalkPoints;
 	TSharedPtr<FJsonObject> DoorProbe, PathProbe, WalkProbe;
+	TArray<TSharedPtr<FJsonValue>> GlassSites;
 	int32 WalkIndex = 0;
 	double WalkSince = 0;
 	double Started, LastWrite = 0, PulseEnd = 0;
@@ -806,6 +861,7 @@ private:
 		auto Json = MakeShared<FJsonObject>();
 		Json->SetStringField(TEXT("id"), C.Id.ToString());
 		Json->SetNumberField(TEXT("revision"), C.Revision);
+		Json->SetBoolField(TEXT("personal_pockets"), C.PersonalPockets);
 		TArray<TSharedPtr<FJsonValue>> Entries;
 		for (const auto& I : C.Items)
 		{
@@ -1071,6 +1127,8 @@ private:
 				       ? EExtractionItemOp::Drop
 				       : Kind == TEXT("use")
 				       ? EExtractionItemOp::Use
+				       : Kind == TEXT("swap")
+				       ? EExtractionItemOp::Swap
 				       : EExtractionItemOp::Transfer;
 			Command->TryGetBoolField(TEXT("from_loot"), R.FromLoot);
 			Command->TryGetBoolField(TEXT("to_loot"), R.ToLoot);
@@ -1084,6 +1142,7 @@ private:
 			Command->TryGetNumberField(TEXT("loot_revision"), R.LootRevision);
 			FString Merge;
 			if (Command->TryGetStringField(TEXT("merge"), Merge)) FGuid::Parse(Merge, R.MergeInto);
+			if (Command->TryGetStringField(TEXT("swap_with"), Merge)) FGuid::Parse(Merge, R.SwapWith);
 			EquipmentRequest(Command, R);
 			LastItemRequest = R;
 			PC->ServerItemOperation(R);
@@ -1158,11 +1217,14 @@ private:
 			const FKey Key = Button == TEXT("right") ? EKeys::RightMouseButton : EKeys::LeftMouseButton;
 			if (Action == TEXT("down")) PressedMouse.Add(Key);
 			if (Action == TEXT("up")) PressedMouse.Remove(Key);
-			FPointerEvent Event(0, P, LastMouse, PressedMouse, Key, 0, FModifierKeysState());
+			double WheelDelta = 0;
+			if (Action == TEXT("wheel")) Command->TryGetNumberField(TEXT("delta"), WheelDelta);
+			FPointerEvent Event(0, P, LastMouse, PressedMouse, Key, WheelDelta, FModifierKeysState());
 			FSlateApplication::Get().SetCursorPos(P);
 			FSlateApplication::Get().ProcessMouseMoveEvent(Event, false);
 			if (Action == TEXT("down")) FSlateApplication::Get().ProcessMouseButtonDownEvent(nullptr, Event);
 			if (Action == TEXT("up")) FSlateApplication::Get().ProcessMouseButtonUpEvent(Event);
+			if (Action == TEXT("wheel")) FSlateApplication::Get().ProcessMouseWheelOrGestureEvent(Event, nullptr);
 			LastMouse = P;
 		}
 		else if (Op == TEXT("input_key") && Controller)
@@ -1360,6 +1422,7 @@ private:
 		if (DoorProbe) State->SetObjectField(TEXT("door_probe"), DoorProbe);
 		if (PathProbe) State->SetObjectField(TEXT("path_probe"), PathProbe);
 		if (WalkProbe) State->SetObjectField(TEXT("walk_probe"), WalkProbe);
+		State->SetArrayField(TEXT("glass_sites"), GlassSites);
 		TArray<TSharedPtr<FJsonValue>> VisibleWidgets;
 		TArray<UUserWidget*> Widgets;
 		UWidgetBlueprintLibrary::GetAllWidgetsOfClass(World, Widgets, UUserWidget::StaticClass(), true);
@@ -1684,6 +1747,20 @@ private:
 							Player->SetBoolField(TEXT("fp_weapon_visible"), ViewWeapon->IsVisible());
 						Player->SetBoolField(TEXT("fp_scope_active"), Character->IsFirstPersonScopeActive());
 						Player->SetNumberField(
+							TEXT("crosshair_shot_pulse"), Character->GetCombat()->GetCrosshairShotPulse());
+						if (const auto* HudOwner = Cast<APlayerController>(Character->Controller))
+							if (const auto* HUD = Cast<ABrokenEdgeHUD>(HudOwner->GetHUD()))
+							{
+								const auto& Package = HUD->GetHUDPackage();
+								Player->SetBoolField(TEXT("crosshair_visible"), Package.bProceduralCrosshair);
+								Player->SetNumberField(TEXT("crosshair_spread"), Package.CrosshairSpread);
+								Player->SetNumberField(TEXT("crosshair_angle_x"), Package.AngularSpread.X);
+							}
+						Player->SetArrayField(
+							TEXT("world_weapon_forward"), VectorJson(Weapon->GetWeaponMesh()->GetForwardVector()));
+						Player->SetArrayField(
+							TEXT("view_forward"), VectorJson(Character->GetBaseAimRotation().Vector()));
+						Player->SetNumberField(
 							TEXT("left_grip_distance"),
 							FVector::Dist(Character->GetMesh()->GetSocketLocation(TEXT("LeftHand")),
 							              (Weapon->EquipmentGrip(false) * Weapon->GetWeaponMesh()->
@@ -1740,6 +1817,36 @@ private:
 				Players.Add(MakeShared<FJsonValueObject>(Player));
 			}
 		State->SetArrayField(TEXT("players"), Players);
+		TArray<TSharedPtr<FJsonValue>> Cards;
+		if (World->GetGameViewport())
+		{
+			const auto Viewport = World->GetGameViewport()->GetGameViewportWidget();
+			if (Viewport.IsValid())
+			{
+				const FGeometry Geometry = Viewport->GetCachedGeometry();
+				const float Scale = FMath::Min(Geometry.GetLocalSize().X / 1280, Geometry.GetLocalSize().Y / 720);
+				const FVector2D Offset = (Geometry.GetLocalSize() - FVector2D(1280, 720) * Scale) * .5f;
+				TArray<UUserWidget*> CardWidgets;
+				UWidgetBlueprintLibrary::GetAllWidgetsOfClass(World, CardWidgets, ULootingWidgetPart::StaticClass(),
+				                                              false);
+				for (const auto* Widget : CardWidgets)
+					if (const auto* Card = Cast<ULootingWidgetPart>(Widget); Card && Card->IsVisible() && Card->ItemId.
+						IsValid() && Scale > 0)
+					{
+						const auto& G = Card->GetCachedGeometry();
+						const auto Position = (Geometry.AbsoluteToLocal(G.LocalToAbsolute(G.GetLocalSize() * .5f)) -
+							Offset) / Scale;
+						auto J = MakeShared<FJsonObject>();
+						J->SetStringField(TEXT("id"), Card->ItemId.ToString());
+						J->SetBoolField(TEXT("loot"), Card->bLoot);
+						J->SetNumberField(TEXT("equipment_slot"), Card->EquipmentSlot);
+						J->SetNumberField(TEXT("x"), Position.X);
+						J->SetNumberField(TEXT("y"), Position.Y);
+						Cards.Add(MakeShared<FJsonValueObject>(J));
+					}
+			}
+		}
+		State->SetArrayField(TEXT("ui_cards"), Cards);
 		TArray<TSharedPtr<FJsonValue>> Weapons;
 		for (TActorIterator<AWeapon> It(World); It; ++It)
 		{
@@ -1773,6 +1880,18 @@ private:
 				                     MakeShared<FJsonValueNumber>(P.Z)
 			                     });
 			Entry->SetObjectField(TEXT("contents"), InventoryJson(It->Contents));
+			TArray<TSharedPtr<FJsonValue>> Models;
+			TInlineComponentArray<UStaticMeshComponent*> Meshes(*It);
+			for (const auto* Mesh : Meshes)
+				if (Mesh->IsVisible() && Mesh->GetStaticMesh())
+				{
+					auto Model = MakeShared<FJsonObject>();
+					Model->SetStringField(TEXT("mesh"), Mesh->GetStaticMesh()->GetPathName());
+					Model->SetArrayField(TEXT("center"), VectorJson(Mesh->Bounds.Origin));
+					Model->SetArrayField(TEXT("extent"), VectorJson(Mesh->Bounds.BoxExtent));
+					Models.Add(MakeShared<FJsonValueObject>(Model));
+				}
+			Entry->SetArrayField(TEXT("models"), Models);
 			LootActors.Add(MakeShared<FJsonValueObject>(Entry));
 		}
 		State->SetArrayField(TEXT("loot"), LootActors);
@@ -1791,6 +1910,61 @@ private:
 			Doors.Add(MakeShared<FJsonValueObject>(J));
 		}
 		State->SetArrayField(TEXT("ordinary_doors"), Doors);
+		TArray<TSharedPtr<FJsonValue>> Glass, Ladders;
+		const auto* Observer = FindPawn(World, TEXT("EX_A"));
+		int32 PaneCount = 0, BrokenCount = 0;
+		for (TActorIterator<AExtractionBreakableGlass> It(World); It; ++It)
+		{
+			++PaneCount;
+			BrokenCount += It->IsBroken() ? 1 : 0;
+			if (Observer && FVector::DistSquared(It->Pane->Bounds.Origin, Observer->GetActorLocation()) >
+				FMath::Square(2000.f))
+				continue;
+			if (Glass.Num() >= 80) continue;
+			auto J = MakeShared<FJsonObject>();
+			J->SetStringField(TEXT("id"), It->PaneId.ToString());
+			J->SetStringField(TEXT("name"), It->GetName());
+			J->SetArrayField(TEXT("center"), VectorJson(It->Pane->Bounds.Origin));
+			J->SetArrayField(TEXT("extent"), VectorJson(It->Pane->Bounds.BoxExtent));
+			J->SetBoolField(TEXT("broken"), It->IsBroken());
+			J->SetBoolField(TEXT("visible"), It->Pane->IsVisible());
+			J->SetNumberField(TEXT("collision"), static_cast<int32>(It->Pane->GetCollisionEnabled()));
+			if (const UStaticMesh* PaneMesh = It->Pane->GetStaticMesh())
+			{
+				const auto Size = PaneMesh->GetBoundingBox().GetSize();
+				const FVector Normal = Size.X <= Size.Y && Size.X <= Size.Z
+					                       ? FVector::ForwardVector
+					                       : Size.Y <= Size.Z
+					                       ? FVector::RightVector
+					                       : FVector::UpVector;
+				J->SetArrayField(
+					TEXT("normal"), VectorJson(It->Pane->GetComponentTransform().TransformVectorNoScale(Normal)));
+				const FVector Across = It->Pane->GetComponentTransform().TransformVectorNoScale(Normal).GetSafeNormal()
+					* 20;
+				FHitResult GlassHit;
+				World->LineTraceSingleByChannel(GlassHit, It->Pane->Bounds.Origin - Across,
+				                                It->Pane->Bounds.Origin + Across, ECC_Visibility);
+				J->SetBoolField(TEXT("trace_blocked"), GlassHit.GetActor() == *It);
+			}
+			Glass.Add(MakeShared<FJsonValueObject>(J));
+		}
+		State->SetArrayField(TEXT("glass"), Glass);
+		State->SetNumberField(TEXT("glass_count"), PaneCount);
+		State->SetNumberField(TEXT("broken_glass_count"), BrokenCount);
+		for (TActorIterator<AExtractionLadder> It(World); It; ++It)
+			if (It->SourceId.StartsWith(TEXT("Soviet_")))
+			{
+				auto J = MakeShared<FJsonObject>();
+				J->SetStringField(TEXT("id"), It->SourceId);
+				J->SetStringField(TEXT("name"), It->GetName());
+				J->SetArrayField(TEXT("bottom"), VectorJson(It->Point(It->Bottom)));
+				J->SetArrayField(TEXT("top"), VectorJson(It->Point(It->Top)));
+				J->SetArrayField(TEXT("bottom_exit"), VectorJson(It->Point(It->BottomExit)));
+				J->SetArrayField(TEXT("top_exit"), VectorJson(It->Point(It->TopExit)));
+				J->SetNumberField(TEXT("yaw"), It->GetActorRotation().Yaw);
+				Ladders.Add(MakeShared<FJsonValueObject>(J));
+			}
+		State->SetArrayField(TEXT("soviet_ladders"), Ladders);
 
 		const auto* GuardRules = GetDefault<UExtractionRules>();
 		auto RulesJson = MakeShared<FJsonObject>();

@@ -1,0 +1,314 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "473790E54B706FB87387B2B9BDF96CAA",
+			"instanceName": "DESKTOP-M9PA1SF-8708",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "GameViewer Virtual Display Adapter",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.05-18.35.59",
+	"succeeded": 19,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 1.0279643535614014,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "ArmorCoverage",
+			"fullTestPath": "BrokenEdge.Extraction.Equipment.ArmorCoverage",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.0069147981703281403,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "AtomicConfiguration",
+			"fullTestPath": "BrokenEdge.Extraction.Equipment.AtomicConfiguration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.031062796711921692,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "LegacyMigration",
+			"fullTestPath": "BrokenEdge.Extraction.Equipment.LegacyMigration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.046835202723741531,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "NestedExportRecovery",
+			"fullTestPath": "BrokenEdge.Extraction.Equipment.NestedExportRecovery",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.068641498684883118,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "StartingSupply",
+			"fullTestPath": "BrokenEdge.Extraction.Expansion.StartingSupply",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.037106797099113464,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "EquipmentAndValidation",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.EquipmentAndValidation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.0081178992986679077,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "GearContainers",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.GearContainers",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.0081510990858078003,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "GridTransactions",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.GridTransactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.0083341002464294434,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "StackConservation",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.StackConservation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.0082409009337425232,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SwapAndPockets",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.SwapAndPockets",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.0084977000951766968,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "JournalFailures",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.JournalFailures",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.017577297985553741,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PreparedCancellation",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.PreparedCancellation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.061252698302268982,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RecoveryProvenance",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.RecoveryProvenance",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.12771189212799072,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Transactions",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.Transactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.065501704812049866,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Atomicity",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Atomicity",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.23494580388069153,
+			"dateTime": "2026.11.05-18.35.58",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Economy",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Economy",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.032403897494077682,
+			"dateTime": "2026.11.05-18.35.59",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "KeyCardShop",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.KeyCardShop",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.022692002356052399,
+			"dateTime": "2026.11.05-18.35.59",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Migration",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Migration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.082928799092769623,
+			"dateTime": "2026.11.05-18.35.59",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Quests",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Quests",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"473790E54B706FB87387B2B9BDF96CAA"
+			],
+			"duration": 0.15104749798774719,
+			"dateTime": "2026.11.05-18.35.59",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

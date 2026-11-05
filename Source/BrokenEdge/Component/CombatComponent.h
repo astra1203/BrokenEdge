@@ -42,6 +42,8 @@ public:
 	void Drop();
 	void FireButtonPressed(bool bPressed);
 	void Fire();
+	void NotifyLocalShot();
+	float GetCrosshairShotPulse() const { return CrosshairShootingFactor; }
 	void StartFireTimer();
 	void FireTimerFinished();
 	void ReloadEmptyWeapon();

@@ -3,6 +3,7 @@
 
 #include "HitScanWeapon.h"
 #include "ExtractionBullet.h"
+#include "BrokenEdge/Extraction/ExtractionBreakableGlass.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 #include "WeaponMechanics.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
@@ -58,36 +59,52 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 	FTransform SocketTransform = MuzzleFlashSocket->GetSocketTransform(GetWeaponMesh());
 	FVector Start = SocketTransform.GetLocation();
 
-	const auto* Mechanics = GetWorld()->GetGameState<AExtractionGameState>() ? WeaponMechanics::Find(ExtractionDefinition) : nullptr;
+	const auto* Mechanics = GetWorld()->GetGameState<AExtractionGameState>()
+		                        ? WeaponMechanics::Find(ExtractionDefinition)
+		                        : nullptr;
 	if (Mechanics && (HasAuthority() || OwnerPawn->IsLocallyControlled()))
 	{
 		// A barrel that protrudes through cover cannot spawn a round beyond the wall.
 		FCollisionQueryParams MuzzleQuery(SCENE_QUERY_STAT(ExtractionMuzzleObstruction), true, this);
 		MuzzleQuery.AddIgnoredActor(OwnerPawn);
 		FHitResult Obstruction;
-		if (GetWorld()->LineTraceSingleByChannel(Obstruction, OwnerPawn->GetPawnViewLocation(), Start, ECC_Visibility, MuzzleQuery))
+		if (GetWorld()->LineTraceSingleByChannel(Obstruction, OwnerPawn->GetPawnViewLocation(), Start, ECC_Visibility,
+		                                         MuzzleQuery))
 			Start = Obstruction.ImpactPoint + Obstruction.ImpactNormal * (Mechanics->Radius + .1f);
 		FActorSpawnParameters Params;
-		Params.Owner = this; Params.Instigator = OwnerPawn;
+		Params.Owner = this;
+		Params.Instigator = OwnerPawn;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		// 霰弹：同一出膛点射出 Pellets 颗弹丸，各自在瞄准方向的圆锥内随机偏转；单弹丸武器只射一颗、方向不变。
 		for (int32 Pellet = 0; Pellet < FMath::Max(1, Pellets); ++Pellet)
-		if (auto* Bullet = GetWorld()->SpawnActor<AExtractionBullet>(AExtractionBullet::StaticClass(), Start, FRotator::ZeroRotator, Params))
+			if (auto* Bullet = GetWorld()->SpawnActor<AExtractionBullet>(
+				AExtractionBullet::StaticClass(), Start, FRotator::ZeroRotator, Params))
 			{
-			const auto* C = Cast<ABrokenEdgeCharacter>(OwnerPawn);
-			const auto& Effective = C ? C->GetExtractionCombat()->GetWeaponStats() : *Mechanics;
-			FVector Direction = HitTarget - Start;
-			if (Pellets > 1)
-				Direction = FMath::VRandCone(Direction.GetSafeNormal(), FMath::DegreesToRadians(PelletSpreadDegrees)) * Direction.Size();
-			Bullet->Initialize(Effective.IsValid() ? Effective : *Mechanics, Direction, Damage, HeadShotDamage, ExtractionAmmoType, ImpactParticles, HitSound, BeamParticles);
-			if (auto* ViewMesh = GetLocalFirstPersonMuzzleMesh(this))
-				if (auto* PC = Cast<APlayerController>(OwnerPawn->GetController()); PC && PC->PlayerCameraManager)
-					Bullet->SetVisualOrigin(UGameplayStatics::TransformWorldToFirstPerson(PC->PlayerCameraManager->GetCameraCacheView(),
-						ViewMesh->GetSocketLocation(MuzzleSocketName), false));
-		}
+				const auto* C = Cast<ABrokenEdgeCharacter>(OwnerPawn);
+				const auto& Effective = C ? C->GetExtractionCombat()->GetWeaponStats() : *Mechanics;
+				FVector Direction = HitTarget - Start;
+				if (Pellets > 1)
+					Direction = FMath::VRandCone(Direction.GetSafeNormal(),
+					                             FMath::DegreesToRadians(PelletSpreadDegrees)) * Direction.Size();
+				Bullet->Initialize(Effective.IsValid() ? Effective : *Mechanics, Direction, Damage, HeadShotDamage,
+				                   ExtractionAmmoType, ImpactParticles, HitSound, BeamParticles);
+				if (auto* ViewMesh = GetLocalFirstPersonMuzzleMesh(this))
+					if (auto* PC = Cast<APlayerController>(OwnerPawn->GetController()); PC && PC->PlayerCameraManager)
+						Bullet->SetVisualOrigin(UGameplayStatics::TransformWorldToFirstPerson(
+							PC->PlayerCameraManager->GetCameraCacheView(),
+							ViewMesh->GetSocketLocation(MuzzleSocketName), false));
+			}
 	}
 	FHitResult FireHit;
 	if (!Mechanics) WeaponTraceHit(Start, HitTarget, FireHit);
+	if (!Mechanics && HasAuthority())
+		for (int32 Pane = 0; Pane < 32; ++Pane)
+		{
+			auto* Glass = Cast<AExtractionBreakableGlass>(FireHit.GetActor());
+			if (!Glass || !Glass->Break(FireHit.ImpactPoint, HitTarget - Start)) break;
+			Start = FireHit.ImpactPoint + (HitTarget - Start).GetSafeNormal();
+			WeaponTraceHit(Start, HitTarget, FireHit);
+		}
 
 	ABrokenEdgeCharacter* HitCharacter = Cast<ABrokenEdgeCharacter>(FireHit.GetActor());
 	AController* InstigatorController = OwnerPawn->GetController();
@@ -119,7 +136,8 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 				// 按射手身份判断，玩家捡起守卫掉落的同一把枪时仍使用正常伤害。
 				const auto* Shooter = Cast<ABrokenEdgeCharacter>(OwnerPawn);
 				const float DamageScale = Shooter && Shooter->bExtractionGuard
-					? FMath::Clamp(GetDefault<UExtractionRules>()->GuardDamageScale, 0.f, 1.f) : 1.f;
+					                          ? FMath::Clamp(GetDefault<UExtractionRules>()->GuardDamageScale, 0.f, 1.f)
+					                          : 1.f;
 				UGameplayStatics::ApplyDamage(
 					HitCharacter,
 					DamageToCause * DamageScale,

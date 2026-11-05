@@ -14,6 +14,8 @@
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "BrokenEdge/Weapon/WeaponPresentation.h"
 #include "Engine/Texture2D.h"
+#include "Camera/PlayerCameraManager.h"
+#include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 
 
 void ABrokenEdgeHUD::BeginPlay()
@@ -46,6 +48,33 @@ void ABrokenEdgeHUD::DrawHUD()
 		}
 
 		float SpreadScaled = CrosshairSpreadMax * HUDPackage.CrosshairSpread;
+		if (HUDPackage.bProceduralCrosshair)
+		{
+			const float Scale = Canvas->SizeY / 1080.f;
+			const auto* PC = GetOwningPlayerController();
+			const float FOV = PC && PC->PlayerCameraManager ? PC->PlayerCameraManager->GetFOVAngle() : 90.f;
+			const float Focal = Canvas->SizeX / (2.f * FMath::Tan(FMath::DegreesToRadians(FOV * .5f)));
+			const float Baseline = (HUDPackage.CrosshairSpread - HUDPackage.ShotPulse) * CrosshairSpreadMax * Scale;
+			const float Pulse = HUDPackage.ShotPulse * 16.f * Scale;
+			const float X = FMath::Clamp(FMath::Max(Baseline,
+			                                        Focal * FMath::Tan(
+				                                        FMath::DegreesToRadians(HUDPackage.AngularSpread.X))) + Pulse,
+			                             4.f * Scale, 80.f * Scale);
+			const float Y = FMath::Clamp(FMath::Max(Baseline,
+			                                        Focal * FMath::Tan(
+				                                        FMath::DegreesToRadians(HUDPackage.AngularSpread.Y))) + Pulse,
+			                             4.f * Scale, 80.f * Scale);
+			const float Length = 7.f * Scale;
+			const auto Color = HUDPackage.CrosshairsColor;
+			for (float Sign : {-1.f, 1.f})
+			{
+				DrawLine(ViewportCenter.X + Sign * X, ViewportCenter.Y,
+				         ViewportCenter.X + Sign * (X + Length), ViewportCenter.Y, Color, 1.5f * Scale);
+				DrawLine(ViewportCenter.X, ViewportCenter.Y + Sign * Y,
+				         ViewportCenter.X, ViewportCenter.Y + Sign * (Y + Length), Color, 1.5f * Scale);
+			}
+			return;
+		}
 
 		if (HUDPackage.CrosshairsCenter)
 		{

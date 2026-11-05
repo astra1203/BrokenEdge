@@ -137,6 +137,9 @@ public:
 	bool SupportsAttachment(FName Id) const;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMesh> WorldMesh;
+	/** Positive values preserve authored drop size; zero keeps legacy sizing. */
+	UPROPERTY(EditAnywhere)
+	float WorldScale = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int32 Penetration = 1;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

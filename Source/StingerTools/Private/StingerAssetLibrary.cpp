@@ -886,6 +886,21 @@ TArray<FVector> UStingerAssetLibrary::TraceTraversalSurface(UObject* WorldContex
 	return {};
 }
 
+FString UStingerAssetLibrary::TraversalCapsuleBlocker(UObject* WorldContext, FVector Start, FVector End, float Radius,
+                                                      float HalfHeight)
+{
+	UWorld* World = WorldContext ? WorldContext->GetWorld() : nullptr;
+	FHitResult Hit;
+	if (World && World->SweepSingleByChannel(Hit, Start, End, FQuat::Identity, ECC_Pawn,
+	                                         FCollisionShape::MakeCapsule(Radius, HalfHeight),
+	                                         FCollisionQueryParams(SCENE_QUERY_STAT(TraversalEditorBlocker), false)))
+		return FString::Printf(TEXT("%s component=%s at=%s normal=%s penetration=%d depth=%f"),
+		                       *GetPathNameSafe(Hit.GetActor()), *GetNameSafe(Hit.GetComponent()),
+		                       *Hit.ImpactPoint.ToString(),
+		                       *Hit.ImpactNormal.ToString(), Hit.bStartPenetrating, Hit.PenetrationDepth);
+	return {};
+}
+
 bool UStingerAssetLibrary::TraversalCapsuleClear(UObject* WorldContext, FVector Start, FVector End, float Radius,
                                                  float HalfHeight)
 {
@@ -1177,8 +1192,9 @@ FString UStingerAssetLibrary::DescribeAnimGraphChain(UAnimBlueprint* Blueprint)
 		{
 			if (!Node) continue;
 			FString Extra;
-			if (auto* Slot = Cast<UAnimGraphNode_Slot>(Node)) Extra = FString::Printf(
-				TEXT(" SlotName=%s"), *Slot->Node.SlotName.ToString());
+			if (auto* Slot = Cast<UAnimGraphNode_Slot>(Node))
+				Extra = FString::Printf(
+					TEXT(" SlotName=%s"), *Slot->Node.SlotName.ToString());
 			if (auto* Layer = Cast<UAnimGraphNode_LayeredBoneBlend>(Node))
 			{
 				Extra = FString::Printf(TEXT(" Layers=%d Weights=%d BlendMode=%d"), Layer->Node.LayerSetup.Num(),

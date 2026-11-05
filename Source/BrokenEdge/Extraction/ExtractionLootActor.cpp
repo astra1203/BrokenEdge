@@ -163,7 +163,8 @@ void AExtractionLootActor::ApplyDoorPose()
 		// 参考姿态的局部旋转再叠加绕 Z 的开门角度，铰链就是骨骼原点。
 		const FTransform Ref = Asset->GetRefSkeleton().GetRefBonePose()[Index];
 		const FQuat Open = FQuat(FVector::UpVector, FMath::DegreesToRadians(Door.Value * Eased));
-		ContainerMesh->SetBoneRotationByName(BoneName, (Open * Ref.GetRotation()).Rotator(), EBoneSpaces::ComponentSpace);
+		ContainerMesh->SetBoneRotationByName(BoneName, (Open * Ref.GetRotation()).Rotator(),
+		                                     EBoneSpaces::ComponentSpace);
 	}
 }
 
@@ -239,7 +240,9 @@ void AExtractionLootActor::OnRep_Appearance()
 	{
 		// 胸挂/背包按模型原尺寸摆放（本身就是真实大小的包），其余散落物统一缩到 LooseSize。
 		const auto* LooseDef = Loose ? UExtractionItemDefinition::Get(LooseDefinition) : nullptr;
-		const float Scale = LooseDef && LooseDef->Kind == EExtractionItemKind::Gear
+		const float Scale = LooseDef && LooseDef->WorldScale > 0.f
+			                    ? LooseDef->WorldScale
+			                    : LooseDef && LooseDef->Kind == EExtractionItemKind::Gear
 			                    ? 1.f
 			                    : (Loose ? LooseSize : ContainerSize) / FMath::Max(
 				                    1.f, static_cast<float>(Asset->GetBounds().BoxExtent.GetMax() * 2));
@@ -253,7 +256,8 @@ void AExtractionLootActor::OnRep_Appearance()
 FVector AExtractionLootActor::InteractionPoint() const
 {
 	if (ContainerStatic)
-		return GetActorTransform().TransformPosition(ContainerStatic->GetBounds().Origin + VisualOffset - FVector(0, 0, -20));
+		return GetActorTransform().TransformPosition(
+			ContainerStatic->GetBounds().Origin + VisualOffset - FVector(0, 0, -20));
 	return ContainerAppearance
 		       ? GetActorTransform().TransformPosition(
 			       ContainerAppearance->GetBounds().Origin + VisualOffset - FVector(0, 0, -20))

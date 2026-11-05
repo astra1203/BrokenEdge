@@ -74,6 +74,7 @@ public:
 	void ServerSetFireInputHeld(bool bHeld);
 	const FResolvedWeaponStats& GetWeaponStats() const { return Stats; }
 	float GetAimAlpha() const { return AimAlpha; }
+	FVector2D GetCrosshairAngularSpread() const;
 	float GetBreath() const { return Breath; }
 	double GetBreathResumeTime() const { return BreathResume; }
 	FRotator GetVisualKick() const { return FRotator(-VisualKick, 0, 0); }

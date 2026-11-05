@@ -122,6 +122,7 @@ void UExtractionCombatComponent::CancelFireInput()
 // 清除开镜、连射、散布与镜头冲量，不重置屏息余量及冷却，避免切枪刷资源。
 void UExtractionCombatComponent::ResetTransientMechanics()
 {
+	if (auto* C = Character(); C && C->GetCombat()) C->GetCombat()->CrosshairShootingFactor = 0;
 	AimAlpha = 0;
 	BurstIndex = 0;
 	SpreadAccumulation = FVector2D::ZeroVector;
@@ -236,6 +237,18 @@ void UExtractionCombatComponent::TickComponent(float Delta, ELevelTick Kind, FAc
 
 // 以共享种子和射击 ID 计算散布，叠加姿态与屏息影响，再推进连射、后座和资源状态。
 // bApplyInput 只控制是否给本地控制旋转施加后座，镜头附加冲量与权威瞄准射线分开。
+FVector2D UExtractionCombatComponent::GetCrosshairAngularSpread() const
+{
+	const auto* C = Character();
+	if (!Stats.IsValid() || !C) return FVector2D::ZeroVector;
+	FVector2D Spread = (FMath::Lerp(Stats.Spread[0].Base, Stats.Spread[1].Base, AimAlpha) + SpreadAccumulation) * Stats.
+		SpreadScale;
+	if (C->GetVelocity().SizeSquared2D() > 100) Spread *= Stats.MoveSpread;
+	if (C->bIsCrouched) Spread *= Stats.CrouchSpread;
+	if (C->GetCharacterMovement()->IsFalling()) Spread *= Stats.JumpSpread;
+	return Spread;
+}
+
 FVector UExtractionCombatComponent::ResolveShot(const FVector& Target, uint32 Id, bool bApplyInput)
 {
 	auto* C = Character();
@@ -333,6 +346,8 @@ void UExtractionCombatComponent::RequestShot(const FVector& Target)
 	auto* W = C ? C->GetEquippedWeapon() : nullptr;
 	if (!CanAct() || !CanFireMechanics() || C->Melee->Active || !Cast<AHitScanWeapon>(W)) return;
 	if (C->GetExtractionInteraction()->InventoryOpen) return;
+	if (!W->IsEmpty() && C->GetCombatState() == ECombatState::ECS_Unoccuiped)
+		C->GetCombat()->NotifyLocalShot();
 	const uint32 Id = ++LocalShotId;
 	SprintFire.PendingShot = false;
 	if (!C->HasAuthority())
@@ -390,10 +405,10 @@ void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint3
 			if (const auto* Item = Inventory->Contents.Find(Weapon->ExtractionItemId))
 				Weapon->SphereRadius *= ExtractionItems::ScatterScale(*Item);
 		FVector End = Stats.IsValid()
-			                    ? ResolveShot(Target, ShotId, true)
-			                    : Weapon->bUseScatter
-			                    ? Weapon->TraceEndWithScatter(Target)
-			                    : FVector(Target);
+			              ? ResolveShot(Target, ShotId, true)
+			              : Weapon->bUseScatter
+			              ? Weapon->TraceEndWithScatter(Target)
+			              : FVector(Target);
 		Weapon->SphereRadius = SavedScatter;
 		if (C->bExtractionGuard)
 		{
@@ -401,7 +416,8 @@ void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint3
 			// 使用独立的种子混合，避免与武器自身的随机采样使用同一序列。
 			const uint32 GuardSeed = HashCombine(HashCombine(MechanicsSeed, ShotId), 0x47554152u);
 			End = ExtractionGuardAim::ApplySpread(Weapon->GetWeaponMesh()->GetSocketLocation(TEXT("MuzzleFlash")),
-				End, GetDefault<UExtractionRules>()->GuardExtraSpreadDegrees, GuardSeed);
+			                                      End, GetDefault<UExtractionRules>()->GuardExtraSpreadDegrees,
+			                                      GuardSeed);
 		}
 		C->PlayFireMontage(Combat->bAiming);
 		Weapon->Fire(End);
@@ -422,7 +438,8 @@ void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint3
 				if (const auto* Item = Inventory->Contents.Find(Weapon->ExtractionItemId))
 					for (const auto& Part : Item->Attachments)
 						if (const auto* D = UExtractionItemDefinition::Get(Part.Definition))
-							bSuppressed |= D->Label.ToString().Contains(TEXT("消音")) || D->Label.ToString().Contains(TEXT("消声"));
+							bSuppressed |= D->Label.ToString().Contains(TEXT("消音")) || D->Label.ToString().Contains(
+								TEXT("消声"));
 			const auto* Rules = GetDefault<UExtractionRules>();
 			AExtractionGuard::HearShot(GetWorld(), C->GetActorLocation(),
 			                           bSuppressed ? Rules->GuardHearingSuppressedRadius : Rules->GuardHearingRadius);

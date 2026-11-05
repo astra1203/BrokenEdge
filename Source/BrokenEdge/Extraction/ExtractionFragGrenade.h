@@ -17,12 +17,15 @@ class BROKENEDGE_API AExtractionFragGrenade : public AActor
 
 public:
 	AExtractionFragGrenade();
+	virtual void BeginPlay() override;
 	// 服务器以给定初速抛出并开始引信计时。
 	void Launch(const FVector& Velocity);
 
 protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UStaticMeshComponent> Shell;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UStaticMeshComponent> Visual;
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UProjectileMovementComponent> Flight;
 	UPROPERTY(EditDefaultsOnly, Category="Grenade")

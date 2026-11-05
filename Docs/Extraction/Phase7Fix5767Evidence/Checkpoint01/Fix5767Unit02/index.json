@@ -1,0 +1,306 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "DDFD536B4A7EA818B7DFE8B423EF5053",
+			"instanceName": "DESKTOP-M9PA1SF-48412",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "GameViewer Virtual Display Adapter",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.05-19.46.31",
+	"succeeded": 15,
+	"succeededWithWarnings": 1,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.42409300804138184,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "StartingSupply",
+			"fullTestPath": "BrokenEdge.Extraction.Expansion.StartingSupply",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.052801899611949921,
+			"dateTime": "2026.11.05-19.46.30",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "EquipmentAndValidation",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.EquipmentAndValidation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.008516702800989151,
+			"dateTime": "2026.11.05-19.46.30",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "GearContainers",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.GearContainers",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.0082972012460231781,
+			"dateTime": "2026.11.05-19.46.30",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "GridTransactions",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.GridTransactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.0091156028211116791,
+			"dateTime": "2026.11.05-19.46.30",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "StackConservation",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.StackConservation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.0081298016011714935,
+			"dateTime": "2026.11.05-19.46.30",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SwapAndPockets",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.SwapAndPockets",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.0085723996162414551,
+			"dateTime": "2026.11.05-19.46.30",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "JournalFailures",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.JournalFailures",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.019763298332691193,
+			"dateTime": "2026.11.05-19.46.30",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PreparedCancellation",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.PreparedCancellation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.055025499314069748,
+			"dateTime": "2026.11.05-19.46.30",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RecoveryProvenance",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.RecoveryProvenance",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.13169459998607635,
+			"dateTime": "2026.11.05-19.46.31",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Transactions",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.Transactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.063097596168518066,
+			"dateTime": "2026.11.05-19.46.31",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "AssemblyTransactions",
+			"fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.AssemblyTransactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.0081310011446475983,
+			"dateTime": "2026.11.05-19.46.31",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "FlightAndObstruction",
+			"fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.FlightAndObstruction",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.020653199404478073,
+			"dateTime": "2026.11.05-19.46.31",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSpawn: UWorld::DestroyActor: World has no context! World: Untitled, Actor: /Temp/Untitled_1.Untitled:PersistentLevel.ExtractionBullet_0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-19.46.31"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSpawn: UWorld::DestroyActor: World has no context! World: Untitled, Actor: /Temp/Untitled_1.Untitled:PersistentLevel.ExtractionBullet_1",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-19.46.31"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSpawn: UWorld::DestroyActor: World has no context! World: Untitled, Actor: /Temp/Untitled_1.Untitled:PersistentLevel.ExtractionBullet_2",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-19.46.31"
+				}
+			],
+			"warnings": 3,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PatternSamples",
+			"fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.PatternSamples",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.0034076012670993805,
+			"dateTime": "2026.11.05-19.46.31",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SourceAndSampling",
+			"fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.SourceAndSampling",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.0083166025578975677,
+			"dateTime": "2026.11.05-19.46.31",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SprintTransitions",
+			"fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.SprintTransitions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.0076614990830421448,
+			"dateTime": "2026.11.05-19.46.31",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "BreakableGlass",
+			"fullTestPath": "BrokenEdge.Extraction.World.BreakableGlass",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"DDFD536B4A7EA818B7DFE8B423EF5053"
+			],
+			"duration": 0.010908499360084534,
+			"dateTime": "2026.11.05-19.46.31",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

@@ -222,7 +222,14 @@ FExtractionContainer UExtractionInventoryComponent::GrantStartingSupply(FExtract
 		Next.Items.Add(Item);
 	}
 	// Reuse carried grenades before creating any new instances.
-	while (Next.Count(TEXT("FragGrenade")) < 2)
+	auto CarriedGrenades = [&]()
+	{
+		int32 Count = 0;
+		for (const auto& Item : Next.Items)
+			if (Item.Definition == TEXT("FragGrenade") && Item.Slot != ExtractionGear::SafeGrid) Count += Item.Quantity;
+		return Count;
+	};
+	while (CarriedGrenades() < 2)
 	{
 		auto Item = TakeOrMake(TEXT("FragGrenade"));
 		if (!ExtractionItems::AutoPlace(Next, Item, ExtractionGear::RigGrid)

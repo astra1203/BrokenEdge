@@ -22,6 +22,13 @@ public:
 	/** Build a real moving-door box; editor subsystems can be unavailable in commandlets. */
 	UFUNCTION(BlueprintCallable)
 	static bool ConfigureDoorCollision(class UStaticMesh* Mesh);
+	/** Operates on a project-owned duplicate; retain selected material geometry and rebuild precise collision. */
+	UFUNCTION(BlueprintCallable)
+	static bool RetainMeshSections(class UStaticMesh* Mesh, const TArray<int32>& MaterialIndices);
+	UFUNCTION(BlueprintCallable)
+	static int32 MeshIslandCount(class UStaticMesh* Mesh);
+	UFUNCTION(BlueprintCallable)
+	static bool RetainMeshIsland(class UStaticMesh* Mesh, int32 Island);
 	UFUNCTION(BlueprintCallable)
 	static int32 ConfigureBackdrop(float MinimumDistance);
 	/** Ground position or invalid (NaN); tests floor, capsule clearance and optional nav projection. */

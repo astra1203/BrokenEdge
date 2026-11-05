@@ -76,9 +76,13 @@ public:
 	 * 返回参与绘制的组件数，0 表示失败。
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation", meta = (WorldContext = "WorldContext"))
-	static int32 RenderLevelOverview(UObject* WorldContext, FVector2D Min, FVector2D Max, int32 Size, const FString& File);
+	static int32 RenderLevelOverview(UObject* WorldContext, FVector2D Min, FVector2D Max, int32 Size,
+	                                 const FString& File);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static TArray<FVector> TraceTraversalSurface(UObject* WorldContext, FVector Start, FVector End);
+	UFUNCTION(BlueprintCallable, Category="Traversal")
+	static FString TraversalCapsuleBlocker(UObject* WorldContext, FVector Start, FVector End, float Radius,
+	                                       float HalfHeight);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static bool TraversalCapsuleClear(UObject* WorldContext, FVector Start, FVector End, float Radius,
 	                                  float HalfHeight);

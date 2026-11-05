@@ -25,6 +25,11 @@ public:
 	float ScopeFOV = 30.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FStingerViewWeaponFit ViewFit;
+	/** Mesh-frame correction relative to the character's authored weapon sockets. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FTransform WorldHandTransform = FTransform::Identity;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FTransform WorldBackTransform = FTransform::Identity;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UAnimSequence> Idle;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

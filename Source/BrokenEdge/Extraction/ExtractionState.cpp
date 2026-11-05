@@ -2,6 +2,8 @@
 #include "ExtractionMapDefinition.h"
 #include "ExtractionInventoryComponent.h"
 #include "Net/UnrealNetwork.h"
+#include "ExtractionBreakableGlass.h"
+#include "EngineUtils.h"
 // 对局状态与玩家状态是服务器到客户端的可复制读模型；实际规则由 GameMode 等服务器逻辑执行。
 // GameState 描述整局，PlayerState 描述单人结果和背包，不把对局状态绑定在可销毁的角色 Pawn 上。
 
@@ -21,6 +23,26 @@ void AExtractionGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(AExtractionGameState, AlivePlayers);
 	DOREPLIFETIME(AExtractionGameState, EndReason);
 	DOREPLIFETIME(AExtractionGameState, StorageError);
+	DOREPLIFETIME(AExtractionGameState, BrokenGlass);
+}
+
+void AExtractionGameState::OnRep_BrokenGlass()
+{
+	const TSet<FGuid> Broken(BrokenGlass);
+	for (TActorIterator<AExtractionBreakableGlass> It(GetWorld()); It; ++It)
+		if (Broken.Contains(It->PaneId)) It->ApplyBroken();
+}
+
+void AExtractionGameState::MulticastGlassBreak_Implementation(FGuid PaneId, FVector_NetQuantize Impact,
+                                                              FVector_NetQuantizeNormal Direction)
+{
+	for (TActorIterator<AExtractionBreakableGlass> It(GetWorld()); It; ++It)
+		if (It->PaneId == PaneId)
+		{
+			It->ApplyBroken();
+			It->PlayBreakEffect(Impact, Direction);
+			break;
+		}
 }
 
 // 注册本类需要同步的属性并保留父类复制项；客户端读取状态，不在复制回调中做仓库结算。

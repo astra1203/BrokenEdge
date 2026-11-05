@@ -4,6 +4,7 @@ Use --scenario scar for SpaceCenter or --scenario soviet for the military map.
 """
 import hashlib
 import json
+import math
 import runpy
 import sys
 import time
@@ -20,9 +21,11 @@ def run(g):
     def items(role='A', peer='Server'):
         return player(peer, role)['inventory']['items']
     for role in g['ROLES']:
-        for definition, slot in [('M4A1', 0), ('SCARH', 1), ('Helmet2', 2), ('Vest2', 3), ('Bag_Test', 5), ('BoltSniper', -1), ('PumpShotgun', -1)]:
+        for definition, slot in [('M4A1', 0), ('SCARH', 1), ('Helmet2', 2), ('Vest2', 3), ('Rig_Assault',4), ('Bag_Test', 5), ('BoltSniper', -1), ('PumpShotgun', -1)]:
             check(role + ' starts with ' + definition, lambda r=role, d=definition, s=slot: all(
                 any(i['definition'] == d and i['slot'] == s for i in items(r, p)) for p in ['Server', r]))
+        check(role+' starts with permanent pockets and two usable grenades',lambda r=role:player('Server',r)['inventory']['personal_pockets']
+              and sum(i['quantity'] for i in items(r) if i['definition']=='FragGrenade' and i['slot']!=-3)>=2)
         before = player('Server', role)['inventory']
         send('Server', 'retry_loadout', target='EX_' + role)
         check(role + ' retry preserves all item identities and quantities', lambda r=role, b=before: player('Server', r)['inventory'] == b)
@@ -50,10 +53,18 @@ def run(g):
         send('A', 'screenshot', name=name)
         wait(lambda: (g['OUT'] / ('A-' + name + '.png')).exists(), name + ' screenshot')
         (g['OUT'] / (name + '-state.json')).write_text(json.dumps(state('A'), indent=2), encoding='utf-8')
-        if name.startswith('BoltSniper'):
+        if name.startswith(('BoltSniper','PumpShotgun')):
             check(name + ' hands stay within 2 cm of rendered grips', lambda: all(
                 player('A', 'A').get('fp_actual_' + side + '_grip_distance', 999) < 2 for side in ['left', 'right']), 3)
+        if name.endswith('-hip'):
+            check(name+' world barrel agrees with view direction',lambda:all(sum(a*b for a,b in zip(
+                player(p,'A')['world_weapon_forward'],player(p,'A')['view_forward']))>.6 for p in peers))
     for gun, capacity in [('BoltSniper', 5), ('PumpShotgun', 6)]:
+        # The previous gun's walk/sprint check may end against terrain and lower
+        # the next gun through the normal obstruction animation.
+        send('Server','fixture',players=[dict(name='EX_A',position=position,health=100,shield=0,clear_trauma=True)])
+        wait(lambda:math.dist(player('A','A')['position'][:2],position[:2])<5 and not player('A','A')['falling'],'open weapon inspection position')
+        send('A','look',yaw=0,pitch=0)
         send('A', 'inventory', open=True)
         wait(lambda: player('A', 'A')['inventory_open'], 'inventory ready')
         # Move the equipped rifle out first; then equip the real backpack weapon.
@@ -66,9 +77,15 @@ def run(g):
         send('A', 'inventory', open=False)
         wait(lambda: player('Server', 'A')['combat_state'] == 0, 'equip finished')
         capture(gun + '-hip')
+        send('A','look',yaw=0,pitch=-60)
+        time.sleep(.3)
+        send('A','screenshot',name=gun+'-ground-shadow')
+        send('A','look',yaw=0,pitch=0)
+        check(gun+' hip crosshair is visible',lambda:player('A','A').get('crosshair_visible'))
         send('A', 'pulse', action='Aim', duration=5)
         check(gun + ' ADS completes on owner and authority', lambda: all(player(p, 'A')['aim_alpha'] > .99 for p in ['A', 'Server']))
         capture(gun + '-ads')
+        check(gun+' ADS hides screen crosshair',lambda:not player('A','A').get('crosshair_visible'))
         if gun == 'BoltSniper':
             check('Sniper scope clears the opaque gun model', lambda: player('A', 'A')['fp_scope_active']
                   and not player('A', 'A')['fp_weapon_visible'])
@@ -82,6 +99,8 @@ def run(g):
                   and player('A', 'A')['fp_weapon_visible'])
         before = player('Server', 'A')['accepted']
         send('A', 'pulse', action='Fire', duration=0)
+        check(gun+' firing creates visible reticle pulse',lambda:player('A','A').get('crosshair_shot_pulse',0)>.03,2)
+        send('A','screenshot',name=gun+'-firing-reticle')
         check(gun + ' authoritative shot spends one round', lambda: player('Server', 'A')['accepted'] == before + 1 and player('A', 'A')['ammo'] == capacity - 1)
         send('A', 'pulse', action='Reload', duration=0)
         check(gun + ' reload returns to full magazine', lambda: player('Server', 'A')['ammo'] == capacity and player('A', 'A')['ammo'] == capacity, 20)

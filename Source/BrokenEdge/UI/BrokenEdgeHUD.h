@@ -35,6 +35,9 @@ public:
 	UTexture2D* CrosshairsBottom = nullptr;
 	/** 准星扩散程度 */
 	float CrosshairSpread = 0;
+	bool bProceduralCrosshair = false;
+	FVector2D AngularSpread = FVector2D::ZeroVector;
+	float ShotPulse = 0.f;
 	/** 准星颜色 */
 	FLinearColor CrosshairsColor = FLinearColor::White;
 };
@@ -116,4 +119,5 @@ public:
 	 * @param Package HUD数据包
 	 */
 	FORCEINLINE void SetHUDPackage(const FHUDPackage& Package) { HUDPackage = Package; }
+	const FHUDPackage& GetHUDPackage() const { return HUDPackage; }
 };

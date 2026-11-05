@@ -143,7 +143,7 @@ foreach (var path in request["packages"]!.Values<string>())
                         record["instances"] = instanced.PerInstanceSMData == null ? null : JToken.FromObject(instanced.PerInstanceSMData);
                     objects.Add(record);
                 }
-                else if (obj is UStaticMesh or UTexture or CUE4Parse.UE4.Assets.Exports.Animation.UAnimSequence)
+                else if (obj is UStaticMesh or CUE4Parse.UE4.Assets.Exports.SkeletalMesh.USkeletalMesh or UTexture or CUE4Parse.UE4.Assets.Exports.Animation.UAnimSequence)
                 {
                     var record = new JObject { ["name"] = obj.Name, ["class"] = obj.ExportType,
                         ["object_path"] = obj.GetPathName() };
@@ -265,7 +265,7 @@ foreach (var path in request["packages"]!.Values<string>())
 if (mode == "export")
 {
     var results = await session.RunAsync(output, new ExportOptions(
-        meshFormat: request.Value<string>("format") == "ActorX" ? EMeshFormat.ActorX : EMeshFormat.Gltf2, exportMaterials: false));
+        meshFormat: request.Value<string>("format") == "ActorX" ? EMeshFormat.ActorX : EMeshFormat.Gltf2, exportMaterials: request.Value<bool?>("export_materials") ?? false));
     exportFailed = results.Count == 0 || results.Any(r => !r.Success);
     await File.WriteAllTextAsync(Path.Combine(output, "ExportResults.json"), JsonConvert.SerializeObject(
         results.Select(r => new { r.Success, r.ObjectPath, r.DiskFilePaths, error = r.Error?.ToString() }), Formatting.Indented));

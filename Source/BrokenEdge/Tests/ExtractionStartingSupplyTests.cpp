@@ -66,6 +66,21 @@ bool FExtractionStartingSupplyTest::RunTest(const FString&)
 	TestEqual(TEXT("Repeated grant does not add reserve"), Bag.Count(TEXT("Ammo55645")), 60);
 	TestEqual(TEXT("Repeated grant does not add sniper"), Bag.Count(TEXT("BoltSniper")), 1);
 	TestEqual(TEXT("Repeated grant does not add grenades"), Bag.Count(TEXT("FragGrenade")), 2);
+	FExtractionContainer ProtectedKit;
+	ProtectedKit.Id = FGuid::NewGuid();
+	ProtectedKit.GearGrids = ProtectedKit.WeaponSlots = true;
+	auto GrenadeSafe = ExtractionItems::Make(TEXT("Safe_Field"));
+	GrenadeSafe.Slot = ExtractionGear::SafeSlot;
+	ProtectedKit.Items.Add(GrenadeSafe);
+	auto ProtectedGrenade = ExtractionItems::Make(TEXT("FragGrenade"));
+	ProtectedGrenade.Slot = ExtractionGear::SafeGrid;
+	ProtectedKit.Items.Add(ProtectedGrenade);
+	UExtractionInventoryComponent::GrantStartingSupply(ProtectedKit);
+	int32 UsableGrenades = 0;
+	for (const auto& I : ProtectedKit.Items)
+		if (I.Definition == TEXT("FragGrenade") && I.Slot != ExtractionGear::SafeGrid) UsableGrenades += I.Quantity;
+	TestEqual(TEXT("ProtectedKit storage does not consume the two usable test grenades"), UsableGrenades, 2);
+	TestNotNull(TEXT("GrenadeSafe grenade identity is preserved"), ProtectedKit.Find(ProtectedGrenade.Id));
 
 	FExtractionContainer Full;
 	Full.Id = FGuid::NewGuid();

@@ -17,6 +17,131 @@
 #include "PhysicsEngine/BodySetup.h"
 #include "K2Node_AddComponent.h"
 #include "StaticMeshResources.h"
+#include "StaticMeshAttributes.h"
+#include "MeshDescription.h"
+
+namespace
+{
+	// Imported hard edges duplicate vertices; weld by position only for connectivity.
+	// Separate panes keep independent damage even when the source batches a whole wall.
+	TArray<TArray<FPolygonID>> GlassIslands(FMeshDescription& D)
+	{
+		FStaticMeshAttributes A(D);
+		auto Positions = A.GetVertexPositions();
+		TMap<FIntVector, TArray<FPolygonID>> AtPosition;
+		TMap<FPolygonID, TArray<FIntVector>> Keys;
+		for (auto P : D.Polygons().GetElementIDs())
+			for (auto V : D.GetPolygonVertexInstances(P))
+			{
+				const FVector3f Point = Positions[D.GetVertexInstanceVertex(V)] * 100.f;
+				const FIntVector Key(FMath::RoundToInt(Point.X), FMath::RoundToInt(Point.Y),
+				                     FMath::RoundToInt(Point.Z));
+				AtPosition.FindOrAdd(Key).AddUnique(P);
+				Keys.FindOrAdd(P).AddUnique(Key);
+			}
+		TSet<FPolygonID> Seen;
+		TArray<TArray<FPolygonID>> Islands;
+		for (auto P : D.Polygons().GetElementIDs())
+		{
+			if (Seen.Contains(P)) continue;
+			auto& Island = Islands.AddDefaulted_GetRef();
+			Island.Add(P);
+			Seen.Add(P);
+			for (int32 Index = 0; Index < Island.Num(); ++Index)
+				for (const auto& Key : Keys[Island[Index]])
+					for (auto Neighbour : AtPosition[Key])
+						if (!Seen.Contains(Neighbour))
+						{
+							Seen.Add(Neighbour);
+							Island.Add(Neighbour);
+						}
+		}
+		auto BoundsOf = [&](const TArray<FPolygonID>& Island)
+		{
+			FBox B(ForceInit);
+			for (auto P : Island)
+				for (auto V : D.GetPolygonVertexInstances(P))
+					B += FVector(Positions[D.GetVertexInstanceVertex(V)]);
+			return B;
+		};
+		for (int32 I = 0; I < Islands.Num(); ++I)
+			for (int32 J = I + 1; J < Islands.Num(); ++J)
+				if (BoundsOf(Islands[I]).ExpandBy(1.f).Intersect(BoundsOf(Islands[J])))
+				{
+					Islands[I].Append(Islands[J]);
+					Islands.RemoveAt(J);
+					J = I;
+				}
+		return Islands;
+	}
+}
+
+int32 USovietMilitaryBuilder::MeshIslandCount(UStaticMesh* Mesh)
+{
+	FAssetCompilingManager::Get().FinishAllCompilation();
+	if (!Mesh || !Mesh->GetMeshDescription(0)) return 0;
+	return GlassIslands(*Mesh->GetMeshDescription(0)).Num();
+}
+
+bool USovietMilitaryBuilder::RetainMeshIsland(UStaticMesh* Mesh, int32 Island)
+{
+	if (!Mesh || !Mesh->GetPathName().StartsWith(TEXT("/Game/Extraction/Glass/"))) return false;
+	FAssetCompilingManager::Get().FinishAllCompilation();
+	auto* D = Mesh->GetMeshDescription(0);
+	if (!D) return false;
+	auto Islands = GlassIslands(*D);
+	if (!Islands.IsValidIndex(Island)) return false;
+	TArray<FPolygonID> Remove;
+	for (int32 I = 0; I < Islands.Num(); ++I) if (I != Island) Remove.Append(Islands[I]);
+	Mesh->Modify();
+	D->DeletePolygons(Remove);
+	FElementIDRemappings Remap;
+	D->Compact(Remap);
+	Mesh->CommitMeshDescription(0);
+	TArray<int32> Materials;
+	for (int32 I = 0; I < Mesh->GetStaticMaterials().Num(); ++I) Materials.Add(I);
+	return RetainMeshSections(Mesh, Materials);
+}
+
+bool USovietMilitaryBuilder::RetainMeshSections(UStaticMesh* Mesh, const TArray<int32>& MaterialIndices)
+{
+	if (!Mesh || !Mesh->GetPathName().StartsWith(TEXT("/Game/Extraction/Glass/"))) return false;
+	FAssetCompilingManager::Get().FinishAllCompilation();
+	auto* Description = Mesh->GetMeshDescription(0);
+	if (!Description) return false;
+	Mesh->Modify();
+	FStaticMeshAttributes Attributes(*Description);
+	const auto Names = Attributes.GetPolygonGroupMaterialSlotNames();
+	TArray<FPolygonID> Remove;
+	for (auto Polygon : Description->Polygons().GetElementIDs())
+	{
+		const auto Group = Description->GetPolygonPolygonGroup(Polygon);
+		const FName Name = Names[Group];
+		int32 Material = Mesh->GetStaticMaterials().IndexOfByPredicate([&](const FStaticMaterial& M)
+		{
+			return M.ImportedMaterialSlotName == Name || M.MaterialSlotName == Name;
+		});
+		if (Material == INDEX_NONE) Material = Group.GetValue();
+		if (!MaterialIndices.Contains(Material)) Remove.Add(Polygon);
+	}
+	if (Remove.Num() == Description->Polygons().Num()) return false;
+	Description->DeletePolygons(Remove);
+	FElementIDRemappings Remap;
+	Description->Compact(Remap);
+	Mesh->CommitMeshDescription(0);
+	Mesh->SetNumSourceModels(1);
+	// Transparent panes use raster rendering; opaque frames retain their source Nanite policy.
+	if (!Mesh->GetName().StartsWith(TEXT("SM_Frame_"))) Mesh->GetNaniteSettings().bEnabled = false;
+	Mesh->Build(false);
+	FAssetCompilingManager::Get().FinishAllCompilation();
+	if (!Mesh->GetBodySetup()) Mesh->CreateBodySetup();
+	auto* Body = Mesh->GetBodySetup();
+	Body->AggGeom.EmptyElements();
+	Body->CollisionTraceFlag = CTF_UseComplexAsSimple;
+	Body->bDoubleSidedGeometry = true;
+	Mesh->MarkPackageDirty();
+	return RefreshCollision(Mesh);
+}
 
 bool USovietMilitaryBuilder::ConfigureDoorCollision(UStaticMesh* Mesh)
 {

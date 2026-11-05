@@ -1,4 +1,5 @@
 #include "ExtractionBullet.h"
+#include "BrokenEdge/Extraction/ExtractionBreakableGlass.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Extraction/ExtractionHealth.h"
 #include "BrokenEdge/Extraction/ExtractionItems.h"
@@ -20,7 +21,8 @@ static TAutoConsoleVariable<float> CVarPenetrationPerLevel(
 	TEXT("Max static obstacle thickness (cm) a bullet passes per ammo penetration level; 0 disables penetration."));
 
 static TAutoConsoleVariable<int32> CVarWeaponFlightLog(
-	TEXT("BrokenEdge.Weapon.LogFlight"), 0, TEXT("Log authoritative bullet initialization and first impact; no per-tick logging."));
+	TEXT("BrokenEdge.Weapon.LogFlight"), 0,
+	TEXT("Log authoritative bullet initialization and first impact; no per-tick logging."));
 
 AExtractionBullet::AExtractionBullet()
 {
@@ -55,9 +57,12 @@ void AExtractionBullet::Initialize(const FResolvedWeaponStats& Profile, const FV
 	bPredicted = GetNetMode() == NM_Client;
 	if (HasAuthority() && !bPredicted && CVarWeaponFlightLog.GetValueOnGameThread())
 		UE_LOG(LogTemp, Display,
-		       TEXT("EXTRACTION_BULLET_INIT Bullet=%s Owner=%s Instigator=%s Start=%s Direction=%s Velocity=%s Speed=%.3f BodyDamage=%.3f HeadDamage=%.3f Radius=%.3f"),
-		       *GetName(), *GetNameSafe(GetOwner()), *GetNameSafe(GetInstigator()), *GetActorLocation().ToString(),
-		       *Direction.GetSafeNormal().ToString(), *Velocity.ToString(), Stats.Speed, BodyDamage, HeadDamage, Stats.Radius);
+	       TEXT(
+		       "EXTRACTION_BULLET_INIT Bullet=%s Owner=%s Instigator=%s Start=%s Direction=%s Velocity=%s Speed=%.3f BodyDamage=%.3f HeadDamage=%.3f Radius=%.3f"
+	       ),
+	       *GetName(), *GetNameSafe(GetOwner()), *GetNameSafe(GetInstigator()), *GetActorLocation().ToString(),
+	       *Direction.GetSafeNormal().ToString(), *Velocity.ToString(), Stats.Speed, BodyDamage, HeadDamage,
+	       Stats.Radius);
 }
 
 void AExtractionBullet::Tick(float DeltaSeconds)
@@ -89,6 +94,13 @@ void AExtractionBullet::Tick(float DeltaSeconds)
 		SetActorLocation(Finish);
 		if (CVarWeaponFlight.GetValueOnGameThread()) DrawDebugLine(GetWorld(), Start, Finish, FColor::Yellow, false, 3);
 		FVector Exit;
+		if (auto* Glass = Cast<AExtractionBreakableGlass>(Hit.GetActor()); Hit.bBlockingHit && Glass
+			&& (bPredicted || (HasAuthority() && Glass->Break(Hit.ImpactPoint, Velocity))))
+		{
+			Query.AddIgnoredActor(Glass);
+			SetActorLocation(Hit.ImpactPoint + Velocity.GetSafeNormal() * (Stats.Radius + 1.f));
+			continue;
+		}
 		if (Hit.bBlockingHit && TryPenetrate(Hit, Exit))
 		{
 			if (HasAuthority() && !bPredicted)
@@ -104,14 +116,17 @@ void AExtractionBullet::Tick(float DeltaSeconds)
 		{
 			if (HasAuthority() && !bPredicted && CVarWeaponFlightLog.GetValueOnGameThread())
 				UE_LOG(LogTemp, Display,
-				       TEXT("EXTRACTION_BULLET_IMPACT Bullet=%s Owner=%s Instigator=%s Actor=%s Component=%s ComponentPath=%s Bone=%s Location=%s ImpactPoint=%s Normal=%s ImpactNormal=%s StartPenetrating=%d Distance=%.3f BodyDamage=%.3f"),
-				       *GetName(), *GetNameSafe(GetOwner()), *GetNameSafe(GetInstigator()), *GetNameSafe(Hit.GetActor()),
-				       *GetNameSafe(Hit.GetComponent()), *GetPathNameSafe(Hit.GetComponent()), *Hit.BoneName.ToString(),
-				       *Hit.Location.ToString(), *Hit.ImpactPoint.ToString(), *Hit.Normal.ToString(),
-				       *Hit.ImpactNormal.ToString(), Hit.bStartPenetrating ? 1 : 0, Distance, BodyDamage);
+			       TEXT(
+				       "EXTRACTION_BULLET_IMPACT Bullet=%s Owner=%s Instigator=%s Actor=%s Component=%s ComponentPath=%s Bone=%s Location=%s ImpactPoint=%s Normal=%s ImpactNormal=%s StartPenetrating=%d Distance=%.3f BodyDamage=%.3f"
+			       ),
+			       *GetName(), *GetNameSafe(GetOwner()), *GetNameSafe(GetInstigator()), *GetNameSafe(Hit.GetActor()),
+			       *GetNameSafe(Hit.GetComponent()), *GetPathNameSafe(Hit.GetComponent()), *Hit.BoneName.ToString(),
+			       *Hit.Location.ToString(), *Hit.ImpactPoint.ToString(), *Hit.Normal.ToString(),
+			       *Hit.ImpactNormal.ToString(), Hit.bStartPenetrating ? 1 : 0, Distance, BodyDamage);
 			if (auto* Victim = Cast<ABrokenEdgeCharacter>(Hit.GetActor()); Victim && HasAuthority() && !bPredicted)
 				Victim->GetExtractionHealth()->Bullet(
-					(Hit.BoneName == TEXT("head") ? HeadDamage : BodyDamage) * Stats.Falloff(Distance) * PenetrationScale,
+					(Hit.BoneName == TEXT("head") ? HeadDamage : BodyDamage) * Stats.Falloff(Distance) *
+					PenetrationScale,
 					Hit.BoneName, AmmoType, GetInstigatorController(), this);
 			if (HasAuthority() && !bPredicted) Impact(Hit.ImpactPoint, Hit.ImpactNormal);
 			UpdateTrail();
@@ -151,7 +166,7 @@ bool AExtractionBullet::TryPenetrate(const FHitResult& Hit, FVector& Exit)
 	Velocity *= FMath::Sqrt(PenetrationScale);
 	if (HasAuthority() && !bPredicted && CVarWeaponFlightLog.GetValueOnGameThread())
 		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_BULLET_PENETRATE Bullet=%s Actor=%s Thickness=%.2f Max=%.2f Scale=%.2f"),
-		       *GetName(), *GetNameSafe(Hit.GetActor()), Thickness, MaxThickness, PenetrationScale);
+	       *GetName(), *GetNameSafe(Hit.GetActor()), Thickness, MaxThickness, PenetrationScale);
 	return true;
 }
 

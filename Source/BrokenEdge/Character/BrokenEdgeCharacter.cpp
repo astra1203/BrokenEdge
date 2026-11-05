@@ -326,7 +326,6 @@ void ABrokenEdgeCharacter::Tick(float DeltaTime)
 	UpdateSprint();
 	UpdateProneAnimation();
 	TickZipline();
-	TickAutoCrouch();
 	if (bSwimUp)
 	{
 		if (GetCharacterMovement()->IsSwimming()) AddMovementInput(FVector::UpVector, 1.f);
@@ -2469,61 +2468,6 @@ void ABrokenEdgeCharacter::ApplyZipline(bool bOn)
 	// 落点在水里（池子注了水）就直接游泳，否则正常下落。
 	const auto* Volume = Movement->GetPhysicsVolume();
 	Movement->SetMovementMode(Volume && Volume->bWaterVolume ? MOVE_Swimming : MOVE_Falling);
-}
-
-bool ABrokenEdgeCharacter::SweepBody(const FVector& Dir, float TopHeight, float Distance, FHitResult& Hit) const
-{
-	const UCapsuleComponent* Capsule = GetCapsuleComponent();
-	const float Feet = GetActorLocation().Z - Capsule->GetScaledCapsuleHalfHeight();
-	constexpr float Lift = 20.f; // 抬离地面，脚下的地面、小台阶不算挡
-	const float Half = FMath::Max((TopHeight - Lift) * .5f, 1.f);
-	const float Radius = FMath::Min(Capsule->GetScaledCapsuleRadius(), Half);
-	const FVector Start(GetActorLocation().X, GetActorLocation().Y, Feet + Lift + Half);
-	FCollisionQueryParams Params(SCENE_QUERY_STAT(AutoCrouch), false, this);
-	FCollisionResponseParams Response;
-	Capsule->InitSweepCollisionParams(Params, Response);
-	return GetWorld()->SweepSingleByChannel(Hit, Start, Start + Dir * Distance, FQuat::Identity,
-	                                        Capsule->GetCollisionObjectType(), FCollisionShape::MakeCapsule(Radius, Half),
-	                                        Params, Response);
-}
-
-void ABrokenEdgeCharacter::TickAutoCrouch()
-{
-	auto* Move = GetCharacterMovement();
-	if (!Move || !IsLocallyControlled()) return;
-	const float StandTop = GetDefaultHalfHeight() * 2.f;
-	const float CrouchTop = Move->GetCrouchedHalfHeight() * 2.f;
-	constexpr float Probe = 55.f;
-	const FVector Dir = Move->GetCurrentAcceleration().GetSafeNormal2D();
-	if (bAutoCrouched)
-	{
-		// 玩家自己按了站起/趴下，或进入攀爬、滑索等状态：不再管。
-		if (!bIsCrouched || bProne || IsTraversing() || Zipline)
-		{
-			bAutoCrouched = false;
-			return;
-		}
-		// 前方（或停下时）不再有挡头的东西就请求站起；头顶还被挡时引擎会保持蹲姿，出来后自己站起。
-		FHitResult Hit;
-		if (Dir.IsNearlyZero() || !SweepBody(Dir, StandTop, Probe, Hit))
-		{
-			UnCrouch();
-			bAutoCrouched = false;
-		}
-		return;
-	}
-	if (bIsCrouched || bProne || Dir.IsNearlyZero() || !Move->IsMovingOnGround() || IsTraversing() || Zipline
-		|| bDisableGameplay)
-		return;
-	FHitResult Stand;
-	if (!SweepBody(Dir, StandTop, Probe, Stand)) return;
-	// 挡住站姿的是头顶上方的东西（命中点高于蹲姿头顶），并且蹲着能往前走得更远，才算低门楣。
-	const float Feet = GetActorLocation().Z - GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-	if (Stand.bStartPenetrating || Stand.ImpactPoint.Z < Feet + CrouchTop - 5.f) return;
-	FHitResult Low;
-	if (SweepBody(Dir, CrouchTop, Probe, Low) && Low.Distance < Stand.Distance + 20.f) return;
-	Crouch();
-	bAutoCrouched = true;
 }
 
 void ABrokenEdgeCharacter::TickZipline()
