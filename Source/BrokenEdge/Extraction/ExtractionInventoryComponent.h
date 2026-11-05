@@ -25,7 +25,7 @@ public:
 	// 补给放不下时在附近安全地面生成容器，然后同步枪械 Actor 和背包版本。
 	void InitializeLoadout();
 	/** Called once by raid initialization; returns supplies that must be placed beside the spawn. */
-	// 补充 SCAR-H 副武器与 60 发 7.62×51 弹；逐发填补零散堆叠，返回装不下的补给容器。
+	// 补齐头甲、64 格背包、主副武器与包内测试长枪；返回装不下的原有物品，保留身份与来源。
 	static FExtractionContainer GrantStartingSupply(FExtractionContainer& Inventory);
 	// 为服务器守卫创建独立 AK、弹药和医疗包，不读取玩家长期档案。
 	void InitializeGuard();

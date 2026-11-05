@@ -105,34 +105,79 @@ void UExtractionInventoryComponent::InitializeLoadout()
 	Changed();
 }
 
-// 测试用开局配枪：主武器 M4A1、副武器 SCAR-H，各补 60 发默认弹种，并装上瞄具、握把、枪口配件。
-// 槽位上原有的其他枪挪进背包网格，装不下的枪和弹药返回为脚边补给容器，不会丢失。
+// 开局测试配装：先为两把测试长枪与备弹预留空间，再装回原有物品。
+// 所有操作在副本中完成；原装备的 GUID、附件、弹匣与来源批次随物品保留。
 FExtractionContainer UExtractionInventoryComponent::GrantStartingSupply(FExtractionContainer& Inventory)
 {
 	FExtractionContainer Overflow;
 	Overflow.Id = FGuid::NewGuid();
+	Overflow.Width = Overflow.Height = 16;
+	for (FName Id : {
+		     TEXT("Bag_Test"), TEXT("Helmet2"), TEXT("Vest2"), TEXT("M4A1"), TEXT("SCARH"),
+		     TEXT("BoltSniper"), TEXT("PumpShotgun"), TEXT("Ammo55645"), TEXT("Ammo76251"),
+		     TEXT("Ammo_338"), TEXT("Ammo_12G")
+	     })
+		if (!UExtractionItemDefinition::Get(Id))
+		{
+			UE_LOG(LogTemp, Error, TEXT("EXTRACTION_STARTING_SUPPLY_MISSING %s"), *Id.ToString());
+			return Overflow;
+		}
+	FExtractionContainer Next = Inventory;
+	Next.WeaponSlots = Next.GearGrids = true;
+	TArray<FExtractionItem> Pending;
+	for (const auto& Item : Inventory.Items)
+		if (Item.Slot == ExtractionGear::BagGrid) Pending.Add(Item);
+	Next.Items.RemoveAll([](const FExtractionItem& Item) { return Item.Slot == ExtractionGear::BagGrid; });
+	auto RemoveSlot = [&](int32 Slot)
+	{
+		if (const auto* Item = Next.InSlot(Slot))
+		{
+			Pending.Add(*Item);
+			Next.Items.RemoveAll([&](const FExtractionItem& I) { return I.Slot == Slot; });
+		}
+	};
+	auto TakeOrMake = [&](FName Id)
+	{
+		const int32 Index = Pending.IndexOfByPredicate([&](const FExtractionItem& I) { return I.Definition == Id; });
+		if (Index == INDEX_NONE) return ExtractionItems::Make(Id);
+		const FExtractionItem Item = Pending[Index];
+		Pending.RemoveAt(Index);
+		return Item;
+	};
+	if (const auto* Bag = Next.InSlot(ExtractionGear::BagSlot); !Bag || Bag->Definition != TEXT("Bag_Test"))
+	{
+		RemoveSlot(ExtractionGear::BagSlot);
+		auto Item = TakeOrMake(TEXT("Bag_Test"));
+		Item.Slot = ExtractionGear::BagSlot;
+		Next.Items.Add(Item);
+	}
+	for (const auto& Pair : {TPair<int32, FName>(2, TEXT("Helmet2")), TPair<int32, FName>(3, TEXT("Vest2"))})
+		if (const auto* Gear = Next.InSlot(Pair.Key); !Gear || Gear->Durability <= 0.f)
+		{
+			RemoveSlot(Pair.Key);
+			auto Item = ExtractionItems::Make(Pair.Value);
+			Item.Slot = Pair.Key;
+			Next.Items.Add(Item);
+		}
 	const TPair<int32, FName> Guns[] = {{0, TEXT("M4A1")}, {1, TEXT("SCARH")}};
 	for (const auto& [Slot, Gun] : Guns)
 	{
 		const auto* Def = UExtractionItemDefinition::Get(Gun);
 		if (!Def) continue;
-		if (const auto* Current = Inventory.InSlot(Slot); Current && Current->Definition != Gun)
+		if (const auto* Current = Next.InSlot(Slot); Current && Current->Definition != Gun) RemoveSlot(Slot);
+		if (!Next.InSlot(Slot))
 		{
-			FExtractionItem Moved = *Current;
-			Inventory.Items.RemoveAll([&](const FExtractionItem& I) { return I.Id == Moved.Id; });
-			if (!ExtractionItems::AutoPlace(Inventory, Moved)) ExtractionItems::AutoPlace(Overflow, Moved);
-		}
-		if (!Inventory.InSlot(Slot))
-		{
-			auto Item = ExtractionItems::Make(Gun);
+			auto Item = TakeOrMake(Gun);
 			Item.Slot = Slot;
-			Inventory.Items.Add(Item);
+			Next.Items.Add(Item);
 		}
 		// 测试配件：没装任何配件的出生枪按瞄具、握把、枪口各装一件兼容配件（取兼容列表里第一件可直接装在枪身上的）。
-		if (const auto* Held = Inventory.InSlot(Slot))
-			if (auto* Mount = Inventory.Find(Held->Id); Mount && Mount->Attachments.IsEmpty())
-				for (const EExtractionAttachmentSlot Want : {EExtractionAttachmentSlot::Optic, EExtractionAttachmentSlot::Grip,
-				                                             EExtractionAttachmentSlot::Muzzle})
+		if (const auto* Held = Next.InSlot(Slot))
+			if (auto* Mount = Next.Find(Held->Id); Mount && Mount->Attachments.IsEmpty())
+				for (const EExtractionAttachmentSlot Want : {
+					     EExtractionAttachmentSlot::Optic, EExtractionAttachmentSlot::Grip,
+					     EExtractionAttachmentSlot::Muzzle
+				     })
 				{
 					FName Socket = NAME_None;
 					bool bHasSocket = Def->MountSockets.IsEmpty();
@@ -158,13 +203,67 @@ FExtractionContainer UExtractionInventoryComponent::GrantStartingSupply(FExtract
 						break;
 					}
 				}
-		// Fill partial stacks even when no free grid cell can hold the whole grant.
-		int32 Added = 0;
-		for (; Added < 60; ++Added)
-			if (!ExtractionItems::AutoPlace(Inventory, ExtractionItems::Make(Def->DefaultAmmo))) break;
-		if (Added < 60) ExtractionItems::AutoPlace(Overflow, ExtractionItems::Make(Def->DefaultAmmo, 60 - Added));
 	}
-	++Inventory.Revision;
+	bool bPlaced = true;
+	for (FName Gun : {TEXT("BoltSniper"), TEXT("PumpShotgun")})
+	{
+		auto Item = TakeOrMake(Gun);
+		Item.Slot = ExtractionGear::BagGrid;
+		Item.Cell = FIntPoint(0, Gun == TEXT("BoltSniper") ? 0 : 2);
+		Item.Rotated = false;
+		bPlaced &= ExtractionItems::Fits(Next, Item);
+		Next.Items.Add(Item);
+	}
+	const TPair<FName, int32> Reserve[] = {
+		{TEXT("Ammo55645"), 60}, {TEXT("Ammo76251"), 60},
+		{TEXT("Ammo_338"), 20}, {TEXT("Ammo_12G"), 24}
+	};
+	for (const auto& [Ammo, Minimum] : Reserve)
+	{
+		while (Next.Count(Ammo) < Minimum)
+		{
+			const int32 Index = Pending.IndexOfByPredicate([&](const FExtractionItem& I)
+			{
+				return I.Definition == Ammo;
+			});
+			FExtractionItem Item;
+			if (Index != INDEX_NONE)
+			{
+				Item = Pending[Index];
+				Pending.RemoveAt(Index);
+			}
+			else Item = ExtractionItems::Make(Ammo, Minimum - Next.Count(Ammo));
+			if (!ExtractionItems::AutoPlace(Next, Item, ExtractionGear::BagGrid))
+			{
+				bPlaced = false;
+				break;
+			}
+		}
+	}
+	// 留出一块完整的长枪格位，玩家才能先收起手中的步枪，再取出测试枪。
+	// 仅在装回旧物品时占位，提交库存前移除；旧物品放不下仍进入出生补给箱。
+	auto SwapSpace = ExtractionItems::Make(TEXT("BoltSniper"));
+	SwapSpace.Slot = ExtractionGear::BagGrid;
+	SwapSpace.Cell = FIntPoint(0, 4);
+	bPlaced &= ExtractionItems::Fits(Next, SwapSpace);
+	Next.Items.Add(SwapSpace);
+	Pending.StableSort([](const FExtractionItem& A, const FExtractionItem& B)
+	{
+		return A.Size.X * A.Size.Y > B.Size.X * B.Size.Y;
+	});
+	for (auto Item : Pending)
+		if (!ExtractionItems::AutoPlace(Next, Item, ExtractionGear::BagGrid))
+			bPlaced &= ExtractionItems::AutoPlace(Overflow, Item);
+	Next.Items.RemoveAll([&](const FExtractionItem& I) { return I.Id == SwapSpace.Id; });
+	FString Error;
+	if (!bPlaced || !ExtractionItems::Validate(Next, Error) || !ExtractionItems::Validate(Overflow, Error))
+	{
+		UE_LOG(LogTemp, Error, TEXT("EXTRACTION_STARTING_SUPPLY_INVALID %s"), *Error);
+		Overflow.Items.Reset();
+		return Overflow;
+	}
+	++Next.Revision;
+	Inventory = MoveTemp(Next);
 	return Overflow;
 }
 

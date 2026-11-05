@@ -61,7 +61,7 @@ const TArray<FName>& UExtractionItemDefinition::Ids()
 		TEXT("Key_EastBridge"), TEXT("Key_StaffPassage"),
 		// 携行装备：官方 EquipmentPart / LOC_GameItem 中的胸挂、背包、安全箱
 		TEXT("Rig_Pouch"), TEXT("Rig_Ammo"), TEXT("Rig_Assault"), TEXT("Rig_Hurricane"),
-		TEXT("Bag_Climb"), TEXT("Bag_Hike"), TEXT("Bag_ALS"), TEXT("Bag_GTO"),
+		TEXT("Bag_Climb"), TEXT("Bag_Hike"), TEXT("Bag_ALS"), TEXT("Bag_GTO"), TEXT("Bag_Test"),
 		TEXT("Safe_Basic"), TEXT("Safe_Advanced"), TEXT("Safe_Premium"), TEXT("Safe_Field"),
 		// 投掷物：官方增强型破片手雷 21010000001
 		TEXT("FragGrenade"),
