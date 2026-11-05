@@ -16,6 +16,29 @@
 #include "AssetCompilingManager.h"
 #include "PhysicsEngine/BodySetup.h"
 #include "K2Node_AddComponent.h"
+#include "StaticMeshResources.h"
+
+bool USovietMilitaryBuilder::ConfigureStairCollision(UStaticMesh* Mesh)
+{
+	if (!Mesh || (Mesh->GetName() != TEXT("SM_SmallStairSmall") && Mesh->GetName() != TEXT("SM_SmallStairBig"))) return
+		false;
+	FAssetCompilingManager::Get().FinishAllCompilation();
+	const auto* Data = Mesh->GetRenderData();
+	if (!Data || Data->LODResources.IsEmpty() || !Mesh->GetBodySetup()) return false;
+	const auto& Positions = Data->LODResources[0].VertexBuffers.PositionVertexBuffer;
+	if (Positions.GetNumVertices() < 4) return false;
+	Mesh->Modify();
+	auto* Body = Mesh->GetBodySetup();
+	Body->Modify();
+	Body->AggGeom.EmptyElements();
+	FKConvexElem& Hull = Body->AggGeom.ConvexElems.AddDefaulted_GetRef();
+	for (uint32 Index = 0; Index < Positions.GetNumVertices(); ++Index)
+		Hull.VertexData.Add(FVector(Positions.VertexPosition(Index)));
+	Hull.UpdateElemBox();
+	// Capsule sweeps use the convex envelope, while precise traces retain the visible steps.
+	Body->CollisionTraceFlag = CTF_UseSimpleAndComplex;
+	return RefreshCollision(Mesh);
+}
 
 int32 USovietMilitaryBuilder::ConfigureBackdrop(float MinimumDistance)
 {

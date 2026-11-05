@@ -127,6 +127,8 @@ OUT.mkdir(parents=True, exist_ok=False)
 ROLES = ['A', 'B', 'C', 'D'] if args.scenario == 'four' else ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
 if args.scenario in ['soviet', 'scar', 'weapon-mechanics', 'lobby-ui']:
     ROLES = list('ABCDEF')[:args.players or 2]
+if args.scenario == 'soviet' and len(ROLES) < 2:
+    parser.error('Military acceptance requires at least two clients')
 if args.soviet_lifecycle:
     if args.scenario != 'soviet' or args.soviet_route or args.guards:
         parser.error('--soviet-lifecycle requires --scenario soviet --guards 0 and no route option')
@@ -412,6 +414,17 @@ def begin_round():
     if args.scenario == 'traversal' and args.traversal_lifecycle:
         send('C', 'squad', value=1)
         check('Traversal casualty has a living squadmate', lambda: player('Server', 'C').get('squad') == player('Server', 'A').get('squad'))
+    if args.scenario == 'soviet':
+        revisions = {r: state(r)['account']['revision'] for r in ROLES}
+        send('A', 'ready')
+        check('Military map change fixture has one ready player', lambda: player('Server', 'A').get('ready'))
+        send('B', 'select_map', map='SpaceCenter')
+        check('Changing map resets every player readiness', lambda: all(not player('Server', r).get('ready') for r in ROLES))
+        send('B', 'select_map', map='SovietMilitary')
+        time.sleep(.3)
+        send('B', 'select_map', map='/Game/Maps/Lobby')
+        check('Map selection and invalid ID preserve loadouts in lobby', lambda: all(
+            state(r).get('map') == '/Game/Maps/Lobby' and state(r)['account']['revision'] == revisions[r] for r in ROLES))
     for role in ROLES:
         send(role, 'ready')
     if args.scenario in ['equipment', 'progression', 'northcombat']:

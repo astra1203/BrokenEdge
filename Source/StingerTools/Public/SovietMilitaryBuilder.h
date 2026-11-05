@@ -16,6 +16,9 @@ public:
 	/** Rebuild physics and navigation caches after changing a mesh collision trace policy. */
 	UFUNCTION(BlueprintCallable)
 	static bool RefreshCollision(class UStaticMesh* Mesh);
+	/** Smooth the two solid entrance stairs without filling openings in other architecture. */
+	UFUNCTION(BlueprintCallable)
+	static bool ConfigureStairCollision(class UStaticMesh* Mesh);
 	UFUNCTION(BlueprintCallable)
 	static int32 ConfigureBackdrop(float MinimumDistance);
 	/** Ground position or invalid (NaN); tests floor, capsule clearance and optional nav projection. */
