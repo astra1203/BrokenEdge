@@ -1,0 +1,50 @@
+{
+  "started_utc": "2026-11-05T12:40:07.443728+00:00",
+  "mode": "Extraction",
+  "command": [
+    "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Maps/Lobby",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1280",
+    "-ResY=720",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\SovietCross03\\Editor.log",
+    "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\SovietCross03\\Store",
+    "-ExtractionProfile=SovietCross03",
+    "-MatchType=Extraction",
+    "-ExtractionPIEMode=Extraction",
+    "-NumPublicConnections=6",
+    "-MinPlayersToStart=6",
+    "-ExtractionPIEPlayers=6",
+    "-ExtractionGuards=0",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.PIE.Lobby",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\SovietCross03\\Automation",
+    "-ExtractionPIECrossMaps",
+    "-NullRHI"
+  ],
+  "pid": 44396,
+  "exit_code": 0,
+  "active_rounds": [
+    "1",
+    "2",
+    "3"
+  ],
+  "settled_rounds": [
+    "1",
+    "2",
+    "3"
+  ],
+  "returned_rounds": [
+    "1",
+    "2",
+    "3"
+  ],
+  "result": "passed",
+  "finished_utc": "2026-11-05T12:43:31.955378+00:00"
+}

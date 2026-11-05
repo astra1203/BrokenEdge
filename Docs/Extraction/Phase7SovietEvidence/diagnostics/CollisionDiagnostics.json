@@ -1,0 +1,27 @@
+[
+  {
+    "run": "SovietRoute04",
+    "stuck_log": [
+      "[2026.11.05-13.01.42:351][464]LogTemp: Warning: STUCK_TRACE loc=V(X=-8670.98, Y=-4572.92, Z=843.87) mode=1 custom=0 walkableFloorZ=0.7 stepHeight=45.0 speed=0.2 accel=2048.0 maxSpeed=600 disableGameplay=0 defeated=0 combat=0 lastInput=V(X=0.57, Y=0.82) overlaps=",
+      "[2026.11.05-13.01.42:351][464]LogTemp: Warning: STUCK_HIT height=10 actor=RockMedium32 component=StaticMeshComponent0 class=StaticMeshActor mesh=SM_RockMedium impactZ=767.9 normalZ=-0.12 dist=39.7",
+      "[2026.11.05-13.01.42:351][464]LogTemp: Warning: STUCK_HIT height=40 actor=RockMedium32 component=StaticMeshComponent0 class=StaticMeshActor mesh=SM_RockMedium impactZ=797.9 normalZ=0.06 dist=39.7",
+      "[2026.11.05-13.01.42:351][464]LogTemp: Warning: STUCK_HIT height=70 actor=RockMedium32 component=StaticMeshComponent0 class=StaticMeshActor mesh=SM_RockMedium impactZ=827.9 normalZ=0.09 dist=42.1",
+      "[2026.11.05-13.01.42:351][464]LogTemp: Warning: STUCK_HIT height=86 actor=RockMedium32 component=StaticMeshComponent0 class=StaticMeshActor mesh=SM_RockMedium impactZ=843.9 normalZ=0.09 dist=43.7",
+      "[2026.11.05-13.01.42:351][464]LogTemp: Warning: STUCK_PROFILE feetZ=757.9 ground [0]=746 [25]=727(d-19) [50]=905(d+179) [75]=791(d-115) [100]=907(d+116) [125]=698(d-209) [150]=691(d-7) [175]=936(d+245) [200]=928(d-8)",
+      "[2026.11.05-13.01.42:351][464]LogTemp: Warning: STUCK_GATE floor actor=Landscape_0 normalZ=0.78 z=762.9 flatBase=0 perch=0.0",
+      "[2026.11.05-13.01.42:351][464]LogTemp: Warning: STUCK_GATE blocker actor=RockMedium32 comp=StaticMeshComponent0 isISM=0 profile=BlockAll impactAboveFloor=-0.1 normalZ=-0.12 canStepUpOn=1",
+      "[2026.11.05-13.01.42:351][464]LogTemp: Warning: STUCK_GATE raisedBy=45 sweepBlocked=1 sweepMesh=RockMedium32 newFloorZ=746.4 newFloorNormalZ=0.78 walkableZ=0.71 newFloorWalkable=1"
+    ]
+  },
+  {
+    "run": "SovietPackagedRoute01",
+    "stuck_log": [
+      "[2026.11.05-14.07.41:717][  0]LogTemp: Warning: STUCK_TRACE loc=V(X=-4844.71, Y=2320.91, Z=188.14) mode=1 custom=0 walkableFloorZ=0.7 stepHeight=45.0 speed=1.8 accel=2048.0 maxSpeed=600 disableGameplay=0 defeated=0 combat=0 lastInput=V(X=-1.00, Y=-0.00) overlaps=BP_SCARH_C_2147481774;BP_M4A1_C_2147481776;",
+      "[2026.11.05-14.07.41:717][  0]LogTemp: Warning: STUCK_HIT height=10 actor=SmallStairSmall2_9 component=StaticMeshComponent0 class=StaticMeshActor mesh=SM_SmallStairSmall impactZ=112.1 normalZ=0.00 dist=30.5",
+      "[2026.11.05-14.07.41:717][  0]LogTemp: Warning: STUCK_PROFILE feetZ=102.1 ground [0]=100 [25]=100(d+0) [50]=122(d+22) [75]=137(d+15) [100]=137(d-0) [125]=137(d-0) [150]=137(d-0) [175]=137(d-0) [200]=122(d-15)",
+      "[2026.11.05-14.07.41:717][  0]LogTemp: Warning: STUCK_GATE floor actor=Landscape_0 normalZ=1.00 z=120.7 flatBase=0 perch=0.0",
+      "[2026.11.05-14.07.41:717][  0]LogTemp: Warning: STUCK_GATE blocker actor=SmallStairSmall2_9 comp=StaticMeshComponent0 isISM=0 profile=BlockAll impactAboveFloor=-13.5 normalZ=0.00 canStepUpOn=1",
+      "[2026.11.05-14.07.41:718][  0]LogTemp: Warning: STUCK_GATE raisedBy=45 sweepBlocked=0 sweepMesh=- newFloorZ=100.0 newFloorNormalZ=1.00 walkableZ=0.71 newFloorWalkable=1"
+    ]
+  }
+]

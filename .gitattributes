@@ -100,3 +100,9 @@ Docs/Extraction/Traversal/Evidence/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
 # Original rifle locomotion evidence preserves recorded SHA-256 bytes.
 Docs/Stinger/LocomotionEvidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 Docs/Stinger/LocomotionEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+
+# Military map evidence preserves the original bytes for SHA-256 verification.
+Docs/Extraction/Phase7SovietEvidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Docs/Extraction/Phase7SovietEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+# Preserve this captured diagnostic script verbatim, including its original trailing blank line.
+Docs/Extraction/Phase7SovietEvidence/diagnostics/ApplySovietVisuals.py whitespace=-blank-at-eof,blank-at-eol,space-before-tab,cr-at-eol

@@ -1,0 +1,47 @@
+{
+  "started_utc": "2026-11-05T14:27:17.552839+00:00",
+  "steps": [
+    {
+      "name": "Registry",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-NullRHI",
+        "-unattended",
+        "-nosound",
+        "-SCCProvider=None",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\SovietAudit07\\Registry.log",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Maps",
+        "-TestExit=Automation Test Queue Empty",
+        "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\SovietAudit07\\Automation"
+      ],
+      "exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "Navigation",
+      "command": [
+        "C:\\UnrealProjects\\UnrealEngine-5.8.3-release\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-NullRHI",
+        "-unattended",
+        "-nosound",
+        "-SCCProvider=None",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\SovietAudit07\\Navigation.log",
+        "-run=pythonscript",
+        "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\validate_soviet_layout.py"
+      ],
+      "exit_code": 0,
+      "passed": true
+    }
+  ],
+  "input_sha256": {
+    "Content/Maps/SovietMilitary/L_SovietMilitaryExtraction.umap": "d50dfd8118ad7db50153c6fbf5a7f7a429aebd783b50574a3b008d43bffdca60",
+    "Content/Extraction/Maps/DA_SovietMilitaryGameplay.uasset": "3adb7eac7bc05f77879ac0c110bd256d290026d0efd0d5bb885d832b15742e5b",
+    "Content/Extraction/Loot/DA_SovietMilitaryLoot.uasset": "ca7b731b670a30053db471cdfd36bdee79b972a0a861e2e8e323bbf9ff83baa1",
+    "Scripts/Extraction/validate_soviet_layout.py": "e5f78115d84858c17375d486079439aa36e7de13fb14db49383219fffebfe087",
+    "Source/BrokenEdge/Tests/ExtractionMapTests.cpp": "be4dc36233aa81425297a6613a024ba5b7d2927bf6f8400553cc2d00ad93f634"
+  },
+  "result": "passed",
+  "finished_utc": "2026-11-05T14:28:05.256509+00:00"
+}

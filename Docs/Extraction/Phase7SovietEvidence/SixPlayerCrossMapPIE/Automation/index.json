@@ -1,0 +1,669 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "505960CD43D2B14058E4C480DFB027E9",
+			"instanceName": "DESKTOP-M9PA1SF-44396",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "GameViewer Virtual Display Adapter",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.05-12.43.30",
+	"succeeded": 0,
+	"succeededWithWarnings": 1,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 176.2030029296875,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Lobby",
+			"fullTestPath": "BrokenEdge.Extraction.PIE.Lobby",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"505960CD43D2B14058E4C480DFB027E9"
+			],
+			"duration": 176.2030029296875,
+			"dateTime": "2026.11.05-12.40.34",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.12"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_20 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_22 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_24 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_26 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_27 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_30 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_31 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_34 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_36 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_38 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_40 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_42 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_43 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_46 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_48 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_02 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_04 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_05 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_08 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_10 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_12 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_14 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_16 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogTemp: EXTRACTION_LOOT_RECIPE_INVALID point=FIELD_CRATE_17 item=Bandage",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.45"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: InitSeamlessTravelPlayer: Could not find a starting spot",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.48"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.48"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.48"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.48"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.48"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.48"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.49"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.49"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.49"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.49"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.49"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.49"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.49"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.50"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.50"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.50"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.50"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.50"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.50"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.50"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.50"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.51"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogGameMode: RestartPlayerAtPlayerStart: Player start not found",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.41.51"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.42.33"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogHttp: HTTP request timed out after 3.00 seconds URL=https://www.google.com/generate_204",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.42.43"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogNet: UNetDriver::ProcessRemoteFunction: No owning connection for actor BP_BrokenEdgePlayerController_C_0. Function ServerRequestServerTime will not be processed.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.43.06"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-12.43.26"
+				}
+			],
+			"warnings": 52,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

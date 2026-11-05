@@ -54,18 +54,36 @@ Actor 存在就认定构建成功。
 
 ## 验收记录
 
-已完成以下分层检查，完整运行记录在 `Saved/Extraction` 对应目录：
+最终代码与资源提交为 `a87702d06`，新 Client/Server 包位于 `Packaged/SovietMilitary03`，构建均退出 0。完整日志、原始报告、截图、资源与包的 SHA-256 已归档至 [Phase7SovietEvidence](Phase7SovietEvidence/Summary.json)，文件索引见 [ArchiveIndex.json](Phase7SovietEvidence/ArchiveIndex.json)。安装包保留在本地，不纳入 Git。
 
-- `SovietNetwork05`：独立服务器和两个客户端，83 项检查通过，包括十七扇门复制、二十四个容器交互、实际搜刮、十秒撤离和同一物品 GUID 返仓。使用定位夹具、零守卫；一名客户端以 1920×1080、Medium 资源限制渲染。
-- `SovietCross03`：六客户端 NullRHI PIE，连续完成军事基地 → 航天基地 → 军事基地三局结算、返回大厅和原枪械 GUID 保留。航天基地使用显式撤离时钟夹具；本项验证切图和持久化，不验证其九百秒门槛与开关流程。
-- `SovietAudit06`：最终地图注册表自动化通过，77 个生成点的导航全部连通，并验证 201 个远景卡片的近距隐藏设置。重跑命令为 `python Scripts/Extraction/run_soviet_audit.py --tag 新名称`。
-- `SovietGuards01`：27 项检查通过，六名守卫和十八段巡逻路径有效；实际巡逻、受击锁定、还击、脱战返回、击杀归属和唯一死亡掉落通过。战斗使用位置夹具和正常射击。
-- `SovietLifecycle02`：37 项检查通过，三人分队验证死亡、突然断线与真实 120 秒测试回合超时。非保护物品进入唯一尸体箱，数量和弹匣保留；安全箱不掉落且返还，最后回到大厅并重置准备状态。
-- `SovietPackagedSix02`：第一套新 Client/Server 包六人功能验收通过 102 项，包含 F 键开门、占用拒关、关门中进入后反向打开、所有门和容器、六人撤离返仓。远景与出生朝向改进正在第二套独立包中复核。
+| 检查 | 结果与范围 | 证据 |
+|------|------------|------|
+| 最终注册表与导航 | 注册表自动化通过；开门、关门状态均为 77/77 点连通；201 个远景卡片近距隐藏设置在重新加载后仍有效 | [LayoutAndRegistry](Phase7SovietEvidence/LayoutAndRegistry/Run.json) |
+| 六人打包联机 | 105 项通过：大厅切图重置准备、非法地图 ID 不扣装备、17 扇门复制、F 键交互、占用拒关与关门反向打开、24 个容器、搜刮、六人撤离返仓 | [PackagedSix](Phase7SovietEvidence/PackagedSix/Report.json.gz) |
+| 两人连续实走 | 30 项通过：三段导航路线合计约 713 米，251 次位置采样，零位置传送；实际搜索与转移物资、十秒撤离、同一物品 GUID 返仓并回大厅 | [PackagedRoute](Phase7SovietEvidence/PackagedRoute/Report.json.gz)、[路线](Phase7SovietEvidence/PackagedRoute/ContinuousRoute.json) |
+| 守卫战斗 | 30 项通过：六名守卫、十八段巡逻导航、实际巡逻、受击锁定、还击、脱战返回、击杀归属、唯一死亡掉落和撤离 | [PackagedGuards](Phase7SovietEvidence/PackagedGuards/Report.json.gz) |
+| 异常结算 | 41 项通过：三人死亡、突然断线、真实 120 秒测试回合超时；非保护物品进入唯一尸体箱，数量和弹匣保留，安全箱不掉落且返还，回大厅后准备状态重置 | [PackagedLifecycle](Phase7SovietEvidence/PackagedLifecycle/Report.json.gz) |
+| 入口台阶回归 | 17 项通过，同一入口从正面和两侧正常步行进入；使用明确的起点定位夹具 | [PackagedStairs](Phase7SovietEvidence/PackagedStairs/Report.json.gz)、[位置记录](Phase7SovietEvidence/PackagedStairs/Stairs.json) |
+| 六人跨地图 PIE | 连续完成军事基地 → 航天基地 → 军事基地三局结算与返大厅，保留原枪械 GUID；六客户端 NullRHI | [SixPlayerCrossMapPIE](Phase7SovietEvidence/SixPlayerCrossMapPIE/Run.json) |
 
-实走测试发现原导入资源的导航碰撞缓存未随碰撞策略更新，导致导航穿过实际阻挡的岩石。生成器现调用 `RefreshCollision` 同时重建 Chaos 物理网格和 NavCollision，随后重建关卡导航。`SovietRoute04` 的阻挡诊断记录了 `RockMedium32`、正常移动输入和零速度；失败记录保留用于对照。`SovietRoute05` 已在缓存修复后通过 27 项检查：两名玩家步行完成约 587 米导航路线，搜取物资、真实计时撤离并返回大厅，物品 GUID 持久化一致；记录的位置传送次数为零。守卫、异常结算和打包验证仍在进行中。
+打包功能测试使用一名 1920×1080、Medium、768 MiB 纹理池、关闭光追、30 FPS 上限的渲染客户端，其余客户端使用 NullRHI。主联机场景、守卫和异常结算场景使用位置夹具，连续实走场景不使用位置夹具。航天基地跨地图 PIE 使用显式撤离时钟夹具，未等待其九百秒门槛。这些结果不等同于六客户端同时渲染、全地图随机路线、匹配服务或性能验收。
 
-导航检查与使用定位夹具的 RPC 检查分别记录，不作为无传送连续实走或全地图性能结论。
+实走发现并修复了两类碰撞问题，原失败报告和截图保存在归档的 `diagnostics` 下：
 
-当前项目的 `GrantStartingSupply` 会提供 M4A1 与 SCAR-H，并把携入 AK 移入背包。地图验收按这份现有规则检查枪械保留；旧 AK
-握枪距离断言仍保留在原有枪械场景中。
+- 导入资源的 NavCollision 缓存没有随碰撞策略更新，导航经过实际阻挡的岩石。`RefreshCollision` 同时重建 Chaos 物理网格和 NavCollision，再构建关卡导航；修复后的编辑器路线与最终打包路线均通过。
+- 入口矮台阶的细节三角形会挡住侧向进入的角色胶囊。`ConfigureStairCollision` 只对 `SM_SmallStairSmall`、`SM_SmallStairBig` 生成凸包角色碰撞，精确射线保留原模型。原打包失败记录中的 `SmallStairSmall2_9`、正常输入与零速度，以及修复后三方向实走结果分别保留。
+
+失败诊断见 [CollisionDiagnostics.json](Phase7SovietEvidence/diagnostics/CollisionDiagnostics.json)。Rider 附加时引擎跨台阶函数的源码断点未能绑定，因此此处结论基于碰撞日志和修改前后的实走对照，不声称已证明引擎内部的具体失败分支。
+
+异常结算测试曾将目标固定放在随机出生点的 X 正方向，恰好被植被实例中的岩石遮挡。只读射线确认相机和枪口都命中该岩石；测试现先选择导航可达、射界无遮挡的站位，再使用正常射击验证死亡，保留遮挡诊断与失败记录。此项调整没有修改子弹或死亡逻辑。
+
+复跑示例（每次使用新的 `--tag`）：
+
+```powershell
+python Scripts/Extraction/run_soviet_audit.py --tag SovietAuditNew
+python Scripts/Extraction/run_network.py --scenario soviet --players 6 --guards 0 --packaged --package-root Packaged/SovietMilitary03 --rendered-clients 1 --bounded-rendering --resolution 1920x1080 --isolated-room --loot-seed 17848 --tag SovietSixNew
+```
+
+连续路线使用 `--players 2 --guards 0 --soviet-route`；守卫验收使用 `--players 2 --guards 6`；异常结算使用 `--players 3 --guards 0 --soviet-lifecycle`。入口回归使用同样的双人参数，入口脚本换成 `Scripts/Extraction/run_soviet_stairs.py`。常规功能场景将回合上限设为六百秒，默认正式规则仍为三十分钟；异常结算单独覆盖真实一百二十秒测试截止时间。
+
+当前项目的 `GrantStartingSupply` 会提供 M4A1 与 SCAR-H，并把携入 AK 移入背包。地图验收按这份现有规则检查枪械保留；旧 AK 握枪距离断言仍保留在原有枪械场景中。

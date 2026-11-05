@@ -229,7 +229,7 @@ def guard_acceptance(g):
 
 def lifecycle(g):
     """Keep death/disconnect/timeout inventory paths separate from successful extraction."""
-    import subprocess
+    import subprocess, json
     send,check,state,player=(g[k] for k in ('send','check','state','player'))
     # ExtractionItems::Protected retains SafeSlot (6) and SafeGrid (-3).
     possessions={r:{i['id']:i for i in player('Server',r)['inventory']['items'] if i['slot'] not in (6,-3)} for r in ('B','C')}
@@ -245,10 +245,33 @@ def lifecycle(g):
         return [box for box in state('Server')['loot'] if {i['id'] for i in box['contents']['items']}==set(possessions[role])]
     check('Disconnected possessions move to exactly one corpse',lambda:len(corpse('C'))==1)
     start=player('Server','A')['position']
-    send('Server','fixture',players=[dict(name='EX_A',position=start,health=100,shield=0,clear_trauma=True),
-                                   dict(name='EX_B',position=[start[0]+400,start[1],start[2]],health=10,shield=0,clear_trauma=True)])
-    time.sleep(1)
-    send('A','aim',target='EX_B',head=False)
+    # A fixed +X offset can put the victim behind a rock at a randomly selected spawn.
+    # Keep the death test separate from cover penetration: verify both camera and barrel rays.
+    attempts=[];clear=False
+    send('Server','fixture',players=[dict(name='EX_A',position=start,health=100,shield=0,clear_trauma=True)])
+    for angle in range(0,360,45):
+        a=math.radians(angle)
+        candidate=[start[0]+400*math.cos(a),start[1]+400*math.sin(a),start[2]]
+        send('Server','path_query',start=start,end=candidate)
+        q=state('Server')['path_probe']
+        if not q['valid']:
+            attempts.append(dict(candidate=candidate,navigable=False));continue
+        floor=q['points'][-1]
+        send('Server','fixture',players=[dict(name='EX_B',position=[floor[0],floor[1],floor[2]+95],health=10,shield=0,clear_trauma=True)])
+        time.sleep(.6)
+        send('A','aim',target='EX_B',head=False)
+        time.sleep(.4)
+        probe=state('A').get('aim_diagnostics',{})
+        target=probe.get('target_actor')
+        selected=probe.get('points',{}).get('selected',{})
+        rays=[selected.get(k,{}) for k in ('camera_simple','camera_complex','muzzle_complex_sphere')]
+        clear=bool(target and probe.get('muzzle_probe_available') and all(
+            'blocking' in h and (not h['blocking'] or h.get('actor')==target) for h in rays))
+        attempts.append(dict(candidate=candidate,navigable=True,clear=clear,probe=probe))
+        if clear:break
+    (g['OUT']/'LifecycleFixture.json').write_text(json.dumps(attempts,indent=2)+'\n',encoding='utf-8')
+    check('Lifecycle PVP fixture has clear camera and muzzle rays',lambda:clear)
+    send('A','screenshot',name='soviet-lifecycle-clear-shot')
     for _ in range(12):
         send('A','pulse',action='Fire');time.sleep(.3)
         if player('Server','B').get('life')==1:break

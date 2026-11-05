@@ -1,0 +1,394 @@
+{
+  "read_only_probe": true,
+  "scope": "local snapshot; not an authoritative shot or impact",
+  "target_name": "EX_B",
+  "target_actor": "BP_StingerCharacter_C_2147481661",
+  "shooter_actor": "BP_StingerCharacter_C_2147481786",
+  "camera_position": [
+    -10310.001219909987,
+    -8499.843805532691,
+    960.5
+  ],
+  "camera_rotation_pitch_yaw_roll": [
+    -5.7923322405786175,
+    0.8949658667469403,
+    2.4975603283609478e-17
+  ],
+  "control_rotation_pitch_yaw_roll": [
+    -5.792350566754362,
+    0.89496586674694,
+    0
+  ],
+  "control_direction": [
+    0.9947728233316061,
+    0.015539715892838622,
+    -0.10092347195194416
+  ],
+  "configured_bone": "None",
+  "configured_head": false,
+  "configured_body_center": false,
+  "production_hit_target": [
+    -10143.8280110814,
+    -8497.247958453709,
+    943.6411128195217
+  ],
+  "muzzle_probe_available": true,
+  "weapon": "BP_M4A1_C_2147481781",
+  "raw_muzzle_position": [
+    -10249.527528690207,
+    -8463.767572343379,
+    972.5947422219483
+  ],
+  "muzzle_sphere_radius": 1,
+  "muzzle_origin_obstruction": {
+    "blocking": false,
+    "actor": "None",
+    "component": "None",
+    "component_path": "None",
+    "bone": "None",
+    "location": [
+      0,
+      0,
+      0
+    ],
+    "impact_point": [
+      0,
+      0,
+      0
+    ],
+    "impact_normal": [
+      0,
+      0,
+      0
+    ],
+    "start_penetrating": false,
+    "distance": 0
+  },
+  "muzzle_position": [
+    -10249.527528690207,
+    -8463.767572343379,
+    972.5947422219483
+  ],
+  "points": {
+    "body": {
+      "available": true,
+      "position": [
+        -9921.45,
+        -8493.77,
+        921.08
+      ],
+      "camera_simple": {
+        "blocking": true,
+        "actor": "InstancedFoliageActor_0",
+        "component": "FoliageInstancedStaticMeshComponent_3",
+        "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+        "bone": "None",
+        "location": [
+          -10143.827191394865,
+          -8497.246184724761,
+          943.6410123854876
+        ],
+        "impact_point": [
+          -10143.82719369607,
+          -8497.246194612257,
+          943.6410232317055
+        ],
+        "impact_normal": [
+          -0.7314232006384053,
+          0.3615936034358805,
+          0.5781610221401353
+        ],
+        "start_penetrating": false,
+        "distance": 167.0472412109375
+      },
+      "camera_complex": {
+        "blocking": true,
+        "actor": "InstancedFoliageActor_0",
+        "component": "FoliageInstancedStaticMeshComponent_3",
+        "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+        "bone": "None",
+        "location": [
+          -10143.827191394865,
+          -8497.246184724761,
+          943.6410123854876
+        ],
+        "impact_point": [
+          -10143.82719369607,
+          -8497.246194612257,
+          943.6410232317055
+        ],
+        "impact_normal": [
+          -0.7314232006384053,
+          0.3615936034358805,
+          0.5781610221401353
+        ],
+        "start_penetrating": false,
+        "distance": 167.0472412109375
+      },
+      "muzzle_complex_sphere": {
+        "blocking": true,
+        "actor": "InstancedFoliageActor_0",
+        "component": "FoliageInstancedStaticMeshComponent_3",
+        "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+        "bone": "None",
+        "location": [
+          -10127.077516449583,
+          -8474.965528047534,
+          953.3676380650934
+        ],
+        "impact_point": [
+          -10126.324862220232,
+          -8475.288717560104,
+          952.7939652021362
+        ],
+        "impact_normal": [
+          -0.7526298876662545,
+          0.3231741952485797,
+          0.5736782109991674
+        ],
+        "start_penetrating": false,
+        "distance": 124.45514678955078
+      }
+    },
+    "head": {
+      "available": true,
+      "position": [
+        -9916.469237341136,
+        -8481.965428049809,
+        981.5456925013651
+      ],
+      "camera_simple": {
+        "blocking": true,
+        "actor": "InstancedFoliageActor_0",
+        "component": "FoliageInstancedStaticMeshComponent_3",
+        "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+        "bone": "None",
+        "location": [
+          -10119.514043574718,
+          -8491.189866856756,
+          970.68706157613
+        ],
+        "impact_point": [
+          -10119.514042035815,
+          -8491.189870307673,
+          970.6870664628116
+        ],
+        "impact_normal": [
+          -0.7526298217546578,
+          0.3231742299304784,
+          0.5736782796257798
+        ],
+        "start_penetrating": false,
+        "distance": 190.95558166503906
+      },
+      "camera_complex": {
+        "blocking": true,
+        "actor": "InstancedFoliageActor_0",
+        "component": "FoliageInstancedStaticMeshComponent_3",
+        "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+        "bone": "None",
+        "location": [
+          -10119.514043574718,
+          -8491.189866856756,
+          970.68706157613
+        ],
+        "impact_point": [
+          -10119.514042035815,
+          -8491.189870307673,
+          970.6870664628116
+        ],
+        "impact_normal": [
+          -0.7526298217546578,
+          0.3231742299304784,
+          0.5736782796257798
+        ],
+        "start_penetrating": false,
+        "distance": 190.95558166503906
+      },
+      "muzzle_complex_sphere": {
+        "blocking": true,
+        "actor": "InstancedFoliageActor_0",
+        "component": "FoliageInstancedStaticMeshComponent_3",
+        "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+        "bone": "None",
+        "location": [
+          -10108.034824882281,
+          -8471.498542789963,
+          976.3973623325452
+        ],
+        "impact_point": [
+          -10107.282180093016,
+          -8471.821739733634,
+          975.823689156088
+        ],
+        "impact_normal": [
+          -0.7526298876662545,
+          0.3231741952485797,
+          0.5736782109991674
+        ],
+        "start_penetrating": false,
+        "distance": 141.7547607421875
+      }
+    },
+    "spine2": {
+      "available": true,
+      "position": [
+        -9926.058227720088,
+        -8491.905880631177,
+        956.7357547983607
+      ],
+      "camera_simple": {
+        "blocking": true,
+        "actor": "InstancedFoliageActor_0",
+        "component": "FoliageInstancedStaticMeshComponent_3",
+        "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+        "bone": "None",
+        "location": [
+          -10130.743103315348,
+          -8496.137689008989,
+          958.7425216269802
+        ],
+        "impact_point": [
+          -10130.743112443995,
+          -8496.137681214712,
+          958.7425298717326
+        ],
+        "impact_normal": [
+          -0.7526298217546578,
+          0.3231742299304784,
+          0.5736782796257798
+        ],
+        "start_penetrating": false,
+        "distance": 179.30503845214844
+      },
+      "camera_complex": {
+        "blocking": true,
+        "actor": "InstancedFoliageActor_0",
+        "component": "FoliageInstancedStaticMeshComponent_3",
+        "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+        "bone": "None",
+        "location": [
+          -10130.743103315348,
+          -8496.137689008989,
+          958.7425216269802
+        ],
+        "impact_point": [
+          -10130.743112443995,
+          -8496.137681214712,
+          958.7425298717326
+        ],
+        "impact_normal": [
+          -0.7526298217546578,
+          0.3231742299304784,
+          0.5736782796257798
+        ],
+        "start_penetrating": false,
+        "distance": 179.30503845214844
+      },
+      "muzzle_complex_sphere": {
+        "blocking": true,
+        "actor": "InstancedFoliageActor_0",
+        "component": "FoliageInstancedStaticMeshComponent_3",
+        "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+        "bone": "None",
+        "location": [
+          -10117.480642231896,
+          -8475.254214162136,
+          966.1207741965878
+        ],
+        "impact_point": [
+          -10116.727985536123,
+          -8475.577407024175,
+          965.5471003749756
+        ],
+        "impact_normal": [
+          -0.7526298876662545,
+          0.3231741952485797,
+          0.5736782109991674
+        ],
+        "start_penetrating": false,
+        "distance": 132.7035675048828
+      }
+    },
+    "selected": {
+      "available": true,
+      "position": [
+        -9921.45,
+        -8493.77,
+        921.08
+      ],
+      "camera_simple": {
+        "blocking": true,
+        "actor": "InstancedFoliageActor_0",
+        "component": "FoliageInstancedStaticMeshComponent_3",
+        "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+        "bone": "None",
+        "location": [
+          -10143.827191394865,
+          -8497.246184724761,
+          943.6410123854876
+        ],
+        "impact_point": [
+          -10143.82719369607,
+          -8497.246194612257,
+          943.6410232317055
+        ],
+        "impact_normal": [
+          -0.7314232006384053,
+          0.3615936034358805,
+          0.5781610221401353
+        ],
+        "start_penetrating": false,
+        "distance": 167.0472412109375
+      },
+      "camera_complex": {
+        "blocking": true,
+        "actor": "InstancedFoliageActor_0",
+        "component": "FoliageInstancedStaticMeshComponent_3",
+        "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+        "bone": "None",
+        "location": [
+          -10143.827191394865,
+          -8497.246184724761,
+          943.6410123854876
+        ],
+        "impact_point": [
+          -10143.82719369607,
+          -8497.246194612257,
+          943.6410232317055
+        ],
+        "impact_normal": [
+          -0.7314232006384053,
+          0.3615936034358805,
+          0.5781610221401353
+        ],
+        "start_penetrating": false,
+        "distance": 167.0472412109375
+      },
+      "muzzle_complex_sphere": {
+        "blocking": true,
+        "actor": "InstancedFoliageActor_0",
+        "component": "FoliageInstancedStaticMeshComponent_3",
+        "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.InstancedFoliageActor_0.FoliageInstancedStaticMeshComponent_3",
+        "bone": "None",
+        "location": [
+          -10127.077516449583,
+          -8474.965528047534,
+          953.3676380650934
+        ],
+        "impact_point": [
+          -10126.324862220232,
+          -8475.288717560104,
+          952.7939652021362
+        ],
+        "impact_normal": [
+          -0.7526298876662545,
+          0.3231741952485797,
+          0.5736782109991674
+        ],
+        "start_penetrating": false,
+        "distance": 124.45514678955078
+      }
+    }
+  }
+}

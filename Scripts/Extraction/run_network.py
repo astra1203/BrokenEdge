@@ -133,6 +133,8 @@ if args.soviet_lifecycle:
     if args.scenario != 'soviet' or args.soviet_route or args.guards:
         parser.error('--soviet-lifecycle requires --scenario soviet --guards 0 and no route option')
     ROLES = list('ABC')
+    # Lifecycle placements must verify an unobstructed shot on this terrain.
+    args.flight_diagnostics = True
 if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']:
     ROLES = list('ABCDEF')[:args.players or (6 if args.scenario in ['pvpve', 'lifecycle'] else 2 if args.scenario == 'traversal' else 3)]
 rendered_roles = [args.rendered_role] if args.rendered_role else ROLES[:args.rendered_clients]
