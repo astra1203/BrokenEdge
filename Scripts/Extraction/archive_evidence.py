@@ -79,8 +79,11 @@ def main():
     implementation = {p: sha(ROOT / p) for p in sorted(paths) if (ROOT / p).is_file()
                       and not p.startswith(('Docs/', 'Saved/', 'Packaged/'))}
     packages = {}
+    package_root = (ROOT / plan.get('package_root', 'Packaged')).resolve()
+    if not package_root.is_relative_to((ROOT / 'Packaged').resolve()):
+        raise ValueError('Evidence package_root must be inside project Packaged')
     for target in ['Client', 'Server']:
-        for file in (ROOT / 'Packaged' / target).rglob('*'):
+        for file in (package_root / target).rglob('*'):
             if file.is_file() and file.suffix in ['.exe', '.pak', '.ucas', '.utoc']:
                 packages[str(file.relative_to(ROOT)).replace('\\', '/')] = {'size': file.stat().st_size, 'sha256': sha(file)}
     summary = {'created_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),

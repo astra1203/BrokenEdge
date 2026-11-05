@@ -56,8 +56,21 @@ def run(g):
         for side in (1,-1):
             pos=[current['position'][i]+side*(current['approach'][i]-current['position'][i]) for i in range(3)]
             place('A',pos,current['yaw']+(180 if side<0 else 0))
-            send('A','ordinary_door',name=door['name']);time.sleep(.35)
+            send('A','ordinary_door',name=door['name']);time.sleep(.08 if door['name']==doors[0]['name'] else .35)
             if not d('Server')['open']:break
+        if door['name']==doors[0]['name']:
+            closing=d('Server')
+            assert not closing['open'] and 0<abs(closing['angle'])<95, ('Expected moving closing leaf',closing)
+            # Saving six full client snapshots can outlast the 0.8 s motion. Arrange
+            # the timed obstruction before serializing the assertion evidence.
+            send('Server','fixture',players=[dict(name='EX_B',position=door['position'],health=100,shield=0,clear_trauma=True)])
+            check('Entering closing swing reverses the door',lambda:all(d(r)['open'] for r in peers),3)
+            g['checks'].append(dict(name='Door was moving closed before obstruction',door=closing))
+            place('B',observer_start)
+            time.sleep(.8)
+            current=d('Server')
+            place('A',current['approach'],current['yaw'])
+            send('A','ordinary_door',name=door['name'])
         check('Door closing replicated '+door['name'],lambda:all(not d(r)['open'] and abs(d(r)['angle'])<1 for r in peers),5)
     send('A','screenshot',name='soviet-door')
     if not g['args'].guards:
@@ -218,12 +231,16 @@ def lifecycle(g):
     """Keep death/disconnect/timeout inventory paths separate from successful extraction."""
     import subprocess
     send,check,state,player=(g[k] for k in ('send','check','state','player'))
-    possessions={r:{i['id']:i for i in player('Server',r)['inventory']['items']} for r in ('B','C')}
-    carried={i['id'] for i in player('Server','A')['inventory']['items']}
+    # ExtractionItems::Protected retains SafeSlot (6) and SafeGrid (-3).
+    possessions={r:{i['id']:i for i in player('Server',r)['inventory']['items'] if i['slot'] not in (6,-3)} for r in ('B','C')}
+    protected={r:{i['id'] for i in player('Server',r)['inventory']['items'] if i['slot'] in (6,-3)} for r in ('A','B','C')}
+    carried={i['id'] for i in player('Server','A')['inventory']['items'] if i['slot'] not in (6,-3)}
+    disconnected_profile=state('C')['account']['profile']
     g['finishing'].add('C')
     g['report']['processes']['C']['expected_disconnect']=True
     subprocess.run(['taskkill','/PID',str(g['processes']['C'].pid),'/T','/F'],stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
     check('Military abrupt disconnect leaves two survivors',lambda:state('Server').get('alive')==2,30)
+    check('Abrupt disconnect is committed to authoritative storage',lambda:any(p['profile']==disconnected_profile and p['outcome']==4 for p in state('Server')['stored_results']))
     def corpse(role):
         return [box for box in state('Server')['loot'] if {i['id'] for i in box['contents']['items']}==set(possessions[role])]
     check('Disconnected possessions move to exactly one corpse',lambda:len(corpse('C'))==1)
@@ -239,8 +256,11 @@ def lifecycle(g):
     check('Dead player possessions move to exactly one corpse',lambda:len(corpse('B'))==1)
     for role in ('B','C'):
         check(role+' corpse preserves quantities and magazines',lambda r=role:all(i['quantity']==possessions[r][i['id']]['quantity'] and i['magazine']==possessions[r][i['id']]['magazine'] for i in corpse(r)[0]['contents']['items']))
+        check(role+' protected inventory never drops into world',lambda r=role:not protected[r].intersection(i['id'] for box in state('Server')['loot'] for i in box['contents']['items']))
     send('A','aim',target='',head=False)
     check('Real military round deadline settles survivor as timed out',lambda:state('A').get('account',{}).get('outcome')==5,130)
     check('Military timeout returns connected players to lobby',lambda:all(state(r).get('map')=='/Game/Maps/Lobby' for r in ('Server','A','B')),40)
     check('Timed out carried loot is not duplicated into stash',lambda:not carried.intersection(i['id'] for i in state('A')['account']['stash']['items']))
+    for role in ('A','B'):
+        check(role+' safe equipment persists after failed raid',lambda r=role:protected[r].issubset(i['id'] for container in ('loadout','stash') for i in state(r)['account'][container]['items']))
     check('Military lobby readiness resets after failed raid',lambda:all(not p.get('ready') for p in state('Server')['players']))

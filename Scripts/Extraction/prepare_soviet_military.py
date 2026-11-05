@@ -30,6 +30,7 @@ def data(path, cls):
 
 if not lib.does_asset_exist(LEVEL):
     assert lib.duplicate_asset(SOURCE,LEVEL)
+assert helper.configure_backdrop(3000.0)>0
 assert levels.load_level(LEVEL)
 world=unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()
 world.get_world_settings().set_editor_property('default_game_mode',unreal.ExtractionGameMode)
@@ -95,6 +96,10 @@ for label,p,scale in [
     boundary.set_actor_hidden_in_game(True)
 
 for a in actors.get_all_level_actors():
+    if a.get_class().get_name()=='BP_TreesBackdropActor_C':
+        for c in a.get_components_by_class(unreal.StaticMeshComponent):
+            if c.static_mesh and c.static_mesh.get_name()=='SM_TreesBackdrop':
+                c.set_editor_property('min_draw_distance',3000.0)
     if isinstance(a,unreal.NavMeshBoundsVolume):
         # Surveyed source bounds were only 154 m wide; include perimeter entry/exit routes.
         o,e=a.get_actor_bounds(False)
@@ -153,7 +158,7 @@ for i,(x,y) in enumerate([(-10500,-8500),(-10500,8500),(10500,8500),(10500,-8500
     positions=[]
     for dx,dy in [(0,0),(180,0),(0,180)]:
         p=nearest(center.x+dx,center.y+dy,center.z+120,used,130)
-        used.append(p);positions.append(unreal.Transform(location=p))
+        used.append(p);positions.append(unreal.Transform(location=p,rotation=unreal.Rotator(yaw=math.degrees(math.atan2(-p.y,-p.x)))))
     g=unreal.ExtractionSpawnGroup()
     g.set_editor_property('id','SovietSpawn%d'%i)
     g.set_editor_property('positions',positions)

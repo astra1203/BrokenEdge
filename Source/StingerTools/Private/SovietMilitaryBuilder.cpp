@@ -15,6 +15,32 @@
 #include "FileHelpers.h"
 #include "AssetCompilingManager.h"
 #include "PhysicsEngine/BodySetup.h"
+#include "K2Node_AddComponent.h"
+
+int32 USovietMilitaryBuilder::ConfigureBackdrop(float MinimumDistance)
+{
+	auto* BP = LoadObject<UBlueprint>(
+		nullptr, TEXT("/Game/UVB80/Assets/UVB80/Environment/TreesBackdrop/BP_TreesBackdropActor"));
+	if (!BP || !FMath::IsFinite(MinimumDistance) || MinimumDistance < 0) return 0;
+	TArray<UEdGraph*> Graphs;
+	BP->GetAllGraphs(Graphs);
+	int32 Count = 0;
+	for (auto* Graph : Graphs)
+		if (Graph)
+			for (const auto& Node : Graph->Nodes)
+				if (const auto* Add = Cast<UK2Node_AddComponent>(Node))
+					if (auto* Template = Cast<UStaticMeshComponent>(Add->GetTemplateFromNode()))
+					{
+						Template->Modify();
+						Template->MinDrawDistance = MinimumDistance;
+						++Count;
+					}
+	if (!Count) return 0;
+	FBlueprintEditorUtils::MarkBlueprintAsModified(BP);
+	FKismetEditorUtilities::CompileBlueprint(BP);
+	if (BP->Status == BS_Error || !UEditorLoadingAndSavingUtils::SavePackages({BP->GetOutermost()}, false)) return 0;
+	return Count;
+}
 
 bool USovietMilitaryBuilder::RefreshCollision(UStaticMesh* Mesh)
 {

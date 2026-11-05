@@ -440,6 +440,11 @@ def begin_round():
             check(role + ' visible reachable pickup focus', lambda r=role: player(r, r).get('focus', 'None') != 'None')
             send(role, 'pulse', action='Equip')
         if args.scenario == 'soviet':
+            # The generic aim reset above faces +X. Restore the military spawn's
+            # intended inward view before capturing its entry scene.
+            import math
+            p = player('Server', role)['position']
+            send(role, 'look', yaw=math.degrees(math.atan2(-p[1], -p[0])))
             # Current production starting supply equips M4A1 and retains the carried AK in the pack.
             check(role + ' current starting supply equipped and carried rifle retained', lambda r=role:
                   'M4A1' in player('Server',r).get('weapon','') and

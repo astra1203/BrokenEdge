@@ -16,6 +16,8 @@ public:
 	/** Rebuild physics and navigation caches after changing a mesh collision trace policy. */
 	UFUNCTION(BlueprintCallable)
 	static bool RefreshCollision(class UStaticMesh* Mesh);
+	UFUNCTION(BlueprintCallable)
+	static int32 ConfigureBackdrop(float MinimumDistance);
 	/** Ground position or invalid (NaN); tests floor, capsule clearance and optional nav projection. */
 	UFUNCTION(BlueprintCallable)
 	static FVector ProbeGround(UObject* WorldContext, FVector Position, bool RequireNavigation);

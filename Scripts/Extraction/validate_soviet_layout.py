@@ -10,6 +10,11 @@ world=unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world
 actors=unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 helper=unreal.SovietMilitaryBuilder
 definition=unreal.load_asset('/Game/Extraction/Maps/DA_SovietMilitaryGameplay')
+backdrops=[c for a in actors.get_all_level_actors() if a.get_class().get_name()=='BP_TreesBackdropActor_C'
+           for c in a.get_components_by_class(unreal.StaticMeshComponent)
+           if c.static_mesh and c.static_mesh.get_name()=='SM_TreesBackdrop']
+assert backdrops and all(c.get_editor_property('min_draw_distance')>=3000 for c in backdrops), 'Backdrop near culling did not survive reload'
+print('SOVIET_BACKDROP_NEAR_CULL_VERIFIED',len(backdrops))
 points=[]
 for group in definition.get_editor_property('spawn_groups'):
     points.extend((str(group.id)+'_'+str(i),p.translation) for i,p in enumerate(group.positions))
