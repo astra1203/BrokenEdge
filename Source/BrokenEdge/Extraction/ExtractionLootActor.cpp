@@ -237,8 +237,12 @@ void AExtractionLootActor::OnRep_Appearance()
 	}
 	if (UStaticMesh* Asset = Mesh->GetStaticMesh())
 	{
-		const float Scale = (Loose ? LooseSize : ContainerSize) / FMath::Max(
-			1.f, static_cast<float>(Asset->GetBounds().BoxExtent.GetMax() * 2));
+		// 胸挂/背包按模型原尺寸摆放（本身就是真实大小的包），其余散落物统一缩到 LooseSize。
+		const auto* LooseDef = Loose ? UExtractionItemDefinition::Get(LooseDefinition) : nullptr;
+		const float Scale = LooseDef && LooseDef->Kind == EExtractionItemKind::Gear
+			                    ? 1.f
+			                    : (Loose ? LooseSize : ContainerSize) / FMath::Max(
+				                    1.f, static_cast<float>(Asset->GetBounds().BoxExtent.GetMax() * 2));
 		Mesh->SetRelativeScale3D(FVector(Scale));
 		Mesh->SetRelativeLocation(-Asset->GetBounds().Origin * Scale
 			+ FVector(0, 0, Asset->GetBounds().BoxExtent.Z * Scale) + VisualOffset);

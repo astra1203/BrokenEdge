@@ -131,7 +131,7 @@ void UExtractionWidget::Refresh()
 		{
 			const FString Reason = It->UnavailableReason(GS->GetServerWorldTimeSeconds());
 			FString Rule;
-			if (It->Definition.bRequireEmptyPack) Rule = TEXT(" · 需清空背包");
+			if (It->Definition.bRequireEmptyPack) Rule = TEXT(" · 需丢掉背包");
 			ExitsText += FString::Printf(TEXT("%s%s\n%.0f 米 · %s\n\n"), *It->Definition.Label.ToString(), *Rule,
 			                             FVector::Dist2D(PC->GetPawn()->GetActorLocation(), It->GetActorLocation()) /
 			                             100,

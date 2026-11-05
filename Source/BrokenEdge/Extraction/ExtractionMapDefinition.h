@@ -54,7 +54,7 @@ struct BROKENEDGE_API FExtractionExitDefinition
 	// 可成功撤离的总名额，0 表示不限制；使用计数保存在撤离点 Actor 中。
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0"))
 	int32 Capacity = 0;
-	/** 丢包撤：网格内不得留有任何物品，装备槽（武器/头盔/护甲）不计。 */
+	/** 丢包撤：身上不能穿着背包（整包丢掉即可），胸挂、安全箱和其余装备不计。 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bRequireEmptyPack = false;
 	/**

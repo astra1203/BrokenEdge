@@ -461,6 +461,12 @@ namespace ExtractionItems
 	BROKENEDGE_API bool GridOf(const FExtractionContainer& Container, int32 Section, FGrid& Out);
 	// 安全箱本体及其中物品：死亡不掉落，结算时随玩家回到仓库。
 	BROKENEDGE_API bool Protected(const FExtractionItem& Item);
+	// 安全箱（无论是否装备）：局内不能丢弃、不能放进别的容器。
+	BROKENEDGE_API bool IsSafeBox(const FExtractionItem& Item);
+	// 整包取下：把穿着的胸挂/背包连同其网格里的物品原样搬进 Out（Out 变成带装备槽的携行容器，保留自身 Id）。
+	BROKENEDGE_API bool DetachGear(FExtractionContainer& Inventory, const FGuid& Gear, FExtractionContainer& Out, FString& Error);
+	// 整包穿上：Bundle 里的胸挂/背包对应槽位空着时，连同其中物品按原格位搬回 Inventory，Bundle 清空。
+	BROKENEDGE_API bool AttachGear(FExtractionContainer& Inventory, FExtractionContainer& Bundle, FString& Error);
 	// 装备槽按类别与占用检查，网格则按旋转后的尺寸检测分区边界与同分区矩形重叠。
 	BROKENEDGE_API bool Fits(const FExtractionContainer& Container, const FExtractionItem& Item);
 	// 在副本中先合并已有堆叠，再尝试两种朝向逐格放置；全部放下才提交，失败不保留部分堆叠。

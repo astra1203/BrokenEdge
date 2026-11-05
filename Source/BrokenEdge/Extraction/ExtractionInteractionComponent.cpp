@@ -169,6 +169,39 @@ void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootAct
 	{
 		if (Target->Contents.Items.IsEmpty()) return;
 		if (C->GetCombatState() != ECombatState::ECS_Unoccuiped) return;
+		// 整包落地的胸挂/背包：对应装备槽空着就连同里面的东西整包穿上；
+		// 槽位已占用且包里还有东西时打开搜索界面逐件拿（包里的东西直接可见，不用再搜）。
+		if (Target->Contents.GearGrids)
+		{
+			FExtractionContainer Bundle = Target->Contents, Destination = Inventory()->Contents;
+			FString Error;
+			if (ExtractionItems::AttachGear(Destination, Bundle, Error))
+			{
+				const auto Before = Inventory()->Contents;
+				Inventory()->Contents = Destination;
+				if (!Inventory()->SyncWeapons())
+				{
+					Inventory()->Contents = Before;
+					Message = TEXT("武器生成失败");
+					return;
+				}
+				Target->SetContents(Bundle);
+				Inventory()->Changed();
+				Message.Reset();
+				return;
+			}
+			if (Target->Contents.Items.Num() > 1)
+			{
+				auto& Known = Revealed.FindOrAdd(Target->Contents.Id);
+				for (const auto& I : Target->Contents.Items) Known.Add(I.Id);
+				InventoryOpen = true;
+				Loot = Target;
+				SeenRevision = -1;
+				RefreshLootView();
+				GetOwner()->ForceNetUpdate();
+				return;
+			}
+		}
 		const auto& Item = Target->Contents.Items[0];
 		FExtractionItemRequest R;
 		R.Item = Item.Id;
@@ -181,6 +214,10 @@ void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootAct
 					R.Slot = Slot;
 					break;
 				}
+		// 捡装备先看装备槽：没穿胸挂/背包/安全箱时直接穿上，不需要网格里有空位。
+		if (PickDef && PickDef->Kind == EExtractionItemKind::Gear && PickDef->GearSlot >= ExtractionGear::RigSlot
+			&& PickDef->GearSlot <= ExtractionGear::SafeSlot && !Inventory()->Contents.InSlot(PickDef->GearSlot))
+			R.Slot = PickDef->GearSlot;
 		FExtractionContainer Source = Target->Contents, Destination = Inventory()->Contents;
 		FString Error;
 		if (ExtractionItems::Transfer(Source, Destination, R, Error))
@@ -456,8 +493,20 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 	else if (R.Op == EExtractionItemOp::Drop)
 	{
 		if (R.FromLoot || R.ToLoot) return TEXT("请先将物品放入背包");
+		if (ExtractionItems::IsSafeBox(*Item)) return TEXT("安全箱不能丢弃");
 		Dropped = AExtractionLootActor::SpawnContainer(GetWorld(), DropPosition(), true, Item->Definition);
 		if (!Dropped) return TEXT("无法放置地面物品");
+		// 身上穿着的胸挂/背包整包丢：里面的物品原位跟着装备一起落地，捡回来时位置不变。
+		if (Item->Slot == ExtractionGear::RigSlot || Item->Slot == ExtractionGear::BagSlot)
+		{
+			if (!ExtractionItems::DetachGear(Inv->Contents, R.Item, Dropped->Contents, Error))
+			{
+				Dropped->Destroy();
+				return Error;
+			}
+		}
+		else
+		{
 		FExtractionItemRequest Move = R;
 		Move.Slot = -1;
 		Move.AutoPlace = true;
@@ -467,9 +516,11 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 			Dropped->Destroy();
 			return Error;
 		}
+		}
 	}
 	else if (R.Op == EExtractionItemOp::Transfer)
 	{
+		if (R.ToLoot && ExtractionItems::IsSafeBox(*Item)) return TEXT("安全箱不能放进容器");
 		FExtractionContainer& Destination = R.ToLoot ? Loot->Contents : Inv->Contents;
 		if (!ExtractionItems::Transfer(OriginalSource, Destination, R, Error)) return Error;
 	}

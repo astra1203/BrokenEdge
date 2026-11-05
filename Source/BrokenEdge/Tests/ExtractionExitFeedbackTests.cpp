@@ -171,9 +171,10 @@ bool FExtractionExitPersonalFeedback::RunTest(const FString&)
 	Exit->Definition.OpensAfterSeconds = 10;
 	FExtractionItem Item;
 	Item.Id = FGuid::NewGuid();
-	Item.Definition = TEXT("Ammo");
+	// 丢包撤只看身上是否穿着背包。
+	Item.Definition = TEXT("Bag_ALS");
 	Item.Quantity = 1;
-	Item.Slot = -1;
+	Item.Slot = ExtractionGear::BagSlot;
 	A.State->Inventory->Contents.Items.Add(Item);
 
 	F.Update(0);

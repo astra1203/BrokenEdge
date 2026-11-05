@@ -245,6 +245,64 @@ bool ExtractionItems::Protected(const FExtractionItem& Item)
 	return Item.Slot == ExtractionGear::SafeSlot || Item.Slot == ExtractionGear::SafeGrid;
 }
 
+bool ExtractionItems::IsSafeBox(const FExtractionItem& Item)
+{
+	const auto* D = UExtractionItemDefinition::Get(Item.Definition);
+	return D && D->Kind == EExtractionItemKind::Gear && D->GearSlot == ExtractionGear::SafeSlot;
+}
+
+bool ExtractionItems::DetachGear(FExtractionContainer& Inventory, const FGuid& GearId, FExtractionContainer& Out, FString& Error)
+{
+	const auto* Gear = Inventory.Find(GearId);
+	if (!Gear || !Inventory.GearGrids || (Gear->Slot != ExtractionGear::RigSlot && Gear->Slot != ExtractionGear::BagSlot))
+	{
+		Error = TEXT("只能整包丢弃身上的胸挂或背包");
+		return false;
+	}
+	const int32 Grid = ExtractionGear::GridForSlot(Gear->Slot);
+	FExtractionContainer From = Inventory, To = Out;
+	To.GearGrids = true;
+	To.WeaponSlots = true;
+	To.Items.Reset();
+	for (const auto& I : From.Items)
+		if (I.Id == GearId || I.Slot == Grid) To.Items.Add(I);
+	From.Items.RemoveAll([&](const FExtractionItem& I) { return I.Id == GearId || I.Slot == Grid; });
+	if (!Validate(From, Error) || !Validate(To, Error)) return false;
+	++From.Revision;
+	++To.Revision;
+	Inventory = MoveTemp(From);
+	Out = MoveTemp(To);
+	return true;
+}
+
+bool ExtractionItems::AttachGear(FExtractionContainer& Inventory, FExtractionContainer& Bundle, FString& Error)
+{
+	const FExtractionItem* Gear = nullptr;
+	for (const auto& I : Bundle.Items)
+		if (I.Slot == ExtractionGear::RigSlot || I.Slot == ExtractionGear::BagSlot) Gear = &I;
+	if (!Gear || !Bundle.GearGrids || !Inventory.GearGrids || Inventory.InSlot(Gear->Slot))
+	{
+		Error = TEXT("对应装备槽已占用");
+		return false;
+	}
+	const int32 Grid = ExtractionGear::GridForSlot(Gear->Slot);
+	FExtractionContainer To = Inventory, From = Bundle;
+	TArray<FGuid> Moved;
+	for (const auto& I : From.Items)
+		if (I.Id == Gear->Id || I.Slot == Grid)
+		{
+			To.Items.Add(I);
+			Moved.Add(I.Id);
+		}
+	From.Items.RemoveAll([&](const FExtractionItem& I) { return Moved.Contains(I.Id); });
+	if (!Validate(To, Error) || !Validate(From, Error)) return false;
+	++From.Revision;
+	++To.Revision;
+	Inventory = MoveTemp(To);
+	Bundle = MoveTemp(From);
+	return true;
+}
+
 // 装备槽按类别与占用检查，网格则按旋转后的尺寸检测分区边界与同分区矩形重叠。
 bool ExtractionItems::Fits(const FExtractionContainer& Container, const FExtractionItem& Item)
 {

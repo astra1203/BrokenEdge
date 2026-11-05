@@ -112,7 +112,7 @@ public:
 			FString Detail = Available
 				                ? TEXT("可以撤离")
 				                : It->UnavailableReason(GS ? GS->GetServerWorldTimeSeconds() : 0);
-			if (It->Definition.bRequireEmptyPack) Detail += TEXT("  ·  需清空背包");
+			if (It->Definition.bRequireEmptyPack) Detail += TEXT("  ·  需丢掉背包");
 			Text({940, 166.f + Row * 75}, Detail, 13);
 			++Row;
 		}

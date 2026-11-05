@@ -513,15 +513,10 @@ void AExtractionGameMode::UpdateExtraction(double Now)
 		// 地图配置顺序决定首次进入重叠区域时的选择；已有点位即使暂时不可用也保持选中，
 		// 不把另一处撤离点的可用性或停留进度偷偷转移给玩家。
 		FString Blocked = Exit->UnavailableReason(Now);
-		// 丢包撤：网格里留着任何战利品都不放行，装备槽（Slot>=0）不算背包。
-		if (Blocked.IsEmpty() && Exit->Definition.bRequireEmptyPack && PS->Inventory)
-		{
-			int32 Carried = 0;
-			for (const auto& Item : PS->Inventory->Contents.Items)
-				if (Item.Slot < 0 && Item.Quantity > 0) ++Carried;
-			if (Carried > 0)
-				Blocked = FString::Printf(TEXT("丢包撤：请先丢弃背包内 %d 件物资"), Carried);
-		}
+		// 丢包撤：只要求把背包整包丢掉；胸挂、安全箱和其中物品都可以带走。
+		if (Blocked.IsEmpty() && Exit->Definition.bRequireEmptyPack && PS->Inventory
+			&& PS->Inventory->Contents.InSlot(ExtractionGear::BagSlot))
+			Blocked = TEXT("丢包撤：请先丢掉背包");
 		if (!Blocked.IsEmpty())
 		{
 			if (PS->ExtractExitId != Exit->Definition.Id || PS->ExtractBlockedReason != Blocked || PS->ExtractAt != 0)
