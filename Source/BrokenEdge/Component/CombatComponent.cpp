@@ -264,7 +264,10 @@ void UCombatComponent::Fire()
 void UCombatComponent::NotifyLocalShot()
 {
 	if (Character && Character->IsLocallyControlled())
+	{
 		CrosshairShootingFactor = FMath::Min(2.f, CrosshairShootingFactor + .65f);
+		bFreshCrosshairShot = true;
+	}
 }
 
 void UCombatComponent::FireProjectileWeapon()
@@ -845,7 +848,11 @@ void UCombatComponent::SetHUDCrosshairs(float DeltaTime)
 		CrosshairAimFactor = FMath::FInterpTo(CrosshairAimFactor, 0.f, DeltaTime, 30.f);
 	}
 
-	CrosshairShootingFactor = FMath::FInterpTo(CrosshairShootingFactor, 0.f, DeltaTime, 8.f);
+	// Show every new shot for at least one HUD frame. A long frame must not
+	// consume the pulse before it can render; exponential decay is frame-rate independent.
+	if (!bFreshCrosshairShot)
+		CrosshairShootingFactor *= FMath::Exp(-8.f * FMath::Max(0.f, DeltaTime));
+	bFreshCrosshairShot = false;
 	HUDPackage.ShotPulse = CrosshairShootingFactor;
 
 	HUDPackage.CrosshairSpread =

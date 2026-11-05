@@ -296,7 +296,8 @@ private:
 	float CrosshairAimFactor;
 
 	/** 准星射击因子 */
-	float CrosshairShootingFactor;
+	float CrosshairShootingFactor = 0.f;
+	bool bFreshCrosshairShot = false;
 
 	/** HUD数据包 */
 	FHUDPackage HUDPackage;

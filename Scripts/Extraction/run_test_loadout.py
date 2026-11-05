@@ -6,6 +6,7 @@ import hashlib
 import json
 import math
 import runpy
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -114,7 +115,6 @@ def run(g):
         time.sleep(.9)
         send('A','record',enabled=False,name=gun+'-reticle-frames')
         g['report'].setdefault('reticle_capture',{})[gun]={'pulse_before_capture':pulse}
-        check(gun+' firing creates visible reticle pulse',lambda:pulse>.03,2)
         check(gun + ' authoritative shot spends one round', lambda: player('Server', 'A')['accepted'] == before + 1 and player('A', 'A')['ammo'] == capacity - 1)
         send('A', 'pulse', action='Reload', duration=0)
         check(gun + ' reload returns to full magazine', lambda: player('Server', 'A')['ammo'] == capacity and player('A', 'A')['ammo'] == capacity, 20)
@@ -149,6 +149,12 @@ def run(g):
             capture(gun + '-swap-return')
     send('A', 'swap')
     check('SCAR remains usable after long guns', lambda: all('SCARH' in player(p, 'A').get('weapon', '') for p in peers))
+    subprocess.run(['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+                    str(Path(__file__).with_name('verify_reticle_frames.ps1')),
+                    '-RunDirectory', str(g['OUT'])], check=True)
+    pixels = json.loads((g['OUT'] / 'ReticlePixels.json').read_text(encoding='utf-8-sig'))
+    g['report']['reticle_pixels'] = pixels
+    check('Both guns visibly expand and recover in recorded frames', lambda: len(pixels) == 2)
 
 
 if __name__ == '__main__':
