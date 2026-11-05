@@ -111,6 +111,10 @@ Docs/Extraction/Phase7SovietEvidence/diagnostics/ApplySovietVisuals.py whitespac
 Docs/Extraction/Phase7Fix5456Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 Docs/Extraction/Phase7Fix5456Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
 
+# Fixes 57-67 evidence preserves source bytes across Windows checkouts.
+Docs/Extraction/Phase7Fix5767Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Docs/Extraction/Phase7Fix5767Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+
 # Preserve the user's requirement notes verbatim, including trailing blank lines.
 "Docs/复刻三角洲行动的需求.txt" -text whitespace=-blank-at-eof,blank-at-eol,space-before-tab,cr-at-eol
 "Docs/复刻三角洲行动的需求2.txt" -text whitespace=-blank-at-eof,blank-at-eol,space-before-tab,cr-at-eol
