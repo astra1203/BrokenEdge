@@ -69,6 +69,10 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter(const FObjectInitializer& ObjectIniti
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(GetCapsuleComponent());
 	FollowCamera->bUsePawnControlRotation = true;
+	// 射击游戏关掉动态模糊：转镜头时画面不拖影，也压过地图后处理体积里的设置。
+	FollowCamera->PostProcessSettings.bOverride_MotionBlurAmount = true;
+	FollowCamera->PostProcessSettings.MotionBlurAmount = 0.f;
+	FollowCamera->PostProcessBlendWeight = 1.f;
 
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
