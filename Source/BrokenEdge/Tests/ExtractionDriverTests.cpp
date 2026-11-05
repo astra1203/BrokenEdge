@@ -3,6 +3,7 @@
 #include "Misc/AutomationTest.h"
 #include "BrokenEdge/Extraction/ExtractionDoor.h"
 #include "BrokenEdge/Extraction/ExtractionBreakableGlass.h"
+#include "BrokenEdge/Extraction/ExtractionFragGrenade.h"
 #include "BrokenEdge/UI/BrokenEdgeHUD.h"
 #include "BrokenEdge/Extraction/LootingMainView.h"
 #include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
@@ -429,7 +430,8 @@ public:
 									FCollisionQueryParams Query(SCENE_QUERY_STAT(GlassSiteProbe), false, Subject);
 									if (!World->LineTraceSingleByChannel(
 										Ground, Offset + FVector(0, 0, 100), Offset - FVector(0, 0, 1200), ECC_Pawn,
-										Query) || Ground.ImpactNormal.Z < .7f) continue;
+										Query) || Ground.ImpactNormal.Z < .7f)
+										continue;
 									const auto* Capsule = Subject->GetCapsuleComponent();
 									const FVector Standing = Ground.ImpactPoint + FVector(
 										0, 0, Capsule->GetScaledCapsuleHalfHeight() + 3);
@@ -437,10 +439,12 @@ public:
 										Standing, FQuat::Identity, ECC_Pawn,
 										FCollisionShape::MakeCapsule(Capsule->GetScaledCapsuleRadius(),
 										                             Capsule->GetScaledCapsuleHalfHeight()),
-										Query)) continue;
+										Query))
+										continue;
 									const FVector Eye = Standing + FVector(0, 0, Subject->BaseEyeHeight);
 									if (!World->LineTraceSingleByChannel(Sight, Eye, Center, ECC_Visibility, Query) ||
-										Sight.GetActor() != *It) continue;
+										Sight.GetActor() != *It)
+										continue;
 									if (FMath::Abs(Eye.Z - Center.Z) > 120) continue;
 									auto Site = MakeShared<FJsonObject>();
 									Site->SetStringField(TEXT("id"), It->PaneId.ToString());
@@ -449,6 +453,19 @@ public:
 									Site->SetArrayField(TEXT("standing"), VectorJson(Standing));
 									Site->SetArrayField(TEXT("normal"), VectorJson(Normal * Side));
 									Site->SetNumberField(TEXT("distance"), Distance);
+									bool BlastExposed = true;
+									for (const float Lateral : {-20.f, 0.f, 20.f})
+									{
+										const FVector Origin = Ground.ImpactPoint + FVector(-Normal.Y, Normal.X, 0) *
+											Lateral + FVector(0, 0, 26);
+										FHitResult BlastHit;
+										FCollisionQueryParams BlastQuery(
+											SCENE_QUERY_STAT(GlassBlastSiteProbe), true, Subject);
+										BlastExposed &= !World->LineTraceSingleByChannel(
+											BlastHit, Origin, Center, ECC_Visibility,
+											BlastQuery) || BlastHit.GetActor() == *It;
+									}
+									Site->SetBoolField(TEXT("blast_exposed"), BlastExposed);
 									GlassSites.Add(MakeShared<FJsonValueObject>(Site));
 								}
 							if (GlassSites.Num() >= 80) break;
@@ -1951,6 +1968,34 @@ private:
 		State->SetArrayField(TEXT("glass"), Glass);
 		State->SetNumberField(TEXT("glass_count"), PaneCount);
 		State->SetNumberField(TEXT("broken_glass_count"), BrokenCount);
+		int32 LegacyVisible = 0, LegacyBlocking = 0;
+		for (TActorIterator<AActor> It(World); It; ++It)
+		{
+			TInlineComponentArray<UStaticMeshComponent*> LegacyComponents(*It);
+			for (const auto* Component : LegacyComponents)
+				if (Component->GetName().EndsWith(TEXT("_StaticGlass")))
+				{
+					LegacyVisible += Component->IsVisible() ? 1 : 0;
+					LegacyBlocking += Component->GetCollisionEnabled() != ECollisionEnabled::NoCollision ? 1 : 0;
+				}
+		}
+		State->SetNumberField(TEXT("legacy_glass_visible"), LegacyVisible);
+		State->SetNumberField(TEXT("legacy_glass_blocking"), LegacyBlocking);
+		TArray<TSharedPtr<FJsonValue>> Frags;
+		for (TActorIterator<AExtractionFragGrenade> It(World); It; ++It)
+		{
+			auto J = MakeShared<FJsonObject>();
+			J->SetArrayField(TEXT("position"), VectorJson(It->GetActorLocation()));
+			TInlineComponentArray<UStaticMeshComponent*> GrenadeMeshes(*It);
+			for (const auto* Component : GrenadeMeshes)
+				if (Component->GetFName() == TEXT("Visual"))
+				{
+					J->SetStringField(TEXT("mesh"), GetPathNameSafe(Component->GetStaticMesh()));
+					J->SetBoolField(TEXT("visible"), Component->IsVisible());
+				}
+			Frags.Add(MakeShared<FJsonValueObject>(J));
+		}
+		State->SetArrayField(TEXT("frag_grenades"), Frags);
 		for (TActorIterator<AExtractionLadder> It(World); It; ++It)
 			if (It->SourceId.StartsWith(TEXT("Soviet_")))
 			{

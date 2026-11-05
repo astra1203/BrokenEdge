@@ -5,6 +5,7 @@
 #include "Engine/DamageEvents.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Engine/StaticMeshActor.h"
+#include "EngineUtils.h"
 
 AExtractionBreakableGlass::AExtractionBreakableGlass()
 {
@@ -19,9 +20,29 @@ AExtractionBreakableGlass::AExtractionBreakableGlass()
 void AExtractionBreakableGlass::BeginPlay()
 {
 	Super::BeginPlay();
+	SuppressLegacyPane();
 	if (const auto* State = GetWorld()->GetGameState<AExtractionGameState>(); State && State->BrokenGlass.
 		Contains(PaneId))
 		ApplyBroken();
+}
+
+void AExtractionBreakableGlass::SuppressLegacyPane()
+{
+	if (!bReplacesLegacyWindow) return;
+	for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+	{
+		TInlineComponentArray<UStaticMeshComponent*> Components(*It);
+		for (auto* Component : Components)
+			if (Component->GetName().EndsWith(TEXT("_StaticGlass"))
+				&& Component->GetStaticMesh() == Pane->GetStaticMesh()
+				&& Component->GetComponentTransform().Equals(Pane->GetComponentTransform(), .01f))
+			{
+				Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				Component->SetVisibility(false);
+				UE_LOG(LogTemp, Display, TEXT("EXTRACTION_GLASS_LEGACY_SUPPRESS Id=%s Component=%s"),
+				       *PaneId.ToString(), *Component->GetPathName());
+			}
+	}
 }
 
 void AExtractionBreakableGlass::ApplyBroken()

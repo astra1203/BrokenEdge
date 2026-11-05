@@ -30,7 +30,8 @@ for name,expected in [('SovietMilitary/L_SovietMilitaryExtraction',196),('SpaceC
     panes=[a for a in actors.get_all_level_actors() if isinstance(a,unreal.ExtractionBreakableGlass)]
     assert len(panes)==expected,(name,len(panes))
     for pane in panes:
-        ident=str(pane.get_editor_property('pane_id'))
+        ident=unreal.GuidLibrary.conv_guid_to_string(pane.get_editor_property('pane_id'))
+        assert ident.replace('-','').replace('{','').replace('}','').strip('0'),('Invalid pane ID',name)
         assert ident not in ids,ident
         ids.add(ident)
         component=pane.get_editor_property('pane')
@@ -38,7 +39,9 @@ for name,expected in [('SovietMilitary/L_SovietMilitaryExtraction',196),('SpaceC
         assert component.get_collision_enabled()!=unreal.CollisionEnabled.NO_COLLISION,pane.get_name()
         assert pane.get_editor_property('break_sound'),pane.get_name()
     ladders=[a for a in actors.get_all_level_actors() if isinstance(a,unreal.ExtractionLadder) and str(a.get_editor_property('source_id')).startswith('Soviet_')]
-    if name.startswith('Soviet'):assert len(ladders)==3
+    if name.startswith('Soviet'):
+        assert len(ladders)==3
+        assert all(p.get_editor_property('replaces_legacy_window') for p in panes),'Legacy replacements are not owned by native panes'
     report['maps'][name]=dict(panes=len(panes),soviet_ladders=len(ladders))
 out=ROOT/'Saved/Extraction/Fix5767AssetAudit';out.mkdir(parents=True,exist_ok=True)
 (out/'Report.json').write_text(json.dumps(report,indent=2),encoding='utf8')

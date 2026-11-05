@@ -1,6 +1,7 @@
 #include "ExtractionFragGrenade.h"
 #include "ExtractionBreakableGlass.h"
 #include "ExtractionItems.h"
+#include "ExtractionLootActor.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionHealth.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
@@ -13,6 +14,16 @@
 #include "Sound/SoundBase.h"
 #include "TimerManager.h"
 #include "UObject/ConstructorHelpers.h"
+
+namespace
+{
+	void IgnoreLooseLoot(UWorld* World, FCollisionQueryParams& Query)
+	{
+		// Pickup interaction volumes are not physical blast cover. Solid containers remain cover.
+		for (TActorIterator<AExtractionLootActor> It(World); It; ++It)
+			if (It->Loose) Query.AddIgnoredActor(*It);
+	}
+}
 
 AExtractionFragGrenade::AExtractionFragGrenade()
 {
@@ -78,6 +89,7 @@ bool AExtractionFragGrenade::Exposed(const ABrokenEdgeCharacter* Victim, const F
 {
 	FCollisionQueryParams Query(SCENE_QUERY_STAT(ExtractionFragGrenade), false, this);
 	Query.AddIgnoredActor(Victim);
+	IgnoreLooseLoot(GetWorld(), Query);
 	for (const FVector& Point : {Victim->GetActorLocation(), Victim->GetPawnViewLocation()})
 	{
 		FHitResult Hit;
@@ -108,8 +120,14 @@ void AExtractionFragGrenade::Explode()
 	{
 		const FVector Point = Glass->Pane->Bounds.Origin;
 		FCollisionQueryParams Query(SCENE_QUERY_STAT(ExtractionGlassExplosion), true, this);
+		IgnoreLooseLoot(GetWorld(), Query);
 		FHitResult Hit;
-		if (!GetWorld()->LineTraceSingleByChannel(Hit, Origin, Point, ECC_Visibility, Query) || Hit.GetActor() == Glass)
+		const bool Blocked = GetWorld()->LineTraceSingleByChannel(Hit, Origin, Point, ECC_Visibility, Query);
+		UE_LOG(LogTemp, Verbose,
+		       TEXT("EXTRACTION_GLASS_BLAST Id=%s Origin=%s Target=%s Blocker=%s Component=%s Hit=%s"),
+		       *Glass->PaneId.ToString(), *Origin.ToString(), *Point.ToString(), *GetNameSafe(Hit.GetActor()),
+		       *GetNameSafe(Hit.GetComponent()), *Hit.ImpactPoint.ToString());
+		if (!Blocked || Hit.GetActor() == Glass)
 			Glass->Break(Point, Point - Origin);
 	}
 	for (TActorIterator<ABrokenEdgeCharacter> It(GetWorld()); It; ++It)

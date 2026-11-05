@@ -65,12 +65,13 @@ def spawn_pane(key, mesh, materials, transform):
     pane_id, valid = unreal.GuidLibrary.parse_string_to_guid(hashlib.md5(key.encode()).hexdigest())
     assert valid
     actor.set_editor_property('pane_id', pane_id)
+    actor.set_editor_property('replaces_legacy_window','/SovietMilitary/' in key)
     actor.set_editor_property('break_sound', unreal.load_asset('/Game/UVB80/Assets/UVB80/Environment/Sounds/SC_GlassBreak'))
     pane = actor.get_editor_property('pane')
     pane.set_static_mesh(mesh)
     for i,m in enumerate(materials):
         if m: pane.set_material(i,m)
-    report['panes'].append(dict(key=key, id=str(actor.get_editor_property('pane_id')), actor=actor.get_actor_label(),
+    report['panes'].append(dict(key=key, id=hashlib.md5(key.encode()).hexdigest(), actor=actor.get_actor_label(),
                                mesh=mesh.get_path_name(), position=[transform.translation.x, transform.translation.y, transform.translation.z]))
 
 for level in ['/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction',
@@ -94,17 +95,10 @@ for level in ['/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction',
                 transform = component.get_world_transform()
                 if component.get_name().endswith('_StaticGlass'):
                     spawn_pane(actor.get_path_name()+'.'+component.get_name(), mesh, materials, transform)
-                else:
-                    frame = actors.spawn_actor_from_class(unreal.StaticMeshActor, transform.translation, unreal.Rotator())
-                    frame.set_actor_label(actor.get_actor_label()+'_'+component.get_name())
-                    frame.static_mesh_component.set_mobility(unreal.ComponentMobility.MOVABLE)
-                    frame.static_mesh_component.set_static_mesh(mesh)
-                    for i,m in enumerate(materials):
-                        if m: frame.static_mesh_component.set_material(i,m)
-                    frame.static_mesh_component.set_collision_profile_name('BlockAll')
-                    frame.set_actor_transform(transform,False,True)
-                    frame.set_folder_path('Extraction/WindowFrames')
-            actors.destroy_actor(actor)
+                    component.set_visibility(False)
+                    component.set_collision_enabled(unreal.CollisionEnabled.NO_COLLISION)
+            # Building construction scripts own the original child actors and frames.
+            # The native pane suppresses its matching old glass again in BeginPlay.
             continue
         if 'SovietMilitary' in level: continue
         for component in components:

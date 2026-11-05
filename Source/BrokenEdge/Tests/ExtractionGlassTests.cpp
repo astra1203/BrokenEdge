@@ -24,6 +24,18 @@ bool FExtractionGlassTest::RunTest(const FString&)
 	Glass->PaneId = FGuid::NewGuid();
 	Glass->Pane->SetStaticMesh(LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube")));
 	Glass->SetActorScale3D(FVector(.02, 1, 1));
+	auto* Legacy = World->SpawnActor<AActor>();
+	auto* LegacyPane = NewObject<UStaticMeshComponent>(Legacy, TEXT("Frame_StaticGlass"));
+	Legacy->SetRootComponent(LegacyPane);
+	LegacyPane->SetStaticMesh(Glass->Pane->GetStaticMesh());
+	LegacyPane->SetCollisionProfileName(TEXT("BlockAll"));
+	LegacyPane->RegisterComponent();
+	LegacyPane->SetWorldTransform(Glass->Pane->GetComponentTransform());
+	Glass->bReplacesLegacyWindow = true;
+	Glass->DispatchBeginPlay();
+	TestFalse(TEXT("Construction-script replacement hides only the matching old pane"), LegacyPane->IsVisible());
+	TestEqual(TEXT("Old pane cannot leave an invisible collision after breaking"), LegacyPane->GetCollisionEnabled(),
+	          ECollisionEnabled::NoCollision);
 	FHitResult Hit;
 	TestTrue(TEXT("Intact glass blocks a projectile trace"), World->LineTraceSingleByChannel(Hit,
 		         FVector(-100, 0, 0), FVector(100, 0, 0), ECC_Visibility));

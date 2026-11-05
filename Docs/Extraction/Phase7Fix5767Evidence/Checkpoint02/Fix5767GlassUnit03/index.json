@@ -1,0 +1,44 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "889E2AD54156A810768D358BAF408BE3",
+			"instanceName": "DESKTOP-M9PA1SF-49120",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "GameViewer Virtual Display Adapter",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.05-20.54.13",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.015814501792192459,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "BreakableGlass",
+			"fullTestPath": "BrokenEdge.Extraction.World.BreakableGlass",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"889E2AD54156A810768D358BAF408BE3"
+			],
+			"duration": 0.015814501792192459,
+			"dateTime": "2026.11.05-20.54.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

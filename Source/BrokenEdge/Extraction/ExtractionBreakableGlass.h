@@ -19,13 +19,18 @@ public:
 	TObjectPtr<class USoundBase> BreakSound;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UParticleSystem> BreakEffect;
+	/** Imported building construction scripts recreate these panes; this actor owns their runtime replacement. */
+	UPROPERTY(EditAnywhere)
+	bool bReplacesLegacyWindow = false;
 	bool IsBroken() const { return bBroken; }
 	bool Break(const FVector& Impact, const FVector& Direction);
 	void ApplyBroken();
 	void PlayBreakEffect(const FVector& Impact, const FVector& Direction);
 	virtual void BeginPlay() override;
-	virtual float TakeDamage(float Amount, const FDamageEvent& Event, AController* DamageInstigator, AActor* Causer) override;
+	virtual float TakeDamage(float Amount, const FDamageEvent& Event, AController* DamageInstigator,
+	                         AActor* Causer) override;
 
 private:
+	void SuppressLegacyPane();
 	bool bBroken = false;
 };
