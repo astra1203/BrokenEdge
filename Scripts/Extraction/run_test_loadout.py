@@ -77,12 +77,19 @@ def run(g):
         send('A', 'inventory', open=False)
         wait(lambda: player('Server', 'A')['combat_state'] == 0, 'equip finished')
         capture(gun + '-hip')
-        send('A','look',yaw=0,pitch=-60)
-        time.sleep(.3)
+        # Include the entire world body and its ground shadow, instead of a
+        # downward first-person crop which can leave the shadow behind camera.
+        actual=player('A','A')['position']
+        send('A','world_camera',position=[actual[0]-400,actual[1]-300,actual[2]+400],
+             target=[actual[0],actual[1],actual[2]-80],field_of_view=70)
+        time.sleep(.6)
         send('A','screenshot',name=gun+'-ground-shadow')
+        send('A','camera',target='')
         send('A','look',yaw=0,pitch=0)
         check(gun+' hip crosshair is visible',lambda:player('A','A').get('crosshair_visible'))
-        send('A', 'pulse', action='Aim', duration=5)
+        # Keep input held across screenshot encoding and evidence serialization.
+        # Release explicitly below; a five-second pulse can expire mid-check.
+        send('A', 'pulse', action='Aim', duration=30)
         check(gun + ' ADS completes on owner and authority', lambda: all(player(p, 'A')['aim_alpha'] > .99 for p in ['A', 'Server']))
         capture(gun + '-ads')
         check(gun+' ADS hides screen crosshair',lambda:not player('A','A').get('crosshair_visible'))
@@ -98,9 +105,16 @@ def run(g):
             check('Leaving scope restores first-person gun', lambda: not player('A', 'A')['fp_scope_active']
                   and player('A', 'A')['fp_weapon_visible'])
         before = player('Server', 'A')['accepted']
+        # Native per-frame recording captures the peak even if the command-file
+        # polling interval misses a brief render frame.
+        send('A','record',enabled=True,name=gun+'-reticle-frames')
+        time.sleep(.15)
         send('A', 'pulse', action='Fire', duration=0)
-        check(gun+' firing creates visible reticle pulse',lambda:player('A','A').get('crosshair_shot_pulse',0)>.03,2)
-        send('A','screenshot',name=gun+'-firing-reticle')
+        pulse=player('A','A').get('crosshair_shot_pulse',0)
+        time.sleep(.9)
+        send('A','record',enabled=False,name=gun+'-reticle-frames')
+        g['report'].setdefault('reticle_capture',{})[gun]={'pulse_before_capture':pulse}
+        check(gun+' firing creates visible reticle pulse',lambda:pulse>.03,2)
         check(gun + ' authoritative shot spends one round', lambda: player('Server', 'A')['accepted'] == before + 1 and player('A', 'A')['ammo'] == capacity - 1)
         send('A', 'pulse', action='Reload', duration=0)
         check(gun + ' reload returns to full magazine', lambda: player('Server', 'A')['ammo'] == capacity and player('A', 'A')['ammo'] == capacity, 20)

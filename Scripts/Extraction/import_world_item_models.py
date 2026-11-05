@@ -2,6 +2,7 @@
 import gc
 import hashlib
 import json
+import sys
 from pathlib import Path
 import unreal
 
@@ -80,6 +81,9 @@ for ident in ['Safe_Basic','Safe_Advanced','Safe_Premium','Safe_Field']:
     report['items'][ident]=dict(mesh=safe.get_path_name())
     report['substitutions'][ident]=dict(reason='Portable scale of a textured lockbox; no official dropped mesh provided.')
 
+sys.path.insert(0,str(ROOT/'Scripts/Extraction'))
+from configure_world_item_materials import repair
+report['material_usage']=repair()
 report['audit']=[]
 for path in lib.list_assets('/Game/Extraction/Items',False,False):
     definition=unreal.load_asset(path)

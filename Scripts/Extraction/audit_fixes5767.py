@@ -17,6 +17,8 @@ for path in lib.list_assets('/Game/Extraction/Items',False,False):
         assert not mesh.get_path_name().startswith('/Engine/BasicShapes/'),path
         materials=mesh.get_editor_property('static_materials')
         assert materials and all(m.material_interface for m in materials),path
+        if mesh.get_editor_property('nanite_settings').enabled:
+            assert all(m.material_interface.get_base_material().get_editor_property('used_with_nanite') for m in materials),('Nanite material would fall back',path)
         size=mesh.get_bounding_box().max-mesh.get_bounding_box().min
         scale=item.get_editor_property('world_scale')
         if scale>0:assert 1<max(size.x,size.y,size.z)*scale<250,(path,size,scale)
