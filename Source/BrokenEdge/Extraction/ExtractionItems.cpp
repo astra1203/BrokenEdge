@@ -169,6 +169,13 @@ bool ExtractionItems::GridOf(const FExtractionContainer& Container, int32 Sectio
 {
 	Out = FGrid();
 	Out.Section = Section;
+	if (Section == ExtractionGear::PocketGrid)
+	{
+		if (!Container.PersonalPockets) return false;
+		Out.Width = Out.Cells = 5;
+		for (int32 X = 0; X < 5; ++X) Out.Pockets.Add(FIntRect(X, 0, X + 1, 1));
+		return true;
+	}
 	if (!Container.GearGrids)
 	{
 		if (Section != -1) return false;
@@ -197,7 +204,10 @@ bool ExtractionItems::GridOf(const FExtractionContainer& Container, int32 Sectio
 
 // 每种胸挂、背包的口袋排法（项目自定，总格数与描述一致）：胸挂以竖排弹匣袋为主，
 // 背包是一个主仓加若干侧袋/顶袋。坐标为 (列, 行, 宽, 高)。
-namespace { bool GLegacyGearGrids = false; }
+namespace
+{
+	bool GLegacyGearGrids = false;
+}
 
 ExtractionItems::FLegacyGridScope::FLegacyGridScope(bool bLegacy) : bPrevious(GLegacyGearGrids)
 {
@@ -216,10 +226,17 @@ const TArray<FIntRect>* ExtractionItems::PocketLayout(FName Definition)
 		// 简易携行弹挂 10：五个 1×2 弹匣袋。
 		{TEXT("Rig_Ammo"), {R(0, 0, 1, 2), R(1, 0, 1, 2), R(2, 0, 1, 2), R(3, 0, 1, 2), R(4, 0, 1, 2)}},
 		// 突击者战术背心 16：四个 1×2 弹匣袋 + 两个 2×2 杂物袋。
-		{TEXT("Rig_Assault"), {R(0, 0, 1, 2), R(1, 0, 1, 2), R(2, 0, 1, 2), R(3, 0, 1, 2), R(4, 0, 2, 2), R(6, 0, 2, 2)}},
+		{
+			TEXT("Rig_Assault"),
+			{R(0, 0, 1, 2), R(1, 0, 1, 2), R(2, 0, 1, 2), R(3, 0, 1, 2), R(4, 0, 2, 2), R(6, 0, 2, 2)}
+		},
 		// 飓风战术胸挂 22：上排六个 1×2 弹匣袋，下排两个 2×2 和一个 2×1。
-		{TEXT("Rig_Hurricane"), {R(0, 0, 1, 2), R(1, 0, 1, 2), R(2, 0, 1, 2), R(3, 0, 1, 2), R(4, 0, 1, 2), R(5, 0, 1, 2),
-		                         R(0, 2, 2, 2), R(2, 2, 2, 2), R(4, 2, 2, 1)}},
+		{
+			TEXT("Rig_Hurricane"), {
+				R(0, 0, 1, 2), R(1, 0, 1, 2), R(2, 0, 1, 2), R(3, 0, 1, 2), R(4, 0, 1, 2), R(5, 0, 1, 2),
+				R(0, 2, 2, 2), R(2, 2, 2, 2), R(4, 2, 2, 1)
+			}
+		},
 		// 大型登山包 16：4×3 主仓 + 2×2 顶袋。
 		{TEXT("Bag_Climb"), {R(0, 0, 4, 3), R(0, 3, 2, 2)}},
 		// 野战徒步背包 24：6×3 主仓 + 两个 3×1 前袋。
@@ -235,7 +252,9 @@ const TArray<FIntRect>* ExtractionItems::PocketLayout(FName Definition)
 TArray<ExtractionItems::FGrid> ExtractionItems::Grids(const FExtractionContainer& Container)
 {
 	TArray<FGrid> Result;
-	for (int32 Section : {ExtractionGear::RigGrid, ExtractionGear::BagGrid, ExtractionGear::SafeGrid})
+	for (int32 Section : {
+		     ExtractionGear::PocketGrid, ExtractionGear::RigGrid, ExtractionGear::BagGrid, ExtractionGear::SafeGrid
+	     })
 		if (FGrid Grid; GridOf(Container, Section, Grid)) Result.Add(Grid);
 	return Result;
 }
@@ -251,10 +270,12 @@ bool ExtractionItems::IsSafeBox(const FExtractionItem& Item)
 	return D && D->Kind == EExtractionItemKind::Gear && D->GearSlot == ExtractionGear::SafeSlot;
 }
 
-bool ExtractionItems::DetachGear(FExtractionContainer& Inventory, const FGuid& GearId, FExtractionContainer& Out, FString& Error)
+bool ExtractionItems::DetachGear(FExtractionContainer& Inventory, const FGuid& GearId, FExtractionContainer& Out,
+                                 FString& Error)
 {
 	const auto* Gear = Inventory.Find(GearId);
-	if (!Gear || !Inventory.GearGrids || (Gear->Slot != ExtractionGear::RigSlot && Gear->Slot != ExtractionGear::BagSlot))
+	if (!Gear || !Inventory.GearGrids || (Gear->Slot != ExtractionGear::RigSlot && Gear->Slot !=
+		ExtractionGear::BagSlot))
 	{
 		Error = TEXT("只能整包丢弃身上的胸挂或背包");
 		return false;
@@ -344,8 +365,9 @@ bool ExtractionItems::AutoPlace(FExtractionContainer& Container, FExtractionItem
 	else if (Container.GearGrids)
 	{
 		FGrid Probe;
-		if (GridOf(Container, ExtractionGear::RigGrid, Probe) || GridOf(Container, ExtractionGear::BagGrid, Probe))
-			Sections = {ExtractionGear::RigGrid, ExtractionGear::BagGrid};
+		if (Container.PersonalPockets || GridOf(Container, ExtractionGear::RigGrid, Probe) || GridOf(
+			Container, ExtractionGear::BagGrid, Probe))
+			Sections = {ExtractionGear::RigGrid, ExtractionGear::BagGrid, ExtractionGear::PocketGrid};
 		else Sections = {ExtractionGear::SafeGrid};
 	}
 	else Sections.Add(-1);
@@ -417,7 +439,9 @@ bool ExtractionItems::Sort(FExtractionContainer& Container)
 		{
 			TArray<FExtractionItem> Section;
 			for (int32 Index = Result.Items.Num() - 1; Index >= 0; --Index)
-				if (Result.Items[Index].Slot == Grid.Section) Section.Add(Result.Items[Index]), Result.Items.RemoveAt(Index);
+				if (Result.Items[Index].Slot == Grid.Section)
+					Section.Add(Result.Items[Index]), Result.Items.
+					                                         RemoveAt(Index);
 			Section.Sort([&](const FExtractionItem& A, const FExtractionItem& B)
 			{
 				const auto* DA = UExtractionItemDefinition::Get(A.Definition);
@@ -488,10 +512,96 @@ bool ExtractionItems::Validate(const FExtractionContainer& Container, FString& E
 	return true;
 }
 
-// 在来源/目标副本中执行移动、拆分或合并；同容器移动也走统一校验，成功后才替换原容器。
+namespace
+{
+	// Keep the displaced instance intact. Never merge it or rearrange a third item.
+	bool SwapGridItems(FExtractionContainer& Source, FExtractionContainer& Destination,
+	                   const FExtractionItemRequest& Request, FString& Error)
+	{
+		const auto* A = Source.Find(Request.Item);
+		const auto* B = Destination.Find(Request.SwapWith);
+		if (!A || !B || A->Id == B->Id || A->Slot >= 0 || B->Slot >= 0
+			|| Request.Quantity != A->Quantity || Request.Slot != B->Slot || Request.MergeInto.IsValid())
+		{
+			Error = TEXT("只能交换网格中的完整物品");
+			return false;
+		}
+		const FExtractionItem Original = *A;
+		FExtractionItem Displaced = *B;
+		const bool Same = &Source == &Destination;
+		FExtractionContainer From = Source, To = Destination;
+		auto& Target = Same ? From : To;
+		Target.Items.RemoveAll([&](const FExtractionItem& I) { return I.Id == Displaced.Id; });
+		FExtractionItemRequest Move = Request;
+		Move.Op = EExtractionItemOp::Transfer;
+		Move.AutoPlace = false;
+		Move.Cell = Displaced.Cell;
+		Move.SwapWith.Invalidate();
+		if (!ExtractionItems::Transfer(From, Target, Move, Error))
+		{
+			Error = TEXT("目标位置放不下拖动的物品");
+			return false;
+		}
+		Displaced.Slot = Original.Slot;
+		Displaced.Cell = Original.Cell;
+		const bool Rotation = Displaced.Rotated;
+		bool Placed = false;
+		for (int32 Turn = 0; Turn < 2 && !Placed; ++Turn)
+		{
+			Displaced.Rotated = Rotation != (Turn != 0);
+			Placed = ExtractionItems::Fits(From, Displaced);
+		}
+		ExtractionItems::FGrid Grid;
+		if (!Placed && ExtractionItems::GridOf(From, Original.Slot, Grid))
+			for (int32 Turn = 0; Turn < 2 && !Placed; ++Turn)
+			{
+				Displaced.Rotated = Rotation != (Turn != 0);
+				for (int32 Y = 0; Y < Grid.Rows() && !Placed; ++Y)
+					for (int32 X = 0; X < Grid.Width && !Placed; ++X)
+					{
+						Displaced.Cell = FIntPoint(X, Y);
+						Placed = ExtractionItems::Fits(From, Displaced);
+					}
+			}
+		if (!Placed)
+		{
+			Error = TEXT("来源分区没有空间放回被交换物品");
+			return false;
+		}
+		From.Items.Add(Displaced);
+		if (!ExtractionItems::Validate(From, Error) || (!Same && !ExtractionItems::Validate(To, Error))) return false;
+		if (!Same)
+		{
+			TSet<FGuid> Ids;
+			for (const auto& I : From.Items)
+			{
+				Ids.Add(I.Id);
+				for (const auto& Part : I.Attachments) Ids.Add(Part.Id);
+			}
+			for (const auto& I : To.Items)
+			{
+				bool Conflict = Ids.Contains(I.Id);
+				for (const auto& Part : I.Attachments) Conflict |= Ids.Contains(Part.Id);
+				if (Conflict)
+				{
+					Error = TEXT("物品身份冲突");
+					return false;
+				}
+			}
+		}
+		From.Revision = Source.Revision + 1;
+		To.Revision = Destination.Revision + 1;
+		Source = MoveTemp(From);
+		if (!Same) Destination = MoveTemp(To);
+		return true;
+	}
+}
+
+// 在来源/目标副本中执行移动、拆分、合并或交换；成功后才替换原容器。
 bool ExtractionItems::Transfer(FExtractionContainer& Source, FExtractionContainer& Destination,
                                const FExtractionItemRequest& Request, FString& Error)
 {
+	if (Request.Op == EExtractionItemOp::Swap) return SwapGridItems(Source, Destination, Request, Error);
 	const auto* Original = Source.Find(Request.Item);
 	if (!Original || Request.Quantity <= 0 || Request.Quantity > Original->Quantity)
 	{
@@ -499,7 +609,7 @@ bool ExtractionItems::Transfer(FExtractionContainer& Source, FExtractionContaine
 		return false;
 	}
 	const auto* D = UExtractionItemDefinition::Get(Original->Definition);
-	if (!D || Request.Slot < ExtractionGear::SafeGrid || Request.Slot > ExtractionGear::SafeSlot)
+	if (!D || Request.Slot < ExtractionGear::PocketGrid || Request.Slot > ExtractionGear::SafeSlot)
 	{
 		Error = TEXT("目标位置无效");
 		return false;
@@ -519,6 +629,17 @@ bool ExtractionItems::Transfer(FExtractionContainer& Source, FExtractionContaine
 	FExtractionContainer& Target = Same ? From : To;
 	FExtractionItem Moving = *Original;
 	Moving.Quantity = Request.Quantity;
+	if (Request.MergeInto.IsValid())
+	{
+		const auto* Merge = Target.Find(Request.MergeInto);
+		if (!Merge || Merge->Id == Moving.Id || Merge->Definition != Moving.Definition || D->MaxStack <= 1
+			|| Merge->Quantity >= D->MaxStack)
+		{
+			Error = TEXT("目标物品无法堆叠或已满");
+			return false;
+		}
+		Moving.Quantity = FMath::Min(Moving.Quantity, D->MaxStack - Merge->Quantity);
+	}
 	if (Moving.Quantity == Original->Quantity)
 		From.Items.RemoveAll([&](const FExtractionItem& I)
 		{

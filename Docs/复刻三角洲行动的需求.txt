@@ -1,0 +1,33 @@
+（逆向工具）D:\SourceFiles\Other\rea
+（三角洲行动客户端）C:\SteamLibrary\steamapps\common\Delta Force
+（三角洲行动解包资产）D:\司晨\源代码和素材\三角洲解包资产
+
+1、机瞄的时候取消准星显示
+2、加注释
+3、出生点撤离点位置不对
+4、地图缺中控、火箭发射区、丢包撤
+5、开桥、二员通道
+6、钥匙房、钥匙卡
+7、物资刷新、大保险小保险
+
+先复刻地图，复刻航天基地的沙地、宿舍和二员通道等和官方地图未复刻的地方，参考资料：（逆向工具）D:\SourceFiles\Other\rea
+（三角洲行动客户端）C:\SteamLibrary\steamapps\common\Delta Force
+（三角洲行动解包资产）D:\司晨\源代码和素材\三角洲解包资产
+
+
+
+烟雾效果
+
+跑射延迟、跑步的时候无法开火，拿着SCAR时跑步时不会收枪还是端着枪
+
+(X=1280.000000,Y=-1410.000000,Z=1480.000000)这个位置的附件门进不去
+
+按TAB键打开背包ai用的是旧版输入，可以优化成新版的增强输入
+
+打开背包在Tick里面可能存在问题
+
+按1或2切枪的逻辑不对，
+
+AExtractionLootActor没有蓝图子类
+UExtractionWidget没有蓝图子类
+UExtractionWidget目前放在ExtractionPlayerController里面共用同一个文件

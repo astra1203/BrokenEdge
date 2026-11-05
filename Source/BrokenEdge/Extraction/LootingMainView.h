@@ -135,6 +135,7 @@ private:
  bool ResolveDrop(FVector2D Screen, FExtractionItemRequest& Out, UCanvasPanel*& Canvas, FVector2D& At, FVector2D& Size) const;
  void HidePreview();
  UPROPERTY(Transient) TObjectPtr<UBorder> DropPreview;
+ UPROPERTY(Transient) TObjectPtr<UBorder> ReturnPreview;
  UPROPERTY(Transient) TArray<TObjectPtr<ULootingWidgetPart>> EquipmentTargets;
  UPROPERTY(Transient) TObjectPtr<ULootingDragDropOperation> ActiveDrag;
  FGuid Selected;

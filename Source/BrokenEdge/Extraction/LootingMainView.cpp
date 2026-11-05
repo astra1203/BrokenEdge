@@ -69,6 +69,7 @@ namespace
 
 	FString GridTitle(const FExtractionContainer& C, const ExtractionItems::FGrid& Grid)
 	{
+		if (Grid.Section == ExtractionGear::PocketGrid) return TEXT("口袋 · 5 个独立单格");
 		const auto* Gear = C.InSlot(ExtractionGear::SlotForGrid(Grid.Section));
 		const auto* D = Gear ? UExtractionItemDefinition::Get(Gear->Definition) : nullptr;
 		const TCHAR* Kind = Grid.Section == ExtractionGear::RigGrid
@@ -884,7 +885,15 @@ bool ULootingMainView::ResolveDrop(FVector2D Screen, FExtractionItemRequest& R, 
 				&& InGrid.Y >= Other.Cell.Y && InGrid.X < Other.Cell.X + Other.Extent().X
 				&& InGrid.Y < Other.Cell.Y + Other.Extent().Y)
 			{
-				R.MergeInto = Other.Id;
+				const auto* D = UExtractionItemDefinition::Get(Item->Definition);
+				if (D && Other.Definition == Item->Definition && D->MaxStack > Other.Quantity)
+					R.MergeInto = Other.Id;
+				else
+				{
+					R.Op = EExtractionItemOp::Swap;
+					R.SwapWith = Other.Id;
+					R.Cell = Other.Cell;
+				}
 				break;
 			}
 		Canvas = Panel->ItemCanvas;
@@ -898,6 +907,7 @@ bool ULootingMainView::ResolveDrop(FVector2D Screen, FExtractionItemRequest& R, 
 void ULootingMainView::HidePreview()
 {
 	if (DropPreview) DropPreview->SetVisibility(ESlateVisibility::Collapsed);
+	if (ReturnPreview) ReturnPreview->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void ULootingMainView::DragOver(FVector2D Screen)
@@ -915,24 +925,41 @@ void ULootingMainView::DragOver(FVector2D Screen)
 	const auto* Source = Container(SelectedLoot);
 	const auto* Item = Source ? Source->Find(Selected) : nullptr;
 	const auto* Target = Container(R.ToLoot);
-	bool bValid = false;
-	if (Item && Target && !R.MergeInto.IsValid())
-	{
-		FExtractionContainer Copy = *Target;
-		// 整组移动时原位置会空出来；拆分时原物品仍在，不能扣掉。
-		if (R.ToLoot == SelectedLoot && R.Quantity >= Item->Quantity)
-			Copy.Items.RemoveAll([this](const FExtractionItem& X) { return X.Id == Selected; });
-		FExtractionItem Moved = *Item;
-		Moved.Slot = R.Slot;
-		Moved.Cell = R.Cell;
-		Moved.Rotated = R.Rotated;
-		bValid = ExtractionItems::Fits(Copy, Moved);
-	}
-	const FLinearColor Color = R.MergeInto.IsValid()
-		                           ? ExtractionUIStyle::Accent()
-		                           : bValid
-		                           ? ExtractionUIStyle::Hex(TEXT("5DBB72"))
-		                           : ExtractionUIStyle::Hex(TEXT("EA5A50"));
+	FExtractionContainer From = Source ? *Source : FExtractionContainer();
+	FExtractionContainer To = Target ? *Target : FExtractionContainer();
+	FString Error;
+	const bool bValid = Item && Target && ExtractionItems::Transfer(From, R.ToLoot == SelectedLoot ? From : To, R, Error);
+	Text(StatusText, bValid ? R.Op == EExtractionItemOp::Swap ? TEXT("交换物品 · 蓝框显示放回位置")
+		: R.MergeInto.IsValid() ? TEXT("合并堆叠 · 多余数量留在原处") : TEXT("移动物品") : Error);
+	const FLinearColor Color = !bValid ? ExtractionUIStyle::Hex(TEXT("EA5A50"))
+		: R.Op == EExtractionItemOp::Swap ? ExtractionUIStyle::Hex(TEXT("57B7EC"))
+		: R.MergeInto.IsValid() ? ExtractionUIStyle::Accent() : ExtractionUIStyle::Hex(TEXT("5DBB72"));
+	if (ReturnPreview) ReturnPreview->SetVisibility(ESlateVisibility::Collapsed);
+	if (bValid && R.Op == EExtractionItemOp::Swap)
+		if (const auto* Returned = From.Find(R.SwapWith))
+		{
+			auto* Panel = SelectedLoot ? LootContainer.Get() : OwnContainer.Get();
+			FVector2D Extent;
+			for (const auto& View : GridLayout(From, Extent))
+				if (Panel && View.Grid.Section == Returned->Slot)
+				{
+					if (!ReturnPreview)
+					{
+						ReturnPreview = WidgetTree->ConstructWidget<UBorder>();
+						ReturnPreview->SetBrush(ExtractionUIStyle::Panel(FLinearColor::White, 3.f, FLinearColor::White, 2.f));
+					}
+					ReturnPreview->SetBrushColor(Color.CopyWithNewOpacity(.3f));
+					if (ReturnPreview->GetParent() != Panel->ItemCanvas)
+					{
+						ReturnPreview->RemoveFromParent();
+						Panel->ItemCanvas->AddChildToCanvas(ReturnPreview)->SetZOrder(100);
+					}
+					auto* S = CastChecked<UCanvasPanelSlot>(ReturnPreview->Slot);
+					S->SetPosition(FVector2D(Returned->Cell.X, View.Top + Returned->Cell.Y) * CellSize);
+					S->SetSize(FVector2D(Returned->Extent()) * CellSize - FVector2D(2));
+					ReturnPreview->SetVisibility(ESlateVisibility::HitTestInvisible);
+				}
+		}
 	if (!DropPreview)
 	{
 		DropPreview = WidgetTree->ConstructWidget<UBorder>();

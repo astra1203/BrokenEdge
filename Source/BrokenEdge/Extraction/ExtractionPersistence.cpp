@@ -52,11 +52,12 @@ namespace
 	void EquipDefaultGear(FExtractionContainer& Loadout, bool bStarterKit = false)
 	{
 		Loadout.GearGrids = true;
+		Loadout.PersonalPockets = true;
 		TArray<TPair<int32, FName>> Defaults = {TPair<int32, FName>(ExtractionGear::BagSlot, TEXT("Bag_Hike")),
-		                                        TPair<int32, FName>(ExtractionGear::SafeSlot, TEXT("Safe_Field"))};
+		                                        TPair<int32, FName>(ExtractionGear::SafeSlot, TEXT("Safe_Field")),
+		                                        TPair<int32, FName>(ExtractionGear::RigSlot, TEXT("Rig_Assault"))};
 		if (bStarterKit)
-			Defaults.Append({TPair<int32, FName>(ExtractionGear::RigSlot, TEXT("Rig_Pouch")),
-			                 TPair<int32, FName>(2, TEXT("Helmet2")), TPair<int32, FName>(3, TEXT("Vest2"))});
+			Defaults.Append({TPair<int32, FName>(2, TEXT("Helmet2")), TPair<int32, FName>(3, TEXT("Vest2"))});
 		for (const auto& [Slot, Definition] : Defaults)
 		{
 			if (Loadout.InSlot(Slot)) continue;
@@ -253,7 +254,7 @@ bool UExtractionPersistence::Load(const FString& Directory)
 		}
 	}
 	// Preserve exact legacy bytes before tail repair, recovery, or migration.
-	if (State.Sequence > 0 && State.Version < 4)
+	if (State.Sequence > 0 && State.Version < 7)
 	{
 		if (!PreserveLegacyJournal(Files, Journal, ValidEnd, State.Version))
 		{
@@ -350,13 +351,27 @@ bool UExtractionPersistence::Load(const FString& Directory)
 		if (!Commit(MoveTemp(Migrated))) return false;
 		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=6 Repacked=%d"), Moved);
 	}
+	if (State.Version < 7)
+	{
+		FExtractionStoreState Migrated = State;
+		Migrated.Version = 7;
+		for (auto& Profile : Migrated.Profiles)
+		{
+			Profile.View.Loadout.PersonalPockets = true;
+			if (!IsInRaid(Profile.View.Profile)) EquipDefaultGear(Profile.View.Loadout);
+			++Profile.View.Loadout.Revision;
+			++Profile.View.Revision;
+		}
+		if (!Commit(MoveTemp(Migrated))) return false;
+		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=7"));
+	}
 	return Recover();
 }
 
 // 检查存储版本、档案与出战身份唯一性、容器合法性及物品来源；不接受客户端自行拼出的结果状态。
 bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) const
 {
-	if (Candidate.Version < 1 || Candidate.Version > 6 || !Candidate.Id.IsValid()) return false;
+	if (Candidate.Version < 1 || Candidate.Version > 7 || !Candidate.Id.IsValid()) return false;
 	const ExtractionItems::FLegacyGridScope Grids(Candidate.Version < 6);
 	TSet<FGuid> Profiles, Items;
 	for (const auto& P : Candidate.Profiles)
@@ -480,6 +495,14 @@ bool UExtractionPersistence::OpenProfile(FGuid Requested, const FString& Credent
 			return false;
 		}
 		Id = Requested;
+		if (!IsInRaid(Requested) && (!P->View.Loadout.PersonalPockets || !P->View.Loadout.InSlot(ExtractionGear::RigSlot)))
+		{
+			FExtractionStoreState Candidate = State;
+			auto* Updated = ProfileIn(Candidate, Requested);
+			EquipDefaultGear(Updated->View.Loadout);
+			++Updated->View.Revision;
+			if (!Commit(MoveTemp(Candidate))) return false;
+		}
 		return true;
 	}
 	if (!Credential.IsEmpty())
@@ -637,6 +660,7 @@ bool UExtractionPersistence::BeginRaid(const TArray<FGuid>& Profiles, FGuid& Id)
 			return false;
 		}
 		Seen.Add(Key);
+		EquipDefaultGear(P->View.Loadout);
 		FExtractionRaidParticipant Member;
 		Member.Profile = Key;
 		Member.Original = P->View.Loadout;
@@ -745,6 +769,7 @@ bool UExtractionPersistence::Settle(FGuid RaidId, FGuid Profile, EExtractionOutc
 	// 携行装备本体装回出战配置，其余物资入库；装不回去（槽已占用）时一起入库。
 	if (!Kept.IsEmpty()) Deposit(P->View, ReturnGear(P->View.Loadout, Kept));
 	else ++P->View.Revision;
+	EquipDefaultGear(P->View.Loadout);
 	P->View.Result.OverflowCount = P->View.Overflow.Num();
 	R->Closed = !R->Players.ContainsByPredicate([](const auto& V) { return V.Outcome == EExtractionOutcome::None; });
 	return Commit(MoveTemp(Candidate));

@@ -26,7 +26,7 @@ bool FExtractionStartingSupplyTest::RunTest(const FString&)
 	TestEqual(TEXT("Full magazine"), Bag.InSlot(1)->Magazine, 20);
 	TestEqual(TEXT("SCAR reserve supplied"), Bag.Count(TEXT("Ammo76251")), 60);
 	TestEqual(TEXT("M4 reserve supplied"), Bag.Count(TEXT("Ammo55645")), 60);
-	for (int32 Slot : {2, 3, 5})
+	for (int32 Slot : {2, 3, 4, 5})
 		if (!TestNotNull(TEXT("Required protective gear equipped"), Bag.InSlot(Slot))) return false;
 	TestEqual(TEXT("Helmet equipped"), Bag.InSlot(2)->Definition, FName(TEXT("Helmet2")));
 	TestEqual(TEXT("Vest equipped"), Bag.InSlot(3)->Definition, FName(TEXT("Vest2")));
@@ -44,6 +44,8 @@ bool FExtractionStartingSupplyTest::RunTest(const FString&)
 	}
 	TestEqual(TEXT("Sniper reserve"), Bag.Count(TEXT("Ammo_338")), 20);
 	TestEqual(TEXT("Shotgun reserve"), Bag.Count(TEXT("Ammo_12G")), 24);
+	TestEqual(TEXT("Two starting frag grenades"), Bag.Count(TEXT("FragGrenade")), 2);
+	TestTrue(TEXT("Personal pockets enabled"), Bag.PersonalPockets);
 	TestTrue(TEXT("Empty overflow"), Overflow.Items.IsEmpty());
 	FString Error;
 	TestTrue(TEXT("Inventory validates"), ExtractionItems::Validate(Bag, Error));
@@ -63,6 +65,7 @@ bool FExtractionStartingSupplyTest::RunTest(const FString&)
 		BeforeIds.Difference(AfterIds).IsEmpty() && AfterIds.Difference(BeforeIds).IsEmpty());
 	TestEqual(TEXT("Repeated grant does not add reserve"), Bag.Count(TEXT("Ammo55645")), 60);
 	TestEqual(TEXT("Repeated grant does not add sniper"), Bag.Count(TEXT("BoltSniper")), 1);
+	TestEqual(TEXT("Repeated grant does not add grenades"), Bag.Count(TEXT("FragGrenade")), 2);
 
 	FExtractionContainer Full;
 	Full.Id = FGuid::NewGuid();

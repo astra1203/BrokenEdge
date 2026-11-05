@@ -471,7 +471,8 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 			RefreshLootView();
 			return TEXT("容器已变化，请重试");
 		}
-		if ((R.FromLoot && !IsRevealed(R.Item)) || (R.ToLoot && R.MergeInto.IsValid() && !IsRevealed(R.MergeInto)))
+		if ((R.FromLoot && !IsRevealed(R.Item)) || (R.ToLoot && R.MergeInto.IsValid() && !IsRevealed(R.MergeInto))
+			|| (R.ToLoot && R.Op == EExtractionItemOp::Swap && !IsRevealed(R.SwapWith)))
 			return TEXT("物品尚未搜索");
 	}
 	// 整理不针对单件物品：只重排自己携行网格里的物品，装备槽不动，医疗中不整理以免挪走正在用的物品。
@@ -486,7 +487,7 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 	FExtractionContainer& OriginalSource = R.FromLoot ? Loot->Contents : Inv->Contents;
 	const auto* Item = OriginalSource.Find(R.Item);
 	if (!Item || R.Quantity < 1 || R.Quantity > Item->Quantity) return TEXT("物品已变化或数量无效");
-	if (R.Item == MedicalItem || R.MergeInto == MedicalItem && MedicalItem.IsValid()) return TEXT("物品正在使用");
+	if (MedicalItem.IsValid() && (R.Item == MedicalItem || R.MergeInto == MedicalItem || R.SwapWith == MedicalItem)) return TEXT("物品正在使用");
 	if (R.Op == EExtractionItemOp::Use)
 		return R.FromLoot ? TEXT("请先拾取医疗包") : StartMedical(R.Item);
 	auto* C = Character();
@@ -531,10 +532,13 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 		}
 		}
 	}
-	else if (R.Op == EExtractionItemOp::Transfer)
+	else if (R.Op == EExtractionItemOp::Transfer || R.Op == EExtractionItemOp::Swap)
 	{
 		if (R.ToLoot && ExtractionItems::IsSafeBox(*Item)) return TEXT("安全箱不能放进容器");
 		FExtractionContainer& Destination = R.ToLoot ? Loot->Contents : Inv->Contents;
+		if (R.Op == EExtractionItemOp::Swap && R.FromLoot)
+			if (const auto* Other = Destination.Find(R.SwapWith); Other && ExtractionItems::IsSafeBox(*Other))
+				return TEXT("安全箱不能放进容器");
 		if (!ExtractionItems::Transfer(OriginalSource, Destination, R, Error)) return Error;
 	}
 	else return TEXT("无效操作");
@@ -549,7 +553,7 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 	if (Loot)
 	{
 		// The depositor knows their own deposited items; other viewers still search independently.
-		if (R.ToLoot)
+		if (R.ToLoot || R.Op == EExtractionItemOp::Swap)
 			for (const auto& I : Loot->Contents.Items)
 				if (!BeforeLoot.Find(I.Id)) Revealed.FindOrAdd(Loot->Contents.Id).Add(I.Id);
 		Loot->Changed();

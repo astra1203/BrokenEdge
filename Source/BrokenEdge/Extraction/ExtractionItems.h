@@ -18,7 +18,7 @@ enum class EExtractionItemKind : uint8 { Weapon, Ammo, Medical, Valuable, Armor,
 namespace ExtractionGear
 {
 	constexpr int32 RigSlot = 4, BagSlot = 5, SafeSlot = 6;
-	constexpr int32 BagGrid = -1, RigGrid = -2, SafeGrid = -3;
+	constexpr int32 BagGrid = -1, RigGrid = -2, SafeGrid = -3, PocketGrid = -4;
 	// 网格分区对应的装备槽；非网格分区返回 -1。
 	constexpr int32 SlotForGrid(int32 Grid)
 	{
@@ -312,6 +312,9 @@ struct BROKENEDGE_API FExtractionContainer
 	/** 玩家携行容器：网格由装备的胸挂/背包/安全箱决定，Width/Height 不再使用；其余容器为固定网格。 */
 	UPROPERTY()
 	bool GearGrids = false;
+	/** Personal pockets remain available without equipped bags; gear bundles leave this false. */
+	UPROPERTY()
+	bool PersonalPockets = false;
 	UPROPERTY()
 	TArray<FExtractionItem> Items;
 	// 按实例 GUID 查找当前容器条目；返回内部数组元素指针，增删数组后应重新查找。
@@ -324,7 +327,7 @@ struct BROKENEDGE_API FExtractionContainer
 };
 
 UENUM()
-enum class EExtractionItemOp : uint8 { Transfer, Drop, Use, Attach, Detach, Unload, SelectAmmo, Tune, Sort, TakeAll };
+enum class EExtractionItemOp : uint8 { Transfer, Drop, Use, Attach, Detach, Unload, SelectAmmo, Tune, Sort, TakeAll, Swap };
 
 USTRUCT()
 struct BROKENEDGE_API FExtractionItemRequest
@@ -345,6 +348,8 @@ struct BROKENEDGE_API FExtractionItemRequest
 	FGuid Item;
 	UPROPERTY()
 	FGuid MergeInto;
+	UPROPERTY()
+	FGuid SwapWith;
 	/** Server resolves both instances; clients never supply resulting equipment state. */
 	UPROPERTY()
 	FGuid Weapon;

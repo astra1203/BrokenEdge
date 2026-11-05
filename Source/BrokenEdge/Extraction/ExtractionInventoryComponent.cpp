@@ -115,7 +115,7 @@ FExtractionContainer UExtractionInventoryComponent::GrantStartingSupply(FExtract
 	for (FName Id : {
 		     TEXT("Bag_Test"), TEXT("Helmet2"), TEXT("Vest2"), TEXT("M4A1"), TEXT("SCARH"),
 		     TEXT("BoltSniper"), TEXT("PumpShotgun"), TEXT("Ammo55645"), TEXT("Ammo76251"),
-		     TEXT("Ammo_338"), TEXT("Ammo_12G")
+		     TEXT("Ammo_338"), TEXT("Ammo_12G"), TEXT("Rig_Assault"), TEXT("FragGrenade")
 	     })
 		if (!UExtractionItemDefinition::Get(Id))
 		{
@@ -124,6 +124,7 @@ FExtractionContainer UExtractionInventoryComponent::GrantStartingSupply(FExtract
 		}
 	FExtractionContainer Next = Inventory;
 	Next.WeaponSlots = Next.GearGrids = true;
+	Next.PersonalPockets = true;
 	TArray<FExtractionItem> Pending;
 	for (const auto& Item : Inventory.Items)
 		if (Item.Slot == ExtractionGear::BagGrid) Pending.Add(Item);
@@ -149,6 +150,12 @@ FExtractionContainer UExtractionInventoryComponent::GrantStartingSupply(FExtract
 		RemoveSlot(ExtractionGear::BagSlot);
 		auto Item = TakeOrMake(TEXT("Bag_Test"));
 		Item.Slot = ExtractionGear::BagSlot;
+		Next.Items.Add(Item);
+	}
+	if (!Next.InSlot(ExtractionGear::RigSlot))
+	{
+		auto Item = TakeOrMake(TEXT("Rig_Assault"));
+		Item.Slot = ExtractionGear::RigSlot;
 		Next.Items.Add(Item);
 	}
 	for (const auto& Pair : {TPair<int32, FName>(2, TEXT("Helmet2")), TPair<int32, FName>(3, TEXT("Vest2"))})
@@ -213,6 +220,17 @@ FExtractionContainer UExtractionInventoryComponent::GrantStartingSupply(FExtract
 		Item.Rotated = false;
 		bPlaced &= ExtractionItems::Fits(Next, Item);
 		Next.Items.Add(Item);
+	}
+	// Reuse carried grenades before creating any new instances.
+	while (Next.Count(TEXT("FragGrenade")) < 2)
+	{
+		auto Item = TakeOrMake(TEXT("FragGrenade"));
+		if (!ExtractionItems::AutoPlace(Next, Item, ExtractionGear::RigGrid)
+			&& !ExtractionItems::AutoPlace(Next, Item, ExtractionGear::BagGrid))
+		{
+			bPlaced = false;
+			break;
+		}
 	}
 	const TPair<FName, int32> Reserve[] = {
 		{TEXT("Ammo55645"), 60}, {TEXT("Ammo76251"), 60},
