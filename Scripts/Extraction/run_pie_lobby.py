@@ -15,6 +15,7 @@ parser.add_argument('--tag', required=True)
 parser.add_argument('--mode', choices=['Extraction', 'Teams', 'FreeForAll'], default='Extraction')
 parser.add_argument('--players', type=int, choices=[2, 3, 6], default=2)
 parser.add_argument('--cross-maps', action='store_true')
+parser.add_argument('--nullrhi', action='store_true', help='Functional multi-world validation without rendering')
 args = parser.parse_args()
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
@@ -29,6 +30,7 @@ command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe'), str(ROOT / 'B
            '-ExecCmds=Automation RunTests BrokenEdge.Extraction.PIE.Lobby',
            '-TestExit=Automation Test Queue Empty', '-ReportExportPath=' + str(out / 'Automation')]
 if args.cross_maps: command.append('-ExtractionPIECrossMaps')
+if args.nullrhi: command.append('-NullRHI')
 metadata = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'mode': args.mode, 'command': command}
 environment = os.environ.copy()
 environment['UE_SKIP_UBT_SDK_SETUP'] = '1'

@@ -14,6 +14,20 @@
 #include "EngineUtils.h"
 #include "FileHelpers.h"
 #include "AssetCompilingManager.h"
+#include "PhysicsEngine/BodySetup.h"
+
+bool USovietMilitaryBuilder::RefreshCollision(UStaticMesh* Mesh)
+{
+	if (!Mesh || !Mesh->GetBodySetup()) return false;
+	Mesh->Modify();
+	Mesh->GetBodySetup()->InvalidatePhysicsData();
+	Mesh->GetBodySetup()->CreatePhysicsMeshes();
+	// Changing CollisionTraceFlag alone leaves the imported NavCollision geometry cached.
+	// Force it to gather the same geometry used by the freshly rebuilt Chaos body.
+	Mesh->CreateNavCollision(true);
+	Mesh->MarkPackageDirty();
+	return true;
+}
 
 FString USovietMilitaryBuilder::RepairWindows(bool Apply)
 {

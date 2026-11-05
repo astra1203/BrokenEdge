@@ -69,6 +69,7 @@ parser.add_argument('--tag', required=True)
 parser.add_argument('--loot-seed', type=int, help='Deterministic authority seed for authored loot validation')
 parser.add_argument('--guards', type=int, help='Override the scenario guard count (server clamps to its own maximum)')
 parser.add_argument('--soviet-route', action='store_true', help='Walk from real spawns through authored loot to an exit; no position fixtures')
+parser.add_argument('--soviet-lifecycle', action='store_true', help='Three-player death, abrupt disconnect and real round timeout on the military map')
 parser.add_argument('--packaged', action='store_true')
 parser.add_argument('--package-root', default='Packaged', help='Archive root containing the Client/Server packages')
 parser.add_argument('--port', type=int, default=27777, help='Isolated test server port')
@@ -124,8 +125,12 @@ if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
 OUT = ROOT / 'Saved/Extraction' / args.tag
 OUT.mkdir(parents=True, exist_ok=False)
 ROLES = ['A', 'B', 'C', 'D'] if args.scenario == 'four' else ['A', 'B', 'C'] if args.scenario == 'spectator' else ['A', 'B']
-if args.scenario in ['scar', 'weapon-mechanics', 'lobby-ui']:
+if args.scenario in ['soviet', 'scar', 'weapon-mechanics', 'lobby-ui']:
     ROLES = list('ABCDEF')[:args.players or 2]
+if args.soviet_lifecycle:
+    if args.scenario != 'soviet' or args.soviet_route or args.guards:
+        parser.error('--soviet-lifecycle requires --scenario soviet --guards 0 and no route option')
+    ROLES = list('ABC')
 if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']:
     ROLES = list('ABCDEF')[:args.players or (6 if args.scenario in ['pvpve', 'lifecycle'] else 2 if args.scenario == 'traversal' else 3)]
 rendered_roles = [args.rendered_role] if args.rendered_role else ROLES[:args.rendered_clients]
@@ -171,6 +176,12 @@ if args.scenario == 'overnight-route':
 if args.scenario == 'flight-matrix':
     name = 'Scripts/Extraction/flight_matrix_scenarios.py'
     report['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+
+if args.scenario == 'soviet':
+    for name in ['Scripts/Extraction/soviet_scenarios.py', 'Content/Maps/SovietMilitary/L_SovietMilitaryExtraction.umap',
+                 'Content/Extraction/Maps/DA_SovietMilitaryGameplay.uasset', 'Content/Extraction/Loot/DA_SovietMilitaryLoot.uasset',
+                 'Source/BrokenEdge/Extraction/ExtractionDoor.cpp', 'Source/BrokenEdge/Extraction/ExtractionMapRegistry.cpp']:
+        report['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
 
 if args.flight_diagnostics:
     name = 'Source/BrokenEdge/Weapon/ExtractionBullet.cpp'
@@ -285,7 +296,7 @@ def launch(role):
                 '-ExtractionGuards=' + (str(args.guards) if args.guards is not None else '8' if args.scenario == 'overnight-route' else '4' if args.scenario in ['pvpve', 'guard_tuning', 'progression', 'northcombat'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
                 '-MatchType=Extraction', '-NumPublicConnections=' + str(len(ROLES)),
                 '-MinPlayersToStart=' + str(len(ROLES)), '-port=' + str(args.port), '-ExtractionTestPort=' + str(args.port),
-                '-ExtractionRoundSeconds=' + ('1800' if args.scenario == 'overnight-route' else '15' if args.scenario == 'timeout' else '1200' if args.debug_hold or args.scenario in ['streaming', 'performance', 'east'] else '600'),
+                '-ExtractionRoundSeconds=' + ('120' if args.soviet_lifecycle else '1800' if args.scenario == 'overnight-route' else '15' if args.scenario == 'timeout' else '1200' if args.debug_hold or args.scenario in ['streaming', 'performance', 'east'] else '600'),
                 '-ExtractionTestRole=' + role, '-ExtractionTestDir=' + str(OUT),
                 '-ExtractionStore=' + str(OUT / 'Store'), '-ExtractionProfile=' + args.tag + '_' + ('A' if args.scenario == 'identity' and role == 'B' else role),
                 '-ExecCmds=t.MaxFPS 30,' + ('sg.ShadowQuality 0,sg.EffectsQuality 1,' if len(ROLES) == 6 else '') + 'BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
@@ -324,7 +335,7 @@ def launch(role):
                     '-ini:Engine:[/Script/OnlineSubsystemUtils.IpNetDriver]:InitialConnectTimeout=600.0']
     if role == 'Server' and args.unacked:
         command += ['-ExtractionHoldSettlement=' + str(OUT / 'SettlementCommitted.txt')]
-    if role == 'Server' and args.scenario == 'lifecycle':
+    if role == 'Server' and (args.scenario == 'lifecycle' or args.soviet_lifecycle):
         # Observe transport disconnect while the 30-second downed deadline is
         # still active. This applies only to this isolated acceptance server.
         command += ['-ini:Engine:[/Script/OnlineSubsystemUtils.IpNetDriver]:ConnectionTimeout=10.0']
@@ -391,6 +402,10 @@ def begin_round():
     if args.scenario in ['abilities', 'squad', 'pvpve', 'lifecycle', 'equipment']:
         from phase5_scenarios import lobby
         lobby(globals())
+    if args.soviet_lifecycle:
+        for role, squad in [('A', 1), ('B', 2), ('C', 1)]:
+            send(role, 'squad', value=squad)
+        check('Military lifecycle assigns opposing squads', lambda: all(player('Server', r).get('squad') == s for r,s in [('A',1),('B',2),('C',1)]))
     if args.scenario in ['streaming','east'] and len(ROLES) == 2:
         send('B', 'squad', value=1)
         check('Streaming pair shares a squad for spectator acceptance', lambda: player('Server', 'B').get('squad') == 1)

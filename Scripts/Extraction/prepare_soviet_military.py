@@ -51,6 +51,7 @@ for path in lib.list_assets('/Game/UVB80',recursive=True,include_folder=False):
     else:
         # Preserve door/window holes instead of filling architecture with an enclosing box.
         mesh.get_editor_property('body_setup').set_editor_property('collision_trace_flag',unreal.CollisionTraceFlag.CTF_USE_COMPLEX_AS_SIMPLE)
+    assert helper.refresh_collision(mesh), path
     save(mesh); fixed.append(path)
 
 door_count=0

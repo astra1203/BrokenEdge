@@ -112,6 +112,25 @@ public:
 			}
 			else if (Now - WalkSince > 45)
 			{
+				WalkProbe = MakeShared<FJsonObject>();
+				const auto* Capsule = Pawn->GetCapsuleComponent();
+				const FVector Start = Pawn->GetActorLocation();
+				const FVector End(WalkPoints[WalkIndex].X, WalkPoints[WalkIndex].Y, Start.Z);
+				FHitResult Hit;
+				FCollisionQueryParams Params(SCENE_QUERY_STAT(ExtractionWalkProbe), false, Pawn);
+				World->SweepSingleByChannel(Hit, Start, End, FQuat::Identity, Capsule->GetCollisionObjectType(),
+				                            FCollisionShape::MakeCapsule(
+					                            Capsule->GetScaledCapsuleRadius(),
+					                            Capsule->GetScaledCapsuleHalfHeight()), Params);
+				WalkProbe->SetArrayField(TEXT("start"), VectorJson(Start));
+				WalkProbe->SetArrayField(TEXT("end"), VectorJson(End));
+				WalkProbe->SetStringField(TEXT("hit_actor"), GetNameSafe(Hit.GetActor()));
+				WalkProbe->SetStringField(TEXT("hit_component"), GetNameSafe(Hit.GetComponent()));
+				WalkProbe->SetArrayField(TEXT("normal"), VectorJson(Hit.ImpactNormal));
+				WalkProbe->SetArrayField(TEXT("velocity"), VectorJson(Pawn->GetVelocity()));
+				WalkProbe->SetArrayField(TEXT("input"), VectorJson(Pawn->GetLastMovementInputVector()));
+				WalkProbe->SetBoolField(TEXT("ignored_input"), PC->IsMoveInputIgnored());
+				WalkProbe->SetNumberField(TEXT("movement_mode"), Pawn->GetCharacterMovement()->MovementMode);
 				Error = FString::Printf(TEXT("Walk stalled at waypoint %d"), WalkIndex);
 				WalkPoints.Empty();
 				Inject(PC, TEXT("Move"), false);
@@ -205,8 +224,9 @@ public:
 				}
 				else if (Op == TEXT("select_map") && PC)
 				{
-					if (auto* LobbyPC = Cast<ABrokenEdgePlayerController>(PC)) LobbyPC->ServerSetExtractionMap(
-						FName(Command->GetStringField(TEXT("map"))));
+					if (auto* LobbyPC = Cast<ABrokenEdgePlayerController>(PC))
+						LobbyPC->ServerSetExtractionMap(
+							FName(Command->GetStringField(TEXT("map"))));
 				}
 				else if (Op == TEXT("ordinary_door") && PC)
 				{
@@ -251,8 +271,10 @@ public:
 					PathProbe = MakeShared<FJsonObject>();
 					PathProbe->SetBoolField(TEXT("valid"), Path && Path->IsValid() && !Path->IsPartial());
 					TArray<TSharedPtr<FJsonValue>> Points;
-					if (Path) for (const auto& P : Path->PathPoints) Points.Add(
-						MakeShared<FJsonValueArray>(VectorJson(P)));
+					if (Path)
+						for (const auto& P : Path->PathPoints)
+							Points.Add(
+								MakeShared<FJsonValueArray>(VectorJson(P)));
 					PathProbe->SetArrayField(TEXT("points"), Points);
 				}
 				else if (Op == TEXT("squad") && PC)
@@ -726,7 +748,7 @@ private:
 	int32 RecordingFrame = 0;
 	double LastFrame = 0;
 	TArray<FVector> WalkPoints;
-	TSharedPtr<FJsonObject> DoorProbe, PathProbe;
+	TSharedPtr<FJsonObject> DoorProbe, PathProbe, WalkProbe;
 	int32 WalkIndex = 0;
 	double WalkSince = 0;
 	double Started, LastWrite = 0, PulseEnd = 0;
@@ -1252,8 +1274,9 @@ private:
 			                                MuzzleQuery);
 			Probe->SetObjectField(TEXT("muzzle_origin_obstruction"), HitJson(Obstruction));
 			// Match the production barrel obstruction adjustment without spawning a round.
-			if (Obstruction.bBlockingHit) Muzzle = Obstruction.ImpactPoint + Obstruction.ImpactNormal * (Stats.Radius +
-				.1f);
+			if (Obstruction.bBlockingHit)
+				Muzzle = Obstruction.ImpactPoint + Obstruction.ImpactNormal * (Stats.Radius +
+					.1f);
 			Probe->SetArrayField(TEXT("muzzle_position"), VectorJson(Muzzle));
 		}
 		FCollisionQueryParams CameraBase(SCENE_QUERY_STAT(ExtractionAimCameraProbe), false, Shooter);
@@ -1291,8 +1314,9 @@ private:
 		           Target->GetMesh()->GetBoneIndex(TEXT("Spine2")) != INDEX_NONE);
 		FVector Selected = bHeadAim ? Head + FVector(0, 0, 8) : Body;
 		if (!AimBone.IsNone()) Selected = Target->GetMesh()->GetBoneLocation(AimBone);
-		if (bBodyCenterAim && Target->GetMesh()->GetBodyInstance(AimBone)) Selected = Target->GetMesh()->
-			GetCenterOfMass(AimBone);
+		if (bBodyCenterAim && Target->GetMesh()->GetBodyInstance(AimBone))
+			Selected = Target->GetMesh()->
+			                   GetCenterOfMass(AimBone);
 		WritePoint(TEXT("selected"), Selected, true);
 		Probe->SetObjectField(TEXT("points"), Points);
 		const double Now = FPlatformTime::Seconds();
@@ -1323,6 +1347,7 @@ private:
 		auto State = MakeShared<FJsonObject>();
 		if (DoorProbe) State->SetObjectField(TEXT("door_probe"), DoorProbe);
 		if (PathProbe) State->SetObjectField(TEXT("path_probe"), PathProbe);
+		if (WalkProbe) State->SetObjectField(TEXT("walk_probe"), WalkProbe);
 		TArray<TSharedPtr<FJsonValue>> VisibleWidgets;
 		TArray<UUserWidget*> Widgets;
 		UWidgetBlueprintLibrary::GetAllWidgetsOfClass(World, Widgets, UUserWidget::StaticClass(), true);

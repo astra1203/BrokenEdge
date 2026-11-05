@@ -14,9 +14,14 @@ def run(g):
         check('Configured guards spawned',lambda:len(state('Server').get('guards',[]))==g['args'].guards)
     if g['args'].soviet_route:
         return continuous_route(g)
+    if g['args'].soviet_lifecycle:
+        return lifecycle(g)
+    if g['args'].guards:
+        return guard_acceptance(g)
     # Production RPC checks same-world, reach and swing clearance on every authored door.
     doors=sorted(state('Server')['ordinary_doors'],key=lambda d:(d['position'][2],d['name']))
     door=doors[0]
+    observer_start=player('Server','B')['position']
     def d(peer): return next(x for x in state(peer)['ordinary_doors'] if x['name']==door['name'])
     def place(role,p,yaw=0):
         send('Server','fixture',players=[dict(name='EX_'+role,position=p,health=100,shield=0,yaw=yaw,clear_trauma=True)])
@@ -28,12 +33,25 @@ def run(g):
         for side in (1,-1):
             pos=[door['position'][i]+side*(door['approach'][i]-door['position'][i]) for i in range(3)]
             place('A',pos,door['yaw']+(180 if side<0 else 0))
-            send('A','ordinary_door',name=door['name']);time.sleep(.35)
+            if door['name']==doors[0]['name']:
+                send('A','input_key',key='F',pressed=True)
+                send('A','input_key',key='F',pressed=False)
+            else:send('A','ordinary_door',name=door['name'])
+            time.sleep(.35)
             if d('Server')['open']:break
         if not d('Server')['open']:
             send('A','screenshot',name='soviet-door-rejected')
             raise AssertionError(('Door request rejected',door['name'],state('A').get('item_message'),state('A').get('door_probe')))
         check('Door opening replicated '+door['name'],lambda:all(d(r)['open'] and abs(d(r)['angle'])>90 for r in peers),5)
+        if door['name']==doors[0]['name']:
+            current=d('Server')
+            place('A',current['approach'],current['yaw'])
+            place('B',door['position'])
+            send('A','ordinary_door',name=door['name']);time.sleep(.4)
+            check('Occupied doorway prevents closing',lambda:all(d(r)['open'] for r in peers)
+                  and state('A').get('door_probe',{}).get('reachable')
+                  and state('A').get('item_message')=='\u95e8\u8fb9\u6709\u4eba\uff0c\u8bf7\u8ba9\u5f00',2)
+            place('B',observer_start)
         current=d('Server')
         for side in (1,-1):
             pos=[current['position'][i]+side*(current['approach'][i]-current['position'][i]) for i in range(3)]
@@ -82,6 +100,7 @@ def run(g):
     send('A','screenshot',name='soviet-extraction')
     check('All players durably extracted',lambda:all(state(r).get('account',{}).get('outcome')==1 for r in roles),35)
     check('Returns to lobby after settlement',lambda:all(state(r).get('map')=='/Game/Maps/Lobby' for r in peers),40)
+    send('A','screenshot',name='soviet-lobby')
     check('Searched item persisted to stash',lambda:any(i['id']==item['id'] for i in state('A')['account']['stash']['items']))
 
 def continuous_route(g):
@@ -89,6 +108,8 @@ def continuous_route(g):
     import json
     send,check,wait,state,player=(g[k] for k in ('send','check','wait','state','player'))
     roles=g['ROLES'];samples=[];legs=[]
+    def record():
+        (g['OUT']/'ContinuousRoute.json').write_text(json.dumps(dict(teleports=0,legs=legs,samples=samples),indent=2),encoding='utf-8')
     def path(role,end):
         send('Server','path_query',start=player('Server',role)['position'],end=end)
         q=state('Server')['path_probe']
@@ -101,6 +122,8 @@ def continuous_route(g):
             count=max(1,math.ceil(math.dist(a,b)/120))
             dense.extend([[a[k]+(b[k]-a[k])*i/count for k in range(3)] for i in range(1,count+1)])
         assert dense
+        legs.append(dict(role=role,label=label,points=points))
+        record()
         send(role,'walk',points=dense)
         last=[0]
         def completed():
@@ -110,15 +133,25 @@ def continuous_route(g):
             if time.monotonic()-last[0]>.5:
                 last[0]=time.monotonic()
                 samples.append(dict(role=role,leg=label,time=state('Server').get('world_time'),position=p.get('position'),falling=p.get('falling')))
+                record()
             return s.get('walk_count')==len(dense) and s.get('walk_index')==len(dense)
-        check('Walk completed: '+label,completed,180)
-        legs.append(dict(role=role,label=label,points=points,actual_end=player('Server',role)['position']))
-        (g['OUT']/'ContinuousRoute.json').write_text(json.dumps(dict(teleports=0,legs=legs,samples=samples),indent=2),encoding='utf-8')
+        try:check('Walk completed: '+label,completed,180)
+        except Exception:
+            send(role,'screenshot',name='soviet-route-stalled')
+            raise
+        legs[-1]['actual_end']=player('Server',role)['position']
+        record()
     box=next(x for x in state('Server')['loot'] if x.get('source_point')=='SovietBox00')
-    points=path('A',box['position'])
-    # Stop 110 cm before the box, within the normal search range.
-    a,b=points[-2:];length=math.dist(a[:2],b[:2]);assert length>110
-    points[-1]=[b[k]+(a[k]-b[k])*110/length for k in range(3)]
+    # Runtime containers carve navigation; query a reachable interaction position,
+    # never a path whose endpoint is inside the solid box.
+    approaches=[]
+    for angle in range(0,360,45):
+        a=math.radians(angle);p=box['position']
+        send('Server','path_query',start=player('Server','A')['position'],end=[p[0]+150*math.cos(a),p[1]+150*math.sin(a),p[2]])
+        q=state('Server')['path_probe']
+        if q['valid']:approaches.append(q['points'])
+    assert approaches, 'No reachable interaction position around authored supplies'
+    points=min(approaches,key=lambda ps:sum(math.dist(a,b) for a,b in zip(ps,ps[1:])))
     walk('A',points,'spawn to authored supplies')
     send('A','open_loot',target=box['id'])
     check('Walking route reaches searchable container',lambda:player('A','A').get('loot_id')==box['id'])
@@ -134,3 +167,80 @@ def continuous_route(g):
         check(role+' real extraction timer starts',lambda r=role:player('Server',r).get('extract_at',0)>0,5)
     check('Walking route persists extraction for all players',lambda:all(state(r).get('account',{}).get('outcome')==1 for r in roles),40)
     check('Walking route returns searched item to stash',lambda:any(i['id']==item['id'] for i in state('A')['account']['stash']['items']))
+    check('Walking route returns all players to lobby',lambda:all(state(r).get('map')=='/Game/Maps/Lobby' for r in ['Server']+roles),40)
+
+def guard_acceptance(g):
+    """Production AI and gunfire, with positions arranged by an explicit scene fixture."""
+    send,check,wait,state,player=(g[k] for k in ('send','check','wait','state','player'))
+    check('All military patrol segments have runtime navigation',lambda:len(state('Server')['nav_paths'])==18 and all(p['valid'] for p in state('Server')['nav_paths']))
+    initial={p['name']:p['position'] for p in state('Server')['guards']}
+    check('Authored guards actually patrol',lambda:sum(math.dist(p['position'],initial[p['name']])>100 for p in state('Server')['guards'])>=4,25)
+    target=min(state('Server')['guards'],key=lambda p:p['position'][1])['name']
+    def guard():return next((p for p in state('Server')['guards'] if p['name']==target),{})
+    safe=player('Server','A')['position']
+    def place(role,p):
+        send('Server','fixture',players=[dict(name='EX_'+role,position=p,health=100,shield=0,clear_trauma=True)])
+        time.sleep(.5)
+    def approach():
+        for angle in (0,90,180,270,45,135,225,315):
+            p=guard()['position'];a=math.radians(angle)
+            candidate=[p[0]+500*math.cos(a),p[1]+500*math.sin(a),p[2]]
+            send('Server','path_query',start=p,end=candidate)
+            q=state('Server')['path_probe']
+            if not q['valid']:continue
+            floor=q['points'][-1];place('A',[floor[0],floor[1],floor[2]+95])
+            if guard().get('line_of_sight_to_A'):return
+        raise AssertionError('No accessible line of sight to authored guard')
+    approach()
+    original=guard();gun=next(i for i in original['inventory']['items'] if i['slot']==0)
+    send('A','aim',target=target,head=False)
+    for _ in range(5):
+        send('A','pulse',action='Fire');time.sleep(.3)
+        if guard().get('health',100)<100:break
+    check('Production bullets damage the authored guard',lambda:0<guard().get('health',100)<100)
+    check('Authored guard acquires attacking player',lambda:guard().get('target')==player('Server','A').get('pawn_name'),8)
+    check('Authored guard returns fire',lambda:guard().get('shots',0)>original.get('shots',0),8)
+    send('A','screenshot',name='soviet-guard-combat')
+    place('A',safe)
+    check('Guard loses distant target and returns to patrol',lambda:guard().get('state')==0 and guard().get('target')=='None',35)
+    approach();send('A','aim',target=target,head=True)
+    for _ in range(20):
+        send('A','pulse',action='Fire');time.sleep(.25)
+        if guard().get('dead') or not guard():break
+    check('Guard defeat credited through combat',lambda:player('Server','A').get('guard_kills',0)>=1,5)
+    check('Guard weapon appears in one death container',lambda:sum(any(i['id']==gun['id'] for i in box.get('contents',{}).get('items',[])) for box in state('Server')['loot'])==1)
+    send('A','aim',target='',head=False)
+    zone=state('Server')['exits'][0]['position']
+    for i,r in enumerate(g['ROLES']):place(r,[zone[0]+(i%3-1)*150,zone[1]+(i//3)*150,zone[2]+100])
+    check('Guard encounter ends with durable extraction',lambda:all(state(r).get('account',{}).get('outcome')==1 for r in g['ROLES']),35)
+
+def lifecycle(g):
+    """Keep death/disconnect/timeout inventory paths separate from successful extraction."""
+    import subprocess
+    send,check,state,player=(g[k] for k in ('send','check','state','player'))
+    possessions={r:{i['id']:i for i in player('Server',r)['inventory']['items']} for r in ('B','C')}
+    carried={i['id'] for i in player('Server','A')['inventory']['items']}
+    g['finishing'].add('C')
+    g['report']['processes']['C']['expected_disconnect']=True
+    subprocess.run(['taskkill','/PID',str(g['processes']['C'].pid),'/T','/F'],stdout=subprocess.DEVNULL,stderr=subprocess.STDOUT)
+    check('Military abrupt disconnect leaves two survivors',lambda:state('Server').get('alive')==2,30)
+    def corpse(role):
+        return [box for box in state('Server')['loot'] if {i['id'] for i in box['contents']['items']}==set(possessions[role])]
+    check('Disconnected possessions move to exactly one corpse',lambda:len(corpse('C'))==1)
+    start=player('Server','A')['position']
+    send('Server','fixture',players=[dict(name='EX_A',position=start,health=100,shield=0,clear_trauma=True),
+                                   dict(name='EX_B',position=[start[0]+400,start[1],start[2]],health=10,shield=0,clear_trauma=True)])
+    time.sleep(1)
+    send('A','aim',target='EX_B',head=False)
+    for _ in range(12):
+        send('A','pulse',action='Fire');time.sleep(.3)
+        if player('Server','B').get('life')==1:break
+    check('Military PVP death settles durably',lambda:state('B').get('account',{}).get('outcome')==2)
+    check('Dead player possessions move to exactly one corpse',lambda:len(corpse('B'))==1)
+    for role in ('B','C'):
+        check(role+' corpse preserves quantities and magazines',lambda r=role:all(i['quantity']==possessions[r][i['id']]['quantity'] and i['magazine']==possessions[r][i['id']]['magazine'] for i in corpse(r)[0]['contents']['items']))
+    send('A','aim',target='',head=False)
+    check('Real military round deadline settles survivor as timed out',lambda:state('A').get('account',{}).get('outcome')==5,130)
+    check('Military timeout returns connected players to lobby',lambda:all(state(r).get('map')=='/Game/Maps/Lobby' for r in ('Server','A','B')),40)
+    check('Timed out carried loot is not duplicated into stash',lambda:not carried.intersection(i['id'] for i in state('A')['account']['stash']['items']))
+    check('Military lobby readiness resets after failed raid',lambda:all(not p.get('ready') for p in state('Server')['players']))

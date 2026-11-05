@@ -227,13 +227,26 @@ namespace
 				LastRaid = Current;
 				AExtractionExit* Exit = nullptr;
 				for (TActorIterator<AExtractionExit> It(Server); It; ++It)
-					if (It->Available(Game->GetServerWorldTimeSeconds()) && !It->Definition.bRequireEmptyPack
+					if (!It->Definition.bRequireEmptyPack
 						&& It->Definition.Capacity == 0)
 					{
 						Exit = *It;
 						break;
 					}
-				if (!Test->TestNotNull(TEXT("Authored open extraction zone"), Exit)) return true;
+				if (!Test->TestNotNull(TEXT("Authored unlimited extraction zone"), Exit)) return true;
+				if (Game->MapDefinition->MapId == TEXT("SpaceCenter") && !Exit->Available(
+					Game->GetServerWorldTimeSeconds()))
+				{
+					// This test isolates cross-map travel and persistence. The original plaza has a 900 s gate
+					// and switches, validated separately by its route scenario. Fixture only its runtime clock.
+					Exit->RoundStartedAt = Game->GetServerWorldTimeSeconds() - Exit->Definition.OpensAfterSeconds - 1;
+					Exit->SwitchedOpenAt = Game->GetServerWorldTimeSeconds();
+					Exit->ForceNetUpdate();
+					UE_LOG(LogTemp, Display, TEXT("EXTRACTION_PIE_LOBBY_EXIT_CLOCK_FIXTURE Map=SpaceCenter"));
+				}
+				if (!Test->TestTrue(
+					TEXT("Prepared exit accepts extraction"),
+					Exit->Available(Game->GetServerWorldTimeSeconds()))) return true;
 				int32 Index = 0;
 				for (auto It = Server->GetPlayerControllerIterator(); It; ++It)
 				{
