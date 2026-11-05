@@ -611,8 +611,20 @@ public:
 						};
 						WriteMesh(TEXT("world"), Target->GetMesh(), Target->GetEquippedWeapon()->GetWeaponMesh());
 						if (Target->IsLocallyControlled())
+						{
 							WriteMesh(
 								TEXT("first_person"), Target->GetFirstPersonMesh(), Target->GetFirstPersonWeaponMesh());
+							if (const auto* View = Target->GetFirstPersonWeaponMesh())
+							{
+								const FTransform Camera(Target->GetViewRotation(), Target->GetPawnViewLocation());
+								Probe->SetStringField(TEXT("weapon_camera_transform"),
+								                      View->GetComponentTransform().GetRelativeTransform(Camera).
+								                            ToString());
+								for (const FName Socket : {TEXT("Hand_R"), TEXT("LeftHandSocket"), TEXT("MuzzleFlash")})
+									Probe->SetStringField(Socket.ToString(),
+									                      View->GetSocketTransform(Socket, RTS_Component).ToString());
+							}
+						}
 						FString Output;
 						FJsonSerializer::Serialize(Probe, TJsonWriterFactory<>::Create(&Output));
 						FFileHelper::SaveStringToFile(
@@ -1670,6 +1682,7 @@ private:
 						Player->SetBoolField(TEXT("weapon_hidden"), Weapon->IsHidden());
 						if (auto* ViewWeapon = Character->GetFirstPersonWeaponMesh())
 							Player->SetBoolField(TEXT("fp_weapon_visible"), ViewWeapon->IsVisible());
+						Player->SetBoolField(TEXT("fp_scope_active"), Character->IsFirstPersonScopeActive());
 						Player->SetNumberField(
 							TEXT("left_grip_distance"),
 							FVector::Dist(Character->GetMesh()->GetSocketLocation(TEXT("LeftHand")),
@@ -1682,11 +1695,25 @@ private:
 						Player->SetStringField(TEXT("weapon"), Weapon->GetName());
 						Player->SetStringField(TEXT("weapon_item"), Weapon->ExtractionItemId.ToString());
 						if (Character->IsLocallyControlled() && Character->GetFirstPersonMesh())
+						{
 							Player->SetNumberField(TEXT("fp_left_grip_distance"), FVector::Dist(
 								                       Character->GetFirstPersonMesh()->GetSocketLocation(
 									                       TEXT("LeftHand")),
 								                       Character->GetFirstPersonGripTarget(TEXT("LeftHandSocket")).
 								                                  GetLocation()));
+							if (const auto* View = Character->GetFirstPersonWeaponMesh())
+							{
+								Player->SetNumberField(TEXT("fp_actual_left_grip_distance"), FVector::Dist(
+									                       Character->GetFirstPersonMesh()->GetSocketLocation(
+										                       TEXT("LeftHand")),
+									                       (Weapon->EquipmentGrip(true) * View->GetComponentTransform())
+									                       .GetLocation()));
+								Player->SetNumberField(TEXT("fp_actual_right_grip_distance"), FVector::Dist(
+									                       Character->GetFirstPersonMesh()->GetSocketLocation(
+										                       TEXT("RightHand")),
+									                       View->GetSocketLocation(TEXT("Hand_R"))));
+							}
+						}
 						TArray<TSharedPtr<FJsonValue>> Visuals;
 						TInlineComponentArray<UStaticMeshComponent*> MeshParts(Weapon);
 						for (const auto* Part : MeshParts)

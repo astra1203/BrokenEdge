@@ -10,6 +10,10 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/HorizontalBox.h"
 #include "Engine/Canvas.h"
+#include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/Weapon/Weapon.h"
+#include "BrokenEdge/Weapon/WeaponPresentation.h"
+#include "Engine/Texture2D.h"
 
 
 void ABrokenEdgeHUD::BeginPlay()
@@ -26,6 +30,20 @@ void ABrokenEdgeHUD::DrawHUD()
 	{
 		// Draw in this player's canvas, including resized PIE and high-resolution captures.
 		const FVector2D ViewportCenter(Canvas->SizeX / 2.f, Canvas->SizeY / 2.f);
+		if (auto* Character = Cast<ABrokenEdgeCharacter>(GetOwningPawn());
+			Character && Character->IsFirstPersonScopeActive())
+		{
+			const auto* Presentation = Character->GetEquippedWeapon()->Presentation.Get();
+			auto* Texture = Presentation->ScopeOverlay.Get();
+			if (Texture && Texture->GetResource())
+			{
+				const float Height = Canvas->SizeY;
+				const float Width = Height * Texture->GetSizeX() / FMath::Max(1, Texture->GetSizeY());
+				DrawTexture(Texture, ViewportCenter.X - Width * .5f, 0, Width, Height,
+				            0, 0, 1, 1, FLinearColor::White);
+				return;
+			}
+		}
 
 		float SpreadScaled = CrosshairSpreadMax * HUDPackage.CrosshairSpread;
 

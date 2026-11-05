@@ -68,6 +68,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
 parser.add_argument('--loot-seed', type=int, help='Deterministic authority seed for authored loot validation')
 parser.add_argument('--guards', type=int, help='Override the scenario guard count (server clamps to its own maximum)')
+parser.add_argument('--starting-kit-validation', action='store_true', help='Validate current M4A1 test-kit startup instead of legacy AK fixtures')
 parser.add_argument('--soviet-route', action='store_true', help='Walk from real spawns through authored loot to an exit; no position fixtures')
 parser.add_argument('--soviet-lifecycle', action='store_true', help='Three-player death, abrupt disconnect and real round timeout on the military map')
 parser.add_argument('--packaged', action='store_true')
@@ -464,11 +465,13 @@ def begin_round():
             check(role + ' current starting supply equipped and carried rifle retained', lambda r=role:
                   'M4A1' in player('Server',r).get('weapon','') and
                   any(i['definition']=='AK' for i in player('Server',r)['inventory']['items']))
+        elif args.starting_kit_validation:
+            check(role + ' current M4A1 primary equipped', lambda r=role: 'M4A1' in player('Server', r).get('weapon', ''))
         else:
             check(role + ' equipped AK', lambda r=role: 'AK47' in player('Server', r).get('weapon', ''))
     time.sleep(1)
     check('First-person backpack section hidden on each owner', lambda: all(player(r, r).get('fp_gear_visible') is False for r in ROLES))
-    if args.scenario != 'soviet':
+    if args.scenario != 'soviet' and not args.starting_kit_validation:
         check('Server and owners keep both hands within two cm of weapon grips', lambda: all(
             player(peer, r).get('left_grip_distance', 999) <= 2 and player(peer, r).get('right_grip_distance', 999) <= 2
             for r in ROLES for peer in ['Server', r]))

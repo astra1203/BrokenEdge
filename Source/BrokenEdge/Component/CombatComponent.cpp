@@ -14,6 +14,7 @@
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "BrokenEdge/Weapon/Shotgun.h"
 #include "BrokenEdge/Weapon/Weapon.h"
+#include "BrokenEdge/Weapon/WeaponPresentation.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -919,10 +920,12 @@ void UCombatComponent::InterpFOV(float DeltaTime)
 	if (EquippedWeapon == nullptr) return;
 	if (Character && Character->FirstPersonMeshAsset && Character->IsFirstPersonView())
 	{
-		const float Target = bAiming ? Character->FirstPersonAimFOV : DefaultFOV;
-		CurrentFOV = Character->GetExtractionCombat()->IsEnabled() && Character->GetExtractionCombat()->GetWeaponStats()
-		                                                                       .IsValid()
-			             ? FMath::Lerp(DefaultFOV, Character->FirstPersonAimFOV,
+		const float AimFOV = EquippedWeapon->Presentation && EquippedWeapon->Presentation->ScopeOverlay
+			                     ? EquippedWeapon->Presentation->ScopeFOV
+			                     : Character->FirstPersonAimFOV;
+		const float Target = bAiming ? AimFOV : DefaultFOV;
+		CurrentFOV = Character->GetExtractionCombat()->IsEnabled()
+			             ? FMath::Lerp(DefaultFOV, AimFOV,
 			                           Character->GetExtractionCombat()->GetAimAlpha())
 			             : FMath::FInterpTo(CurrentFOV, Target, DeltaTime, Character->FirstPersonAimInterpSpeed);
 		Character->GetFollowCamera()->SetFieldOfView(CurrentFOV);

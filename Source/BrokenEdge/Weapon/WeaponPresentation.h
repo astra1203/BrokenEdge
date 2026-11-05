@@ -18,6 +18,11 @@ public:
 	TObjectPtr<class URifleLocomotionSet> Locomotion;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<USkeletalMesh> ViewMesh;
+	/** Optional first-person scope view for models with an opaque baked-in lens. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<class UTexture2D> ScopeOverlay;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="5", ClampMax="90"))
+	float ScopeFOV = 30.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FStingerViewWeaponFit ViewFit;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

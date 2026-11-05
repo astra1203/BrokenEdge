@@ -38,7 +38,9 @@ void UExtractionCombatComponent::RefreshMechanics()
 {
 	auto* C = Character();
 	auto* W = C ? C->GetEquippedWeapon() : nullptr;
-	if (W == MechanicsWeapon.Get() && (Stats.IsValid() || !W) && (!W || (MechanicsParts == W->ExtractionParts &&
+	// Legacy weapons without a mechanics profile still have a stable configuration.
+	// Re-resolving them every tick used to clear ADS and held-fire state continuously.
+	if (W == MechanicsWeapon.Get() && (!W || (MechanicsParts == W->ExtractionParts &&
 		Configuration == W->ExtractionConfiguration)))
 		return;
 	MechanicsParts = W ? W->ExtractionParts : TArray<FName>();
@@ -171,7 +173,7 @@ void UExtractionCombatComponent::TickComponent(float Delta, ELevelTick Kind, FAc
 	RefreshMechanics();
 	auto* C = Character();
 	if (C && C->IsLocallyControlled() && C->GetFollowCamera()) C->GetFollowCamera()->ClearAdditiveOffset();
-	if (!C || !Stats.IsValid()) return;
+	if (!C) return;
 	const double Now = GetWorld()->GetTimeSeconds();
 	const bool Steady = CanSteadyWeapon();
 	if (!Steady) ResetTransientMechanics();
@@ -179,6 +181,9 @@ void UExtractionCombatComponent::TickComponent(float Delta, ELevelTick Kind, FAc
 	if (!Aiming) bBreathHeld = false;
 	AimAlpha = FMath::FInterpConstantTo(AimAlpha, Aiming ? 1.f : 0.f, Delta,
 	                                    1.f / FMath::Max(.01f, Aiming ? Stats.AimIn : Stats.AimOut));
+	// First-person presentation also needs ADS for legacy guns. Keep their existing
+	// shot/reload rules, using the default 0.3 s blend without enabling profile ballistics.
+	if (!Stats.IsValid()) return;
 	// 跑射时间只在退出冲刺时记录；逐帧推迟会让按住 Shift 的射击永远无法就绪。
 	if (!CanAct() || C->Melee->Active || C->GetExtractionInteraction()->InventoryOpen
 		|| C->GetCombatState() != ECombatState::ECS_Unoccuiped || C->GetCombat()->bLocallyReloading)

@@ -927,10 +927,22 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 	// 翻越期间不执行常规第一人称动作同步，避免干扰翻越表现。
 	if (!IsTraversing()) SyncFirstPersonAction();
 	// 枪模只在有效持枪、未死亡且非翻越和近战时显示；人物网格还可服务于近战或翻越。
+	const bool bScope = IsFirstPersonScopeActive();
 	if (FirstPersonWeaponMesh)
 		FirstPersonWeaponMesh->SetVisibility(
-			Weapon && !bDefeated && !IsTraversing() && !Melee->Active, true);
-	DedicatedFirstPersonMesh->SetVisibility((Weapon || Melee->Active || IsTraversing()) && !bDefeated, false);
+			Weapon && !bDefeated && !IsTraversing() && !Melee->Active && !bScope, true);
+	DedicatedFirstPersonMesh->SetVisibility((Weapon || Melee->Active || IsTraversing()) && !bDefeated && !bScope,
+	                                        false);
+}
+
+bool ABrokenEdgeCharacter::IsFirstPersonScopeActive() const
+{
+	const auto* Weapon = Combat ? Combat->EquippedWeapon : nullptr;
+	return IsLocallyControlled() && IsFirstPersonView() && Weapon && Weapon->Presentation
+		&& Weapon->Presentation->ScopeOverlay && Combat->bAiming && !bDefeated && !Melee->Active
+		&& !IsTraversing() && !IsSprinting() && !ExtractionInteraction->InventoryOpen
+		&& GetCombatState() == ECombatState::ECS_Unoccuiped
+		&& (!ExtractionCombat->IsEnabled() || ExtractionCombat->GetAimAlpha() >= .98f);
 }
 
 bool ABrokenEdgeCharacter::UsesFirstPersonWeaponFit() const

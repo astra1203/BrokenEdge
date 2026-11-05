@@ -52,6 +52,13 @@ for name,src,sight,mag_bone in [('BoltSniper','/Game/MilitaryWeapSilver/Weapons/
     for prop in ['magazine_grip','magazine_reference']:
         fit.set_editor_property(prop,fit.get_editor_property(prop).multiply(Minv))
     fit.set_editor_property('magazine_reference',bone_cs(pose,mag_bone))
+    if name == 'BoltSniper':
+        da.set_editor_property('scope_overlay', unreal.load_asset('/Game/Blueprints/UI/SniperScopeNoBG'))
+        da.set_editor_property('scope_fov', 30.0)
+        # Sockets were converted above; the camera frame must include the same
+        # X-forward -> Y-forward conversion or the sniper lies sideways on screen.
+        for key in ['hip', 'aim']:
+            fit.set_editor_property(key, M.multiply(fit.get_editor_property(key)))
     da.set_editor_property('view_fit',fit)
     assert lib.save_loaded_asset(da,only_if_is_dirty=False)
     bp=unreal.load_asset(folder+'/BP_'+name)

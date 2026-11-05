@@ -336,6 +336,7 @@ public:
 	float LadderCameraBlend = 0.f;
 	USkeletalMeshComponent* GetFirstPersonWeaponMesh() const { return FirstPersonWeaponMesh; }
 	bool UsesFirstPersonWeaponFit() const;
+	bool IsFirstPersonScopeActive() const;
 	FTransform GetFirstPersonGripTarget(FName Socket) const;
 	float GetFirstPersonReloadProgress() const;
 	void RefreshFirstPersonWorldWeapons();
