@@ -19,7 +19,7 @@ L('ak right %s left %s'%(ak_right.translation,ak_left.translation))
 def to_ak(dz): return unreal.Transform(unreal.Vector(0,-1,dz),unreal.Rotator(yaw=90),unreal.Vector(1,1,1))
 import os
 ONLY=os.environ.get('LONGGUN_ONLY')
-# 结构体属性在 Python 里是引用，改它会改到内存里的 AK 配置；所以一次进程只配一把枪。
+# 配置结构体必须复制，避免编辑一把枪时改到 AK 或下一把枪的源姿势。
 for name,src,sight,mag_bone in [('BoltSniper','/Game/MilitaryWeapSilver/Weapons/Sniper_Rifle_A',21.5,'Ammo'),
                                 ('PumpShotgun','/Game/MilitaryWeapSilver/Weapons/Shotgun_A',14.5,'Ammo')]:
     if ONLY and ONLY!=name: continue
@@ -44,7 +44,7 @@ for name,src,sight,mag_bone in [('BoltSniper','/Game/MilitaryWeapSilver/Weapons/
     if not lib.does_asset_exist(da_path): assert lib.duplicate_asset(AK_DA,da_path)
     da=unreal.load_asset(da_path)
     da.set_editor_property('view_mesh',mesh)
-    fit=unreal.load_asset(AK_DA).get_editor_property('view_fit')
+    fit=unreal.load_asset(AK_DA).get_editor_property('view_fit').copy()
     aim=fit.get_editor_property('aim')
     aim.translation=unreal.Vector(aim.translation.x,aim.translation.y,aim.translation.z-(sight-13.95))
     fit.set_editor_property('aim',aim)

@@ -1,0 +1,38 @@
+{
+  "result": "passed",
+  "succeeded": 5,
+  "succeeded_with_warnings": 1,
+  "failed": 0,
+  "tests": [
+    {
+      "testDisplayName": "StartingSupply",
+      "fullTestPath": "BrokenEdge.Extraction.Expansion.StartingSupply",
+      "state": "Success"
+    },
+    {
+      "testDisplayName": "Registry",
+      "fullTestPath": "BrokenEdge.Extraction.Maps.Registry",
+      "state": "Success"
+    },
+    {
+      "testDisplayName": "AssemblyTransactions",
+      "fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.AssemblyTransactions",
+      "state": "Success"
+    },
+    {
+      "testDisplayName": "FlightAndObstruction",
+      "fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.FlightAndObstruction",
+      "state": "Success"
+    },
+    {
+      "testDisplayName": "SourceAndSampling",
+      "fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.SourceAndSampling",
+      "state": "Success"
+    },
+    {
+      "testDisplayName": "SprintTransitions",
+      "fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.SprintTransitions",
+      "state": "Success"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "F7AA09F4421FD4F12064A89BC9C3A64D",
+			"instanceName": "DESKTOP-M9PA1SF-26684",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "GameViewer Virtual Display Adapter",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.05-16.59.59",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.032997701317071915,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Registry",
+			"fullTestPath": "BrokenEdge.Extraction.Maps.Registry",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"F7AA09F4421FD4F12064A89BC9C3A64D"
+			],
+			"duration": 0.032997701317071915,
+			"dateTime": "2026.11.05-16.59.59",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

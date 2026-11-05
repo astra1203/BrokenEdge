@@ -1,0 +1,156 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "DESKTOP-M9PA1SF",
+			"instance": "16443B3741A3F47667D3BA97A04C5B36",
+			"instanceName": "DESKTOP-M9PA1SF-51532",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 10 (22H2) [10.0.19045.6466] ",
+			"model": "Default",
+			"gPU": "GameViewer Virtual Display Adapter",
+			"cPUModel": "AMD Ryzen 5 7500F 6-Core Processor             ",
+			"rAMInGB": 32,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.05-17.08.10",
+	"succeeded": 5,
+	"succeededWithWarnings": 1,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.12687590718269348,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "StartingSupply",
+			"fullTestPath": "BrokenEdge.Extraction.Expansion.StartingSupply",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"16443B3741A3F47667D3BA97A04C5B36"
+			],
+			"duration": 0.067263498902320862,
+			"dateTime": "2026.11.05-17.08.10",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Registry",
+			"fullTestPath": "BrokenEdge.Extraction.Maps.Registry",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"16443B3741A3F47667D3BA97A04C5B36"
+			],
+			"duration": 0.02379009872674942,
+			"dateTime": "2026.11.05-17.08.10",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "AssemblyTransactions",
+			"fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.AssemblyTransactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"16443B3741A3F47667D3BA97A04C5B36"
+			],
+			"duration": 0.0081159025430679321,
+			"dateTime": "2026.11.05-17.08.10",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "FlightAndObstruction",
+			"fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.FlightAndObstruction",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"16443B3741A3F47667D3BA97A04C5B36"
+			],
+			"duration": 0.016321498900651932,
+			"dateTime": "2026.11.05-17.08.10",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSpawn: UWorld::DestroyActor: World has no context! World: Untitled, Actor: /Temp/Untitled_1.Untitled:PersistentLevel.ExtractionBullet_0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-17.08.10"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSpawn: UWorld::DestroyActor: World has no context! World: Untitled, Actor: /Temp/Untitled_1.Untitled:PersistentLevel.ExtractionBullet_1",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-17.08.10"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSpawn: UWorld::DestroyActor: World has no context! World: Untitled, Actor: /Temp/Untitled_1.Untitled:PersistentLevel.ExtractionBullet_2",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.05-17.08.10"
+				}
+			],
+			"warnings": 3,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SourceAndSampling",
+			"fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.SourceAndSampling",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"16443B3741A3F47667D3BA97A04C5B36"
+			],
+			"duration": 0.0021318010985851288,
+			"dateTime": "2026.11.05-17.08.10",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SprintTransitions",
+			"fullTestPath": "BrokenEdge.Extraction.WeaponMechanics.SprintTransitions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"16443B3741A3F47667D3BA97A04C5B36"
+			],
+			"duration": 0.0092530995607376099,
+			"dateTime": "2026.11.05-17.08.10",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

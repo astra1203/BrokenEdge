@@ -1,0 +1,216 @@
+{
+  "created_utc": "2026-11-05T17:38:19.432571+00:00",
+  "large_json_compression": "gzip above 1 MiB; original bytes retained",
+  "base_commit": "06f4288cb4e20ca687d986085068a3eb31caac65",
+  "engine": "C:/UnrealProjects/UnrealEngine-5.8.3-release",
+  "runs": [
+    {
+      "folder": "Saved/Extraction/Fix5456Editor05",
+      "name": "EditorBuild",
+      "build": true,
+      "report": "Run.json"
+    },
+    {
+      "folder": "Saved/Extraction/Fix5456Server01",
+      "name": "ServerBuild",
+      "build": true,
+      "report": "Run.json"
+    },
+    {
+      "folder": "Saved/Extraction/Fix5456Client01",
+      "name": "ClientBuild",
+      "build": true,
+      "report": "Run.json"
+    },
+    {
+      "folder": "Saved/Extraction/Fix5456Unit03",
+      "name": "Automation",
+      "build": false,
+      "report": "Run.json"
+    },
+    {
+      "folder": "Saved/Extraction/Fix5456Audit01",
+      "name": "NavigationAndReload",
+      "build": false,
+      "report": "Run.json"
+    },
+    {
+      "folder": "Saved/Extraction/Fix5456Doors01",
+      "name": "EditorDoors",
+      "build": false,
+      "report": "Report.json"
+    },
+    {
+      "folder": "Saved/Extraction/Fix5456PoseAfter04",
+      "name": "EditorFirstPerson",
+      "build": false,
+      "report": "Report.json"
+    },
+    {
+      "folder": "Saved/Extraction/Fix5456PackagedSoviet01",
+      "name": "PackagedSovietLoadout",
+      "build": false,
+      "report": "Report.json"
+    },
+    {
+      "folder": "Saved/Extraction/Fix5456PackagedSpace01",
+      "name": "PackagedSpaceLoadout",
+      "build": false,
+      "report": "Report.json"
+    },
+    {
+      "folder": "Saved/Extraction/Fix5456PackagedDoors01",
+      "name": "PackagedDoors",
+      "build": false,
+      "report": "Report.json"
+    },
+    {
+      "folder": "Saved/Extraction/Fix5456PackagedInteraction01",
+      "name": "PackagedInteraction",
+      "build": false,
+      "report": "Report.json"
+    },
+    {
+      "folder": "Saved/Extraction/Fix5456PackagedLifecycle01",
+      "name": "PackagedLifecycle",
+      "build": false,
+      "report": "Report.json"
+    },
+    {
+      "folder": "Saved/Extraction/Fix5456AssetReload01",
+      "name": "AssetReload",
+      "report": "Run.json",
+      "build": false
+    }
+  ],
+  "extra_files": [
+    {
+      "source": "Saved/Extraction/Fix5456PoseBefore03/A-BoltSniper-hip.png",
+      "name": "SniperBefore-Hip.png"
+    },
+    {
+      "source": "Saved/Extraction/Fix5456PoseAfter03/A-BoltSniper-ads.png",
+      "name": "OpaqueLens-BeforeScope.png"
+    },
+    {
+      "source": "Saved/Extraction/Fix5456PoseBefore02/A-test-kit.png",
+      "name": "KitBefore-SwapSpace.png"
+    },
+    {
+      "source": "Saved/Extraction/inspect_kit_assets.py",
+      "name": "inspect_kit_assets.py"
+    }
+  ],
+  "implementation_sha256": {
+    "BrokenEdge.uproject": "f341e1a1916de17662ebb1921a015005d084c2f98d481b4ca77b2a25ba1bab77",
+    "Content/Extraction/Items/DA_Item_Bag_Test.uasset": "b82d0f0db1bf0b84d70b957ac04935de0e83bc3d6064149b77f40cd0607b26c7",
+    "Content/Extraction/Weapons/BoltSniper/DA_BoltSniper_Presentation.uasset": "6ccc3ecf24e079081133d934395a96f20510ca14bd0d8bf8a5e2641bc5b7b1de",
+    "Content/Maps/SovietMilitary/L_SovietMilitaryExtraction.umap": "7ad131ab02f63e3b15b123874eb5a8795450728d3327785fb081137fdad9ee6e",
+    "Content/UVB80/Assets/UVB80/Buildings/Door/SM_Door.uasset": "419ee1314a9bfbfc86451c4a5b50b9fc8f3b7231d0e0e15fe4ecddeb6bd17bef",
+    "Scripts/Extraction/configure_bolt_sniper_pose.py": "9a9ac9a2ee5c74952a5a1c9e7695001332d58f0636c7c7095c1d395a9c946172",
+    "Scripts/Extraction/configure_long_gun_viewfit.py": "67b3afc45071eadfb6f2d9378f0c70b5199451a17f31a0044f46ba0fc0762d26",
+    "Scripts/Extraction/configure_test_backpack.py": "dfc3ad30bf204933e3d317eecb983734dcc1195f9ff38e1f775e83b7e29f8d6a",
+    "Scripts/Extraction/prepare_soviet_military.py": "11360cae7c202aceabe322913563a74aebe6d4ea6626abd124f9b0d43d0f810b",
+    "Scripts/Extraction/repair_soviet_doors.py": "ca8f0bebb955a0fe7935ef297881998fe2cf8e50b67b387c3d87d07ac00a60d0",
+    "Scripts/Extraction/run_network.py": "f71e4b21e85b75249afdcc32e927bdea713f0df9004976ab7e1da648f866d0fc",
+    "Scripts/Extraction/run_soviet_doors.py": "96b63bad223077341121890f2c912f30739832440df23ab7db7ffd432a89c128",
+    "Scripts/Extraction/run_test_loadout.py": "fbcde4f7125930d5397d22bcdd996183261651ea78180d86581df3bc5b002e30",
+    "Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp": "c050ffa16e7c6888947e6d988d9dce7f811c11210262ba8bbb888a01301433f5",
+    "Source/BrokenEdge/Character/BrokenEdgeCharacter.h": "920fcf08563809b0b43e7eaaf5f7c753c20152ec58dea0cea4f79d2a0e29c19c",
+    "Source/BrokenEdge/Component/CombatComponent.cpp": "0db701a105c6daacfb0350e22b1c6599f4798ab1350f7b54b3c103c02f4a0542",
+    "Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp": "b68b513b9b61824d4164a80636292cdaf0b4ca34a47e6c0ea9b804dc5629b08f",
+    "Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp": "fadec887bb4523286c4cf7b8971ba02fc699b5d4af33b035bcc957b26306a753",
+    "Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h": "a11cc1c2772ed2af20a6fd6116590fbb1bc70691a0b47fe11a5c2223c36048b1",
+    "Source/BrokenEdge/Extraction/ExtractionItems.cpp": "84309814b2fcb229915b9eb4212f9236debf475ab439736d29e8a65eba51c0e5",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "e39f3bd2dc7a1d5926257784bdbd959077b8cbbb4ca1ae3f128d0a14d8bee107",
+    "Source/BrokenEdge/Tests/ExtractionMapTests.cpp": "0b4e0afa52d7f9a51d4f90fb64f9546de63b30b91037b5ce7e21709ccaf19408",
+    "Source/BrokenEdge/Tests/ExtractionStartingSupplyTests.cpp": "294ebe593baeb11ce5011dcb863fb25c730591b65807a9b22cd9b1ab07644a12",
+    "Source/BrokenEdge/UI/BrokenEdgeHUD.cpp": "d6a793b6c1b65ef27c1b98a06d92f1ef31568149527089d5c3c518348217cd05",
+    "Source/BrokenEdge/Weapon/WeaponPresentation.h": "29a53311858001ccdcc102aebe9b61f77d8490fe0ecd5e24f3f5d5dd74591ff0",
+    "Source/StingerTools/Private/SovietMilitaryBuilder.cpp": "add0f3b950748c69eae92da7123e513dbe1ab27439eb48944a6f30877c4866aa",
+    "Source/StingerTools/Public/SovietMilitaryBuilder.h": "07f1df0122cf93aeeac3e6d39d66414bed45c495dce24760e965e27ad1a54c7f"
+  },
+  "packages": {
+    "Packaged/Fix5456/Client/Windows/BrokenEdge.exe": {
+      "size": 173568,
+      "sha256": "061bdd6d6c67ab6f19e80c1cc06a9aaa8ad959bb767871d76b5bed6790e52c34"
+    },
+    "Packaged/Fix5456/Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe": {
+      "size": 339990528,
+      "sha256": "e5b9fc80fe577265d2c4f7ac680299cf65b8882b018b26c08ead006cbc87fd7b"
+    },
+    "Packaged/Fix5456/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.pak": {
+      "size": 12917429,
+      "sha256": "a20d96023dfcc143aec6b6c8cb3eaf6104590c25a04033e15af7ef7e5936faf9"
+    },
+    "Packaged/Fix5456/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.ucas": {
+      "size": 5067067040,
+      "sha256": "3d679de77ae7d8c1403ebcdeaa1c578ebdc37187efc094c255b6f35d6fa463b8"
+    },
+    "Packaged/Fix5456/Client/Windows/BrokenEdge/Content/Paks/BrokenEdge-Windows.utoc": {
+      "size": 5489293,
+      "sha256": "cb32fce0c1a89c258da19eceaee58413e0da3992d4b402b2a8e7fbbd33ba86ee"
+    },
+    "Packaged/Fix5456/Client/Windows/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3384800,
+      "sha256": "71d6d4027b44101f3111bf911e6f74738a5b4a05f2084ea34073743b4c1ccafe"
+    },
+    "Packaged/Fix5456/Client/Windows/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "f8543787eb5b980d4521ab3b4d2014b253a70ec23ea65b650713ce8ef478139a"
+    },
+    "Packaged/Fix5456/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Fix5456/Client/Windows/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    },
+    "Packaged/Fix5456/Server/WindowsServer/BrokenEdgeServer.exe": {
+      "size": 173568,
+      "sha256": "e9fa4aaa0667e5a6b5d24d86c95d7c126211a48deebb4a9b5b4dee4cac76c631"
+    },
+    "Packaged/Fix5456/Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe": {
+      "size": 321681920,
+      "sha256": "1023fab3101267e48441353d1e7540386052ceceb7ce898ac7f11734fa06448a"
+    },
+    "Packaged/Fix5456/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.pak": {
+      "size": 11885392,
+      "sha256": "109115620c9b6266f1a7679d009ee962498bcf923c254f946a3b19e042ccac30"
+    },
+    "Packaged/Fix5456/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.ucas": {
+      "size": 264823376,
+      "sha256": "ceb410964ab1b753b77689a587592b72953ce28fe1b7dc27e03bdf479d05ea64"
+    },
+    "Packaged/Fix5456/Server/WindowsServer/BrokenEdge/Content/Paks/BrokenEdge-WindowsServer.utoc": {
+      "size": 2621622,
+      "sha256": "6063eae677961dbea6ba390449db24039fa52808edf59461e10db58b60341c5f"
+    },
+    "Packaged/Fix5456/Server/WindowsServer/BrokenEdge/Content/Paks/global.ucas": {
+      "size": 3384800,
+      "sha256": "71d6d4027b44101f3111bf911e6f74738a5b4a05f2084ea34073743b4c1ccafe"
+    },
+    "Packaged/Fix5456/Server/WindowsServer/BrokenEdge/Content/Paks/global.utoc": {
+      "size": 818,
+      "sha256": "f8543787eb5b980d4521ab3b4d2014b253a70ec23ea65b650713ce8ef478139a"
+    },
+    "Packaged/Fix5456/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.arm64.exe": {
+      "size": 11740976,
+      "sha256": "fcda7b24413f170bd456052f08ae49fb60ac1638f083aab7a35afeb957aeb1d6"
+    },
+    "Packaged/Fix5456/Server/WindowsServer/Engine/Extras/Redist/en-us/vc_redist.x64.exe": {
+      "size": 18558944,
+      "sha256": "8995548dfffcde7c49987029c764355612ba6850ee09a7b6f0fddc85bdc5c280"
+    }
+  },
+  "review": [
+    "Only first-person presentation work; existing world models/animation machinery retained.",
+    "Real starting kit and inventory RPCs, no injected test guns or ammunition; explicit position fixtures.",
+    "All 17 doors: both-side closed blocking and open movement on server and owner; separate interaction/occupancy regression.",
+    "One rendered 1920x1080 Medium client, remaining clients NullRHI; not performance or all-map traversal coverage.",
+    "Lifecycle uses a real 120-second round limit and intentionally terminates client C.",
+    "Six unit tests passed; FlightAndObstruction emitted three temporary-world context warnings.",
+    "Final code/assets packaged from 06f4288cb; later changes only add script coverage, generator struct-copy isolation and documentation."
+  ]
+}

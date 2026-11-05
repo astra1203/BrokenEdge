@@ -86,4 +86,8 @@ python Scripts/Extraction/run_network.py --scenario soviet --players 6 --guards 
 
 连续路线使用 `--players 2 --guards 0 --soviet-route`；守卫验收使用 `--players 2 --guards 6`；异常结算使用 `--players 3 --guards 0 --soviet-lifecycle`。入口回归使用同样的双人参数，入口脚本换成 `Scripts/Extraction/run_soviet_stairs.py`。常规功能场景将回合上限设为六百秒，默认正式规则仍为三十分钟；异常结算单独覆盖真实一百二十秒测试截止时间。
 
-当前项目的 `GrantStartingSupply` 会提供 M4A1 与 SCAR-H，并把携入 AK 移入背包。地图验收按这份现有规则检查枪械保留；旧 AK 握枪距离断言仍保留在原有枪械场景中。
+上述归档使用当时的 `GrantStartingSupply`：提供 M4A1 与 SCAR-H，并把携入 AK 移入背包。旧 AK 握枪距离断言仍保留在原有枪械场景中。
+
+## 2026-11-06：54–56 修复补充
+
+后续实测确认，当时门的简单碰撞数量为零；旧归档的门检查验证了交互与动作复制，没有证明关门实际阻挡角色。现已生成真实碰撞盒，重建导航，并增加全部 17 扇门正反两侧的关门阻挡与开门步行穿越测试。测试配装也已增加头盔、护甲、64 格背包及两把长枪。新代码、打包验证和证据边界见 [54–56 修复验收](Fixes54-56.md)，旧归档保持原样。

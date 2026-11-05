@@ -1,0 +1,405 @@
+[
+  {
+    "candidate": [
+      11080.0,
+      8500.0,
+      930.0897714531629
+    ],
+    "navigable": true,
+    "clear": true,
+    "probe": {
+      "read_only_probe": true,
+      "scope": "local snapshot; not an authoritative shot or impact",
+      "target_name": "EX_B",
+      "target_actor": "BP_StingerCharacter_C_2147481492",
+      "shooter_actor": "BP_StingerCharacter_C_2147481656",
+      "camera_position": [
+        10689.9999999995,
+        8500.000100091132,
+        1000.1
+      ],
+      "camera_rotation_pitch_yaw_roll": [
+        -17.195235628426065,
+        0.0005751726568246407,
+        1.905079420687917e-19
+      ],
+      "control_rotation_pitch_yaw_roll": [
+        -17.195285195881052,
+        0.0005751726568187415,
+        0
+      ],
+      "control_direction": [
+        0.9553026923168577,
+        9.589955705183875e-06,
+        -0.2956294402798816
+      ],
+      "configured_bone": "None",
+      "configured_head": false,
+      "configured_body_center": false,
+      "production_hit_target": [
+        11053.047723676145,
+        8500.003742572182,
+        887.7507061354999
+      ],
+      "muzzle_probe_available": true,
+      "weapon": "BP_M4A1_C_2147481594",
+      "raw_muzzle_position": [
+        10757.762322434135,
+        8535.025954161109,
+        998.7933017541019
+      ],
+      "muzzle_sphere_radius": 1,
+      "muzzle_origin_obstruction": {
+        "blocking": false,
+        "actor": "None",
+        "component": "None",
+        "component_path": "None",
+        "bone": "None",
+        "location": [
+          0,
+          0,
+          0
+        ],
+        "impact_point": [
+          0,
+          0,
+          0
+        ],
+        "impact_normal": [
+          0,
+          0,
+          0
+        ],
+        "start_penetrating": false,
+        "distance": 0
+      },
+      "muzzle_position": [
+        10757.762322434135,
+        8535.025954161109,
+        998.7933017541019
+      ],
+      "points": {
+        "body": {
+          "available": true,
+          "position": [
+            11080,
+            8500,
+            879.41
+          ],
+          "camera_simple": {
+            "blocking": true,
+            "actor": "BP_StingerCharacter_C_2147481492",
+            "component": "CharacterMesh0",
+            "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.BP_StingerCharacter_C_2147481492.CharacterMesh0",
+            "bone": "Spine1",
+            "location": [
+              11053.024351596798,
+              8500.000006923136,
+              887.7579256558417
+            ],
+            "impact_point": [
+              11053.024372259313,
+              8500.000008280791,
+              887.7579165482397
+            ],
+            "impact_normal": [
+              -0.7207336773572335,
+              -0.07554931892206707,
+              -0.6890829171685587
+            ],
+            "start_penetrating": false,
+            "distance": 380.009765625
+          },
+          "camera_complex": {
+            "blocking": true,
+            "actor": "BP_StingerCharacter_C_2147481492",
+            "component": "CharacterMesh0",
+            "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.BP_StingerCharacter_C_2147481492.CharacterMesh0",
+            "bone": "Spine1",
+            "location": [
+              11053.024351596798,
+              8500.000006923136,
+              887.7579256558417
+            ],
+            "impact_point": [
+              11053.024372259313,
+              8500.000008280791,
+              887.7579165482397
+            ],
+            "impact_normal": [
+              -0.7207336773572335,
+              -0.07554931892206707,
+              -0.6890829171685587
+            ],
+            "start_penetrating": false,
+            "distance": 380.009765625
+          },
+          "muzzle_complex_sphere": {
+            "blocking": true,
+            "actor": "BP_StingerCharacter_C_2147481492",
+            "component": "CharacterMesh0",
+            "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.BP_StingerCharacter_C_2147481492.CharacterMesh0",
+            "bone": "Spine1",
+            "location": [
+              11049.272247065572,
+              8503.339984553902,
+              890.7940834147852
+            ],
+            "impact_point": [
+              11050.105632725934,
+              8503.290134285451,
+              891.3456422224381
+            ],
+            "impact_normal": [
+              -0.832565592104763,
+              0.050512362798741384,
+              -0.5516187229390841
+            ],
+            "start_penetrating": false,
+            "distance": 312.4833984375
+          }
+        },
+        "head": {
+          "available": true,
+          "position": [
+            11065.697348053309,
+            8504.6557151945,
+            939.6496003193562
+          ],
+          "camera_simple": {
+            "blocking": true,
+            "actor": "BP_StingerCharacter_C_2147481492",
+            "component": "CharacterMesh0",
+            "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.BP_StingerCharacter_C_2147481492.CharacterMesh0",
+            "bone": "Head",
+            "location": [
+              11042.162967729348,
+              8504.364078809382,
+              943.4363257359432
+            ],
+            "impact_point": [
+              11042.16297167475,
+              8504.364078922184,
+              943.4363250870313
+            ],
+            "impact_normal": [
+              -0.9075154977746888,
+              -0.4052845820708137,
+              0.11027252075854811
+            ],
+            "start_penetrating": false,
+            "distance": 356.71917724609375
+          },
+          "camera_complex": {
+            "blocking": true,
+            "actor": "BP_StingerCharacter_C_2147481492",
+            "component": "CharacterMesh0",
+            "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.BP_StingerCharacter_C_2147481492.CharacterMesh0",
+            "bone": "Head",
+            "location": [
+              11042.162967729348,
+              8504.364078809382,
+              943.4363257359432
+            ],
+            "impact_point": [
+              11042.16297167475,
+              8504.364078922184,
+              943.4363250870313
+            ],
+            "impact_normal": [
+              -0.9075154977746888,
+              -0.4052845820708137,
+              0.11027252075854811
+            ],
+            "start_penetrating": false,
+            "distance": 356.71917724609375
+          },
+          "muzzle_complex_sphere": {
+            "blocking": true,
+            "actor": "BP_StingerCharacter_C_2147481492",
+            "component": "CharacterMesh0",
+            "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.BP_StingerCharacter_C_2147481492.CharacterMesh0",
+            "bone": "Head",
+            "location": [
+              11040.379970930178,
+              8507.15265360445,
+              944.512195571944
+            ],
+            "impact_point": [
+              11041.345880550078,
+              8507.347223996607,
+              944.3379551904488
+            ],
+            "impact_normal": [
+              -0.9654650904736793,
+              -0.19371455247073693,
+              0.1742177736211623
+            ],
+            "start_penetrating": false,
+            "distance": 289.1298828125
+          }
+        },
+        "spine2": {
+          "available": true,
+          "position": [
+            11077.72351947643,
+            8497.023839310361,
+            915.0815379459337
+          ],
+          "camera_simple": {
+            "blocking": true,
+            "actor": "BP_StingerCharacter_C_2147481492",
+            "component": "CharacterMesh0",
+            "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.BP_StingerCharacter_C_2147481492.CharacterMesh0",
+            "bone": "Spine2",
+            "location": [
+              11044.779900978852,
+              8497.276722601639,
+              922.305282801388
+            ],
+            "impact_point": [
+              11044.779899394725,
+              8497.276721608067,
+              922.305283488933
+            ],
+            "impact_normal": [
+              -0.9608484894966776,
+              0.20778313283698688,
+              -0.18329307117400867
+            ],
+            "start_penetrating": false,
+            "distance": 363.21923828125
+          },
+          "camera_complex": {
+            "blocking": true,
+            "actor": "BP_StingerCharacter_C_2147481492",
+            "component": "CharacterMesh0",
+            "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.BP_StingerCharacter_C_2147481492.CharacterMesh0",
+            "bone": "Spine2",
+            "location": [
+              11044.779900978852,
+              8497.276722601639,
+              922.305282801388
+            ],
+            "impact_point": [
+              11044.779899394725,
+              8497.276721608067,
+              922.305283488933
+            ],
+            "impact_normal": [
+              -0.9608484894966776,
+              0.20778313283698688,
+              -0.18329307117400867
+            ],
+            "start_penetrating": false,
+            "distance": 363.21923828125
+          },
+          "muzzle_complex_sphere": {
+            "blocking": true,
+            "actor": "BP_StingerCharacter_C_2147481492",
+            "component": "CharacterMesh0",
+            "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.BP_StingerCharacter_C_2147481492.CharacterMesh0",
+            "bone": "RightHand",
+            "location": [
+              11038.85236759822,
+              8501.640605317338,
+              925.2514357806082
+            ],
+            "impact_point": [
+              11039.334731911302,
+              8502.270698685485,
+              924.6426191894518
+            ],
+            "impact_normal": [
+              -0.4821208036497705,
+              -0.630055476233247,
+              0.6087608095971763
+            ],
+            "start_penetrating": false,
+            "distance": 292.4629821777344
+          }
+        },
+        "selected": {
+          "available": true,
+          "position": [
+            11080,
+            8500,
+            879.41
+          ],
+          "camera_simple": {
+            "blocking": true,
+            "actor": "BP_StingerCharacter_C_2147481492",
+            "component": "CharacterMesh0",
+            "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.BP_StingerCharacter_C_2147481492.CharacterMesh0",
+            "bone": "Spine1",
+            "location": [
+              11053.024351596798,
+              8500.000006923136,
+              887.7579256558417
+            ],
+            "impact_point": [
+              11053.024372259313,
+              8500.000008280791,
+              887.7579165482397
+            ],
+            "impact_normal": [
+              -0.7207336773572335,
+              -0.07554931892206707,
+              -0.6890829171685587
+            ],
+            "start_penetrating": false,
+            "distance": 380.009765625
+          },
+          "camera_complex": {
+            "blocking": true,
+            "actor": "BP_StingerCharacter_C_2147481492",
+            "component": "CharacterMesh0",
+            "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.BP_StingerCharacter_C_2147481492.CharacterMesh0",
+            "bone": "Spine1",
+            "location": [
+              11053.024351596798,
+              8500.000006923136,
+              887.7579256558417
+            ],
+            "impact_point": [
+              11053.024372259313,
+              8500.000008280791,
+              887.7579165482397
+            ],
+            "impact_normal": [
+              -0.7207336773572335,
+              -0.07554931892206707,
+              -0.6890829171685587
+            ],
+            "start_penetrating": false,
+            "distance": 380.009765625
+          },
+          "muzzle_complex_sphere": {
+            "blocking": true,
+            "actor": "BP_StingerCharacter_C_2147481492",
+            "component": "CharacterMesh0",
+            "component_path": "/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction.L_SovietMilitaryExtraction:PersistentLevel.BP_StingerCharacter_C_2147481492.CharacterMesh0",
+            "bone": "Spine1",
+            "location": [
+              11049.272247065572,
+              8503.339984553902,
+              890.7940834147852
+            ],
+            "impact_point": [
+              11050.105632725934,
+              8503.290134285451,
+              891.3456422224381
+            ],
+            "impact_normal": [
+              -0.832565592104763,
+              0.050512362798741384,
+              -0.5516187229390841
+            ],
+            "start_penetrating": false,
+            "distance": 312.4833984375
+          }
+        }
+      }
+    }
+  }
+]

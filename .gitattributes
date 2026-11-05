@@ -106,3 +106,7 @@ Docs/Extraction/Phase7SovietEvidence/** -text whitespace=blank-at-eol,blank-at-e
 Docs/Extraction/Phase7SovietEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
 # Preserve this captured diagnostic script verbatim, including its original trailing blank line.
 Docs/Extraction/Phase7SovietEvidence/diagnostics/ApplySovietVisuals.py whitespace=-blank-at-eof,blank-at-eol,space-before-tab,cr-at-eol
+
+# Fixes 54-56 evidence retains recorded bytes and stores compressed reports in LFS.
+Docs/Extraction/Phase7Fix5456Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Docs/Extraction/Phase7Fix5456Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
