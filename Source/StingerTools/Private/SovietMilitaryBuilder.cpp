@@ -1,0 +1,162 @@
+#include "SovietMilitaryBuilder.h"
+#include "Engine/Blueprint.h"
+#include "Engine/SimpleConstructionScript.h"
+#include "Engine/SCS_Node.h"
+#include "Engine/StaticMesh.h"
+#include "Materials/MaterialInterface.h"
+#include "Components/StaticMeshComponent.h"
+#include "Kismet2/BlueprintEditorUtils.h"
+#include "Kismet2/KismetEditorUtilities.h"
+#include "EdGraph/EdGraph.h"
+#include "NavigationSystem.h"
+#include "NavMesh/RecastNavMesh.h"
+#include "Engine/World.h"
+#include "EngineUtils.h"
+#include "FileHelpers.h"
+#include "AssetCompilingManager.h"
+
+FString USovietMilitaryBuilder::RepairWindows(bool Apply)
+{
+	FString Report;
+	for (const TCHAR* Name : {TEXT("BP_WindowBase"), TEXT("BP_WindowA"), TEXT("BP_WindowB"), TEXT("BP_WindowC")})
+	{
+		const FString Path = FString(TEXT("/Game/UVB80/Assets/UVB80/Buildings/Blueprints/")) + Name;
+		auto* BP = LoadObject<UBlueprint>(nullptr, *Path);
+		if (!BP)
+		{
+			Report += TEXT("MISSING ") + Path;
+			continue;
+		}
+		Report += TEXT("\nBLUEPRINT ") + Path;
+		for (const auto& Var : BP->NewVariables)
+			Report += TEXT("\nVAR ") + Var.VarName.ToString() + TEXT(" ") + Var.
+			                                                                VarType.PinCategory.ToString() + TEXT(" ") +
+				GetNameSafe(Var.VarType.PinSubCategoryObject.Get());
+		if (BP->SimpleConstructionScript)
+			for (auto* Node : BP->SimpleConstructionScript->GetAllNodes())
+			{
+				auto* Scene = Cast<USceneComponent>(Node->ComponentTemplate);
+				Report += TEXT("\nNODE ") + Node->GetVariableName().ToString() + TEXT(" ") + GetNameSafe(
+						Node->ComponentClass)
+					+ TEXT(" ") + (Scene ? Scene->GetRelativeTransform().ToString() : TEXT("NULL"));
+				if (auto* Mesh = Cast<UStaticMeshComponent>(Scene))
+					Report += TEXT(" MESH=") + GetPathNameSafe(
+						Mesh->GetStaticMesh());
+			}
+		if (!Apply) continue;
+		BP->Modify();
+		// Legacy window logic only controls APEX destruction. Keep authored components and valid parameters.
+		TArray<UEdGraph*> Graphs;
+		BP->GetAllGraphs(Graphs);
+		for (auto* Graph : Graphs) if (Graph) FBlueprintEditorUtils::RemoveGraph(BP, Graph, EGraphRemoveFlags::None);
+		TArray<FName> InvalidVariables;
+		for (const auto& Var : BP->NewVariables)
+			if ((Var.VarType.PinCategory == TEXT("object") || Var.VarType.PinCategory == TEXT("class")) && !Var.VarType.
+				PinSubCategoryObject.IsValid())
+				InvalidVariables.Add(Var.VarName);
+		for (auto Var : InvalidVariables) FBlueprintEditorUtils::RemoveMemberVariable(BP, Var);
+		if (auto* SCS = BP->SimpleConstructionScript.Get())
+		{
+			const auto Nodes = SCS->GetAllNodes();
+			for (auto* Node : Nodes)
+				if (auto* Scene = Cast<USceneComponent>(Node->ComponentTemplate))
+					Scene->SetMobility(
+						EComponentMobility::Movable);
+			// Missing APEX templates are discarded by the loader before SCS enumeration.
+			// Fill each surviving frame with ordinary glass in that frame's local bounds.
+			for (auto* Node : Nodes)
+			{
+				auto* Frame = Cast<UStaticMeshComponent>(Node->ComponentTemplate);
+				if (!Frame || !Frame->GetStaticMesh() || !Frame->GetStaticMesh()->GetName().StartsWith(
+					TEXT("SM_WindowFrame")))
+					continue;
+				const FName GlassName(*(Node->GetVariableName().ToString() + TEXT("_StaticGlass")));
+				if (SCS->FindSCSNode(GlassName)) continue;
+				auto* GlassNode = SCS->CreateNode(UStaticMeshComponent::StaticClass(), GlassName);
+				auto* Glass = CastChecked<UStaticMeshComponent>(GlassNode->ComponentTemplate);
+				Glass->SetStaticMesh(LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube")));
+				Glass->SetMaterial(0, LoadObject<UMaterialInterface>(
+					                   nullptr, TEXT(
+						                   "/Game/UVB80/Assets/UVB80/Buildings/Materials/MIC_GlassMaterial_Inst")));
+				const FBox Bounds = Frame->GetStaticMesh()->GetBoundingBox();
+				FVector Size = Bounds.GetSize() - FVector(8);
+				const int32 Thin = Bounds.GetSize().GetAbsMin() == Bounds.GetSize().X
+					                   ? 0
+					                   : (Bounds.GetSize().Y < Bounds.GetSize().Z ? 1 : 2);
+				Size[Thin] = 1.5;
+				Glass->SetRelativeLocation(Frame->GetRelativeTransform().TransformPosition(Bounds.GetCenter()));
+				Glass->SetRelativeRotation(Frame->GetRelativeRotation());
+				Glass->SetRelativeScale3D(Size.ComponentMax(FVector(1)) * Frame->GetRelativeScale3D() / 100.);
+				Glass->SetCollisionProfileName(TEXT("BlockAll"));
+				Glass->SetMobility(EComponentMobility::Movable);
+				SCS->AddNode(GlassNode);
+			}
+			for (auto* Node : Nodes)
+			{
+				if (Node->ComponentClass && Node->ComponentTemplate) continue;
+				const FString N = Node->GetVariableName().ToString();
+				const auto* Scene = Cast<USceneComponent>(Node->ComponentTemplate);
+				const FTransform Transform = Scene ? Scene->GetRelativeTransform() : FTransform::Identity;
+				SCS->RemoveNodeAndPromoteChildren(Node);
+				FString MeshName;
+				if (N.Contains(TEXT("ARectangle"))) MeshName = TEXT("SM_GlassFrameARectangle");
+				else if (N.Contains(TEXT("ASquare"))) MeshName = TEXT("SM_GlassFrameASquare");
+				else if (N.Contains(TEXT("Big"))) MeshName = TEXT("SM_GlassFrameBig");
+				if (MeshName.IsEmpty()) continue;
+				auto* NewNode = SCS->CreateNode(UStaticMeshComponent::StaticClass(), FName(N + TEXT("_Static")));
+				auto* Mesh = CastChecked<UStaticMeshComponent>(NewNode->ComponentTemplate);
+				Mesh->SetStaticMesh(
+					LoadObject<UStaticMesh>(nullptr, *(TEXT("/Game/UVB80/Assets/UVB80/Buildings/Meshes/") + MeshName)));
+				Mesh->SetRelativeTransform(Transform);
+				Mesh->SetCollisionProfileName(TEXT("BlockAll"));
+				SCS->AddNode(NewNode);
+			}
+		}
+		FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(BP);
+		FKismetEditorUtilities::CompileBlueprint(BP);
+		Report += FString::Printf(TEXT("\nSTATUS %d"), int32(BP->Status));
+		TArray<UPackage*> Packages{BP->GetOutermost()};
+		if (!UEditorLoadingAndSavingUtils::SavePackages(Packages, false)) Report += TEXT(" SAVE_FAILED");
+	}
+	return Report;
+}
+
+bool USovietMilitaryBuilder::BuildNavigation(UObject* Context)
+{
+	auto* World = GEngine->GetWorldFromContextObject(Context, EGetWorldErrorMode::ReturnNull);
+	if (!World) return false;
+	auto* Nav = FNavigationSystem::GetCurrent<UNavigationSystemV1>(World);
+	if (!Nav) return false;
+	// Commandlets do not advance the editor ticker that normally clears the async-load lock.
+	FlushAsyncLoading();
+	FAssetCompilingManager::Get().FinishAllCompilation();
+	Nav->RemoveNavigationBuildLock(ENavigationBuildLock::AsyncLoadLock,
+	                               UNavigationSystemV1::ELockRemovalRebuildAction::NoRebuild);
+	if (Nav->IsNavigationBuildingLocked(~ENavigationBuildLock::NoUpdateInEditor)) return false;
+	Nav->Build();
+	if (auto* Data = Nav->GetDefaultNavDataInstance(FNavigationSystem::DontCreate)) Data->EnsureBuildCompletion();
+	return Nav->GetDefaultNavDataInstance(FNavigationSystem::DontCreate) != nullptr;
+}
+
+FVector USovietMilitaryBuilder::ProbeGround(UObject* Context, FVector Position, bool RequireNavigation)
+{
+	auto* World = GEngine->GetWorldFromContextObject(Context, EGetWorldErrorMode::ReturnNull);
+	const FVector Invalid(0, 0, -1e9);
+	if (!World) return Invalid;
+	FHitResult Hit;
+	if (!World->LineTraceSingleByChannel(Hit, Position + FVector(0, 0, 100), Position - FVector(0, 0, 1200),
+	                                     ECC_Visibility) || Hit.ImpactNormal.Z < .7)
+		return Invalid;
+	FVector Floor = Hit.ImpactPoint;
+	if (World->OverlapBlockingTestByChannel(Floor + FVector(0, 0, 98), FQuat::Identity, ECC_Pawn,
+	                                        FCollisionShape::MakeCapsule(42, 92)))
+		return Invalid;
+	if (RequireNavigation)
+	{
+		auto* Nav = FNavigationSystem::GetCurrent<UNavigationSystemV1>(World);
+		FNavLocation Projected;
+		if (!Nav || !Nav->ProjectPointToNavigation(Floor, Projected, FVector(80, 80, 100))) return Invalid;
+		if (FVector::Dist2D(Floor, Projected.Location) > 60) return Invalid;
+	}
+	return Floor;
+}

@@ -91,7 +91,9 @@ private:
 	void PaintMinimap(const FGeometry& Geometry, FSlateWindowElementList& Out, int32 LayerId) const;
 	UPROPERTY(Transient)
 	TObjectPtr<class UTexture2D> MiniOverview;
+	UPROPERTY(Transient)
+	TObjectPtr<class UExtractionMapDefinition> MiniDefinition;
 	FVector2D MiniMin = FVector2D::ZeroVector, MiniMax = FVector2D::ZeroVector;
-	bool bMiniLoaded = false, bMiniActive = false;
+	bool bMiniActive = false;
 	FVector MiniCenter = FVector::ZeroVector;
 };

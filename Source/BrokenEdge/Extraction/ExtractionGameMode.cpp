@@ -1,4 +1,5 @@
 #include "ExtractionGameMode.h"
+#include "ExtractionMapRegistry.h"
 #include "ExtractionLootActor.h"
 #include "ExtractionLootLayout.h"
 #include "ExtractionRegionStream.h"
@@ -68,7 +69,12 @@ void AExtractionGameMode::InitGame(const FString& Map, const FString& Options, F
 	int32 Seed = FMath::Rand();
 	FParse::Value(FCommandLine::Get(), TEXT("ExtractionSpawnSeed="), Seed);
 	SpawnRandom.Initialize(Seed);
-	LoadedMapDefinition = MapDefinition.LoadSynchronous();
+	LoadedMapDefinition = nullptr;
+	if (auto* Registry = GetGameInstance()->GetSubsystem<UExtractionMapRegistry>())
+		LoadedMapDefinition = Registry->FindWorld(GetWorld());
+	// Explicit training/test overrides remain supported, never the global SpaceCenter fallback on an unknown world.
+	if (!LoadedMapDefinition && MapDefinition.ToSoftObjectPath().GetAssetName() != TEXT("DA_SpaceCenterGameplay"))
+		LoadedMapDefinition = MapDefinition.LoadSynchronous();
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_SPAWN_SEED %d"), Seed);
 }
 
@@ -79,7 +85,7 @@ void AExtractionGameMode::BeginPlay()
 	Super::BeginPlay();
 	LoadedAt = GetWorld()->GetTimeSeconds();
 	if (auto* Persistence = Store()) Persistence->EnsureLoaded();
-	LoadedMapDefinition = MapDefinition.LoadSynchronous();
+	if (auto* GS = GetGameState<AExtractionGameState>()) GS->MapDefinition = LoadedMapDefinition;
 	if (LoadedMapDefinition)
 	{
 		TSet<FName> Ids;

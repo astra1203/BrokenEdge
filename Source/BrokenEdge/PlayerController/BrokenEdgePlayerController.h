@@ -21,6 +21,8 @@ public:
 	UFUNCTION(Server, Reliable) void ServerSetExtractionSquad(uint8 Squad);
 	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Lobby")
 	void ServerSetLobbyMatchType(const FString& MatchType);
+	UFUNCTION(Server, Reliable)
+	void ServerSetExtractionMap(FName MapId);
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void PreClientTravel(const FString& PendingURL, ETravelType TravelType, bool bIsSeamlessTravel) override;
 	/**

@@ -1,4 +1,5 @@
 #include "ExtractionInteractionComponent.h"
+#include "ExtractionDoor.h"
 #include "ExtractionHealth.h"
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionLootActor.h"
@@ -86,6 +87,7 @@ bool UExtractionInteractionComponent::CanReach(const AExtractionLootActor* Targe
 void UExtractionInteractionComponent::UpdateFocus()
 {
 	Focus = nullptr;
+	OrdinaryDoorFocus = nullptr;
 	DoorFocus = nullptr;
 	SwitchFocus = nullptr;
 	ZiplineFocus = nullptr;
@@ -106,6 +108,14 @@ void UExtractionInteractionComponent::UpdateFocus()
 			Best = Score;
 		}
 	}
+	for (TActorIterator<AExtractionDoor> It(GetWorld()); It; ++It)
+	{
+		if (!It->CanReach(C)) continue;
+		const FVector Delta = It->InteractionPoint() - C->GetActorLocation();
+		const float Dot = FVector::DotProduct(Forward, Delta.GetSafeNormal2D());
+		const float Score = Delta.Size() + (1 - Dot) * 100;
+		if (Dot >= -.1f && Score < Best) { OrdinaryDoorFocus = *It; Focus = nullptr; Best = Score; }
+	}
 	for (TActorIterator<AExtractionKeyRoom> It(GetWorld()); It; ++It)
 	{
 		// 距离由门自己的交互碰撞盒决定；站进盒子就算够得着，只要求不是背对门。
@@ -115,6 +125,7 @@ void UExtractionInteractionComponent::UpdateFocus()
 		const float Score = Delta.Size();
 		if (Dot >= -.5f && Score < Best)
 		{
+			OrdinaryDoorFocus = nullptr;
 			DoorFocus = *It;
 			Focus = nullptr;
 			Best = Score;
@@ -128,6 +139,7 @@ void UExtractionInteractionComponent::UpdateFocus()
 		const float Score = Delta.Size2D();
 		if (Dot >= -.5f && Score < Best)
 		{
+			OrdinaryDoorFocus = nullptr;
 			SwitchFocus = *It;
 			DoorFocus = nullptr;
 			Focus = nullptr;
@@ -142,6 +154,7 @@ void UExtractionInteractionComponent::UpdateFocus()
 		const float Score = FVector::Dist2D(C->GetActorLocation(), bFromTop ? It->TopWorld() : It->BottomWorld()) - 50.f;
 		if (Score < Best)
 		{
+			OrdinaryDoorFocus = nullptr;
 			ZiplineFocus = *It;
 			SwitchFocus = nullptr;
 			DoorFocus = nullptr;

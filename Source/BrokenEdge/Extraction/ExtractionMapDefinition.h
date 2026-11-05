@@ -91,6 +91,10 @@ class BROKENEDGE_API UExtractionMapDefinition : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) FText DisplayName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) TSoftObjectPtr<UWorld> Level;
+	/** -1 keeps the existing global guard configuration. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="-1", ClampMax="8")) int32 GuardCount = -1;
 	/** World-space floor rectangles from restored geometry, two corners per rectangle. */
 	// 每两个二维世界坐标组成一个地板矩形，供战术地图绘制，不能替代场景碰撞。
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

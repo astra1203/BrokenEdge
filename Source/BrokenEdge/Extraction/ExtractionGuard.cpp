@@ -1,4 +1,5 @@
 #include "ExtractionGuard.h"
+#include "ExtractionMapDefinition.h"
 #include "ExtractionGameMode.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionSmoke.h"
@@ -330,7 +331,8 @@ void AExtractionGameMode::SpawnGuards()
 {
 	// 7F 起每个区域一条巡逻路线（核心区 4 条 + 新区域 4 条），上限随之放开到 8。
 	constexpr int32 MaxGuards = 8;
-	int32 Count = FMath::Clamp(GetDefault<UExtractionRules>()->Guards, 0, MaxGuards);
+	int32 Count = FMath::Clamp(LoadedMapDefinition && LoadedMapDefinition->GuardCount >= 0
+		? LoadedMapDefinition->GuardCount : GetDefault<UExtractionRules>()->Guards, 0, MaxGuards);
 	// Explicit server scenario configuration; clients cannot change this through a URL or RPC.
 	FParse::Value(FCommandLine::Get(), TEXT("ExtractionGuards="), Count);
 	Count = FMath::Clamp(Count, 0, MaxGuards);

@@ -34,7 +34,8 @@ public:
 	virtual int32 OnPaint(const FPaintArgs&, const FGeometry& G, const FSlateRect&, FSlateWindowElementList& Draw,
 	                      int32 Layer, const FWidgetStyle&, bool) const override
 	{
-		if (!Owner.IsValid() || !Owner->Definition) return Layer;
+		if (!Owner.IsValid()) return Layer;
+		Owner->RefreshDefinition();
 		const auto* D = Owner->Definition.Get();
 		auto* PC = Owner->GetOwningPlayer();
 		if (!PC) return Layer;
@@ -54,6 +55,12 @@ public:
 				                            FMath::Max(8, FMath::RoundToInt(Font * Scale))),
 			                            ESlateDrawEffect::None, C);
 		};
+		if (!D)
+		{
+			Box({35, 35}, {1210, 650}, FLinearColor(.009f, .02f, .024f, .98f));
+			Text({65, 62}, TEXT("地图加载中…"), 26);
+			return Layer + 3;
+		}
 		// 有烘焙俯视图时按俯视图覆盖的范围投影（整张可玩区），否则退回旧的楼层矩形范围。
 		UTexture2D* Overview = Owner->Overview;
 		const bool bImage = Overview && D->OverviewTextureMax.X > D->OverviewTextureMin.X;
@@ -67,7 +74,7 @@ public:
 			return Origin + FVector2D(P.Y - MinXY.Y, MaxXY.X - P.X) * Zoom;
 		};
 		Box({35, 35}, {1210, 650}, FLinearColor(.009f, .02f, .024f, .98f));
-		Text({65, 62},TEXT("航天基地  /  战术地图"), 26);
+		Text({65, 62},D->DisplayName.ToString() + TEXT("  /  战术地图"), 26);
 		Text({65, 660},TEXT("M / Esc 关闭   ·   ↑ 北   ·   俯视地图，标记高度以当前位置为基准"), 14);
 		Box({65, 115}, {850, 530}, FLinearColor(.025f, .045f, .048f));
 		for (int32 I = 1; I < 10; ++I)
@@ -160,11 +167,20 @@ private:
 	TWeakObjectPtr<UExtractionTacticalMap> Owner;
 };
 
-// 加载当前实现固定指定的地图数据资产，再创建 Slate 绘图面板；资产引用由 UPROPERTY 持有。
+// 从复制的对局状态读取地图；资产引用由 UPROPERTY 持有。
 TSharedRef<SWidget> UExtractionTacticalMap::RebuildWidget()
 {
-	Definition = LoadObject<UExtractionMapDefinition>(
-		nullptr,TEXT("/Game/Extraction/Maps/DA_SpaceCenterGameplay.DA_SpaceCenterGameplay"));
-	Overview = Definition ? Definition->OverviewTexture.LoadSynchronous() : nullptr;
+	RefreshDefinition();
 	return SNew(SExtractionTacticalMap).Owner(this);
+}
+
+void UExtractionTacticalMap::RefreshDefinition()
+{
+	const auto* GS = GetWorld() ? GetWorld()->GetGameState<AExtractionGameState>() : nullptr;
+	auto* Current = GS ? GS->MapDefinition.Get() : nullptr;
+	if (Current != Definition)
+	{
+		Definition = Current;
+		Overview = Current ? Current->OverviewTexture.LoadSynchronous() : nullptr;
+	}
 }

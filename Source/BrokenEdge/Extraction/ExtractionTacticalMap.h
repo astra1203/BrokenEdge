@@ -12,6 +12,7 @@ class BROKENEDGE_API UExtractionTacticalMap : public UUserWidget
 public:
 	// 加载当前实现固定指定的地图数据资产，再创建 Slate 绘图面板；资产引用由 UPROPERTY 持有。
 	virtual TSharedRef<SWidget> RebuildWidget() override;
+	void RefreshDefinition();
 
 	UPROPERTY(Transient)
 	TObjectPtr<class UExtractionMapDefinition> Definition;

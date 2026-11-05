@@ -13,7 +13,8 @@ ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
 parser.add_argument('--mode', choices=['Extraction', 'Teams', 'FreeForAll'], default='Extraction')
-parser.add_argument('--players', type=int, choices=[2, 3], default=2)
+parser.add_argument('--players', type=int, choices=[2, 3, 6], default=2)
+parser.add_argument('--cross-maps', action='store_true')
 args = parser.parse_args()
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
@@ -27,6 +28,7 @@ command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe'), str(ROOT / 'B
            '-NumPublicConnections=6', '-MinPlayersToStart=' + str(args.players), '-ExtractionPIEPlayers=' + str(args.players), '-ExtractionGuards=0',
            '-ExecCmds=Automation RunTests BrokenEdge.Extraction.PIE.Lobby',
            '-TestExit=Automation Test Queue Empty', '-ReportExportPath=' + str(out / 'Automation')]
+if args.cross_maps: command.append('-ExtractionPIECrossMaps')
 metadata = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'mode': args.mode, 'command': command}
 environment = os.environ.copy()
 environment['UE_SKIP_UBT_SDK_SETUP'] = '1'
@@ -47,14 +49,14 @@ metadata['active_rounds'] = re.findall(r'EXTRACTION_PIE_LOBBY_ACTIVE Round=(\d)'
 metadata['settled_rounds'] = re.findall(r'EXTRACTION_PIE_LOBBY_SETTLED Round=(\d)', text)
 metadata['returned_rounds'] = re.findall(r'EXTRACTION_PIE_LOBBY_RETURNED Round=(\d)', text)
 successes = re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text)
-rounds = 2 if args.mode == 'Extraction' else 1
+rounds = (3 if args.cross_maps else 2) if args.mode == 'Extraction' else 1
 passed = (metadata['exit_code'] == 0 and len(successes) == 1 and 'Fatal error:' not in text
           and f'EXTRACTION_PIE_LOBBY_STOPPED Mode={args.mode} Rounds={rounds} Worlds=0' in text
           and 'Seamless travel is disabled in PIE' not in text
           and not re.search(r'Test Completed\. Result=\{(?:Fail|Failure|\u5931\u8d25)', text))
 if args.mode == 'Extraction':
     passed = (passed and 'EXTRACTION_PIE_LOBBY_DISABLED_GUARD_OK' in text
-              and all(metadata[key] == ['1', '2'] for key in ['active_rounds', 'settled_rounds', 'returned_rounds']))
+              and all(metadata[key] == [str(i+1) for i in range(rounds)] for key in ['active_rounds', 'settled_rounds', 'returned_rounds']))
 else:
     passed = passed and f'EXTRACTION_PIE_LOBBY_LEGACY_OK Mode={args.mode}' in text
 metadata['result'] = 'passed' if passed else 'failed'

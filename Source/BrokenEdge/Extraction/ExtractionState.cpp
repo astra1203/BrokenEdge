@@ -1,4 +1,5 @@
 #include "ExtractionState.h"
+#include "ExtractionMapDefinition.h"
 #include "ExtractionInventoryComponent.h"
 #include "Net/UnrealNetwork.h"
 // 对局状态与玩家状态是服务器到客户端的可复制读模型；实际规则由 GameMode 等服务器逻辑执行。
@@ -15,6 +16,7 @@ void AExtractionGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AExtractionGameState, Phase);
+	DOREPLIFETIME(AExtractionGameState, MapDefinition);
 	DOREPLIFETIME(AExtractionGameState, Deadline);
 	DOREPLIFETIME(AExtractionGameState, AlivePlayers);
 	DOREPLIFETIME(AExtractionGameState, EndReason);

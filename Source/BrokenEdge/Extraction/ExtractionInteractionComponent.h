@@ -61,6 +61,7 @@ public:
 	/** 本地选中的未解锁钥匙房门，与战利品焦点互斥，不参与复制或持久化。 */
 	UPROPERTY(Transient)
 	TObjectPtr<class AExtractionKeyRoom> DoorFocus;
+	UPROPERTY(Transient) TObjectPtr<class AExtractionDoor> OrdinaryDoorFocus;
 	/** 本地选中的撤离电闸，与其他焦点互斥，不参与复制。 */
 	UPROPERTY(Transient)
 	TObjectPtr<class AExtractionExitSwitch> SwitchFocus;

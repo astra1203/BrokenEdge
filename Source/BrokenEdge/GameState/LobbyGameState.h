@@ -10,6 +10,8 @@ class BROKENEDGE_API ALobbyGameState : public AGameState
 {
     GENERATED_BODY()
 public:
+	UPROPERTY(Replicated, BlueprintReadOnly, Category="Lobby")
+	FName ExtractionMapId = TEXT("SpaceCenter");
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
     UPROPERTY(Replicated, BlueprintReadOnly, Category = "Lobby")
     FString RoomMatchType;

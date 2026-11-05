@@ -396,20 +396,24 @@ bool UStingerAssetLibrary::ConfigureThirdPersonGripIK(UAnimBlueprint* Blueprint)
 FString UStingerAssetLibrary::DescribeComponentCollision(UPrimitiveComponent* Component, FVector Start, FVector End)
 {
 	if (!Component) return TEXT("null");
-	FString Out = FString::Printf(TEXT("class=%s registered=%d physicsState=%d enabled=%d objType=%d visibilityResp=%d pawnResp=%d mobility=%d"),
-	                              *Component->GetClass()->GetName(), Component->IsRegistered(),
-	                              Component->IsPhysicsStateCreated(), static_cast<int32>(Component->GetCollisionEnabled()),
-	                              static_cast<int32>(Component->GetCollisionObjectType()),
-	                              static_cast<int32>(Component->GetCollisionResponseToChannel(ECC_Visibility)),
-	                              static_cast<int32>(Component->GetCollisionResponseToChannel(ECC_Pawn)),
-	                              static_cast<int32>(Component->Mobility.GetValue()));
+	FString Out = FString::Printf(
+		TEXT("class=%s registered=%d physicsState=%d enabled=%d objType=%d visibilityResp=%d pawnResp=%d mobility=%d"),
+		*Component->GetClass()->GetName(), Component->IsRegistered(),
+		Component->IsPhysicsStateCreated(), static_cast<int32>(Component->GetCollisionEnabled()),
+		static_cast<int32>(Component->GetCollisionObjectType()),
+		static_cast<int32>(Component->GetCollisionResponseToChannel(ECC_Visibility)),
+		static_cast<int32>(Component->GetCollisionResponseToChannel(ECC_Pawn)),
+		static_cast<int32>(Component->Mobility.GetValue()));
 	if (const auto* Instanced = Cast<UInstancedStaticMeshComponent>(Component))
 		Out += FString::Printf(TEXT(" instances=%d bodies=%d disableCollision=%d"), Instanced->GetInstanceCount(),
 		                       Instanced->InstanceBodies.Num(), Instanced->bDisableCollision ? 1 : 0);
-	if (const UStaticMesh* Mesh = Cast<UStaticMeshComponent>(Component) ? Cast<UStaticMeshComponent>(Component)->GetStaticMesh().Get() : nullptr)
+	if (const UStaticMesh* Mesh = Cast<UStaticMeshComponent>(Component)
+		                              ? Cast<UStaticMeshComponent>(Component)->GetStaticMesh().Get()
+		                              : nullptr)
 		if (const UBodySetup* Body = Mesh->GetBodySetup())
-			Out += FString::Printf(TEXT(" flag=%d boxes=%d convex=%d trimesh=%d"), static_cast<int32>(Body->CollisionTraceFlag),
-			                       Body->AggGeom.BoxElems.Num(), Body->AggGeom.ConvexElems.Num(), Body->TriMeshGeometries.Num());
+			Out += FString::Printf(
+				TEXT(" flag=%d boxes=%d convex=%d trimesh=%d"), static_cast<int32>(Body->CollisionTraceFlag),
+				Body->AggGeom.BoxElems.Num(), Body->AggGeom.ConvexElems.Num(), Body->TriMeshGeometries.Num());
 	FHitResult Hit;
 	const bool bHit = Component->LineTraceComponent(Hit, Start, End, FCollisionQueryParams(NAME_None, true));
 	Out += FString::Printf(TEXT(" trace=%d at=%s"), bHit, *Hit.ImpactPoint.ToString());
@@ -431,7 +435,7 @@ FString UStingerAssetLibrary::DescribeSkeletalVertices(USkeletalMesh* Mesh)
 	if (Mesh && Mesh->GetResourceForRendering() && Mesh->GetResourceForRendering()->LODRenderData.Num())
 	{
 		const auto& Positions = Mesh->GetResourceForRendering()->LODRenderData[0].StaticVertexBuffers.
-		                              PositionVertexBuffer;
+			PositionVertexBuffer;
 		for (uint32 I = 0; I < Positions.GetNumVertices(); ++I)
 		{
 			const auto P = Positions.VertexPosition(I);
@@ -467,8 +471,11 @@ int32 UStingerAssetLibrary::RenderWeaponIcon(USkeletalMesh* Mesh, const FString&
 		Sign = (bAlongY ? At.Y - Bounds.GetCenter().Y : At.X - Bounds.GetCenter().X) < 0 ? -1.f : 1.f;
 	}
 	// 投影：U 沿枪身（枪口为正），V 向下，深度取侧向（离观察者近的覆盖远的）。
-	const auto Project = [&](const FVector& P) { return FVector(bAlongY ? P.Y * Sign : P.X * Sign, -P.Z,
-	                                                            bAlongY ? -P.X * Sign : P.Y * Sign); };
+	const auto Project = [&](const FVector& P)
+	{
+		return FVector(bAlongY ? P.Y * Sign : P.X * Sign, -P.Z,
+		               bAlongY ? -P.X * Sign : P.Y * Sign);
+	};
 	FBox Flat(ForceInit);
 	for (uint32 I = 0; I < Positions.GetNumVertices(); ++I) Flat += Project(FVector(Positions.VertexPosition(I)));
 	const int32 Super = 4;
@@ -546,7 +553,9 @@ int32 UStingerAssetLibrary::RenderWeaponIcon(USkeletalMesh* Mesh, const FString&
 int32 UStingerAssetLibrary::RenderLevelOverview(UObject* WorldContext, FVector2D Min, FVector2D Max, int32 Size,
                                                 const FString& File)
 {
-	UWorld* World = GEngine ? GEngine->GetWorldFromContextObject(WorldContext, EGetWorldErrorMode::LogAndReturnNull) : nullptr;
+	UWorld* World = GEngine
+		                ? GEngine->GetWorldFromContextObject(WorldContext, EGetWorldErrorMode::LogAndReturnNull)
+		                : nullptr;
 	if (!World || Size < 16 || Max.X <= Min.X || Max.Y <= Min.Y) return 0;
 	struct FTris
 	{
@@ -596,6 +605,28 @@ int32 UStingerAssetLibrary::RenderLevelOverview(UObject* WorldContext, FVector2D
 	const double Cell = FMath::Max(Max.X - Min.X, Max.Y - Min.Y) / Size;
 	TArray<float> Height;
 	Height.Init(TNumericLimits<float>::Lowest(), Size * Size);
+	// Landscapes are not StaticMeshComponents. Sample their visible ground before
+	// rasterizing buildings, otherwise a landscape-based map has an empty background.
+	bool bLandscape = false;
+	for (TActorIterator<AActor> It(World); It; ++It)
+		if (It->GetClass()->GetName().StartsWith(TEXT("Landscape")))
+		{
+			bLandscape = true;
+			break;
+		}
+	if (bLandscape)
+	{
+		const int32 Step = FMath::Max(1, Size / 512);
+		for (int32 Y = 0; Y < Size; Y += Step)
+			for (int32 X = 0; X < Size; X += Step)
+			{
+				const FVector Top(Max.X - (Y + .5) * Cell, Min.Y + (X + .5) * Cell, 10000);
+				FHitResult Hit;
+				if (!World->LineTraceSingleByChannel(Hit, Top, Top - FVector(0, 0, 20000), ECC_Visibility)) continue;
+				for (int32 J = Y; J < FMath::Min(Size, Y + Step); ++J)
+					for (int32 I = X; I < FMath::Min(Size, X + Step); ++I) Height[J * Size + I] = Hit.ImpactPoint.Z;
+			}
+	}
 	const FBox Area(FVector(Min.X, Min.Y, -1e6), FVector(Max.X, Max.Y, 1e6));
 	int32 Drawn = 0;
 	const auto Raster = [&](const FTris& Tris, const FTransform& ToWorld)
@@ -684,7 +715,8 @@ int32 UStingerAssetLibrary::RenderLevelOverview(UObject* WorldContext, FVector2D
 	if (Known.IsEmpty()) return 0;
 	Known.Sort();
 	const float Low = Known[Known.Num() * 5 / 100], High = FMath::Max(Low + 100.f, Known[Known.Num() * 97 / 100]);
-	const FLinearColor Empty(.035f, .05f, .058f), Ground(.10f, .14f, .145f), Top(.50f, .56f, .54f), Edge(.80f, .86f, .82f);
+	const FLinearColor Empty(.035f, .05f, .058f), Ground(.10f, .14f, .145f), Top(.50f, .56f, .54f), Edge(
+		                   .80f, .86f, .82f);
 	const FVector Sun = FVector(1, -1, 1.4).GetSafeNormal(); // 北 = 行减小，西 = 列减小
 	TArray<FColor> Pixels;
 	Pixels.SetNumUninitialized(Size * Size);
@@ -800,7 +832,8 @@ int32 UStingerAssetLibrary::RenderLevelOverview(UObject* WorldContext, FVector2D
 	}
 	auto& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
 	const TSharedPtr<IImageWrapper> Png = ImageWrapperModule.CreateImageWrapper(EImageFormat::PNG);
-	if (!Png.IsValid() || !Png->SetRaw(Pixels.GetData(), Pixels.Num() * sizeof(FColor), Size, Size, ERGBFormat::BGRA, 8))
+	if (!Png.IsValid() || !Png->SetRaw(Pixels.GetData(), Pixels.Num() * sizeof(FColor), Size, Size, ERGBFormat::BGRA,
+	                                   8))
 		return 0;
 	UE_LOG(LogTemp, Display, TEXT("LEVEL_OVERVIEW components=%d meshes=%d low=%.0f high=%.0f"), Drawn, Cache.Num(), Low,
 	       High);
@@ -1144,7 +1177,8 @@ FString UStingerAssetLibrary::DescribeAnimGraphChain(UAnimBlueprint* Blueprint)
 		{
 			if (!Node) continue;
 			FString Extra;
-			if (auto* Slot = Cast<UAnimGraphNode_Slot>(Node)) Extra = FString::Printf(TEXT(" SlotName=%s"), *Slot->Node.SlotName.ToString());
+			if (auto* Slot = Cast<UAnimGraphNode_Slot>(Node)) Extra = FString::Printf(
+				TEXT(" SlotName=%s"), *Slot->Node.SlotName.ToString());
 			if (auto* Layer = Cast<UAnimGraphNode_LayeredBoneBlend>(Node))
 			{
 				Extra = FString::Printf(TEXT(" Layers=%d Weights=%d BlendMode=%d"), Layer->Node.LayerSetup.Num(),
@@ -1230,7 +1264,11 @@ bool UStingerAssetLibrary::ConfigureMeleeUpperBodySlot(UAnimBlueprint* Blueprint
 		{
 			ContactInput = nullptr;
 			for (auto* Pin : ContactNode->Pins)
-				if (Pin && Pin->Direction == EGPD_Input && Pin->LinkedTo.Num() == 1) { ContactInput = Pin; break; }
+				if (Pin && Pin->Direction == EGPD_Input && Pin->LinkedTo.Num() == 1)
+				{
+					ContactInput = Pin;
+					break;
+				}
 		}
 		if (!ContactInput) return false;
 		auto* TailOutput = ContactInput->LinkedTo[0];

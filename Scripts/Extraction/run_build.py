@@ -65,7 +65,7 @@ if args.package:
     command = [str(ENGINE / 'Engine/Build/BatchFiles/RunUAT.bat'), 'BuildCookRun', '-project=' + str(ROOT / 'BrokenEdge.uproject'),
                '-nop4', '-build', '-cook', '-stage', '-pak', '-iostore', '-archive',
                '-archivedirectory=' + str(archive),
-               '-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction',
+               '-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction+/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction',
                '-prereqs', '-ubtargs=-NoHotReloadFromIDE -WaitMutex' + (f' -MaxParallelActions={args.jobs}' if args.jobs else '')
                + (' -LinkerArguments=/DEBUG:FASTLINK' if args.fast_link_symbols else ''), '-utf8output']
     if args.fast_link_symbols:
@@ -119,7 +119,10 @@ if args.package:
 metadata['input_sha256'] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in [
     'Scripts/Extraction/run_build.py', 'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
     'Config/DefaultGame.ini', 'Config/DefaultEngine.ini', 'BrokenEdge.uproject',
-    'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap', 'Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap']}
+    'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap', 'Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap',
+    'Content/Maps/SovietMilitary/L_SovietMilitaryExtraction.umap',
+    'Content/Extraction/Maps/DA_SovietMilitaryGameplay.uasset',
+    'Content/Extraction/Maps/DA_SpaceCenterGameplay.uasset']}
 for source in sorted((ROOT/'Source/BrokenEdge').rglob('*')):
     if source.suffix in ('.h','.cpp'):
         metadata['input_sha256'][source.relative_to(ROOT).as_posix()] = hashlib.sha256(source.read_bytes()).hexdigest()

@@ -19,6 +19,7 @@ public:
 	void AssignExtractionSquads();
 	void SetPlayerReady(APlayerController* Player, bool bReady);
 	void SetMatchType(APlayerController* Player, const FString& MatchType);
+	void SetExtractionMap(APlayerController* Player, FName MapId);
 
 protected:
 	virtual void BeginPlay() override;

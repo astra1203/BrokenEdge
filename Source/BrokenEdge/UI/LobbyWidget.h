@@ -56,6 +56,11 @@ private:
 	void TeamsClicked();
 	UFUNCTION()
 	void ExtractionClicked();
+	UFUNCTION() void SpaceCenterClicked();
+	UFUNCTION() void SovietMilitaryClicked();
+	UPROPERTY(Transient) TObjectPtr<class UButton> SpaceCenterButton;
+	UPROPERTY(Transient) TObjectPtr<class UButton> SovietMilitaryButton;
+	UPROPERTY(Transient) TObjectPtr<class UTextBlock> MapLabel;
 	UPROPERTY(Transient)
 	TObjectPtr<class UButton> ExtractionButton;
 	UPROPERTY(Transient)

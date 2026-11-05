@@ -1,4 +1,5 @@
 #include "ExtractionWidget.h"
+#include "ExtractionDoor.h"
 #include "ExtractionMapDefinition.h"
 #include "Engine/Texture2D.h"
 #include "ExtractionUIStyle.h"
@@ -69,6 +70,7 @@ void UExtractionWidget::Refresh()
 	SmokeHaze->SetBrushColor(FLinearColor(.34f, .34f, .34f, Haze * .55f));
 	const int32 Seconds = FMath::Max(0, FMath::CeilToInt(GS->Deadline - GS->GetServerWorldTimeSeconds()));
 	FString Text;
+	const FString MapName = GS->MapDefinition ? GS->MapDefinition->DisplayName.ToString() : TEXT("地图加载中");
 	// 按键提示放进右侧中间的卡片；旧布局没有该卡片时仍并入整段文本。
 	FString Hints;
 	FString& HintText = KeyHints ? Hints : Text;
@@ -90,7 +92,7 @@ void UExtractionWidget::Refresh()
 				+ TEXT("\nH 治疗 · G 手雷 · 中键 标点");
 		else Text = RaidTimer
 			       ? FString(Hint)
-			       : FString::Printf(TEXT("航天基地 · 小队行动\n剩余 %02d:%02d · 存活 %d\n%s"), Seconds / 60, Seconds % 60,
+			       : FString::Printf(TEXT("%s · 小队行动\n剩余 %02d:%02d · 存活 %d\n%s"), *MapName, Seconds / 60, Seconds % 60,
 			                         GS->AlivePlayers, Hint);
 	}
 	if (RaidTimer)
@@ -104,7 +106,7 @@ void UExtractionWidget::Refresh()
 			                                          : FLinearColor::White));
 	}
 	if (RaidInfo)
-		RaidInfo->SetText(FText::FromString(FString::Printf(TEXT("航天基地  ·  存活 %d  ·  击杀守卫 %d"),
+		RaidInfo->SetText(FText::FromString(FString::Printf(TEXT("%s  ·  存活 %d  ·  击杀守卫 %d"), *MapName,
 		                                                    GS->AlivePlayers, PS->RaidProgress.GuardKills)));
 	if (!GS->StorageError.IsEmpty()) Text = GS->StorageError;
 	if (PC->ExtractionAccount && PS->Life == EExtractionLife::Alive)
@@ -242,6 +244,9 @@ void UExtractionWidget::Refresh()
 			Text += FString::Printf(
 				TEXT("\n队友正在救援 · %.1f 秒"), FMath::Max(0.0, A->Rescuer->GetExtractionAbilities()->ActionEnd - Now));
 	}
+	if (const auto* C = Cast<ABrokenEdgeCharacter>(PC->GetPawn()))
+		if (const auto* I = C->GetExtractionInteraction(); I && I->OrdinaryDoorFocus)
+			HintText += I->OrdinaryDoorFocus->bOpen ? TEXT("\nF 关门") : TEXT("\nF 开门");
 	Text.TrimStartAndEndInline();
 	Status->SetText(FText::FromString(Text));
 	if (KeyHints)
@@ -653,6 +658,7 @@ void UExtractionWidget::LeaveClicked()
 void UExtractionWidget::NativeDestruct()
 {
 	MiniOverview = nullptr;
+	MiniDefinition = nullptr;
 	Super::NativeDestruct();
 }
 
@@ -661,16 +667,14 @@ void UExtractionWidget::UpdateMinimap(const APawn* Pawn)
 {
 	bMiniActive = Pawn != nullptr;
 	if (!Pawn) return;
-	if (!bMiniLoaded)
+	const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
+	auto* Map = GS ? GS->MapDefinition.Get() : nullptr;
+	if (MiniDefinition != Map)
 	{
-		bMiniLoaded = true;
-		if (const auto* Map = LoadObject<UExtractionMapDefinition>(
-			nullptr, TEXT("/Game/Extraction/Maps/DA_SpaceCenterGameplay.DA_SpaceCenterGameplay")))
-		{
-			MiniOverview = Map->OverviewTexture.LoadSynchronous();
-			MiniMin = Map->OverviewTextureMin;
-			MiniMax = Map->OverviewTextureMax;
-		}
+		MiniDefinition = Map;
+		MiniOverview = Map ? Map->OverviewTexture.LoadSynchronous() : nullptr;
+		MiniMin = Map ? Map->OverviewTextureMin : FVector2D::ZeroVector;
+		MiniMax = Map ? Map->OverviewTextureMax : FVector2D::ZeroVector;
 	}
 	MiniCenter = Pawn->GetActorLocation();
 }

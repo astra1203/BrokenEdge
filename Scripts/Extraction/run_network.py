@@ -68,6 +68,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
 parser.add_argument('--loot-seed', type=int, help='Deterministic authority seed for authored loot validation')
 parser.add_argument('--guards', type=int, help='Override the scenario guard count (server clamps to its own maximum)')
+parser.add_argument('--soviet-route', action='store_true', help='Walk from real spawns through authored loot to an exit; no position fixtures')
 parser.add_argument('--packaged', action='store_true')
 parser.add_argument('--package-root', default='Packaged', help='Archive root containing the Client/Server packages')
 parser.add_argument('--port', type=int, default=27777, help='Isolated test server port')
@@ -85,7 +86,7 @@ parser.add_argument('--traversal-lifecycle', action='store_true', help='Three-pl
 parser.add_argument('--optic-validation', action='store_true', help='Additional mounted-optic visual acceptance in the equipment scenario')
 parser.add_argument('--optic-remote-only', action='store_true', help='Stop equipment acceptance after observer mount captures; not a full combat regression')
 parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2560x1440', '3440x1440'], help='Rendered client size for visual acceptance')
-parser.add_argument('--scenario', choices=['flight-matrix', 'overnight-route', 'exit-feedback', 'lobby-ui', 'loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
+parser.add_argument('--scenario', choices=['soviet', 'flight-matrix', 'overnight-route', 'exit-feedback', 'lobby-ui', 'loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
 parser.add_argument('--players', type=int, choices=[1, 2, 3, 6])
 parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
 parser.add_argument('--rendered-role', choices=['A', 'B'], help='Render only this client; the other clients remain connected with NullRHI')
@@ -289,6 +290,8 @@ def launch(role):
                 '-ExtractionStore=' + str(OUT / 'Store'), '-ExtractionProfile=' + args.tag + '_' + ('A' if args.scenario == 'identity' and role == 'B' else role),
                 '-ExecCmds=t.MaxFPS 30,' + ('sg.ShadowQuality 0,sg.EffectsQuality 1,' if len(ROLES) == 6 else '') + 'BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver',
                 '-TestExit=Automation Test Queue Empty', '-abslog=' + str(OUT / (role + '.log'))]
+    if args.scenario == 'soviet':
+        command += ['-ExtractionMap=SovietMilitary']
     if args.scenario == 'overnight-route':
         command += ['-ExtractionTestTimeout=4200']
         if role == 'Server':
@@ -367,7 +370,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['exit-feedback', 'lobby-ui', 'weapon-mechanics', 'knife', 'scar', 'settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
+    phase4 = args.scenario in ['soviet', 'exit-feedback', 'lobby-ui', 'weapon-mechanics', 'knife', 'scar', 'settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
@@ -421,12 +424,19 @@ def begin_round():
         if not phase4:
             check(role + ' visible reachable pickup focus', lambda r=role: player(r, r).get('focus', 'None') != 'None')
             send(role, 'pulse', action='Equip')
-        check(role + ' equipped AK', lambda r=role: 'AK47' in player('Server', r).get('weapon', ''))
+        if args.scenario == 'soviet':
+            # Current production starting supply equips M4A1 and retains the carried AK in the pack.
+            check(role + ' current starting supply equipped and carried rifle retained', lambda r=role:
+                  'M4A1' in player('Server',r).get('weapon','') and
+                  any(i['definition']=='AK' for i in player('Server',r)['inventory']['items']))
+        else:
+            check(role + ' equipped AK', lambda r=role: 'AK47' in player('Server', r).get('weapon', ''))
     time.sleep(1)
     check('First-person backpack section hidden on each owner', lambda: all(player(r, r).get('fp_gear_visible') is False for r in ROLES))
-    check('Server and owners keep both hands within two cm of weapon grips', lambda: all(
-        player(peer, r).get('left_grip_distance', 999) <= 2 and player(peer, r).get('right_grip_distance', 999) <= 2
-        for r in ROLES for peer in ['Server', r]))
+    if args.scenario != 'soviet':
+        check('Server and owners keep both hands within two cm of weapon grips', lambda: all(
+            player(peer, r).get('left_grip_distance', 999) <= 2 and player(peer, r).get('right_grip_distance', 999) <= 2
+            for r in ROLES for peer in ['Server', r]))
 
 
 def fixture(shields=0, cover=False):
@@ -499,7 +509,10 @@ try:
         check('Packet simulation applied: 50ms each direction and 2 percent loss', lambda: all(state(r).get('packet_lag') == 50 and state(r).get('packet_loss') == 2 for r in processes))
     for role in rendered_roles:
         send(role, 'screenshot', name='spawn')
-    if args.scenario == 'flight-matrix':
+    if args.scenario == 'soviet':
+        from soviet_scenarios import run
+        run(globals())
+    elif args.scenario == 'flight-matrix':
         from flight_matrix_scenarios import run
         run(globals())
     elif args.scenario == 'overnight-route':

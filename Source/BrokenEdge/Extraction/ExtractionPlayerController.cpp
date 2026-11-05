@@ -1,4 +1,5 @@
 #include "ExtractionPlayerController.h"
+#include "ExtractionDoor.h"
 #include "ExtractionWidget.h"
 #include "ExtractionTacticalMap.h"
 #include "BrokenEdge/Traversal/ExtractionTraversalComponent.h"
@@ -270,6 +271,7 @@ void AExtractionPlayerController::InteractDoor()
 		ServerPullSwitch(I->SwitchFocus);
 		return;
 	}
+	if (I->OrdinaryDoorFocus) { ServerToggleDoor(I->OrdinaryDoorFocus); return; }
 	auto* Inventory = I->Inventory();
 	if (!Inventory || !I->DoorFocus) return;
 	if (!I->DoorFocus->IsInInteractionRange(GetPawn())) return;
@@ -796,4 +798,11 @@ void AExtractionPlayerController::EnsureLocalWidgets()
 		                             *InventoryWidgetClass.ToString());
 	}
 	if (InventoryWidget && !InventoryWidget->IsInViewport()) InventoryWidget->AddToViewport(60);
+}
+
+void AExtractionPlayerController::ServerToggleDoor_Implementation(AExtractionDoor* Door)
+{
+	const auto* I = Interaction();
+	if (IsValid(Door) && Door->GetWorld() == GetWorld() && I && !I->InventoryOpen)
+		ClientItemResult(0, Door->Toggle(Cast<ABrokenEdgeCharacter>(GetPawn())));
 }

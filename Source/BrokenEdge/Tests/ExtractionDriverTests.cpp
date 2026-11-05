@@ -1,6 +1,7 @@
 // Development-only local process driver. No test RPCs or fixture commands exist in Shipping.
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
+#include "BrokenEdge/Extraction/ExtractionDoor.h"
 #include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
@@ -201,6 +202,58 @@ public:
 							Error = TEXT("Room not found yet");
 						}
 					}
+				}
+				else if (Op == TEXT("select_map") && PC)
+				{
+					if (auto* LobbyPC = Cast<ABrokenEdgePlayerController>(PC)) LobbyPC->ServerSetExtractionMap(
+						FName(Command->GetStringField(TEXT("map"))));
+				}
+				else if (Op == TEXT("ordinary_door") && PC)
+				{
+					if (auto* ExtractPC = Cast<AExtractionPlayerController>(PC))
+						for (TActorIterator<AExtractionDoor> It(World); It; ++It)
+							if (It->GetName() == Command->GetStringField(TEXT("name")))
+							{
+								DoorProbe = MakeShared<FJsonObject>();
+								if (Pawn)
+								{
+									FVector Eye;
+									FRotator Rotation;
+									Pawn->GetActorEyesViewPoint(Eye, Rotation);
+									FHitResult Hit;
+									World->LineTraceSingleByChannel(Hit, Eye, It->InteractionPoint(), ECC_Visibility,
+									                                FCollisionQueryParams(
+										                                SCENE_QUERY_STAT(DoorAcceptance), false, Pawn));
+									DoorProbe->SetStringField(TEXT("hit_actor"), GetNameSafe(Hit.GetActor()));
+									DoorProbe->SetStringField(TEXT("hit_component"), GetNameSafe(Hit.GetComponent()));
+									DoorProbe->SetArrayField(TEXT("eye"), VectorJson(Eye));
+									DoorProbe->SetArrayField(TEXT("hit"), VectorJson(Hit.ImpactPoint));
+									DoorProbe->SetNumberField(
+										TEXT("distance"),
+										FVector::Distance(Pawn->GetActorLocation(), It->InteractionPoint()));
+									DoorProbe->SetBoolField(TEXT("reachable"), It->CanReach(Pawn));
+									DoorProbe->SetBoolField(
+										TEXT("can_act"), Pawn->GetExtractionInteraction()->CanAct());
+								}
+								ExtractPC->ServerToggleDoor(*It);
+								break;
+							}
+				}
+				else if (Op == TEXT("path_query") && Role == TEXT("Server"))
+				{
+					const auto ReadVector = [&](const TCHAR* Key)
+					{
+						const auto& P = Command->GetArrayField(Key);
+						return FVector(P[0]->AsNumber(), P[1]->AsNumber(), P[2]->AsNumber());
+					};
+					auto* Path = UNavigationSystemV1::FindPathToLocationSynchronously(
+						World, ReadVector(TEXT("start")), ReadVector(TEXT("end")));
+					PathProbe = MakeShared<FJsonObject>();
+					PathProbe->SetBoolField(TEXT("valid"), Path && Path->IsValid() && !Path->IsPartial());
+					TArray<TSharedPtr<FJsonValue>> Points;
+					if (Path) for (const auto& P : Path->PathPoints) Points.Add(
+						MakeShared<FJsonValueArray>(VectorJson(P)));
+					PathProbe->SetArrayField(TEXT("points"), Points);
 				}
 				else if (Op == TEXT("squad") && PC)
 				{
@@ -673,6 +726,7 @@ private:
 	int32 RecordingFrame = 0;
 	double LastFrame = 0;
 	TArray<FVector> WalkPoints;
+	TSharedPtr<FJsonObject> DoorProbe, PathProbe;
 	int32 WalkIndex = 0;
 	double WalkSince = 0;
 	double Started, LastWrite = 0, PulseEnd = 0;
@@ -725,7 +779,8 @@ private:
 			Entry->SetStringField(TEXT("id"), I.Id.ToString());
 			Entry->SetStringField(TEXT("definition"), I.Definition.ToString());
 			Entry->SetNumberField(TEXT("quantity"), I.Quantity);
-			Entry->SetNumberField(TEXT("sell_price"), GetDefault<UExtractionProgressionRules>()->SellPrice(I, I.Quantity));
+			Entry->SetNumberField(
+				TEXT("sell_price"), GetDefault<UExtractionProgressionRules>()->SellPrice(I, I.Quantity));
 			Entry->SetNumberField(TEXT("x"), I.Cell.X);
 			Entry->SetNumberField(TEXT("y"), I.Cell.Y);
 			Entry->SetNumberField(TEXT("slot"), I.Slot);
@@ -1135,7 +1190,8 @@ private:
 	// Diagnostic queries only: these do not change aiming, projectile origins or damage.
 	void WriteAimDiagnostics(UWorld* World, APlayerController* PC, const TSharedPtr<FJsonObject>& State)
 	{
-		if (!PC || AimTarget.IsEmpty() || !FParse::Param(FCommandLine::Get(), TEXT("ExtractionFlightDiagnostics"))) return;
+		if (!PC || AimTarget.IsEmpty() || !FParse::Param(FCommandLine::Get(), TEXT("ExtractionFlightDiagnostics")))
+			return;
 		auto* Shooter = Cast<ABrokenEdgeCharacter>(PC->GetPawn());
 		auto* Target = FindPawn(World, AimTarget);
 		auto Probe = MakeShared<FJsonObject>();
@@ -1150,8 +1206,12 @@ private:
 		PC->GetPlayerViewPoint(Camera, CameraRotation);
 		const FRotator ControlRotation = PC->GetControlRotation();
 		Probe->SetArrayField(TEXT("camera_position"), VectorJson(Camera));
-		Probe->SetArrayField(TEXT("camera_rotation_pitch_yaw_roll"), VectorJson(FVector(CameraRotation.Pitch, CameraRotation.Yaw, CameraRotation.Roll)));
-		Probe->SetArrayField(TEXT("control_rotation_pitch_yaw_roll"), VectorJson(FVector(ControlRotation.Pitch, ControlRotation.Yaw, ControlRotation.Roll)));
+		Probe->SetArrayField(
+			TEXT("camera_rotation_pitch_yaw_roll"),
+			VectorJson(FVector(CameraRotation.Pitch, CameraRotation.Yaw, CameraRotation.Roll)));
+		Probe->SetArrayField(
+			TEXT("control_rotation_pitch_yaw_roll"),
+			VectorJson(FVector(ControlRotation.Pitch, ControlRotation.Yaw, ControlRotation.Roll)));
 		Probe->SetArrayField(TEXT("control_direction"), VectorJson(ControlRotation.Vector()));
 		Probe->SetStringField(TEXT("configured_bone"), AimBone.ToString());
 		Probe->SetBoolField(TEXT("configured_head"), bHeadAim);
@@ -1188,10 +1248,12 @@ private:
 			Probe->SetArrayField(TEXT("raw_muzzle_position"), VectorJson(Muzzle));
 			Probe->SetNumberField(TEXT("muzzle_sphere_radius"), Stats.Radius);
 			FHitResult Obstruction;
-			World->LineTraceSingleByChannel(Obstruction, Shooter->GetPawnViewLocation(), Muzzle, ECC_Visibility, MuzzleQuery);
+			World->LineTraceSingleByChannel(Obstruction, Shooter->GetPawnViewLocation(), Muzzle, ECC_Visibility,
+			                                MuzzleQuery);
 			Probe->SetObjectField(TEXT("muzzle_origin_obstruction"), HitJson(Obstruction));
 			// Match the production barrel obstruction adjustment without spawning a round.
-			if (Obstruction.bBlockingHit) Muzzle = Obstruction.ImpactPoint + Obstruction.ImpactNormal * (Stats.Radius + .1f);
+			if (Obstruction.bBlockingHit) Muzzle = Obstruction.ImpactPoint + Obstruction.ImpactNormal * (Stats.Radius +
+				.1f);
 			Probe->SetArrayField(TEXT("muzzle_position"), VectorJson(Muzzle));
 		}
 		FCollisionQueryParams CameraBase(SCENE_QUERY_STAT(ExtractionAimCameraProbe), false, Shooter);
@@ -1217,7 +1279,7 @@ private:
 			{
 				FHitResult MuzzleHit;
 				World->SweepSingleByChannel(MuzzleHit, Muzzle, Point, FQuat::Identity, ECC_Visibility,
-				                           FCollisionShape::MakeSphere(Stats.Radius), MuzzleQuery);
+				                            FCollisionShape::MakeSphere(Stats.Radius), MuzzleQuery);
 				Value->SetObjectField(TEXT("muzzle_complex_sphere"), HitJson(MuzzleHit));
 			}
 		};
@@ -1229,7 +1291,8 @@ private:
 		           Target->GetMesh()->GetBoneIndex(TEXT("Spine2")) != INDEX_NONE);
 		FVector Selected = bHeadAim ? Head + FVector(0, 0, 8) : Body;
 		if (!AimBone.IsNone()) Selected = Target->GetMesh()->GetBoneLocation(AimBone);
-		if (bBodyCenterAim && Target->GetMesh()->GetBodyInstance(AimBone)) Selected = Target->GetMesh()->GetCenterOfMass(AimBone);
+		if (bBodyCenterAim && Target->GetMesh()->GetBodyInstance(AimBone)) Selected = Target->GetMesh()->
+			GetCenterOfMass(AimBone);
 		WritePoint(TEXT("selected"), Selected, true);
 		Probe->SetObjectField(TEXT("points"), Points);
 		const double Now = FPlatformTime::Seconds();
@@ -1242,11 +1305,12 @@ private:
 			Record->SetStringField(TEXT("target"), AimTarget);
 			Record->SetObjectField(TEXT("aim_diagnostics"), Probe);
 			FString Line;
-			FJsonSerializer::Serialize(Record, TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Line));
+			FJsonSerializer::Serialize(
+				Record, TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Line));
 			Line += TEXT("\n");
 			if (!FFileHelper::SaveStringToFile(Line, *(Folder / (Role + TEXT("-aim-diagnostics.jsonl"))),
-			                                  FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM,
-			                                  &IFileManager::Get(), FILEWRITE_Append) && !bAimDiagnosticWriteFailed)
+			                                   FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM,
+			                                   &IFileManager::Get(), FILEWRITE_Append) && !bAimDiagnosticWriteFailed)
 			{
 				bAimDiagnosticWriteFailed = true;
 				Test->AddError(TEXT("Could not append read-only aim diagnostics"));
@@ -1257,6 +1321,8 @@ private:
 	void WriteState(UWorld* World, APlayerController* PC)
 	{
 		auto State = MakeShared<FJsonObject>();
+		if (DoorProbe) State->SetObjectField(TEXT("door_probe"), DoorProbe);
+		if (PathProbe) State->SetObjectField(TEXT("path_probe"), PathProbe);
 		TArray<TSharedPtr<FJsonValue>> VisibleWidgets;
 		TArray<UUserWidget*> Widgets;
 		UWidgetBlueprintLibrary::GetAllWidgetsOfClass(World, Widgets, UUserWidget::StaticClass(), true);
@@ -1348,13 +1414,16 @@ private:
 		if (auto* GS = World->GetGameState<AExtractionGameState>())
 		{
 			State->SetStringField(TEXT("storage_error"), GS->StorageError);
+			State->SetStringField(TEXT("map_id"), GS->MapDefinition ? GS->MapDefinition->MapId.ToString() : FString());
 			TArray<TSharedPtr<FJsonValue>> ExitStates;
 			for (TActorIterator<AExtractionExit> It(World); It; ++It)
 			{
 				auto Entry = MakeShared<FJsonObject>();
 				Entry->SetStringField(TEXT("id"), It->Definition.Id.ToString());
 				Entry->SetStringField(TEXT("label"), It->Definition.Label.ToString());
-				Entry->SetArrayField(TEXT("bounds_center"), VectorJson(It->GetActorTransform().TransformPosition(It->Definition.BoundsOffset)));
+				Entry->SetArrayField(
+					TEXT("bounds_center"),
+					VectorJson(It->GetActorTransform().TransformPosition(It->Definition.BoundsOffset)));
 				Entry->SetArrayField(TEXT("half_extent"), VectorJson(It->Definition.HalfExtent));
 				Entry->SetArrayField(TEXT("position"), VectorJson(It->GetActorLocation()));
 				Entry->SetNumberField(TEXT("opens_after"), It->Definition.OpensAfterSeconds);
@@ -1655,6 +1724,22 @@ private:
 			LootActors.Add(MakeShared<FJsonValueObject>(Entry));
 		}
 		State->SetArrayField(TEXT("loot"), LootActors);
+		TArray<TSharedPtr<FJsonValue>> Doors;
+		for (TActorIterator<AExtractionDoor> It(World); It; ++It)
+		{
+			auto J = MakeShared<FJsonObject>();
+			J->SetStringField(TEXT("name"), It->GetName());
+			J->SetBoolField(TEXT("open"), It->bOpen);
+			J->SetNumberField(TEXT("angle"), It->Door->GetRelativeRotation().Yaw);
+			J->SetArrayField(TEXT("position"), VectorJson(It->InteractionPoint()));
+			FVector Approach = It->InteractionPoint() + It->GetActorRightVector() * 180;
+			Approach.Z = It->GetActorLocation().Z + 98;
+			J->SetArrayField(TEXT("approach"), VectorJson(Approach));
+			J->SetNumberField(TEXT("yaw"), It->GetActorRotation().Yaw - 90);
+			Doors.Add(MakeShared<FJsonValueObject>(J));
+		}
+		State->SetArrayField(TEXT("ordinary_doors"), Doors);
+
 		const auto* GuardRules = GetDefault<UExtractionRules>();
 		auto RulesJson = MakeShared<FJsonObject>();
 		RulesJson->SetNumberField(TEXT("reaction_seconds"), GuardRules->GuardReactionSeconds);
@@ -1700,7 +1785,7 @@ private:
 					{
 						J->SetBoolField(TEXT("line_of_sight_to_A"), AI->LineOfSightTo(PlayerA));
 						J->SetBoolField(TEXT("smoke_blocked_to_A"), AExtractionSmoke::Blocks(
-							World, It->GetPawnViewLocation(), PlayerA->GetPawnViewLocation()));
+							                World, It->GetPawnViewLocation(), PlayerA->GetPawnViewLocation()));
 					}
 					J->SetStringField(TEXT("route"), AI->Route ? AI->Route->GetActorNameOrLabel() : TEXT("None"));
 					J->SetStringField(TEXT("route_object"), GetNameSafe(AI->Route));

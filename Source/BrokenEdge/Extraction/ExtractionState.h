@@ -22,6 +22,8 @@ class BROKENEDGE_API AExtractionGameState : public ABrokenEdgeGameState
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(Replicated, BlueprintReadOnly)
+	TObjectPtr<class UExtractionMapDefinition> MapDefinition;
 	// 注册本类需要同步的属性并保留父类复制项；客户端读取状态，不在复制回调中做仓库结算。
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out) const override;
 	UPROPERTY(Replicated, BlueprintReadOnly)

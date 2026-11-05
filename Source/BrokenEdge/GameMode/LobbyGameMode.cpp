@@ -1,4 +1,5 @@
 #include "LobbyGameMode.h"
+#include "BrokenEdge/Extraction/ExtractionMapRegistry.h"
 #include "SessionModes.h"
 
 #include "Menu.h"
@@ -57,6 +58,8 @@ void ALobbyGameMode::PreLogin(const FString& Options, const FString& Address, co
 void ALobbyGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	if (auto* Registry = GetGameInstance()->GetSubsystem<UExtractionMapRegistry>())
+		if (auto* GS = GetGameState<ALobbyGameState>()) GS->ExtractionMapId = Registry->SelectedMap;
 	Sessions = GetGameInstance() ? GetGameInstance()->GetSubsystem<UMultiplayerSessionsSubsystem>() : nullptr;
 	if (!Sessions) return;
 	Sessions->MultiplayerOnStartSessionComplete.AddUniqueDynamic(this, &ThisClass::OnStartSession);
@@ -236,6 +239,10 @@ void ALobbyGameMode::CancelCountdown()
 FString ALobbyGameMode::ExtractionStartError() const
 {
 	if (!Sessions || Sessions->DesiredMatchType != TEXT("Extraction")) return {};
+	const auto* Registry = GetGameInstance()->GetSubsystem<UExtractionMapRegistry>();
+	FString MapError;
+	if (!Registry || !Registry->Validate(Registry->SelectedMap, MapError))
+		return MapError.IsEmpty() ? TEXT("地图注册表不可用") : MapError;
 	const auto* Store = GetGameInstance()->GetSubsystem<UExtractionPersistence>();
 	if (!bPreparedRaidsCleared || !Store || !Store->IsAvailable())
 		return Store && !Store->Error.IsEmpty() ? Store->Error : TEXT("仓库恢复未完成，暂时无法开局");
@@ -285,6 +292,12 @@ void ALobbyGameMode::TryStartGame()
 	if (!AreAllPlayersReady()) return;
 
 	PendingMap = SessionModes::Map(Sessions->DesiredMatchType);
+	if (Sessions->DesiredMatchType == TEXT("Extraction"))
+	{
+		const auto* Registry = GetGameInstance()->GetSubsystem<UExtractionMapRegistry>();
+		const auto* D = Registry ? Registry->Find(Registry->SelectedMap) : nullptr;
+		PendingMap = D ? D->Level.ToSoftObjectPath().GetLongPackageName() : FString();
+	}
 	if (PendingMap.IsEmpty())
 	{
 		UE_LOG(LogTemp, Error, TEXT("Lobby: unsupported MatchType '%s'"), *Sessions->DesiredMatchType);
@@ -381,4 +394,26 @@ void ALobbyGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	if (Sessions) Sessions->MultiplayerOnUpdateMatchTypeComplete.RemoveAll(this);
 	if (Sessions) Sessions->MultiplayerOnStartSessionComplete.RemoveDynamic(this, &ThisClass::OnStartSession);
 	Super::EndPlay(EndPlayReason);
+}
+
+void ALobbyGameMode::SetExtractionMap(APlayerController* Player, FName MapId)
+{
+	auto* GS = GetGameState<ALobbyGameState>();
+	auto* Registry = GetGameInstance()->GetSubsystem<UExtractionMapRegistry>();
+	if (GetNetMode() != NM_DedicatedServer || !Player || !GS || !Registry || !Sessions
+		|| Sessions->DesiredMatchType != TEXT("Extraction") || bStartingSession || bTravelRequested
+		|| GS->bModeUpdating || Sessions->IsBusy() || !Sessions->HasSession() || Registry->SelectedMap == MapId) return;
+	const auto* PS = Player->GetPlayerState<ABrokenEdgePlayerState>();
+	if (!PS || PS->GetOwner() != Player || !GS->PlayerArray.Contains(PS) || PS->IsInactive()
+		|| PS->IsOnlyASpectator() || PS->IsLobbyReady()) return;
+	FString Error;
+	if (!Registry->Validate(MapId, Error)) { GS->LobbyStatus = Error; return; }
+	CancelCountdown();
+	Registry->SelectedMap = MapId;
+	GS->ExtractionMapId = MapId;
+	PendingMap.Reset();
+	for (APlayerState* State : GS->PlayerArray)
+		if (auto* Member = Cast<ABrokenEdgePlayerState>(State)) Member->SetLobbyReady(false);
+	GS->LobbyStatus = TEXT("地图已切换，请所有玩家重新准备");
+	GS->ForceNetUpdate();
 }

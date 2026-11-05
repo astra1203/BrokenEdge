@@ -73,6 +73,8 @@ public:
 	void Interact();
 	/** F 键：只处理钥匙房门（不换枪、不抢救人）。门由服务器校验钥匙卡并扣耐久。 */
 	void InteractDoor();
+	UFUNCTION(Server, Reliable)
+	void ServerToggleDoor(class AExtractionDoor* Door);
 	// 先确认门对象有效且属于同一世界，再由门执行完整权限和库存版本校验。
 	UFUNCTION(Server, Reliable)
 	void ServerUnlockDoor(class AExtractionKeyRoom* Door, int32 InventoryRevision);

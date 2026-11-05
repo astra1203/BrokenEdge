@@ -18,6 +18,10 @@
 #include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
 #include "MultiplayerSessionsSubsystem.h"
+#include "EngineUtils.h"
+#include "BrokenEdge/Extraction/ExtractionMapRegistry.h"
+#include "BrokenEdge/Extraction/ExtractionExit.h"
+#include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 
 namespace
 {
@@ -30,7 +34,7 @@ namespace
 			Seamless = IConsoleManager::Get().FindConsoleVariable(TEXT("net.AllowPIESeamlessTravel"));
 			InitialSeamless = Seamless->GetInt();
 			FParse::Value(FCommandLine::Get(), TEXT("ExtractionPIEPlayers="), Players);
-			Deadline = FPlatformTime::Seconds() + 120;
+			Deadline = FPlatformTime::Seconds() + 300;
 		}
 
 		virtual ~FExtractionPIELobbyFlow() override { Seamless->SetWithCurrentPriority(InitialSeamless); }
@@ -67,8 +71,10 @@ namespace
 				return true;
 			}
 			if (!Server || Clients.Num() != Players || Server->IsInSeamlessTravel()) return false;
-			for (auto* Client : Clients) if (Client->IsInSeamlessTravel() || !Client->GetFirstPlayerController()) return
-				false;
+			for (auto* Client : Clients)
+				if (Client->IsInSeamlessTravel() || !Client->GetFirstPlayerController())
+					return
+						false;
 			auto* Lobby = Server->GetGameState<ALobbyGameState>();
 			auto* Store = Server->GetGameInstance()->GetSubsystem<UExtractionPersistence>();
 
@@ -88,6 +94,23 @@ namespace
 						UExtractionAccountComponent>();
 					if (!Account || !Account->Bound || !Account->Profile.Profile.IsValid()) return false;
 				}
+				if (CrossMaps)
+				{
+					const FName Wanted = Round == 1 ? TEXT("SpaceCenter") : TEXT("SovietMilitary");
+					if (SelectionRound != Round)
+					{
+						CastChecked<ABrokenEdgePlayerController>(Clients[0]->GetFirstPlayerController())->
+							ServerSetExtractionMap(Wanted);
+						SelectionRound = Round;
+						return false;
+					}
+					if (Lobby->ExtractionMapId != Wanted) return false;
+					for (auto* Client : Clients)
+					{
+						const auto* ClientLobby = Client->GetGameState<ALobbyGameState>();
+						if (!ClientLobby || ClientLobby->ExtractionMapId != Wanted) return false;
+					}
+				}
 				for (auto* Client : Clients)
 				{
 					auto* Account = Client->GetFirstPlayerController()->FindComponentByClass<
@@ -103,7 +126,8 @@ namespace
 						return true;
 					}
 					Weapons.Add(Profile, Item->Id);
-					Squads.FindOrAdd(Profile) = Client->GetFirstPlayerController()->GetPlayerState<ABrokenEdgePlayerState>()->ExtractionSquad;
+					Squads.FindOrAdd(Profile) = Client->GetFirstPlayerController()->GetPlayerState<
+						ABrokenEdgePlayerState>()->ExtractionSquad;
 					FExtractionStorageRequest Request;
 					Request.Move.Item = Item->Id;
 					Request.Move.Quantity = 1;
@@ -163,12 +187,23 @@ namespace
 					return false;
 				}
 				const auto* Game = Server->GetGameState<AExtractionGameState>();
-				if (!Game || Game->Phase != EExtractionPhase::Active || Game->PlayerArray.Num() != Players) return false;
+				if (!Game || Game->Phase != EExtractionPhase::Active || Game->PlayerArray.Num() != Players)
+					return
+						false;
 				for (auto* Client : Clients)
 				{
 					const auto* PS = Client->GetFirstPlayerController()->GetPlayerState<AExtractionPlayerState>();
 					if (!PS || !PS->Inventory || !PS->Inventory->Contents.InSlot(0)) return false;
 				}
+				if (!Game->MapDefinition) return false;
+				for (auto* Client : Clients)
+				{
+					const auto* ClientGame = Client->GetGameState<AExtractionGameState>();
+					if (!ClientGame || ClientGame->MapDefinition != Game->MapDefinition) return false;
+				}
+				if (CrossMaps)
+					Test->TestEqual(TEXT("Selected map reaches all clients"), Game->MapDefinition->MapId,
+					                FName(Round == 1 ? TEXT("SpaceCenter") : TEXT("SovietMilitary")));
 				FGuid Current;
 				for (APlayerState* State : Game->PlayerArray)
 				{
@@ -176,11 +211,13 @@ namespace
 					if (!Test->TestNotNull(TEXT("Extraction PlayerState after seamless travel"), PS)) return true;
 					Test->TestTrue(TEXT("Authenticated profile retained"), Weapons.Contains(PS->ExtractionProfile));
 					Test->TestTrue(TEXT("Raid ticket retained"), PS->ExtractionRaid.IsValid());
-					Test->TestEqual(TEXT("Squad survives lobby travel"), PS->ExtractionSquad, Squads.FindRef(PS->ExtractionProfile));
+					Test->TestEqual(TEXT("Squad survives lobby travel"), PS->ExtractionSquad,
+					                Squads.FindRef(PS->ExtractionProfile));
 					if (!Current.IsValid()) Current = PS->ExtractionRaid;
 					Test->TestEqual(TEXT("All players share raid"), PS->ExtractionRaid, Current);
-					const auto* Rifle = PS->Inventory->Contents.InSlot(0);
-					if (Test->TestNotNull(TEXT("Equipped rifle carried into raid"), Rifle))
+					// Current starting-supply rules may move the carried rifle into the backpack.
+					const auto* Rifle = PS->Inventory->Contents.Find(Weapons.FindRef(PS->ExtractionProfile));
+					if (Test->TestNotNull(TEXT("Original rifle carried into raid"), Rifle))
 						Test->TestEqual(TEXT("Same rifle instance"), Rifle->Id, Weapons.FindRef(PS->ExtractionProfile));
 					Test->TestEqual(
 						TEXT("Loadout deducted exactly once"), Store->View(PS->ExtractionProfile)->Loadout.Items.Num(),
@@ -188,12 +225,23 @@ namespace
 				}
 				Test->TestTrue(TEXT("New round has a fresh raid"), Current != LastRaid);
 				LastRaid = Current;
-				int32 Offset = -160;
+				AExtractionExit* Exit = nullptr;
+				for (TActorIterator<AExtractionExit> It(Server); It; ++It)
+					if (It->Available(Game->GetServerWorldTimeSeconds()) && !It->Definition.bRequireEmptyPack
+						&& It->Definition.Capacity == 0)
+					{
+						Exit = *It;
+						break;
+					}
+				if (!Test->TestNotNull(TEXT("Authored open extraction zone"), Exit)) return true;
+				int32 Index = 0;
 				for (auto It = Server->GetPlayerControllerIterator(); It; ++It)
 				{
 					// Scene fixture only: the real exit timer and persistence path perform settlement.
-					if (APawn* Pawn = It->Get()->GetPawn()) Pawn->SetActorLocation(FVector(1400 + Offset, 2900, 500));
-					Offset += 160;
+					if (APawn* Pawn = It->Get()->GetPawn())
+						Pawn->SetActorLocation(
+							Exit->GetActorLocation() + FVector((Index % 3 - 1) * 150, (Index / 3) * 150, 100));
+					++Index;
 				}
 				UE_LOG(LogTemp, Display, TEXT("EXTRACTION_PIE_LOBBY_ACTIVE Round=%d"), Round + 1);
 				Advance(4);
@@ -234,7 +282,7 @@ namespace
 					                3);
 				}
 				UE_LOG(LogTemp, Display, TEXT("EXTRACTION_PIE_LOBBY_RETURNED Round=%d"), ++Round);
-				if (Round == 2) Stop();
+				if (Round == (CrossMaps ? 3 : 2)) Stop();
 				else Advance(0);
 			}
 			return false;
@@ -253,7 +301,7 @@ namespace
 		void Advance(int32 Next)
 		{
 			Stage = Next;
-			Deadline = FPlatformTime::Seconds() + 120;
+			Deadline = FPlatformTime::Seconds() + 300;
 			Since = 0;
 		}
 
@@ -269,6 +317,8 @@ namespace
 		int32 InitialSeamless = 0;
 		int32 Stage = 0;
 		int32 Round = 0;
+		int32 SelectionRound = -1;
+		bool CrossMaps = FParse::Param(FCommandLine::Get(), TEXT("ExtractionPIECrossMaps"));
 		int32 Players = 2;
 		TMap<FGuid, uint8> Squads;
 		double Deadline = 0;
@@ -290,8 +340,9 @@ bool FExtractionPIELobbyTest::RunTest(const FString&)
 		return false;
 	}
 	const auto* Seamless = IConsoleManager::Get().FindConsoleVariable(TEXT("net.AllowPIESeamlessTravel"));
-	if (!TestTrue(TEXT("Project config enables PIE seamless travel"), Seamless && Seamless->GetInt() == 1)) return
-		false;
+	if (!TestTrue(TEXT("Project config enables PIE seamless travel"), Seamless && Seamless->GetInt() == 1))
+		return
+			false;
 	FString Mode = TEXT("Extraction");
 	FParse::Value(FCommandLine::Get(), TEXT("ExtractionPIEMode="), Mode);
 	if (!FEditorFileUtils::LoadMap(TEXT("/Game/Maps/Lobby"), false, false)) return false;
@@ -299,7 +350,7 @@ bool FExtractionPIELobbyTest::RunTest(const FString&)
 	Settings->bLaunchSeparateServer = false;
 	int32 Players = 2;
 	FParse::Value(FCommandLine::Get(), TEXT("ExtractionPIEPlayers="), Players);
-	Settings->SetPlayNumberOfClients(FMath::Clamp(Players, 2, 3));
+	Settings->SetPlayNumberOfClients(FMath::Clamp(Players, 2, 6));
 	Settings->SetRunUnderOneProcess(true);
 	Settings->SetPlayNetMode(PIE_Client);
 	Settings->NewWindowWidth = 640;

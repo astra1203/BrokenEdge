@@ -458,3 +458,8 @@ void ABrokenEdgePlayerController::HideTeamScores()
 		BrokenEdgeHUD->CharacterOverlay->ScoreSpacerText->SetText(FText());
 	}
 }
+
+void ABrokenEdgePlayerController::ServerSetExtractionMap_Implementation(FName MapId)
+{
+	if (auto* Mode = GetWorld()->GetAuthGameMode<ALobbyGameMode>()) Mode->SetExtractionMap(this, MapId);
+}

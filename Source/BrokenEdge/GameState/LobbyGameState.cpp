@@ -5,6 +5,7 @@ void ALobbyGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(ALobbyGameState, RoomMatchType);
+    DOREPLIFETIME(ALobbyGameState, ExtractionMapId);
     DOREPLIFETIME(ALobbyGameState, bModeUpdating);
     DOREPLIFETIME(ALobbyGameState, MinimumPlayers);
     DOREPLIFETIME(ALobbyGameState, Capacity);

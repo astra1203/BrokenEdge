@@ -1,4 +1,6 @@
 #include "LobbyWidget.h"
+#include "BrokenEdge/Extraction/ExtractionMapRegistry.h"
+#include "Engine/GameInstance.h"
 #include "LobbyShowcase.h"
 #include "Components/Image.h"
 #include "Components/Overlay.h"
@@ -45,7 +47,7 @@ bool ULobbyWidget::Initialize()
     auto* Modes = WidgetTree->ConstructWidget<UHorizontalBox>();
     FreeForAllButton = SessionWidgetStyle::Button(WidgetTree,TEXT("FreeForAllButton"),TEXT("自由混战"));
     TeamsButton = SessionWidgetStyle::Button(WidgetTree,TEXT("TeamsButton"),TEXT("团队对抗"));
-    ExtractionButton = SessionWidgetStyle::Button(WidgetTree,TEXT("ExtractionButton"),TEXT("烽火地带 · 航天行动"));
+    ExtractionButton = SessionWidgetStyle::Button(WidgetTree,TEXT("ExtractionButton"),TEXT("烽火地带 · 搜打撤"));
     FreeForAllButton->OnClicked.AddUniqueDynamic(this,&ThisClass::FreeForAllClicked);
     TeamsButton->OnClicked.AddUniqueDynamic(this,&ThisClass::TeamsClicked);
     ExtractionButton->OnClicked.AddUniqueDynamic(this,&ThisClass::ExtractionClicked);
@@ -63,7 +65,16 @@ bool ULobbyWidget::Initialize()
     auto* Content = WidgetTree->ConstructWidget<UVerticalBox>();
     Place(Content,FVector2D(830,124),FVector2D(450,440));
     SessionWidgetStyle::Line(Content,SessionWidgetStyle::Text(WidgetTree,TEXT("行动区域"),14),6);
-    SessionWidgetStyle::Line(Content,SessionWidgetStyle::Text(WidgetTree,TEXT("航天基地"),30),6);
+    MapLabel = SessionWidgetStyle::Text(WidgetTree,TEXT("地图加载中"),26);
+    SessionWidgetStyle::Line(Content,MapLabel,6);
+    auto* Maps = WidgetTree->ConstructWidget<UHorizontalBox>();
+    SpaceCenterButton = SessionWidgetStyle::Button(WidgetTree,TEXT("SpaceCenterMap"),TEXT("航天基地"));
+    SovietMilitaryButton = SessionWidgetStyle::Button(WidgetTree,TEXT("SovietMilitaryMap"),TEXT("苏联军事基地"));
+    SpaceCenterButton->OnClicked.AddUniqueDynamic(this,&ThisClass::SpaceCenterClicked);
+    SovietMilitaryButton->OnClicked.AddUniqueDynamic(this,&ThisClass::SovietMilitaryClicked);
+    for (auto* B : {SpaceCenterButton.Get(), SovietMilitaryButton.Get()})
+        Maps->AddChildToHorizontalBox(B)->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
+    SessionWidgetStyle::Line(Content,Maps,8);
     SessionWidgetStyle::Line(Content,SessionWidgetStyle::Text(WidgetTree,TEXT("搜索物资 · 完成任务 · 携装撤离"),16),18);
     RoomInfo = SessionWidgetStyle::Text(WidgetTree,TEXT("正在同步房间…"),14);
     RoomInfo->SetAutoWrapText(true); SessionWidgetStyle::Line(Content,RoomInfo,12);
@@ -234,6 +245,13 @@ void ULobbyWidget::Refresh()
 	const bool bCanChooseMode = LocalPS && !LocalPS->IsLobbyReady() && !LocalPS->IsInactive()
 		&& !LocalPS->IsOnlyASpectator() && !GS->bTravelling && !GS->bModeUpdating && GS->CountdownEndTime <= 0.0;
 	const bool Extraction = GS->RoomMatchType == TEXT("Extraction");
+	const auto* Registry = GetGameInstance()->GetSubsystem<UExtractionMapRegistry>();
+	const auto* Map = Registry ? Registry->Find(GS->ExtractionMapId) : nullptr;
+	MapLabel->SetText(Extraction ? (Map ? Map->DisplayName : FText::FromString(TEXT("地图不可用"))) : FText::FromString(GS->RoomMatchType));
+	SpaceCenterButton->SetVisibility(Extraction ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	SovietMilitaryButton->SetVisibility(SpaceCenterButton->GetVisibility());
+	SpaceCenterButton->SetIsEnabled(Extraction && bCanChooseMode && GS->ExtractionMapId != TEXT("SpaceCenter"));
+	SovietMilitaryButton->SetIsEnabled(Extraction && bCanChooseMode && GS->ExtractionMapId != TEXT("SovietMilitary"));
 	int32 SquadCounts[3] = {};
 	for (const auto* P : Players) if (P->ExtractionSquad >= 1 && P->ExtractionSquad <= 2) ++SquadCounts[P->ExtractionSquad];
 	SquadOne->SetVisibility(Extraction ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
@@ -289,4 +307,13 @@ void ULobbyWidget::QuestsClicked()
 	ProgressionWidget->TasksInitially = true;
 	ProgressionWidget->AddToViewport(160);
 	ProgressionWidget->FocusPanel();
+}
+
+void ULobbyWidget::SpaceCenterClicked()
+{
+	if (auto* PC = GetOwningPlayer<ABrokenEdgePlayerController>()) PC->ServerSetExtractionMap(TEXT("SpaceCenter"));
+}
+void ULobbyWidget::SovietMilitaryClicked()
+{
+	if (auto* PC = GetOwningPlayer<ABrokenEdgePlayerController>()) PC->ServerSetExtractionMap(TEXT("SovietMilitary"));
 }
