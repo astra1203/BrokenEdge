@@ -1,0 +1,276 @@
+{
+  "capturedAt": "2026-11-06T19:11:31+08:00",
+  "sourceCommit": "bd56081333bafc3f9d1ae4bd3910b148041547e9",
+  "method": "Read-only Unreal Editor Python asset/CDO inspection and RiderLink buffered logs. No PIE reproduction, build, test run or asset save.",
+  "assets": [
+    {
+      "path": "/Game/Input/IMC_CharacterDefault",
+      "mappings": [
+        {
+          "action": "IA_Jump",
+          "key": "空格键"
+        },
+        {
+          "action": "IA_Move",
+          "key": "W"
+        },
+        {
+          "action": "IA_Move",
+          "key": "S"
+        },
+        {
+          "action": "IA_Move",
+          "key": "A"
+        },
+        {
+          "action": "IA_Move",
+          "key": "D"
+        },
+        {
+          "action": "IA_Look",
+          "key": "鼠标XY 2D轴"
+        },
+        {
+          "action": "IA_Crouch",
+          "key": "左Ctrl"
+        },
+        {
+          "action": "IA_Equip",
+          "key": "E"
+        },
+        {
+          "action": "IA_Aim",
+          "key": "鼠标右键"
+        },
+        {
+          "action": "IA_Reload",
+          "key": "R"
+        },
+        {
+          "action": "IA_Drop",
+          "key": "G"
+        },
+        {
+          "action": "IA_Fire",
+          "key": "鼠标左键"
+        }
+      ]
+    },
+    {
+      "path": "/Game/Characters/Stinger/Blueprints/Input/IMC_Stinger",
+      "mappings": [
+        {
+          "action": "IA_Jump",
+          "key": "空格键"
+        },
+        {
+          "action": "IA_Move",
+          "key": "W"
+        },
+        {
+          "action": "IA_Move",
+          "key": "S"
+        },
+        {
+          "action": "IA_Move",
+          "key": "A"
+        },
+        {
+          "action": "IA_Move",
+          "key": "D"
+        },
+        {
+          "action": "IA_Look",
+          "key": "鼠标XY 2D轴"
+        },
+        {
+          "action": "IA_Crouch",
+          "key": "左Ctrl"
+        },
+        {
+          "action": "IA_Equip",
+          "key": "E"
+        },
+        {
+          "action": "IA_Aim",
+          "key": "鼠标右键"
+        },
+        {
+          "action": "IA_Reload",
+          "key": "R"
+        },
+        {
+          "action": "IA_Drop",
+          "key": "G"
+        },
+        {
+          "action": "IA_Fire",
+          "key": "鼠标左键"
+        },
+        {
+          "action": "IA_StingerSprint",
+          "key": "左Shift"
+        }
+      ]
+    },
+    {
+      "path": "/Game/Extraction/Items/DA_Item_M4A1",
+      "size": "<Struct 'IntPoint' (address-omitted) {x: 4, y: 2}>",
+      "icon": "<Object '/Game/Extraction/Items/Icons/T_ItemIcon_W_M4A1.T_ItemIcon_W_M4A1' (address-omitted) Class 'Texture2D'>",
+      "compatible_attachments": "[\"RedDot\", \"VerticalGrip\", \"Compensator\"]",
+      "mount_sockets": "{}",
+      "world_mesh": "None",
+      "first_person_mesh": "None",
+      "optic_aim_offset": "<Struct 'Vector' (address-omitted) {x: 0.000000, y: 0.000000, z: 0.000000}>"
+    },
+    {
+      "path": "/Game/Extraction/Items/DA_Item_RedDot",
+      "size": "<Struct 'IntPoint' (address-omitted) {x: 1, y: 1}>",
+      "icon": "<Object '/Game/Extraction/Items/Icons/T_ItemIcon_scope.T_ItemIcon_scope' (address-omitted) Class 'Texture2D'>",
+      "compatible_attachments": "[\"RedDot\", \"VerticalGrip\", \"Compensator\"]",
+      "mount_sockets": "{}",
+      "world_mesh": "<Object '/Game/Extraction/Items/WorldModels/SharedMeshes/SM_1c29942052c83418.SM_1c29942052c83418' (address-omitted) Class 'StaticMesh'>",
+      "first_person_mesh": "<Object '/Game/Extraction/Equipment/RedDot_1P/Sco_Re_Reddot_035_1P_Rigid/StaticMeshes/Sco_Re_Reddot_035_1P_Rigid.Sco_Re_Reddot_035_1P_Rigid' (address-omitted) Class 'StaticMesh'>",
+      "optic_aim_offset": "<Struct 'Vector' (address-omitted) {x: 0.000000, y: 0.000016, z: -1.745596}>"
+    },
+    {
+      "path": "/Game/Extraction/Weapons/M4A1/DA_M4A1_Presentation",
+      "scope_overlay": "None"
+    },
+    {
+      "widget": "/Game/UI/Looting/WBP_LootingSlotView.WBP_LootingSlotView:WidgetTree.WeaponIconFit",
+      "found": true,
+      "stretch": "<Stretch.SCALE_TO_FIT: 2>",
+      "slot": "<Object '/Game/UI/Looting/WBP_LootingSlotView.WBP_LootingSlotView:WidgetTree.Overlay_0.OverlaySlot_0' (address-omitted) Class 'OverlaySlot'>"
+    },
+    {
+      "widget": "/Game/UI/Looting/WBP_LootingSlotView.WBP_LootingSlotView:WidgetTree.Icon",
+      "found": true,
+      "brush": "<Struct 'SlateBrush' (address-omitted) {tint_color: {specified_color: {r: 1.000000, g: 1.000000, b: 1.000000, a: 1.000000}, color_use_rule: UseColor_Specified}, draw_as: Image, tiling: NoTile, mirroring: NoMirror, image_size: {}, margin: {left: 0.000000, top: 0.000000, right: 0.000000, bottom: 0.000000}, resource_object: None, outline_settings: {corner_radii: {x: 0.000000, y: 0.000000, z: 0.000000, w: 0.000000}, color: {specified_color: {r: 0.000000, g: 0.000000, b: 0.000000, a: 0.000000}, color_use_rule: UseColor_Specified}, width: 0.000000, rounding_type: HalfHeightRadius, use_brush_transparency: False}}>",
+      "slot": "<Object '/Game/UI/Looting/WBP_LootingSlotView.WBP_LootingSlotView:WidgetTree.WeaponIconFit.ScaleBoxSlot_0' (address-omitted) Class 'ScaleBoxSlot'>"
+    }
+  ],
+  "montagesAndLayout": [
+    {
+      "property": "HealMontage",
+      "asset": "/Game/Characters/Stinger/Animations/Abilities/AM_Ability_Heal_3P.AM_Ability_Heal_3P",
+      "length": 1.4008333683013916
+    },
+    {
+      "property": "FirstPersonHealMontage",
+      "asset": "/Game/Characters/Stinger/Animations/Abilities/AM_Ability_Heal_1P.AM_Ability_Heal_1P",
+      "length": 1.3344333171844482
+    },
+    {
+      "property": "HealOtherMontage",
+      "asset": "/Game/Characters/Stinger/Animations/Abilities/AM_Ability_HealOther_3P.AM_Ability_HealOther_3P",
+      "length": 0.8347166776657104
+    },
+    {
+      "property": "FirstPersonHealOtherMontage",
+      "asset": "/Game/Characters/Stinger/Animations/Abilities/AM_Ability_HealOther_1P.AM_Ability_HealOther_1P",
+      "length": 0.5019500255584717
+    },
+    {
+      "property": "ReviveMontage",
+      "asset": "/Game/Characters/Stinger/Animations/Abilities/AM_Ability_Revive_3P.AM_Ability_Revive_3P",
+      "length": 1.0009167194366455
+    },
+    {
+      "property": "FirstPersonReviveMontage",
+      "asset": "/Game/Characters/Stinger/Animations/Abilities/AM_Ability_Revive_1P.AM_Ability_Revive_1P",
+      "length": 1.0009167194366455
+    },
+    {
+      "widget": "WeaponIconFit",
+      "horizontal_alignment": "<HorizontalAlignment.H_ALIGN_FILL: 0>",
+      "vertical_alignment": "<VerticalAlignment.V_ALIGN_FILL: 0>",
+      "padding": "<Struct 'Margin' (address-omitted) {left: 6.000000, top: 6.000000, right: 6.000000, bottom: 9.000000}>"
+    },
+    {
+      "widget": "Icon",
+      "horizontal_alignment": "<HorizontalAlignment.H_ALIGN_CENTER: 2>",
+      "vertical_alignment": "<VerticalAlignment.V_ALIGN_CENTER: 2>"
+    }
+  ],
+  "editor": {
+    "connected": true,
+    "projectName": "BrokenEdge",
+    "processId": 49804,
+    "playState": "Idle",
+    "recentLogs": [
+      {
+        "verbosity": "Warning",
+        "category": "LogTemp",
+        "message": "Weapon grip target unavailable: mesh=/Game/MilitaryWeapSilver/Weapons/Shotgun_A.Shotgun_A LeftHandSocket=0 Hand_R=0 character=BP_StingerCharacter_C_9 right bone=RightHand valid=1",
+        "timestampMs": 1793958898000
+      },
+      {
+        "verbosity": "Warning",
+        "category": "LogTemp",
+        "message": "Weapon grip target unavailable: mesh=/Game/MilitaryWeapSilver/Weapons/Shotgun_A.Shotgun_A LeftHandSocket=0 Hand_R=0 character=BP_StingerCharacter_C_14 right bone=RightHand valid=1",
+        "timestampMs": 1793958898000
+      },
+      {
+        "verbosity": "Warning",
+        "category": "LogTemp",
+        "message": "Weapon grip target unavailable: mesh=/Game/MilitaryWeapSilver/Weapons/Shotgun_A.Shotgun_A LeftHandSocket=0 Hand_R=0 character=BP_StingerCharacter_C_15 right bone=RightHand valid=1",
+        "timestampMs": 1793958898000
+      },
+      {
+        "verbosity": "Warning",
+        "category": "LogCrowdFollowing",
+        "message": "Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+        "timestampMs": 1793958898000
+      },
+      {
+        "verbosity": "Warning",
+        "category": "LogBlueprint",
+        "message": "[AssetLog]D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Animations\\ThirdPerson\\ABP_BrokenEdgeAnimInstance_Stinger.uasset：[编译器]Transform (Modify) Bone - Bone: RightHand  - 没有选中要修改的组件。旋转度、平移或缩放应该设置为'忽略'之外的内容。",
+        "timestampMs": 1793958898000
+      },
+      {
+        "verbosity": "Warning",
+        "category": "LogAudioMixerWasapi",
+        "message": "Sample rate mismatch. Engine sample rate: 48000 Device sample rate: 192000",
+        "timestampMs": 1793958898000
+      },
+      {
+        "verbosity": "Warning",
+        "category": "LogAudioMixerWasapi",
+        "message": "Device level sample rate conversion will be used.",
+        "timestampMs": 1793958898000
+      },
+      {
+        "verbosity": "Warning",
+        "category": "LogUObjectGlobals",
+        "message": "未找到Object“Class /Script/ApexDestruction.DestructibleMesh”",
+        "timestampMs": 1793958898000
+      },
+      {
+        "verbosity": "Warning",
+        "category": "LogPython",
+        "message": "<string>:7: DeprecationWarning: InputMappingContext: Property 'mappings' on 'InputMappingContext' is deprecated: Use the DefaultKeyMappings struct instead.",
+        "timestampMs": 1793958898000
+      },
+      {
+        "verbosity": "Error",
+        "category": "LogPython",
+        "message": "Traceback (most recent call last):",
+        "timestampMs": 1793958898000
+      },
+      {
+        "verbosity": "Error",
+        "category": "LogPython",
+        "message": "  File \"<string>\", line 7, in <module>",
+        "timestampMs": 1793958898000
+      },
+      {
+        "verbosity": "Error",
+        "category": "LogPython",
+        "message": "AttributeError: type object 'InputLibrary' has no attribute 'get_key_display_name'",
+        "timestampMs": 1793958898000
+      }
+    ]
+  }
+}
