@@ -7,7 +7,7 @@ import shutil
 
 root=Path(__file__).resolve().parents[2]
 parser=argparse.ArgumentParser();parser.add_argument('runs',nargs='+');args=parser.parse_args()
-out=root/'Docs/Extraction/RestorationEvidence/Loot';runs=[];points={}
+out=root/'Artifacts/Extraction/RestorationEvidence/Loot';runs=[];points={}
 for tag in args.runs:
     run=root/'Saved/Extraction'/tag;path=run/'Report.json';report=json.loads(path.read_text(encoding='utf-8'))
     assert report['result']=='passed',tag

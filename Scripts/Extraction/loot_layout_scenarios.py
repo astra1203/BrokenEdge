@@ -6,7 +6,7 @@ import time
 
 def run(g):
     send,check,wait,state,player=(g[k] for k in ('send','check','wait','state','player'))
-    audit=json.loads((g['ROOT']/'Docs/Extraction/RestorationEvidence/Loot/PlacementAudit.json').read_text(encoding='utf-8'))
+    audit=json.loads((g['ROOT']/'Artifacts/Extraction/RestorationEvidence/Loot/PlacementAudit.json').read_text(encoding='utf-8'))
     points={p['id']:p for p in audit['points'] if p['variant']=='SpaceCenter_Ma1' and p['enabled']}
     def safes(peer='Server'):
         return {a['source_point']:a for a in state(peer)['loot'] if a.get('source_point') in points}

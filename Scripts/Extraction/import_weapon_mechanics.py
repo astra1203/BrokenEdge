@@ -84,11 +84,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--source', type=Path, default=weapon_specs.DEFAULT_SOURCE.parent)
     parser.add_argument('--check', action='store_true')
-    parser.add_argument('--audit', action='store_true', help='Audit relationships into Docs; never change runtime snapshot')
+    parser.add_argument('--audit', action='store_true', help='Audit relationships into Artifacts; never change runtime snapshot')
     args = parser.parse_args()
     if args.audit:
         from audit_weapon_mechanics import run
-        run(args.source, ROOT / 'Docs/Extraction/WeaponMechanicsEvidence', args.check)
+        run(args.source, ROOT / 'Artifacts/Extraction/WeaponMechanicsEvidence', args.check)
         raise SystemExit(0)
     output = ROOT / 'Content/Extraction/Data/WeaponMechanics.json'
     payload = json.dumps(import_snapshot(args.source), ensure_ascii=False, sort_keys=True, indent=2) + '\n'

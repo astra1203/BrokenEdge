@@ -32,7 +32,7 @@ def main():
     if args.suffix and not args.suffix.isalnum():
         raise ValueError('Use an alphanumeric archive suffix')
     plan = read(args.plan)
-    out = ROOT / 'Docs/Extraction' / f'Phase{args.phase}{args.suffix}Evidence'
+    out = ROOT / 'Artifacts/Extraction' / f'Phase{args.phase}{args.suffix}Evidence'
     # Validate every entry before creating the immutable evidence directory.
     for entry in plan['runs']:
         folder = ROOT / entry['folder']
@@ -77,7 +77,7 @@ def main():
     paths.update(subprocess.check_output(['git', '-c', 'core.quotePath=false', 'ls-files', '--others', '--exclude-standard'], cwd=ROOT).decode('utf-8').splitlines())
     paths.update(plan.get('asset_paths', []))
     implementation = {p: sha(ROOT / p) for p in sorted(paths) if (ROOT / p).is_file()
-                      and not p.startswith(('Docs/', 'Saved/', 'Packaged/'))}
+                      and not p.startswith(('Docs/', 'Artifacts/', 'Saved/', 'Packaged/'))}
     packages = {}
     package_root = (ROOT / plan.get('package_root', 'Packaged')).resolve()
     if not package_root.is_relative_to((ROOT / 'Packaged').resolve()):

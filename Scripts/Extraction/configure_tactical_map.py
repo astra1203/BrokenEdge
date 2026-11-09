@@ -25,7 +25,7 @@ definition.set_editor_property('floor_bounds',points)
 definition.set_editor_property('overview_min',unreal.Vector2D(min(p.x for p in points)-500,min(p.y for p in points)-500))
 definition.set_editor_property('overview_max',unreal.Vector2D(max(p.x for p in points)+500,max(p.y for p in points)+500))
 assert lib.save_loaded_asset(definition)
-out=root/'Docs/Extraction/RestorationEvidence/UI';out.mkdir(parents=True,exist_ok=True)
+out=root/'Artifacts/Extraction/RestorationEvidence/UI';out.mkdir(parents=True,exist_ok=True)
 (out/'MapProjection.json').write_text(json.dumps({'rectangles':len(rectangles),'basis':'world-space restored floor/road/stair actor bounds; +X north; +Y east',
     'limits':'Project overview, not official minimap artwork. Rectangles approximate floor footprints; vertical overlap remains visible.',
     'actors':rectangles},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

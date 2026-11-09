@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<title>BrokenEdge 延迟补偿</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+SC:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: 单列工作台。控制条在上；客户端 / 服务器两块俯视画面并排；下面是共享的服务器时间轴；再下面是步骤说明与数值。 */
+:root {
+  --bg: #eef1f5;
+  --panel: #ffffff;
+  --field: #f6f8fb;
+  --ink: #16202c;
+  --muted: #5a6676;
+  --line: #d6dce4;
+  --client: #2563c9;
+  --bullet: #c27400;
+  --rewind: #12874a;
+  --current: #cc3838;
+  --history: #8792a3;
+  --sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f141a; --panel: #161d25; --field: #1a222c; --ink: #e4e9ef; --muted: #95a1b1; --line: #2b3542;
+    --client: #6fa3ff; --bullet: #f2a93b; --rewind: #48c983; --current: #ff6b6b; --history: #6f7b8c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f141a; --panel: #161d25; --field: #1a222c; --ink: #e4e9ef; --muted: #95a1b1; --line: #2b3542;
+  --client: #6fa3ff; --bullet: #f2a93b; --rewind: #48c983; --current: #ff6b6b; --history: #6f7b8c;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.65; }
+.wrap {
+  max-width: 1180px; margin: 0 auto; display: grid; gap: 18px;
+  padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+h1 { font-size: clamp(26px, 4vw, 36px); font-weight: 900; margin: 0; text-wrap: balance; letter-spacing: .01em; }
+h2 { font-size: 17px; margin: 0 0 10px; text-wrap: balance; }
+.lede { max-width: 64ch; color: var(--muted); margin: 8px 0 0; }
+code, .mono { font-family: var(--mono); font-size: .88em; }
+
+.controls {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+}
+.group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.group > .lbl { font-size: 13px; color: var(--muted); }
+.btn {
+  font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); background: var(--field);
+  border: 1px solid var(--line); border-radius: 7px; padding: 5px 12px; cursor: pointer;
+}
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--ink); color: var(--panel); border-color: var(--ink); min-width: 74px; }
+.btn:focus-visible, input:focus-visible + span, .seg label:focus-within { outline: 2px solid var(--client); outline-offset: 2px; }
+input[type="range"] { width: 170px; accent-color: var(--client); }
+.val { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 600; min-width: 58px; }
+.chips { display: flex; gap: 6px; }
+.chip { font: inherit; font-size: 12px; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 99px; padding: 2px 10px; cursor: pointer; }
+.chip:hover { color: var(--ink); border-color: var(--muted); }
+.switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; font-weight: 600; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch span.track { width: 38px; height: 22px; border-radius: 99px; background: var(--line); position: relative; transition: background .15s; }
+.switch span.track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--panel); transition: transform .15s; box-shadow: 0 1px 2px rgb(0 0 0 / .25); }
+.switch input:checked + span.track { background: var(--rewind); }
+.switch input:checked + span.track::after { transform: translateX(16px); }
+.switch input:focus-visible + span.track { outline: 2px solid var(--client); outline-offset: 2px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+.seg label { font-size: 13px; padding: 4px 10px; cursor: pointer; color: var(--muted); font-family: var(--mono); }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label:has(input:checked) { background: var(--ink); color: var(--panel); }
+
+.verdict {
+  margin: 0; padding: 10px 14px; border-radius: 8px; font-weight: 500;
+  background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--rewind);
+}
+.verdict[data-hit="false"] { border-left-color: var(--current); }
+
+.stage { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 780px) { .stage { grid-template-columns: 1fr; } }
+.panel { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; min-width: 0; }
+.cap { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 9px 14px; border-bottom: 1px solid var(--line); }
+.cap b { font-size: 15px; }
+.cap .sub { font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+canvas { display: block; width: 100%; max-width: 100%; }
+.panel canvas { aspect-ratio: 16 / 10; }
+.timeline canvas { height: 214px; cursor: ew-resize; touch-action: none; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); margin: 0; padding: 0; list-style: none; }
+.legend li { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 14px; height: 14px; border-radius: 50%; display: inline-block; flex: none; }
+.sw.solid-c { background: var(--client); }
+.sw.solid-r { background: var(--current); }
+.sw.ghost-g { border: 2px solid var(--rewind); background: color-mix(in srgb, var(--rewind) 18%, transparent); }
+.sw.dash-r { border: 2px dashed var(--current); }
+.sw.hist { border: 1.5px solid var(--history); opacity: .7; }
+.sw.dot-b { width: 8px; height: 8px; background: var(--bullet); }
+
+.explain { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 860px) { .explain { grid-template-columns: 1fr; } }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 28px 1fr; gap: 2px 10px; padding: 9px 10px; border-radius: 8px; transition: background .2s; }
+.steps li::before {
+  content: counter(s); grid-row: span 3; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--mono); font-size: 12px; font-weight: 600; border: 1.5px solid var(--line); color: var(--muted); margin-top: 1px;
+}
+.steps li.active { background: color-mix(in srgb, var(--client) 10%, transparent); }
+.steps li.active::before { background: var(--client); border-color: var(--client); color: var(--panel); }
+.steps li.done::before { border-color: var(--muted); color: var(--ink); }
+.steps b { font-size: 15px; }
+.steps p { margin: 0; color: var(--muted); font-size: 14px; }
+.steps .where { font-family: var(--mono); font-size: 12px; color: var(--muted); opacity: .9; overflow-wrap: anywhere; }
+
+.readout { display: grid; grid-template-columns: 1fr auto; gap: 7px 14px; margin: 0; font-size: 14px; }
+.readout dt { color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; font-weight: 600; }
+.readout .sep { grid-column: 1 / -1; border-top: 1px solid var(--line); margin: 3px 0; }
+.res-hit { color: var(--rewind); }
+.res-miss { color: var(--current); }
+.fine { font-size: 12.5px; color: var(--muted); margin: 12px 0 0; }
+
+.notes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 960px) { .notes { grid-template-columns: 1fr; } }
+.notes ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; }
+.notes li { color: var(--ink); }
+.notes li span { color: var(--muted); }
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+td { padding: 6px 0; border-top: 1px solid var(--line); vertical-align: top; }
+td:first-child { padding-right: 12px; white-space: nowrap; color: var(--muted); }
+td code { overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<main class="wrap">
+  <header>
+    <p class="eyebrow">BrokenEdge · 搜打撤模式 · 服务器权威</p>
+    <h1>延迟补偿是怎么做的</h1>
+    <p class="lede">射手画面里的敌人，大约是一个单程延迟之前的位置；开枪请求传到服务器，又过了一个单程延迟。服务器把命中检测用的敌人姿态倒回射手开枪时看到的那一刻，再判断子弹有没有打中。倒带有上限，延迟太高的玩家就得自己提前量。</p>
+  </header>
+
+  <section class="controls" aria-label="动画控制">
+    <div class="group">
+      <button class="btn primary" id="play" type="button">暂停</button>
+      <button class="btn" id="replay" type="button">重播</button>
+    </div>
+    <div class="group">
+      <label class="lbl" for="ping">射手 Ping</label>
+      <input type="range" id="ping" min="0" max="400" step="10" value="80">
+      <span class="val" id="pingVal">80 ms</span>
+      <div class="chips">
+        <button class="chip" type="button" data-ping="40">40</button>
+        <button class="chip" type="button" data-ping="150">150</button>
+        <button class="chip" type="button" data-ping="320">320（超上限）</button>
+      </div>
+    </div>
+    <label class="switch" for="comp">
+      <input type="checkbox" id="comp" checked>
+      <span class="track" aria-hidden="true"></span>
+      延迟补偿
+    </label>
+    <div class="group">
+      <span class="lbl" id="speedLbl">播放速度</span>
+      <div class="seg" role="radiogroup" aria-labelledby="speedLbl">
+        <label><input type="radio" name="speed" id="sp1" value="0.1">0.1×</label>
+        <label><input type="radio" name="speed" id="sp2" value="0.25" checked>0.25×</label>
+        <label><input type="radio" name="speed" id="sp3" value="1">1×</label>
+      </div>
+    </div>
+  </section>
+
+  <p class="verdict" id="verdict" data-hit="true">…</p>
+
+  <section class="stage">
+    <figure class="panel">
+      <div class="cap"><b>射手的客户端画面</b><span class="sub" id="subC"></span></div>
+      <canvas id="cv-client" aria-label="客户端俯视图：射手看到的敌人位置和本地预测子弹"></canvas>
+    </figure>
+    <figure class="panel">
+      <div class="cap"><b>服务器</b><span class="sub" id="subS"></span></div>
+      <canvas id="cv-server" aria-label="服务器俯视图：敌人当前姿态、历史帧、倒带姿态和服务器子弹"></canvas>
+    </figure>
+  </section>
+
+  <ul class="legend">
+    <li><span class="sw solid-c"></span>射手画面里的敌人</li>
+    <li><span class="sw solid-r"></span>服务器上敌人的当前姿态</li>
+    <li><span class="sw dash-r"></span>此刻服务器上的真实位置</li>
+    <li><span class="sw ghost-g"></span>倒带后的姿态（用来做命中检测）</li>
+    <li><span class="sw hist"></span>服务器记录的历史帧</li>
+    <li><span class="sw dot-b"></span>子弹</li>
+  </ul>
+
+  <figure class="panel timeline">
+    <div class="cap"><b>时间轴（服务器时钟）</b><span class="sub">拖动可逐帧查看</span></div>
+    <canvas id="cv-time" aria-label="时间轴：开枪、RPC、服务器子弹飞行、倒带区间和结果回传"></canvas>
+  </figure>
+
+  <section class="explain">
+    <div class="card">
+      <h2>一发子弹经过的五步</h2>
+      <ol class="steps" id="steps">
+        <li><b>服务器每帧记录姿态</b>
+          <p>每个玩家角色在服务器上每帧记下物理资产各 Body 所属骨骼的世界变换，保留最近 0.5 秒（至少比倒带上限多 0.1 秒）。只存变换，不复制网格。</p>
+          <span class="where">LagCompensationComponent · SaveFrame / EnsureShapes</span></li>
+        <li><b>客户端开枪，带上画面时间</b>
+          <p>客户端立刻生成一颗本地预测子弹，只做表现，不结算伤害。同时发送开枪请求，附带 ViewTime = 服务器时间 − 单程延迟，即“我看到的是服务器哪一刻的世界”。</p>
+          <span class="where">ExtractionCombatComponent · RequestShot → ServerRequestShotVersioned</span></li>
+        <li><b>服务器核验并算出倒带时长</b>
+          <p>先核验武器、弹药、射速和瞄准方向。倒带 = Now − ViewTime，再限制在 MaxRewindMs（默认 200 ms）和 ping×1.5+50 ms 两者中较小的一个以内，防止伪造时间。</p>
+          <span class="where">ExtractionCombatComponent · ServerRewindFor</span></li>
+        <li><b>服务器子弹逐步飞行</b>
+          <p>子弹每 1/120 秒前进一步。主扫掠忽略所有玩家角色，只检测场景；角色改用“本步时刻 − 倒带时长”的历史姿态，对胶囊、盒子、球做纯几何检测，谁更近算谁。</p>
+          <span class="where">ExtractionBullet · Tick → ULagCompensationComponent::TraceWorldAt</span></li>
+        <li><b>判定并同步结果</b>
+          <p>命中的骨骼决定部位：Head 走头盔，Hips / Spine 系列走护甲，其余算四肢。伤害由服务器结算，再同步回所有客户端。</p>
+          <span class="where">ExtractionHealth · ArmorSlotForBone</span></li>
+      </ol>
+    </div>
+    <div class="card">
+      <h2>这一发的数值</h2>
+      <dl class="readout">
+        <dt>单程延迟</dt><dd id="rL"></dd>
+        <dt>开枪时附带的 ViewTime</dt><dd id="rView"></dd>
+        <dt>服务器收到请求时 Now</dt><dd id="rNow"></dd>
+        <div class="sep"></div>
+        <dt>申请倒带 Now − ViewTime</dt><dd id="rReq"></dd>
+        <dt>上限 min(200, ping×1.5+50)</dt><dd id="rLim"></dd>
+        <dt>实际倒带</dt><dd id="rRew"></dd>
+        <div class="sep"></div>
+        <dt>检测姿态与射手画面相差</dt><dd id="rOff"></dd>
+        <dt>结果</dt><dd id="rRes"></dd>
+      </dl>
+      <p class="fine">示意参数：敌人横移 5 m/s，距离 25 m，子弹 600 m/s，躯干命中半径约 35 cm；横向距离压缩显示。客户端画面落后按单程延迟估算，实际还有少量插值延迟，ping×1.5+50 的余量就是留给它的。时间单位都是毫秒（服务器时钟）。</p>
+    </div>
+  </section>
+
+  <section class="notes">
+    <div class="card">
+      <h2>不倒带的情况</h2>
+      <ul>
+        <li>AI 守卫开枪 <span>它们本来就在服务器上，没有延迟</span></li>
+        <li>主机本地玩家开枪 <span>画面就是服务器当前状态</span></li>
+        <li>客户端的预测子弹 <span>只播放特效，不参与结算</span></li>
+        <li>死亡或关闭了碰撞的角色 <span>不参与倒带检测</span></li>
+        <li>延迟超出上限的部分 <span>不补偿，射手需要自己提前量</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>代码位置</h2>
+      <div class="tbl-wrap">
+        <table>
+          <tr><td>命中形状</td><td>网格的物理资产（Physics Asset），与普通命中同一套形状</td></tr>
+          <tr><td>记录与检测</td><td><code>Component/LagCompensationComponent.cpp</code></td></tr>
+          <tr><td>几何判定</td><td><code>HitRewind::SegmentCapsule / SegmentBox / SegmentSphere</code></td></tr>
+          <tr><td>倒带时长</td><td><code>Extraction/ExtractionCombatComponent.cpp</code></td></tr>
+          <tr><td>子弹接入</td><td><code>Weapon/ExtractionBullet.cpp</code></td></tr>
+          <tr><td>测试</td><td><code>BrokenEdge.LagCompensation.*</code></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h2>在编辑器里调试</h2>
+      <ul>
+        <li><code>BrokenEdge.Net.MaxRewindMs 200</code> <span>倒带上限，默认 200 ms</span></li>
+        <li><code>BrokenEdge.Net.DebugRewind 1</code> <span>绿色画倒带姿态，红色画当前姿态，与本页配色一致</span></li>
+        <li><code>Net PktLag=150</code> <span>在 PIE 客户端上模拟延迟</span></li>
+        <li><code>BrokenEdge.Weapon.LogFlight 1</code> <span>倒带命中时打印 EXTRACTION_BULLET_REWIND</span></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  // 示意参数（米、米/秒、毫秒）
+  const V = 5, D = 25, BULLET = 600, F = D / BULLET * 1000, R = 0.35, T0 = 700;
+  const STEP = 1000 / 120, REC = 1000 / 30, HIST = 500, CAP = 200;
+  const FONT = '"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif';
+  const MONO = '"JetBrains Mono",ui-monospace,Consolas,monospace';
+  const $ = s => document.querySelector(s);
+  const cvC = $('#cv-client'), cvS = $('#cv-server'), cvT = $('#cv-time');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let ping = 80, comp = true, speed = 0.25, playing = !reduce, t = 0, holdUntil = 0, endUntil = 0, passed = new Set(), S;
+  const yAt = tm => V * (tm - T0) / 1000;
+  const f0 = v => Math.round(v).toString();
+  const cm = v => Math.round(Math.abs(v) * 100);
+
+  function build() {
+    const L = ping / 2;
+    const tFire = T0 - F + L;           // 客户端在画面里瞄准敌人、扣扳机的服务器时刻
+    const viewTime = tFire - L;         // 客户端附带的画面时间
+    const now = tFire + L;              // RPC 到达服务器
+    const requested = now - viewTime;
+    const limit = Math.min(CAP, ping * 1.5 + 50);
+    const rewind = comp ? Math.max(0, Math.min(requested, limit)) : 0;
+    const tArrive = now + F;            // 服务器子弹到达目标所在纵线
+    const poseTime = tArrive - rewind;  // 检测用的姿态时刻
+    const offset = yAt(poseTime);
+    const hit = Math.abs(offset) < R;
+    const tFeedback = tArrive + L;
+    S = { L, tFire, viewTime, now, requested, limit, rewind, tArrive, poseTime, offset, hit, tFeedback,
+          tStart: T0 - 520, tEnd: tFeedback + 240 };
+    S.holds = [S.tFire, S.now, S.tArrive];
+    fillReadout();
+  }
+
+  function fillReadout() {
+    $('#pingVal').textContent = ping + ' ms';
+    $('#rL').textContent = f0(S.L) + ' ms';
+    $('#rView').textContent = f0(S.viewTime);
+    $('#rNow').textContent = f0(S.now);
+    $('#rReq').textContent = f0(S.requested) + ' ms';
+    $('#rLim').textContent = f0(S.limit) + ' ms';
+    $('#rRew').textContent = comp ? f0(S.rewind) + ' ms' : '关闭';
+    $('#rOff').textContent = cm(S.offset) + ' cm';
+    const res = $('#rRes');
+    res.textContent = S.hit ? '命中' : '未命中';
+    res.className = S.hit ? 'res-hit' : 'res-miss';
+    let s;
+    if (!comp) s = `未开启补偿：服务器用子弹到达时的当前姿态检测，敌人比射手画面里多走了 ${cm(S.offset)} cm，`;
+    else if (S.rewind + 0.01 < S.requested) s = `申请倒带 ${f0(S.requested)} ms，超过上限 ${f0(S.limit)} ms，只能倒回 ${f0(S.rewind)} ms；检测姿态比射手画面多走了 ${cm(S.offset)} cm，`;
+    else s = `倒带 ${f0(S.rewind)} ms，正好回到射手开枪时看到的那一刻，检测姿态与射手画面一致，`;
+    s += S.hit ? '判定命中。' : '判定未命中。';
+    const v = $('#verdict');
+    v.textContent = s;
+    v.dataset.hit = String(S.hit);
+  }
+
+  function restart() {
+    build();
+    t = S.tStart; passed = new Set(); holdUntil = 0; endUntil = 0;
+  }
+  function syncPassed() { passed = new Set(S.holds.filter(h => h <= t)); }
+
+  // ---------- 绘制工具 ----------
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = n => cs.getPropertyValue(n).trim();
+    return { ink: g('--ink'), muted: g('--muted'), line: g('--line'), field: g('--field'), panel: g('--panel'),
+             client: g('--client'), bullet: g('--bullet'), rewind: g('--rewind'), current: g('--current'), history: g('--history') };
+  }
+  function setup(cv) {
+    const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    const w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d));
+    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+    const c = cv.getContext('2d');
+    c.setTransform(d, 0, 0, d, 0, 0);
+    c.clearRect(0, 0, r.width, r.height);
+    return [c, r.width, r.height];
+  }
+  function text(c, s, x, y, color, opt = {}) {
+    c.font = `${opt.weight || 500} ${opt.size || 12}px ${opt.mono ? MONO : FONT}`;
+    c.textAlign = opt.align || 'left';
+    c.textBaseline = 'middle';
+    if (opt.bg) {
+      const m = c.measureText(s), pw = m.width + 8, x0 = opt.align === 'right' ? x - m.width - 4 : opt.align === 'center' ? x - m.width / 2 - 4 : x - 4;
+      c.save(); c.globalAlpha = .85; c.fillStyle = opt.bg; c.fillRect(x0, y - 9, pw, 18); c.restore();
+    }
+    c.fillStyle = color;
+    c.fillText(s, x, y);
+  }
+  function disc(c, x, y, r, color, style, alpha = 1) {
+    c.save();
+    c.globalAlpha = alpha;
+    c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2);
+    if (style === 'solid') { c.fillStyle = color; c.fill(); }
+    else {
+      if (style === 'ghost') { c.save(); c.globalAlpha = alpha * .2; c.fillStyle = color; c.fill(); c.restore(); }
+      if (style === 'dash') c.setLineDash([4, 3]);
+      c.strokeStyle = color; c.lineWidth = style === 'hist' ? 1.2 : 2; c.stroke();
+    }
+    c.restore();
+  }
+  function arrow(c, x1, y1, x2, y2, color, width = 1.6, dashed = false, head = true) {
+    c.save(); c.strokeStyle = color; c.fillStyle = color; c.lineWidth = width;
+    if (dashed) c.setLineDash([4, 4]);
+    c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke();
+    c.setLineDash([]);
+    if (head) {
+      const a = Math.atan2(y2 - y1, x2 - x1), s = 7;
+      c.beginPath(); c.moveTo(x2, y2);
+      c.lineTo(x2 - s * Math.cos(a - .45), y2 - s * Math.sin(a - .45));
+      c.lineTo(x2 - s * Math.cos(a + .45), y2 - s * Math.sin(a + .45));
+      c.closePath(); c.fill();
+    }
+    c.restore();
+  }
+
+  // 俯视场地：左侧射手，右侧敌人横穿的纵线；纵向 1 格 = 1 米
+  function field(c, w, h, K, shooterColor) {
+    const pl = 34, pr = 46, py = 22;
+    const sx = (w - pl - pr) / D, sy = (h / 2 - py) / 3.1;
+    const X = x => pl + x * sx, Y = y => h / 2 - y * sy;
+    c.fillStyle = K.field; c.fillRect(0, 0, w, h);
+    c.strokeStyle = K.line; c.lineWidth = 1;
+    for (let m = -3; m <= 3; m++) {
+      c.beginPath(); c.moveTo(X(D) - 8, Y(m)); c.lineTo(X(D) + 8, Y(m)); c.stroke();
+    }
+    c.beginPath(); c.moveTo(X(D), 6); c.lineTo(X(D), h - 6); c.stroke();
+    text(c, '1 m', X(D) + 11, Y(1), K.muted, { size: 10, mono: true });
+    c.save(); c.setLineDash([3, 5]); c.strokeStyle = K.muted; c.globalAlpha = .55;
+    c.beginPath(); c.moveTo(X(0) + 10, Y(0)); c.lineTo(w - 4, Y(0)); c.stroke(); c.restore();
+    text(c, '25 m', X(D / 2), Y(0) + 12, K.muted, { size: 10, mono: true, align: 'center' });
+    // 射手
+    c.save(); c.fillStyle = shooterColor; c.beginPath();
+    c.moveTo(X(0) + 11, Y(0)); c.lineTo(X(0) - 7, Y(0) - 8); c.lineTo(X(0) - 3, Y(0)); c.lineTo(X(0) - 7, Y(0) + 8);
+    c.closePath(); c.fill(); c.restore();
+    text(c, '射手', X(0) - 6, Y(0) + 20, K.muted, { size: 11 });
+    return { X, Y, r: R * sy, sx, sy };
+  }
+
+  function bulletAt(c, M, x, K) {
+    const tail = Math.max(0, x - 2.2);
+    c.save(); c.strokeStyle = K.bullet; c.globalAlpha = .45; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(M.X(tail), M.Y(0)); c.lineTo(M.X(x), M.Y(0)); c.stroke(); c.restore();
+    disc(c, M.X(x), M.Y(0), 4, K.bullet, 'solid');
+  }
+
+  // ---------- 客户端画面 ----------
+  function drawClient(K) {
+    const [c, w, h] = setup(cvC);
+    const M = field(c, w, h, K, K.client);
+    const x = M.X(D);
+    const yTrue = M.Y(yAt(t)), ySeen = M.Y(yAt(t - S.L));
+    if (Math.abs(yTrue - ySeen) > 2) disc(c, x, yTrue, M.r, K.current, 'dash', .8);
+    disc(c, x, ySeen, M.r, K.client, 'solid');
+    text(c, '你看到的敌人', x - M.r - 8, ySeen, K.client, { align: 'right', weight: 700, bg: K.field });
+    if (Math.abs(yTrue - ySeen) > 18) text(c, '服务器此刻', x - M.r - 8, yTrue, K.current, { align: 'right', bg: K.field });
+
+    if (t >= S.tFire) {
+      const bx = BULLET * (t - S.tFire) / 1000;
+      if (bx < D) bulletAt(c, M, bx, K);
+      else if (t < S.tFeedback) {
+        c.save(); c.strokeStyle = K.client; c.lineWidth = 2;
+        c.beginPath(); c.arc(x, M.Y(0), M.r + 6, 0, Math.PI * 2); c.stroke(); c.restore();
+        text(c, '本地预测命中（只播特效）', x - M.r - 10, M.Y(0) + 24, K.client, { align: 'right', size: 11, bg: K.field });
+      }
+      if (t < S.tFire + 120) text(c, '扣扳机', M.X(0) + 16, M.Y(0) - 16, K.client, { weight: 700, bg: K.field });
+    }
+    if (t >= S.tFeedback) {
+      const col = S.hit ? K.rewind : K.current;
+      text(c, S.hit ? '服务器确认：命中' : '服务器回复：未命中', 12, 18, col, { weight: 700, size: 13, bg: K.field });
+    } else if (t >= S.tFire) {
+      text(c, '等待服务器结果…', 12, 18, K.muted, { size: 12, bg: K.field });
+    }
+    $('#subC').textContent = `画面落后约 ${f0(S.L)} ms`;
+  }
+
+  // ---------- 服务器 ----------
+  function drawServer(K) {
+    const [c, w, h] = setup(cvS);
+    const M = field(c, w, h, K, K.history);
+    const x = M.X(D);
+    // 历史帧
+    const from = Math.max(S.tStart, t - HIST);
+    for (let k = Math.ceil(from / REC); k * REC <= t; k++) {
+      const age = (t - k * REC) / HIST;
+      disc(c, x, M.Y(yAt(k * REC)), M.r, K.history, 'hist', .55 * (1 - age) + .08);
+    }
+    const yCur = M.Y(yAt(t));
+    disc(c, x, yCur, M.r, K.current, 'solid');
+
+    const flying = t >= S.now;
+    let yGhost = null;
+    if (flying && comp && S.rewind > 0) {
+      const pt = Math.min(t, S.tArrive) - S.rewind;
+      yGhost = M.Y(yAt(pt));
+      disc(c, x, yGhost, M.r, K.rewind, 'ghost');
+    }
+    const gap = yGhost == null ? 99 : Math.abs(yCur - yGhost);
+    text(c, '当前姿态', x - M.r - 8, yCur, K.current, { align: 'right', weight: 700, bg: K.field });
+    if (yGhost != null && gap > 16) text(c, `倒带 ${f0(S.rewind)} ms 的姿态`, x - M.r - 8, yGhost, K.rewind, { align: 'right', weight: 700, bg: K.field });
+    else if (yGhost != null) text(c, `倒带 ${f0(S.rewind)} ms`, x - M.r - 8, yCur + 18, K.rewind, { align: 'right', weight: 700, bg: K.field });
+
+    if (t >= S.tFire && t < S.now) {
+      text(c, `开枪请求在路上，还要 ${f0(S.now - t)} ms`, 12, 18, K.muted, { bg: K.field });
+    }
+    if (flying) {
+      const bx = BULLET * (t - S.now) / 1000;
+      // 每 1/120 秒一步的落点
+      c.save(); c.fillStyle = K.bullet; c.globalAlpha = .6;
+      for (let k = 1; k * STEP <= t - S.now; k++) {
+        const sxp = BULLET * k * STEP / 1000;
+        if (sxp > D + 8) break;
+        c.fillRect(M.X(sxp) - 1, M.Y(0) - 6, 2, 12);
+      }
+      c.restore();
+      if (t < S.tArrive) {
+        bulletAt(c, M, bx, K);
+        text(c, '每 1/120 秒一步', M.X(Math.min(bx, D - 6)), M.Y(0) - 18, K.bullet, { size: 11, align: 'center', bg: K.field });
+      } else if (S.hit) {
+        c.save(); c.strokeStyle = K.rewind; c.lineWidth = 2.5;
+        c.beginPath(); c.arc(x, M.Y(0), M.r + 7, 0, Math.PI * 2); c.stroke(); c.restore();
+        disc(c, x, M.Y(0), 4, K.bullet, 'solid');
+        text(c, '命中', x + M.r + 10, M.Y(0) - 16, K.rewind, { weight: 900, size: 14, bg: K.field });
+      } else {
+        bulletAt(c, M, Math.min(bx, D + 40), K);
+        text(c, '未命中', x - M.r - 8, M.Y(0) + 22, K.current, { weight: 900, size: 14, align: 'right', bg: K.field });
+      }
+      if (t >= S.now && t < S.now + 140) text(c, comp ? `收到请求 → 倒带 ${f0(S.rewind)} ms` : '收到请求 → 不倒带', 12, 18, K.ink, { weight: 700, bg: K.field });
+    }
+    text(c, `历史帧 · 保留 ${HIST} ms`, x - M.r - 8, h - 14, K.history, { align: 'right', size: 11 });
+    $('#subS').textContent = `t = ${f0(t)} ms`;
+  }
+
+  // ---------- 时间轴 ----------
+  let TL = null;
+  function drawTime(K) {
+    const [c, w, h] = setup(cvT);
+    const pl = 66, pr = 20, yc = 52, ys = 132;
+    const T = tm => pl + (tm - S.tStart) / (S.tEnd - S.tStart) * (w - pl - pr);
+    TL = { pl, pr, w };
+    c.fillStyle = K.panel; c.fillRect(0, 0, w, h);
+
+    // 刻度
+    c.font = `400 10px ${MONO}`;
+    for (let m = Math.ceil(S.tStart / 100) * 100; m <= S.tEnd; m += 100) {
+      const x = T(m);
+      c.strokeStyle = K.line; c.lineWidth = 1;
+      c.beginPath(); c.moveTo(x, 24); c.lineTo(x, h - 26); c.stroke();
+      text(c, String(m), x, h - 13, K.muted, { size: 10, mono: true, align: 'center' });
+    }
+    // 泳道
+    text(c, '客户端', 10, yc, K.client, { weight: 700, size: 13 });
+    text(c, '服务器', 10, ys, K.ink, { weight: 700, size: 13 });
+    c.strokeStyle = K.muted; c.lineWidth = 1.2;
+    [yc, ys].forEach(y => { c.beginPath(); c.moveTo(pl, y); c.lineTo(w - pr, y); c.stroke(); });
+
+    // 历史窗口与记录帧
+    const hx0 = T(Math.max(S.tStart, t - HIST)), hx1 = T(t);
+    c.save(); c.globalAlpha = .14; c.fillStyle = K.history; c.fillRect(hx0, ys - 9, hx1 - hx0, 18); c.restore();
+    c.strokeStyle = K.history; c.lineWidth = 1;
+    for (let k = Math.ceil(S.tStart / REC); k * REC <= t; k++) {
+      const x = T(k * REC); c.beginPath(); c.moveTo(x, ys - 4); c.lineTo(x, ys + 4); c.stroke();
+    }
+
+    if (t >= S.tFire) {
+      const xf = T(S.tFire);
+      // ViewTime：客户端把自己的画面对应到服务器时钟上的哪一刻
+      arrow(c, xf, yc, T(S.viewTime), ys, K.client, 1.2, true, false);
+      disc(c, T(S.viewTime), ys, 4, K.client, 'solid');
+      text(c, 'ViewTime', T(S.viewTime) - 6, ys - 18, K.client, { size: 11, align: 'right', mono: true, bg: K.panel });
+      // RPC
+      const p = Math.min(1, (t - S.tFire) / Math.max(1, S.now - S.tFire));
+      const xn = xf + (T(S.now) - xf) * p, yn = yc + (ys - yc) * p;
+      arrow(c, xf, yc, xn, yn, K.client, 1.8, false, p > .02);
+      if (p > .4) text(c, `RPC +${f0(S.L)} ms`, (xf + T(S.now)) / 2 + 8, (yc + ys) / 2 - 4, K.client, { size: 11, mono: true, bg: K.panel });
+      disc(c, xf, yc, 5, K.client, 'solid');
+      text(c, '开枪', xf, yc - 16, K.client, { weight: 700, align: 'center' });
+    }
+    if (t >= S.now) {
+      const xn = T(S.now), xe = T(Math.min(t, S.tArrive));
+      c.save(); c.strokeStyle = K.bullet; c.lineWidth = 5; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(xn, ys); c.lineTo(Math.max(xn + .5, xe), ys); c.stroke(); c.restore();
+      text(c, 'Now', xn, ys - 18, K.ink, { size: 11, mono: true, align: 'center', bg: K.panel, weight: 600 });
+      // 倒带区间
+      const yb = ys + 26, tCur = Math.min(t, S.tArrive);
+      if (comp && S.rewind > 0) {
+        if (S.requested > S.rewind + .01) {
+          arrow(c, T(tCur - S.rewind), yb, T(tCur - S.requested), yb, K.muted, 1.2, true, false);
+          text(c, '超出上限，不补', T(tCur - S.requested), yb + 15, K.muted, { size: 10.5, bg: K.panel });
+        }
+        arrow(c, T(tCur), yb, T(tCur - S.rewind), yb, K.rewind, 2.2, false, true);
+        c.save(); c.strokeStyle = K.rewind; c.lineWidth = 1.5;
+        c.beginPath(); c.moveTo(T(tCur), yb - 6); c.lineTo(T(tCur), yb + 6); c.stroke(); c.restore();
+        text(c, `倒带 ${f0(S.rewind)} ms`, (T(tCur) + T(tCur - S.rewind)) / 2, yb - 12, K.rewind, { size: 11, align: 'center', weight: 700, bg: K.panel });
+      } else {
+        text(c, '不倒带：用当前姿态', T(tCur), yb, K.current, { size: 11, align: 'center', weight: 700, bg: K.panel });
+      }
+    }
+    if (t >= S.tArrive) {
+      const p = Math.min(1, (t - S.tArrive) / Math.max(1, S.tFeedback - S.tArrive));
+      const x0 = T(S.tArrive), x1 = x0 + (T(S.tFeedback) - x0) * p, y1 = ys + (yc - ys) * p;
+      const col = S.hit ? K.rewind : K.current;
+      arrow(c, x0, ys, x1, y1, col, 1.8, false, p > .02);
+      disc(c, x0, ys, 5, col, 'solid');
+      if (p >= 1) text(c, S.hit ? '命中结果' : '未命中', T(S.tFeedback), yc - 16, col, { weight: 700, align: 'center', bg: K.panel });
+    }
+    // 播放头
+    const xp = T(t);
+    c.strokeStyle = K.ink; c.lineWidth = 1.5;
+    c.beginPath(); c.moveTo(xp, 22); c.lineTo(xp, h - 26); c.stroke();
+    text(c, `${f0(t)} ms`, Math.min(Math.max(xp, pl + 24), w - pr - 24), 11, K.ink, { size: 11, mono: true, align: 'center', weight: 600 });
+  }
+
+  // ---------- 步骤高亮 ----------
+  const lis = [...document.querySelectorAll('#steps li')];
+  let lastStage = -1;
+  function stageOf() {
+    if (t < S.tFire) return 0;
+    if (t < S.now) return 1;
+    if (t < S.now + 4) return 2;
+    if (t < S.tArrive) return 3;
+    return 4;
+  }
+  function updateSteps() {
+    const s = stageOf();
+    if (s === lastStage) return;
+    lastStage = s;
+    lis.forEach((li, i) => { li.classList.toggle('active', i === s); li.classList.toggle('done', i < s); });
+  }
+
+  // ---------- 主循环 ----------
+  let last = performance.now();
+  function frame(ts) {
+    const dt = Math.min(50, ts - last); last = ts;
+    if (playing) {
+      if (endUntil) {
+        if (ts >= endUntil) restart();
+      } else if (ts >= holdUntil) {
+        let nt = t + dt * speed;
+        for (const hd of S.holds) {
+          if (!passed.has(hd) && t <= hd && nt >= hd) { nt = hd; passed.add(hd); holdUntil = ts + 1100; break; }
+        }
+        t = nt;
+        if (t >= S.tEnd) { t = S.tEnd; endUntil = ts + 2200; }
+      }
+    }
+    const K = tokens();
+    drawClient(K); drawServer(K); drawTime(K); updateSteps();
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- 控件 ----------
+  const playBtn = $('#play');
+  function setPlaying(p) { playing = p; playBtn.textContent = p ? '暂停' : '播放'; if (p && t >= S.tEnd) restart(); }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+  $('#replay').addEventListener('click', () => { restart(); setPlaying(true); });
+  function setPing(v) {
+    ping = v; $('#ping').value = v;
+    build(); t = Math.min(Math.max(t, S.tStart), S.tEnd); syncPassed(); endUntil = 0;
+  }
+  $('#ping').addEventListener('input', e => setPing(+e.target.value));
+  document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => { setPing(+b.dataset.ping); restart(); setPlaying(true); }));
+  $('#comp').addEventListener('change', e => { comp = e.target.checked; build(); syncPassed(); });
+  document.querySelectorAll('input[name="speed"]').forEach(r => r.addEventListener('change', e => { speed = +e.target.value; }));
+
+  let scrubbing = false;
+  function scrub(e) {
+    if (!TL) return;
+    const r = cvT.getBoundingClientRect();
+    const f = (e.clientX - r.left - TL.pl) / (TL.w - TL.pl - TL.pr);
+    t = S.tStart + Math.min(1, Math.max(0, f)) * (S.tEnd - S.tStart);
+    syncPassed(); endUntil = 0; holdUntil = 0;
+  }
+  cvT.addEventListener('pointerdown', e => { scrubbing = true; cvT.setPointerCapture(e.pointerId); setPlaying(false); scrub(e); });
+  cvT.addEventListener('pointermove', e => { if (scrubbing) scrub(e); });
+  cvT.addEventListener('pointerup', () => { scrubbing = false; });
+  cvT.addEventListener('pointercancel', () => { scrubbing = false; });
+
+  restart();
+  if (reduce) { t = S.tArrive + 20; syncPassed(); setPlaying(false); }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

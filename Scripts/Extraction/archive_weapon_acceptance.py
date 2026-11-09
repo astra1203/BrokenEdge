@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
 parser.add_argument('--runs', nargs='+', required=True)
-parser.add_argument('--output', type=Path, default=ROOT / 'Docs/Extraction/WeaponMechanicsEvidence/Runtime/Acceptance.json')
+parser.add_argument('--output', type=Path, default=ROOT / 'Artifacts/Extraction/WeaponMechanicsEvidence/Runtime/Acceptance.json')
 args = parser.parse_args()
 result = {'scope': 'Project compatibility implementation; not official fidelity', 'runs': []}
 for tag in args.runs:

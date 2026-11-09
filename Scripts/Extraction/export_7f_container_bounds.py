@@ -26,7 +26,7 @@ import unreal
 
 LAYOUT = '/Game/Extraction/Loot/DA_SpaceCenter_Ma1_Loot'
 MODE = '/Script/BrokenEdge.ExtractionGameMode'
-PLAN = 'Docs/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json'
+PLAN = 'Artifacts/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json'
 SOURCE_FILES = ('Source/BrokenEdge/Extraction/ExtractionLootActor.cpp',
                 'Source/BrokenEdge/Extraction/ExtractionLootActor.h',
                 'Source/BrokenEdge/Extraction/ExtractionLootLayout.cpp',

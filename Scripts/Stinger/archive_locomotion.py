@@ -15,7 +15,7 @@ p.add_argument('--single',required=True);p.add_argument('--multi',required=True)
 p.add_argument('--grip',required=True);p.add_argument('--actions',required=True);p.add_argument('--route',required=True)
 p.add_argument('--weapon',required=True)
 a=p.parse_args()
-dest=root/'Docs/Stinger/LocomotionEvidence';dest.mkdir(parents=True,exist_ok=True)
+dest=root/'Artifacts/Stinger/LocomotionEvidence';dest.mkdir(parents=True,exist_ok=True)
 summary={'scope':'Stinger AK opt-in; editor cold load and same-process PIE; no packaged or dedicated-server validation',
          'suites':[],'files':[],'assets':[],'videos':[]}
 

@@ -2,7 +2,7 @@
 
 地图入口：`/Game/Maps/SpaceCenter/L_SpaceCenterSample`。已生成的 UE 资源在 `Content/Maps/SpaceCenter`；直接打开地图即可运行，不需要先解包源资源。玩法沿用蜂医与 AK 基线。
 
-本工具只覆盖 `sample_config.json` 固定的 6 个原始分块和空间范围。格式恢复、人工近似及验收边界见 [转换问题](../../Docs/SpaceCenter/ConversionIssues.md) 和 [阶段记录](../../Docs/SpaceCenter/Phase1.md)。
+本工具只覆盖 `sample_config.json` 固定的 6 个原始分块和空间范围。格式恢复、人工近似及验收边界见 [转换问题](../../Artifacts/SpaceCenter/ConversionIssues.md) 和 [阶段记录](../../Artifacts/SpaceCenter/Phase1.md)。
 
 ## 从原始 ZIP 重建
 

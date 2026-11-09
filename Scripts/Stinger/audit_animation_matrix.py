@@ -3,8 +3,8 @@
 纯本地脚本（不需要 UE 进程）：
   python Scripts/Stinger/audit_animation_matrix.py
 输出：
-  Docs/Stinger/AnimationInventory.json  机读清单
-  Docs/Stinger/AnimationInventory.md    人读矩阵
+  Artifacts/Stinger/AnimationInventory.json  机读清单
+  Artifacts/Stinger/AnimationInventory.md    人读矩阵
 """
 import json
 import re
@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 ANIM = ROOT / 'Content/Characters/Stinger/Animations'
-DOCS = ROOT / 'Docs/Stinger'
+DOCS = ROOT / 'Artifacts/Stinger'
 
 # 当前 DA_RifleLocomotion / ABP_StingerFirstPerson_Repaired 实际引用的序列（2026-10-27 读取资产确认）
 WIRED_1P = {

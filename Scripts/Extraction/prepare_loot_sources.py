@@ -63,6 +63,6 @@ assert found==needed,needed-found
 report={'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'points':points,
         'models':models,'files':records,'random_group_status':'unresolved','drop_policy':'project compatibility'}
 (work/'Manifest.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-out=root/'Docs/Extraction/RestorationEvidence/Loot';out.mkdir(parents=True,exist_ok=True)
+out=root/'Artifacts/Extraction/RestorationEvidence/Loot';out.mkdir(parents=True,exist_ok=True)
 (out/'SourcePoints.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print('LOOT_SOURCES_READY',len(points),len(models),len(found))

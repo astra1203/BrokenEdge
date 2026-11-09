@@ -64,7 +64,7 @@ def material_graph(tag, selection):
     out=WORK/'MaterialRuns'/tag
     out.mkdir(parents=True,exist_ok=False)
     scene=read(WORK/'SelectionRuns'/selection/'Selection.json')
-    graph=json.loads(gzip.decompress((ROOT/'Docs/Extraction/Phase7BEvidence/materials/Graph.json.gz').read_bytes()))
+    graph=json.loads(gzip.decompress((ROOT/'Artifacts/Extraction/Phase7BEvidence/materials/Graph.json.gz').read_bytes()))
     for pattern in ['MaterialRuns/*/Graph.json','AugmentRuns/*/Graph.json']:
         for target in cache_files(pattern):graph.update(read(target))
     roots={m for a in scene['actors'] for m in a['materials'] if m and m.startswith('/Game/')}

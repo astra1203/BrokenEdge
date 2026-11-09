@@ -4,7 +4,7 @@
   python Scripts/Stinger/compare_repair_manifests.py [新清单] [基准清单]
 默认：
   新清单   Saved/Stinger/AnimationOptimization/repair_full.json
-  基准清单 Docs/Stinger/RepairImportManifest.json
+  基准清单 Artifacts/Stinger/RepairImportManifest.json
 输出 Saved/Stinger/AnimationOptimization/RepairDiff.json 并打印摘要。
 """
 import json
@@ -14,7 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 NEW = Path(sys.argv[1]) if len(sys.argv) > 1 else (
     ROOT / 'Saved/Stinger/AnimationOptimization/repair_full.json')
-BASE = Path(sys.argv[2]) if len(sys.argv) > 2 else (ROOT / 'Docs/Stinger/RepairImportManifest.json')
+BASE = Path(sys.argv[2]) if len(sys.argv) > 2 else (ROOT / 'Artifacts/Stinger/RepairImportManifest.json')
 DURATION_TOLERANCE = 1e-3
 FPS_TOLERANCE = 1e-3
 

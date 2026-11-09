@@ -38,6 +38,6 @@ for package in packages:
             'target':props['TargetExit'], 'source_position':p,
             'world_position':[p[k]-o for k,o in zip(('X','Y','Z'),origin)] if p else None})
     result['variants'].append(variant)
-out = root/'Docs/Extraction/SpaceCenterExpansion/SourceGameplayAnchors.json'
+out = root/'Artifacts/Extraction/SpaceCenterExpansion/SourceGameplayAnchors.json'
 out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print([(v['package'],len(v['spawns']),len(v['exits'])) for v in result['variants']])

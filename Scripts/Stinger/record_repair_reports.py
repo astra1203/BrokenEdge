@@ -6,7 +6,7 @@ import shutil
 
 project = Path(__file__).resolve().parents[2]
 saved = project / 'Saved' / 'Stinger'
-docs = project / 'Docs' / 'Stinger'
+docs = project / 'Artifacts' / 'Stinger'
 manifest = json.loads((saved / 'import_manifest_v3.json').read_text(encoding='utf-8'))
 entries = list(manifest['entries'].values())
 sequences = [s for e in entries for s in e.get('sequences', [])]

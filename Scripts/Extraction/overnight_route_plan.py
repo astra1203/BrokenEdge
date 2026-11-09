@@ -16,8 +16,8 @@ sys.path.insert(0, str(ROOT / 'Scripts/SpaceCenter'))
 from plan_route import FloorGraph
 from plan_phase7f_route import RUNTIME_AVOIDANCE, avoid, block_ledges
 
-PLAN = 'Docs/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json'
-ANCHORS = 'Docs/Extraction/RestorationEvidence/SpawnExit/OfficialSpawnExitAnchors.json'
+PLAN = 'Artifacts/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json'
+ANCHORS = 'Artifacts/Extraction/RestorationEvidence/SpawnExit/OfficialSpawnExitAnchors.json'
 MAP = 'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap'
 GROUPS = ['7F_WestDorm_A', '7F_WestDorm_B', '7F_LivingArea_B']
 GUARD_ROUTE = 'ExtractionPatrol_7F_WestDorm'

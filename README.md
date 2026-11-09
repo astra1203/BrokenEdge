@@ -97,9 +97,9 @@ MatchType=Teams
 bAutoStartSession=True
 ```
 
-仓库默认模式为 `Teams`。测试搜打撤时，给专服传入 `-MatchType=Extraction`；本轮独立包复验命令见 [连续路线验证](Docs/Extraction/Overnight-Route-Validation.md)。
+仓库默认模式为 `Teams`。测试搜打撤时，给专服传入 `-MatchType=Extraction`；本轮独立包复验命令见 [连续路线验证](Artifacts/Extraction/Overnight-Route-Validation.md)。
 
-`NumPublicConnections` 是容量；`MinPlayersToStart` 是开局所需的真实客户端数量，专服本身不算玩家。满足人数且全员准备后启动在线会话，并无缝跳转到所选比赛地图。将 `bAutoStartSession` 设为 False 会停留在大厅。当前支持 `FreeForAll`、`Teams` 和 `Extraction`；后者的死亡观战、返回大厅和验收记录见 [阶段 2](Docs/Extraction/Phase2.md)。
+`NumPublicConnections` 是容量；`MinPlayersToStart` 是开局所需的真实客户端数量，专服本身不算玩家。满足人数且全员准备后启动在线会话，并无缝跳转到所选比赛地图。将 `bAutoStartSession` 设为 False 会停留在大厅。当前支持 `FreeForAll`、`Teams` 和 `Extraction`；后者的死亡观战、返回大厅和验收记录见 [阶段 2](Artifacts/Extraction/Phase2.md)。
 
 启动参数 `-NumPublicConnections=`、`-MinPlayersToStart=`、`-MatchType=` 优先于配置。客户端菜单模式可以由 `BP_LobbyGameMode.MenuMatchType` 或启动参数 `-MatchType=` 指定；旧的 `Menu Num Public Connections` 不再决定服务器容量。
 
@@ -141,7 +141,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Scripts\Test-LanSessio
 
 ### 历史打包记录（2026-09-08）
 
-以下保留当时的验收说明；原 `Saved` 日志不在 Git 中，当前工作区也已不可用。本轮结果见 [2026-11-03 实施记录](Docs/Extraction/Overnight-2026-11-03.md)。
+以下保留当时的验收说明；原 `Saved` 日志不在 Git 中，当前工作区也已不可用。本轮结果见 [2026-11-03 实施记录](Artifacts/Extraction/Overnight-2026-11-03.md)。
 
 本次使用 `Saved/PackagingWorkspace/20260908-093209` 中的已保存工程副本构建，产物归档到原工程的 `Packaged` 目录，保留原工程编辑器运行。服务器和 Windows 客户端的 Build/Cook/Stage/Pak/IoStore/Archive 均成功，UAT 退出码均为 0；两个包的 EXE、`.pak`、`.ucas`、`.utoc` 齐全，启动脚本 SHA-256 与 `Deployment` 中的版本一致。
 
@@ -160,6 +160,7 @@ BrokenEdge/
 ├─ Config/                         项目、输入和引擎配置
 ├─ Content/                        蓝图、地图、动画、UI、武器与特效资源
 ├─ Docs/                           项目专题文档与排查记录
+├─ Artifacts/                      Extraction、SpaceCenter、Stinger 阶段报告与验收归档
 ├─ Plugins/MultiplayerSessions/    多人会话插件
 ├─ Source/BrokenEdge/
 │  ├─ Character/                   角色与动画实例
@@ -215,8 +216,8 @@ git lfs status
 
 ## 项目文档
 
-- [航天基地夜间实施记录：改动、验证与逐次推送](Docs/Extraction/Overnight-2026-11-03.md)
-- [搜打撤当前能力与官方差距核对](Docs/Extraction/OvernightEvidence/CurrentCapabilities.md)
+- [航天基地夜间实施记录：改动、验证与逐次推送](Artifacts/Extraction/Overnight-2026-11-03.md)
+- [搜打撤当前能力与官方差距核对](Artifacts/Extraction/OvernightEvidence/CurrentCapabilities.md)
 
 - [已完成功能、网络同步分析与后续开发路线](Docs/BrokenEdge_Project_Status_Network_Replication_Roadmap.md)
 - [比赛流程与会话匹配代码评审](Docs/BrokenEdge_Match_and_Matchmaking_Gap_Analysis.md)
@@ -249,4 +250,4 @@ git lfs status
 
 地图：/Game/Characters/Stinger/Maps/L_StingerTest。角色 BP_StingerCharacter 直接继承 ABrokenEdgeCharacter；第一人称使用修正导入动作和 AK 适配，第三人称暂用原项目重定向动作。操作为 WASD 移动、Shift 冲刺、Space 跳跃、Ctrl 蹲伏、E 装备/切枪、右键瞄准、左键开火、R 换弹。当前角色固定第一人称，旧测试说明中的 V 切换视角已不适用。
 
-[适配说明与验证证据](Docs/Stinger/ViewFit.md)。
+[适配说明与验证证据](Artifacts/Stinger/ViewFit.md)。

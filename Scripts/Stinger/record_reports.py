@@ -6,7 +6,7 @@ import json
 
 project = Path(__file__).resolve().parents[2]
 saved = project/'Saved'/'Stinger'
-docs = project/'Docs'/'Stinger'
+docs = project/'Artifacts'/'Stinger'
 docs.mkdir(parents=True,exist_ok=True)
 manifest = json.loads((saved/'import_manifest.json').read_text(encoding='utf-8'))
 for entry in manifest['entries'].values():

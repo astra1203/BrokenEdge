@@ -22,7 +22,7 @@ def main():
     parser.add_argument('--observer-run', required=True)
     args = parser.parse_args()
     runs = {'owner-720': args.owner_run, 'owner-1080': args.hd_run, 'observer': args.observer_run}
-    out = ROOT / 'Docs/Extraction/OpticCalibrationEvidence'
+    out = ROOT / 'Artifacts/Extraction/OpticCalibrationEvidence'
     assert not out.exists(), 'Use a new archive; never overwrite historical evidence'
     review_path = ROOT / 'Saved/Extraction/OpticVisualReview.json'
     review = json.loads(review_path.read_text(encoding='utf-8'))
@@ -77,7 +77,7 @@ def main():
     copy(ROOT/'Saved/Extraction/OpticAudit02/AK.fbx', 'geometry/AK.fbx.gz', True)
     lens = next((ROOT/'Saved/Extraction/Phase6ASources').rglob('Sco_Re_Reddot_035_1P_Rigid.glb'))
     copy(lens, 'geometry/OriginalOptic.glb.gz', True)
-    copy(ROOT/'Docs/Extraction/Phase6AEvidence/equipment-six/B-equipment-ads.png', 'before/B-equipment-ads.png')
+    copy(ROOT/'Artifacts/Extraction/Phase6AEvidence/equipment-six/B-equipment-ads.png', 'before/B-equipment-ads.png')
     copy(review_path, 'VisualReview.json')
     owner_scenario = ROOT/'Saved/Extraction/OpticOwnerTestedScenario.py'
     for report in [reports['owner-720'], reports['owner-1080']]:

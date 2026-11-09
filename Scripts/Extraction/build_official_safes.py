@@ -1,6 +1,6 @@
 """合并两份官方数据源，产出「原版保险箱位置」权威清单（不需要编辑器）。
 
-源 A：Docs/Extraction/RestorationEvidence/Loot/SourcePoints.json
+源 A：Artifacts/Extraction/RestorationEvidence/Loot/SourcePoints.json
       —— 从解包关卡的 SafeBox / SmallSafebox actor 直接序列化导出，
          有 actor 根坐标 + Yaw + Scale，精度最高。
 源 B：.workbuddy/tmp/df2/MapPOIData_SpaceCenter.json
@@ -14,15 +14,15 @@
 
 去重：X/Y 平面距离 < 100cm 视为同一实体（POI 是整数精度，实测同一 actor 差 41.65cm）。
 
-输出：Docs/Extraction/RestorationEvidence/Loot/OfficialSafes.json
+输出：Artifacts/Extraction/RestorationEvidence/Loot/OfficialSafes.json
 """
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_POINTS = ROOT / 'Docs/Extraction/RestorationEvidence/Loot/SourcePoints.json'
+SOURCE_POINTS = ROOT / 'Artifacts/Extraction/RestorationEvidence/Loot/SourcePoints.json'
 POI_TABLE = ROOT / '.workbuddy/tmp/df2/MapPOIData_SpaceCenter.json'
-OUT = ROOT / 'Docs/Extraction/RestorationEvidence/Loot/OfficialSafes.json'
+OUT = ROOT / 'Artifacts/Extraction/RestorationEvidence/Loot/OfficialSafes.json'
 
 ORIGIN_X, ORIGIN_Y, ORIGIN_Z = 664000.0, 451000.0, 22400.0
 VARIANTS = ('SpaceCenter_Ma1',)

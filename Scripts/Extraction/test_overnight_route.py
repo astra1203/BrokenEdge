@@ -130,7 +130,7 @@ class OvernightRouteTests(unittest.TestCase):
 
     def test_generated_peer_parking_does_not_occupy_an_independent_candidate_crate(self):
         plan = json.loads((Path(__file__).resolve().parents[2]
-                           / 'Docs/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json').read_text(encoding='utf-8'))
+                           / 'Artifacts/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json').read_text(encoding='utf-8'))
         for node in self.route['nodes'].values():
             if node['kind'] != 'peer_parking':
                 continue

@@ -13,7 +13,7 @@ parser.add_argument('--prefix', default='phase0')
 args = parser.parse_args()
 project = Path(__file__).resolve().parents[2]
 saved = project / 'Saved/Stinger/Baseline'
-destination = project / 'Docs/Stinger/BaselineEvidence'
+destination = project / 'Artifacts/Stinger/BaselineEvidence'
 suites = {'audit': 'Audit.json', 'combat': 'Combat.json', 'actions': 'pie_validation.json'}
 for players in [1, 2]:
     suites[f'grip-{players}p'] = f'third_person_grip_p0_{players}p.json'

@@ -16,7 +16,7 @@ import zlib
 
 import unreal
 
-PLAN = 'Docs/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json'
+PLAN = 'Artifacts/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json'
 LAYOUT = '/Game/Extraction/Loot/DA_SpaceCenter_Ma1_Loot'
 LEVEL = '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction'
 BOX = ('/Game/Extraction/Loot/Models/props_collect_box_546_3P/props_collect_box_546_3P/'

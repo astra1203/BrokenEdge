@@ -446,9 +446,9 @@ Ended
 | 复制注册 | 各类的 `GetLifetimeReplicatedProps()`，重点 `ExtractionState.cpp`、`LobbyGameState.cpp` |
 | 配置 | `Config/DefaultEngine.ini`、`Config/DefaultGame.ini`、`Config/DefaultInput.ini` |
 | 资产生成 | `Source/StingerTools/Private/*Builder.cpp`、`Scripts/Extraction/place_*.py` |
-| 官方差距与验收记录 | `Docs/Extraction/OvernightEvidence/CurrentCapabilities.md`、`Docs/Extraction/官方功能差距审计.md`、`Docs/Extraction/Overnight-2026-11-03.md` |
+| 官方差距与验收记录 | `Artifacts/Extraction/OvernightEvidence/CurrentCapabilities.md`、`Artifacts/Extraction/官方功能差距审计.md`、`Artifacts/Extraction/Overnight-2026-11-03.md` |
 
-**若要自查某条结论**，建议在源码里直接搜函数名（本文所有函数名都来自源码），再追 `GetLifetimeReplicatedProps()` 确认复制注册、追 `UFUNCTION(Server/Client/NetMulticast)` 确认权威端。注意 `Docs/Extraction/Phase7CEvidence/files/`、`Phase7DEvidence/files/` 里有旧源码副本，别和 `Source/` 真身混淆。
+**若要自查某条结论**，建议在源码里直接搜函数名（本文所有函数名都来自源码），再追 `GetLifetimeReplicatedProps()` 确认复制注册、追 `UFUNCTION(Server/Client/NetMulticast)` 确认权威端。注意 `Artifacts/Extraction/Phase7CEvidence/files/`、`Phase7DEvidence/files/` 里有旧源码副本，别和 `Source/` 真身混淆。
 
 ---
 

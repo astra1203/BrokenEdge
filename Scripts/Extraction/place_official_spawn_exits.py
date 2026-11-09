@@ -1,6 +1,6 @@
 """把官方 45 个 PlayerStart（9 队）与 3 个官方撤离点写进地图定义。
 
-数据来源：Docs/Extraction/RestorationEvidence/SpawnExit/OfficialSpawnExitAnchors.json
+数据来源：Artifacts/Extraction/RestorationEvidence/SpawnExit/OfficialSpawnExitAnchors.json
 （由 build_official_spawn_exits.py 从解包 GameplayConfig 抽取，不是手填的坐标）
 
 两个阶段：
@@ -37,9 +37,9 @@ import unreal
 
 LEVEL = '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction'
 ASSET = '/Game/Extraction/Maps/DA_SpaceCenterGameplay'
-ANCHORS = 'Docs/Extraction/RestorationEvidence/SpawnExit/OfficialSpawnExitAnchors.json'
+ANCHORS = 'Artifacts/Extraction/RestorationEvidence/SpawnExit/OfficialSpawnExitAnchors.json'
 
-CAPSULE_RADIUS = 34.0      # 项目角色胶囊，见 Docs/Extraction/Traversal/SourceCorrection.md
+CAPSULE_RADIUS = 34.0      # 项目角色胶囊，见 Artifacts/Extraction/Traversal/SourceCorrection.md
 CAPSULE_HALF = 92.0
 GROUND_NORMAL_MIN = 0.7
 

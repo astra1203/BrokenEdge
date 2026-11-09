@@ -16,7 +16,7 @@ import unreal
 
 ROOT = Path(unreal.Paths.project_dir())
 ASSET = '/Game/Extraction/Maps/DA_SpaceCenterGameplay'
-ANCHORS = ROOT / 'Docs/Extraction/RestorationEvidence/SpawnExit/OfficialSpawnExitAnchors.json'
+ANCHORS = ROOT / 'Artifacts/Extraction/RestorationEvidence/SpawnExit/OfficialSpawnExitAnchors.json'
 EXIT_ID = 'OfficialExitSquare'
 REQUIRED = 2
 

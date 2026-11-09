@@ -237,7 +237,7 @@ Content/
 
 ## 8. 证据与工作区说明
 
-- [11 月 6 日编辑器只读资产及日志记录](Extraction/Audit_2026-11-06_Assets.json)：输入映射、物品定义、Widget 模板、蒙太奇绑定与长度、编辑器状态及缓存警告；11 月 7 日保留原件，未重新采集。
+- [11 月 6 日编辑器只读资产及日志记录](../Artifacts/Extraction/Audit_2026-11-06_Assets.json)：输入映射、物品定义、Widget 模板、蒙太奇绑定与长度、编辑器状态及缓存警告；11 月 7 日保留原件，未重新采集。
 - [既有功能与实现全景](BrokenEdge_功能与实现全景.md)：用于定位模块；本清单的关键结论重新核对了当前源码，未把其中的疑点直接当作事实。
 - 本轮开始时本 Markdown、上述 JSON 和既有全景文档已在工作区，均为未跟踪文件。本轮完善本 Markdown，并新增截图证据；临时诊断脚本、独立测试档案与原始日志位于 `Saved/Extraction/Audit20261107*`，独立 Cook 输出位于 `D:/BEAuditCook1107`。未修改玩法 C++、项目配置、蓝图、地图、原 JSON、既有全景文档或正式玩家档案，未提交或推送。
 - 本文不是全项目无遗漏证明。已做当前蓝图编译、五图 Cook、独立客户端与进程崩溃恢复检查；未做全部蓝图连线人工审阅、全部资产授权审查、完整打包客户端验收、跨机器网络和长期容量／性能测试。具体通过与失败范围见第 10 节。
@@ -359,7 +359,7 @@ Content/
 
 本轮诊断完成并正常退出；完整原始记录为 `Saved/Extraction/Audit20261107Player02/PlayerObservations.json`。这些运行证据支持定位，不表示已有代码修复。
 
-可直接查看的脱敏画面：[第一次背包](Extraction/Audit_2026-11-07_Evidence/first-bag.png)、[第二次背包](Extraction/Audit_2026-11-07_Evidence/second-bag.png)、[正常步枪与红点](Extraction/Audit_2026-11-07_Evidence/rifle-baseline.png)、[药枪叠枪且红点消失](Extraction/Audit_2026-11-07_Evidence/stim-overlap.png)。
+可直接查看的脱敏画面：[第一次背包](../Artifacts/Extraction/Audit_2026-11-07_Evidence/first-bag.png)、[第二次背包](../Artifacts/Extraction/Audit_2026-11-07_Evidence/second-bag.png)、[正常步枪与红点](../Artifacts/Extraction/Audit_2026-11-07_Evidence/rifle-baseline.png)、[药枪叠枪且红点消失](../Artifacts/Extraction/Audit_2026-11-07_Evidence/stim-overlap.png)。
 
 ### 10.6 存档与长期运行结构风险
 

@@ -6,7 +6,7 @@ import unreal
 work=Path(unreal.Paths.project_saved_dir())/'Stinger/Locomotion'
 backup=work/'BindingsBefore.json'
 if not backup.exists():
-    backup=Path(unreal.Paths.project_dir())/'Docs/Stinger/LocomotionEvidence/BindingsBefore.json'
+    backup=Path(unreal.Paths.project_dir())/'Artifacts/Stinger/LocomotionEvidence/BindingsBefore.json'
 bindings=json.loads(backup.read_text(encoding='utf-8'))
 for binding in bindings:
     bp=unreal.load_asset(binding['asset'])

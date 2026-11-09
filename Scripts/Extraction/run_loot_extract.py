@@ -53,7 +53,7 @@ def run(g):
                    else next(r for r in exits if r['id']=='OfficialExitSquare'))
     g['report']['exit_original']=selected_exit
     if g['args'].scenario=='scar':
-        anchors_file=g['ROOT']/'Docs/Extraction/RestorationEvidence/SpawnExit/OfficialSpawnExitAnchors.json'
+        anchors_file=g['ROOT']/'Artifacts/Extraction/RestorationEvidence/SpawnExit/OfficialSpawnExitAnchors.json'
         anchors=json.loads(anchors_file.read_text(encoding='utf8'))
         def available():return any(r['id']==selected_exit['id'] and r['available'] for r in state('Server')['exits'])
         attempts=g['report']['lever_inputs']=[]

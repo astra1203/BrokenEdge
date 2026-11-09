@@ -1,7 +1,7 @@
 """Place the Space Center key-room doors on their real loot anchors.
 
 Anchors are the safe positions recorded in
-Docs/Extraction/RestorationEvidence/Loot/SourcePoints.json (already converted to
+Artifacts/Extraction/RestorationEvidence/Loot/SourcePoints.json (already converted to
 project coordinates and floor-checked against L_SpaceCenterExtraction). Only the
 rooms that have an anchor are placed here; 东区吊桥 / 员工通道 still need a
 position because this source dump does not contain them.

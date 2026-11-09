@@ -1,7 +1,7 @@
 """Archive completed checks and a previously recorded manual visual review."""
 from pathlib import Path
 import json,shutil
-project=Path(__file__).resolve().parents[2];saved=project/'Saved/Stinger';docs=project/'Docs/Stinger'
+project=Path(__file__).resolve().parents[2];saved=project/'Saved/Stinger';docs=project/'Artifacts/Stinger'
 for name in ['configure_view_fit.py','import_view_arms.py','validate_view_fit.py','validate_multiplayer_view.py',
              'promote_view_fit.py','record_view_fit_reports.py','prepare_capped_view_arms.py','audit_view_rig.py']:
     path=project/'Scripts/Stinger'/name

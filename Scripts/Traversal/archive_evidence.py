@@ -17,7 +17,7 @@ parser.add_argument('--client-build', required=True)
 parser.add_argument('--runs', nargs='+', required=True)
 parser.add_argument('--video-runs', nargs='+', required=True)
 args = parser.parse_args()
-OUT = ROOT / 'Docs/Extraction/Traversal/Evidence'
+OUT = ROOT / 'Artifacts/Extraction/Traversal/Evidence'
 OUT.mkdir(parents=True, exist_ok=True)
 
 

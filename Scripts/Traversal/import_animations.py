@@ -29,7 +29,7 @@ for clip in source['clips']:
     print('TRAVERSAL_IMPORTED', clip['name'], flush=True)
     unreal.SystemLibrary.collect_garbage()
 
-existing = json.loads((ROOT/'Docs/Stinger/RepairImportManifest.json').read_text(encoding='utf-8'))['entries']
+existing = json.loads((ROOT/'Artifacts/Stinger/RepairImportManifest.json').read_text(encoding='utf-8'))['entries']
 def animation(name):
     result = entries.get(name)
     if result is None:

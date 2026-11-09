@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BrokenEdge 从大厅到开火</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+SC:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: 左侧粘性控制栏（章节、播放、当前状态），右侧是三栏时序图：客户端 | 网络 | 专用服务器。 */
+:root {
+  --bg: #eef0f3;
+  --panel: #ffffff;
+  --sunk: #f5f6f8;
+  --ink: #18202a;
+  --muted: #5d6775;
+  --line: #d7dce3;
+  --client: #1f6fb8;
+  --server: #b4541c;
+  --net: #6a5acd;
+  --ok: #17864c;
+  --sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1217; --panel: #161c23; --sunk: #1b222b; --ink: #e3e8ee; --muted: #94a0ae; --line: #2a333e;
+    --client: #5fa8ec; --server: #f08a4b; --net: #9d8fff; --ok: #4cc987; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1217; --panel: #161c23; --sunk: #1b222b; --ink: #e3e8ee; --muted: #94a0ae; --line: #2a333e;
+  --client: #5fa8ec; --server: #f08a4b; --net: #9d8fff; --ok: #4cc987; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.6; }
+[hidden] { display: none !important; }
+code, .mono { font-family: var(--mono); }
+
+.page {
+  max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 22px; align-items: start;
+  padding-block: 26px 80px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (max-width: 920px) { .page { grid-template-columns: 1fr; } }
+
+/* ---------- 侧栏 ---------- */
+.side { position: sticky; top: 16px; display: grid; gap: 14px; }
+@media (max-width: 920px) { .side { position: static; } }
+.eyebrow { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+h1 { font-size: 28px; line-height: 1.25; font-weight: 900; margin: 0; text-wrap: balance; }
+.lede { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+.box { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+.ctrls { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.btn {
+  font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); background: var(--sunk);
+  border: 1px solid var(--line); border-radius: 7px; padding: 5px 11px; cursor: pointer;
+}
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--ink); color: var(--panel); border-color: var(--ink); min-width: 70px; }
+.btn:focus-visible, .chap:focus-visible, .row:focus-visible { outline: 2px solid var(--client); outline-offset: 2px; }
+.counter { margin-left: auto; font-family: var(--mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.speed { display: flex; gap: 4px; margin-top: 10px; align-items: center; font-size: 13px; color: var(--muted); }
+.speed button { font: inherit; font-family: var(--mono); font-size: 12px; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; }
+.speed button[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+.bar { height: 4px; background: var(--line); border-radius: 99px; margin-top: 12px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--client); transition: width .3s; }
+
+.chaps { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.chap { width: 100%; text-align: left; font: inherit; color: var(--muted); background: transparent; border: 0; border-radius: 7px; padding: 7px 9px; cursor: pointer; display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; align-items: center; }
+.chap:hover { background: var(--sunk); color: var(--ink); }
+.chap .n { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; font-family: var(--mono); font-size: 11.5px; font-weight: 600; }
+.chap .c { font-family: var(--mono); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.chap.on { color: var(--ink); background: var(--sunk); font-weight: 700; }
+.chap.on .n { background: var(--client); border-color: var(--client); color: var(--panel); }
+.chap.done .n { border-color: var(--muted); color: var(--ink); }
+
+.state { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0; font-size: 13.5px; }
+.state dt { color: var(--muted); }
+.state dd { margin: 0; font-family: var(--mono); font-size: 12.5px; text-align: right; overflow-wrap: anywhere; }
+.state dd.flash { animation: flash 1s ease-out; }
+@keyframes flash { from { color: var(--client); } }
+.box h2 { font-size: 13px; margin: 0 0 8px; color: var(--muted); font-weight: 600; letter-spacing: .04em; }
+.key { display: grid; gap: 5px; font-size: 13px; color: var(--muted); }
+.key span { display: inline-flex; align-items: center; gap: 8px; }
+.key i { width: 26px; height: 0; border-top: 2px solid; flex: none; }
+.key i.rpc-c { border-color: var(--client); }
+.key i.rpc-s { border-color: var(--server); }
+.key i.rep { border-top-style: dashed; border-color: var(--net); }
+.fine { font-size: 12px; color: var(--muted); margin: 0; }
+
+/* ---------- 时序图 ---------- */
+.seq { min-width: 0; }
+.lanes {
+  position: sticky; top: 0; z-index: 5; display: grid; grid-template-columns: 1fr 96px 1fr; gap: 0;
+  background: var(--bg); padding: 10px 0 8px; border-bottom: 1px solid var(--line);
+}
+.lanes div { font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.lanes .lc { color: var(--client); }
+.lanes .ln { color: var(--net); justify-content: center; font-size: 12.5px; }
+.lanes .ls { color: var(--server); justify-content: flex-end; }
+.lanes small { font-weight: 400; color: var(--muted); font-size: 12px; }
+.track { position: relative; }
+.track::before, .track::after { content: ""; position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px dotted var(--line); }
+.track::before { left: calc(50% - 48px); }
+.track::after { left: calc(50% + 48px); }
+
+.chapter-h { position: relative; z-index: 1; margin: 26px 0 10px; display: flex; align-items: baseline; gap: 12px; background: var(--bg); padding: 4px 0; }
+.chapter-h b { font-size: 19px; font-weight: 900; }
+.chapter-h span { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.chapter-h p { margin: 0; color: var(--muted); font-size: 13.5px; }
+
+.row { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 96px 1fr; margin: 8px 0; cursor: pointer; transition: opacity .35s; outline: none; }
+.row.future { opacity: .42; }
+.row.future:hover { opacity: .75; }
+.slot { min-width: 0; }
+
+.card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: 9px 12px 10px;
+  transition: border-color .25s, box-shadow .25s, transform .25s;
+}
+.row[data-k="c"] .card { border-left: 3px solid var(--client); }
+.row[data-k="s"] .card { border-right: 3px solid var(--server); }
+.row.on .card { border-color: currentColor; box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 18%, transparent); }
+.row[data-k="c"].on { color: var(--client); }
+.row[data-k="s"].on { color: var(--server); }
+.card > * { color: var(--ink); }
+.fn { font-family: var(--mono); font-size: 13.5px; font-weight: 600; overflow-wrap: anywhere; display: block; }
+.at { font-family: var(--mono); font-size: 11.5px; color: var(--muted); overflow-wrap: anywhere; display: block; margin-top: 1px; }
+.what { margin: 5px 0 0; font-size: 14px; color: var(--ink); }
+.opt { font-family: var(--sans); font-size: 11px; font-weight: 700; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 0 7px; margin-left: 6px; vertical-align: 2px; }
+.more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s ease; }
+.more > div { overflow: hidden; }
+.row.on .more { grid-template-rows: 1fr; }
+.more ul { margin: 7px 0 0; padding-left: 18px; font-size: 13.5px; color: var(--muted); display: grid; gap: 3px; }
+.more li code { font-size: 12.5px; color: var(--ink); }
+
+/* 跨网络的箭头行 */
+.row.wire { grid-template-columns: 1fr; min-height: 46px; }
+.wire .span { position: relative; margin: 0 calc(50% - 48px - 8%); padding: 18px 0 4px; min-width: 0; }
+.wire .line { position: absolute; left: 0; right: 0; top: 18px; border-top: 2px solid var(--wc); }
+.wire[data-k="rep"] .line { border-top-style: dashed; }
+.wire .line::after {
+  content: ""; position: absolute; top: -7px; width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent;
+}
+.wire[data-dir="r"] .line::after { right: -2px; border-left: 10px solid var(--wc); }
+.wire[data-dir="l"] .line::after { left: -2px; border-right: 10px solid var(--wc); }
+.wire .dot { position: absolute; top: 12px; width: 12px; height: 12px; border-radius: 50%; background: var(--wc); opacity: 0; box-shadow: 0 0 0 4px color-mix(in srgb, var(--wc) 25%, transparent); }
+.wire.on .dot { animation: travel var(--dur, 1.1s) ease-in-out forwards; }
+.wire[data-dir="l"].on .dot { animation-name: travel-l; }
+@keyframes travel { 0% { left: 0; opacity: 1; } 90% { opacity: 1; } 100% { left: calc(100% - 12px); opacity: 0; } }
+@keyframes travel-l { 0% { left: calc(100% - 12px); opacity: 1; } 90% { opacity: 1; } 100% { left: 0; opacity: 0; } }
+.wire .label { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1px; padding-top: 8px; }
+.wire .label .fn { font-size: 12.5px; color: var(--wc); background: var(--bg); padding: 0 6px; }
+.wire .label .kind { font-size: 11px; color: var(--muted); }
+.wire .label .what { font-size: 13px; color: var(--muted); max-width: 52ch; margin-top: 2px; }
+.wire[data-k="cs"] { --wc: var(--client); }
+.wire[data-k="sc"] { --wc: var(--server); }
+.wire[data-k="rep"] { --wc: var(--net); }
+.wire.on .label .fn { font-weight: 700; }
+
+@media (max-width: 640px) {
+  .lanes { grid-template-columns: 1fr 1fr; }
+  .lanes .ln { display: none; }
+  .track::before, .track::after { display: none; }
+  .row { grid-template-columns: 1fr; }
+  .row[data-k="c"] .s-slot, .row[data-k="s"] .c-slot, .row .mid { display: none; }
+  .row[data-k="c"] .card { margin-right: 12%; }
+  .row[data-k="s"] .card { margin-left: 12%; }
+  .wire .span { margin: 0 4%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .row, .card, .more, .bar i { transition: none; }
+  .wire.on .dot { animation: none; opacity: 1; left: calc(50% - 6px); }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <aside class="side">
+    <div>
+      <p class="eyebrow">BrokenEdge · 搜打撤 · 代码调用链</p>
+      <h1>从大厅到开第一枪</h1>
+      <p class="lede">从客户端进大厅、选择航天基地、全员准备跳图、开局，到扣下扳机、服务器判定命中。每一步标出类、函数和源文件行号。</p>
+    </div>
+    <div class="box">
+      <div class="ctrls">
+        <button class="btn" id="prev" type="button" aria-label="上一步">←</button>
+        <button class="btn primary" id="play" type="button">播放</button>
+        <button class="btn" id="next" type="button" aria-label="下一步">→</button>
+        <span class="counter" id="counter">0 / 0</span>
+      </div>
+      <div class="speed" role="group" aria-label="播放速度">速度
+        <button type="button" data-speed="0.6">慢</button>
+        <button type="button" data-speed="1" aria-pressed="true">中</button>
+        <button type="button" data-speed="1.8">快</button>
+      </div>
+      <div class="bar"><i id="bar"></i></div>
+    </div>
+    <nav class="box" aria-label="章节">
+      <ol class="chaps" id="chaps"></ol>
+    </nav>
+    <div class="box">
+      <h2>此刻的状态</h2>
+      <dl class="state">
+        <dt>服务器地图</dt><dd id="stMap"></dd>
+        <dt>已选地图</dt><dd id="stSel"></dd>
+        <dt>对局阶段</dt><dd id="stPhase"></dd>
+        <dt>本地角色</dt><dd id="stPawn"></dd>
+      </dl>
+    </div>
+    <div class="box key">
+      <span><i class="rpc-c"></i>客户端 → 服务器 RPC</span>
+      <span><i class="rpc-s"></i>服务器 → 客户端 RPC / 多播</span>
+      <span><i class="rep"></i>属性复制（服务器改值，客户端自动收到）</span>
+      <p class="fine">路径相对 <code>Source/BrokenEdge/</code>；Menu 在 <code>Plugins/MultiplayerSessions/</code>。快捷键：← → 切换，空格播放。</p>
+    </div>
+  </aside>
+
+  <main class="seq">
+    <div class="lanes">
+      <div class="lc">客户端 <small>玩家电脑</small></div>
+      <div class="ln">网络</div>
+      <div class="ls"><small>Dedicated Server</small> 专用服务器</div>
+    </div>
+    <div class="track" id="track"></div>
+  </main>
+</div>
+
+<script>
+(() => {
+  // k: c 客户端本地 | s 服务器本地 | cs 客户端→服务器 RPC | sc 服务器→客户端 RPC | rep 属性复制
+  const CH = [
+    { t: '进入大厅', d: '客户端连上专用服务器的大厅，绑定仓库档案。' },
+    { t: '选择航天基地', d: '点地图按钮，服务器校验地图配置后记住选择。' },
+    { t: '准备 → 倒计时 → 跳图', d: '全员准备后倒计时 3 秒，建立出战记录，无缝切到航天基地关卡。' },
+    { t: '进图 → 开局', d: '服务器刷物资和撤离点、生成角色并冻结；人到齐后进入 Active。' },
+    { t: '开火 → 命中', d: '客户端预测开枪，服务器核验、重算散布、发射带倒带的子弹并结算伤害。' },
+  ];
+  const E = [
+    // ---------- 0 进入大厅 ----------
+    { ch: 0, k: 's', fn: 'ALobbyGameMode::BeginPlay', at: 'GameMode/LobbyGameMode.cpp:58',
+      what: '专服启动时进入 ServerDefaultMap（/Game/Maps/Lobby），初始化会话，并开启每 0.25 秒一次的 TryStartGame 定时器。',
+      more: ['<code>UExtractionPersistence::AbortPreparedRaids</code> 先退还上次没开成的出战', '<code>GameState.ExtractionMapId = Registry-&gt;SelectedMap</code>（默认 SpaceCenter）'],
+      st: { map: 'Lobby（专服）', phase: '大厅', sel: 'SpaceCenter（默认）' } },
+    { ch: 0, k: 'c', fn: 'ALobbyGameMode::BeginPlay（单机）', at: 'GameMode/LobbyGameMode.cpp:58',
+      what: '客户端启动也先进 /Game/Maps/Lobby，单机运行、没有会话时创建 WBP_Menu。',
+      more: ['<code>Menu-&gt;MenuSetup(人数, MatchType, "/Game/Maps/Lobby")</code>'] },
+    { ch: 0, k: 'c', fn: 'UMenu::JoinButtonClicked → RefreshRooms → OnFindSessions', at: 'Plugins/MultiplayerSessions/…/Menu.cpp:134',
+      what: '查找在线会话，列出房间。' },
+    { ch: 0, k: 'c', fn: 'UMenu::JoinRoom → OnJoinSession', at: 'Plugins/MultiplayerSessions/…/Menu.cpp:204',
+      what: '加入会话，拿到服务器地址后 ClientTravel(Address, TRAVEL_Absolute)。' },
+    { ch: 0, k: 'cs', fn: 'ClientTravel → 连接服务器', kind: '引擎连接', what: '客户端加载服务器当前地图（大厅）。' },
+    { ch: 0, k: 's', fn: 'ALobbyGameMode::PreLogin', at: 'GameMode/LobbyGameMode.cpp:50',
+      what: '正在开局或跳图时拒绝（MATCH_STARTING）；搜打撤房间满 6 人拒绝（ROOM_FULL）。' },
+    { ch: 0, k: 's', fn: 'ALobbyGameMode::PostLogin', at: 'GameMode/LobbyGameMode.cpp:93',
+      what: '新玩家设为未准备；AssignExtractionSquads 分到人少的小队（每队最多 3 人）；取消进行中的倒计时。' },
+    { ch: 0, k: 's', fn: 'UExtractionAccountComponent::TickComponent', at: 'Extraction/ExtractionAccountComponent.cpp:56',
+      what: '挂在 PlayerController 上的账号组件。搜打撤房间里还没绑定档案，就向客户端要凭据。' },
+    { ch: 0, k: 'sc', fn: 'ClientBind(StoreId)', kind: 'Client RPC' },
+    { ch: 0, k: 'c', fn: 'UExtractionAccountComponent::ClientBind_Implementation', at: 'Extraction/ExtractionAccountComponent.cpp:103',
+      what: '读取本地凭据文件；文件不存在就请求新建档案，损坏则提示错误。',
+      more: ['凭据路径：<code>Saved/Extraction/Clients/&lt;档案标签&gt;/&lt;StoreId&gt;.credential</code>'] },
+    { ch: 0, k: 'cs', fn: 'ServerBind(ProfileId, Credential)', kind: 'Server RPC' },
+    { ch: 0, k: 's', fn: 'UExtractionAccountComponent::ServerBind_Implementation', at: 'Extraction/ExtractionAccountComponent.cpp:129',
+      what: 'Store()->OpenProfile 校验凭据，拒绝同一档案重复在线；成功后 PlayerState.ExtractionProfile = 档案 ID，Bound = true。' },
+    { ch: 0, k: 'c', fn: 'ABrokenEdgePlayerController::Tick → UpdateLobbyUI', at: 'PlayerController/BrokenEdgePlayerController.cpp:233',
+      what: '世界里是 ALobbyGameState 时创建 ULobbyWidget 并切到 UI 输入，之后每帧 ULobbyWidget::Refresh 刷新房间、小队、地图名和按钮状态。',
+      st: { pawn: '无（大厅界面）' } },
+
+    // ---------- 1 选择航天基地 ----------
+    { ch: 1, k: 'c', opt: '可选', fn: 'ULobbyWidget::ExtractionClicked', at: 'UI/LobbyWidget.cpp:149',
+      what: '房间还不是搜打撤模式时，先点“烽火地带 · 搜打撤”。',
+      more: ['<code>ServerSetLobbyMatchType</code> → <code>ALobbyGameMode::SetMatchType</code>（:169）→ 会话 <code>UpdateMatchType</code> → <code>OnMatchTypeUpdated</code>（:189）', '切换成功后所有人重置为未准备'] },
+    { ch: 1, k: 'c', fn: 'ULobbyWidget::SpaceCenterClicked', at: 'UI/LobbyWidget.cpp:312',
+      what: '点“航天基地”。按钮只在搜打撤模式、自己未准备、不在倒计时、当前地图不是航天基地时可点。',
+      more: ['已选地图默认就是 SpaceCenter；没切到过苏联军事基地的话，这个按钮一开始就是灰的', '“苏联军事基地”走同一条路径，只是 MapId 换成 SovietMilitary'] },
+    { ch: 1, k: 'cs', fn: 'ServerSetExtractionMap("SpaceCenter")', kind: 'Server RPC' },
+    { ch: 1, k: 's', fn: 'ABrokenEdgePlayerController::ServerSetExtractionMap_Implementation', at: 'PlayerController/BrokenEdgePlayerController.cpp:462',
+      what: '转给服务器上的大厅 GameMode。' },
+    { ch: 1, k: 's', fn: 'ALobbyGameMode::SetExtractionMap', at: 'GameMode/LobbyGameMode.cpp:399',
+      what: '只在专服、搜打撤模式、没在开局 / 跳图 / 切模式、请求者未准备、地图确实变化时生效。' },
+    { ch: 1, k: 's', fn: 'UExtractionMapRegistry::Validate', at: 'Extraction/ExtractionMapRegistry.cpp:38',
+      what: '在 DefaultGame.ini 注册的地图里找 MapId = SpaceCenter，即 DA_SpaceCenterGameplay。',
+      more: ['关卡包 <code>/Game/Maps/SpaceCenter/L_SpaceCenterExtraction</code> 必须存在', '至少 2 个出生组，每组至少 3 个位置', '撤离点全部有效（航天基地 2 个），配置了物资布局 LootLayout'] },
+    { ch: 1, k: 's', fn: 'SetExtractionMap：写入选择', at: 'GameMode/LobbyGameMode.cpp:399',
+      what: 'Registry->SelectedMap = SpaceCenter（GameInstance 子系统，跳图后仍在）；GameState.ExtractionMapId 同步；所有人重置为未准备。',
+      st: { sel: 'SpaceCenter（航天基地）' } },
+    { ch: 1, k: 'rep', fn: 'ALobbyGameState.ExtractionMapId / LobbyStatus', kind: '属性复制' },
+    { ch: 1, k: 'c', fn: 'ULobbyWidget::Refresh', at: 'UI/LobbyWidget.cpp:154',
+      what: '地图名显示 DA 里的 DisplayName“航天基地”，航天基地按钮变灰；状态栏显示“地图已切换，请所有玩家重新准备”。' },
+
+    // ---------- 2 准备 → 倒计时 → 跳图 ----------
+    { ch: 2, k: 'c', fn: 'ULobbyWidget::ReadyClicked', at: 'UI/LobbyWidget.cpp:130',
+      what: '点“准备出战”。档案绑定之前这个按钮不可点。' },
+    { ch: 2, k: 'cs', fn: 'ServerSetLobbyReady(true)', kind: 'Server RPC' },
+    { ch: 2, k: 's', fn: 'ALobbyGameMode::SetPlayerReady', at: 'GameMode/LobbyGameMode.cpp:150',
+      what: '搜打撤模式要求：未完成的出战已清理、档案已绑定、仓库可用。通过后 PlayerState.bLobbyReady = true。' },
+    { ch: 2, k: 's', fn: 'ALobbyGameMode::TryStartGame（每 0.25 秒）', at: 'GameMode/LobbyGameMode.cpp:258',
+      what: '条件都满足时开始 3 秒倒计时：CountdownEndTime = 现在 + 3。',
+      more: ['<code>ExtractionStartError</code>（:239）：再验一次地图、仓库可用、PIE 是否开了无缝切图', '<code>AreAllPlayersReady</code>（:208）：每人已准备、有档案、在 1 / 2 队、每队 ≤ 3、总数 ≤ 6、人数达到下限', '<code>PendingMap</code> = DA_SpaceCenterGameplay 的关卡包名'] },
+    { ch: 2, k: 'rep', fn: 'ALobbyGameState.CountdownEndTime', kind: '属性复制' },
+    { ch: 2, k: 'c', fn: 'ULobbyWidget::Refresh', at: 'UI/LobbyWidget.cpp:154',
+      what: '显示“全员已准备，3 秒后开始 · 取消准备可中止倒计时”。有人取消准备，服务器 CancelCountdown。' },
+    { ch: 2, k: 's', fn: 'TryStartGame：倒计时结束', at: 'GameMode/LobbyGameMode.cpp:258',
+      what: 'bStartingSession = true，Sessions->StartSession()，等会话回调。' },
+    { ch: 2, k: 's', fn: 'ALobbyGameMode::OnStartSession', at: 'GameMode/LobbyGameMode.cpp:328',
+      what: '异步期间可能有人取消准备，所以全部重新校验；然后 UExtractionPersistence::BeginRaid 为所有人建立出战记录，锁定带入的装备，写入 PlayerState.ExtractionRaid。' },
+    { ch: 2, k: 's', fn: 'UWorld::ServerTravel', at: 'GameMode/LobbyGameMode.cpp:328',
+      what: '无缝切图到 /Game/Maps/SpaceCenter/L_SpaceCenterExtraction?MaxPlayers=…?ExpectedPlayers=N。',
+      more: ['大厅 GameMode 设了 <code>bUseSeamlessTravel = true</code>', '跳图失败会 <code>AbortRaid</code> 退还装备，所有人重置为未准备'],
+      st: { map: '切换中…', phase: '跳图' } },
+    { ch: 2, k: 'sc', fn: 'ClientTravel（无缝）', kind: '引擎' },
+    { ch: 2, k: 'c', fn: 'ABrokenEdgePlayerController::PreClientTravel', at: 'PlayerController/BrokenEdgePlayerController.cpp:265',
+      what: '记下大厅世界，移除大厅界面，切回游戏输入。' },
+    { ch: 2, k: 's', fn: 'ABrokenEdgePlayerState::CopyProperties', at: 'PlayerState/BrokenEdgePlayerState.cpp:10',
+      what: '无缝切图时 PlayerState / PlayerController 换成新地图的类（AExtractionPlayerState / AExtractionPlayerController），ExtractionProfile、ExtractionRaid、ExtractionSquad 拷过去。',
+      more: ['航天基地关卡的 WorldSettings 用 <code>BP_ExtractionGameMode</code>'] },
+
+    // ---------- 3 进图 → 开局 ----------
+    { ch: 3, k: 's', fn: 'AExtractionGameMode::InitGame', at: 'Extraction/ExtractionGameMode.cpp:61',
+      what: '读 ExpectedPlayers、单局时长（默认 1800 秒）、出生随机种子；UExtractionMapRegistry::FindWorld 按关卡包名找到 DA_SpaceCenterGameplay。',
+      st: { map: 'L_SpaceCenterExtraction', phase: 'Waiting' } },
+    { ch: 3, k: 's', fn: 'AExtractionGameMode::BeginPlay', at: 'Extraction/ExtractionGameMode.cpp:83',
+      what: '加载仓库；GameState.MapDefinition = DA；LootLayout->Spawn 按种子刷物资；按 DA 生成 AExtractionExit 撤离点；检查出生组 ≥ 2、撤离点齐全。' },
+    { ch: 3, k: 'c', fn: 'AExtractionPlayerController::PostSeamlessTravel → EnsureLocalWidgets', at: 'Extraction/ExtractionPlayerController.cpp:772',
+      what: '创建局内 HUD（UExtractionWidget）和背包界面（ULootingMainView）。' },
+    { ch: 3, k: 's', fn: 'AExtractionGameMode::HandleStartingNewPlayer', at: 'Extraction/ExtractionGameMode.cpp:135',
+      what: '客户端加载完世界后：Life = Alive，清除准备状态，RestartPlayer 生成角色。' },
+    { ch: 3, k: 's', fn: 'AExtractionGameMode::ChoosePlayerStart', at: 'Extraction/ExtractionGameMode.cpp:211',
+      what: '每个小队分到不同的出生组，组员依次分配组内位置；位置必须已加载、能落地、坡度合适、胶囊体不被挡。' },
+    { ch: 3, k: 's', fn: 'UExtractionInventoryComponent::InitializeLoadout', at: 'Extraction/ExtractionInventoryComponent.cpp:56',
+      what: '从出战记录恢复带入的物品，发放开局补给，SyncWeapons（:361）生成并装备枪；随后 FreezePlayer 冻结操作。',
+      st: { pawn: 'BP_StingerCharacter（冻结）' } },
+    { ch: 3, k: 'rep', fn: 'Pawn / 武器 / 背包内容', kind: '属性复制' },
+    { ch: 3, k: 'c', fn: 'ABrokenEdgeCharacter::Tick → InitializeFirstPersonView', at: 'Character/BrokenEdgeCharacter.cpp:534',
+      what: '本地玩家初始化第一人称：第三人称身体对自己隐藏，创建第一人称身体和枪模，相机放到眼睛高度。' },
+    { ch: 3, k: 's', fn: 'AExtractionGameMode::Tick（Waiting）', at: 'Extraction/ExtractionGameMode.cpp:596',
+      what: '每帧 StartWaitingPlayers 补生成角色；人数达到 ExpectedPlayers、区域流送就绪后核对“门票”。',
+      more: ['所有人来自同一份未关闭的出战记录，档案不重复，人数与记录一致', '门票不对：FinishRound("请从大厅准备后进入对局")', '120 秒没到齐：FinishRound("玩家加载超时")'] },
+    { ch: 3, k: 's', fn: 'ActivateRaid → 开局', at: 'Extraction/ExtractionGameMode.cpp:649',
+      what: 'Phase = Active；撤离点 StartRound；Deadline = 现在 + 1800 秒；StartMatch()；SpawnGuards() 生成 AI 守卫；FreezePlayer(false) 解冻所有人。',
+      st: { phase: 'Active', pawn: 'BP_StingerCharacter' } },
+    { ch: 3, k: 'rep', fn: 'AExtractionGameState.Phase = Active', kind: '属性复制' },
+    { ch: 3, k: 'c', fn: 'UExtractionCombatComponent::CanAct', at: 'Extraction/ExtractionCombatComponent.cpp:323',
+      what: 'CanAct 要求 Phase == Active 且自己 Life == Alive。在这之前按开火键都会被挡住。' },
+
+    // ---------- 4 开火 → 命中 ----------
+    { ch: 4, k: 'c', fn: 'UCombatComponent::TickComponent → TraceUnderCrosshairs', at: 'Component/CombatComponent.cpp:588',
+      what: '每帧从屏幕准星打射线，HitTarget = 命中点。' },
+    { ch: 4, k: 'c', fn: 'ABrokenEdgeCharacter::FireButtonPressed', at: 'Character/BrokenEdgeCharacter.cpp:1969',
+      what: 'Enhanced Input 的 FireAction Started 触发。近战中改为挥刀，背包打开时忽略，手持激素枪时改为射飞镖。' },
+    { ch: 4, k: 'c', fn: 'UCombatComponent::FireButtonPressed', at: 'Component/CombatComponent.cpp:224',
+      what: '先经过 UExtractionCombatComponent::SetFireInputHeld（Extraction/ExtractionCombatComponent.cpp:106）判断能否开火：能行动、手上有枪、没换弹、没开背包。' },
+    { ch: 4, k: 'cs', fn: 'ServerSetFireInputHeld(bHeld)', kind: 'Server RPC', what: '同步按键状态，服务器用它处理跑射切换。' },
+    { ch: 4, k: 'c', fn: 'UCombatComponent::Fire → FireHitScanWeapon', at: 'Component/CombatComponent.cpp:239',
+      what: 'CanFire 通过后按武器类型分发；搜打撤的枪都是 HitScan，直接转给 RequestShot(HitTarget)。',
+      more: ['全自动武器按住不放时，<code>UExtractionCombatComponent::TickComponent</code>（:229）每帧再调 <code>Fire()</code>，射速由 <code>bCanFire</code> 和开火计时器控制'] },
+    { ch: 4, k: 'c', fn: 'UExtractionCombatComponent::RequestShot', at: 'Extraction/ExtractionCombatComponent.cpp:345',
+      what: '分配射击序号 ShotId，记入 PendingShots；ResolveShot（:255）用“种子 + ShotId”算散布、呼吸摆动和后坐力，后坐力加到视角上。' },
+    { ch: 4, k: 'c', fn: 'UCombatComponent::LocalFire → AHitScanWeapon::Fire', at: 'Component/CombatComponent.cpp:395',
+      what: '本地预测：播放开火动画，AWeapon::Fire 先扣一发，生成一颗只做表现的 AExtractionBullet。同时记下 ViewTime = 服务器时间 − 单程延迟。' },
+    { ch: 4, k: 'cs', fn: 'ServerRequestShotVersioned(ShotId, Weapon, Target, Revision, ViewTime)', kind: 'Server RPC · Extraction/ExtractionCombatComponent.cpp:369' },
+    { ch: 4, k: 's', fn: 'ServerRequestShotVersioned_Implementation', at: 'Extraction/ExtractionCombatComponent.cpp:393',
+      what: '逐项核验，任一不通过就拒绝并记 RejectedShots。',
+      more: ['序号比上一次大（防重放）、能行动、枪是自己手上那把、配件版本 Revision 一致', '目标方向与视角夹角在约 45° 内（点积 &gt; 0.7）', '有子弹、没在换弹、射速冷却已过、目标点有限且在 1.2 km 内'] },
+    { ch: 4, k: 's', fn: 'ResolveShot + ServerRewindFor', at: 'Extraction/ExtractionCombatComponent.cpp:381',
+      what: '用同一个种子重算散布，结果和客户端一致；倒带时长 = 现在 − ViewTime，上限 min(200 ms, ping × 1.5 + 50 ms)。' },
+    { ch: 4, k: 's', fn: 'AHitScanWeapon::Fire', at: 'Weapon/HitScanWeapon.cpp:49',
+      what: 'AWeapon::Fire 扣弹；枪口穿进墙里时把出膛点挪到墙前；生成服务器子弹 AExtractionBullet，Initialize 弹道参数，SetRewind 设置倒带时长。' },
+    { ch: 4, k: 's', fn: 'RecordShot · MulticastShotEffects · HearShot', at: 'Extraction/ExtractionCombatComponent.cpp:444',
+      what: '背包记录弹匣余量；其他客户端播放开火表现；附近 AI 守卫听到枪声，装了消音器听觉半径更小。' },
+    { ch: 4, k: 'sc', fn: 'ClientShotResult · ClientMechanicsResult', kind: 'Client RPC → 射手', what: '用服务器的弹药数和散布状态校正本地预测，叠加还没确认的射击。' },
+    { ch: 4, k: 's', fn: 'AExtractionBullet::Tick', at: 'Weapon/ExtractionBullet.cpp:70',
+      what: '每 1/120 秒前进一步做球形扫掠（ECC_Visibility）。',
+      more: ['玩家角色不参与普通扫掠，改用 <code>ULagCompensationComponent::TraceWorldAt</code>（Component/LagCompensationComponent.cpp:345）检测倒带后的物理资产姿态', '玻璃：打碎后继续飞；薄墙：<code>TryPenetrate</code> 穿透并衰减伤害', '命中角色：伤害 =（爆头 ? 头部伤害 : 身体伤害）× 距离衰减 × 穿透衰减'] },
+    { ch: 4, k: 's', fn: 'UExtractionHealth::Bullet', at: 'Extraction/ExtractionHealth.cpp:149',
+      what: 'GameMode 处理友伤，乘弹种系数；ArmorSlotForBone 找到头盔或护甲，Absorb 按穿透等级扣伤害和耐久。' },
+    { ch: 4, k: 's', fn: 'ABrokenEdgeCharacter::ReceiveDamage', at: 'Character/BrokenEdgeCharacter.cpp:120',
+      what: '扣血；已倒地交给 DamageDowned；血量归零交给 AExtractionGameMode 击倒或淘汰（DefeatCombatant :774）；伤害够大会出血，打腿可能骨折。' },
+    { ch: 4, k: 'sc', fn: 'ClientCombatHit · ClientDamaged · Impact', kind: 'Client RPC / 多播',
+      what: 'NotifyCombatFeedback（Character/BrokenEdgeCharacter.cpp:181）给射手发命中提示、给挨打的人发受击方向；Impact 在所有客户端播放弹孔和音效；Health 复制后 OnRep_Health 刷新血条。' },
+    { ch: 4, k: 'c', fn: 'AExtractionPlayerController::ClientCombatHit', at: 'Extraction/ExtractionPlayerController.cpp:407',
+      what: '射手屏幕上出现命中标记，击倒和击杀显示不同提示。' },
+  ];
+  E.forEach((e, i) => e.i = i);
+
+  const $ = s => document.querySelector(s);
+  const track = $('#track');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const rows = [];
+
+  // ---------- 构建 ----------
+  CH.forEach((c, ci) => {
+    const h = document.createElement('div');
+    h.className = 'chapter-h';
+    h.id = 'ch' + ci;
+    const count = E.filter(e => e.ch === ci).length;
+    h.innerHTML = `<b>${ci + 1}. ${c.t}</b><span>${count} 步</span><p>${c.d}</p>`;
+    track.appendChild(h);
+    E.filter(e => e.ch === ci).forEach(e => {
+      const r = document.createElement('div');
+      r.dataset.k = e.k;
+      r.dataset.i = e.i;
+      r.tabIndex = 0;
+      if (e.k === 'c' || e.k === 's') {
+        r.className = 'row';
+        const card = `<article class="card">
+          <code class="fn">${e.fn}${e.opt ? `<span class="opt">${e.opt}</span>` : ''}</code>
+          ${e.at ? `<span class="at">${e.at}</span>` : ''}
+          <p class="what">${e.what}</p>
+          ${e.more ? `<div class="more"><div><ul>${e.more.map(m => `<li>${m}</li>`).join('')}</ul></div></div>` : ''}
+        </article>`;
+        r.innerHTML = `<div class="slot c-slot">${e.k === 'c' ? card : ''}</div><div class="mid"></div><div class="slot s-slot">${e.k === 's' ? card : ''}</div>`;
+      } else {
+        r.className = 'row wire';
+        r.dataset.dir = e.k === 'cs' ? 'r' : 'l';
+        r.innerHTML = `<div class="span"><span class="line"></span><span class="dot"></span>
+          <div class="label"><code class="fn">${e.fn}</code><span class="kind">${e.kind || ''}</span>${e.what ? `<span class="what">${e.what}</span>` : ''}</div></div>`;
+      }
+      r.addEventListener('click', () => go(e.i, false));
+      r.addEventListener('keydown', ev => { if (ev.key === 'Enter') go(e.i, false); });
+      track.appendChild(r);
+      rows.push(r);
+    });
+  });
+
+  const chapList = $('#chaps');
+  const chapBtns = CH.map((c, ci) => {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.className = 'chap';
+    b.type = 'button';
+    const n = E.filter(e => e.ch === ci).length;
+    b.innerHTML = `<span class="n">${ci + 1}</span><span>${c.t}</span><span class="c">${n}</span>`;
+    b.addEventListener('click', () => {
+      const first = E.findIndex(e => e.ch === ci);
+      go(first, false);
+      $('#ch' + ci).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    });
+    li.appendChild(b);
+    chapList.appendChild(li);
+    return b;
+  });
+
+  // ---------- 状态 ----------
+  const INIT = { map: '—', sel: 'SpaceCenter（默认）', phase: '未连接', pawn: '无' };
+  let last = {};
+  function stateAt(i) {
+    const s = { ...INIT };
+    for (let k = 0; k <= i; k++) if (E[k].st) Object.assign(s, E[k].st);
+    return s;
+  }
+  function paintState(i) {
+    const s = i < 0 ? INIT : stateAt(i);
+    for (const [id, key] of [['stMap', 'map'], ['stSel', 'sel'], ['stPhase', 'phase'], ['stPawn', 'pawn']]) {
+      const el = document.getElementById(id);
+      if (el.textContent !== s[key]) {
+        el.textContent = s[key];
+        if (last[key] !== undefined) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+      }
+      last[key] = s[key];
+    }
+  }
+
+  // ---------- 播放 ----------
+  let cur = -1, playing = false, timer = 0, speed = 1;
+  function go(i, fromPlay) {
+    cur = Math.max(-1, Math.min(E.length - 1, i));
+    rows.forEach((r, k) => {
+      r.classList.toggle('on', k === cur);
+      r.classList.toggle('future', k > cur);
+    });
+    if (cur >= 0) {
+      const r = rows[cur];
+      if (r.classList.contains('wire')) {
+        r.style.setProperty('--dur', (1.1 / speed).toFixed(2) + 's');
+        const dot = r.querySelector('.dot');
+        dot.style.animation = 'none'; void dot.offsetWidth; dot.style.animation = '';
+      }
+      if (fromPlay) r.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    }
+    const ch = cur >= 0 ? E[cur].ch : -1;
+    chapBtns.forEach((b, ci) => { b.classList.toggle('on', ci === ch); b.classList.toggle('done', ci < ch); });
+    $('#counter').textContent = `${cur + 1} / ${E.length}`;
+    $('#bar').style.width = ((cur + 1) / E.length * 100) + '%';
+    paintState(cur);
+    if (!fromPlay && playing) schedule();
+  }
+  function dwell(e) {
+    const base = e.k === 'c' || e.k === 's' ? 1700 + (e.what ? e.what.length * 22 : 0) + (e.more ? e.more.length * 700 : 0) : 1500;
+    return base / speed;
+  }
+  function schedule() {
+    clearTimeout(timer);
+    if (!playing) return;
+    const wait = cur < 0 ? 300 : dwell(E[cur]);
+    timer = setTimeout(() => {
+      if (cur >= E.length - 1) { setPlaying(false); return; }
+      go(cur + 1, true);
+      schedule();
+    }, wait);
+  }
+  function setPlaying(p) {
+    playing = p;
+    $('#play').textContent = p ? '暂停' : (cur >= E.length - 1 ? '重播' : '播放');
+    if (p && cur >= E.length - 1) go(-1, false);
+    if (p) schedule(); else clearTimeout(timer);
+  }
+  $('#play').addEventListener('click', () => setPlaying(!playing));
+  $('#next').addEventListener('click', () => { setPlaying(false); go(cur + 1, true); });
+  $('#prev').addEventListener('click', () => { setPlaying(false); go(cur - 1, true); });
+  document.querySelectorAll('[data-speed]').forEach(b => b.addEventListener('click', () => {
+    speed = +b.dataset.speed;
+    document.querySelectorAll('[data-speed]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    if (playing) schedule();
+  }));
+  document.addEventListener('keydown', ev => {
+    if (ev.target.closest('button') && (ev.key === ' ' || ev.key === 'Enter')) return;
+    if (ev.key === 'ArrowRight') { ev.preventDefault(); setPlaying(false); go(cur + 1, true); }
+    else if (ev.key === 'ArrowLeft') { ev.preventDefault(); setPlaying(false); go(cur - 1, true); }
+    else if (ev.key === ' ') { ev.preventDefault(); setPlaying(!playing); }
+  });
+
+  // 静止时也完整可读：先显示第一步；不减少动画的环境自动播放。
+  go(0, false);
+  if (!reduce) setPlaying(true);
+})();
+</script>
+</body>
+</html>

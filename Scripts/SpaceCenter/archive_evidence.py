@@ -40,7 +40,7 @@ def main():
     parser.add_argument('--conversion', required=True)
     parser.add_argument('--baseline-audit', required=True)
     parser.add_argument('--baseline-actions', required=True)
-    parser.add_argument('--output', type=Path, default=PROJECT / 'Docs/SpaceCenter/Phase1Evidence')
+    parser.add_argument('--output', type=Path, default=PROJECT / 'Artifacts/SpaceCenter/Phase1Evidence')
     args = parser.parse_args()
     for path in [WORK / 'ConversionRuns' / args.conversion / 'Run.json', WORK / 'GeometryAudit.json', WORK / 'Repeatability.json']:
         if json.loads(path.read_text(encoding='utf-8'))['result'] != 'passed':

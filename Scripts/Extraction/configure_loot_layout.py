@@ -77,7 +77,7 @@ map_definition=unreal.load_asset('/Game/Extraction/Maps/DA_SpaceCenterGameplay')
 assert map_definition
 map_definition.set_editor_property('loot_layout',unreal.load_asset(layouts['SpaceCenter_Ma1']))
 assert lib.save_loaded_asset(map_definition)
-out=root/'Docs/Extraction/RestorationEvidence/Loot/PlacementAudit.json'
+out=root/'Artifacts/Extraction/RestorationEvidence/Loot/PlacementAudit.json'
 out.write_text(json.dumps({'layouts':layouts,'points':report,'runtime_enabled':True,'active_variant':'SpaceCenter_Ma1',
     'limits':'All enabled safes are fixed points and spawn every raid (project tuning, no one-of-N groups). Floor checks are not reachability or visual approval; unsupported and underground points stay disabled.'},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print('LOOT_LAYOUTS_AUDITED',len(report),'floor-supported',sum(p['enabled'] for p in report))

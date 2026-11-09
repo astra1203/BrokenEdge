@@ -1,6 +1,6 @@
 """把「原版游戏的保险箱位置」写进 DA_SpaceCenter_Ma1_Loot（在编辑器里跑）。
 
-数据源：Docs/Extraction/RestorationEvidence/Loot/OfficialSafes.json
+数据源：Artifacts/Extraction/RestorationEvidence/Loot/OfficialSafes.json
         由 Scripts/Extraction/build_official_safes.py 从两份官方数据合成：
           - 解包关卡里 SafeBox / SmallSafebox actor 的序列化根坐标（精度最高）
           - 官方 MapPOIData 里 bHighValueBox 的行（补 actor 导出漏掉的实体）
@@ -118,7 +118,7 @@ def main():
     assert not unreal.EditorLevelLibrary.get_pie_worlds(True), '请先停止 PIE'
 
     data_path = (Path(unreal.Paths.project_dir())
-                 / 'Docs/Extraction/RestorationEvidence/Loot/OfficialSafes.json')
+                 / 'Artifacts/Extraction/RestorationEvidence/Loot/OfficialSafes.json')
     data = json.loads(data_path.read_text(encoding='utf-8'))
     official = [p for p in data['points'] if p['kind'] in SAFE_KINDS]
     assert official, '官方保险箱清单为空：%s' % data_path

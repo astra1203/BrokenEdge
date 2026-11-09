@@ -70,7 +70,7 @@ def verify(tag, terrain_tag, repeat_tag, materials_tag):
         check('all missing-node findings independently match original bytes', incomplete == gate['incomplete_graphs'])
         check('dependency parse success is separate from source completeness', gate['dependency_parse'] == 'passed' and gate['result'] != 'source_gate_passed')
         protected = subprocess.check_output(['git', 'status', '--porcelain=v1', '--untracked-files=all', '--',
-                                             'Content', 'Config', 'Source', 'Docs/Extraction/Phase7AEvidence'], cwd=ROOT)
+                                             'Content', 'Config', 'Source', 'Artifacts/Extraction/Phase7AEvidence'], cwd=ROOT)
         check('production assets, native gameplay and old evidence unchanged', not protected.strip())
         for path in [ROOT / 'Scripts/SpaceCenter' / name for name in ['phase7b_source.py', 'recover_phase7b_materials.py',
                                                                     'recover_phase7b_terrain.py', 'verify_phase7b_recovery.py']]:

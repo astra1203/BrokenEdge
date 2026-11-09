@@ -16,6 +16,6 @@ for row in records:
     assert lib.save_loaded_asset(texture)
     item=unreal.load_asset('/Game/Extraction/Items/DA_Item_'+row['item']);assert item
     item.set_editor_property('icon',texture);assert lib.save_loaded_asset(item)
-out=root/'Docs/Extraction/RestorationEvidence/UI';out.mkdir(parents=True,exist_ok=True)
+out=root/'Artifacts/Extraction/RestorationEvidence/UI';out.mkdir(parents=True,exist_ok=True)
 (out/'SourceIcons.json').write_text(json.dumps(records,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print('UI_ICONS_CONFIGURED',len(records))

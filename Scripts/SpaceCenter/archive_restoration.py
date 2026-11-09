@@ -210,11 +210,11 @@ def main():
     assert read(audit/'Report.json')['map']=='/Game/Maps/SpaceCenter/L_SpaceCenterExtraction'
     assert read(WORK/'RepeatVerification.json')['result']=='passed'
     assert read(WORK/'VerificationRuns'/args.source_verification_tag/'Report.json')['result']=='passed'
-    destination=ROOT/('Docs/Extraction/Phase'+PHASE+'Evidence')
+    destination=ROOT/('Artifacts/Extraction/Phase'+PHASE+'Evidence')
     assert not destination.exists(),'Final evidence already exists; do not overwrite it'
     stamp=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
     out=destination.with_name(destination.name+'.partial-'+stamp)
-    assert destination.resolve().parent==out.resolve().parent==(ROOT/'Docs/Extraction').resolve()
+    assert destination.resolve().parent==out.resolve().parent==(ROOT/'Artifacts/Extraction').resolve()
     out.mkdir(parents=True,exist_ok=False)
     records=[];copied=set()
 

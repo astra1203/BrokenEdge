@@ -1,13 +1,13 @@
 """把官方 GameplayConfig 里的 PlayerStart / PlayerExit 抽成干净的权威清单。
 
-来源：Docs/Extraction/SpaceCenterExpansion/SourceGameplayAnchors.json
+来源：Artifacts/Extraction/SpaceCenterExpansion/SourceGameplayAnchors.json
       （由 inspect_source_gameplay.py + summarize_source_gameplay.py 从解包包解码生成，
        记录了解码文件 SHA-256、原包路径、导出索引、原坐标与换算后坐标）
 
 坐标换算（与物资、保险箱同一套约定，勿再猜）：
     world = source + (-664000, +451000, +22400)
 
-产物：Docs/Extraction/RestorationEvidence/SpawnExit/OfficialSpawnExitAnchors.json
+产物：Artifacts/Extraction/RestorationEvidence/SpawnExit/OfficialSpawnExitAnchors.json
       只读、可重复生成；写资产的脚本读它，不直接解析解包数据。
 
 用法：
@@ -19,8 +19,8 @@ import math
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = ROOT / 'Docs/Extraction/SpaceCenterExpansion/SourceGameplayAnchors.json'
-OUT_DIR = ROOT / 'Docs/Extraction/RestorationEvidence/SpawnExit'
+SOURCE = ROOT / 'Artifacts/Extraction/SpaceCenterExpansion/SourceGameplayAnchors.json'
+OUT_DIR = ROOT / 'Artifacts/Extraction/RestorationEvidence/SpawnExit'
 ORIGIN = (-664000.0, 451000.0, 22400.0)
 
 # 官方出生点按 PlayerStart 编号分带，每带 5 个 = 一队。

@@ -2,7 +2,7 @@
 
 输入：7F 地面探针 Probes.json / BlockedEdges.json（Scripts/SpaceCenter/phase7f_probe.json 跑出），
 只从「起点可达」的连通区域选点，保证玩家和守卫都走得到。
-输出：Docs/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json，由 place_7f_loot_guards.py 写入资产。
+输出：Artifacts/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json，由 place_7f_loot_guards.py 写入资产。
 
 POI 坐标来自解包 POI 表（Saved/SpaceCenter/Phase7F/Reference/POIList.tsv），换算
 world = source + (-664000, +451000)。容器点位与配方是项目布置，不是官方刷新点。
@@ -23,7 +23,7 @@ sys.path.insert(0, str(ROOT / 'Scripts/SpaceCenter'))
 from plan_route import FloorGraph  # noqa: E402
 from plan_phase7f_route import RUNTIME_AVOIDANCE, avoid, block_ledges  # noqa: E402
 
-OUT = ROOT / 'Docs/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json'
+OUT = ROOT / 'Artifacts/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json'
 START = [-1500, -300, 362]
 SEED = 20261028
 

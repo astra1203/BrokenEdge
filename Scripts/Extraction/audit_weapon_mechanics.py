@@ -340,7 +340,7 @@ def markdown(report):
                   'python Scripts/Extraction/import_weapon_mechanics.py --audit',
                   'python Scripts/Extraction/import_weapon_mechanics.py --audit --check',
                   'python -m unittest discover -s Scripts/Extraction -p test_weapon_mechanics_audit.py',
-                  '```', '', '`--audit` 仅写 Docs/Extraction/WeaponMechanicsEvidence；`--audit --check` 重新读取源包并比对报告，不写文件。', ''])
+                  '```', '', '`--audit` 仅写 Artifacts/Extraction/WeaponMechanicsEvidence；`--audit --check` 重新读取源包并比对报告，不写文件。', ''])
     return '\n'.join(lines)
 
 

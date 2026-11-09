@@ -10,7 +10,7 @@ parser.add_argument('--ffmpeg', default='ffmpeg')
 args = parser.parse_args()
 project = Path(__file__).resolve().parents[2]
 saved = project / 'Saved/Stinger'
-docs = project / 'Docs/Stinger'
+docs = project / 'Artifacts/Stinger'
 capture = docs / 'WeaponVisibilityCapture'
 capture.mkdir(exist_ok=True)
 

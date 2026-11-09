@@ -79,7 +79,7 @@ for path in LAYOUTS:
     report.append({'layout': path, 'enabled': enabled, 'groups': grouped,
                    'cleared': [{'id': i, 'group': g} for i, g in cleared]})
 
-out = Path(unreal.Paths.project_dir()) / 'Docs/Extraction/RestorationEvidence/Loot/GuaranteedSafes.json'
+out = Path(unreal.Paths.project_dir()) / 'Artifacts/Extraction/RestorationEvidence/Loot/GuaranteedSafes.json'
 out.parent.mkdir(parents=True, exist_ok=True)
 # Keep a cumulative record: a rerun is idempotent and clears nothing, but it must not
 # erase the evidence of which points were de-grouped the first time.

@@ -11,7 +11,7 @@ parser.add_argument('--section',choices=['UI','Regression'],required=True)
 parser.add_argument('--failed',action='append',default=[],help='Retain a failed report summary separately; never count it as passed')
 parser.add_argument('runs',nargs='+')
 args=parser.parse_args()
-out=root/'Docs/Extraction/RestorationEvidence'/args.section
+out=root/'Artifacts/Extraction/RestorationEvidence'/args.section
 out.mkdir(parents=True,exist_ok=True)
 records=[]
 for tag in args.runs:

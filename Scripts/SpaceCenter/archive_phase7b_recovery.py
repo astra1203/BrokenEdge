@@ -10,7 +10,7 @@ from recover_phase7b_terrain import ASSETS
 
 
 def archive():
-    out = ROOT / 'Docs/Extraction/Phase7BEvidence'
+    out = ROOT / 'Artifacts/Extraction/Phase7BEvidence'
     out.mkdir(parents=True, exist_ok=False)
     records = []
 

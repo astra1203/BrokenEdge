@@ -16,7 +16,7 @@ from pathlib import Path
 import unreal
 
 ROOT = Path(unreal.Paths.project_dir()).resolve()
-AUDIT = ROOT / 'Docs/Extraction/RestorationEvidence/Loot/PlacementAudit.json'
+AUDIT = ROOT / 'Artifacts/Extraction/RestorationEvidence/Loot/PlacementAudit.json'
 FOLDER = '/Game/Extraction/Loot'
 LAYOUT = FOLDER + '/DA_SpaceCenter_Ma1_Loot'
 BASE_RECIPE = FOLDER + '/DA_ProjectLargeSafeRecipe'
