@@ -25,95 +25,95 @@
 RawContent/**/* filter=lfs diff=lfs merge=lfs -text
 
 # Preserve archived evidence bytes and the recorded SHA-256 values.
-Docs/Stinger/BaselineEvidence/** -text
+Artifacts/Stinger/BaselineEvidence/** -text
 # Treat preserved Windows line endings as line endings in JSON whitespace checks.
-Docs/Stinger/BaselineEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Stinger/BaselineEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 # Runtime logs retain their original whitespace.
-Docs/Stinger/BaselineEvidence/**/*.txt -whitespace
+Artifacts/Stinger/BaselineEvidence/**/*.txt -whitespace
 
 # SpaceCenter conversion and runtime evidence keeps its recorded bytes.
-Docs/SpaceCenter/Phase1Evidence/** -text
-Docs/SpaceCenter/Phase1Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/SpaceCenter/Phase1Evidence/**/*.txt -whitespace
+Artifacts/SpaceCenter/Phase1Evidence/** -text
+Artifacts/SpaceCenter/Phase1Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/SpaceCenter/Phase1Evidence/**/*.txt -whitespace
 
 # Phase-2 independent process and packaged acceptance evidence.
-Docs/Extraction/Phase2Evidence/** -text
-Docs/Extraction/Phase2Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase2Evidence/** -text
+Artifacts/Extraction/Phase2Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # Phase-3 inventory, looting and packaged acceptance evidence.
-Docs/Extraction/Phase3Evidence/** -text
-Docs/Extraction/Phase3Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase3Evidence/** -text
+Artifacts/Extraction/Phase3Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # Phase-4 extraction, persistence and crash recovery evidence.
-Docs/Extraction/Phase4Evidence/** -text
-Docs/Extraction/Phase4Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/Extraction/Phase4FixEvidence/** -text
-Docs/Extraction/Phase4FixEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/Extraction/Phase4LobbyFixEvidence/** -text
-Docs/Extraction/Phase4LobbyFixEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase4Evidence/** -text
+Artifacts/Extraction/Phase4Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase4FixEvidence/** -text
+Artifacts/Extraction/Phase4FixEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase4LobbyFixEvidence/** -text
+Artifacts/Extraction/Phase4LobbyFixEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # Phase-5 squad, ability and PVPVE acceptance evidence.
-Docs/Extraction/Phase5Evidence/** -text
-Docs/Extraction/Phase5Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase5Evidence/** -text
+Artifacts/Extraction/Phase5Evidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # Phase-6A equipment combat and packaged acceptance evidence.
-Docs/Extraction/Phase6AEvidence/** -text
-Docs/Extraction/Phase6AEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase6AEvidence/** -text
+Artifacts/Extraction/Phase6AEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # Phase-6B progression, economy and key-room acceptance evidence.
-Docs/Extraction/Phase6BEvidence/** -text
-Docs/Extraction/Phase6BEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase6BEvidence/** -text
+Artifacts/Extraction/Phase6BEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # Phase-7A north region, streaming and performance evidence.
-Docs/Extraction/Phase7AEvidence/** -text
-Docs/Extraction/Phase7AEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase7AEvidence/** -text
+Artifacts/Extraction/Phase7AEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # Phase-7B source recovery and explicitly blocked fidelity gate.
-Docs/Extraction/Phase7BEvidence/** -text
-Docs/Extraction/Phase7BEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/Extraction/Phase7BEvidence/**/*.glb filter=lfs diff=lfs merge=lfs -text
+Artifacts/Extraction/Phase7BEvidence/** -text
+Artifacts/Extraction/Phase7BEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase7BEvidence/**/*.glb filter=lfs diff=lfs merge=lfs -text
 
 # Phase-7C native reconstruction and packaged acceptance evidence.
-Docs/Extraction/Phase7CEvidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase7CEvidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 # Preserve trailing spaces emitted by build/editor logs as original evidence.
-Docs/Extraction/Phase7CEvidence/**/*.log whitespace=-blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/Extraction/Phase7CEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+Artifacts/Extraction/Phase7CEvidence/**/*.log whitespace=-blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase7CEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
 
 # Phase-7D source, native rendering and packaged acceptance evidence.
-Docs/Extraction/Phase7DEvidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/Extraction/Phase7DEvidence/**/*.log whitespace=-blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/Extraction/Phase7DEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+Artifacts/Extraction/Phase7DEvidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase7DEvidence/**/*.log whitespace=-blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase7DEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
 
 # Measured optic placement and direct visual acceptance.
-Docs/Extraction/OpticCalibrationEvidence/** -text
-Docs/Extraction/OpticCalibrationEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/OpticCalibrationEvidence/** -text
+Artifacts/Extraction/OpticCalibrationEvidence/**/*.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # Experience phase A evidence retains original bytes for SHA-256 verification.
-Docs/Extraction/ExperiencePhaseA/Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/Extraction/ExperiencePhaseA/Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+Artifacts/Extraction/ExperiencePhaseA/Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/ExperiencePhaseA/Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
 
 # Traversal evidence retains exact source/report bytes.
-Docs/Extraction/Traversal/Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/Extraction/Traversal/Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
-Docs/Extraction/Traversal/Evidence/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
+Artifacts/Extraction/Traversal/Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Traversal/Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+Artifacts/Extraction/Traversal/Evidence/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
 
 # Original rifle locomotion evidence preserves recorded SHA-256 bytes.
-Docs/Stinger/LocomotionEvidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/Stinger/LocomotionEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+Artifacts/Stinger/LocomotionEvidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Stinger/LocomotionEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
 
 # Military map evidence preserves the original bytes for SHA-256 verification.
-Docs/Extraction/Phase7SovietEvidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/Extraction/Phase7SovietEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+Artifacts/Extraction/Phase7SovietEvidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase7SovietEvidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
 # Preserve this captured diagnostic script verbatim, including its original trailing blank line.
-Docs/Extraction/Phase7SovietEvidence/diagnostics/ApplySovietVisuals.py whitespace=-blank-at-eof,blank-at-eol,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase7SovietEvidence/diagnostics/ApplySovietVisuals.py whitespace=-blank-at-eof,blank-at-eol,space-before-tab,cr-at-eol
 
 # Fixes 54-56 evidence retains recorded bytes and stores compressed reports in LFS.
-Docs/Extraction/Phase7Fix5456Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/Extraction/Phase7Fix5456Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+Artifacts/Extraction/Phase7Fix5456Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase7Fix5456Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
 
 # Fixes 57-67 evidence preserves source bytes across Windows checkouts.
-Docs/Extraction/Phase7Fix5767Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-Docs/Extraction/Phase7Fix5767Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
+Artifacts/Extraction/Phase7Fix5767Evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+Artifacts/Extraction/Phase7Fix5767Evidence/**/*.gz filter=lfs diff=lfs merge=lfs -text
 
 # Preserve the user's requirement notes verbatim, including trailing blank lines.
 "Docs/复刻三角洲行动的需求.txt" -text whitespace=-blank-at-eof,blank-at-eol,space-before-tab,cr-at-eol

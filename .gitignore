@@ -36,5 +36,9 @@ Saved/Autosaves/
 Saved/Backup/
 
 # Archived acceptance evidence includes nested Saved directories and original logs.
-!Docs/Extraction/Phase7DEvidence/**/
-!Docs/Extraction/Phase7DEvidence/**
+!Artifacts/Extraction/Phase7DEvidence/**/
+!Artifacts/Extraction/Phase7DEvidence/**
+
+# Ignore local .NET build output inside archived evidence.
+/Artifacts/Extraction/Phase7CEvidence/files/Scripts/SpaceCenter/Converter/obj/
+/Artifacts/Extraction/Phase7DEvidence/files/Scripts/SpaceCenter/Converter/obj/
