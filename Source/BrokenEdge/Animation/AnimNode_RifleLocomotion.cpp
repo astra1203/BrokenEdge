@@ -27,6 +27,8 @@ void FAnimNode_RifleLocomotion::PreUpdate(const UAnimInstance* Instance)
 		State->bRifleLocomotionEnabled = bEnabled;
 		State->RifleLocomotionAsset.Reset();
 	}
+	// 开镜时上半身改用旧状态机的 Ironsights 姿势；空中和冲刺保持新移动姿势。bAiming 已复制，远端玩家同样生效。
+	bWantsAimPose = bEnabled && Character->IsAiming() && !bFalling && !Character->IsSprinting();
 	if (!bEnabled)
 	{
 		bAirborne = false;
@@ -162,6 +164,8 @@ void FAnimNode_RifleLocomotion::Initialize_AnyThread(const FAnimationInitializeC
 	LandTime = -1.f;
 	JumpAlpha = 0.f;
 	JumpPose = nullptr;
+	bWantsAimPose = false;
+	AimPoseAlpha = 0.f;
 }
 
 void FAnimNode_RifleLocomotion::CacheBones_AnyThread(const FAnimationCacheBonesContext& Context)
@@ -169,6 +173,22 @@ void FAnimNode_RifleLocomotion::CacheBones_AnyThread(const FAnimationCacheBonesC
 	Source.CacheBones(Context);
 	Player.CacheBones_AnyThread(Context);
 	AimPlayer.CacheBones_AnyThread(Context);
+	// 紧凑骨骼序号里父骨骼总在子骨骼之前，顺序扫描一遍即可标出 Spine 子树。
+	const FBoneContainer& Bones = Context.AnimInstanceProxy->GetRequiredBones();
+	UpperBody.Init(false, Bones.GetCompactPoseNumBones());
+	SpineBone = PelvisBone = FCompactPoseBoneIndex(INDEX_NONE);
+	FBoneReference Spine;
+	Spine.BoneName = TEXT("Spine");
+	Spine.Initialize(Bones);
+	if (!Spine.IsValidToEvaluate(Bones)) return;
+	SpineBone = Spine.GetCompactPoseIndex(Bones);
+	PelvisBone = Bones.GetParentBoneIndex(SpineBone);
+	for (int32 Index = SpineBone.GetInt(); Index < UpperBody.Num(); ++Index)
+	{
+		const FCompactPoseBoneIndex Bone(Index);
+		const FCompactPoseBoneIndex Parent = Bones.GetParentBoneIndex(Bone);
+		UpperBody[Index] = Bone == SpineBone || (Parent.IsValid() && UpperBody[Parent.GetInt()]);
+	}
 }
 
 void FAnimNode_RifleLocomotion::Update_AnyThread(const FAnimationUpdateContext& Context)
@@ -177,6 +197,7 @@ void FAnimNode_RifleLocomotion::Update_AnyThread(const FAnimationUpdateContext& 
 	FrameDelta = Context.GetDeltaTime();
 	SmoothedAimYaw = FMath::FInterpTo(SmoothedAimYaw, AimYaw, Context.GetDeltaTime(), 12.f);
 	Weight = FMath::FInterpConstantTo(Weight, bEnabled ? 1.f : 0.f, Context.GetDeltaTime(), 1.f / .15f);
+	AimPoseAlpha = FMath::FInterpConstantTo(AimPoseAlpha, bWantsAimPose ? 1.f : 0.f, Context.GetDeltaTime(), 1.f / .15f);
 	if (Weight > 0.f)
 	{
 		Player.Update_AnyThread(Context);
@@ -188,6 +209,10 @@ void FAnimNode_RifleLocomotion::Evaluate_AnyThread(FPoseContext& Output)
 {
 	Source.Evaluate(Output);
 	if (Weight <= 0.f) return;
+	const bool bAimPose = AimPoseAlpha > 0.f && SpineBone.IsValid() && PelvisBone.IsValid()
+		&& UpperBody.Num() == Output.Pose.GetNumBones();
+	FCompactPose Legacy;
+	if (bAimPose) Legacy.CopyBonesFrom(Output.Pose);
 	FPoseContext Movement(Output);
 	Player.Evaluate_AnyThread(Movement);
 	if (JumpPose && JumpAlpha > 0.f)
@@ -201,6 +226,25 @@ void FAnimNode_RifleLocomotion::Evaluate_AnyThread(FPoseContext& Output)
 			const FCompactPoseBoneIndex Bone(Index);
 			Movement.Pose[Bone].Blend(Movement.Pose[Bone], Jump.Pose[Bone], JumpAlpha);
 		}
+	}
+	if (bAimPose)
+	{
+		// Spine 取旧姿势在网格空间的朝向（相对新姿势的髋部换算成局部），其余上半身骨骼直接取旧姿势的局部变换。
+		FCSPose<FCompactPose> Lower, Upper;
+		Lower.InitPose(Movement.Pose);
+		Upper.InitPose(Legacy);
+		const FQuat SpineRotation = Lower.GetComponentSpaceTransform(PelvisBone).GetRotation().Inverse()
+			* Upper.GetComponentSpaceTransform(SpineBone).GetRotation();
+		for (const FCompactPoseBoneIndex Bone : Movement.Pose.ForEachBoneIndex())
+		{
+			if (!UpperBody[Bone.GetInt()]) continue;
+			const FTransform& Current = Movement.Pose[Bone];
+			const FTransform Target = Bone == SpineBone
+				                          ? FTransform(SpineRotation, Current.GetTranslation(), Current.GetScale3D())
+				                          : Legacy[Bone];
+			Movement.Pose[Bone].Blend(Current, Target, AimPoseAlpha);
+		}
+		Movement.Pose.NormalizeRotations();
 	}
 	if (bAim)
 	{

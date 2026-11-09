@@ -118,4 +118,77 @@ bool FExtractionSwapPocketTest::RunTest(const FString&)
 		TEXT("Gear bundle has no personal pockets"), ExtractionItems::GridOf(Bundle, ExtractionGear::PocketGrid, Grid));
 	return true;
 }
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionSwapSlotTest, "BrokenEdge.Extraction.Inventory.SwapEquipmentSlots",
+                                 EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+
+bool FExtractionSwapSlotTest::RunTest(const FString&)
+{
+	FString Error;
+	// 拖动 Item 松手在 With 上：界面发出的交换请求。
+	auto SwapRequest = [](const FExtractionItem& Item, const FExtractionItem& With)
+	{
+		FExtractionItemRequest R;
+		R.Op = EExtractionItemOp::Swap;
+		R.Item = Item.Id;
+		R.SwapWith = With.Id;
+		R.Quantity = Item.Quantity;
+		R.Slot = With.Slot;
+		R.Cell = With.Cell;
+		R.AutoPlace = false;
+		return R;
+	};
+	FExtractionContainer Stash, Loadout;
+	Stash.Id = FGuid::NewGuid();
+	Stash.Width = 10;
+	Stash.Height = 12;
+	Loadout.Id = FGuid::NewGuid();
+	Loadout.WeaponSlots = Loadout.GearGrids = true;
+	const auto Spare = At(TEXT("PumpShotgun"), 2, 3);
+	Stash.Items = {Spare};
+	auto Held = ExtractionItems::Make(TEXT("BoltSniper"));
+	Held.Slot = 0;
+	Loadout.Items = {Held};
+
+	TestTrue(TEXT("Grid gun swaps into an occupied weapon slot"),
+	         ExtractionItems::Transfer(Stash, Loadout, SwapRequest(Spare, Held), Error));
+	TestTrue(TEXT("Dragged gun now holds the slot"), Loadout.InSlot(0) && Loadout.InSlot(0)->Id == Spare.Id);
+	const auto* Back = Stash.Find(Held.Id);
+	TestTrue(TEXT("Replaced gun goes back to the stash grid"), Back && Back->Slot == -1);
+	TestTrue(TEXT("Stash still validates"), ExtractionItems::Validate(Stash, Error));
+
+	auto Secondary = ExtractionItems::Make(TEXT("AK"));
+	Secondary.Slot = 1;
+	Loadout.Items.Add(Secondary);
+	TestTrue(TEXT("Primary and secondary weapons swap"),
+	         ExtractionItems::Transfer(Loadout, Loadout, SwapRequest(*Loadout.InSlot(0), Secondary), Error));
+	TestTrue(TEXT("Secondary moved to primary"), Loadout.InSlot(0) && Loadout.InSlot(0)->Id == Secondary.Id);
+	TestTrue(TEXT("Primary moved to secondary"), Loadout.InSlot(1) && Loadout.InSlot(1)->Id == Spare.Id);
+
+	const auto Bandage = At(TEXT("Bandage"), 0, 0);
+	Stash.Items.Add(Bandage);
+	const FString StashBefore = SnapshotInventory(Stash), LoadoutBefore = SnapshotInventory(Loadout);
+	TestFalse(TEXT("A bandage cannot take a weapon slot"),
+	          ExtractionItems::Transfer(Stash, Loadout, SwapRequest(Bandage, *Loadout.InSlot(0)), Error));
+	TestFalse(TEXT("A slotted gun cannot hand its slot to a bandage"),
+	          ExtractionItems::Transfer(Loadout, Stash, SwapRequest(*Loadout.InSlot(0), Bandage), Error));
+	TestEqual(TEXT("Failed slot swaps leave the stash unchanged"), SnapshotInventory(Stash), StashBefore);
+	TestEqual(TEXT("Failed slot swaps leave the loadout unchanged"), SnapshotInventory(Loadout), LoadoutBefore);
+
+	auto Pack = ExtractionItems::Make(TEXT("Bag_Hike"));
+	Pack.Slot = ExtractionGear::BagSlot;
+	Loadout.Items.Add(Pack);
+	TestTrue(TEXT("Pack holds an item"),
+	         ExtractionItems::AutoPlace(Loadout, ExtractionItems::Make(TEXT("Bandage")), ExtractionGear::BagGrid));
+	TestTrue(TEXT("Spare pack fits the stash"), ExtractionItems::AutoPlace(Stash, ExtractionItems::Make(TEXT("Bag_Test"))));
+	const FExtractionItem* SparePack = Stash.Items.FindByPredicate([](const FExtractionItem& I)
+	{
+		return I.Definition == TEXT("Bag_Test");
+	});
+	if (!TestNotNull(TEXT("Spare pack placed"), SparePack)) return false;
+	TestFalse(TEXT("A packed bag cannot be swapped off"),
+	          ExtractionItems::Transfer(Stash, Loadout, SwapRequest(*SparePack, Pack), Error));
+	TestEqual(TEXT("Packed bag swap explains why"), Error, FString(TEXT("请先清空这件装备里的物品")));
+	return true;
+}
 #endif

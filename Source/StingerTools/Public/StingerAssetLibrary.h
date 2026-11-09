@@ -71,6 +71,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
 	static int32 RenderWeaponIcon(class USkeletalMesh* Mesh, const FString& File, int32 Height, float Margin = .06f);
 	/**
+	 * 同上，但输出固定 CanvasWidth × Height 的画布，枪按比例缩放后居中、四周透明。
+	 * 画布取 2 的幂（如 512×256）时贴图可以生成 mipmap，界面缩小显示不会出现锯齿。CanvasWidth 为 0 时宽度随枪长。
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Validation")
+	static int32 RenderWeaponIconCanvas(class USkeletalMesh* Mesh, const FString& File, int32 CanvasWidth, int32 Height,
+	                                    float Margin = .06f);
+	/**
 	 * 烘焙关卡俯视地图：把所有带碰撞的静态网格（含实例化网格）按最高点光栅化成高度图，
 	 * 再做山体阴影和墙边描线，写成 Size×Size 的 PNG。上方 = 世界 +X（北），右方 = +Y。
 	 * 返回参与绘制的组件数，0 表示失败。

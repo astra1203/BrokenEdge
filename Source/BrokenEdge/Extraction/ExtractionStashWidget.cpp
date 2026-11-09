@@ -90,10 +90,12 @@ public:
 	}
 
 	// 物品左上角与尺寸：装备槽用固定卡片，网格物品按所在分区的原点与格子大小换算；分区不存在时放到画面外。
-	FVector2D Origin(const FExtractionItem& I, int32 Side) const
+	FVector2D Origin(const FExtractionItem& I, int32 Side) const { return OriginIn(Container(Side), I, Side); }
+
+	static FVector2D OriginIn(const FExtractionContainer* C, const FExtractionItem& I, int32 Side)
 	{
 		if (I.Slot >= 0) return Slot(I.Slot);
-		for (const auto& L : Layout(Container(Side), Side))
+		for (const auto& L : Layout(C, Side))
 			if (L.Grid.Section == I.Slot) return L.At + FVector2D(I.Cell.X, I.Cell.Y) * L.CellSize;
 		return FVector2D(-10000);
 	}
@@ -199,9 +201,33 @@ public:
 			const auto* I = Container(SelectedSide)->Find(Selected);
 			if (I)
 			{
+				// 落点预览只用本地快照模拟，最终以服务器为准：绿色移动、蓝色交换（蓝框是换下物品的去处）、琥珀合并、红色放不下。
+				FExtractionStorageRequest R;
+				FVector2D DropAt, DropSize;
+				FString Hint;
+				if (Resolve(Mouse, R, DropAt, DropSize))
+				{
+					const int32 ToSide = static_cast<int32>(R.To);
+					FExtractionContainer From = *Container(SelectedSide);
+					FExtractionContainer To = *Container(ToSide);
+					FString Error;
+					const bool bValid = ExtractionItems::Transfer(From, ToSide == SelectedSide ? From : To, R.Move, Error);
+					const bool bSwap = R.Move.Op == EExtractionItemOp::Swap;
+					const FLinearColor Color = !bValid ? ExtractionUIStyle::Hex(TEXT("EA5A50"))
+						: bSwap ? ExtractionUIStyle::Hex(TEXT("57B7EC"))
+						: R.Move.MergeInto.IsValid() ? ExtractionUIStyle::Accent() : ExtractionUIStyle::Hex(TEXT("5DBB72"));
+					Box(DropAt, DropSize, Color.CopyWithNewOpacity(.35f), 2);
+					if (bValid && bSwap)
+						if (const auto* Back = From.Find(R.Move.SwapWith))
+							Box(OriginIn(&From, *Back, SelectedSide), Size(*Back, SelectedSide),
+							    Color.CopyWithNewOpacity(.25f), 2);
+					Hint = !bValid ? Error : bSwap ? TEXT("交换位置") : R.Move.MergeInto.IsValid() ? TEXT("合并堆叠") : FString();
+				}
 				const FIntPoint E = Rotated ? FIntPoint(I->Size.Y, I->Size.X) : I->Size;
-				Box(Mouse, FVector2D(E.X, E.Y) * Cell, FLinearColor(.25, .65, .65, .8), 3);
-				Text(Mouse, FString::Printf(TEXT("× %d · R 旋转"), Quantity), 14, 4);
+				const FVector2D Floating = Mouse - GrabFraction * FVector2D(E.X, E.Y) * Cell;
+				Box(Floating, FVector2D(E.X, E.Y) * Cell, FLinearColor(.25, .65, .65, .8), 3);
+				Text(Floating, FString::Printf(TEXT("× %d · R 旋转"), Quantity), 14, 4);
+				if (!Hint.IsEmpty()) Text(Floating + FVector2D(0, E.Y * Cell + 4), Hint, 14, 4);
 			}
 		}
 		if (Menu && !Dragging)
@@ -346,6 +372,10 @@ public:
 		Selected = I->Id;
 		Quantity = I->Quantity;
 		Rotated = I->Rotated;
+		// 记住按下点在物品上的相对位置，拖动时物品跟着这一点走，不会跳到鼠标右下方；装备槽卡片按中心抓取。
+		GrabFraction = I->Slot >= 0
+			               ? FVector2D(.5f)
+			               : ((Mouse - Origin(*I, SelectedSide)) / Size(*I, SelectedSide)).ClampAxes(0.f, .999f);
 		if (E.GetEffectingButton() == EKeys::RightMouseButton)
 		{
 			MenuAt = {FMath::Min(Mouse.X, 960.f), FMath::Min(Mouse.Y, 690.f - MenuHeight())};
@@ -370,31 +400,10 @@ public:
 	{
 		if (!Dragging || E.GetEffectingButton() != EKeys::LeftMouseButton) return FReply::Unhandled();
 		Mouse = Position(G, E);
-		auto R = Request();
-		R.Move.AutoPlace = false;
-		for (int32 I = 0; I <= ExtractionGear::SafeSlot; ++I)
-			if (InsideStash(Mouse, Slot(I), SlotSize))
-			{
-				R.To = EExtractionStorageSide::Loadout;
-				R.Move.Slot = I;
-				Send(R);
-				return FReply::Handled().ReleaseMouseCapture();
-			}
-		int32 TargetSide = 0;
-		const auto* Target = Hit(Mouse, TargetSide);
-		for (int32 Side = 0; Side < 2; ++Side)
-			for (const auto& L : Layout(Container(Side), Side))
-			{
-				if (!InsideStash(Mouse, L.At, L.Extent())) continue;
-				R.To = static_cast<EExtractionStorageSide>(Side);
-				R.Move.Slot = L.Grid.Section;
-				const auto V = (Mouse - L.At) / L.CellSize;
-				R.Move.Cell = FIntPoint(FMath::FloorToInt(V.X), FMath::FloorToInt(V.Y));
-				if (Target && TargetSide == Side && Target->Id != Selected) R.Move.MergeInto = Target->Id;
-				Send(R);
-				return FReply::Handled().ReleaseMouseCapture();
-			}
-		Cancel();
+		FExtractionStorageRequest R;
+		FVector2D DropAt, DropSize;
+		if (Resolve(Mouse, R, DropAt, DropSize)) Send(R);
+		else Cancel();
 		return FReply::Handled().ReleaseMouseCapture();
 	}
 
@@ -443,6 +452,86 @@ private:
 
 	float MenuHeight() const { return 5.f + 31.f * (5 + EquipmentActions().Num()); }
 
+	// 把鼠标落点换算成请求（只读，不提交）；松手和拖动预览共用。At/Size 是落点在面板上的矩形。
+	// 装备槽有别的物品时交换；网格里鼠标下是同类未满堆叠时合并，是别的物品时交换；
+	// 鼠标在空格但占位只压到一件物品时，把那件换出去。拆分出的部分数量不交换。
+	bool Resolve(FVector2D P, FExtractionStorageRequest& R, FVector2D& DropAt, FVector2D& DropSize) const
+	{
+		const auto* Source = Container(SelectedSide);
+		const auto* Item = Source ? Source->Find(Selected) : nullptr;
+		if (!Item) return false;
+		R = Request();
+		R.Move.AutoPlace = false;
+		const bool bWhole = Quantity == Item->Quantity;
+		auto SwapWith = [&R](const FExtractionItem& Other)
+		{
+			R.Move.Op = EExtractionItemOp::Swap;
+			R.Move.SwapWith = Other.Id;
+		};
+		for (int32 I = 0; I <= ExtractionGear::SafeSlot; ++I)
+			if (InsideStash(P, Slot(I), SlotSize))
+			{
+				R.To = EExtractionStorageSide::Loadout;
+				R.Move.Slot = I;
+				if (const auto* Loadout = Container(1))
+					if (const auto* Occupant = Loadout->InSlot(I); bWhole && Occupant && Occupant->Id != Selected)
+						SwapWith(*Occupant);
+				DropAt = Slot(I);
+				DropSize = SlotSize;
+				return true;
+			}
+		const FIntPoint Ext = Rotated ? FIntPoint(Item->Size.Y, Item->Size.X) : Item->Size;
+		for (int32 Side = 0; Side < 2; ++Side)
+		{
+			const auto* Target = Container(Side);
+			for (const auto& L : Layout(Target, Side))
+			{
+				if (!InsideStash(P, L.At, L.Extent())) continue;
+				R.To = static_cast<EExtractionStorageSide>(Side);
+				R.Move.Slot = L.Grid.Section;
+				// 抓取点换算成物品左上角，再取最近的格子。
+				const FVector2D InGrid = (P - L.At) / L.CellSize;
+				const FVector2D Corner = InGrid - GrabFraction * FVector2D(Ext.X, Ext.Y);
+				R.Move.Cell = FIntPoint(FMath::RoundToInt(Corner.X), FMath::RoundToInt(Corner.Y));
+				bool bHovered = false;
+				for (const auto& Other : Target->Items)
+					if (Other.Id != Selected && Other.Slot == L.Grid.Section && InGrid.X >= Other.Cell.X
+						&& InGrid.Y >= Other.Cell.Y && InGrid.X < Other.Cell.X + Other.Extent().X
+						&& InGrid.Y < Other.Cell.Y + Other.Extent().Y)
+					{
+						bHovered = true;
+						const auto* D = UExtractionItemDefinition::Get(Item->Definition);
+						if (D && Other.Definition == Item->Definition && D->MaxStack > Other.Quantity)
+							R.Move.MergeInto = Other.Id;
+						else if (bWhole)
+						{
+							SwapWith(Other);
+							R.Move.Cell = Other.Cell;
+						}
+						break;
+					}
+				if (!bHovered && bWhole)
+				{
+					const FExtractionItem* Only = nullptr;
+					int32 Overlaps = 0;
+					for (const auto& Other : Target->Items)
+						if (Other.Id != Selected && Other.Slot == L.Grid.Section
+							&& R.Move.Cell.X < Other.Cell.X + Other.Extent().X && R.Move.Cell.X + Ext.X > Other.Cell.X
+							&& R.Move.Cell.Y < Other.Cell.Y + Other.Extent().Y && R.Move.Cell.Y + Ext.Y > Other.Cell.Y)
+						{
+							Only = &Other;
+							++Overlaps;
+						}
+					if (Overlaps == 1) SwapWith(*Only);
+				}
+				DropAt = L.At + FVector2D(R.Move.Cell.X, R.Move.Cell.Y) * L.CellSize;
+				DropSize = FVector2D(Ext.X, Ext.Y) * L.CellSize;
+				return true;
+			}
+		}
+		return false;
+	}
+
 	// 选中物品若是胸挂/背包/安全箱，返回它对应的装备槽，否则 -1。
 	int32 SelectedGearSlot() const
 	{
@@ -457,6 +546,8 @@ private:
 	bool Dragging = false, Menu = false, Splitting = false, Rotated = false;
 	FString SplitText;
 	FVector2D Mouse = FVector2D::ZeroVector, MenuAt = FVector2D::ZeroVector;
+	/** 抓取点在物品上的相对位置（0..1）。 */
+	FVector2D GrabFraction = FVector2D::ZeroVector;
 
 	void Cancel()
 	{

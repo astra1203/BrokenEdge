@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "ExtractionItems.generated.h"
+
+class UStaticMesh;
 // 物品定义与实例分离：DataAsset 提供稳定规则，实例保存数量、格位、弹匣、耐久与装配。
 // Id 表示独立实例，Definition 指向物品种类，Origins 的 Lot 表示可追踪的来源批次，三者不能混用。
 // 容器算法采用副本校验后提交；失败返回 false 并保留原数据，调用方负责权限与网络版本检查。

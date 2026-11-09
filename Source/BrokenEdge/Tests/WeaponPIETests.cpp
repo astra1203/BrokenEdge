@@ -571,4 +571,112 @@ bool FRifleLocomotionStabilityPIETest::RunTest(const FString&)
 	FAutomationTestFramework::Get().EnqueueLatentCommand(Restore);
 	return true;
 }
+
+/**
+ * 第一人称开镜时，别人看到的第三人称身体也要举枪贴脸：头部靠近枪管轴线，枪口朝准星方向。
+ * 采样世界人物网格（第一人称下仍逐帧更新骨骼），比较腰射与开镜两种姿势。
+ */
+class FThirdPersonAimPoseSequence : public IAutomationLatentCommand
+{
+public:
+	explicit FThirdPersonAimPoseSequence(FAutomationTestBase* InTest) : Test(InTest), Started(FPlatformTime::Seconds())
+	{
+	}
+
+	virtual bool Update() override
+	{
+		const double Now = FPlatformTime::Seconds();
+		if (Now - Started > 60.0)
+		{
+			Test->AddError(FString::Printf(TEXT("Third-person aim pose PIE timed out at step %d"), Step));
+			return true;
+		}
+		UWorld* W = GEditor ? GEditor->PlayWorld.Get() : nullptr;
+		auto* PC = W ? Cast<AExtractionPlayerController>(W->GetFirstPlayerController()) : nullptr;
+		auto* C = PC ? Cast<ABrokenEdgeCharacter>(PC->GetPawn()) : nullptr;
+		AWeapon* Weapon = C ? C->GetEquippedWeapon() : nullptr;
+		if (!Weapon || !C->IsFirstPersonView()) return false;
+		USkeletalMeshComponent* Gun = Weapon->GetWeaponMesh();
+		// 视点（眼睛高度）到枪管轴线的距离（cm）与枪管和瞄准方向的夹角（度）。
+		// Head 骨骼在后脑与颈部交界，离眼睛十几厘米，不能当作眼睛位置。
+		auto Measure = [&](float& EyeDistance, float& Angle)
+		{
+			const FVector Root = Gun->GetComponentLocation();
+			const FVector Axis = (Gun->GetSocketLocation(TEXT("MuzzleFlash")) - Root).GetSafeNormal();
+			EyeDistance = FMath::PointDistToLine(C->GetPawnViewLocation(), Axis, Root);
+			Angle = FMath::RadiansToDegrees(FMath::Acos(FMath::Clamp(
+				FVector::DotProduct(Axis, C->GetBaseAimRotation().Vector()), -1.f, 1.f)));
+		};
+		auto Mouse = [&](bool Down)
+		{
+			PC->InputKey(FInputKeyEventArgs::CreateSimulated(EKeys::RightMouseButton, Down ? IE_Pressed : IE_Released,
+			                                                 Down ? 1.f : 0.f));
+		};
+		switch (Step)
+		{
+		case 0:
+			StepAt = Now;
+			++Step;
+			return false;
+		case 1:
+			if (Now - StepAt < 1.0) return false;
+			Measure(HipDistance, HipAngle);
+			Mouse(true);
+			StepAt = Now;
+			++Step;
+			return false;
+		case 2:
+			// 等开镜混合（0.15 秒）和旧状态机的过渡结束。
+			if (Now - StepAt < 1.0) return false;
+			Measure(AimDistance, AimAngle);
+			Test->AddInfo(FString::Printf(
+				TEXT("Third-person aim pose: hip eye-to-barrel=%.1fcm angle=%.1f deg, aim eye-to-barrel=%.1fcm angle=%.1f deg"),
+				HipDistance, HipAngle, AimDistance, AimAngle));
+			Test->TestTrue(TEXT("Aim input reaches the character"), C->IsAiming());
+			Test->TestTrue(TEXT("Third-person body raises the gun towards the eye"), AimDistance < HipDistance - 5.f);
+			Test->TestTrue(TEXT("Raised gun stays near the eye line"), AimDistance < 20.f);
+			Test->TestTrue(TEXT("Raised gun points where the player aims"), AimAngle < 20.f);
+			Mouse(false);
+			StepAt = Now;
+			++Step;
+			return false;
+		case 3:
+		{
+			if (Now - StepAt < 1.0) return false;
+			float Distance = 0, Angle = 0;
+			Measure(Distance, Angle);
+			Test->TestTrue(TEXT("Releasing aim returns to the hip pose"), FMath::Abs(Distance - HipDistance) < 5.f);
+			++Step;
+			return true;
+		}
+		default:
+			return true;
+		}
+	}
+
+private:
+	FAutomationTestBase* Test;
+	double Started, StepAt = 0;
+	int32 Step = 0;
+	float HipDistance = 0, HipAngle = 0, AimDistance = 0, AimAngle = 0;
+};
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FThirdPersonAimPosePIETest, "BrokenEdge.Extraction.WeaponPIE.ThirdPersonAimPose",
+                                 EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FThirdPersonAimPosePIETest::RunTest(const FString&)
+{
+	const auto Restore = MakeShared<FRestoreWeaponPIESettings>();
+	auto* Settings = GetMutableDefault<ULevelEditorPlaySettings>();
+	Settings->SetPlayNetMode(PIE_Standalone);
+	Settings->SetPlayNumberOfClients(1);
+	Settings->SetRunUnderOneProcess(true);
+	Settings->bLaunchSeparateServer = false;
+	ADD_LATENT_AUTOMATION_COMMAND(FEditorLoadMap(TEXT("/Game/Extraction/Training/L_WeaponRange")));
+	ADD_LATENT_AUTOMATION_COMMAND(FStartPIECommand(false));
+	FAutomationTestFramework::Get().EnqueueLatentCommand(MakeShared<FThirdPersonAimPoseSequence>(this));
+	ADD_LATENT_AUTOMATION_COMMAND(FEndPlayMapCommand());
+	FAutomationTestFramework::Get().EnqueueLatentCommand(Restore);
+	return true;
+}
 #endif

@@ -83,6 +83,14 @@ inline FSlateBrush Panel(FLinearColor Fill, float Radius = 4.f, FLinearColor Out
 	return Brush;
 }
 
+	// 图标的原图像素尺寸。用导入尺寸而不是 GetSizeX/Y：编辑器里贴图异步编译期间后者是占位贴图的方形尺寸。
+	inline FIntPoint IconSize(const UTexture2D* Texture)
+	{
+		FIntPoint Size = Texture ? Texture->GetImportedSize() : FIntPoint::ZeroValue;
+		if (Size.X <= 0 || Size.Y <= 0) Size = Texture ? FIntPoint(Texture->GetSizeX(), Texture->GetSizeY()) : FIntPoint(1);
+		return FIntPoint(FMath::Max(1, Size.X), FMath::Max(1, Size.Y));
+	}
+
 // 同步加载并缓存软引用纹理，以强引用防止 GC 回收；按宽高比居中绘制，失败返回 false 供调用者显示文本。
 	inline bool Icon(FSlateWindowElementList& Draw, int32 Layer, const FGeometry& G,
 	                 FVector2D At, FVector2D Size, float Scale, const UExtractionItemDefinition* Definition)
@@ -95,9 +103,9 @@ inline FSlateBrush Panel(FLinearColor Fill, float Radius = 4.f, FLinearColor Out
 			Path, TStrongObjectPtr<UTexture2D>(Definition->Icon.LoadSynchronous()));
 		UTexture2D* Texture = Textures[Path].Get();
 		if (!Texture) return false;
-		const float Fit = FMath::Min(Size.X / FMath::Max(1, Texture->GetSizeX()),
-		                             Size.Y / FMath::Max(1, Texture->GetSizeY()));
-		const FVector2D ImageSize(Texture->GetSizeX() * Fit, Texture->GetSizeY() * Fit);
+		const FIntPoint Pixels = IconSize(Texture);
+		const float Fit = FMath::Min(Size.X / Pixels.X, Size.Y / Pixels.Y);
+		const FVector2D ImageSize(Pixels.X * Fit, Pixels.Y * Fit);
 		FSlateBrush Brush;
 		Brush.SetResourceObject(Texture);
 		Brush.ImageSize = ImageSize;

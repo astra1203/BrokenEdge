@@ -514,45 +514,38 @@ bool ExtractionItems::Validate(const FExtractionContainer& Container, FString& E
 
 namespace
 {
-	// Keep the displaced instance intact. Never merge it or rearrange a third item.
-	bool SwapGridItems(FExtractionContainer& Source, FExtractionContainer& Destination,
-	                   const FExtractionItemRequest& Request, FString& Error)
+	// 穿着的胸挂/背包/安全箱里还有东西：整件换下会让里面的物品失去所在网格。
+	bool HoldsGearContents(const FExtractionContainer& C, const FExtractionItem& I)
 	{
-		const auto* A = Source.Find(Request.Item);
-		const auto* B = Destination.Find(Request.SwapWith);
-		if (!A || !B || A->Id == B->Id || A->Slot >= 0 || B->Slot >= 0
-			|| Request.Quantity != A->Quantity || Request.Slot != B->Slot || Request.MergeInto.IsValid())
-		{
-			Error = TEXT("只能交换网格中的完整物品");
-			return false;
-		}
-		const FExtractionItem Original = *A;
-		FExtractionItem Displaced = *B;
-		const bool Same = &Source == &Destination;
-		FExtractionContainer From = Source, To = Destination;
-		auto& Target = Same ? From : To;
-		Target.Items.RemoveAll([&](const FExtractionItem& I) { return I.Id == Displaced.Id; });
-		FExtractionItemRequest Move = Request;
-		Move.Op = EExtractionItemOp::Transfer;
-		Move.AutoPlace = false;
-		Move.Cell = Displaced.Cell;
-		Move.SwapWith.Invalidate();
-		if (!ExtractionItems::Transfer(From, Target, Move, Error))
-		{
-			Error = TEXT("目标位置放不下拖动的物品");
-			return false;
-		}
+		return C.GearGrids && I.Slot >= ExtractionGear::RigSlot && I.Slot <= ExtractionGear::SafeSlot
+			&& C.Items.ContainsByPredicate([&](const FExtractionItem& X)
+			{
+				return X.Slot == ExtractionGear::GridForSlot(I.Slot);
+			});
+	}
+
+	// 被换下的物品回到拖动物品原来的位置：装备槽只能放回原槽；网格先试原格（两种朝向），再找同分区第一个空位。
+	bool PlaceDisplaced(FExtractionContainer& C, FExtractionItem Displaced, const FExtractionItem& Original)
+	{
 		Displaced.Slot = Original.Slot;
+		if (Original.Slot >= 0)
+		{
+			Displaced.Cell = FIntPoint::ZeroValue;
+			Displaced.Rotated = false;
+			if (!ExtractionItems::Fits(C, Displaced)) return false;
+			C.Items.Add(Displaced);
+			return true;
+		}
 		Displaced.Cell = Original.Cell;
 		const bool Rotation = Displaced.Rotated;
 		bool Placed = false;
 		for (int32 Turn = 0; Turn < 2 && !Placed; ++Turn)
 		{
 			Displaced.Rotated = Rotation != (Turn != 0);
-			Placed = ExtractionItems::Fits(From, Displaced);
+			Placed = ExtractionItems::Fits(C, Displaced);
 		}
 		ExtractionItems::FGrid Grid;
-		if (!Placed && ExtractionItems::GridOf(From, Original.Slot, Grid))
+		if (!Placed && ExtractionItems::GridOf(C, Original.Slot, Grid))
 			for (int32 Turn = 0; Turn < 2 && !Placed; ++Turn)
 			{
 				Displaced.Rotated = Rotation != (Turn != 0);
@@ -560,15 +553,64 @@ namespace
 					for (int32 X = 0; X < Grid.Width && !Placed; ++X)
 					{
 						Displaced.Cell = FIntPoint(X, Y);
-						Placed = ExtractionItems::Fits(From, Displaced);
+						Placed = ExtractionItems::Fits(C, Displaced);
 					}
 			}
-		if (!Placed)
+		if (Placed) C.Items.Add(Displaced);
+		return Placed;
+	}
+
+	// 两件完整物品互换位置，网格和装备槽都适用。被换下的物品保持原样，不合并、不挪动第三件物品。
+	bool SwapItems(FExtractionContainer& Source, FExtractionContainer& Destination,
+	               const FExtractionItemRequest& Request, FString& Error)
+	{
+		const auto* A = Source.Find(Request.Item);
+		const auto* B = Destination.Find(Request.SwapWith);
+		if (!A || !B || A->Id == B->Id || Request.Quantity != A->Quantity || Request.Slot != B->Slot
+			|| Request.MergeInto.IsValid())
 		{
-			Error = TEXT("来源分区没有空间放回被交换物品");
+			Error = TEXT("只能交换两件完整的物品");
 			return false;
 		}
-		From.Items.Add(Displaced);
+		if (HoldsGearContents(Source, *A) || HoldsGearContents(Destination, *B))
+		{
+			Error = TEXT("请先清空这件装备里的物品");
+			return false;
+		}
+		const FExtractionItem Original = *A;
+		const FExtractionItem Displaced = *B;
+		const bool Same = &Source == &Destination;
+		FExtractionContainer From = Source, To = Destination;
+		auto& Target = Same ? From : To;
+		Target.Items.RemoveAll([&](const FExtractionItem& I) { return I.Id == Displaced.Id; });
+		FExtractionItemRequest Move = Request;
+		Move.Op = EExtractionItemOp::Transfer;
+		Move.AutoPlace = false;
+		Move.SwapWith.Invalidate();
+		// 网格先放到请求的格子（鼠标落点），放不下再对齐被换物品的左上角；Transfer 失败不改动容器，可以重试。
+		bool Moved = false;
+		FString MoveError;
+		if (Displaced.Slot >= 0)
+		{
+			Move.Cell = FIntPoint::ZeroValue;
+			Moved = ExtractionItems::Transfer(From, Target, Move, MoveError);
+		}
+		else
+			for (const FIntPoint Cell : {Request.Cell, Displaced.Cell})
+			{
+				Move.Cell = Cell;
+				if ((Moved = ExtractionItems::Transfer(From, Target, Move, MoveError))) break;
+			}
+		if (!Moved)
+		{
+			Error = Displaced.Slot >= 0 ? TEXT("这件物品不能放进该装备槽") : TEXT("目标位置放不下拖动的物品");
+			return false;
+		}
+		if (!PlaceDisplaced(From, Displaced, Original))
+		{
+			Error = Original.Slot >= 0 ? TEXT("换下的物品不能放进原来的装备槽") : TEXT("原位置附近没有空间放回被交换的物品");
+			return false;
+		}
 		if (!ExtractionItems::Validate(From, Error) || (!Same && !ExtractionItems::Validate(To, Error))) return false;
 		if (!Same)
 		{
@@ -601,7 +643,7 @@ namespace
 bool ExtractionItems::Transfer(FExtractionContainer& Source, FExtractionContainer& Destination,
                                const FExtractionItemRequest& Request, FString& Error)
 {
-	if (Request.Op == EExtractionItemOp::Swap) return SwapGridItems(Source, Destination, Request, Error);
+	if (Request.Op == EExtractionItemOp::Swap) return SwapItems(Source, Destination, Request, Error);
 	const auto* Original = Source.Find(Request.Item);
 	if (!Original || Request.Quantity <= 0 || Request.Quantity > Original->Quantity)
 	{

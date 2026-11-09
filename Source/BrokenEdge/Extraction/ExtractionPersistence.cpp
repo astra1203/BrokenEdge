@@ -7,6 +7,7 @@
 #include "Misc/Paths.h"
 #include "Misc/SecureHash.h"
 #include "Misc/Crc.h"
+#include "Engine/World.h"
 // 服务器仓库的单写入者：每条日志保存完整候选状态，包含受影响档案、出战记录和带出批次数量。
 // 先校验候选副本，再追加带长度与 CRC 的记录并 Flush，成功后才替换内存 State。
 // GameInstanceSubsystem 跨关卡存活；它不是可复制 Actor，客户端通过 AccountComponent 获取自己的快照。
@@ -623,7 +624,7 @@ bool UExtractionPersistence::Move(FGuid Id, const FExtractionStorageRequest& R)
 	else
 	{
 		auto& From = R.From == EExtractionStorageSide::Stash ? V.Stash : V.Loadout;
-		if (R.Move.Op == EExtractionItemOp::Transfer)
+		if (R.Move.Op == EExtractionItemOp::Transfer || R.Move.Op == EExtractionItemOp::Swap)
 		{
 			if (!ExtractionItems::Transfer(From, Target, R.Move, Error)) return false;
 		}

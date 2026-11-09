@@ -28,6 +28,7 @@
 #include "PlayInEditorDataTypes.h"
 #include "Settings/LevelEditorPlaySettings.h"
 #include "GameFramework/PlayerController.h"
+#include "Engine/LocalPlayer.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputAction.h"
 #include "GameFramework/Pawn.h"
@@ -454,7 +455,13 @@ FString UStingerAssetLibrary::DescribeSkeletalVertices(USkeletalMesh* Mesh)
 
 int32 UStingerAssetLibrary::RenderWeaponIcon(USkeletalMesh* Mesh, const FString& File, int32 Height, float Margin)
 {
-	if (!Mesh || !Mesh->GetResourceForRendering() || !Mesh->GetResourceForRendering()->LODRenderData.Num()) return 0;
+	return RenderWeaponIconCanvas(Mesh, File, 0, Height, Margin);
+}
+
+int32 UStingerAssetLibrary::RenderWeaponIconCanvas(USkeletalMesh* Mesh, const FString& File, int32 CanvasWidth,
+                                                   int32 Height, float Margin)
+{
+	if (Height < 8 || CanvasWidth < 0 || !Mesh || !Mesh->GetResourceForRendering() || !Mesh->GetResourceForRendering()->LODRenderData.Num()) return 0;
 	const auto& Lod = Mesh->GetResourceForRendering()->LODRenderData[0];
 	const auto& Positions = Lod.StaticVertexBuffers.PositionVertexBuffer;
 	const auto* Indices = Lod.MultiSizeIndexContainer.GetIndexBuffer();
@@ -482,9 +489,15 @@ int32 UStingerAssetLibrary::RenderWeaponIcon(USkeletalMesh* Mesh, const FString&
 	FBox Flat(ForceInit);
 	for (uint32 I = 0; I < Positions.GetNumVertices(); ++I) Flat += Project(FVector(Positions.VertexPosition(I)));
 	const int32 Super = 4;
-	const double Inner = 1. - 2. * Margin;
-	const double Scale = Height * Inner / FMath::Max(1., Flat.GetSize().Y);
-	const int32 Width = FMath::Clamp(FMath::CeilToInt(Flat.GetSize().X * Scale + Height * 2. * Margin), 8, 4096);
+	// 四周留 Height × Margin 像素；固定画布时按宽高两个方向取较小缩放并居中。
+	const double Pad = Height * Margin;
+	double Scale = (Height - 2. * Pad) / FMath::Max(1., Flat.GetSize().Y);
+	if (CanvasWidth > 0) Scale = FMath::Min(Scale, (CanvasWidth - 2. * Pad) / FMath::Max(1., Flat.GetSize().X));
+	if (Scale <= 0) return 0;
+	const int32 Width = CanvasWidth > 0
+		                    ? CanvasWidth
+		                    : FMath::Clamp(FMath::CeilToInt(Flat.GetSize().X * Scale + 2. * Pad), 8, 4096);
+	const FVector2D Offset((Width - Flat.GetSize().X * Scale) * .5, (Height - Flat.GetSize().Y * Scale) * .5);
 	const int32 W = Width * Super, H = Height * Super;
 	TArray<float> Depth;
 	Depth.Init(TNumericLimits<float>::Lowest(), W * H);
@@ -493,8 +506,8 @@ int32 UStingerAssetLibrary::RenderWeaponIcon(USkeletalMesh* Mesh, const FString&
 	const FVector Light = FVector(.35, -.75, .55).GetSafeNormal(); // 投影空间：右上偏前方打光
 	const auto ToPixel = [&](const FVector& P)
 	{
-		return FVector((P.X - Flat.Min.X) * Scale * Super + Height * Margin * Super,
-		               (P.Y - Flat.Min.Y) * Scale * Super + Height * Margin * Super, P.Z);
+		return FVector(((P.X - Flat.Min.X) * Scale + Offset.X) * Super,
+		               ((P.Y - Flat.Min.Y) * Scale + Offset.Y) * Super, P.Z);
 	};
 	for (int32 T = 0; T + 2 < Indices->Num(); T += 3)
 	{

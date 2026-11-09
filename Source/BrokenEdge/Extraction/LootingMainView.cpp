@@ -149,13 +149,15 @@ void ULootingWidgetPart::SetItem(const FExtractionItem& Item)
 		if (Texture)
 		{
 			// 按物品占格尺寸等比缩放，长枪图标不会被压扁。
+			// 尺寸取导入时的原图大小：编辑器里贴图异步编译期间 GetSizeX/Y 返回占位贴图的方形尺寸，
+			// 笔刷一旦按它设成正方形，编译完成后也不会重算，图标会被压扁。
+			const FIntPoint Pixels = ExtractionUIStyle::IconSize(Texture);
 			const float CellPixels = Inventory ? Inventory->CellSize : 64.f;
 			const FVector2D Area = FVector2D(Item.Extent()) * CellPixels * .9f;
-			const float Fit = FMath::Min(Area.X / FMath::Max(1, Texture->GetSizeX()),
-			                             Area.Y / FMath::Max(1, Texture->GetSizeY()));
+			const float Fit = FMath::Min(Area.X / Pixels.X, Area.Y / Pixels.Y);
 			FSlateBrush Brush;
 			Brush.SetResourceObject(Texture);
-			Brush.ImageSize = FVector2D(Texture->GetSizeX(), Texture->GetSizeY()) * Fit;
+			Brush.ImageSize = FVector2D(Pixels) * Fit;
 			Icon->SetBrush(Brush);
 		}
 		Icon->SetVisibility(Texture ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
@@ -848,11 +850,23 @@ bool ULootingMainView::ResolveDrop(FVector2D Screen, FExtractionItemRequest& R, 
 	R = Request();
 	// 使用鼠标指定的目标槽位或格子，关闭自动寻找空位。
 	R.AutoPlace = false;
+	// 只有整件物品能交换；拆分出来的部分数量只能放到空位或合并。
+	const bool bWhole = R.Quantity == Item->Quantity;
+	auto SwapWith = [&R](const FExtractionItem& Other)
+	{
+		R.Op = EExtractionItemOp::Swap;
+		R.SwapWith = Other.Id;
+	};
 	for (const auto& Target : EquipmentTargets)
 		if (Contains(Target, Screen) && Target->ItemCanvas)
 		{
 			R.ToLoot = Target->bLoot;
 			R.Slot = Target->EquipmentSlot;
+			// 槽里已有别的物品：两件互换，换下的物品回到拖动物品原来的位置。
+			if (const auto* Dest = Container(Target->bLoot))
+				if (const auto* Occupant = Dest->InSlot(Target->EquipmentSlot);
+					bWhole && Occupant && Occupant->Id != Selected)
+					SwapWith(*Occupant);
 			Canvas = Target->ItemCanvas;
 			At = FVector2D::ZeroVector;
 			Size = Canvas->GetCachedGeometry().GetLocalSize();
@@ -878,24 +892,44 @@ bool ULootingMainView::ResolveDrop(FVector2D Screen, FExtractionItemRequest& R, 
 		const FVector2D Offset = ActiveDrag ? ActiveDrag->GrabFraction * FVector2D(Ext) : FVector2D::ZeroVector;
 		R.ToLoot = Side != 0;
 		R.Slot = View->Grid.Section;
-		R.Cell = FIntPoint(FMath::FloorToInt(InGrid.X - Offset.X), FMath::FloorToInt(InGrid.Y - Offset.Y));
-		// 用鼠标落点查找同分区内的其他物品作为合并候选；能否合并仍由请求处理逻辑判定。
+		// 拖拽时拖拽图像的左上角落在两格之间，取最近的格子（和看到的位置一致）；点击放置时取鼠标所在格。
+		const FVector2D Corner = InGrid - Offset;
+		R.Cell = ActiveDrag
+			         ? FIntPoint(FMath::RoundToInt(Corner.X), FMath::RoundToInt(Corner.Y))
+			         : FIntPoint(FMath::FloorToInt(Corner.X), FMath::FloorToInt(Corner.Y));
+		// 鼠标正下方的物品：同类且未满则合并，否则两件互换，拖动物品对齐到它的左上角。
+		bool bHovered = false;
 		for (const auto& Other : Target->Items)
 			if (Other.Id.IsValid() && Other.Id != Selected && Other.Slot == View->Grid.Section && InGrid.X >= Other.Cell.X
 				&& InGrid.Y >= Other.Cell.Y && InGrid.X < Other.Cell.X + Other.Extent().X
 				&& InGrid.Y < Other.Cell.Y + Other.Extent().Y)
 			{
+				bHovered = true;
 				const auto* D = UExtractionItemDefinition::Get(Item->Definition);
 				if (D && Other.Definition == Item->Definition && D->MaxStack > Other.Quantity)
 					R.MergeInto = Other.Id;
-				else
+				else if (bWhole)
 				{
-					R.Op = EExtractionItemOp::Swap;
-					R.SwapWith = Other.Id;
+					SwapWith(Other);
 					R.Cell = Other.Cell;
 				}
 				break;
 			}
+		// 鼠标落在空格，但物品的占位只压到一件物品：把那件换出去，拖动物品放在落点。
+		if (!bHovered && bWhole)
+		{
+			const FExtractionItem* Only = nullptr;
+			int32 Overlaps = 0;
+			for (const auto& Other : Target->Items)
+				if (Other.Id != Selected && Other.Slot == View->Grid.Section
+					&& R.Cell.X < Other.Cell.X + Other.Extent().X && R.Cell.X + Ext.X > Other.Cell.X
+					&& R.Cell.Y < Other.Cell.Y + Other.Extent().Y && R.Cell.Y + Ext.Y > Other.Cell.Y)
+				{
+					Only = &Other;
+					++Overlaps;
+				}
+			if (Overlaps == 1) SwapWith(*Only);
+		}
 		Canvas = Panel->ItemCanvas;
 		At = FVector2D(R.Cell.X, View->Top + R.Cell.Y) * CellSize;
 		Size = FVector2D(Ext) * CellSize - FVector2D(2);

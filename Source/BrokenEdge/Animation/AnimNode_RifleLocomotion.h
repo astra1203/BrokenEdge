@@ -39,6 +39,16 @@ struct BROKENEDGE_API FAnimNode_RifleLocomotion : public FAnimNode_Base
 	class UAnimSequence* JumpPose = nullptr;
 	float JumpPoseTime = 0.f;
 	float JumpAlpha = 0.f;
+	/**
+	 * 开镜上半身：新移动素材没有第三人称开镜动作，开镜时把 Spine 以上从 Source（旧状态机，已按 bAiming
+	 * 播放 Ironsights 姿势）混合进来，腿部仍用新移动。Spine 按网格空间朝向对齐，避免两套素材髋部朝向不同导致枪口偏转。
+	 */
+	bool bWantsAimPose = false;
+	float AimPoseAlpha = 0.f;
+	/** 按紧凑骨骼序号标记是否属于上半身（Spine 及其所有子骨骼）。 */
+	TArray<bool> UpperBody;
+	FCompactPoseBoneIndex SpineBone = FCompactPoseBoneIndex(INDEX_NONE);
+	FCompactPoseBoneIndex PelvisBone = FCompactPoseBoneIndex(INDEX_NONE);
 	virtual bool HasPreUpdate() const override { return true; }
 	virtual void PreUpdate(const UAnimInstance* Instance) override;
 	void UpdateJump(const class ABrokenEdgeCharacter* Character, const class URifleLocomotionSet* Set, bool bFalling);
