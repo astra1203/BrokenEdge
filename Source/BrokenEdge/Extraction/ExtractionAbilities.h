@@ -38,7 +38,7 @@ public:
 	float ReviveHealth = 30;
 	// 激素枪（官方 C101 技能 20010101）：一发弹，对准队友射出飞镖，否则给自己打；
 	// 出手时长取官方 FireInterval 0.66 s。冷却在解包数据里没有，保留项目值。
-	// 数据出处见 Docs/Extraction/RestorationEvidence/Stinger/OfficialKit.md。
+	// 数据出处见 Artifacts/Extraction/RestorationEvidence/Stinger/OfficialKit.md。
 	UPROPERTY(Config)
 	float HealSeconds = .66f;
 	/**

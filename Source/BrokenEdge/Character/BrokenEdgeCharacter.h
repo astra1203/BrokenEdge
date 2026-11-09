@@ -13,7 +13,6 @@ class UCameraComponent;
 class UAnimInstance;
 class UCombatComponent;
 class AWeapon;
-class UBoxComponent;
 enum class ETurningInPlace : uint8;
 class UInputAction;
 class UInputMappingContext;
@@ -127,10 +126,6 @@ public:
 	void UpdateHUDShield();
 	void UpdateHUDAmmo();
 
-	/** 命中碰撞盒映射 */ // unordered_map
-	UPROPERTY()
-	TMap<FName, UBoxComponent*> HitCollisionBoxes;
-
 	/** 获取战斗组件 */
 	FORCEINLINE TObjectPtr<UCombatComponent> GetCombat() const { return Combat; }
 	class UExtractionCombatComponent* GetExtractionCombat() const { return ExtractionCombat; }
@@ -142,79 +137,6 @@ public:
 	FORCEINLINE TObjectPtr<class UBuffComponent> GetBuff() const { return Buff; }
 
 	FORCEINLINE TObjectPtr<class ULagCompensationComponent> GetLagCompensation() const { return LagCompensation; }
-
-protected:
-	/** 头部碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* head = nullptr;
-
-	/** 骨盆碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* pelvis = nullptr;
-
-	/** 第二节脊椎碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* spine_02 = nullptr;
-
-	/** 第三节脊椎碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* spine_03 = nullptr;
-
-	/** 左上臂碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* upperarm_l = nullptr;
-
-	/** 右上臂碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* upperarm_r = nullptr;
-
-	/** 左前臂碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* lowerarm_l = nullptr;
-
-	/** 右前臂碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* lowerarm_r = nullptr;
-
-	/** 左手碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* hand_l = nullptr;
-
-	/** 右手碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* hand_r = nullptr;
-
-	/** 背包碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* backpack = nullptr;
-
-	/** 毯子碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* blanket = nullptr;
-
-	/** 左大腿碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* thigh_l = nullptr;
-
-	/** 右大腿碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* thigh_r = nullptr;
-
-	/** 左小腿碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* calf_l = nullptr;
-
-	/** 右小腿碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* calf_r = nullptr;
-
-	/** 左脚碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* foot_l = nullptr;
-
-	/** 右脚碰撞盒 */
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* foot_r = nullptr;
 
 public:
 	virtual void Jump() override;

@@ -53,6 +53,9 @@
 #include "UObject/UObjectIterator.h"
 #include "EngineUtils.h"
 #include "PhysicsEngine/BodySetup.h"
+#include "PhysicsEngine/PhysicsAsset.h"
+#include "PhysicsEngine/SkeletalBodySetup.h"
+#include "PhysicsAssetUtils.h"
 #include "BrokenEdge/Extraction/ExtractionWater.h"
 #include "MeshDescription.h"
 #include "AssetCompilingManager.h"
@@ -1359,4 +1362,64 @@ UFont* UStingerAssetLibrary::CreateFontFromFiles(const TArray<FString>& Files, c
 		Entry.Font = FFontData(Face);
 	}
 	return Save(Font) ? Font : nullptr;
+}
+
+bool UStingerAssetLibrary::ReplacePhysicsBodies(UPhysicsAsset* Asset, const TArray<FName>& BoneNames,
+                                                const TArray<int32>& Kinds, const TArray<FTransform>& Locals,
+                                                const TArray<FVector>& Sizes)
+{
+	const int32 Count = BoneNames.Num();
+	if (!Asset || Kinds.Num() != Count || Locals.Num() != Count || Sizes.Num() != Count) return false;
+	Asset->Modify();
+	while (Asset->ConstraintSetup.Num()) FPhysicsAssetUtils::DestroyConstraint(Asset, Asset->ConstraintSetup.Num() - 1);
+	while (Asset->SkeletalBodySetups.Num()) FPhysicsAssetUtils::DestroyBody(Asset, Asset->SkeletalBodySetups.Num() - 1);
+	const FPhysAssetCreateParams Params;
+	for (int32 Index = 0; Index < Count; ++Index)
+	{
+		int32 BodyIndex = Asset->FindBodyIndex(BoneNames[Index]);
+		if (BodyIndex == INDEX_NONE) BodyIndex = FPhysicsAssetUtils::CreateNewBody(Asset, BoneNames[Index], Params);
+		USkeletalBodySetup* Body = Asset->SkeletalBodySetups.IsValidIndex(BodyIndex)
+			                           ? Asset->SkeletalBodySetups[BodyIndex].Get()
+			                           : nullptr;
+		if (!Body) return false;
+		// 旧 Body 已全部删除；同一骨骼出现多次时把形状追加到同一个 Body。
+		Body->Modify();
+		const FTransform& Local = Locals[Index];
+		const FVector& Size = Sizes[Index];
+		switch (Kinds[Index])
+		{
+		case 0:
+			{
+				FKSphereElem Elem(Size.X);
+				Elem.Center = Local.GetLocation();
+				Body->AggGeom.SphereElems.Add(Elem);
+				break;
+			}
+		case 1:
+			{
+				FKSphylElem Elem(Size.X, Size.Y);
+				Elem.Center = Local.GetLocation();
+				Elem.Rotation = Local.Rotator();
+				Body->AggGeom.SphylElems.Add(Elem);
+				break;
+			}
+		case 2:
+			{
+				FKBoxElem Elem(Size.X, Size.Y, Size.Z);
+				Elem.Center = Local.GetLocation();
+				Elem.Rotation = Local.Rotator();
+				Body->AggGeom.BoxElems.Add(Elem);
+				break;
+			}
+		default:
+			return false;
+		}
+		Body->InvalidatePhysicsData();
+		Body->CreatePhysicsMeshes();
+	}
+	Asset->UpdateBodySetupIndexMap();
+	Asset->UpdateBoundsBodiesArray();
+	Asset->RefreshPhysicsAssetChange();
+	Asset->MarkPackageDirty();
+	return true;
 }

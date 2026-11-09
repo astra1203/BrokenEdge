@@ -9,6 +9,9 @@
 #include "ExtractionAbilities.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
+#include "BrokenEdge/Component/LagCompensationComponent.h"
+#include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
+#include "GameFramework/PlayerState.h"
 #include "BrokenEdge/Weapon/HitScanWeapon.h"
 #include "Animation/AnimMontage.h"
 #include "TimerManager.h"
@@ -350,16 +353,21 @@ void UExtractionCombatComponent::RequestShot(const FVector& Target)
 		C->GetCombat()->NotifyLocalShot();
 	const uint32 Id = ++LocalShotId;
 	SprintFire.PendingShot = false;
+	float ViewTime = -1.f;
 	if (!C->HasAuthority())
 	{
 		PendingShots.Add(Id, W);
 		C->GetCombat()->LocalFire(ResolveShot(Target, Id, true));
+		// 远端角色在本机画面上约落后服务器单程延迟，这就是开枪时看到的那一刻。
+		if (auto* PC = Cast<ABrokenEdgePlayerController>(C->GetController()))
+			ViewTime = PC->GetServerTime() - PC->SingleTripTime;
 	}
-	ServerRequestShot(Id, W, Target);
+	ServerRequestShot(Id, W, Target, ViewTime);
 }
 
 // 补齐当前武器配置版本并转发到版本化 RPC；旧调用入口仍接受同一套服务器检查。
-void UExtractionCombatComponent::ServerRequestShot(uint32 ShotId, AWeapon* Weapon, FVector_NetQuantize Target)
+void UExtractionCombatComponent::ServerRequestShot(uint32 ShotId, AWeapon* Weapon, FVector_NetQuantize Target,
+                                                   float ViewTime)
 {
 	const auto* Profile = Weapon ? WeaponMechanics::Find(Weapon->ExtractionDefinition) : nullptr;
 	ServerRequestShotVersioned(ShotId, Weapon, Target,
@@ -367,13 +375,24 @@ void UExtractionCombatComponent::ServerRequestShot(uint32 ShotId, AWeapon* Weapo
 		                           ? Weapon->ExtractionConfiguration
 		                           : Profile
 		                           ? Profile->Revision
-		                           : 0);
+		                           : 0, ViewTime);
+}
+
+float UExtractionCombatComponent::ServerRewindFor(float ViewTime) const
+{
+	const auto* C = Character();
+	if (ViewTime < 0 || !C || C->bExtractionGuard || C->IsLocallyControlled()) return 0.f;
+	double Limit = HitRewind::MaxRewindSeconds();
+	// 客户端时间可以伪造，再用服务器测得的往返延迟兜底：画面最多落后一个往返加少量插值余量。
+	if (const auto* PS = C->GetPlayerState()) Limit = FMath::Min(Limit, PS->GetPingInMilliseconds() * .0015 + .05);
+	return static_cast<float>(FMath::Clamp(GetWorld()->GetTimeSeconds() - ViewTime, 0., Limit));
 }
 
 // 按序号去重，核验武器归属、装配版本、瞄准方向、射速、弹药和动作互斥，再执行服务端命中。
 // 无论接受或拒绝都给拥有者回执，但绝不回传伪造请求指定的他人物品状态。
 void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint32 ShotId, AWeapon* Weapon,
-                                                                           FVector_NetQuantize Target, uint32 Revision)
+                                                                           FVector_NetQuantize Target, uint32 Revision,
+                                                                           float ViewTime)
 {
 	if (!IsEnabled()) return;
 	RefreshMechanics();
@@ -420,6 +439,7 @@ void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint3
 			                                      GuardSeed);
 		}
 		C->PlayFireMontage(Combat->bAiming);
+		Weapon->ServerRewindSeconds = ServerRewindFor(ViewTime);
 		Weapon->Fire(End);
 		if (auto* Inventory = C->GetExtractionInteraction()->Inventory()) Inventory->RecordShot(Weapon);
 		++AcceptedShots;

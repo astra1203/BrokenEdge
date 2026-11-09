@@ -49,6 +49,9 @@ namespace
 void AHitScanWeapon::Fire(const FVector& HitTarget)
 {
 	Super::Fire(HitTarget);
+	// 一次性参数：取出后立即清零，提前返回也不会遗留给下一次开火。
+	const float Rewind = ServerRewindSeconds;
+	ServerRewindSeconds = 0.f;
 
 	APawn* OwnerPawn = Cast<APawn>(GetOwner());
 	if (OwnerPawn == nullptr) return;
@@ -88,6 +91,7 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 					                             FMath::DegreesToRadians(PelletSpreadDegrees)) * Direction.Size();
 				Bullet->Initialize(Effective.IsValid() ? Effective : *Mechanics, Direction, Damage, HeadShotDamage,
 				                   ExtractionAmmoType, ImpactParticles, HitSound, BeamParticles);
+				if (HasAuthority()) Bullet->SetRewind(Rewind);
 				if (auto* ViewMesh = GetLocalFirstPersonMuzzleMesh(this))
 					if (auto* PC = Cast<APlayerController>(OwnerPawn->GetController()); PC && PC->PlayerCameraManager)
 						Bullet->SetVisualOrigin(UGameplayStatics::TransformWorldToFirstPerson(

@@ -542,7 +542,7 @@ public:
 					FVector End = Pawn->GetActorLocation() + FVector(0, 0, 8000);
 					if (Kind == TEXT("version"))
 						Combat->ServerRequestShotVersioned(
-							++Combat->LocalShotId, Pawn->GetEquippedWeapon(), End, 0);
+							++Combat->LocalShotId, Pawn->GetEquippedWeapon(), End, 0, -1.f);
 					else if (Kind == TEXT("duplicate")) Combat->ServerRequestShot(0, Pawn->GetEquippedWeapon(), End);
 					else if (Kind == TEXT("foreign"))
 					{

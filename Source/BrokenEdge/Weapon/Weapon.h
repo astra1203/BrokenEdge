@@ -174,6 +174,9 @@ public:
 
 	void UseImmediateServerHitScan() { if (HasAuthority()) bUseServerSideRewind = false; }
 
+	/** 服务器为下一次 Fire 生成的子弹设置的倒带时长（秒）；由搜打撤开火校验写入，Fire 用完即清零。 */
+	float ServerRewindSeconds = 0.f;
+
 	/**
  * @brief 武器掉落时调用
  */

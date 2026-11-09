@@ -16,6 +16,12 @@ public:
 	                FName Ammo, class UParticleSystem* Impact, class USoundCue* Sound, class UParticleSystem* Trail);
 	virtual void Tick(float DeltaSeconds) override;
 	void SetVisualOrigin(const FVector& Origin) { PreviousVisual = Origin; }
+	/**
+	 * 服务器延迟补偿：大于 0 时，角色不再按当前姿态扫掠，而是按"本步时刻 - Seconds"的历史物理资产姿态检测，
+	 * 即射手开枪时在屏幕上看到的位置。Seconds 已由服务器限制在倒带上限内。
+	 */
+	void SetRewind(float Seconds) { RewindSeconds = FMath::Max(0.f, Seconds); }
+	float GetRewind() const { return RewindSeconds; }
 
 private:
 	void UpdateTrail();
@@ -28,6 +34,7 @@ private:
 	bool bPredicted = false;
 	// 穿透后保留的伤害比例；每发子弹最多穿透一次。
 	float PenetrationScale = 1;
+	float RewindSeconds = 0;
 	bool bPenetrated = false;
 	FVector PreviousVisual = FVector::ZeroVector;
 	UPROPERTY(Replicated) TObjectPtr<class UParticleSystem> TrailEffect;

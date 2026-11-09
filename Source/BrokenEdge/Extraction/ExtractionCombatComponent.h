@@ -45,11 +45,15 @@ public:
 	// 销毁前清除镜头临时偏移和定时器，防止后续回调访问失效角色。
 	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
 	// 补齐当前武器配置版本并转发到版本化 RPC；旧调用入口仍接受同一套服务器检查。
-	void ServerRequestShot(uint32 ShotId, AWeapon* Weapon, FVector_NetQuantize Target);
+	// ViewTime 是射手开枪时屏幕上画面对应的服务器时间，小于 0 表示不做延迟补偿（AI、主机本地玩家）。
+	void ServerRequestShot(uint32 ShotId, AWeapon* Weapon, FVector_NetQuantize Target, float ViewTime = -1.f);
 	// 按序号去重，核验武器归属、装配版本、瞄准方向、射速、弹药和动作互斥，再执行服务端命中。
 	// 无论接受或拒绝都给拥有者回执，但绝不回传伪造请求指定的他人物品状态。
 	UFUNCTION(Server, Reliable)
-	void ServerRequestShotVersioned(uint32 ShotId, AWeapon* Weapon, FVector_NetQuantize Target, uint32 Revision);
+	void ServerRequestShotVersioned(uint32 ShotId, AWeapon* Weapon, FVector_NetQuantize Target, uint32 Revision,
+	                                float ViewTime);
+	// 服务器按客户端报告的画面时间计算倒带时长，并限制在倒带上限和该玩家实测延迟之内，防止伪造时间。
+	float ServerRewindFor(float ViewTime) const;
 	// 旧丢枪入口也转入背包事务，防止仅销毁 Actor 而保留可再次使用的物品。
 	UFUNCTION(Server, Reliable)
 	void ServerDropWeapon();

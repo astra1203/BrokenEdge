@@ -115,6 +115,15 @@ public:
 	static bool SetMontageSlotName(UAnimMontage* Montage, FName SlotName);
 	/** Install <Slot> plus a layered blend per bone right before the output pose.
 	 *  Melee attacks must not freeze the legs, and the weapon layer is inactive while the knife is out. */
+	/**
+	 * 用给定命中体替换物理资产的全部 Body（连同约束一起清掉；项目不使用布娃娃）。Python 不能增删 Body，只能走这里。
+	 * Kinds：0 球、1 胶囊（轴为局部 Z）、2 盒。Sizes：球 (半径,0,0)，胶囊 (半径,圆柱长度,0)，盒 (X,Y,Z) 全尺寸。
+	 * Locals 是形状相对骨骼的变换。只修改内存中的资产并标脏，保存由调用方负责。
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Stinger|Setup")
+	static bool ReplacePhysicsBodies(class UPhysicsAsset* Asset, const TArray<FName>& BoneNames,
+	                                 const TArray<int32>& Kinds, const TArray<FTransform>& Locals,
+	                                 const TArray<FVector>& Sizes);
 	UFUNCTION(BlueprintCallable, Category = "Stinger|Setup")
 	static bool ConfigureMeleeUpperBodySlot(UAnimBlueprint* Blueprint, FName SlotName, FName BranchBone);
 };

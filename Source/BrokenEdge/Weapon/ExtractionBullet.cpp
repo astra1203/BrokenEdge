@@ -1,6 +1,8 @@
 #include "ExtractionBullet.h"
 #include "BrokenEdge/Extraction/ExtractionBreakableGlass.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/Component/LagCompensationComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "BrokenEdge/Extraction/ExtractionHealth.h"
 #include "BrokenEdge/Extraction/ExtractionItems.h"
 #include "Components/SceneComponent.h"
@@ -78,6 +80,16 @@ void AExtractionBullet::Tick(float DeltaSeconds)
 	FCollisionQueryParams Query(SCENE_QUERY_STAT(ExtractionBullet), true, this);
 	Query.AddIgnoredActor(GetOwner());
 	Query.AddIgnoredActor(GetInstigator());
+	// 延迟补偿：有历史记录的角色从主扫掠中排除，改为对其倒带后的物理资产姿态单独检测。
+	const bool bRewind = HasAuthority() && !bPredicted && RewindSeconds > 0;
+	TArray<const AActor*> RewindIgnore;
+	if (bRewind)
+	{
+		TArray<AActor*> RewindActors;
+		ULagCompensationComponent::GetRewindActors(GetWorld(), RewindActors);
+		Query.AddIgnoredActors(RewindActors);
+		RewindIgnore.Add(GetInstigator());
+	}
 	// Retain time debt through a hitch, rather than increasing bullet speed or dropping travel.
 	for (int32 Work = 0; Accumulator >= Step && Work < 240; ++Work)
 	{
@@ -89,6 +101,24 @@ void AExtractionBullet::Tick(float DeltaSeconds)
 		FHitResult Hit;
 		GetWorld()->SweepSingleByChannel(Hit, Start, End, FQuat::Identity, ECC_Visibility,
 		                                 FCollisionShape::MakeSphere(Stats.Radius), Query);
+		FRewindHit Rewound;
+		// 本步结束时刻（尚未模拟的时间留在 Accumulator 里），再减去射手的延迟。
+		if (bRewind && ULagCompensationComponent::TraceWorldAt(
+			GetWorld(), GetWorld()->GetTimeSeconds() - Accumulator - RewindSeconds, Start,
+			Hit.bBlockingHit ? Hit.Location : End, Stats.Radius, RewindIgnore, Rewound))
+		{
+			// 倒带姿态比世界里的阻挡更近：改写为命中该角色的网格，后续伤害与表现走同一条路径。
+			Hit = FHitResult(Rewound.Character, Rewound.Character->GetMesh(), Rewound.Location,
+			                 -Velocity.GetSafeNormal());
+			Hit.bBlockingHit = true;
+			Hit.TraceStart = Start;
+			Hit.TraceEnd = End;
+			Hit.Time = Rewound.Fraction;
+			Hit.BoneName = Rewound.Bone;
+			if (CVarWeaponFlightLog.GetValueOnGameThread())
+				UE_LOG(LogTemp, Display, TEXT("EXTRACTION_BULLET_REWIND Bullet=%s Victim=%s Bone=%s Rewind=%.3f"),
+				       *GetName(), *GetNameSafe(Rewound.Character), *Rewound.Bone.ToString(), RewindSeconds);
+		}
 		const FVector Finish = Hit.bBlockingHit ? Hit.Location : End;
 		Distance += FVector::Distance(Start, Finish);
 		SetActorLocation(Finish);
