@@ -130,4 +130,4 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts/Test-LanSessions
 运行器创建独立 UE 进程，每轮记录命令、PID、Git 起点、工作区状态、日志、报告和退出码。关闭其他使用相同测试端口的实例后按顺序执行，保留正在调试的共享实例现场。重新配置资产使用独立
 PythonScript commandlet，避免通过 RiderLink 游戏线程同步执行批量导入。
 
-后续入口：[三角洲功能还原评估与实施路线](../三角洲功能还原评估与实施路线.md) 的阶段 1——验证一个室内及实际相邻室外区域的地图转换样本。
+后续入口：[三角洲功能还原评估与实施路线](../../Docs/三角洲功能还原评估与实施路线.md) 的阶段 1——验证一个室内及实际相邻室外区域的地图转换样本。

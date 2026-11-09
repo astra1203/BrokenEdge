@@ -196,7 +196,7 @@ const FVector Facing = SnapFacingToNormal(Camera, Front.ImpactNormal);
 `蜂医的人物模型和相关动画资产` 下四个分组：`01_完整人物模型`(5 GLB)、`02_蜂医角色动画`(100 PSA)、
 `03_蜂医技能动画`(157 PSA)、`04_通用男性动作`(186 PSA)，合计 **443 PSA**，与历史记录完全一致。
 
-抽样 12 个 PSA 做 sha256 比对历史清单（`Docs/Stinger/RepairImportManifest.json`）：**12/12 一致**，
+抽样 12 个 PSA 做 sha256 比对历史清单（`Artifacts/Stinger/RepairImportManifest.json`）：**12/12 一致**，
 说明这就是当初导入的同一份源，不是换了游戏版本。
 
 脚本原先写死 `D:\司晨\源代码和素材`（已删除），本轮把它们改成可配置，便于以后盘符再变：
@@ -291,7 +291,7 @@ $env:STINGER_REPAIR_REPORT='D:/project_Lu/Server/BrokenEdge/Saved/Stinger/Animat
 ## 复现
 
 ```powershell
-./Scripts/Stinger/audit_animation_matrix.py            # 资产盘点（纯本地，产出 Docs/Stinger/AnimationInventory.*）
+./Scripts/Stinger/audit_animation_matrix.py            # 资产盘点（纯本地，产出 Artifacts/Stinger/AnimationInventory.*）
 & "D:/UE_5.8/Engine/Build/BatchFiles/Build.bat" BrokenEdgeEditor Win64 Development `
     "D:/project_Lu/Server/BrokenEdge/BrokenEdge.uproject" -WaitMutex -NoUBA
 # 以下三条会写资产，必须关闭编辑器后执行
