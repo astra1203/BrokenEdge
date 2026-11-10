@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="从真实 C++ 源码理解 BrokenEdge 搜打撤：八章实现解析、函数调用链与交互实验。">
+  <title>搜打撤工程手册 · BrokenEdge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="topbar">
+    <a class="brand" href="#overview"><span class="brand-icon" aria-hidden="true">B<span>↗</span></span><span>BROKENEDGE <small>ENGINEERING NOTES / 01</small></span></a>
+    <div class="top-actions"><span class="offline"><i></i>离线源码手册</span><button id="theme" aria-label="切换深色主题">◐ <span>深色</span></button></div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" aria-label="教学目录">
+      <label class="searchbox"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="搜索功能、技术、函数…" aria-label="搜索章节及函数"><kbd>/</kbd></label>
+      <p class="nav-caption">学习路径 <span>8 CHAPTERS</span></p>
+      <nav id="navigation"></nav>
+      <div id="search-results" hidden aria-label="搜索结果"></div>
+      <div class="reading"><div><span>我的阅读进度</span><strong id="progress-text">0 / 8</strong></div><progress id="progress" max="8" value="0"></progress><button id="clear-progress" class="text-button">重置阅读记录</button></div>
+      <div class="side-note"><span class="tiny-label">READ THE IMPLEMENTATION</span><p>先理解一件物品的旅程，<br>再理解整场对局的规则。</p><a href="../从大厅到开火调用链.html">已有教程：大厅到开火 ↗</a><a href="../延迟补偿示意.html">已有教程：延迟补偿 ↗</a></div>
+    </aside>
+    <main id="main" tabindex="-1"></main>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <noscript><p>请启用 JavaScript 以查看教学内容。全部脚本保存在本地，不需要联网。</p></noscript>
+  <script src="content.js"></script>
+  <script src="sources.js"></script>
+  <script src="simulations.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

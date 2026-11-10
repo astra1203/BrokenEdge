@@ -216,6 +216,8 @@ git lfs status
 
 ## 项目文档
 
+- [搜打撤源码教学页面](Docs/ExtractionTutorial/index.html)：本地双击打开，包含八章实现解析、逐步函数调用链、真实源码及三个教学实验；无需安装依赖。维护方式见 [教程说明](Docs/ExtractionTutorial/README.md)。
+
 - [航天基地夜间实施记录：改动、验证与逐次推送](Artifacts/Extraction/Overnight-2026-11-03.md)
 - [搜打撤当前能力与官方差距核对](Artifacts/Extraction/OvernightEvidence/CurrentCapabilities.md)
 
