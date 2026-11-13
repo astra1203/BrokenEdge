@@ -1,0 +1,39 @@
+{
+  "task": "input",
+  "started_utc": "2026-11-13T07:15:03.664845+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp11_cancel_20261113_02\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Input",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp11_cancel_20261113_02\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "bbf1f4a82109bb8d9c0dbe0be25313ade04d1d5e",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Extraction/run_editor_task.py\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.h\n M Source/BrokenEdge/Component/CombatComponent.h\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.h\n?? Docs/Artifacts/TechnicalDebt/WP11/\n?? \"Docs/\\350\\276\\223\\345\\205\\245\\345\\212\\250\\344\\275\\234\\346\\270\\205\\345\\215\\225.md\"\n?? Scripts/Extraction/audit_input_actions.py\n?? Source/BrokenEdge/Tests/ExtractionInputTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "4e10d9a739eaf36e27e021d971d41bd394fbf3c43f34624291ca26302e6355e4",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp11_cancel_20261113_02\\Run.json",
+  "exit_code": 0,
+  "pid": 12088,
+  "successful_tests": 1,
+  "result": "passed",
+  "finished_utc": "2026-11-13T07:15:24.268533+00:00"
+}

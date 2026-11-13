@@ -163,6 +163,8 @@ public:
 	void DropButtonPressed();
 	void FireButtonPressed();
 	void FireButtonReleased();
+	// Cancellation must work even after gameplay is disabled or the pawn is defeated.
+	void StopHeldCombatInput();
 
 	/** 获取瞄准偏移偏航值 */
 	FORCEINLINE float GetAO_Yaw() const { return AO_Yaw; }

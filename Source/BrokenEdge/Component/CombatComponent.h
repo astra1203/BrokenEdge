@@ -23,6 +23,7 @@ class BROKENEDGE_API UCombatComponent : public UActorComponent
 	void AttachSwappedWeapons();
 
 public:
+	bool IsFireInputHeld() const { return bFireButtonPressed; }
 	// Sets default values for this component's properties
 	UCombatComponent();
 

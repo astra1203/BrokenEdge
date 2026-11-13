@@ -1,0 +1,6 @@
+[2026.11.13-07.12.45:377][983]LogAutomationController: Display: Test Completed. Result={Success} Name={InputAndAssembly} Path={BrokenEdge.Extraction.WeaponPIE.InputAndAssembly}
+[2026.11.13-07.12.49:209][195]LogAutomationController: Display: Test Completed. Result={Success} Name={RifleLocomotionStability} Path={BrokenEdge.Extraction.WeaponPIE.RifleLocomotionStability}
+[2026.11.13-07.12.56:827][632]LogAutomationController: Display: Test Completed. Result={Success} Name={SprintTransitions} Path={BrokenEdge.Extraction.WeaponPIE.SprintTransitions}
+[2026.11.13-07.13.00:131][809]LogAutomationController: Error: Test Completed. Result={Fail} Name={ThirdPersonAimPose} Path={BrokenEdge.Extraction.WeaponPIE.ThirdPersonAimPose}
+[2026.11.13-07.13.00:131][809]LogAutomationController: Third-person aim pose: hip eye-to-barrel=37.2cm angle=46.0 deg, aim eye-to-barrel=26.9cm angle=8.9 deg
+[2026.11.13-07.13.00:131][809]LogAutomationController: Error: Expected 'Raised gun stays near the eye line' to be true. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\WeaponPIETests.cpp(639)]

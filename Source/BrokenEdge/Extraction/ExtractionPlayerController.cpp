@@ -1,4 +1,5 @@
 #include "ExtractionPlayerController.h"
+#include "Framework/Application/SlateApplication.h"
 #include "ExtractionDoor.h"
 #include "ExtractionWidget.h"
 #include "ExtractionTacticalMap.h"
@@ -136,6 +137,7 @@ void AExtractionPlayerController::ToggleExtractionMenu()
 		}
 	}
 	bMenuOpen = !bMenuOpen;
+	if (bMenuOpen) StopHeldActions();
 }
 
 // 切换只读战术地图，必要时关闭背包；HitTestInvisible 使地图不截获游戏鼠标输入。
@@ -167,6 +169,7 @@ UExtractionInteractionComponent* AExtractionPlayerController::Interaction() cons
 void AExtractionPlayerController::RequestOpenInventory(AExtractionLootActor* Target, bool bOpen)
 {
 	if (bOpen && TacticalMap && TacticalMap->IsInViewport()) TacticalMap->RemoveFromParent();
+	if (bOpen) StopHeldActions();
 	auto* I = Interaction();
 	if (!I) return;
 	LocalInventorySession = FMath::Max(LocalInventorySession, I->Session) + 1;
@@ -220,6 +223,37 @@ void AExtractionPlayerController::HealReleased()
 	}
 	HealDownAt = -1;
 	bHealHoldUsed = false;
+}
+
+void AExtractionPlayerController::StopHeldActions()
+{
+	bAimingGrenade = false;
+	bAimingGrenadeLow = false;
+	HealDownAt = -1;
+	bHealHoldUsed = false;
+	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()))
+	{
+		C->StopHeldCombatInput();
+		C->GetExtractionAbilities()->ReleaseRescue();
+	}
+}
+
+void AExtractionPlayerController::HandleApplicationActivation(bool bActive)
+{
+	if (!bActive && IsLocalController()) StopHeldActions();
+}
+
+void AExtractionPlayerController::OnPossess(APawn* InPawn)
+{
+	StopHeldActions();
+	Super::OnPossess(InPawn);
+	StopHeldActions();
+}
+
+void AExtractionPlayerController::OnUnPossess()
+{
+	StopHeldActions();
+	Super::OnUnPossess();
 }
 
 // 发起烟雾能力请求（高抛），出手方向与冷却在服务器处理。
@@ -602,6 +636,13 @@ void AExtractionPlayerController::GetPlayerViewPoint(FVector& OutLocation, FRota
 void AExtractionPlayerController::Tick(float Delta)
 {
 	Super::Tick(Delta);
+	if (IsLocalController())
+	{
+		const auto* I = Interaction();
+		const bool bActionable = I && I->CanAct() && !I->InventoryOpen && !bMenuOpen;
+		if (bInputWasActionable && !bActionable) StopHeldActions();
+		bInputWasActionable = bActionable;
+	}
 	// 长按 V 到时：给自己打针（播自用动作），松开时不再切枪。
 	if (HealDownAt >= 0 && !bHealHoldUsed && IsLocalController()
 		&& GetWorld()->GetTimeSeconds() - HealDownAt >= HealHoldSeconds)
@@ -746,6 +787,9 @@ void AExtractionPlayerController::LocalSessionDestroyed(bool bSuccess)
 // 移除本地 UI、观战相机、重试定时器和会话委托，防止关卡切换后仍收到旧回调。
 void AExtractionPlayerController::EndPlay(const EEndPlayReason::Type Reason)
 {
+	StopHeldActions();
+	if (FSlateApplication::IsInitialized())
+		FSlateApplication::Get().OnApplicationActivationStateChanged().RemoveAll(this);
 	if (TacticalMap) TacticalMap->RemoveFromParent();
 	GetWorldTimerManager().ClearTimer(LeaveRetryTimer);
 	if (ExtractionWidget) ExtractionWidget->RemoveFromParent();
@@ -763,6 +807,8 @@ void AExtractionPlayerController::EndPlay(const EEndPlayReason::Type Reason)
 void AExtractionPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	if (IsLocalController() && FSlateApplication::IsInitialized())
+		FSlateApplication::Get().OnApplicationActivationStateChanged().AddUObject(this, &ThisClass::HandleApplicationActivation);
 	EnsureLocalWidgets();
 }
 

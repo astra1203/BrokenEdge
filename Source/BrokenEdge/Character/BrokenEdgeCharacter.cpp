@@ -507,6 +507,8 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		                                   &ABrokenEdgeCharacter::AimButtonPressed);
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this,
 		                                   &ABrokenEdgeCharacter::AimButtonReleased);
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Canceled, this,
+		                                   &ABrokenEdgeCharacter::AimButtonReleased);
 
 		//换子弹
 		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this,
@@ -520,6 +522,8 @@ void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this,
 		                                   &ABrokenEdgeCharacter::FireButtonPressed);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this,
+		                                   &ABrokenEdgeCharacter::FireButtonReleased);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Canceled, this,
 		                                   &ABrokenEdgeCharacter::FireButtonReleased);
 	}
 	else
@@ -1929,8 +1933,6 @@ void ABrokenEdgeCharacter::AimButtonPressed()
 
 void ABrokenEdgeCharacter::AimButtonReleased()
 {
-	if (Combat && Combat->bHoldingTheFlag) return;
-	if (bDisableGameplay) return;
 	if (Combat)
 	{
 		Combat->SetAiming(false);
@@ -1993,12 +1995,19 @@ void ABrokenEdgeCharacter::FireButtonPressed()
  */
 void ABrokenEdgeCharacter::FireButtonReleased()
 {
-	if (Combat && Combat->bHoldingTheFlag) return;
-	if (bDisableGameplay) return;
 	if (Combat)
 	{
 		Combat->FireButtonPressed(false);
 	}
+}
+
+void ABrokenEdgeCharacter::StopHeldCombatInput()
+{
+	FireButtonReleased();
+	AimButtonReleased();
+	ExtractionCombat->HoldBreathReleased();
+	SprintReleased();
+	StopJumping();
 }
 
 

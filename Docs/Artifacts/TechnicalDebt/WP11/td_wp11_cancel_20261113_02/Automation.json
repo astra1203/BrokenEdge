@@ -1,0 +1,44 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "E8E73B3E459C9F96E05A688E69060851",
+			"instanceName": "OREKI-LEGION-12088",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-07.15.24",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.01964699849486351,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "CancelHeldActions",
+			"fullTestPath": "BrokenEdge.Extraction.Input.CancelHeldActions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E8E73B3E459C9F96E05A688E69060851"
+			],
+			"duration": 0.01964699849486351,
+			"dateTime": "2026.11.13-07.15.23",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

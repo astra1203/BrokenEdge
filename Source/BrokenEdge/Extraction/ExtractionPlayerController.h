@@ -48,6 +48,11 @@ public:
 	virtual void GetPlayerViewPoint(FVector& OutLocation, FRotator& OutRotation) const override;
 	// 在父类输入之上绑定菜单、背包、地图、医疗、能力和武器槽；E 松开用于停止救援。
 	virtual void SetupInputComponent() override;
+	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
+	// Cancel held gestures without interpreting cancellation as a release/throw/tap.
+	void StopHeldActions();
+	void HandleApplicationActivation(bool bActive);
 	// 移除本地 UI、观战相机、重试定时器和会话委托，防止关卡切换后仍收到旧回调。
 	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
 	// 观战目标与观战标记仅同步给控制器拥有者，其他玩家不需要该私有视角状态。
@@ -118,6 +123,7 @@ public:
 	void HealReleased();
 	double HealDownAt = -1;
 	bool bHealHoldUsed = false;
+	bool bInputWasActionable = false;
 	static constexpr double HealHoldSeconds = .35;
 	// 发起烟雾能力请求，落点与冷却在服务器处理。
 	void SmokeAbility();
