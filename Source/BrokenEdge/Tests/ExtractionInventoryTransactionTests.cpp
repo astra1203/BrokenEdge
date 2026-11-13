@@ -4,6 +4,7 @@
 #include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
 #include "BrokenEdge/Extraction/ExtractionLootActor.h"
 #include "Engine/World.h"
+#include "BrokenEdge/Weapon/Weapon.h"
 #include "UObject/Class.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionInventoryTransactionTest,
@@ -89,6 +90,72 @@ bool FExtractionInventoryTransactionTest::RunTest(const FString&)
             TestTrue(TEXT("Origin lot identity and quantity preserved"),
                 FExtractionOrigin::StaticStruct()->CompareScriptStruct(&Received->Origins[Index], &Ammo.Origins[Index], 0));
     }
+    // Consumables must reject unknown/non-consumable GUIDs and remove exactly one origin unit.
+    auto Medkit = ExtractionItems::Make(TEXT("Medkit"));
+    TestTrue(TEXT("Place medical item"), ExtractionItems::AutoPlace(Inventory->Contents, Medkit));
+    const int32 MedicalRevision = Inventory->Contents.Revision;
+    TestTrue(TEXT("Medical consumption commits"), Inventory->ConsumeOne(Medkit.Id).Ok());
+    TestNull(TEXT("Last unit removes medical GUID"), Inventory->Contents.Find(Medkit.Id));
+    TestEqual(TEXT("Consume advances once"), Inventory->Contents.Revision, MedicalRevision + 1);
+    const auto AfterMedical = Inventory->Contents;
+    TestFalse(TEXT("Cannot consume same item twice"), Inventory->ConsumeOne(Medkit.Id).Ok());
+    TestTrue(TEXT("Duplicate consumption has no effect"), Same(AfterMedical, Inventory->Contents));
+
+    // A synthetic stack exercises provenance accounting even when current medical assets stack to one.
+    Medkit.Quantity = 2;
+    Medkit.Origins.Reset();
+    ExtractionItems::SeedOrigins(Medkit);
+    Inventory->Contents.Items.Add(Medkit);
+    TestTrue(TEXT("Consume one from stack"), Inventory->ConsumeOne(Medkit.Id).Ok());
+    const auto* RemainingMedical = Inventory->Contents.Find(Medkit.Id);
+    if (TestNotNull(TEXT("Stack GUID retained"), RemainingMedical))
+    {
+        TestEqual(TEXT("Only one unit consumed"), RemainingMedical->Quantity, 1);
+        int32 OriginQuantity = 0;
+        for (const auto& Origin : RemainingMedical->Origins) OriginQuantity += Origin.Quantity;
+        TestEqual(TEXT("Only one origin unit consumed"), OriginQuantity, 1);
+    }
+
+    auto Gun = ExtractionItems::Make(TEXT("AK"));
+    Gun.Slot = 0;
+    Gun.Magazine = 0;
+    Gun.MagazineOrigins.Reset();
+    Inventory->Contents.WeaponSlots = true;
+    Inventory->Contents.Items.Add(Gun);
+    TestFalse(TEXT("Weapons cannot use ConsumeOne"), Inventory->ConsumeOne(Gun.Id).Ok());
+    auto Reserve = ExtractionItems::Make(Gun.MagazineAmmo, 10);
+    TestTrue(TEXT("Seed reload reserve"), ExtractionItems::AutoPlace(Inventory->Contents, Reserve));
+    const auto* GunDef = UExtractionItemDefinition::Get(Gun.Definition);
+    auto* Weapon = GunDef ? World->SpawnActor<AWeapon>(GunDef->WeaponClass) : nullptr;
+    if (TestNotNull(TEXT("Weapon for ammo integration"), Weapon))
+    {
+        Weapon->ExtractionItemId = Gun.Id;
+        Weapon->SetExtractionAmmo(0);
+        const int32 BeforeReload = Inventory->Contents.Revision;
+        const int32 Loaded = Inventory->Reload(Weapon);
+        TestEqual(TEXT("Reload consumes reserve"), Loaded, FMath::Min(10, Weapon->GetMagCapacity()));
+        TestTrue(TEXT("Reload adds ammo"), Loaded > 0);
+        TestEqual(TEXT("Reload advances once"), Inventory->Contents.Revision, BeforeReload + 1);
+        TestEqual(TEXT("Actor and inventory magazine agree"), Inventory->Contents.Find(Gun.Id)->Magazine, Weapon->GetAmmo());
+        Weapon->SetExtractionAmmo(Weapon->GetAmmo() - 1);
+        Inventory->RecordShot(Weapon);
+        TestEqual(TEXT("Shot advances once"), Inventory->Contents.Revision, BeforeReload + 2);
+        const auto* FiredGun = Inventory->Contents.Find(Gun.Id);
+        int32 MagazineOrigins = 0;
+        for (const auto& Origin : FiredGun->MagazineOrigins) MagazineOrigins += Origin.Quantity;
+        TestEqual(TEXT("Shot consumes one magazine origin"), MagazineOrigins, Weapon->GetAmmo());
+    }
+    const auto BeforeClear = Inventory->Contents;
+    // Clear has no guns to restore, isolating the failure boundary from asset spawning during rollback.
+    Inventory->Contents.Items.RemoveAll([&](const auto& Item) { return Item.Id == Gun.Id; });
+    const auto ClearCandidate = Inventory->Contents;
+    Inventory->FailNextWeaponSyncForTest();
+    Inventory->ClearSettled();
+    TestTrue(TEXT("Failed clear preserves inventory"), Same(ClearCandidate, Inventory->Contents));
+    TestFalse(TEXT("Failed clear does not mark dropped"), Inventory->WasDropped());
+    Inventory->ClearSettled();
+    TestTrue(TEXT("Successful clear empties inventory"), Inventory->Contents.Items.IsEmpty());
+    TestTrue(TEXT("Successful clear marks dropped"), Inventory->WasDropped());
     World->DestroyWorld(false);
     return true;
 }

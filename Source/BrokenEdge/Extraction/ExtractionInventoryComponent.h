@@ -31,6 +31,8 @@ public:
 	// Origin/GUID changes (including split, merge and consumption) belong to Edit's primitives.
 	FExtractionInventoryResult Mutate(TFunctionRef<bool(FExtractionContainer&, FString&)> Edit,
 		int32 ExpectedRevision = INDEX_NONE, bool bSyncWeapons = true);
+	// Consume one medical/throwable item, including one unit of provenance; no weapon sync needed.
+	FExtractionInventoryResult ConsumeOne(FGuid ItemId);
 	static FExtractionInventoryResult MutatePair(UExtractionInventoryComponent& Inventory,
 		class AExtractionLootActor& Loot,
 		TFunctionRef<bool(FExtractionContainer&, FExtractionContainer&, FString&)> Edit,

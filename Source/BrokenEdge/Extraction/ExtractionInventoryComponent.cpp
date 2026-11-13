@@ -51,6 +51,25 @@ FExtractionInventoryResult UExtractionInventoryComponent::Mutate(
 	return CommitCandidate(MoveTemp(Candidate), bSyncWeapons);
 }
 
+FExtractionInventoryResult UExtractionInventoryComponent::ConsumeOne(FGuid ItemId)
+{
+	return Mutate([&](FExtractionContainer& Candidate, FString& Error)
+	{
+		auto* Item = Candidate.Find(ItemId);
+		const auto* Definition = Item ? UExtractionItemDefinition::Get(Item->Definition) : nullptr;
+		if (!Item || Item->Quantity <= 0 || !Definition ||
+			(Definition->Kind != EExtractionItemKind::Medical && Definition->Kind != EExtractionItemKind::Throwable))
+		{
+			Error = TEXT("物品已变化或无法消耗");
+			return false;
+		}
+		ExtractionItems::TakeOrigins(Item->Origins, 1);
+		if (--Item->Quantity == 0)
+			Candidate.Items.RemoveAll([&](const FExtractionItem& Entry) { return Entry.Id == ItemId; });
+		return true;
+	}, INDEX_NONE, false);
+}
+
 FExtractionInventoryResult UExtractionInventoryComponent::MutatePair(UExtractionInventoryComponent& Inventory,
 	AExtractionLootActor& Loot, TFunctionRef<bool(FExtractionContainer&, FExtractionContainer&, FString&)> Edit,
 	int32 ExpectedInventoryRevision, int32 ExpectedLootRevision)
@@ -396,11 +415,9 @@ void UExtractionInventoryComponent::InitializeGuard()
 void UExtractionInventoryComponent::ClearSettled()
 {
 	if (!GetOwner()->HasAuthority()) return;
-	bDropped = true;
-	Contents.Items.Reset();
-	++Contents.Revision;
-	SyncWeapons();
-	Changed();
+	auto Candidate = Contents;
+	Candidate.Items.Reset();
+	if (CommitCandidate(MoveTemp(Candidate), true).Ok()) bDropped = true;
 }
 
 // 从背包当前弹种总量刷新旧战斗组件的备弹显示，备弹不再是可独立增减的另一份库存。
@@ -538,13 +555,13 @@ void UExtractionInventoryComponent::CaptureWeapons()
 void UExtractionInventoryComponent::RecordShot(AWeapon* Weapon)
 {
 	if (!GetOwner()->HasAuthority() || !Weapon) return;
-	if (auto* I = Contents.Find(Weapon->ExtractionItemId))
+	auto Candidate = Contents;
+	if (auto* I = Candidate.Find(Weapon->ExtractionItemId))
 	{
 		I->Magazine = Weapon->GetAmmo();
 		ExtractionItems::TakeOrigins(I->MagazineOrigins, 1);
-		Weapon->ExtractionInitialAmmo = Weapon->GetAmmo();
-		++Contents.Revision;
-		GetOwner()->ForceNetUpdate();
+		if (CommitCandidate(MoveTemp(Candidate), false).Ok())
+			Weapon->ExtractionInitialAmmo = Weapon->GetAmmo();
 	}
 }
 
@@ -553,10 +570,12 @@ int32 UExtractionInventoryComponent::Reload(AWeapon* Weapon)
 {
 	if (!GetOwner()->HasAuthority() || !Weapon || !Contents.Find(Weapon->ExtractionItemId)) return 0;
 	const FName AmmoType = Contents.Find(Weapon->ExtractionItemId)->MagazineAmmo;
-	int32 Amount = FMath::Min(Weapon->GetMagCapacity() - Weapon->GetAmmo(), Contents.Count(AmmoType));
+	const int32 Amount = FMath::Min(FMath::Max(0, Weapon->GetMagCapacity() - Weapon->GetAmmo()), Contents.Count(AmmoType));
+	if (Amount <= 0) return 0;
+	auto Candidate = Contents;
 	int32 Remaining = Amount;
-	auto* GunItem = Contents.Find(Weapon->ExtractionItemId);
-	for (auto& I : Contents.Items)
+	auto* GunItem = Candidate.Find(Weapon->ExtractionItemId);
+	for (auto& I : Candidate.Items)
 		if (I.Definition == AmmoType)
 		{
 			const int32 Take = FMath::Min(Remaining, I.Quantity);
@@ -564,12 +583,11 @@ int32 UExtractionInventoryComponent::Reload(AWeapon* Weapon)
 			I.Quantity -= Take;
 			Remaining -= Take;
 		}
-	Contents.Items.RemoveAll([](const FExtractionItem& I) { return I.Quantity == 0; });
+	GunItem->Magazine = Weapon->GetAmmo() + Amount;
+	Candidate.Items.RemoveAll([](const FExtractionItem& I) { return I.Quantity == 0; });
+	if (!CommitCandidate(MoveTemp(Candidate), false).Ok()) return 0;
 	Weapon->SetExtractionAmmo(Weapon->GetAmmo() + Amount);
 	Weapon->ExtractionInitialAmmo = Weapon->GetAmmo();
-	Contents.Find(Weapon->ExtractionItemId)->Magazine = Weapon->GetAmmo();
-	++Contents.Revision;
-	Changed();
 	return Amount;
 }
 

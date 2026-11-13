@@ -186,21 +186,17 @@ void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootAct
 		// 槽位已占用且包里还有东西时打开搜索界面逐件拿（包里的东西直接可见，不用再搜）。
 		if (Target->Contents.GearGrids)
 		{
-			FExtractionContainer Bundle = Target->Contents, Destination = Inventory()->Contents;
-			FString Error;
-			if (ExtractionItems::AttachGear(Destination, Bundle, Error))
+			const auto Result = UExtractionInventoryComponent::MutatePair(*Inventory(), *Target,
+				[](FExtractionContainer& Destination, FExtractionContainer& Bundle, FString& Error)
+				{ return ExtractionItems::AttachGear(Destination, Bundle, Error); });
+			if (Result.Ok())
 			{
-				const auto Before = Inventory()->Contents;
-				Inventory()->Contents = Destination;
-				if (!Inventory()->SyncWeapons())
-				{
-					Inventory()->Contents = Before;
-					Message = TEXT("武器生成失败");
-					return;
-				}
-				Target->SetContents(Bundle);
-				Inventory()->Changed();
 				Message.Reset();
+				return;
+			}
+			if (Result.Code == EExtractionInventoryCommit::WeaponSyncFailed)
+			{
+				Message = TEXT("武器生成失败，操作已撤回");
 				return;
 			}
 			if (Target->Contents.Items.Num() > 1)
@@ -231,24 +227,11 @@ void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootAct
 		if (PickDef && PickDef->Kind == EExtractionItemKind::Gear && PickDef->GearSlot >= ExtractionGear::RigSlot
 			&& PickDef->GearSlot <= ExtractionGear::SafeSlot && !Inventory()->Contents.InSlot(PickDef->GearSlot))
 			R.Slot = PickDef->GearSlot;
-		FExtractionContainer Source = Target->Contents, Destination = Inventory()->Contents;
-		FString Error;
-		if (ExtractionItems::Transfer(Source, Destination, R, Error))
-		{
-			const auto Before = Inventory()->Contents;
-			Inventory()->Contents = Destination;
-			if (!Inventory()->SyncWeapons())
-			{
-				Inventory()->Contents = Before;
-				Error = TEXT("武器生成失败");
-			}
-			else
-			{
-				Target->SetContents(Source);
-				Inventory()->Changed();
-			}
-		}
-		Message = Error;
+		const auto Result = UExtractionInventoryComponent::MutatePair(*Inventory(), *Target,
+			[&](FExtractionContainer& Destination, FExtractionContainer& Source, FString& Error)
+			{ return ExtractionItems::Transfer(Source, Destination, R, Error); });
+		Message = Result.Ok() ? FString() : Result.Code == EExtractionInventoryCommit::WeaponSyncFailed
+			? TEXT("武器生成失败，操作已撤回") : Result.Error;
 		return;
 	}
 	InventoryOpen = true;
@@ -424,31 +407,33 @@ FString UExtractionInteractionComponent::TakeAll(const FExtractionItemRequest& R
 	}
 	if (MedicalEnd > 0 || Character()->GetExtractionAbilities()->Action != EExtractionAction::None)
 		return TEXT("当前动作尚未完成");
-	const FExtractionContainer BeforeInventory = Inv->Contents, BeforeLoot = Loot->Contents;
 	int32 Moved = 0, Left = 0;
-	for (const auto& Item : BeforeLoot.Items)
-	{
-		if (!IsRevealed(Item.Id)) continue;
-		FExtractionItemRequest Move;
-		Move.Item = Item.Id;
-		Move.FromLoot = true;
-		Move.Quantity = Item.Quantity;
-		Move.Slot = -1;
-		Move.AutoPlace = true;
-		FString Error;
-		if (ExtractionItems::Transfer(Loot->Contents, Inv->Contents, Move, Error)) ++Moved;
-		else ++Left;
-	}
-	if (!Moved) return Left ? TEXT("背包空间不足") : TEXT("没有可拾取的物品");
-	if (!Inv->SyncWeapons())
-	{
-		Inv->Contents = BeforeInventory;
-		Loot->Contents = BeforeLoot;
-		return TEXT("武器生成失败，操作已撤回");
-	}
-	Loot->Changed();
+	const auto Result = UExtractionInventoryComponent::MutatePair(*Inv, *Loot,
+		[&](FExtractionContainer& Candidate, FExtractionContainer& Other, FString& Error)
+		{
+			const auto Items = Other.Items; // Transfers mutate Other; iterate the original list.
+			for (const auto& Item : Items)
+			{
+				if (!IsRevealed(Item.Id)) continue;
+				FExtractionItemRequest Move;
+				Move.Item = Item.Id;
+				Move.FromLoot = true;
+				Move.Quantity = Item.Quantity;
+				Move.Slot = -1;
+				Move.AutoPlace = true;
+				FString ItemError;
+				if (ExtractionItems::Transfer(Other, Candidate, Move, ItemError)) ++Moved;
+				else ++Left;
+			}
+			if (Moved) return true;
+			Error = Left ? TEXT("背包空间不足") : TEXT("没有可拾取的物品");
+			return false;
+		}, R.InventoryRevision, R.LootRevision);
+	if (!Result.Ok())
+		return Result.Code == EExtractionInventoryCommit::WeaponSyncFailed
+			? TEXT("武器生成失败，操作已撤回") : Result.Code == EExtractionInventoryCommit::Stale
+			? TEXT("背包或容器已变化，请重试") : Result.Error;
 	RefreshLootView();
-	Inv->Changed();
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_TAKE_ALL Sequence=%u Moved=%d Left=%d"), R.Sequence, Moved, Left);
 	return Left ? FString::Printf(TEXT("已拾取 %d 件，%d 件放不下"), Moved, Left) : FString();
 }
@@ -480,9 +465,13 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 	{
 		if (R.FromLoot || R.ToLoot) return TEXT("只能整理自己的背包");
 		if (MedicalEnd > 0 || MedicalItem.IsValid()) return TEXT("当前动作尚未完成");
-		if (!ExtractionItems::Sort(Inv->Contents)) return TEXT("空间不足，无法整理");
-		Inv->Changed();
-		return {};
+		const auto Result = Inv->Mutate([](FExtractionContainer& Candidate, FString& Error)
+		{
+			if (ExtractionItems::Sort(Candidate)) return true;
+			Error = TEXT("空间不足，无法整理");
+			return false;
+		}, R.InventoryRevision, false);
+		return Result.Ok() ? FString() : Result.Error;
 	}
 	FExtractionContainer& OriginalSource = R.FromLoot ? Loot->Contents : Inv->Contents;
 	const auto* Item = OriginalSource.Find(R.Item);
@@ -596,11 +585,9 @@ void UExtractionInteractionComponent::TickComponent(float Delta, ELevelTick Tick
 			auto* Inv = Inventory();
 			auto* I = Inv->Contents.Find(MedicalItem);
 			const auto* D = I ? UExtractionItemDefinition::Get(I->Definition) : nullptr;
-			if (D && C->GetExtractionHealth()->Treat(D))
+			if (D && C->GetExtractionHealth()->Needs(D->MedicalEffect) && Inv->ConsumeOne(MedicalItem).Ok()
+				&& C->GetExtractionHealth()->Treat(D))
 			{
-				Inv->Contents.Items.RemoveAll([&](const FExtractionItem& Entry) { return Entry.Id == MedicalItem; });
-				++Inv->Contents.Revision;
-				Inv->Changed();
 				C->UpdateHUDHealth();
 				C->ForceNetUpdate();
 				UE_LOG(LogTemp, Display, TEXT("EXTRACTION_MEDICAL Item=%s Health=%.1f"), *MedicalItem.ToString(),

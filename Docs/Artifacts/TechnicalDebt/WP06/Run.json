@@ -1,0 +1,39 @@
+{
+  "task": "inventory",
+  "started_utc": "2026-11-13T05:51:30.198746+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp06_inventory_20261113_01\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Inventory",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp06_inventory_20261113_01\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "cdc579356c5c94bab1968a4bd499cb673afda0e5",
+  "git_status": "M BrokenEdge.uproject\n M Source/BrokenEdge/Extraction/ExtractionInteractionComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp\n M Source/BrokenEdge/Tests/ExtractionInventoryTransactionTests.cpp\n?? Docs/Artifacts/TechnicalDebt/WP06/",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "de970ed514e54ef0b125a316ee4506f5fe72b5bedd2ad328ea32fcacee97f817",
+  "ue_env_sha256": "7999162131eb1cca58c4c49e2f4426ad704711e5b0c204317baaa65c5361f5c1",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp06_inventory_20261113_01\\Run.json",
+  "exit_code": 0,
+  "pid": 24616,
+  "successful_tests": 7,
+  "result": "passed",
+  "finished_utc": "2026-11-13T05:51:58.774343+00:00"
+}

@@ -1,0 +1,60 @@
+[2026.11.13-05.51.57:883][296]LogAutomationController: Received FindWorkersResponseMessage from 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.57:884][296]LogAutomationController: Requesting test list from 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.58:118][297]LogAutomationController: Received RequestTestsReplyCompleteMessage from 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.58:120][297]LogAutomationController: 9054 tests available on 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.58:158][297]LogAutomationController: Sending StopTests to 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.58:161][297]LogAutomationController: Display: Loading results html template...
+[2026.11.13-05.51.58:163][297]LogAutomationController: Display: Successfully wrote html results file!
+[2026.11.13-05.51.58:163][297]LogAutomationController: Sending StartTestSession to 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.58:163][297]LogAutomationController: Display: Clearing ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Logs/ and ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Tmp/
+[2026.11.13-05.51.58:165][298]LogAutomationController: Sending RunTest CommitAndRollback to 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.58:165][298]LogAutomationController: Display: Test Started. Name={CommitAndRollback} Path={BrokenEdge.Extraction.Inventory.Transaction.CommitAndRollback}
+[2026.11.13-05.51.58:177][298]LogTemp: Display: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=2 Items=0 Ammo=0
+[2026.11.13-05.51.58:177][298]LogTemp: Display: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=3 Items=0 Ammo=0
+[2026.11.13-05.51.58:177][298]LogTemp: Display: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=4 Items=0 Ammo=0
+[2026.11.13-05.51.58:178][298]LogTemp: Display: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=5 Items=0 Ammo=0
+[2026.11.13-05.51.58:178][298]LogTemp: Display: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=6 Items=0 Ammo=0
+[2026.11.13-05.51.58:178][298]LogTemp: Display: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=7 Items=1 Ammo=0
+[2026.11.13-05.51.58:180][298]LogTemp: Display: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=8 Items=2 Ammo=0
+[2026.11.13-05.51.58:180][298]LogTemp: Display: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=9 Items=2 Ammo=0
+[2026.11.13-05.51.58:180][298]LogTemp: Display: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=10 Items=0 Ammo=0
+[2026.11.13-05.51.58:188][299]LogAutomationController: Display: Test Completed. Result={Success} Name={CommitAndRollback} Path={BrokenEdge.Extraction.Inventory.Transaction.CommitAndRollback}
+[2026.11.13-05.51.58:188][299]LogAutomationController: BeginEvents: BrokenEdge.Extraction.Inventory.Transaction.CommitAndRollback
+[2026.11.13-05.51.58:188][299]LogAutomationController: EndEvents: BrokenEdge.Extraction.Inventory.Transaction.CommitAndRollback
+[2026.11.13-05.51.58:188][299]LogAutomationController: Sending RunTest EquipmentAndValidation to 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.58:188][300]LogAutomationController: Display: Test Started. Name={EquipmentAndValidation} Path={BrokenEdge.Extraction.Inventory.EquipmentAndValidation}
+[2026.11.13-05.51.58:236][302]LogAutomationController: Display: Test Completed. Result={Success} Name={EquipmentAndValidation} Path={BrokenEdge.Extraction.Inventory.EquipmentAndValidation}
+[2026.11.13-05.51.58:237][302]LogAutomationController: BeginEvents: BrokenEdge.Extraction.Inventory.EquipmentAndValidation
+[2026.11.13-05.51.58:237][302]LogAutomationController: EndEvents: BrokenEdge.Extraction.Inventory.EquipmentAndValidation
+[2026.11.13-05.51.58:237][302]LogAutomationController: Sending RunTest GearContainers to 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.58:237][302]LogAutomationController: Display: Test Started. Name={GearContainers} Path={BrokenEdge.Extraction.Inventory.GearContainers}
+[2026.11.13-05.51.58:270][304]LogAutomationController: Display: Test Completed. Result={Success} Name={GearContainers} Path={BrokenEdge.Extraction.Inventory.GearContainers}
+[2026.11.13-05.51.58:271][304]LogAutomationController: BeginEvents: BrokenEdge.Extraction.Inventory.GearContainers
+[2026.11.13-05.51.58:271][304]LogAutomationController: EndEvents: BrokenEdge.Extraction.Inventory.GearContainers
+[2026.11.13-05.51.58:271][304]LogAutomationController: Sending RunTest GridTransactions to 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.58:271][304]LogAutomationController: Display: Test Started. Name={GridTransactions} Path={BrokenEdge.Extraction.Inventory.GridTransactions}
+[2026.11.13-05.51.58:320][307]LogAutomationController: Display: Test Completed. Result={Success} Name={GridTransactions} Path={BrokenEdge.Extraction.Inventory.GridTransactions}
+[2026.11.13-05.51.58:321][307]LogAutomationController: BeginEvents: BrokenEdge.Extraction.Inventory.GridTransactions
+[2026.11.13-05.51.58:321][307]LogAutomationController: EndEvents: BrokenEdge.Extraction.Inventory.GridTransactions
+[2026.11.13-05.51.58:321][308]LogAutomationController: Sending RunTest StackConservation to 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.58:321][308]LogAutomationController: Display: Test Started. Name={StackConservation} Path={BrokenEdge.Extraction.Inventory.StackConservation}
+[2026.11.13-05.51.58:371][310]LogAutomationController: Display: Test Completed. Result={Success} Name={StackConservation} Path={BrokenEdge.Extraction.Inventory.StackConservation}
+[2026.11.13-05.51.58:371][310]LogAutomationController: BeginEvents: BrokenEdge.Extraction.Inventory.StackConservation
+[2026.11.13-05.51.58:371][310]LogAutomationController: EndEvents: BrokenEdge.Extraction.Inventory.StackConservation
+[2026.11.13-05.51.58:371][310]LogAutomationController: Sending RunTest SwapAndPockets to 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.58:371][311]LogAutomationController: Display: Test Started. Name={SwapAndPockets} Path={BrokenEdge.Extraction.Inventory.SwapAndPockets}
+[2026.11.13-05.51.58:420][313]LogAutomationController: Display: Test Completed. Result={Success} Name={SwapAndPockets} Path={BrokenEdge.Extraction.Inventory.SwapAndPockets}
+[2026.11.13-05.51.58:420][313]LogAutomationController: BeginEvents: BrokenEdge.Extraction.Inventory.SwapAndPockets
+[2026.11.13-05.51.58:420][313]LogAutomationController: EndEvents: BrokenEdge.Extraction.Inventory.SwapAndPockets
+[2026.11.13-05.51.58:421][313]LogAutomationController: Sending RunTest SwapEquipmentSlots to 3B4951F4447F8A191AD1E19F3EBB6335
+[2026.11.13-05.51.58:421][313]LogAutomationController: Display: Test Started. Name={SwapEquipmentSlots} Path={BrokenEdge.Extraction.Inventory.SwapEquipmentSlots}
+[2026.11.13-05.51.58:470][316]LogAutomationController: Display: Test Completed. Result={Success} Name={SwapEquipmentSlots} Path={BrokenEdge.Extraction.Inventory.SwapEquipmentSlots}
+[2026.11.13-05.51.58:470][316]LogAutomationController: BeginEvents: BrokenEdge.Extraction.Inventory.SwapEquipmentSlots
+[2026.11.13-05.51.58:470][316]LogAutomationController: EndEvents: BrokenEdge.Extraction.Inventory.SwapEquipmentSlots
+[2026.11.13-05.51.58:471][316]LogAutomationController: Display: Exporting Automation Report.
+[2026.11.13-05.51.58:471][316]LogAutomationController: Display: Converting results to json object...
+[2026.11.13-05.51.58:472][316]LogAutomationController: Writing reports to D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_wp06_inventory_20261113_01\Automation...
+[2026.11.13-05.51.58:472][316]LogAutomationController: Display: Successfully wrote json results file!
+[2026.11.13-05.51.58:472][316]LogAutomationController: Exported report to 'D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_wp06_inventory_20261113_01\Automation' in 0.00 Seconds
+[2026.11.13-05.51.58:472][316]LogAutomationController: Display: Report can be opened in the editor at 'D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_wp06_inventory_20261113_01\Automation'
+[2026.11.13-05.51.58:472][316]LogAutomationController: Sending StopTestSession to 3B4951F4447F8A191AD1E19F3EBB6335

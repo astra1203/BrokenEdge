@@ -369,10 +369,13 @@ void AExtractionPlayerController::ServerThrowGrenade_Implementation(bool bLow)
 	auto* Grenade = GetWorld()->SpawnActor<AExtractionFragGrenade>(From, View, Params);
 	if (!Grenade) return;
 	const FGuid Used = Item->Id;
-	if (Item->Quantity > 1) Inv->Contents.Find(Used)->Quantity -= 1;
-	else Inv->Contents.Items.RemoveAll([&](const FExtractionItem& Entry) { return Entry.Id == Used; });
-	++Inv->Contents.Revision;
-	Inv->Changed();
+	const auto Consumed = Inv->ConsumeOne(Used);
+	if (!Consumed.Ok())
+	{
+		Grenade->Destroy();
+		ClientItemResult(0, Consumed.Error);
+		return;
+	}
 	NextGrenadeAt = Now + R->FragThrowInterval;
 	Grenade->Launch(View.Vector() * (bLow ? R->FragThrowLowSpeed : R->FragThrowSpeed) + C->GetVelocity());
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_FRAG_THROW Player=%s Low=%d"), *GetNameSafe(PlayerState), bLow ? 1 : 0);
