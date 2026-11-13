@@ -94,7 +94,7 @@ void AExtractionPlayerController::SelectWeaponSlot(int32 Slot)
 	if (!C || bMenuOpen || !Inv) return;
 	// 拿着激素枪时按 1/2 先收起激素枪，回到对应的枪。
 	if (C->GetExtractionAbilities()->bStimDrawn) C->GetExtractionAbilities()->SetStimDrawn(false);
-	const auto* Wanted = Inv->Contents.InSlot(Slot);
+	const auto* Wanted = Inv->GetContents().InSlot(Slot);
 	if (!Wanted)
 	{
 		ShowItemMessage(Slot == 0 ? TEXT("主武器槽没有武器") : TEXT("副武器槽没有武器"));
@@ -251,7 +251,7 @@ void AExtractionPlayerController::Interact()
 	if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen) return;
 	if (I->ZiplineFocus) ServerUseZipline(I->ZiplineFocus);
 	else if (I->SwitchFocus) ServerPullSwitch(I->SwitchFocus);
-	else if (I->DoorFocus) ServerUnlockDoor(I->DoorFocus, I->Inventory()->Contents.Revision);
+	else if (I->DoorFocus) ServerUnlockDoor(I->DoorFocus, I->Inventory()->GetContents().Revision);
 	else if (I->Focus) RequestOpenInventory(I->Focus, true);
 	else if (C) ServerSwapExtractionWeapons();
 }
@@ -275,7 +275,7 @@ void AExtractionPlayerController::InteractDoor()
 	auto* Inventory = I->Inventory();
 	if (!Inventory || !I->DoorFocus) return;
 	if (!I->DoorFocus->IsInInteractionRange(GetPawn())) return;
-	ServerUnlockDoor(I->DoorFocus, Inventory->Contents.Revision);
+	ServerUnlockDoor(I->DoorFocus, Inventory->GetContents().Revision);
 }
 
 // 先确认门对象有效且属于同一世界，再由门执行完整权限和库存版本校验。
@@ -347,7 +347,7 @@ void AExtractionPlayerController::ServerThrowGrenade_Implementation(bool bLow)
 	const auto* R = GetDefault<UExtractionRules>();
 	if (!C || !I || !Inv || !I->CanAct() || Now < NextGrenadeAt
 		|| C->GetCombatState() != ECombatState::ECS_Unoccuiped) return;
-	const auto* Item = Inv->Contents.Items.FindByPredicate([](const FExtractionItem& Entry)
+	const auto* Item = Inv->GetContents().Items.FindByPredicate([](const FExtractionItem& Entry)
 	{
 		const auto* D = UExtractionItemDefinition::Get(Entry.Definition);
 		return D && D->Kind == EExtractionItemKind::Throwable && Entry.Slot != ExtractionGear::SafeGrid;
@@ -402,7 +402,7 @@ void AExtractionPlayerController::RequestItem(FExtractionItemRequest Request)
 	Request.Sequence = ++LocalItemSequence;
 	if (Request.Op == EExtractionItemOp::Use) I->StopCombatInput();
 	Request.Session = I->Session;
-	Request.InventoryRevision = I->Inventory()->Contents.Revision;
+	Request.InventoryRevision = I->Inventory()->GetContents().Revision;
 	Request.LootRevision = I->LootView.Revision;
 	ServerItemOperation(Request);
 }
@@ -503,7 +503,7 @@ void AExtractionPlayerController::UseMedical()
 		ServerCancelMedical();
 		return;
 	}
-	for (const auto& Item : I->Inventory()->Contents.Items)
+	for (const auto& Item : I->Inventory()->GetContents().Items)
 		if (Item.Definition == TEXT("Medkit"))
 		{
 			FExtractionItemRequest R;

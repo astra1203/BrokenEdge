@@ -280,7 +280,7 @@ void UExtractionWidget::Refresh()
 		{
 			for (int32 ArmorSlot = 2; ArmorSlot <= 3; ++ArmorSlot)
 			{
-				const auto* Armor = Inv->Contents.InSlot(ArmorSlot);
+				const auto* Armor = Inv->GetContents().InSlot(ArmorSlot);
 				VitalText += (ArmorSlot == 2 ? TEXT("头盔 ") : TEXT("  胸甲 ")) + (Armor
 					                                                               ? ExtractionItems::Details(*Armor)
 					                                                               : FString(TEXT("无")));

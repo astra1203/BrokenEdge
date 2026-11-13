@@ -171,23 +171,30 @@ void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController
 	C->GetExtractionAbilities()->Damaged();
 	const int32 Slot = ArmorSlotForBone(Bone);
 	if (auto* Inv = C->GetExtractionInteraction()->Inventory(); Inv && Slot >= 0)
-		for (auto& Item : Inv->Contents.Items)
-			if (Item.Slot == Slot)
-			{
-				const auto* Armor = UExtractionItemDefinition::Get(Item.Definition);
-				if (Armor && Armor->Kind == EExtractionItemKind::Armor && Item.Durability > 0)
+	{
+		float AppliedDamage = Damage;
+		FString BrokenArmor;
+		const auto Result = Inv->Mutate([&](FExtractionContainer& Candidate, FString&)
+		{
+			for (auto& Item : Candidate.Items)
+				if (Item.Slot == Slot)
 				{
-					const float DurabilityBefore = Item.Durability;
-					Damage = Absorb(Damage, AmmoDef->Penetration, Armor->ArmorLevel, Item.Durability);
-					++Inv->Contents.Revision;
-					Inv->Changed();
-					// 这一枪把护甲打到耐久 0：提醒本人护甲已失效。
-					if (DurabilityBefore > 0 && Item.Durability <= 0)
-						if (auto* Owner = Cast<AExtractionPlayerController>(C->GetController()))
-							Owner->ClientItemResult(0, Armor->Label.ToString() + TEXT(" 已损坏，不再提供防护"));
+					const auto* Armor = UExtractionItemDefinition::Get(Item.Definition);
+					if (Armor && Armor->Kind == EExtractionItemKind::Armor && Item.Durability > 0)
+					{
+						AppliedDamage = Absorb(Damage, AmmoDef->Penetration, Armor->ArmorLevel, Item.Durability);
+						if (Item.Durability <= 0) BrokenArmor = Armor->Label.ToString();
+					}
+					break;
 				}
-				break;
-			}
+			return true;
+		}, INDEX_NONE, false);
+		if (!Result.Ok()) return;
+		Damage = AppliedDamage;
+		if (!BrokenArmor.IsEmpty())
+			if (auto* Owner = Cast<AExtractionPlayerController>(C->GetController()))
+				Owner->ClientItemResult(0, BrokenArmor + TEXT(" 已损坏，不再提供防护"));
+	}
 	// 记录护甲后的实际生命变化，创伤判定不使用被护甲吸收的部分。
 	const float Before = C->GetHealth();
 	C->ReceiveDamage(C, Damage, nullptr, Attacker, Causer);

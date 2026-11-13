@@ -1,5 +1,6 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
+#include "ExtractionInventoryTestAccess.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Extraction/ExtractionExit.h"
 #include "BrokenEdge/Extraction/ExtractionGameMode.h"
@@ -71,7 +72,7 @@ struct FExtractionExitFeedbackFixture
 			Player.Controller->PlayerState = Player.State;
 			Player.Controller->Possess(Player.Pawn);
 			Player.Pawn->SetPlayerState(Player.State);
-			Player.State->Inventory->Contents.Items.Reset();
+			FExtractionInventoryTestAccess::Get(Player.State->Inventory).Items.Reset();
 		}
 		Players.Add(Player);
 		return Player;
@@ -175,7 +176,7 @@ bool FExtractionExitPersonalFeedback::RunTest(const FString&)
 	Item.Definition = TEXT("Bag_ALS");
 	Item.Quantity = 1;
 	Item.Slot = ExtractionGear::BagSlot;
-	A.State->Inventory->Contents.Items.Add(Item);
+	FExtractionInventoryTestAccess::Get(A.State->Inventory).Items.Add(Item);
 
 	F.Update(0);
 	TestEqual(TEXT("Availability takes precedence over personal inventory"), A.State->ExtractBlockedReason,
@@ -186,12 +187,12 @@ bool FExtractionExitPersonalFeedback::RunTest(const FString&)
 	TestTrue(TEXT("Second player's reason remains empty"), B.State->ExtractBlockedReason.IsEmpty());
 	TestEqual(TEXT("Second player starts normally"), B.State->ExtractAt, 20.0);
 
-	A.State->Inventory->Contents.Items.Reset();
+	FExtractionInventoryTestAccess::Get(A.State->Inventory).Items.Reset();
 	F.Update(11);
 	TestTrue(TEXT("Removing inventory clears the personal reason"), A.State->ExtractBlockedReason.IsEmpty());
 	TestEqual(TEXT("Clearing the condition starts a fresh deadline"), A.State->ExtractAt, 21.0);
 	TestEqual(TEXT("Other player's ongoing deadline is unchanged"), B.State->ExtractAt, 20.0);
-	A.State->Inventory->Contents.Items.Add(Item);
+	FExtractionInventoryTestAccess::Get(A.State->Inventory).Items.Add(Item);
 	F.Update(12);
 	TestEqual(TEXT("Adding pack inventory cancels the hold"), A.State->ExtractAt, 0.0);
 	TestEqual(TEXT("One player's cancellation does not reset another"), B.State->ExtractAt, 20.0);

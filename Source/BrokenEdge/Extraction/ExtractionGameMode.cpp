@@ -470,7 +470,7 @@ bool AExtractionGameMode::SettlePlayer(AController* Player, EExtractionOutcome O
 	PS->Inventory->CaptureWeapons();
 	auto Progress = PS->RaidProgress;
 	for (TActorIterator<AExtractionKeyRoom> It(GetWorld()); It; ++It) Progress.FileLots.Append(It->FileLots);
-	if (!Persistence->Settle(PS->ExtractionRaid, PS->ExtractionProfile, Outcome, PS->Inventory->Contents, Progress))
+	if (!Persistence->Settle(PS->ExtractionRaid, PS->ExtractionProfile, Outcome, PS->Inventory->GetContents(), Progress))
 		return false;
 #if WITH_DEV_AUTOMATION_TESTS
 	FString HoldFile;
@@ -521,7 +521,7 @@ void AExtractionGameMode::UpdateExtraction(double Now)
 		FString Blocked = Exit->UnavailableReason(Now);
 		// 丢包撤：只要求把背包整包丢掉；胸挂、安全箱和其中物品都可以带走。
 		if (Blocked.IsEmpty() && Exit->Definition.bRequireEmptyPack && PS->Inventory
-			&& PS->Inventory->Contents.InSlot(ExtractionGear::BagSlot))
+			&& PS->Inventory->GetContents().InSlot(ExtractionGear::BagSlot))
 			Blocked = TEXT("丢包撤：请先丢掉背包");
 		if (!Blocked.IsEmpty())
 		{

@@ -193,7 +193,7 @@ namespace
 				for (auto* Client : Clients)
 				{
 					const auto* PS = Client->GetFirstPlayerController()->GetPlayerState<AExtractionPlayerState>();
-					if (!PS || !PS->Inventory || !PS->Inventory->Contents.InSlot(0)) return false;
+					if (!PS || !PS->Inventory || !PS->Inventory->GetContents().InSlot(0)) return false;
 				}
 				if (!Game->MapDefinition) return false;
 				for (auto* Client : Clients)
@@ -216,7 +216,7 @@ namespace
 					if (!Current.IsValid()) Current = PS->ExtractionRaid;
 					Test->TestEqual(TEXT("All players share raid"), PS->ExtractionRaid, Current);
 					// Current starting-supply rules may move the carried rifle into the backpack.
-					const auto* Rifle = PS->Inventory->Contents.Find(Weapons.FindRef(PS->ExtractionProfile));
+					const auto* Rifle = PS->Inventory->GetContents().Find(Weapons.FindRef(PS->ExtractionProfile));
 					if (Test->TestNotNull(TEXT("Original rifle carried into raid"), Rifle))
 						Test->TestEqual(TEXT("Same rifle instance"), Rifle->Id, Weapons.FindRef(PS->ExtractionProfile));
 					Test->TestEqual(

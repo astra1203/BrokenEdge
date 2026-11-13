@@ -1,6 +1,7 @@
 // Development-only local process driver. No test RPCs or fixture commands exist in Shipping.
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
+#include "ExtractionInventoryTestAccess.h"
 #include "BrokenEdge/Extraction/ExtractionDoor.h"
 #include "BrokenEdge/Extraction/ExtractionBreakableGlass.h"
 #include "BrokenEdge/Extraction/ExtractionFragGrenade.h"
@@ -518,7 +519,7 @@ public:
 						if (auto* Inv = Character->GetExtractionInteraction()->Inventory())
 						{
 							Inv->CaptureWeapons();
-							for (auto& Item : Inv->Contents.Items)
+							for (auto& Item : FExtractionInventoryTestAccess::Get(Inv).Items)
 								if (Item.Id == Character->GetEquippedWeapon()->ExtractionItemId)
 								{
 									Item.MagazineOrigins.Empty();
@@ -1003,7 +1004,7 @@ private:
 		}
 		else if (Op == TEXT("unlock") && PC && Interaction && Interaction->Inventory())
 		{
-			int32 Revision = Interaction->Inventory()->Contents.Revision;
+			int32 Revision = FExtractionInventoryTestAccess::Get(Interaction->Inventory()).Revision;
 			Command->TryGetNumberField(TEXT("revision"), Revision);
 			for (TActorIterator<AExtractionKeyRoom> It(World); It; ++It)
 			{
@@ -1135,7 +1136,7 @@ private:
 			FExtractionItemRequest R;
 			R.Sequence = ++PC->LocalItemSequence;
 			R.Session = Interaction->Session;
-			R.InventoryRevision = Interaction->Inventory()->Contents.Revision;
+			R.InventoryRevision = FExtractionInventoryTestAccess::Get(Interaction->Inventory()).Revision;
 			R.LootRevision = Interaction->LootView.Revision;
 			FGuid::Parse(Command->GetStringField(TEXT("item")), R.Item);
 			FString Kind;
@@ -1199,7 +1200,7 @@ private:
 			}
 			bool Clear = false;
 			Command->TryGetBoolField(TEXT("clear"), Clear);
-			if (Clear) Inv->Contents.Items.Reset();
+			if (Clear) FExtractionInventoryTestAccess::Get(Inv).Items.Reset();
 			for (const auto& Value : Command->GetArrayField(TEXT("items")))
 			{
 				const auto Entry = Value->AsObject();
@@ -1211,11 +1212,11 @@ private:
 				{
 					auto Item = ExtractionItems::Make(FName(*Entry->GetStringField(TEXT("definition"))), Quantity);
 					Item.Slot = Slot;
-					if (Slot >= 0) Inv->Contents.Items.Add(Item);
-					else if (!ExtractionItems::AutoPlace(Inv->Contents, Item)) Error = TEXT("Fixture has no space");
+					if (Slot >= 0) FExtractionInventoryTestAccess::Get(Inv).Items.Add(Item);
+					else if (!ExtractionItems::AutoPlace(FExtractionInventoryTestAccess::Get(Inv), Item)) Error = TEXT("Fixture has no space");
 				}
 			}
-			++Inv->Contents.Revision;
+			++FExtractionInventoryTestAccess::Get(Inv).Revision;
 			Inv->SyncWeapons();
 			Inv->Changed();
 		}
@@ -1630,7 +1631,7 @@ private:
 					Player->SetNumberField(TEXT("extract_at"), ExtractionPS->ExtractAt);
 					Player->SetNumberField(
 						TEXT("life"), static_cast<int32>(ExtractionPS->Life));
-					Player->SetObjectField(TEXT("inventory"), InventoryJson(ExtractionPS->Inventory->Contents));
+					Player->SetObjectField(TEXT("inventory"), InventoryJson(FExtractionInventoryTestAccess::Get(ExtractionPS->Inventory)));
 					Player->SetNumberField(TEXT("extract_at"), ExtractionPS->ExtractAt);
 					Player->SetNumberField(TEXT("down_health"), ExtractionPS->DownHealth);
 					Player->SetNumberField(TEXT("bleed_at"), ExtractionPS->BleedAt);
@@ -1896,7 +1897,7 @@ private:
 				                     MakeShared<FJsonValueNumber>(P.X), MakeShared<FJsonValueNumber>(P.Y),
 				                     MakeShared<FJsonValueNumber>(P.Z)
 			                     });
-			Entry->SetObjectField(TEXT("contents"), InventoryJson(It->Contents));
+			Entry->SetObjectField(TEXT("contents"), InventoryJson(It->GetContents()));
 			TArray<TSharedPtr<FJsonValue>> Models;
 			TInlineComponentArray<UStaticMeshComponent*> Meshes(*It);
 			for (const auto* Mesh : Meshes)
@@ -2049,7 +2050,7 @@ private:
 				J->SetArrayField(TEXT("shot_times"), ShotTimes);
 				if (It->HasAuthority())
 					J->SetObjectField(
-						TEXT("inventory"), InventoryJson(It->GuardInventory->Contents));
+						TEXT("inventory"), InventoryJson(FExtractionInventoryTestAccess::Get(It->GuardInventory)));
 				if (const auto* AI = Cast<AExtractionGuard>(It->GetController()))
 				{
 					if (const auto* PlayerA = FindPawn(World, TEXT("EX_A")))

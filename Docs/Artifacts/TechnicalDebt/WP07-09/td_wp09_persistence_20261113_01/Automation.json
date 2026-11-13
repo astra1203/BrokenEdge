@@ -1,0 +1,104 @@
+{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "79C3442E49F723F3E3D34885D7CC35BE",
+			"instanceName": "OREKI-LEGION-16752",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-06.50.51",
+	"succeeded": 5,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.61771780252456665,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "JournalFailures",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.JournalFailures",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"79C3442E49F723F3E3D34885D7CC35BE"
+			],
+			"duration": 0.039911400526762009,
+			"dateTime": "2026.11.13-06.50.51",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "JournalRolling",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.JournalRolling",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"79C3442E49F723F3E3D34885D7CC35BE"
+			],
+			"duration": 0.23586620390415192,
+			"dateTime": "2026.11.13-06.50.51",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PreparedCancellation",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.PreparedCancellation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"79C3442E49F723F3E3D34885D7CC35BE"
+			],
+			"duration": 0.10871350020170212,
+			"dateTime": "2026.11.13-06.50.51",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RecoveryProvenance",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.RecoveryProvenance",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"79C3442E49F723F3E3D34885D7CC35BE"
+			],
+			"duration": 0.15391859412193298,
+			"dateTime": "2026.11.13-06.50.51",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Transactions",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.Transactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"79C3442E49F723F3E3D34885D7CC35BE"
+			],
+			"duration": 0.079308100044727325,
+			"dateTime": "2026.11.13-06.50.51",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

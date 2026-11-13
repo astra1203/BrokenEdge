@@ -260,7 +260,7 @@ UExtractionInteractionComponent* ULootingMainView::Interaction() const
 const FExtractionContainer* ULootingMainView::Container(bool Loot) const
 {
 	auto* I = Interaction();
-	return !I || !I->Inventory() ? nullptr : Loot ? I->Loot ? &I->LootView : nullptr : &I->Inventory()->Contents;
+	return !I || !I->Inventory() ? nullptr : Loot ? I->Loot ? &I->LootView : nullptr : &I->Inventory()->GetContents();
 }
 
 ULootingWidgetPart* ULootingMainView::MakePart(TSubclassOf<ULootingWidgetPart> Class)

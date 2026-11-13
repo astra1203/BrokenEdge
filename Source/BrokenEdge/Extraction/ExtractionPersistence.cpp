@@ -8,6 +8,11 @@
 #include "Misc/SecureHash.h"
 #include "Misc/Crc.h"
 #include "Engine/World.h"
+#include "Misc/ScopeExit.h"
+#include "HAL/PlatformTime.h"
+#if PLATFORM_WINDOWS
+#include "Windows/WindowsHWrapper.h"
+#endif
 // 服务器仓库的单写入者：每条日志保存完整候选状态，包含受影响档案、出战记录和带出批次数量。
 // 先校验候选副本，再追加带长度与 CRC 的记录并 Flush，成功后才替换内存 State。
 // GameInstanceSubsystem 跨关卡存活；它不是可复制 Actor，客户端通过 AccountComponent 获取自己的快照。
@@ -189,16 +194,30 @@ bool UExtractionPersistence::LoadForTest(const FString& Directory) { return Load
 // 只有末尾未写完整的记录可截断；旧版先保留原始备份，再迁移并恢复未结算对局。
 bool UExtractionPersistence::Load(const FString& Directory)
 {
+	const double Started = FPlatformTime::Seconds();
+	int32 Records = 0;
+	ON_SCOPE_EXIT
+	{
+		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_LOAD Records=%d JournalBytes=%lld ElapsedMs=%.2f Faulted=%d"),
+			Records, IFileManager::Get().FileSize(*Journal), (FPlatformTime::Seconds() - Started) * 1000, Faulted);
+	};
 	Loaded = true;
 	Faulted = false;
 	Error.Reset();
 	State = FExtractionStoreState();
+	JournalRecords = 0;
 	auto& Files = FPlatformFileManager::Get().GetPlatformFile();
 	Journal = FPaths::ConvertRelativePathToFull(Directory / TEXT("Store.journal"));
 	if (!Files.CreateDirectoryTree(*Directory))
 	{
 		Faulted = true;
 		Error = TEXT("无法创建仓库目录");
+		return false;
+	}
+	if (!RecoverPendingSegment())
+	{
+		Faulted = true;
+		Error = TEXT("无法恢复仓库日志段，保留文件等待恢复");
 		return false;
 	}
 	int64 ValidEnd = 0;
@@ -220,12 +239,20 @@ bool UExtractionPersistence::Load(const FString& Directory)
 				Partial = true;
 				break;
 			}
-			if (!File->Read(reinterpret_cast<uint8*>(Header), sizeof(Header)) || Header[0] != Magic || Header[1] != 1 ||
+			if (!File->Read(reinterpret_cast<uint8*>(Header), sizeof(Header)) || Header[0] != Magic || (Header[1] != 1 && Header[1] != 2) ||
 				Header[2] > MaxRecord)
 			{
 				Faulted = true;
 				Error = TEXT("仓库日志头损坏，停止载入");
 				return false;
+			}
+			uint32 Flags = 0;
+			if (Header[1] == 2)
+			{
+				if (File->Size() - File->Tell() < sizeof(Flags)) { Partial = true; break; }
+				if (!File->Read(reinterpret_cast<uint8*>(&Flags), sizeof(Flags)) || (Flags & ~1u)
+					|| ((Flags & 1u) && Records != 0))
+				{ Faulted = true; Error = TEXT("仓库日志段标志无效"); return false; }
 			}
 			if (File->Size() - File->Tell() < Header[2])
 			{
@@ -243,7 +270,8 @@ bool UExtractionPersistence::Load(const FString& Directory)
 			FUTF8ToTCHAR Text(reinterpret_cast<const ANSICHAR*>(Bytes.GetData()), Bytes.Num());
 			FExtractionStoreState Next;
 			if (!FJsonObjectConverter::JsonObjectStringToUStruct(FString(Text.Length(), Text.Get()), &Next, 0, 0)
-				|| Next.Sequence != State.Sequence + 1 || (State.Sequence > 0 && Next.Version < State.Version) || !
+				|| ((Flags & 1u) ? (Next.Sequence < 1 || Next.Version != 7) : Next.Sequence != State.Sequence + 1)
+				|| (State.Sequence > 0 && Next.Version < State.Version) || !
 				Validate(Next))
 			{
 				Faulted = true;
@@ -251,6 +279,8 @@ bool UExtractionPersistence::Load(const FString& Directory)
 				return false;
 			}
 			State = MoveTemp(Next);
+			++Records;
+			++JournalRecords;
 			ValidEnd = File->Tell();
 		}
 	}
@@ -424,6 +454,7 @@ bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) co
 // 按值接收候选快照，成功刷盘后才发布为当前 State；写入失败锁定 Faulted，需恢复存储并重启。
 bool UExtractionPersistence::Commit(FExtractionStoreState Candidate)
 {
+	const double Started = FPlatformTime::Seconds();
 	if (Faulted) return false;
 	Candidate.Sequence = State.Sequence + 1;
 	if (!Validate(Candidate))
@@ -434,7 +465,9 @@ bool UExtractionPersistence::Commit(FExtractionStoreState Candidate)
 	FString Json;
 	if (!FJsonObjectConverter::UStructToJsonObjectString(Candidate, Json, 0, 0, 0, nullptr, false)) return false;
 	FTCHARToUTF8 Bytes(*Json);
-	uint32 Header[] = {Magic, 1, static_cast<uint32>(Bytes.Length()), FCrc::MemCrc32(Bytes.Get(), Bytes.Length())};
+	if (Bytes.Length() > MaxRecord / 2)
+		UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_STORE_NEAR_LIMIT Bytes=%d MaxRecord=%u"), Bytes.Length(), MaxRecord);
+	uint32 Header[] = {Magic, 2, static_cast<uint32>(Bytes.Length()), FCrc::MemCrc32(Bytes.Get(), Bytes.Length()), 0};
 	bool Written = false;
 #if WITH_DEV_AUTOMATION_TESTS
 	if (!FailNextWrite)
@@ -454,9 +487,109 @@ bool UExtractionPersistence::Commit(FExtractionStoreState Candidate)
 	}
 	// 只有完整记录刷盘成功才更新权威内存快照，不能先让 UI 看见尚未保存的数据。
 	State = MoveTemp(Candidate);
+	++JournalRecords;
 	Error.Reset();
-	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_COMMIT Sequence=%lld"), State.Sequence);
+	int64 Receipts = 0;
+	for (const auto& Profile : State.Profiles) Receipts += Profile.EconomyReceipts.Num();
+	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_COMMIT Sequence=%lld Bytes=%d JournalBytes=%lld Profiles=%d Raids=%d Receipts=%lld ElapsedMs=%.2f"),
+		State.Sequence, Bytes.Length(), IFileManager::Get().FileSize(*Journal), State.Profiles.Num(), State.Raids.Num(),
+		Receipts, (FPlatformTime::Seconds() - Started) * 1000);
+	if (State.Version == 7 && ((JournalRollBytes > 0 && IFileManager::Get().FileSize(*Journal) >= JournalRollBytes)
+		|| (JournalRollRecords > 0 && JournalRecords >= JournalRollRecords)))
+		if (!RollJournal()) UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_STORE_ROLL_FAILED Sequence=%lld"), State.Sequence);
 	return true;
+}
+
+bool UExtractionPersistence::ReadSegment(const FString& Path, FExtractionStoreState& Out) const
+{
+	auto& Files = FPlatformFileManager::Get().GetPlatformFile();
+	TUniquePtr<IFileHandle> File(Files.OpenRead(*Path));
+	uint32 Header[5];
+	if (!File || File->Size() < sizeof(Header) || !File->Read(reinterpret_cast<uint8*>(Header), sizeof(Header))
+		|| Header[0] != Magic || Header[1] != 2 || Header[4] != 1 || Header[2] > MaxRecord
+		|| File->Size() != static_cast<int64>(sizeof(Header)) + Header[2]) return false;
+	TArray<uint8> Bytes;
+	Bytes.SetNumUninitialized(Header[2]);
+	if (!File->Read(Bytes.GetData(), Bytes.Num()) || FCrc::MemCrc32(Bytes.GetData(), Bytes.Num()) != Header[3]) return false;
+	FUTF8ToTCHAR Text(reinterpret_cast<const ANSICHAR*>(Bytes.GetData()), Bytes.Num());
+	return FJsonObjectConverter::JsonObjectStringToUStruct(FString(Text.Length(), Text.Get()), &Out, 0, 0)
+		&& Out.Version == 7 && Out.Sequence > 0 && Validate(Out);
+}
+
+bool UExtractionPersistence::WriteSegment(const FString& Path) const
+{
+	FString Json;
+	if (!FJsonObjectConverter::UStructToJsonObjectString(State, Json, 0, 0, 0, nullptr, false)) return false;
+	FTCHARToUTF8 Bytes(*Json);
+	if (Bytes.Length() > MaxRecord) return false;
+	uint32 Header[] = {Magic, 2, static_cast<uint32>(Bytes.Length()), FCrc::MemCrc32(Bytes.Get(), Bytes.Length()), 1};
+	TUniquePtr<IFileHandle> File(FPlatformFileManager::Get().GetPlatformFile().OpenWrite(*Path));
+	return File && File->Write(reinterpret_cast<const uint8*>(Header), sizeof(Header))
+		&& File->Write(reinterpret_cast<const uint8*>(Bytes.Get()), Bytes.Length()) && File->Flush(true);
+}
+
+bool UExtractionPersistence::RecoverPendingSegment()
+{
+	auto& Files = FPlatformFileManager::Get().GetPlatformFile();
+	const FString Pending = Journal + TEXT(".next");
+	if (Files.FileExists(*Journal))
+	{
+		if (Files.FileExists(*Pending) && !Files.DeleteFile(*Pending))
+			UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_STORE_PENDING_CLEANUP_FAILED"));
+		return true;
+	}
+	if (Files.FileExists(*Pending))
+	{
+		FExtractionStoreState Recovered;
+		if (!ReadSegment(Pending, Recovered)) return false;
+		return Files.MoveFile(*Journal, *Pending);
+	}
+	TArray<FString> Generations;
+	IFileManager::Get().FindFiles(Generations, *(Journal + TEXT(".gen*")), true, false);
+	// Never silently initialize an empty store when archived state exists but the active file is missing.
+	return Generations.IsEmpty();
+}
+
+bool UExtractionPersistence::RollJournal()
+{
+#if !PLATFORM_WINDOWS
+	// Only enable replacement on a platform with a verified atomic replace primitive.
+	return false;
+#else
+	auto& Files = FPlatformFileManager::Get().GetPlatformFile();
+	const FString Pending = Journal + TEXT(".next");
+	ON_SCOPE_EXIT { if (Files.FileExists(*Pending)) Files.DeleteFile(*Pending); };
+#if WITH_DEV_AUTOMATION_TESTS
+	if (FailRollStepForTest == 1) return false;
+#endif
+	if (!WriteSegment(Pending)) return false;
+	FExtractionStoreState Verified;
+	if (!ReadSegment(Pending, Verified) || !FExtractionStoreState::StaticStruct()->CompareScriptStruct(&State, &Verified, 0)) return false;
+#if WITH_DEV_AUTOMATION_TESTS
+	if (FailRollStepForTest == 2) return false;
+#endif
+	const FString Generation = Journal + FString::Printf(TEXT(".gen%020lld"), State.Sequence);
+	if (!Files.CopyFile(*Generation, *Journal)) return false;
+	{
+		TUniquePtr<IFileHandle> Archive(Files.OpenWrite(*Generation, true));
+		if (!Archive || !Archive->Flush(true)) return false;
+	}
+#if WITH_DEV_AUTOMATION_TESTS
+	if (FailRollStepForTest == 3) return false;
+#endif
+	// Archive by copy, then atomically replace. The active path never disappears between renames.
+	if (!::MoveFileExW(*Pending, *Journal, MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) return false;
+	JournalRecords = 1;
+	TArray<FString> Generations;
+	IFileManager::Get().FindFiles(Generations, *(Journal + TEXT(".gen*")), true, false);
+	Generations.Sort();
+	const int32 Keep = FMath::Max(1, JournalGenerations);
+	for (int32 Index = 0; Index < Generations.Num() - Keep; ++Index)
+		if (!Files.DeleteFile(*(FPaths::GetPath(Journal) / Generations[Index])))
+			UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_STORE_ARCHIVE_CLEANUP_FAILED %s"), *Generations[Index]);
+	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_ROLLED Sequence=%lld"), State.Sequence);
+	return true;
+#endif
 }
 
 // 返回当前内存状态中的档案只读指针；找不到返回空，后续 Commit 替换状态后不能继续持有旧指针。

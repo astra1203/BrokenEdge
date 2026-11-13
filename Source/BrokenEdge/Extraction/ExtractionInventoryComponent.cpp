@@ -158,13 +158,12 @@ void UExtractionInventoryComponent::InitializeLoadout()
 		                     })
 		                     : nullptr;
 	if (!Member || Member->Outcome != EExtractionOutcome::None) return;
-	bInitialized = true;
-	InitializedWorld = GetWorld();
-	bDropped = false;
-	Contents = Member->Original;
-	Contents.Id = FGuid::NewGuid();
+	FExtractionContainer Candidate = Member->Original;
+	Candidate.Revision = FMath::Max(Candidate.Revision, Contents.Revision);
+	Candidate.Id = FGuid::NewGuid();
+	AExtractionLootActor* Supply = nullptr;
 	// 补给生成是独立于原出战装备的局内规则；容器装不下时保留为地面物资。
-	const FExtractionContainer Overflow = GrantStartingSupply(Contents);
+	const FExtractionContainer Overflow = GrantStartingSupply(Candidate);
 	if (!Overflow.Items.IsEmpty())
 	{
 		auto* C = Character();
@@ -175,10 +174,10 @@ void UExtractionInventoryComponent::InitializeLoadout()
 		for (TActorIterator<AExtractionLootActor> It(GetWorld()); It; ++It) Query.AddIgnoredActor(*It);
 		for (int32 Side : {1, -1, 0})
 		{
-			const FVector Candidate = C->GetActorLocation() + C->GetActorRightVector() * Side * 100;
+			const FVector SupplyPosition = C->GetActorLocation() + C->GetActorRightVector() * Side * 100;
 			FHitResult Ground, Wall;
-			if (!GetWorld()->LineTraceSingleByChannel(Wall, C->GetActorLocation(), Candidate, ECC_Visibility, Query)
-				&& GetWorld()->LineTraceSingleByChannel(Ground, Candidate, Candidate - FVector(0, 0, 200),
+			if (!GetWorld()->LineTraceSingleByChannel(Wall, C->GetActorLocation(), SupplyPosition, ECC_Visibility, Query)
+				&& GetWorld()->LineTraceSingleByChannel(Ground, SupplyPosition, SupplyPosition - FVector(0, 0, 200),
 				                                        ECC_Visibility, Query)
 				&& Ground.ImpactNormal.Z > .7f)
 			{
@@ -186,15 +185,27 @@ void UExtractionInventoryComponent::InitializeLoadout()
 				break;
 			}
 		}
-		if (auto* Supply = AExtractionLootActor::SpawnContainer(GetWorld(), Position, false))
+		if ((Supply = AExtractionLootActor::SpawnContainer(GetWorld(), Position, false)))
 		{
 			Supply->Label = TEXT("开局补给");
-			Supply->SetContents(Overflow);
 		}
-		else UE_LOG(LogTemp, Error, TEXT("EXTRACTION_STARTING_SUPPLY_SPAWN_FAILED"));
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("EXTRACTION_STARTING_SUPPLY_SPAWN_FAILED"));
+			return;
+		}
 	}
-	SyncWeapons();
-	Changed();
+	FExtractionContainer Other = Overflow;
+	const auto Result = CommitCandidate(MoveTemp(Candidate), true, Supply, Supply ? &Other : nullptr);
+	if (!Result.Ok())
+	{
+		if (Supply) Supply->Destroy();
+		UE_LOG(LogTemp, Error, TEXT("EXTRACTION_LOADOUT_COMMIT_FAILED %s"), *Result.Error);
+		return;
+	}
+	bInitialized = true;
+	InitializedWorld = GetWorld();
+	bDropped = false;
 }
 
 // 开局测试配装：先为两把测试长枪与备弹预留空间，再装回原有物品。
@@ -389,9 +400,9 @@ void UExtractionInventoryComponent::InitializeGuard()
 {
 	auto* C = Character();
 	if (!C || !C->HasAuthority() || !C->bExtractionGuard || bInitialized) return;
-	bInitialized = true;
-	Contents.Id = FGuid::NewGuid();
-	Contents.WeaponSlots = true;
+	auto Candidate = Contents;
+	Candidate.Id = FGuid::NewGuid();
+	Candidate.WeaponSlots = true;
 	// 按配置随机配枪，弹药跟随枪的默认弹种；配置无效时回退 AK。
 	const auto& Weapons = GetDefault<UExtractionRules>()->GuardWeapons;
 	FName GunId = Weapons.IsEmpty() ? FName(TEXT("AK")) : Weapons[FMath::RandRange(0, Weapons.Num() - 1)];
@@ -404,11 +415,10 @@ void UExtractionInventoryComponent::InitializeGuard()
 	auto Gun = ExtractionItems::Make(GunId);
 	Gun.Slot = 0;
 	ExtractionItems::SeedOrigins(Gun);
-	Contents.Items.Add(Gun);
-	ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(GunDef ? GunDef->DefaultAmmo : FName(TEXT("Ammo")), 60));
-	ExtractionItems::AutoPlace(Contents, ExtractionItems::Make(TEXT("Medkit")));
-	SyncWeapons();
-	Changed();
+	Candidate.Items.Add(Gun);
+	ExtractionItems::AutoPlace(Candidate, ExtractionItems::Make(GunDef ? GunDef->DefaultAmmo : FName(TEXT("Ammo")), 60));
+	ExtractionItems::AutoPlace(Candidate, ExtractionItems::Make(TEXT("Medkit")));
+	if (CommitCandidate(MoveTemp(Candidate), true).Ok()) bInitialized = true;
 }
 
 // 结算后的清理路径：标记已处理并清空物品和武器，防止角色销毁时再次掉落已入库资产。
@@ -527,13 +537,12 @@ void UExtractionInventoryComponent::CaptureWeapons()
 	if (!C || !C->HasAuthority()) return;
 	auto* Combat = C->GetCombat().Get();
 	AWeapon* Weapons[2] = {Combat->EquippedWeapon, Combat->SecondaryWeapon};
-	bool ChangedState = false;
+	auto Candidate = Contents;
 	// 槽位固定不随切枪交换，只写回弹匣；切枪结果记在手持槽 bHoldingSecondary 上。
 	for (auto* W : Weapons)
 		if (W)
-			if (auto* I = Contents.Find(W->ExtractionItemId))
+			if (auto* I = Candidate.Find(W->ExtractionItemId))
 			{
-				ChangedState |= I->Magazine != W->GetAmmo();
 				I->Magazine = W->GetAmmo();
 			}
 	if (const auto* W = Combat->EquippedWeapon)
@@ -544,11 +553,7 @@ void UExtractionInventoryComponent::CaptureWeapons()
 			SyncReserve();
 			GetOwner()->ForceNetUpdate();
 		}
-	if (ChangedState)
-	{
-		++Contents.Revision;
-		Changed();
-	}
+	CommitCandidate(MoveTemp(Candidate), false);
 }
 
 // 服务器接受射击后记录弹匣余量，并从弹匣来源中消耗一发，保持数量与来源守恒。
@@ -599,21 +604,26 @@ void UExtractionInventoryComponent::DropAll(const FVector& Position)
 	// 安全箱及其中物品不掉落：结算时已随玩家回到仓库，这里只丢其余装备与物资。
 	FExtractionContainer Dropped = Contents;
 	Dropped.Items.RemoveAll([](const FExtractionItem& I) { return ExtractionItems::Protected(I); });
+	AExtractionLootActor* Loot = nullptr;
 	if (!Dropped.Items.IsEmpty())
 	{
-		auto* Loot = AExtractionLootActor::SpawnContainer(GetWorld(), Position, false);
+		Loot = AExtractionLootActor::SpawnContainer(GetWorld(), Position, false);
 		if (!Loot)
 		{
 			UE_LOG(LogTemp, Error, TEXT("EXTRACTION_DROP_FAILED Owner=%s"), *GetOwner()->GetName());
 			return;
 		}
-		Dropped.Id = FGuid::NewGuid();
-		++Dropped.Revision;
-		Loot->SetContents(Dropped);
+		Dropped.Id = Loot->Contents.Id;
+		Dropped.Revision = Loot->Contents.Revision;
+	}
+	auto Candidate = Contents;
+	Candidate.Items.Reset();
+	const auto Result = CommitCandidate(MoveTemp(Candidate), true, Loot, Loot ? &Dropped : nullptr);
+	if (!Result.Ok())
+	{
+		if (Loot) Loot->Destroy();
+		UE_LOG(LogTemp, Error, TEXT("EXTRACTION_DROP_COMMIT_FAILED %s"), *Result.Error);
+		return;
 	}
 	bDropped = true;
-	Contents.Items.Reset();
-	++Contents.Revision;
-	SyncWeapons();
-	Changed();
 }

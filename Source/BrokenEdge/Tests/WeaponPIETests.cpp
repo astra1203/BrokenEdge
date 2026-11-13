@@ -1,5 +1,6 @@
 #if WITH_EDITOR && WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
+#include "ExtractionInventoryTestAccess.h"
 #include "Tests/AutomationEditorCommon.h"
 #include "Editor.h"
 #include "Settings/LevelEditorPlaySettings.h"
@@ -230,11 +231,11 @@ public:
 		{
 			auto* Inventory = C->GetExtractionInteraction()->Inventory();
 			Test->TestTrue(TEXT("PIE inventory opened"), C->GetExtractionInteraction()->InventoryOpen);
-			const auto* Gun = Inventory->Contents.Items.FindByPredicate([](const auto& I)
+			const auto* Gun = FExtractionInventoryTestAccess::Get(Inventory).Items.FindByPredicate([](const auto& I)
 			{
 				return I.Definition == TEXT("AK");
 			});
-			const auto* Grip = Inventory->Contents.Items.FindByPredicate([](const auto& I)
+			const auto* Grip = FExtractionInventoryTestAccess::Get(Inventory).Items.FindByPredicate([](const auto& I)
 			{
 				return I.Definition == TEXT("VerticalGrip");
 			});
@@ -254,7 +255,7 @@ public:
 		}
 		else if (Step == 8 && Now - StepAt > .5)
 		{
-			const auto* Gun = C->GetExtractionInteraction()->Inventory()->Contents.Find(GunId);
+			const auto* Gun = FExtractionInventoryTestAccess::Get(C->GetExtractionInteraction()->Inventory()).Find(GunId);
 			Test->TestTrue(TEXT("PIE attachment production transaction"), Gun && Gun->Attachments.Num() == 1);
 			const auto* Def = UExtractionItemDefinition::Get(TEXT("VerticalGrip"));
 			FExtractionItemRequest R;
@@ -268,7 +269,7 @@ public:
 		}
 		else if (Step == 9 && Now - StepAt > .5)
 		{
-			const auto* Gun = C->GetExtractionInteraction()->Inventory()->Contents.Find(GunId);
+			const auto* Gun = FExtractionInventoryTestAccess::Get(C->GetExtractionInteraction()->Inventory()).Find(GunId);
 			Test->TestTrue(
 				TEXT("PIE tuning reaches runtime resolver"),
 				Gun && WeaponMechanics::ResolveWeaponStats(*Gun).RecoilScale < 1.f);

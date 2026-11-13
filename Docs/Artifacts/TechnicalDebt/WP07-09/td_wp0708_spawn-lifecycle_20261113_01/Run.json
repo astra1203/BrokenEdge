@@ -1,0 +1,39 @@
+{
+  "task": "spawn-lifecycle",
+  "started_utc": "2026-11-13T06:43:11.871447+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp0708_spawn-lifecycle_20261113_01\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.SpawnLifecycle",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp0708_spawn-lifecycle_20261113_01\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "ff2ac32adeeeb6db62fed1c06a888b4a652afcfd",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Extraction/run_editor_task.py\n M Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionGameMode.cpp\n M Source/BrokenEdge/Extraction/ExtractionGuard.cpp\n M Source/BrokenEdge/Extraction/ExtractionHealth.cpp\n M Source/BrokenEdge/Extraction/ExtractionInteractionComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h\n M Source/BrokenEdge/Extraction/ExtractionKeyRoom.cpp\n M Source/BrokenEdge/Extraction/ExtractionLootActor.h\n M Source/BrokenEdge/Extraction/ExtractionPersistence.cpp\n M Source/BrokenEdge/Extraction/ExtractionPersistence.h\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp\n M Source/BrokenEdge/Extraction/ExtractionWidget.cpp\n M Source/BrokenEdge/Extraction/LootingMainView.cpp\n M Source/BrokenEdge/Extraction/WeaponRangeGameMode.cpp\n M Source/BrokenEdge/Tests/ExtractionBlueprintTests.cpp\n M Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\n M Source/BrokenEdge/Tests/ExtractionExitFeedbackTests.cpp\n M Source/BrokenEdge/Tests/ExtractionInventoryTransactionTests.cpp\n M Source/BrokenEdge/Tests/WeaponPIETests.cpp\n M Source/StingerTools/Private/ExtractionPIELobbyTests.cpp\n?? Source/BrokenEdge/Tests/ExtractionInventoryTestAccess.h\n?? Source/BrokenEdge/Tests/ExtractionPersistenceCapacityTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "f8dc8775ac768badf473b50775b798d09d71dd92f7e13fcb81dbc2362f4cab94",
+  "ue_env_sha256": "7999162131eb1cca58c4c49e2f4426ad704711e5b0c204317baaa65c5361f5c1",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp0708_spawn-lifecycle_20261113_01\\Run.json",
+  "exit_code": 0,
+  "pid": 17056,
+  "successful_tests": 3,
+  "result": "passed",
+  "finished_utc": "2026-11-13T06:43:33.144984+00:00"
+}

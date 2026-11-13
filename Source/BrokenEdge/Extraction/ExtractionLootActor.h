@@ -93,8 +93,7 @@ public:
 	TObjectPtr<class AExtractionKeyRoom> AccessDoor;
 	/** Filled only once by authority, never by opening the UI. */
 	// 权威物品内容不参与 Actor 属性复制，不能把它当作客户端已知的库存。
-	UPROPERTY()
-	FExtractionContainer Contents;
+	const FExtractionContainer& GetContents() const { return Contents; }
 	// 仅控制首次生成配方与默认落地调整；布局导入和玩家掉落会关闭它。
 	UPROPERTY(EditAnywhere)
 	bool SeedContents = true;
@@ -112,6 +111,9 @@ public:
 	                                            FName Definition = NAME_None);
 
 private:
+	friend class UExtractionInventoryComponent;
+	UPROPERTY()
+	FExtractionContainer Contents;
 	// 依据整箱/散落物/枪械切换模型和查询边界；不移动作为根组件的交互盒，以免改变配置点位。
 	UFUNCTION()
 	void OnRep_Appearance();

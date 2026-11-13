@@ -213,7 +213,7 @@ bool AExtractionGuard::StartGuardAI()
 	// 只要由此类型控制器接管，就作为敌人初始化；不要求关卡或 GameMode 额外打标。
 	ApplySightRules();
 	C->bExtractionGuard = true;
-	if (!C->GuardInventory->Contents.Id.IsValid())
+	if (!C->GuardInventory->GetContents().Id.IsValid())
 	{
 		C->SetHealth(100);
 		C->SetShield(0);

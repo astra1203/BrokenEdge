@@ -1,0 +1,40 @@
+[2026.11.13-06.50.51:088][298]LogTemp: Display: EXTRACTION_STORE_LOAD Records=0 JournalBytes=111 ElapsedMs=7.92 Faulted=0
+[2026.11.13-06.50.51:114][298]LogTemp: Display: EXTRACTION_STORE_LOAD Records=2 JournalBytes=7731 ElapsedMs=4.08 Faulted=0
+[2026.11.13-06.50.51:118][298]LogTemp: Display: EXTRACTION_STORE_LOAD Records=0 JournalBytes=7731 ElapsedMs=0.23 Faulted=1
+[2026.11.13-06.50.51:120][299]LogAutomationController: Display: Test Completed. Result={Success} Name={JournalFailures} Path={BrokenEdge.Extraction.Persistence.JournalFailures}
+[2026.11.13-06.50.51:144][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=0 JournalBytes=111 ElapsedMs=7.50 Faulted=0
+[2026.11.13-06.50.51:157][300]LogTemp: Display: EXTRACTION_STORE_ROLLED Sequence=2
+[2026.11.13-06.50.51:158][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=1 JournalBytes=7620 ElapsedMs=0.72 Faulted=0
+[2026.11.13-06.50.51:172][300]LogTemp: Display: EXTRACTION_STORE_ROLLED Sequence=3
+[2026.11.13-06.50.51:173][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=1 JournalBytes=15130 ElapsedMs=1.09 Faulted=0
+[2026.11.13-06.50.51:188][300]LogTemp: Display: EXTRACTION_STORE_ROLLED Sequence=4
+[2026.11.13-06.50.51:190][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=1 JournalBytes=22640 ElapsedMs=1.50 Faulted=0
+[2026.11.13-06.50.51:207][300]LogTemp: Display: EXTRACTION_STORE_ROLLED Sequence=5
+[2026.11.13-06.50.51:209][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=1 JournalBytes=30150 ElapsedMs=1.95 Faulted=0
+[2026.11.13-06.50.51:228][300]LogTemp: Display: EXTRACTION_STORE_ROLLED Sequence=6
+[2026.11.13-06.50.51:231][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=1 JournalBytes=37660 ElapsedMs=2.32 Faulted=0
+[2026.11.13-06.50.51:236][300]LogTemp: Verbose: EXTRACTION_STORE_ROLL_FAILED Sequence=7
+[2026.11.13-06.50.51:241][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=2 JournalBytes=82830 ElapsedMs=4.44 Faulted=0
+[2026.11.13-06.50.51:256][300]LogTemp: Verbose: EXTRACTION_STORE_ROLL_FAILED Sequence=8
+[2026.11.13-06.50.51:264][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=3 JournalBytes=135510 ElapsedMs=7.60 Faulted=0
+[2026.11.13-06.50.51:285][300]LogTemp: Verbose: EXTRACTION_STORE_ROLL_FAILED Sequence=9
+[2026.11.13-06.50.51:295][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=4 JournalBytes=195700 ElapsedMs=10.22 Faulted=0
+[2026.11.13-06.50.51:318][300]LogTemp: Display: EXTRACTION_STORE_ROLLED Sequence=10
+[2026.11.13-06.50.51:329][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=1 JournalBytes=67701 ElapsedMs=4.29 Faulted=0
+[2026.11.13-06.50.51:344][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=1 JournalBytes=67701 ElapsedMs=7.78 Faulted=0
+[2026.11.13-06.50.51:354][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=1 JournalBytes=67696 ElapsedMs=3.80 Faulted=0
+[2026.11.13-06.50.51:370][300]LogTemp: Display: EXTRACTION_STORE_LOAD Records=0 JournalBytes=-1 ElapsedMs=0.23 Faulted=1
+[2026.11.13-06.50.51:372][301]LogAutomationController: Display: Test Completed. Result={Success} Name={JournalRolling} Path={BrokenEdge.Extraction.Persistence.JournalRolling}
+[2026.11.13-06.50.51:400][302]LogTemp: Display: EXTRACTION_STORE_LOAD Records=0 JournalBytes=111 ElapsedMs=11.53 Faulted=0
+[2026.11.13-06.50.51:497][303]LogAutomationController: Display: Test Completed. Result={Success} Name={PreparedCancellation} Path={BrokenEdge.Extraction.Persistence.PreparedCancellation}
+[2026.11.13-06.50.51:529][304]LogTemp: Display: EXTRACTION_STORE_LOAD Records=0 JournalBytes=111 ElapsedMs=15.28 Faulted=0
+[2026.11.13-06.50.51:581][304]LogTemp: Display: EXTRACTION_STORE_LOAD Records=10 JournalBytes=162322 ElapsedMs=11.90 Faulted=0
+[2026.11.13-06.50.51:590][304]LogTemp: Display: EXTRACTION_STORE_LOAD Records=11 JournalBytes=162322 ElapsedMs=8.19 Faulted=0
+[2026.11.13-06.50.51:624][304]LogTemp: Display: EXTRACTION_STORE_LOAD Records=15 JournalBytes=262821 ElapsedMs=13.55 Faulted=0
+[2026.11.13-06.50.51:666][304]LogTemp: Display: EXTRACTION_STORE_LOAD Records=19 JournalBytes=388731 ElapsedMs=23.19 Faulted=0
+[2026.11.13-06.50.51:685][306]LogAutomationController: Display: Test Completed. Result={Success} Name={RecoveryProvenance} Path={BrokenEdge.Extraction.Persistence.RecoveryProvenance}
+[2026.11.13-06.50.51:709][307]LogTemp: Display: EXTRACTION_STORE_LOAD Records=0 JournalBytes=111 ElapsedMs=7.44 Faulted=0
+[2026.11.13-06.50.51:718][307]LogTemp: Display: EXTRACTION_STORE_LOAD Records=3 JournalBytes=15350 ElapsedMs=1.16 Faulted=0
+[2026.11.13-06.50.51:728][307]LogTemp: Display: EXTRACTION_STORE_LOAD Records=4 JournalBytes=35154 ElapsedMs=5.79 Faulted=0
+[2026.11.13-06.50.51:745][307]LogTemp: Display: EXTRACTION_STORE_LOAD Records=8 JournalBytes=67983 ElapsedMs=3.61 Faulted=0
+[2026.11.13-06.50.51:797][309]LogAutomationController: Display: Test Completed. Result={Success} Name={Transactions} Path={BrokenEdge.Extraction.Persistence.Transactions}

@@ -180,11 +180,11 @@ void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootAct
 	C->GetCombat()->SetAiming(false);
 	if (Target && Target->Loose)
 	{
-		if (Target->Contents.Items.IsEmpty()) return;
+		if (Target->GetContents().Items.IsEmpty()) return;
 		if (C->GetCombatState() != ECombatState::ECS_Unoccuiped) return;
 		// 整包落地的胸挂/背包：对应装备槽空着就连同里面的东西整包穿上；
 		// 槽位已占用且包里还有东西时打开搜索界面逐件拿（包里的东西直接可见，不用再搜）。
-		if (Target->Contents.GearGrids)
+		if (Target->GetContents().GearGrids)
 		{
 			const auto Result = UExtractionInventoryComponent::MutatePair(*Inventory(), *Target,
 				[](FExtractionContainer& Destination, FExtractionContainer& Bundle, FString& Error)
@@ -199,10 +199,10 @@ void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootAct
 				Message = TEXT("武器生成失败，操作已撤回");
 				return;
 			}
-			if (Target->Contents.Items.Num() > 1)
+			if (Target->GetContents().Items.Num() > 1)
 			{
-				auto& Known = Revealed.FindOrAdd(Target->Contents.Id);
-				for (const auto& I : Target->Contents.Items) Known.Add(I.Id);
+				auto& Known = Revealed.FindOrAdd(Target->GetContents().Id);
+				for (const auto& I : Target->GetContents().Items) Known.Add(I.Id);
 				InventoryOpen = true;
 				Loot = Target;
 				SeenRevision = -1;
@@ -211,21 +211,21 @@ void UExtractionInteractionComponent::Open(uint32 NewSession, AExtractionLootAct
 				return;
 			}
 		}
-		const auto& Item = Target->Contents.Items[0];
+		const auto& Item = Target->GetContents().Items[0];
 		FExtractionItemRequest R;
 		R.Item = Item.Id;
 		R.Quantity = Item.Quantity;
 		const auto* PickDef = UExtractionItemDefinition::Get(Item.Definition);
 		if (PickDef && PickDef->Kind == EExtractionItemKind::Weapon)
 			for (int32 Slot = 0; Slot < 2; ++Slot)
-				if (!Inventory()->Contents.InSlot(Slot))
+				if (!Inventory()->GetContents().InSlot(Slot))
 				{
 					R.Slot = Slot;
 					break;
 				}
 		// 捡装备先看装备槽：没穿胸挂/背包/安全箱时直接穿上，不需要网格里有空位。
 		if (PickDef && PickDef->Kind == EExtractionItemKind::Gear && PickDef->GearSlot >= ExtractionGear::RigSlot
-			&& PickDef->GearSlot <= ExtractionGear::SafeSlot && !Inventory()->Contents.InSlot(PickDef->GearSlot))
+			&& PickDef->GearSlot <= ExtractionGear::SafeSlot && !Inventory()->GetContents().InSlot(PickDef->GearSlot))
 			R.Slot = PickDef->GearSlot;
 		const auto Result = UExtractionInventoryComponent::MutatePair(*Inventory(), *Target,
 			[&](FExtractionContainer& Destination, FExtractionContainer& Source, FString& Error)
@@ -258,7 +258,7 @@ void UExtractionInteractionComponent::Close()
 bool UExtractionInteractionComponent::IsRevealed(const FGuid& Id) const
 {
 	if (!Loot) return false;
-	const auto* Known = Revealed.Find(Loot->Contents.Id);
+	const auto* Known = Revealed.Find(Loot->GetContents().Id);
 	return Known && Known->Contains(Id);
 }
 
@@ -266,7 +266,7 @@ bool UExtractionInteractionComponent::IsRevealed(const FGuid& Id) const
 void UExtractionInteractionComponent::RefreshLootView()
 {
 	if (!GetOwner()->HasAuthority() || !Loot) return;
-	LootView = Loot->Contents;
+	LootView = Loot->GetContents();
 	for (auto& I : LootView.Items)
 		if (!IsRevealed(I.Id))
 		{
@@ -278,7 +278,7 @@ void UExtractionInteractionComponent::RefreshLootView()
 			I.Durability = 0;
 			I.Attachments.Reset();
 		}
-	SeenRevision = Loot->Contents.Revision;
+	SeenRevision = Loot->GetContents().Revision;
 	GetOwner()->ForceNetUpdate();
 }
 
@@ -286,21 +286,21 @@ void UExtractionInteractionComponent::RefreshLootView()
 void UExtractionInteractionComponent::AdvanceSearch(double Now)
 {
 	if (!Loot || !InventoryOpen) return;
-	if (Searching.IsValid() && !Loot->Contents.Find(Searching))
+	if (Searching.IsValid() && !Loot->GetContents().Find(Searching))
 	{
 		Searching.Invalidate();
 		SearchEnd = 0;
 	}
 	if (Searching.IsValid() && Now >= SearchEnd)
 	{
-		Revealed.FindOrAdd(Loot->Contents.Id).Add(Searching);
+		Revealed.FindOrAdd(Loot->GetContents().Id).Add(Searching);
 		Searching.Invalidate();
 		SearchEnd = 0;
 		RefreshLootView();
 	}
 	if (!Searching.IsValid())
 	{
-		TArray<FExtractionItem> Ordered = Loot->Contents.Items;
+		TArray<FExtractionItem> Ordered = Loot->GetContents().Items;
 		Ordered.Sort([](const FExtractionItem& A, const FExtractionItem& B)
 		{
 			// 装备槽在前，网格按分区（胸挂 -2、背包 -1 …）分段，再按格子行列。
@@ -320,7 +320,7 @@ void UExtractionInteractionComponent::AdvanceSearch(double Now)
 				break;
 			}
 	}
-	if (SeenRevision != Loot->Contents.Revision) RefreshLootView();
+	if (SeenRevision != Loot->GetContents().Revision) RefreshLootView();
 }
 
 // 服务器清除医疗计时和物品占用，并取消能力动作；未完成时不消耗医疗物品。
@@ -358,7 +358,7 @@ void UExtractionInteractionComponent::StopCombatInput()
 // 验证物品类型、动作互斥和治疗需求，再记录服务器完成时刻；空错误字符串表示启动成功。
 FString UExtractionInteractionComponent::StartMedical(const FGuid& Id)
 {
-	const auto* I = Inventory()->Contents.Find(Id);
+	const auto* I = Inventory()->GetContents().Find(Id);
 	const auto* D = I ? UExtractionItemDefinition::Get(I->Definition) : nullptr;
 	auto* C = Character();
 	if (!D || D->Kind != EExtractionItemKind::Medical) return TEXT("无法使用该物品");
@@ -400,7 +400,7 @@ FString UExtractionInteractionComponent::TakeAll(const FExtractionItemRequest& R
 {
 	auto* Inv = Inventory();
 	if (!InventoryOpen || R.Session != Session || !Loot || !CanReach(Loot)) return TEXT("搜索已关闭或超出距离");
-	if (R.LootRevision != Loot->Contents.Revision)
+	if (R.LootRevision != Loot->GetContents().Revision)
 	{
 		RefreshLootView();
 		return TEXT("容器已变化，请重试");
@@ -446,12 +446,12 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 	LastSequence = R.Sequence;
 	if (!CanAct()) return TEXT("当前无法操作物品");
 	auto* Inv = Inventory();
-	if (R.InventoryRevision != Inv->Contents.Revision) return TEXT("背包已变化，请重试");
+	if (R.InventoryRevision != Inv->GetContents().Revision) return TEXT("背包已变化，请重试");
 	if (R.Op == EExtractionItemOp::TakeAll) return TakeAll(R);
 	if (R.FromLoot || R.ToLoot)
 	{
 		if (!InventoryOpen || R.Session != Session || !Loot || !CanReach(Loot)) return TEXT("搜索已关闭或超出距离");
-		if (R.LootRevision != Loot->Contents.Revision)
+		if (R.LootRevision != Loot->GetContents().Revision)
 		{
 			RefreshLootView();
 			return TEXT("容器已变化，请重试");
@@ -473,7 +473,7 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 		}, R.InventoryRevision, false);
 		return Result.Ok() ? FString() : Result.Error;
 	}
-	FExtractionContainer& OriginalSource = R.FromLoot ? Loot->Contents : Inv->Contents;
+	const FExtractionContainer& OriginalSource = R.FromLoot ? Loot->GetContents() : Inv->GetContents();
 	const auto* Item = OriginalSource.Find(R.Item);
 	if (!Item || R.Quantity < 1 || R.Quantity > Item->Quantity) return TEXT("物品已变化或数量无效");
 	if (MedicalItem.IsValid() && (R.Item == MedicalItem || R.MergeInto == MedicalItem || R.SwapWith == MedicalItem)) return TEXT("物品正在使用");
@@ -483,72 +483,70 @@ FString UExtractionInteractionComponent::Execute(const FExtractionItemRequest& R
 	if (MedicalEnd > 0 || C->GetExtractionAbilities()->Action != EExtractionAction::None) return TEXT("当前动作尚未完成");
 	if (R.Op == EExtractionItemOp::Drop) C->GetExtractionCombat()->CancelReload();
 	if (C->GetCombatState() != ECombatState::ECS_Unoccuiped) return TEXT("当前动作尚未完成");
-	// 在改变任何容器前保留快照；后续场景武器同步失败时，要恢复数据并销毁临时掉落物。
-	FExtractionContainer BeforeInventory = Inv->Contents;
-	FExtractionContainer BeforeLoot = Loot ? Loot->Contents : FExtractionContainer();
-	FString Error;
-	AExtractionLootActor* Dropped = nullptr;
-	if (R.Op == EExtractionItemOp::Attach || R.Op == EExtractionItemOp::Detach || R.Op == EExtractionItemOp::Unload || R
-		.Op == EExtractionItemOp::SelectAmmo || R.Op == EExtractionItemOp::Tune)
+	const FExtractionContainer BeforeLoot = Loot ? Loot->GetContents() : FExtractionContainer();
+	FExtractionInventoryResult Result;
+	if (R.Op == EExtractionItemOp::Attach || R.Op == EExtractionItemOp::Detach || R.Op == EExtractionItemOp::Unload
+		|| R.Op == EExtractionItemOp::SelectAmmo || R.Op == EExtractionItemOp::Tune)
 	{
-		if (!ExtractionItems::Configure(Inv->Contents, R, Error)) return Error;
+		Result = Inv->Mutate([&](FExtractionContainer& Candidate, FString& Error)
+		{ return ExtractionItems::Configure(Candidate, R, Error); }, R.InventoryRevision);
 	}
 	else if (R.Op == EExtractionItemOp::Drop)
 	{
 		if (R.FromLoot || R.ToLoot) return TEXT("请先将物品放入背包");
 		if (ExtractionItems::IsSafeBox(*Item)) return TEXT("安全箱不能丢弃");
-		Dropped = AExtractionLootActor::SpawnContainer(GetWorld(), DropPosition(), true, Item->Definition);
-		if (!Dropped) return TEXT("无法放置地面物品");
-		// 身上穿着的胸挂/背包整包丢：里面的物品原位跟着装备一起落地，捡回来时位置不变。
+		const FName Definition = Item->Definition;
+		FExtractionContainer Candidate = Inv->GetContents(), Bundle;
+		FString Error;
 		if (Item->Slot == ExtractionGear::RigSlot || Item->Slot == ExtractionGear::BagSlot)
 		{
-			if (!ExtractionItems::DetachGear(Inv->Contents, R.Item, Dropped->Contents, Error))
-			{
-				Dropped->Destroy();
-				return Error;
-			}
+			if (!ExtractionItems::DetachGear(Candidate, R.Item, Bundle, Error)) return Error;
 		}
 		else
 		{
-		FExtractionItemRequest Move = R;
-		Move.Slot = -1;
-		Move.AutoPlace = true;
-		Move.MergeInto.Invalidate();
-		if (!ExtractionItems::Transfer(Inv->Contents, Dropped->Contents, Move, Error))
-		{
-			Dropped->Destroy();
-			return Error;
+			FExtractionItemRequest Move = R;
+			Move.Slot = -1;
+			Move.AutoPlace = true;
+			Move.MergeInto.Invalidate();
+			if (!ExtractionItems::Transfer(Candidate, Bundle, Move, Error)) return Error;
 		}
-		}
+		auto* Dropped = AExtractionLootActor::SpawnContainer(GetWorld(), DropPosition(), true, Definition);
+		if (!Dropped) return TEXT("无法放置地面物品");
+		Bundle.Id = Dropped->GetContents().Id;
+		Bundle.Revision = Dropped->GetContents().Revision;
+		Result = UExtractionInventoryComponent::MutatePair(*Inv, *Dropped,
+			[&](FExtractionContainer& InventoryCandidate, FExtractionContainer& Other, FString&)
+			{ InventoryCandidate = Candidate; Other = Bundle; return true; }, R.InventoryRevision);
+		if (!Result.Ok()) Dropped->Destroy();
 	}
 	else if (R.Op == EExtractionItemOp::Transfer || R.Op == EExtractionItemOp::Swap)
 	{
 		if (R.ToLoot && ExtractionItems::IsSafeBox(*Item)) return TEXT("安全箱不能放进容器");
-		FExtractionContainer& Destination = R.ToLoot ? Loot->Contents : Inv->Contents;
+		const auto& Destination = R.ToLoot ? Loot->GetContents() : Inv->GetContents();
 		if (R.Op == EExtractionItemOp::Swap && R.FromLoot)
 			if (const auto* Other = Destination.Find(R.SwapWith); Other && ExtractionItems::IsSafeBox(*Other))
 				return TEXT("安全箱不能放进容器");
-		if (!ExtractionItems::Transfer(OriginalSource, Destination, R, Error)) return Error;
+		if (R.FromLoot || R.ToLoot)
+			Result = UExtractionInventoryComponent::MutatePair(*Inv, *Loot,
+				[&](FExtractionContainer& Candidate, FExtractionContainer& Other, FString& Error)
+				{ return ExtractionItems::Transfer(R.FromLoot ? Other : Candidate, R.ToLoot ? Other : Candidate, R, Error); },
+				R.InventoryRevision, R.LootRevision);
+		else
+			Result = Inv->Mutate([&](FExtractionContainer& Candidate, FString& Error)
+			{ return ExtractionItems::Transfer(Candidate, Candidate, R, Error); }, R.InventoryRevision);
 	}
 	else return TEXT("无效操作");
-	if (!Inv->SyncWeapons())
-	{
-		Inv->Contents = BeforeInventory;
-		if (Loot) Loot->Contents = BeforeLoot;
-		if (Dropped) Dropped->Destroy();
-		return TEXT("武器生成失败，操作已撤回");
-	}
-	if (Dropped) Dropped->Changed();
+	if (!Result.Ok()) return Result.Code == EExtractionInventoryCommit::WeaponSyncFailed
+		? TEXT("武器生成失败，操作已撤回") : Result.Code == EExtractionInventoryCommit::Stale
+		? TEXT("背包或容器已变化，请重试") : Result.Error;
 	if (Loot)
 	{
 		// The depositor knows their own deposited items; other viewers still search independently.
 		if (R.ToLoot || R.Op == EExtractionItemOp::Swap)
-			for (const auto& I : Loot->Contents.Items)
-				if (!BeforeLoot.Find(I.Id)) Revealed.FindOrAdd(Loot->Contents.Id).Add(I.Id);
-		Loot->Changed();
+			for (const auto& I : Loot->GetContents().Items)
+				if (!BeforeLoot.Find(I.Id)) Revealed.FindOrAdd(Loot->GetContents().Id).Add(I.Id);
 		RefreshLootView();
 	}
-	Inv->Changed();
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_TRANSFER Sequence=%u Item=%s Quantity=%d Op=%d FromLoot=%d ToLoot=%d"),
 	       R.Sequence, *R.Item.ToString(), R.Quantity, static_cast<int32>(R.Op), R.FromLoot, R.ToLoot);
 	return {};
@@ -583,7 +581,7 @@ void UExtractionInteractionComponent::TickComponent(float Delta, ELevelTick Tick
 		if (Now >= MedicalEnd)
 		{
 			auto* Inv = Inventory();
-			auto* I = Inv->Contents.Find(MedicalItem);
+			auto* I = Inv->GetContents().Find(MedicalItem);
 			const auto* D = I ? UExtractionItemDefinition::Get(I->Definition) : nullptr;
 			if (D && C->GetExtractionHealth()->Needs(D->MedicalEffect) && Inv->ConsumeOne(MedicalItem).Ok()
 				&& C->GetExtractionHealth()->Treat(D))

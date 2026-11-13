@@ -243,8 +243,8 @@ FString AExtractionKeyRoom::Unlock(UExtractionInteractionComponent* I, int32 Rev
 		return TEXT("当前动作不能开门");
 	if (Unlocked) return TEXT("门已解锁，无需再次使用钥匙");
 	auto* Inventory = I->Inventory();
-	if (!Inventory || Inventory->Contents.Revision != Revision) return TEXT("背包已更新，请重试");
-	FExtractionContainer Candidate = Inventory->Contents;
+	if (!Inventory || Inventory->GetContents().Revision != Revision) return TEXT("背包已更新，请重试");
+	FExtractionContainer Candidate = Inventory->GetContents();
 	int32 Index = INDEX_NONE;
 	if (RequiredKey.IsNone())
 	{
@@ -279,8 +279,10 @@ FString AExtractionKeyRoom::Unlock(UExtractionInteractionComponent* I, int32 Rev
 	++Candidate.Revision;
 	FString Error;
 	if (!ExtractionItems::Validate(Candidate, Error)) return Error;
-	Inventory->Contents = MoveTemp(Candidate);
-	Inventory->Changed();
+	const auto Result = Inventory->Mutate([&](FExtractionContainer& Next, FString&)
+	{ Next = Candidate; return true; }, Revision, false);
+	if (!Result.Ok()) return Result.Code == EExtractionInventoryCommit::Stale
+		? TEXT("背包已更新，请重试") : Result.Error;
 	Unlocked = true;
 	OpenAt = GetWorld()->GetGameState()->GetServerWorldTimeSeconds() + .8;
 	ForceNetUpdate();

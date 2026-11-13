@@ -421,7 +421,7 @@ void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint3
 		Weapon->UseImmediateServerHitScan();
 		float SavedScatter = Weapon->SphereRadius;
 		if (const auto* Inventory = C->GetExtractionInteraction()->Inventory())
-			if (const auto* Item = Inventory->Contents.Find(Weapon->ExtractionItemId))
+			if (const auto* Item = Inventory->GetContents().Find(Weapon->ExtractionItemId))
 				Weapon->SphereRadius *= ExtractionItems::ScatterScale(*Item);
 		FVector End = Stats.IsValid()
 			              ? ResolveShot(Target, ShotId, true)
@@ -455,7 +455,7 @@ void UExtractionCombatComponent::ServerRequestShotVersioned_Implementation(uint3
 		{
 			bool bSuppressed = false;
 			if (const auto* Inventory = C->GetExtractionInteraction()->Inventory())
-				if (const auto* Item = Inventory->Contents.Find(Weapon->ExtractionItemId))
+				if (const auto* Item = Inventory->GetContents().Find(Weapon->ExtractionItemId))
 					for (const auto& Part : Item->Attachments)
 						if (const auto* D = UExtractionItemDefinition::Get(Part.Definition))
 							bSuppressed |= D->Label.ToString().Contains(TEXT("消音")) || D->Label.ToString().Contains(

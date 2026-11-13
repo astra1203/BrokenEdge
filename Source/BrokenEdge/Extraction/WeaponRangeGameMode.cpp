@@ -27,23 +27,25 @@ void AWeaponRangeGameMode::HandleStartingNewPlayer_Implementation(APlayerControl
 	auto* PS = Player ? Player->GetPlayerState<AExtractionPlayerState>() : nullptr;
 	if (!PS || !Player->GetPawn()) return;
 	auto* Inventory = PS->Inventory.Get();
-	Inventory->Contents = FExtractionContainer();
-	Inventory->Contents.Id = FGuid::NewGuid();
-	Inventory->Contents.WeaponSlots = true;
+	FExtractionContainer Candidate;
+	Candidate.Revision = Inventory->GetContents().Revision;
+	Candidate.Id = FGuid::NewGuid();
+	Candidate.WeaponSlots = true;
 	for (int32 Slot = 0; Slot < 2; ++Slot)
 	{
 		auto Gun = ExtractionItems::Make(Slot == 0 ? TEXT("AK") : TEXT("SCARH"));
 		Gun.Slot = Slot;
-		Inventory->Contents.Items.Add(Gun);
+		Candidate.Items.Add(Gun);
 	}
 	for (FName Id : {
 		     FName(TEXT("Ammo")), FName(TEXT("Ammo76251")), FName(TEXT("VerticalGrip")), FName(TEXT("RedDot")),
 		     FName(TEXT("Compensator"))
 	     })
-		ExtractionItems::AutoPlace(Inventory->Contents,
+		ExtractionItems::AutoPlace(Candidate,
 		                           ExtractionItems::Make(Id, Id.ToString().StartsWith(TEXT("Ammo")) ? 60 : 1));
-	Inventory->SyncWeapons();
-	Inventory->Changed();
+	const auto Result = Inventory->Mutate([&](FExtractionContainer& Next, FString&)
+	{ Next = Candidate; return true; });
+	if (!Result.Ok()) UE_LOG(LogTemp, Error, TEXT("EXTRACTION_RANGE_LOADOUT_FAILED %s"), *Result.Error);
 }
 
 // 有意不调用基类对局 Tick：持续提供 Active 测试环境并解除冻结，不激活或结算长期出战记录。

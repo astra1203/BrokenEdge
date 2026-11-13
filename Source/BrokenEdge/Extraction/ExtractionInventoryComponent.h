@@ -43,8 +43,7 @@ public:
 	// 背包 Contents 仅复制给所属客户端，避免把玩家完整库存广播给所有人。
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out) const override;
 	// 运行时权威背包快照，Revision 用于拒绝基于旧界面的操作。
-	UPROPERTY(ReplicatedUsing=OnRep_Contents)
-	FExtractionContainer Contents;
+	const FExtractionContainer& GetContents() const { return Contents; }
 	// 服务器从出战票据中的 Original 初始化携带装备；用世界标识防止同一世界重复发放。
 	// 补给放不下时在附近安全地面生成容器，然后同步枪械 Actor 和背包版本。
 	void InitializeLoadout();
@@ -84,6 +83,11 @@ public:
 	bool WasDropped() const { return bDropped; }
 
 private:
+	UPROPERTY(ReplicatedUsing=OnRep_Contents)
+	FExtractionContainer Contents;
+#if WITH_DEV_AUTOMATION_TESTS
+	friend struct FExtractionInventoryTestAccess;
+#endif
 	FExtractionInventoryResult CommitCandidate(FExtractionContainer Candidate, bool bSyncWeapons,
 		class AExtractionLootActor* Loot = nullptr, FExtractionContainer* OtherCandidate = nullptr);
 #if WITH_DEV_AUTOMATION_TESTS

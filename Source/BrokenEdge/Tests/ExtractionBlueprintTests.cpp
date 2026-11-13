@@ -91,7 +91,7 @@ namespace
 							TEXT("Loot uses configured blueprint"), Loot->GetClass(),
 							World->GetAuthGameMode<AExtractionGameMode>()->LootActorClass.Get());
 						Test->TestFalse(TEXT("Runtime loot does not seed extra inventory"), Loot->SeedContents);
-						Test->TestTrue(TEXT("Runtime loot initially empty"), Loot->Contents.Items.IsEmpty());
+						Test->TestTrue(TEXT("Runtime loot initially empty"), Loot->GetContents().Items.IsEmpty());
 						Test->TestTrue(TEXT("Loot visual mesh"), Loot->Mesh->GetStaticMesh() != nullptr);
 						const FTransform Visual = Loot->Mesh->GetRelativeTransform();
 						Loot->OnConstruction(Loot->GetActorTransform());

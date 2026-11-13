@@ -137,12 +137,16 @@ struct FExtractionStorageRequest
 
 /** Single authoritative writer. A framed, flushed transaction contains the whole store,
  * including all affected profiles and raid export totals. No client-supplied item state. */
-UCLASS()
+UCLASS(Config=Game)
 class BROKENEDGE_API UExtractionPersistence : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
 public:
+	// Initial thresholds follow the recorded WP-08 capacity run; zero disables that trigger.
+	UPROPERTY(Config) int64 JournalRollBytes = 64LL * 1024 * 1024;
+	UPROPERTY(Config) int32 JournalRollRecords = 128;
+	UPROPERTY(Config) int32 JournalGenerations = 3;
 	// 按需加载仓库；训练地图使用独立随机目录，避免测试消耗正式档案。
 	bool EnsureLoaded();
 	// 已有档案必须校验凭据哈希；空身份请求才创建新档案，并通过输出参数返回新凭据。
@@ -179,6 +183,9 @@ public:
 	static FString OutcomeLabel(EExtractionOutcome Outcome);
 #if WITH_DEV_AUTOMATION_TESTS
 	friend class FExtractionDriver;
+	friend class FExtractionPersistenceCapacity;
+	friend class FExtractionJournalRolling;
+	int32 FailRollStepForTest = 0;
 	// 自动化测试专用入口，显式指定隔离目录，避免访问玩家仓库。
 	bool LoadForTest(const FString& Directory);
 	bool FailNextWrite = false;
@@ -187,6 +194,11 @@ public:
 #endif
 
 private:
+	int32 JournalRecords = 0;
+	bool ReadSegment(const FString& Path, FExtractionStoreState& Out) const;
+	bool WriteSegment(const FString& Path) const;
+	bool RecoverPendingSegment();
+	bool RollJournal();
 	UPROPERTY()
 	FExtractionStoreState State;
 	// 服务器本地追加日志路径；不通过网络复制，不应把凭据内容写入日志。
