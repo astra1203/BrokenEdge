@@ -1,0 +1,145 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "3A7078D6430C420A68D31E9DE58C7BD6",
+			"instanceName": "OREKI-LEGION-17776",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-13.26.11",
+	"succeeded": 0,
+	"succeededWithWarnings": 1,
+	"failed": 1,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.11916150152683258,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "DispatchAndOwnership",
+			"fullTestPath": "BrokenEdge.Extraction.CombatMode.DispatchAndOwnership",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"3A7078D6430C420A68D31E9DE58C7BD6"
+			],
+			"duration": 0.02109450101852417,
+			"dateTime": "2026.11.13-13.26.11",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_1.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-13.26.11"
+				}
+			],
+			"warnings": 1,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PredictionAndCadenceIsolation",
+			"fullTestPath": "BrokenEdge.Extraction.CombatMode.PredictionAndCadenceIsolation",
+			"tags": [],
+			"state": "Fail",
+			"deviceInstance": [
+				"3A7078D6430C420A68D31E9DE58C7BD6"
+			],
+			"duration": 0.098067000508308411,
+			"dateTime": "2026.11.13-13.26.11",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Extraction does not inherit legacy reload prediction' to be false.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\CombatModeAdapterTests.cpp",
+					"lineNumber": 94,
+					"timestamp": "2026.11.13-13.26.11"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Extraction does not inherit legacy cooldown' to be true.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\CombatModeAdapterTests.cpp",
+					"lineNumber": 95,
+					"timestamp": "2026.11.13-13.26.11"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Extraction starts its own cooldown' to be false.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\CombatModeAdapterTests.cpp",
+					"lineNumber": 97,
+					"timestamp": "2026.11.13-13.26.11"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Legacy gate is independent of extraction cooldown and reload' to be true.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\CombatModeAdapterTests.cpp",
+					"lineNumber": 104,
+					"timestamp": "2026.11.13-13.26.11"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Clearing legacy prediction leaves extraction prediction intact' to be true.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\CombatModeAdapterTests.cpp",
+					"lineNumber": 106,
+					"timestamp": "2026.11.13-13.26.11"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Extraction cadence unlocks after its timer' to be true.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\CombatModeAdapterTests.cpp",
+					"lineNumber": 118,
+					"timestamp": "2026.11.13-13.26.11"
+				}
+			],
+			"warnings": 0,
+			"errors": 6,
+			"artifacts": []
+		}
+	]
+}

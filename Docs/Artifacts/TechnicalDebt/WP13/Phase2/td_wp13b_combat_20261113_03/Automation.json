@@ -1,0 +1,97 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "4EECB00C4B1FB2EBCED460A7C11B2882",
+			"instanceName": "OREKI-LEGION-16420",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-13.27.16",
+	"succeeded": 0,
+	"succeededWithWarnings": 2,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.035861697047948837,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "DispatchAndOwnership",
+			"fullTestPath": "BrokenEdge.Extraction.CombatMode.DispatchAndOwnership",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"4EECB00C4B1FB2EBCED460A7C11B2882"
+			],
+			"duration": 0.020629599690437317,
+			"dateTime": "2026.11.13-13.27.16",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_1.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-13.27.16"
+				}
+			],
+			"warnings": 1,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PredictionAndCadenceIsolation",
+			"fullTestPath": "BrokenEdge.Extraction.CombatMode.PredictionAndCadenceIsolation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"4EECB00C4B1FB2EBCED460A7C11B2882"
+			],
+			"duration": 0.01523209735751152,
+			"dateTime": "2026.11.13-13.27.16",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-13.27.16"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-13.27.16"
+				}
+			],
+			"warnings": 2,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

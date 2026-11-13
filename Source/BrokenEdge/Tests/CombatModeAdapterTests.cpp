@@ -6,6 +6,8 @@
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
 #include "BrokenEdge/Weapon/Weapon.h"
+#include "BrokenEdge/Weapon/HitScanWeapon.h"
+#include "TimerManager.h"
 #include "UObject/UnrealType.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCombatModeAdapterTest, "BrokenEdge.Extraction.CombatMode.DispatchAndOwnership",
@@ -63,6 +65,78 @@ bool FCombatModeAdapterTest::RunTest(const FString&)
     TestEqual(TEXT("Repeated legacy completion cannot transfer more ammo"), Combat->GetCarriedAmmo(), Reserve);
     Combat->Drop();
     TestNull(TEXT("Legacy drop clears equipped reference"), C->GetEquippedWeapon());
+    W->DestroyWorld(false);
+    return true;
+}
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCombatModeCadenceTest, "BrokenEdge.Extraction.CombatMode.PredictionAndCadenceIsolation",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+bool FCombatModeCadenceTest::RunTest(const FString&)
+{
+    const auto Init = UWorld::InitializationValues().AllowAudioPlayback(false).CreatePhysicsScene(true)
+        .CreateNavigation(false).CreateAISystem(false).ShouldSimulatePhysics(false);
+    auto* W = UWorld::CreateWorld(EWorldType::Game, false, NAME_None, nullptr, true, ERHIFeatureLevel::Num, &Init);
+    if (!TestNotNull(TEXT("World"), W)) return false;
+    auto* C = W->SpawnActor<ABrokenEdgeCharacter>(); C->PostInitializeComponents();
+    auto* Combat = C->GetCombat().Get();
+    auto* Extraction = C->GetExtractionCombat();
+    // This temporary world does not dispatch play; pair the component lifecycle explicitly.
+    Extraction->BeginPlay();
+    auto* Weapon = W->SpawnActor<AHitScanWeapon>();
+    auto* Capacity = FindFProperty<FIntProperty>(AWeapon::StaticClass(), TEXT("MagCapacity"));
+    if (!TestNotNull(TEXT("Magazine fixture property"), Capacity)) { W->DestroyWorld(false); return false; }
+    Capacity->SetPropertyValue_InContainer(Weapon, 30); Weapon->SetExtractionAmmo(5);
+    Combat->EquipWeapon(Weapon);
+    Combat->StartFireTimer();
+    TestFalse(TEXT("Legacy cadence starts locked"), Combat->CanFire());
+    Combat->SetReloadPrediction(true);
+    auto* GS = W->SpawnActor<AExtractionGameState>(); GS->Phase = EExtractionPhase::Active;
+    auto SetExtractionMode = [&](bool Enabled)
+    {
+        // Guards enable extraction even without a GameState; change both fixture inputs.
+        C->bExtractionGuard = Enabled; W->SetGameState(Enabled ? GS : nullptr);
+    };
+    SetExtractionMode(true);
+    TestFalse(TEXT("Extraction does not inherit legacy reload prediction"), Combat->IsReloadPredicted());
+    TestTrue(TEXT("Extraction does not inherit legacy cooldown"), Combat->CanFire());
+    Combat->StartFireTimer();
+    TestFalse(TEXT("Extraction starts its own cooldown"), Extraction->IsFireCooldownReady());
+    Combat->FireTimerFinished();
+    TestFalse(TEXT("Legacy callback cannot release extraction cooldown"), Combat->CanFire());
+    Combat->SetReloadPrediction(true);
+    SetExtractionMode(false);
+    TestTrue(TEXT("Legacy prediction survives extraction changes"), Combat->IsReloadPredicted());
+    Combat->SetReloadPrediction(false);
+    TestTrue(TEXT("Legacy gate is independent of extraction cooldown and reload"), Combat->CanFire());
+    SetExtractionMode(true);
+    TestTrue(TEXT("Clearing legacy prediction leaves extraction prediction intact"), Combat->IsReloadPredicted());
+    Extraction->CancelReload();
+    TestFalse(TEXT("Extraction cancellation clears its own prediction"), Combat->IsReloadPredicted());
+    auto AdvanceTimers = [&]
+    {
+        TGuardValue<uint64> RestoreFrame(GFrameCounter, GFrameCounter);
+        for (int32 Index = 0; Index < 2; ++Index)
+        {
+            ++GFrameCounter; W->TimeSeconds += 1; W->GetTimerManager().Tick(1.f);
+        }
+    };
+    AdvanceTimers();
+    TestTrue(TEXT("Extraction cadence unlocks after its timer"), Combat->CanFire());
+    TestEqual(TEXT("Released input does not fire on cooldown completion"), Weapon->GetAmmo(), 5);
+
+    Combat->StartFireTimer();
+    SetExtractionMode(false); Combat->Drop();
+    auto* Replacement = W->SpawnActor<AHitScanWeapon>();
+    Capacity->SetPropertyValue_InContainer(Replacement, 30); Replacement->SetExtractionAmmo(0);
+    Combat->EquipWeapon(Replacement); Combat->SyncReserveFromInventory(40); SetExtractionMode(true);
+    AdvanceTimers();
+    TestTrue(TEXT("Replacement does not inherit expired weapon's auto-reload"), C->GetCombatState() == ECombatState::ECS_Unoccuiped);
+    TestFalse(TEXT("Replacement has no stale reload prediction"), Combat->IsReloadPredicted());
+    TestTrue(TEXT("Expired weapon releases local cadence"), Extraction->IsFireCooldownReady());
+    Combat->StartFireTimer(); Combat->SetReloadPrediction(true);
+    Extraction->EndPlay(EEndPlayReason::Destroyed);
+    AdvanceTimers();
+    TestFalse(TEXT("EndPlay clears prediction"), Extraction->IsReloadPredicted());
+    TestTrue(TEXT("EndPlay timer cannot auto-reload"), C->GetCombatState() == ECombatState::ECS_Unoccuiped);
     W->DestroyWorld(false);
     return true;
 }

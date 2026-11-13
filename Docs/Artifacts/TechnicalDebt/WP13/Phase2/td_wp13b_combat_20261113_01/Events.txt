@@ -1,0 +1,4 @@
+[2026.11.13-13.24.53:035][300]LogAutomationController: Display: Test Completed. Result={Success} Name={DispatchAndOwnership} Path={BrokenEdge.Extraction.CombatMode.DispatchAndOwnership}
+[2026.11.13-13.24.53:149][301]LogWindows: Error: appError called: Assertion failed: bHasBegunPlay [File:D:\build\++UE5\Sync\Engine\Source\Runtime\Engine\Private\Components\ActorComponent.cpp] [Line: 1668]
+[2026.11.13-13.24.54:976][301]LogWindows: Error: Assertion failed: bHasBegunPlay [File:D:\build\++UE5\Sync\Engine\Source\Runtime\Engine\Private\Components\ActorComponent.cpp] [Line: 1668]
+[2026.11.13-13.24.54:976][301]LogWindows: Error: [Callstack] 0x00007ffec34baa68 UnrealEditor-BrokenEdge.dll!FCombatModeCadenceTest::RunTest() [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\CombatModeAdapterTests.cpp:129]

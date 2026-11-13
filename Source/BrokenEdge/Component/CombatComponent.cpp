@@ -202,8 +202,9 @@ void UCombatComponent::Fire()
 {
 	if (CanFire())
 	{
-		bCanFire = false;
 		if (EquippedWeapon == nullptr)return;
+		// Lock the active mode before issuing a shot, including synchronous authority callbacks.
+		StartFireTimer();
 
 		if (!Character || !Character->GetExtractionCombat()->IsEnabled()) NotifyLocalShot();
 
@@ -219,7 +220,6 @@ void UCombatComponent::Fire()
 			FireShotgunWeapon();
 			break;
 		}
-		StartFireTimer();
 	}
 }
 
@@ -372,21 +372,7 @@ void UCombatComponent::LocalFire(const FVector_NetQuantize& TraceHitTarget)
 bool UCombatComponent::CanFire()
 {
 	if (Character && Character->Melee->Active) return false;
-	if (Character && Character->GetExtractionCombat()->IsEnabled() && (!Character->GetExtractionCombat()->CanAct() || !
-		Character->GetExtractionCombat()->CanFireMechanics()))
-		return false;
-	// if (EquippedWeapon == nullptr || bLocallyReloading)return false;
-	if (EquippedWeapon == nullptr)return false;
-
-	if (!EquippedWeapon->IsEmpty() &&
-		bCanFire &&
-		CombatState == ECombatState::ECS_Reloading &&
-		EquippedWeapon->GetWeaponType() == EWeaponType::EWT_Shotgun)
-		return true;
-
-	if (bLocallyReloading)return false;
-
-	return !EquippedWeapon->IsEmpty() && bCanFire && CombatState == ECombatState::ECS_Unoccuiped;
+	return ModeAdapter().CanFire(*this);
 }
 
 /**
@@ -394,14 +380,7 @@ bool UCombatComponent::CanFire()
  */
 void UCombatComponent::StartFireTimer()
 {
-	if (EquippedWeapon == nullptr || Character == nullptr) return;
-
-	Character->GetWorldTimerManager().SetTimer(
-		FireTimer,
-		this,
-		&UCombatComponent::FireTimerFinished,
-		EquippedWeapon->FireDelay
-	);
+	ModeAdapter().StartFireTimer(*this);
 }
 
 /**
@@ -409,8 +388,9 @@ void UCombatComponent::StartFireTimer()
  */
 void UCombatComponent::FireTimerFinished()
 {
-	if (EquippedWeapon == nullptr) return;
 	bCanFire = true;
+	// A pending legacy timer must never drive the extraction protocol after a mode change.
+	if (!Character || Character->GetExtractionCombat()->IsEnabled() || !EquippedWeapon) return;
 	if (IsFireInputHeld() && EquippedWeapon->bAutomatic)
 	{
 		Fire();

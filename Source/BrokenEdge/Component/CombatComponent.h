@@ -32,8 +32,8 @@ public:
 	// Clears only this component's legacy input; never forwards back to the mode adapter.
 	void ClearLocalFireInput();
 	void PublishExtractionCombatState(ECombatState State);
-	void SetReloadPrediction(bool Reloading) { bLocallyReloading = Reloading; }
-	bool IsReloadPredicted() const { return bLocallyReloading; }
+	void SetReloadPrediction(bool Reloading);
+	bool IsReloadPredicted() const;
 	void SyncReserveFromInventory(int32 Ammo);
 	// Sets default values for this component's properties
 	UCombatComponent();
@@ -281,7 +281,7 @@ private:
 
 	/** 开火按钮是否按下 */
 	bool bFireButtonPressed = false;
-	/** Owning-client reload prediction; callers use SetReloadPrediction/IsReloadPredicted. */
+	/** Legacy-only owning-client prediction; adapter queries the active mode. */
 	bool bLocallyReloading = false;
 
 	/** 是否可以开火,防止玩家连续点击开火大于射速 */

@@ -69,6 +69,12 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	// 有有效参数时检查冲刺和举枪/跑射延迟；无参数时允许既有逻辑继续判断。
 	bool CanFireMechanics() const;
+	// Local cadence and prediction belong to this mode; server NextShotTime remains authoritative.
+	bool CanFire() const;
+	void StartFireCooldown();
+	bool IsFireCooldownReady() const { return bFireCooldownReady; }
+	void SetReloadPrediction(bool Reloading) { bReloadPredicted = Reloading; }
+	bool IsReloadPredicted() const { return bReloadPredicted; }
 	// 开火意图与射击请求走同一可靠通道；服务器也必须先退出冲刺再接受首发。
 	bool SetFireInputHeld(bool bHeld);
 	bool IsFireInputHeld() const { return SprintFire.FireHeld; }
@@ -96,6 +102,10 @@ private:
 	ABrokenEdgeCharacter* Character() const;
 	FResolvedWeaponStats Stats;
 	FWeaponSprintState SprintFire;
+	bool bReloadPredicted = false, bFireCooldownReady = true;
+	FTimerHandle FireCooldownTimer;
+	TWeakObjectPtr<AWeapon> FireCooldownWeapon;
+	void FireCooldownFinished();
 	bool ApplyFireInput(bool bHeld);
 	TWeakObjectPtr<AWeapon> MechanicsWeapon;
 	TArray<FName> MechanicsParts;

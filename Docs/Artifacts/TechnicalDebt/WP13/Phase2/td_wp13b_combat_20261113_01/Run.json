@@ -1,0 +1,39 @@
+{
+  "task": "combat",
+  "started_utc": "2026-11-13T13:24:27.351445+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp13b_combat_20261113_01\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CombatMode.",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp13b_combat_20261113_01\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "6de708a8d260662ce694c76bd045ea134ac3ed0f",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Extraction/run_editor_task.py\n M Source/BrokenEdge/Component/CombatComponent.cpp\n M Source/BrokenEdge/Component/CombatComponent.h\n M Source/BrokenEdge/Component/CombatModeAdapter.cpp\n M Source/BrokenEdge/Component/CombatModeAdapter.h\n M Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionCombatComponent.h\n M Source/BrokenEdge/Tests/CombatModeAdapterTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "277b6c6a04029087fe315fbd4262e7f0c99e279507c6f5363a23e43073a2b8bd",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp13b_combat_20261113_01\\Run.json",
+  "exit_code": 3,
+  "pid": 26900,
+  "successful_tests": 1,
+  "result": "failed",
+  "finished_utc": "2026-11-13T13:24:55.298914+00:00"
+}

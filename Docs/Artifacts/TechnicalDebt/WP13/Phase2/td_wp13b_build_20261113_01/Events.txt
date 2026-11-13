@@ -1,0 +1,5 @@
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionCombatComponent.cpp(87,25): error C2662: “AWeapon *ABrokenEdgeCharacter::GetEquippedWeapon(void)”: 不能将“this”指针从“const ABrokenEdgeCharacter”转换为“ABrokenEdgeCharacter &”
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionCombatComponent.cpp(88,30): error C2662: “bool AWeapon::IsEmpty(void)”: 不能将“this”指针从“const AWeapon”转换为“AWeapon &”
+D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Extraction\ExtractionCombatComponent.cpp(95,19): error C2662: “AWeapon *ABrokenEdgeCharacter::GetEquippedWeapon(void)”: 不能将“this”指针从“const ABrokenEdgeCharacter”转换为“ABrokenEdgeCharacter &”
+Result: Failed (OtherCompilationError)
+Total execution time: 46.50 seconds
