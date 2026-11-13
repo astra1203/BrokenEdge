@@ -1,0 +1,37 @@
+{
+  "task": "input-audit",
+  "started_utc": "2026-11-13T07:21:52.671249+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp11_enhancedaudit_20261113_01\\Editor.log",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\audit_input_actions.py"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "1d7cb3259489f6fe0e6e51acec74122f5aa7ce36",
+  "git_status": "M BrokenEdge.uproject\n M Config/DefaultInput.ini\n M Scripts/Extraction/run_editor_task.py\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.h\n M Source/BrokenEdge/Extraction/LootingMainView.cpp\n M Source/BrokenEdge/Extraction/LootingMainView.h\n?? Content/Input/Extraction/\n?? Scripts/Extraction/prepare_input_actions.py",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "59aedafaab1d146393a3b015c8dd2308a74ed1d8e080dfba38de69fcf4716a10",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp11_enhancedaudit_20261113_01\\Run.json",
+  "exit_code": 0,
+  "pid": 24040,
+  "result": "passed",
+  "finished_utc": "2026-11-13T07:22:12.003718+00:00"
+}

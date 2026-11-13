@@ -1,0 +1,76 @@
+{
+  "result": "passed",
+  "assets": [
+    "/Game/Input/Extraction/IA_Menu",
+    "/Game/Input/Extraction/IA_Inventory",
+    "/Game/Input/Extraction/IA_TacticalMap",
+    "/Game/Input/Extraction/IA_UseMedical",
+    "/Game/Input/Extraction/IA_Prone",
+    "/Game/Input/Extraction/IA_Heal",
+    "/Game/Input/Extraction/IA_Smoke",
+    "/Game/Input/Extraction/IA_Grenade",
+    "/Game/Input/Extraction/IA_Ping",
+    "/Game/Input/Extraction/IA_SelectPrimary",
+    "/Game/Input/Extraction/IA_SelectSecondary",
+    "/Game/Input/Extraction/IA_SelectKnife",
+    "/Game/Input/Extraction/IA_Interact",
+    "/Game/Input/Extraction/IA_InteractWorld",
+    "/Game/Input/Extraction/IA_HoldBreath",
+    "/Game/Input/Extraction/IA_RotateItem",
+    "/Game/Input/Extraction/IMC_Extraction",
+    "/Game/Input/Extraction/IMC_ExtractionUI"
+  ],
+  "generator": "D:/SourceFiles/UnrealProjects/BrokenEdge/Scripts/Extraction/prepare_input_actions.py",
+  "keys": {
+    "Menu": [
+      "Escape"
+    ],
+    "Inventory": [
+      "Tab"
+    ],
+    "TacticalMap": [
+      "M"
+    ],
+    "UseMedical": [
+      "H"
+    ],
+    "Prone": [
+      "Z"
+    ],
+    "Heal": [
+      "V"
+    ],
+    "Smoke": [
+      "X"
+    ],
+    "Grenade": [
+      "G"
+    ],
+    "Ping": [
+      "MiddleMouseButton"
+    ],
+    "SelectPrimary": [
+      "One"
+    ],
+    "SelectSecondary": [
+      "Two"
+    ],
+    "SelectKnife": [
+      "Three"
+    ],
+    "Interact": [
+      "E"
+    ],
+    "InteractWorld": [
+      "F"
+    ],
+    "HoldBreath": [
+      "LeftAlt",
+      "RightAlt"
+    ],
+    "RotateItem": [
+      "R"
+    ]
+  },
+  "boundary": "New assets only. Existing character mappings are unchanged."
+}

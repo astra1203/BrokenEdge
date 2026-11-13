@@ -1,0 +1,619 @@
+{
+  "actions": [
+    {
+      "asset": "/Game/Characters/Stinger/Blueprints/Input/IA_StingerSprint.IA_StingerSprint",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Actions/IA_Aim.IA_Aim",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [
+        {
+          "class": "/Script/EnhancedInput.InputTriggerPressed",
+          "properties": {
+            "actuation_threshold": 0.5,
+            "should_always_tick": false
+          }
+        },
+        {
+          "class": "/Script/EnhancedInput.InputTriggerReleased",
+          "properties": {
+            "actuation_threshold": 0.5,
+            "should_always_tick": false
+          }
+        }
+      ],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Actions/IA_Crouch.IA_Crouch",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [
+        {
+          "class": "/Script/EnhancedInput.InputTriggerPressed",
+          "properties": {
+            "actuation_threshold": 0.5,
+            "should_always_tick": false
+          }
+        }
+      ],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Actions/IA_Drop.IA_Drop",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [
+        {
+          "class": "/Script/EnhancedInput.InputTriggerPressed",
+          "properties": {
+            "actuation_threshold": 0.5,
+            "should_always_tick": false
+          }
+        }
+      ],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Actions/IA_Equip.IA_Equip",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [
+        {
+          "class": "/Script/EnhancedInput.InputTriggerPressed",
+          "properties": {
+            "actuation_threshold": 0.5,
+            "should_always_tick": false
+          }
+        }
+      ],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Actions/IA_Fire.IA_Fire",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [
+        {
+          "class": "/Script/EnhancedInput.InputTriggerPressed",
+          "properties": {
+            "actuation_threshold": 0.5,
+            "should_always_tick": false
+          }
+        },
+        {
+          "class": "/Script/EnhancedInput.InputTriggerReleased",
+          "properties": {
+            "actuation_threshold": 0.5,
+            "should_always_tick": false
+          }
+        }
+      ],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Actions/IA_Jump.IA_Jump",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [
+        {
+          "class": "/Script/EnhancedInput.InputTriggerPressed",
+          "properties": {
+            "actuation_threshold": 0.5,
+            "should_always_tick": false
+          }
+        },
+        {
+          "class": "/Script/EnhancedInput.InputTriggerReleased",
+          "properties": {
+            "actuation_threshold": 0.5,
+            "should_always_tick": false
+          }
+        }
+      ],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Actions/IA_Look.IA_Look",
+      "value_type": "<InputActionValueType.AXIS2D: 2>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Actions/IA_Move.IA_Move",
+      "value_type": "<InputActionValueType.AXIS2D: 2>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Actions/IA_Reload.IA_Reload",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [
+        {
+          "class": "/Script/EnhancedInput.InputTriggerPressed",
+          "properties": {
+            "actuation_threshold": 0.5,
+            "should_always_tick": false
+          }
+        }
+      ],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_Grenade.IA_Grenade",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_Heal.IA_Heal",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [
+        {
+          "class": "/Script/EnhancedInput.InputTriggerHold",
+          "properties": {
+            "actuation_threshold": 0.5,
+            "affected_by_time_dilation": false,
+            "held_duration": 0.0,
+            "hold_time_threshold": 0.3499999940395355,
+            "is_one_shot": false,
+            "should_always_tick": false
+          }
+        },
+        {
+          "class": "/Script/EnhancedInput.InputTriggerTap",
+          "properties": {
+            "actuation_threshold": 0.5,
+            "affected_by_time_dilation": false,
+            "held_duration": 0.0,
+            "should_always_tick": false,
+            "tap_release_time_threshold": 0.3499999940395355
+          }
+        }
+      ],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_HoldBreath.IA_HoldBreath",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_Interact.IA_Interact",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_InteractWorld.IA_InteractWorld",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_Inventory.IA_Inventory",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_Menu.IA_Menu",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_Ping.IA_Ping",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_Prone.IA_Prone",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_RotateItem.IA_RotateItem",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_SelectKnife.IA_SelectKnife",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_SelectPrimary.IA_SelectPrimary",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_SelectSecondary.IA_SelectSecondary",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_Smoke.IA_Smoke",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_TacticalMap.IA_TacticalMap",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    },
+    {
+      "asset": "/Game/Input/Extraction/IA_UseMedical.IA_UseMedical",
+      "value_type": "<InputActionValueType.BOOLEAN: 0>",
+      "triggers": [],
+      "modifiers": []
+    }
+  ],
+  "contexts": [
+    {
+      "asset": "/Game/Characters/Stinger/Blueprints/Input/IMC_Stinger.IMC_Stinger",
+      "mappings": [
+        {
+          "action": "/Game/Input/Actions/IA_Jump.IA_Jump",
+          "key": "SpaceBar",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Move.IA_Move",
+          "key": "W",
+          "triggers": [],
+          "modifiers": [
+            {
+              "class": "/Script/EnhancedInput.InputModifierSwizzleAxis",
+              "properties": {
+                "order": "<InputAxisSwizzle.YXZ: 0>"
+              }
+            }
+          ]
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Move.IA_Move",
+          "key": "S",
+          "triggers": [],
+          "modifiers": [
+            {
+              "class": "/Script/EnhancedInput.InputModifierSwizzleAxis",
+              "properties": {
+                "order": "<InputAxisSwizzle.YXZ: 0>"
+              }
+            },
+            {
+              "class": "/Script/EnhancedInput.InputModifierNegate",
+              "properties": {
+                "x": true,
+                "y": true,
+                "z": true
+              }
+            }
+          ]
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Move.IA_Move",
+          "key": "A",
+          "triggers": [],
+          "modifiers": [
+            {
+              "class": "/Script/EnhancedInput.InputModifierNegate",
+              "properties": {
+                "x": true,
+                "y": true,
+                "z": true
+              }
+            }
+          ]
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Move.IA_Move",
+          "key": "D",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Look.IA_Look",
+          "key": "Mouse2D",
+          "triggers": [],
+          "modifiers": [
+            {
+              "class": "/Script/EnhancedInput.InputModifierNegate",
+              "properties": {
+                "x": false,
+                "y": true,
+                "z": false
+              }
+            }
+          ]
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Crouch.IA_Crouch",
+          "key": "LeftControl",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Equip.IA_Equip",
+          "key": "E",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Aim.IA_Aim",
+          "key": "RightMouseButton",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Reload.IA_Reload",
+          "key": "R",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Drop.IA_Drop",
+          "key": "G",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Fire.IA_Fire",
+          "key": "LeftMouseButton",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Characters/Stinger/Blueprints/Input/IA_StingerSprint.IA_StingerSprint",
+          "key": "LeftShift",
+          "triggers": [],
+          "modifiers": []
+        }
+      ],
+      "profile_overrides": "{}"
+    },
+    {
+      "asset": "/Game/Input/Extraction/IMC_Extraction.IMC_Extraction",
+      "mappings": [
+        {
+          "action": "/Game/Input/Extraction/IA_Menu.IA_Menu",
+          "key": "Escape",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_Inventory.IA_Inventory",
+          "key": "Tab",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_TacticalMap.IA_TacticalMap",
+          "key": "M",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_UseMedical.IA_UseMedical",
+          "key": "H",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_Prone.IA_Prone",
+          "key": "Z",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_Heal.IA_Heal",
+          "key": "V",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_Smoke.IA_Smoke",
+          "key": "X",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_Grenade.IA_Grenade",
+          "key": "G",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_Ping.IA_Ping",
+          "key": "MiddleMouseButton",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_SelectPrimary.IA_SelectPrimary",
+          "key": "One",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_SelectSecondary.IA_SelectSecondary",
+          "key": "Two",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_SelectKnife.IA_SelectKnife",
+          "key": "Three",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_Interact.IA_Interact",
+          "key": "E",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_InteractWorld.IA_InteractWorld",
+          "key": "F",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_HoldBreath.IA_HoldBreath",
+          "key": "LeftAlt",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Extraction/IA_HoldBreath.IA_HoldBreath",
+          "key": "RightAlt",
+          "triggers": [],
+          "modifiers": []
+        }
+      ],
+      "profile_overrides": "{}"
+    },
+    {
+      "asset": "/Game/Input/Extraction/IMC_ExtractionUI.IMC_ExtractionUI",
+      "mappings": [
+        {
+          "action": "/Game/Input/Extraction/IA_RotateItem.IA_RotateItem",
+          "key": "R",
+          "triggers": [],
+          "modifiers": []
+        }
+      ],
+      "profile_overrides": "{}"
+    },
+    {
+      "asset": "/Game/Input/IMC_CharacterDefault.IMC_CharacterDefault",
+      "mappings": [
+        {
+          "action": "/Game/Input/Actions/IA_Jump.IA_Jump",
+          "key": "SpaceBar",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Move.IA_Move",
+          "key": "W",
+          "triggers": [],
+          "modifiers": [
+            {
+              "class": "/Script/EnhancedInput.InputModifierSwizzleAxis",
+              "properties": {
+                "order": "<InputAxisSwizzle.YXZ: 0>"
+              }
+            }
+          ]
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Move.IA_Move",
+          "key": "S",
+          "triggers": [],
+          "modifiers": [
+            {
+              "class": "/Script/EnhancedInput.InputModifierSwizzleAxis",
+              "properties": {
+                "order": "<InputAxisSwizzle.YXZ: 0>"
+              }
+            },
+            {
+              "class": "/Script/EnhancedInput.InputModifierNegate",
+              "properties": {
+                "x": true,
+                "y": true,
+                "z": true
+              }
+            }
+          ]
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Move.IA_Move",
+          "key": "A",
+          "triggers": [],
+          "modifiers": [
+            {
+              "class": "/Script/EnhancedInput.InputModifierNegate",
+              "properties": {
+                "x": true,
+                "y": true,
+                "z": true
+              }
+            }
+          ]
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Move.IA_Move",
+          "key": "D",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Look.IA_Look",
+          "key": "Mouse2D",
+          "triggers": [],
+          "modifiers": [
+            {
+              "class": "/Script/EnhancedInput.InputModifierNegate",
+              "properties": {
+                "x": false,
+                "y": true,
+                "z": false
+              }
+            }
+          ]
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Crouch.IA_Crouch",
+          "key": "LeftControl",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Equip.IA_Equip",
+          "key": "E",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Aim.IA_Aim",
+          "key": "RightMouseButton",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Reload.IA_Reload",
+          "key": "R",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Drop.IA_Drop",
+          "key": "G",
+          "triggers": [],
+          "modifiers": []
+        },
+        {
+          "action": "/Game/Input/Actions/IA_Fire.IA_Fire",
+          "key": "LeftMouseButton",
+          "triggers": [],
+          "modifiers": []
+        }
+      ],
+      "profile_overrides": "{}"
+    }
+  ],
+  "scope": "Saved project assets; native bindings documented separately.",
+  "result": "passed"
+}
