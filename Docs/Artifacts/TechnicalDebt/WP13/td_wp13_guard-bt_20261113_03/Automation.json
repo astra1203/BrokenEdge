@@ -1,0 +1,272 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "E65076714EF29E290D074B9F431525AF",
+			"instanceName": "OREKI-LEGION-21100",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-10.05.20",
+	"succeeded": 9,
+	"succeededWithWarnings": 3,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.36304169893264771,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "EnemyBlueprintMeshFacing",
+			"fullTestPath": "BrokenEdge.Extraction.GuardBT.EnemyBlueprintMeshFacing",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E65076714EF29E290D074B9F431525AF"
+			],
+			"duration": 0.13084951043128967,
+			"dateTime": "2026.11.13-10.05.19",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Animations\\ThirdPerson\\ABP_BrokenEdgeAnimInstance_Stinger.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.05.19"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogBlueprint: [AssetLog]D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Animations\\ThirdPerson\\ABP_BrokenEdgeAnimInstance_Stinger.uasset：[编译器]Transform (Modify) Bone - Bone: RightHand  - 没有选中要修改的组件。旋转度、平移或缩放应该设置为'忽略'之外的内容。",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.05.19"
+				}
+			],
+			"warnings": 2,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "EngagementAbort",
+			"fullTestPath": "BrokenEdge.Extraction.GuardBT.EngagementAbort",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E65076714EF29E290D074B9F431525AF"
+			],
+			"duration": 0.021575499325990677,
+			"dateTime": "2026.11.13-10.05.19",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ExpandedSightRange",
+			"fullTestPath": "BrokenEdge.Extraction.GuardBT.ExpandedSightRange",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E65076714EF29E290D074B9F431525AF"
+			],
+			"duration": 0.020623002201318741,
+			"dateTime": "2026.11.13-10.05.19",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ExtraSpread",
+			"fullTestPath": "BrokenEdge.Extraction.GuardBT.ExtraSpread",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E65076714EF29E290D074B9F431525AF"
+			],
+			"duration": 0.016633298248052597,
+			"dateTime": "2026.11.13-10.05.19",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "FacingAndPatrolRotation",
+			"fullTestPath": "BrokenEdge.Extraction.GuardBT.FacingAndPatrolRotation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E65076714EF29E290D074B9F431525AF"
+			],
+			"duration": 0.020058698952198029,
+			"dateTime": "2026.11.13-10.05.19",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "IsolationAndInvalidTarget",
+			"fullTestPath": "BrokenEdge.Extraction.GuardBT.IsolationAndInvalidTarget",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E65076714EF29E290D074B9F431525AF"
+			],
+			"duration": 0.020800299942493439,
+			"dateTime": "2026.11.13-10.05.19",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PatrolArrival",
+			"fullTestPath": "BrokenEdge.Extraction.GuardBT.PatrolArrival",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E65076714EF29E290D074B9F431525AF"
+			],
+			"duration": 0.01966099813580513,
+			"dateTime": "2026.11.13-10.05.19",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RandomPatrolBounds",
+			"fullTestPath": "BrokenEdge.Extraction.GuardBT.RandomPatrolBounds",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E65076714EF29E290D074B9F431525AF"
+			],
+			"duration": 0.019466497004032135,
+			"dateTime": "2026.11.13-10.05.19",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RandomPatrolNavigation",
+			"fullTestPath": "BrokenEdge.Extraction.GuardBT.RandomPatrolNavigation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E65076714EF29E290D074B9F431525AF"
+			],
+			"duration": 0.026545599102973938,
+			"dateTime": "2026.11.13-10.05.19",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogCrowdFollowing: Unable to find RecastNavMesh instance while trying to create UCrowdManager instance",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.05.19"
+				}
+			],
+			"warnings": 1,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SearchContext",
+			"fullTestPath": "BrokenEdge.Extraction.GuardBT.SearchContext",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E65076714EF29E290D074B9F431525AF"
+			],
+			"duration": 0.020382698625326157,
+			"dateTime": "2026.11.13-10.05.19",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SightToBlackboard",
+			"fullTestPath": "BrokenEdge.Extraction.GuardBT.SightToBlackboard",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E65076714EF29E290D074B9F431525AF"
+			],
+			"duration": 0.020066201686859131,
+			"dateTime": "2026.11.13-10.05.19",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "StandaloneFireAndReload",
+			"fullTestPath": "BrokenEdge.Extraction.GuardBT.StandaloneFireAndReload",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E65076714EF29E290D074B9F431525AF"
+			],
+			"duration": 0.026379399001598358,
+			"dateTime": "2026.11.13-10.05.19",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_12.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.05.20"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Player weapon FireDelay=0.0750 s; actual AI spacing=0.1500 s",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.05.20"
+				}
+			],
+			"warnings": 1,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

@@ -437,9 +437,7 @@ void UExtractionInventoryComponent::SyncReserve()
 	{
 		auto* Combat = C->GetCombat().Get();
 		const auto* Gun = HeldGun();
-		Combat->CarriedAmmo = Contents.Count(Gun ? Gun->MagazineAmmo : FName(TEXT("Ammo")));
-		Combat->CarriedAmmoMap.FindOrAdd(EWeaponType::EWT_AssaultRifle) = Combat->CarriedAmmo;
-		Combat->UpdateCarriedAmmo();
+		Combat->SyncReserveFromInventory(Contents.Count(Gun ? Gun->MagazineAmmo : FName(TEXT("Ammo"))));
 	}
 }
 

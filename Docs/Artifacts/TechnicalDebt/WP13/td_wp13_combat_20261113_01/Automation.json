@@ -1,0 +1,93 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "588EBC494C8A8D3FC63CD4BACAE2E3A3",
+			"instanceName": "OREKI-LEGION-23240",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-09.58.57",
+	"succeeded": 0,
+	"succeededWithWarnings": 0,
+	"failed": 1,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.10711349546909332,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "DispatchAndOwnership",
+			"fullTestPath": "BrokenEdge.Extraction.CombatMode.DispatchAndOwnership",
+			"tags": [],
+			"state": "Fail",
+			"deviceInstance": [
+				"588EBC494C8A8D3FC63CD4BACAE2E3A3"
+			],
+			"duration": 0.10711349546909332,
+			"dateTime": "2026.11.13-09.58.57",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Legacy animation completion clears prediction' to be false.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\CombatModeAdapterTests.cpp",
+					"lineNumber": 25,
+					"timestamp": "2026.11.13-09.58.57"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Extraction never inherits legacy held input' to be false.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\CombatModeAdapterTests.cpp",
+					"lineNumber": 28,
+					"timestamp": "2026.11.13-09.58.57"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Extraction rejects held fire without a usable weapon' to be false.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\CombatModeAdapterTests.cpp",
+					"lineNumber": 30,
+					"timestamp": "2026.11.13-09.58.57"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Animation notify cannot finish authoritative reload' to be true.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\CombatModeAdapterTests.cpp",
+					"lineNumber": 35,
+					"timestamp": "2026.11.13-09.58.57"
+				}
+			],
+			"warnings": 0,
+			"errors": 4,
+			"artifacts": []
+		}
+	]
+}

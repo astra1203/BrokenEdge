@@ -2199,7 +2199,7 @@ ECombatState ABrokenEdgeCharacter::GetCombatState() const
 bool ABrokenEdgeCharacter::IsLocallyReloading()
 {
 	if (Combat == nullptr) return false;
-	return Combat->bLocallyReloading;
+	return Combat->IsReloadPredicted();
 }
 
 void ABrokenEdgeCharacter::OnRep_ReplicatedMovement()

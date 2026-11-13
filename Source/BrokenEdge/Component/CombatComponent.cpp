@@ -2,6 +2,7 @@
 
 
 #include "CombatComponent.h"
+#include "CombatModeAdapter.h"
 #include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 #include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
@@ -160,35 +161,12 @@ void UCombatComponent::AttachSwappedWeapons()
  */
 void UCombatComponent::Reload()
 {
-	if (Character && Character->GetExtractionCombat()->IsEnabled())
-	{
-		Character->GetExtractionCombat()->RequestReload();
-		return;
-	}
-	if (CarriedAmmo > 0 && CombatState == ECombatState::ECS_Unoccuiped && EquippedWeapon &&
-		!EquippedWeapon->IsFull() && !bLocallyReloading)
-	{
-		ServerReload();
-		HandleReload();
-		bLocallyReloading = true;
-	}
+	ModeAdapter().Reload(*this);
 }
 
 void UCombatComponent::FinishReloading()
 {
-	if (Character && Character->GetExtractionCombat()->IsEnabled()) return; // The server timer owns the transfer.
-	if (Character == nullptr) return;
-	bLocallyReloading = false;
-	if (Character->HasAuthority())
-	{
-		CombatState = ECombatState::ECS_Unoccuiped;
-		UpdateAmmoValues();
-	}
-
-	if (bFireButtonPressed)
-	{
-		Fire();
-	}
+	ModeAdapter().FinishReload(*this);
 }
 
 void UCombatComponent::ShotgunReloadOnce()
@@ -203,18 +181,7 @@ void UCombatComponent::ShotgunReloadOnce()
 
 void UCombatComponent::Drop()
 {
-	if (Character && Character->GetExtractionCombat()->IsEnabled())
-	{
-		if (auto* PC = Cast<AExtractionPlayerController>(Character->GetController())) PC->DropEquippedItem();
-		return;
-	}
-	//@TODO 有bug
-	if (EquippedWeapon)
-	{
-		EquippedWeapon->Dropped();
-
-		EquippedWeapon = nullptr;
-	}
+	ModeAdapter().Drop(*this);
 }
 
 /**
@@ -223,13 +190,7 @@ void UCombatComponent::Drop()
  */
 void UCombatComponent::FireButtonPressed(bool bPressed)
 {
-	if (Character && Character->GetExtractionCombat()->IsEnabled())
-		bPressed = Character->GetExtractionCombat()->SetFireInputHeld(bPressed);
-	bFireButtonPressed = bPressed;
-	if (bFireButtonPressed)
-	{
-		Fire();
-	}
+	ModeAdapter().SetFireHeld(*this, bPressed);
 }
 
 
@@ -449,7 +410,7 @@ void UCombatComponent::FireTimerFinished()
 {
 	if (EquippedWeapon == nullptr) return;
 	bCanFire = true;
-	if (bFireButtonPressed && EquippedWeapon->bAutomatic)
+	if (IsFireInputHeld() && EquippedWeapon->bAutomatic)
 	{
 		Fire();
 	}
@@ -1055,4 +1016,17 @@ bool UCombatComponent::ShouldSwapWeapons()
 	// 	SecondaryWeapon != nullptr?TEXT("有副武器"):TEXT("没有副武器"));
 
 	return (EquippedWeapon != nullptr && SecondaryWeapon != nullptr);
+}
+
+// Replicated presentation state remains on Combat during the staged protocol split.
+void UCombatComponent::PublishExtractionCombatState(ECombatState State)
+{
+    if (Character && Character->GetExtractionCombat()->IsEnabled()) CombatState = State;
+}
+
+void UCombatComponent::SyncReserveFromInventory(int32 Ammo)
+{
+    CarriedAmmo = FMath::Max(0, Ammo);
+    CarriedAmmoMap.FindOrAdd(EWeaponType::EWT_AssaultRifle) = CarriedAmmo;
+    UpdateCarriedAmmo();
 }

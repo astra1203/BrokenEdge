@@ -10,6 +10,7 @@
 
 
 enum class EWeaponType : uint8;
+class ICombatModeAdapter;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class BROKENEDGE_API UCombatComponent : public UActorComponent
@@ -20,10 +21,20 @@ class BROKENEDGE_API UCombatComponent : public UActorComponent
 	friend class UExtractionCombatComponent;
 	friend class UExtractionInventoryComponent;
 	friend class UExtractionInteractionComponent;
+	friend class FLegacyCombatModeAdapter;
+	friend class FExtractionCombatModeAdapter;
+	const ICombatModeAdapter& ModeAdapter() const;
 	void AttachSwappedWeapons();
 
 public:
-	bool IsFireInputHeld() const { return bFireButtonPressed; }
+	bool IsFireInputHeld() const;
+	void CancelFireInput();
+	// Clears only this component's legacy input; never forwards back to the mode adapter.
+	void ClearLocalFireInput();
+	void PublishExtractionCombatState(ECombatState State);
+	void SetReloadPrediction(bool Reloading) { bLocallyReloading = Reloading; }
+	bool IsReloadPredicted() const { return bLocallyReloading; }
+	void SyncReserveFromInventory(int32 Ammo);
 	// Sets default values for this component's properties
 	UCombatComponent();
 
@@ -132,9 +143,6 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
-
-	/** 是否正在本地换弹 */
-	bool bLocallyReloading = false;
 
 	/**
  * @brief 拾取弹药
@@ -272,7 +280,9 @@ private:
 	float BaseWalkSpeed;
 
 	/** 开火按钮是否按下 */
-	bool bFireButtonPressed;
+	bool bFireButtonPressed = false;
+	/** Owning-client reload prediction; callers use SetReloadPrediction/IsReloadPredicted. */
+	bool bLocallyReloading = false;
 
 	/** 是否可以开火,防止玩家连续点击开火大于射速 */
 	bool bCanFire = true;

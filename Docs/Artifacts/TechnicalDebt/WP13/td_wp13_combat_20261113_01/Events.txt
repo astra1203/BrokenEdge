@@ -1,0 +1,6 @@
+[2026.11.13-09.58.57:188][295]LogAutomationController: Display: Test Started. Name={DispatchAndOwnership} Path={BrokenEdge.Extraction.CombatMode.DispatchAndOwnership}
+[2026.11.13-09.58.57:296][296]LogAutomationController: Error: Test Completed. Result={Fail} Name={DispatchAndOwnership} Path={BrokenEdge.Extraction.CombatMode.DispatchAndOwnership}
+[2026.11.13-09.58.57:296][296]LogAutomationController: Error: Expected 'Legacy animation completion clears prediction' to be false. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\CombatModeAdapterTests.cpp(25)]
+[2026.11.13-09.58.57:296][296]LogAutomationController: Error: Expected 'Extraction never inherits legacy held input' to be false. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\CombatModeAdapterTests.cpp(28)]
+[2026.11.13-09.58.57:296][296]LogAutomationController: Error: Expected 'Extraction rejects held fire without a usable weapon' to be false. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\CombatModeAdapterTests.cpp(30)]
+[2026.11.13-09.58.57:296][296]LogAutomationController: Error: Expected 'Animation notify cannot finish authoritative reload' to be true. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\CombatModeAdapterTests.cpp(35)]

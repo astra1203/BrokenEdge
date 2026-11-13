@@ -96,7 +96,7 @@ bool UExtractionCombatComponent::ApplyFireInput(bool bHeld)
 	RefreshMechanics();
 	auto* C = Character();
 	bHeld = bHeld && CanAct() && C && C->GetEquippedWeapon() && !C->Melee->Active
-		&& !C->GetExtractionInteraction()->InventoryOpen && !C->GetCombat()->bLocallyReloading
+		&& !C->GetExtractionInteraction()->InventoryOpen && !C->GetCombat()->IsReloadPredicted()
 		&& C->GetCombatState() == ECombatState::ECS_Unoccuiped;
 	SprintFire.SetFireHeld(bHeld, GetWorld()->GetTimeSeconds(), Stats.ReturnSprintInterval);
 	if (C) C->UpdateSprint();
@@ -119,7 +119,7 @@ void UExtractionCombatComponent::ServerSetFireInputHeld_Implementation(bool bHel
 void UExtractionCombatComponent::CancelFireInput()
 {
 	SprintFire.SetFireHeld(false, GetWorld()->GetTimeSeconds(), Stats.ReturnSprintInterval);
-	if (auto* C = Character(); C && C->GetCombat()) C->GetCombat()->bFireButtonPressed = false;
+	if (auto* C = Character(); C && C->GetCombat()) C->GetCombat()->ClearLocalFireInput();
 }
 
 // 清除开镜、连射、散布与镜头冲量，不重置屏息余量及冷却，避免切枪刷资源。
@@ -145,7 +145,7 @@ bool UExtractionCombatComponent::CanSteadyWeapon() const
 	const auto* C = Character();
 	return CanAct() && C && !C->IsSprinting() && !C->Melee->Active
 		&& !C->GetExtractionInteraction()->InventoryOpen
-		&& !C->GetCombat()->bLocallyReloading
+		&& !C->GetCombat()->IsReloadPredicted()
 		&& C->GetCombat()->CombatState == ECombatState::ECS_Unoccuiped;
 }
 
@@ -190,7 +190,7 @@ void UExtractionCombatComponent::TickComponent(float Delta, ELevelTick Kind, FAc
 	if (!Stats.IsValid()) return;
 	// 跑射时间只在退出冲刺时记录；逐帧推迟会让按住 Shift 的射击永远无法就绪。
 	if (!CanAct() || C->Melee->Active || C->GetExtractionInteraction()->InventoryOpen
-		|| C->GetCombatState() != ECombatState::ECS_Unoccuiped || C->GetCombat()->bLocallyReloading)
+		|| C->GetCombatState() != ECombatState::ECS_Unoccuiped || C->GetCombat()->IsReloadPredicted())
 		CancelFireInput();
 	const bool Hold = CanAct() && bBreathHeld && AimAlpha > .99f && Breath > 0 && Now >= BreathResume;
 	Breath = FMath::Clamp(Breath + Delta * (Hold ? -Stats.BreathDrain : Stats.BreathRecovery), 0.f, 100.f);
@@ -226,7 +226,7 @@ void UExtractionCombatComponent::TickComponent(float Delta, ELevelTick Kind, FAc
 		PreviousControl = Control;
 		bHaveControl = true;
 	}
-	if (C->IsLocallyControlled() && CanFireMechanics() && C->GetCombat()->bFireButtonPressed
+	if (C->IsLocallyControlled() && CanFireMechanics() && IsFireInputHeld()
 		&& C->GetCombat()->bCanFire && MechanicsWeapon.IsValid()
 		&& (MechanicsWeapon->bAutomatic || SprintFire.PendingShot)
 		&& !C->GetExtractionInteraction()->InventoryOpen)
@@ -530,11 +530,11 @@ void UExtractionCombatComponent::RequestReload()
 	auto* C = Character();
 	UCombatComponent* Combat = C ? C->GetCombat().Get() : nullptr;
 	auto* W = C ? C->GetEquippedWeapon() : nullptr;
-	if (!CanAct() || !W || W->IsFull() || Combat->CarriedAmmo <= 0 || Combat->bLocallyReloading
+	if (!CanAct() || !W || W->IsFull() || Combat->CarriedAmmo <= 0 || Combat->IsReloadPredicted()
 		|| C->GetExtractionInteraction()->InventoryOpen
 		|| Combat->CombatState != ECombatState::ECS_Unoccuiped)
 		return;
-	Combat->bLocallyReloading = true;
+	Combat->SetReloadPrediction(true);
 	CancelFireInput();
 	Combat->HandleReload();
 	Combat->ServerReload();
@@ -557,7 +557,7 @@ void UExtractionCombatComponent::BeginServerReload()
 	ReloadWeapon = W;
 	CancelFireInput();
 	C->GetExtractionInteraction()->CancelMedical();
-	Combat->CombatState = ECombatState::ECS_Reloading;
+	Combat->PublishExtractionCombatState(ECombatState::ECS_Reloading);
 	if (!C->IsLocallyControlled()) Combat->HandleReload();
 	float Duration = 2.f;
 	if (const UAnimMontage* Montage = C->GetReloadMontage())
@@ -616,8 +616,8 @@ void UExtractionCombatComponent::CancelReload()
 	if (auto* C = Character())
 	{
 		UCombatComponent* Combat = C->GetCombat();
-		if (Combat->CombatState == ECombatState::ECS_Reloading) Combat->CombatState = ECombatState::ECS_Unoccuiped;
-		Combat->bLocallyReloading = false;
+		if (Combat->CombatState == ECombatState::ECS_Reloading) Combat->PublishExtractionCombatState(ECombatState::ECS_Unoccuiped);
+		Combat->SetReloadPrediction(false);
 		if (C->HasAuthority()) ClientReloadRejected();
 	}
 }
@@ -625,7 +625,7 @@ void UExtractionCombatComponent::CancelReload()
 // 撤销本地装填预测标记；真实弹药以服务器快照为准。
 void UExtractionCombatComponent::ClientReloadRejected_Implementation()
 {
-	if (auto* C = Character()) C->GetCombat()->bLocallyReloading = false;
+	if (auto* C = Character()) C->GetCombat()->SetReloadPrediction(false);
 }
 
 // 记录原主副武器，用参数或通知时刻确定挂接和结束时间；广播蒙太奇后由服务器定时器推进。
@@ -658,7 +658,7 @@ void UExtractionCombatComponent::BeginServerSwap()
 		}
 	AttachTime = FMath::Max(.05f, AttachTime);
 	FinishTime = FMath::Max(AttachTime + .05f, FinishTime);
-	Combat->CombatState = ECombatState::ECS_SwappingWeapon;
+	Combat->PublishExtractionCombatState(ECombatState::ECS_SwappingWeapon);
 	C->bFinishedSwapping = false;
 	Combat->SecondaryWeapon->EnableCustomDepth(false);
 	MulticastSwapStarted();
@@ -717,7 +717,7 @@ void UExtractionCombatComponent::CancelSwap()
 	if (auto* C = Character())
 	{
 		auto* Combat = C->GetCombat().Get();
-		if (Combat->CombatState == ECombatState::ECS_SwappingWeapon) Combat->CombatState = ECombatState::ECS_Unoccuiped;
+		if (Combat->CombatState == ECombatState::ECS_SwappingWeapon) Combat->PublishExtractionCombatState(ECombatState::ECS_Unoccuiped);
 		C->bFinishedSwapping = true;
 		if (Combat->SecondaryWeapon) Combat->SecondaryWeapon->EnableCustomDepth(true);
 		C->ForceNetUpdate();

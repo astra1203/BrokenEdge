@@ -71,6 +71,7 @@ public:
 	bool CanFireMechanics() const;
 	// 开火意图与射击请求走同一可靠通道；服务器也必须先退出冲刺再接受首发。
 	bool SetFireInputHeld(bool bHeld);
+	bool IsFireInputHeld() const { return SprintFire.FireHeld; }
 	bool CanSprintWithWeapon() const;
 	void OnSprintEnded();
 	void CancelFireInput();
