@@ -4,17 +4,23 @@ import datetime
 import json
 import os
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "Scripts"))
+from Common.ue_env import engine_root, run_record
 import re
 import subprocess
-import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
+parser.add_argument('--engine', type=Path)
 args = parser.parse_args()
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
+try:
+    ENGINE = engine_root(args.engine)
+except (ValueError, OSError) as error:
+    parser.error(str(error))
 out = ROOT / 'Saved/Extraction' / args.tag
 out.mkdir(parents=True, exist_ok=False)
 command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe'), str(ROOT / 'BrokenEdge.uproject'),
@@ -24,6 +30,7 @@ command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe'), str(ROOT / 'B
            '-ExecCmds=Automation RunTests BrokenEdge.Extraction.PIE.Teardown',
            '-TestExit=Automation Test Queue Empty', '-ReportExportPath=' + str(out / 'Automation')]
 metadata = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'command': command}
+metadata.update(run_record(command, out / 'Run.json', engine=ENGINE, script=__file__))
 environment = os.environ.copy()
 environment['UE_SKIP_UBT_SDK_SETUP'] = '1'
 with (out / 'Process.log').open('wb') as log:

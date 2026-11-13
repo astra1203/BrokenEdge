@@ -4,6 +4,10 @@ import datetime
 import os
 import subprocess
 import sys
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "Scripts"))
+from Common.ue_env import engine_root, run_record
 from restoration_common import ROOT, WORK, PROFILE, PROFILE_FILE, input_path, read, sha, write_json
 
 parser=argparse.ArgumentParser()
@@ -18,7 +22,12 @@ parser.add_argument('--headless',action='store_true',help='Input-driven PIE with
 parser.add_argument('--no-raytracing',action='store_true',help='Capture with hardware ray tracing disabled to reduce memory use')
 parser.add_argument('--capture-texture-bias',type=int,choices=[0,1,2],default=0,help='Optional capture-only texture mip bias; recorded in Run.json')
 parser.add_argument('--capture-world',choices=['pie','editor'],default='pie')
+parser.add_argument('--engine', type=Path)
 args=parser.parse_args()
+try:
+    engine=engine_root(args.engine)
+except (ValueError, OSError) as error:
+    parser.error(str(error))
 if args.task.startswith('traverse'):
     route_file=(ROOT/args.route).resolve() if args.route else input_path('traverse_route',ROOT/'Scripts/SpaceCenter/route.json')
     if not route_file.is_file():parser.error('Regional traversal route is not ready; inspect the profile acceptance status or pass an explicit diagnostic --route')
@@ -33,9 +42,7 @@ out=WORK/'EditorRuns'/args.tag
 out.mkdir(parents=True,exist_ok=False)
 subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',str(ROOT/'Scripts/Assert-EditorClosed.ps1'),
                 '-ProjectFile',str(ROOT/'BrokenEdge.uproject')],check=True)
-config=read(ROOT/'Scripts/SpaceCenter/north_config.json')
-from pathlib import Path
-engine=Path(config['engine']);rendered=args.task in ['capture','capture-integrated','probe-east','probe-east-integrated','traverse','traverse-integrated']
+rendered=args.task in ['capture','capture-integrated','probe-east','probe-east-integrated','traverse','traverse-integrated']
 script=ROOT/'Scripts/SpaceCenter'/({'capture':'capture_restoration.py','capture-integrated':'capture_restoration.py','probe-east':'probe_east_route.py','probe-east-integrated':'probe_east_route.py','traverse':'validate_sample.py','traverse-integrated':'validate_sample.py'}.get(args.task,'import_restoration.py'))
 command=[str(engine/'Engine/Binaries/Win64'/('UnrealEditor.exe' if rendered else 'UnrealEditor-Cmd.exe')),str(ROOT/'BrokenEdge.uproject')]
 if rendered:
@@ -80,9 +87,10 @@ if args.task.startswith('traverse'):env.update(SPACECENTER_SUITE='traverse',SPAC
 if args.task.startswith('traverse') and PROFILE['phase'] in {'7E','7F'}:
     env['SPACECENTER_VALIDATION_TIMEOUT']=str(1800*args.players)
 metadata={'task':args.task,'command':command,'started_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
-          'script_sha256':sha(script),'manifest_sha256':sha(args.manifest),
+          'task_script_sha256':sha(script),'manifest_sha256':sha(args.manifest),
           'profile_file':PROFILE_FILE.relative_to(ROOT).as_posix(),'profile_sha256':sha(PROFILE_FILE),
           'capture_world':args.capture_world if args.task.startswith('capture') else None}
+metadata.update(run_record(command,out/'Run.json',engine=engine,script=__file__))
 if args.task.startswith('capture'):
     metadata.update(raytracing_disabled=args.no_raytracing,capture_texture_bias=args.capture_texture_bias)
 if (WORK/'NativeAssets.json').is_file():metadata['native_assets_sha256']=sha(WORK/'NativeAssets.json')

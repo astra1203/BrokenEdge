@@ -1,19 +1,20 @@
-"""Recorded UE 5.8.3 builds and Development packages; never overwrite a run."""
+"""Recorded Unreal builds and Development packages; never overwrite a run."""
 import argparse
 import datetime
 import hashlib
 import json
 import os
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "Scripts"))
+from Common.ue_env import engine_root, run_record
 import shutil
 import subprocess
-import sys
 import time
 from pe_validation import validate_executable
 
 sys.stdout.reconfigure(encoding='utf-8')
 ROOT = Path(__file__).resolve().parents[2]
-ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser = argparse.ArgumentParser()
 parser.add_argument('--target', choices=['Editor', 'Client', 'Server'], default='Editor')
 parser.add_argument('--package', action='store_true')
@@ -27,6 +28,7 @@ parser.add_argument('--fast-link-symbols', action='store_true', help='Use MSVC D
 parser.add_argument('--jobs', type=int, default=0, help='Optional UBT compile action limit; 0 uses the engine default')
 parser.add_argument('--cook-workers', type=int, default=0, help='Optional shader worker limit and bounded async asset compilation during cooking')
 parser.add_argument('--tag', required=True)
+parser.add_argument('--engine', type=Path)
 args = parser.parse_args()
 if args.jobs < 0:
     raise ValueError('jobs must be zero or positive')
@@ -55,6 +57,10 @@ if not archive_root.is_relative_to((ROOT / 'Packaged').resolve()):
 archive = archive_root / args.target
 if args.package_root and archive.exists():
     parser.error('Use a new archive target; existing packages are never overwritten with --package-root')
+try:
+    ENGINE = engine_root(args.engine)
+except (ValueError, OSError) as error:
+    parser.error(str(error))
 out = ROOT / 'Saved/Extraction' / args.tag
 out.mkdir(parents=True, exist_ok=False)
 if args.package:
@@ -109,6 +115,7 @@ else:
         command.append('-LinkerArguments=/DEBUG:FASTLINK')
 metadata = {'command': command, 'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
             'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'compile_only': args.compile_only}
+metadata.update(run_record(command, out / 'Run.json', engine=ENGINE, script=__file__))
 if args.fast_link_symbols:
     metadata['linker_debug_info'] = ('MSVC FASTLINK index PDB; local-only symbols'
                                      + ('; omitted from package' if args.package else ''))

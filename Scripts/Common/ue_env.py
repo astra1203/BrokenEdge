@@ -61,3 +61,14 @@ def run_record(cmd, report_path, *, engine, script, project_root=ROOT):
         'report_path': str(Path(report_path).resolve()),
         'exit_code': None,
     }
+
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--engine', type=Path)
+    args = parser.parse_args()
+    try:
+        print(engine_root(args.engine))
+    except (ValueError, OSError) as error:
+        parser.error(str(error))

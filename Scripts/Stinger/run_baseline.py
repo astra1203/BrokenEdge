@@ -4,21 +4,26 @@ import datetime
 import json
 import os
 from pathlib import Path
-import subprocess
 import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "Scripts"))
+from Common.ue_env import engine_root, run_record
+import subprocess
 
 parser = argparse.ArgumentParser()
 parser.add_argument('suite', choices=['audit', 'grip', 'visibility', 'actions', 'combat'])
-parser.add_argument('--engine', default='C:/UnrealProjects/UnrealEngine-5.8.3-release')
 parser.add_argument('--players', type=int, choices=[1, 2], default=2)
 parser.add_argument('--capture', choices=['0', 'stills', 'video'], default='0')
 parser.add_argument('--tag', required=True)
+parser.add_argument('--engine', type=Path)
 args = parser.parse_args()
 assert args.tag and all(c.isalnum() or c in '-_' for c in args.tag), 'Tag must be a directory name.'
 project = Path(__file__).resolve().parents[2]
+try:
+    engine = engine_root(args.engine)
+except (ValueError, OSError) as error:
+    parser.error(str(error))
 out = project / 'Saved/Stinger/Baseline' / args.tag
 out.mkdir(parents=True, exist_ok=False)
-engine = Path(args.engine)
 scripts = {'audit': 'audit_baseline.py', 'grip': 'validate_third_person_grip.py',
            'visibility': 'validate_weapon_visibility.py', 'actions': 'validate_pie.py',
            'combat': 'validate_baseline_combat.py'}
@@ -45,6 +50,7 @@ metadata = {'suite': args.suite, 'players': args.players, 'capture': args.captur
             'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=project, text=True).strip(),
             'worktree': subprocess.check_output(['git', 'status', '--short'], cwd=project, text=True),
             'command': command}
+metadata.update(run_record(command, out / 'Run.json', engine=engine, script=__file__))
 print('BASELINE_OUTPUT', out, flush=True)
 with (out / 'Process.log').open('w', encoding='utf-8') as log:
     process = subprocess.Popen(command, cwd=project, env=env, stdout=log, stderr=subprocess.STDOUT,

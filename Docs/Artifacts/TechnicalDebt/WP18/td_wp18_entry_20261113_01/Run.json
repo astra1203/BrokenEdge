@@ -1,0 +1,42 @@
+{
+  "result": "passed",
+  "started_utc": "2026-11-13T06:57:42.342784+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Maps/Lobby",
+    "-unattended",
+    "-NullRHI",
+    "-nosound",
+    "-nosplash",
+    "-ExecCmds=Automation RunTests BrokenEdge.Traversal.EntryCapsule",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\EditorRuns\\td_wp18_entry_20261113_01\\Automation",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\EditorRuns\\td_wp18_entry_20261113_01\\Editor.log"
+  ],
+  "inputs": {
+    "Source/BrokenEdge/Tests/TraversalEntryTests.cpp": "eb4c18495f14e5d2cca30fbf45f39d58295fa8e2b62c8c8c20d57ab1900d6698",
+    "Source/BrokenEdge/Traversal/ExtractionLadder.cpp": "99ce1d9a8141ca1c703861bc78ae32b44d05e26c5af25f4429ded90e9359c863",
+    "Source/BrokenEdge/Traversal/TraversalLadderEntry.h": "b22d5734d13a2bc90ac904fd6674abf4c74f290d8417d71a6f11fbe1d8e4c298"
+  },
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "ff2ac32adeeeb6db62fed1c06a888b4a652afcfd",
+  "git_status": "M BrokenEdge.uproject\n M PackageClient.bat\n M PackageServer.bat\n M Scripts/Common/test_ue_env.py\n M Scripts/Extraction/run_build.py\n M Scripts/Extraction/run_editor_task.py\n M Scripts/Extraction/run_pie_teardown.py\n M Scripts/SpaceCenter/run_editor.py\n M Scripts/Stinger/run_baseline.py\n M Scripts/Stinger/run_locomotion.py\n M Scripts/Traversal/run_editor.py\n M Scripts/Traversal/run_entry_tests.py\n M Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionGameMode.cpp\n M Source/BrokenEdge/Extraction/ExtractionGuard.cpp\n M Source/BrokenEdge/Extraction/ExtractionHealth.cpp\n M Source/BrokenEdge/Extraction/ExtractionInteractionComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h\n M Source/BrokenEdge/Extraction/ExtractionKeyRoom.cpp\n M Source/BrokenEdge/Extraction/ExtractionLootActor.h\n M Source/BrokenEdge/Extraction/ExtractionPersistence.cpp\n M Source/BrokenEdge/Extraction/ExtractionPersistence.h\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp\n M Source/BrokenEdge/Extraction/ExtractionWidget.cpp\n M Source/BrokenEdge/Extraction/LootingMainView.cpp\n M Source/BrokenEdge/Extraction/WeaponRangeGameMode.cpp\n M Source/BrokenEdge/Tests/ExtractionBlueprintTests.cpp\n M Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\n M Source/BrokenEdge/Tests/ExtractionExitFeedbackTests.cpp\n M Source/BrokenEdge/Tests/ExtractionInventoryTransactionTests.cpp\n M Source/BrokenEdge/Tests/WeaponPIETests.cpp\n M Source/StingerTools/Private/ExtractionPIELobbyTests.cpp\n?? Source/BrokenEdge/Tests/ExtractionInventoryTestAccess.h\n?? Source/BrokenEdge/Tests/ExtractionJournalRollingTests.cpp\n?? Source/BrokenEdge/Tests/ExtractionPersistenceCapacityTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Traversal\\run_entry_tests.py",
+  "script_sha256": "19406bdc02feedac1f962c5bfe65f5f12ec925c231ca508f5cf3d0e78b0a17c5",
+  "ue_env_sha256": "7999162131eb1cca58c4c49e2f4426ad704711e5b0c204317baaa65c5361f5c1",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Traversal\\EditorRuns\\td_wp18_entry_20261113_01\\Run.json",
+  "exit_code": 0,
+  "pid": 16972,
+  "successful_tests": 1
+}

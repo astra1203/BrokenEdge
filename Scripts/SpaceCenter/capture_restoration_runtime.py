@@ -10,13 +10,23 @@ from pathlib import Path
 import struct
 import subprocess
 import time
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "Scripts"))
+from Common.ue_env import engine_root, run_record
 from restoration_common import *
 
 p=argparse.ArgumentParser();p.add_argument('--tag',required=True);p.add_argument('--manifest',required=True)
 p.add_argument('--task',choices=['capture','traverse'],default='capture')
 p.add_argument('--probe-report',help='Passed native PIE floor/terrain probe directory required for traversal')
 p.add_argument('--nullrhi',action='store_true',help='Validate traversal/collision without rendering; visual captures remain a separate gate')
-p.add_argument('--integrated',action='store_true');args=p.parse_args()
+p.add_argument('--integrated',action='store_true')
+p.add_argument('--engine', type=Path)
+args=p.parse_args()
+try:
+    engine=engine_root(args.engine)
+except (ValueError, OSError) as error:
+    p.error(str(error))
 if args.task=='traverse' and not args.probe_report:p.error('Traversal requires --probe-report')
 if args.nullrhi and args.task!='traverse':p.error('--nullrhi is only valid for traversal')
 assert args.tag and all(c.isalnum() or c in '-_' for c in args.tag)
@@ -27,7 +37,6 @@ cameras_file=input_path('cameras',ROOT/'Scripts/SpaceCenter/restoration_cameras_
 if PROFILE['phase']=='7D':assert len(config['shots'])>=20
 subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',str(ROOT/'Scripts/Assert-EditorClosed.ps1'),
                 '-ProjectFile',str(ROOT/'BrokenEdge.uproject')],check=True)
-engine=Path(read(ROOT/'Scripts/SpaceCenter/north_config.json')['engine'])
 map_name='/Game/Maps/SpaceCenter/L_SpaceCenterExtraction' if args.integrated else PROFILE.get('preview_map','/Game/Maps/SpaceCenter/L_SpaceCenterRestorationPreview')
 groups=['ViewDistance','AntiAliasing','Shadow','GlobalIllumination','Reflection','PostProcess','Texture','Effects','Foliage','Shading']
 settings=['r.VSync 0','r.ScreenPercentage 100','t.MaxFPS 60','t.IdleWhenNotForeground 0']+['sg.'+s+'Quality 1' for s in groups]
@@ -45,6 +54,7 @@ run={'task':args.task+('-integrated' if args.integrated else ''),'result':'runni
      'driver_sha256':sha(ROOT/'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp'),
      'started_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
      'map_sha256_before':{p.relative_to(ROOT).as_posix():sha(p) for p in maps}}
+run.update(run_record(command,out/'Run.json',engine=engine,script=__file__))
 report={'task':args.task,'result':'running','map':map_name,'captures':[],'resolution':config['resolution'],
         'quality':config['quality'],'camera_config_sha256':sha(cameras_file),'reference_status':config['reference_status'],
         'capture_world':'standalone','render_boundary':'One uncooked Development game world with the existing local test GameMode. Real native viewport screenshots, no editor or PIE world and no image scaling. Packaged gameplay is separately accepted.'}

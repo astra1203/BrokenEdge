@@ -20,8 +20,12 @@ set "PROJECT_ROOT=%~dp0"
 REM PROJECT_FILE: 要打包的项目文件完整路径
 set "PROJECT_FILE=%PROJECT_ROOT%BrokenEdge.uproject"
 
-REM UE_ROOT: Unreal Engine 引擎安装根目录, 换引擎版本时改这一行
-set "UE_ROOT=C:\UnrealProjects\UnrealEngine-5.8.3-release"
+REM UE_ROOT: selected by BROKENEDGE_UE_ROOT
+if not defined BROKENEDGE_UE_ROOT (
+    echo [ERROR] Set BROKENEDGE_UE_ROOT to the Unreal Engine installation.
+    exit /b 1
+)
+set "UE_ROOT=%BROKENEDGE_UE_ROOT%"
 
 REM RUN_UAT: 自动化工具入口 RunUAT.bat 的路径
 set "RUN_UAT=%UE_ROOT%\Engine\Build\BatchFiles\RunUAT.bat"

@@ -55,14 +55,30 @@ class EngineSelectionTests(unittest.TestCase):
 
     def test_cli_invalid_engine_never_creates_success_report(self):
         project = Path(__file__).resolve().parents[2]
+        entries = [
+            ('Extraction/run_editor_task.py', ['inventory'], 'Saved/Extraction'),
+            ('Extraction/run_build.py', [], 'Saved/Extraction'),
+            ('Extraction/run_pie_teardown.py', [], 'Saved/Extraction'),
+            ('Traversal/run_entry_tests.py', [], 'Saved/Traversal/EditorRuns'),
+            ('Traversal/run_editor.py', ['geometry'], 'Saved/Traversal/EditorRuns'),
+            ('Stinger/run_baseline.py', ['audit'], 'Saved/Stinger/Baseline'),
+            ('Stinger/run_locomotion.py', [], 'Saved/Stinger/Locomotion/Runs'),
+            ('SpaceCenter/run_editor.py', ['audit'], 'Saved/SpaceCenter/Runs'),
+            ('SpaceCenter/run_restoration_editor.py', ['audit'], 'Saved/SpaceCenter/Restoration/EditorRuns'),
+            ('SpaceCenter/capture_restoration_runtime.py', ['--manifest', 'missing.json'], 'Saved/SpaceCenter/Restoration/EditorRuns'),
+        ]
         for engine in (self.root / 'missing', self.engine('incompatible', minor=7)):
-            tag = 'invalid_engine_' + uuid.uuid4().hex
-            result = subprocess.run([sys.executable, str(project / 'Scripts/Extraction/run_editor_task.py'),
-                                     'inventory', '--engine', str(engine), '--tag', tag],
-                                    capture_output=True, text=True)
-            self.assertNotEqual(result.returncode, 0)
-            self.assertIn('error:', result.stderr)
-            self.assertFalse((project / 'Saved/Extraction' / tag).exists())
+            for script, arguments, output in entries:
+                with self.subTest(script=script, engine=engine):
+                    tag = 'invalid_engine_' + uuid.uuid4().hex
+                    result = subprocess.run([sys.executable, str(project / 'Scripts' / script),
+                                             *arguments, '--engine', str(engine), '--tag', tag],
+                                            capture_output=True, text=True)
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn('error:', result.stderr)
+                    self.assertIn('not found' if engine.name == 'missing' else 'does not match', result.stderr)
+                    self.assertFalse((project / output / tag).exists())
+
 
 
 if __name__ == '__main__':

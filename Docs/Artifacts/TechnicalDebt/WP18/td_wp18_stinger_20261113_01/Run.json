@@ -1,0 +1,40 @@
+{
+  "suite": "audit",
+  "players": 2,
+  "capture": "0",
+  "started_utc": "2026-11-13T06:58:32.579422+00:00",
+  "head": "ff2ac32adeeeb6db62fed1c06a888b4a652afcfd",
+  "worktree": " M BrokenEdge.uproject\n M PackageClient.bat\n M PackageServer.bat\n M Scripts/Common/test_ue_env.py\n M Scripts/Common/ue_env.py\n M Scripts/Extraction/run_build.py\n M Scripts/Extraction/run_editor_task.py\n M Scripts/Extraction/run_pie_teardown.py\n M Scripts/SpaceCenter/bootstrap.ps1\n M Scripts/SpaceCenter/capture_restoration_runtime.py\n M Scripts/SpaceCenter/run_editor.py\n M Scripts/SpaceCenter/run_restoration_editor.py\n M Scripts/Stinger/run_baseline.py\n M Scripts/Stinger/run_locomotion.py\n M Scripts/Traversal/run_editor.py\n M Scripts/Traversal/run_entry_tests.py\n M Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionGameMode.cpp\n M Source/BrokenEdge/Extraction/ExtractionGuard.cpp\n M Source/BrokenEdge/Extraction/ExtractionHealth.cpp\n M Source/BrokenEdge/Extraction/ExtractionInteractionComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h\n M Source/BrokenEdge/Extraction/ExtractionKeyRoom.cpp\n M Source/BrokenEdge/Extraction/ExtractionLootActor.h\n M Source/BrokenEdge/Extraction/ExtractionPersistence.cpp\n M Source/BrokenEdge/Extraction/ExtractionPersistence.h\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp\n M Source/BrokenEdge/Extraction/ExtractionWidget.cpp\n M Source/BrokenEdge/Extraction/LootingMainView.cpp\n M Source/BrokenEdge/Extraction/WeaponRangeGameMode.cpp\n M Source/BrokenEdge/Tests/ExtractionBlueprintTests.cpp\n M Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\n M Source/BrokenEdge/Tests/ExtractionExitFeedbackTests.cpp\n M Source/BrokenEdge/Tests/ExtractionInventoryTransactionTests.cpp\n M Source/BrokenEdge/Tests/WeaponPIETests.cpp\n M Source/StingerTools/Private/ExtractionPIELobbyTests.cpp\n?? Source/BrokenEdge/Tests/ExtractionInventoryTestAccess.h\n?? Source/BrokenEdge/Tests/ExtractionJournalRollingTests.cpp\n?? Source/BrokenEdge/Tests/ExtractionPersistenceCapacityTests.cpp\n",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Stinger\\audit_baseline.py",
+    "-NullRHI",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\Baseline\\td_wp18_stinger_20261113_01\\Editor.log"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "ff2ac32adeeeb6db62fed1c06a888b4a652afcfd",
+  "git_status": "M BrokenEdge.uproject\n M PackageClient.bat\n M PackageServer.bat\n M Scripts/Common/test_ue_env.py\n M Scripts/Common/ue_env.py\n M Scripts/Extraction/run_build.py\n M Scripts/Extraction/run_editor_task.py\n M Scripts/Extraction/run_pie_teardown.py\n M Scripts/SpaceCenter/bootstrap.ps1\n M Scripts/SpaceCenter/capture_restoration_runtime.py\n M Scripts/SpaceCenter/run_editor.py\n M Scripts/SpaceCenter/run_restoration_editor.py\n M Scripts/Stinger/run_baseline.py\n M Scripts/Stinger/run_locomotion.py\n M Scripts/Traversal/run_editor.py\n M Scripts/Traversal/run_entry_tests.py\n M Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionGameMode.cpp\n M Source/BrokenEdge/Extraction/ExtractionGuard.cpp\n M Source/BrokenEdge/Extraction/ExtractionHealth.cpp\n M Source/BrokenEdge/Extraction/ExtractionInteractionComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h\n M Source/BrokenEdge/Extraction/ExtractionKeyRoom.cpp\n M Source/BrokenEdge/Extraction/ExtractionLootActor.h\n M Source/BrokenEdge/Extraction/ExtractionPersistence.cpp\n M Source/BrokenEdge/Extraction/ExtractionPersistence.h\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp\n M Source/BrokenEdge/Extraction/ExtractionWidget.cpp\n M Source/BrokenEdge/Extraction/LootingMainView.cpp\n M Source/BrokenEdge/Extraction/WeaponRangeGameMode.cpp\n M Source/BrokenEdge/Tests/ExtractionBlueprintTests.cpp\n M Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\n M Source/BrokenEdge/Tests/ExtractionExitFeedbackTests.cpp\n M Source/BrokenEdge/Tests/ExtractionInventoryTransactionTests.cpp\n M Source/BrokenEdge/Tests/WeaponPIETests.cpp\n M Source/StingerTools/Private/ExtractionPIELobbyTests.cpp\n?? Source/BrokenEdge/Tests/ExtractionInventoryTestAccess.h\n?? Source/BrokenEdge/Tests/ExtractionJournalRollingTests.cpp\n?? Source/BrokenEdge/Tests/ExtractionPersistenceCapacityTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Stinger\\run_baseline.py",
+  "script_sha256": "da9ca97a3b398c03bdc8d50eb739e0fbfb991d65b780d41ddaee5f7b2b201a0a",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Stinger\\Baseline\\td_wp18_stinger_20261113_01\\Run.json",
+  "exit_code": 0,
+  "pid": 10672,
+  "finished_utc": "2026-11-13T06:58:48.322797+00:00"
+}

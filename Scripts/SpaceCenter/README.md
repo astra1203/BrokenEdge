@@ -6,10 +6,11 @@
 
 ## 从原始 ZIP 重建
 
-使用 UE 5.8.3，先核对配置中的引擎、ZIP 目录。PowerShell：
+先选择与项目关联版本匹配的引擎，并核对配置中的 ZIP 目录。入口统一按 `--engine`（bootstrap 为 `-Engine`）、`BROKENEDGE_UE_ROOT`、`Scripts/local_config.json` 的顺序定位；旧 sample/north 配置中的 engine 字段不再用于启动。PowerShell：
 
 ```powershell
-$uePython = 'C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Binaries/ThirdParty/Python3/Win64/python.exe'
+$env:BROKENEDGE_UE_ROOT = 'D:/YourUnrealInstallation'
+$uePython = Join-Path $env:BROKENEDGE_UE_ROOT 'Engine/Binaries/ThirdParty/Python3/Win64/python.exe'
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts/SpaceCenter/bootstrap.ps1
 & $uePython Scripts/SpaceCenter/run_conversion.py --tag my-conversion-01
 & $uePython Scripts/SpaceCenter/run_editor.py import --tag my-import-01

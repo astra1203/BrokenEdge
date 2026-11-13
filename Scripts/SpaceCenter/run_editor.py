@@ -5,22 +5,28 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import subprocess
 import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "Scripts"))
+from Common.ue_env import engine_root, run_record
+import subprocess
 
 parser = argparse.ArgumentParser()
 parser.add_argument('suite', choices=['import', 'audit', 'capture', 'traverse'])
 parser.add_argument('--tag', required=True)
 parser.add_argument('--players', type=int, choices=[1, 2], default=1)
+parser.add_argument('--engine', type=Path)
 args = parser.parse_args()
 assert args.tag and all(c.isalnum() or c in '-_' for c in args.tag)
 project = Path(__file__).resolve().parents[2]
-config = json.loads((Path(__file__).parent / 'sample_config.json').read_text(encoding='utf-8'))
+try:
+    engine = engine_root(args.engine)
+except (ValueError, OSError) as error:
+    parser.error(str(error))
 out = project / 'Saved/SpaceCenter/Runs' / args.tag
 out.mkdir(parents=True, exist_ok=False)
 script = Path(__file__).parent / ({'import': 'import_sample.py', 'audit': 'audit_sample.py'}.get(args.suite, 'validate_sample.py'))
 rendered = args.suite in ['capture', 'traverse']
-exe = Path(config['engine']) / 'Engine/Binaries/Win64' / ('UnrealEditor.exe' if rendered else 'UnrealEditor-Cmd.exe')
+exe = engine / 'Engine/Binaries/Win64' / ('UnrealEditor.exe' if rendered else 'UnrealEditor-Cmd.exe')
 command = [str(exe), str(project / 'BrokenEdge.uproject')]
 if rendered:
     command += ['/Game/Maps/SpaceCenter/L_SpaceCenterSample', '-RenderOffscreen', '-windowed', '-ResX=1280', '-ResY=720', '-csvGpuStats', '-csvCategories=GPUMem', '-ExecCmds=py ' + str(script)]
@@ -30,10 +36,11 @@ command += ['-unattended', '-nosplash', '-nosound', '-abslog=' + str(out / 'Edit
 env = os.environ.copy()
 env.update(SPACECENTER_RUN_DIR=str(out), SPACECENTER_SUITE=args.suite, SPACECENTER_PLAYERS=str(args.players))
 metadata = {'command': command, 'suite': args.suite, 'players': args.players,
-            'script_sha256': {str(p.relative_to(project)): hashlib.sha256(p.read_bytes()).hexdigest() for p in Path(__file__).parent.glob('*') if p.is_file()},
+            'input_sha256': {str(p.relative_to(project)): hashlib.sha256(p.read_bytes()).hexdigest() for p in Path(__file__).parent.glob('*') if p.is_file()},
             'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
             'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=project, text=True).strip(),
             'worktree': subprocess.check_output(['git', 'status', '--short'], cwd=project, text=True)}
+metadata.update(run_record(command, out / 'Run.json', engine=engine, script=__file__))
 with (out / 'Process.log').open('w', encoding='utf-8') as log:
     process = subprocess.Popen(command, cwd=project, env=env, stdout=log, stderr=subprocess.STDOUT, creationflags=subprocess.CREATE_NO_WINDOW)
     metadata['pid'] = process.pid

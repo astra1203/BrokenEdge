@@ -4,19 +4,26 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "Scripts"))
+from Common.ue_env import engine_root, run_record
 import re
 import subprocess
-import sys
 import argparse
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--tag',required=True)
+parser.add_argument('--engine', type=Path)
 args=parser.parse_args()
 assert args.tag and all(c.isalnum() or c in '-_' for c in args.tag)
 root=Path(__file__).resolve().parents[2]
+try:
+    engine = engine_root(args.engine)
+except (ValueError, OSError) as error:
+    parser.error(str(error))
 out=root/'Saved/Traversal/EditorRuns'/args.tag
 out.mkdir(parents=True,exist_ok=False)
-command=['C:/UnrealProjects/UnrealEngine-5.8.3-release/Engine/Binaries/Win64/UnrealEditor-Cmd.exe',
+command=[str(engine / 'Engine/Binaries/Win64/UnrealEditor-Cmd.exe'),
          str(root/'BrokenEdge.uproject'),'/Game/Maps/Lobby','-unattended','-NullRHI','-nosound','-nosplash',
          '-ExecCmds=Automation RunTests BrokenEdge.Traversal.EntryCapsule','-TestExit=Automation Test Queue Empty',
          '-ReportExportPath='+str(out/'Automation'),'-abslog='+str(out/'Editor.log')]
@@ -24,6 +31,7 @@ report=dict(result='running',started_utc=datetime.datetime.now(datetime.timezone
             inputs={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in (
                 'Source/BrokenEdge/Tests/TraversalEntryTests.cpp','Source/BrokenEdge/Traversal/ExtractionLadder.cpp',
                 'Source/BrokenEdge/Traversal/TraversalLadderEntry.h')})
+report.update(run_record(command, out / 'Run.json', engine=engine, script=__file__))
 def save():(out/'Run.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 with (out/'Process.log').open('wb') as log:
     process=subprocess.Popen(command,cwd=root,stdout=log,stderr=subprocess.STDOUT,creationflags=subprocess.CREATE_NO_WINDOW)
