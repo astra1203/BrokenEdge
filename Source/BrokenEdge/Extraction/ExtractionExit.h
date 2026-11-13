@@ -13,6 +13,8 @@ class BROKENEDGE_API AExtractionExit : public AActor
 public:
 	// 创建无碰撞的区域标记与文字；AlwaysRelevant 让远处客户端也可获得撤离点状态。
 	AExtractionExit();
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
 	// 注册定义、开局时间和使用名额的复制；声明 Replicated 还需要在此加入复制列表。
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	// 仅服务器接受有效定义，设置 Actor 变换并主动更新本地表现；客户端通过 OnRep 更新。

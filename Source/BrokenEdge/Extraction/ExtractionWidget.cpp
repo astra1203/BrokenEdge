@@ -1,4 +1,10 @@
 #include "ExtractionWidget.h"
+#include "ExtractionHUDMetrics.h"
+#include "ProfilingDebugging/CpuProfilerTrace.h"
+#include "Stats/Stats.h"
+
+DECLARE_STATS_GROUP(TEXT("ExtractionHUD"), STATGROUP_ExtractionHUD, STATCAT_Advanced);
+DECLARE_CYCLE_STAT(TEXT("Refresh"), STAT_ExtractionHUDRefresh, STATGROUP_ExtractionHUD);
 #include "ExtractionDoor.h"
 #include "ExtractionMapDefinition.h"
 #include "Engine/Texture2D.h"
@@ -14,6 +20,7 @@
 #include "ExtractionInventoryComponent.h"
 #include "ExtractionAccountComponent.h"
 #include "ExtractionExit.h"
+#include "ExtractionExitRegistry.h"
 #include "ExtractionExitSwitch.h"
 #include "EngineUtils.h"
 #include "ExtractionState.h"
@@ -48,6 +55,9 @@ void UExtractionWidget::NativeOnInitialized()
 // 使用同步服务器时间计算剩余秒数，进度条到零本身不会触发撤离结算。
 void UExtractionWidget::Refresh()
 {
+    TRACE_CPUPROFILER_EVENT_SCOPE(ExtractionHUDRefresh);
+    SCOPE_CYCLE_COUNTER(STAT_ExtractionHUDRefresh);
+    const ExtractionHUDMetrics::FRefreshScope ProfileScope;
 	const auto* PC = GetOwningPlayer<AExtractionPlayerController>();
 	const auto* GS = GetWorld()->GetGameState<AExtractionGameState>();
 	const auto* PS = PC ? PC->GetPlayerState<AExtractionPlayerState>() : nullptr;
@@ -63,7 +73,7 @@ void UExtractionWidget::Refresh()
 	const TCHAR* Directions[] = {
 		TEXT("N"), TEXT("NE"), TEXT("E"), TEXT("SE"), TEXT("S"), TEXT("SW"), TEXT("W"), TEXT("NW")
 	};
-	Compass->SetText(FText::FromString(FString::Printf(TEXT("%s  %03d°"), Directions[((Heading + 22) / 45) % 8], Heading)));
+	ExtractionHUDMetrics::SetText(Compass, FText::FromString(FString::Printf(TEXT("%s  %03d°"), Directions[((Heading + 22) / 45) % 8], Heading)));
 	// 只给"在烟里"的信号太生硬，改为按距烟心的深度渐变：烟心最浓 .55，边缘接近 0。
 	const float Haze = AExtractionSmoke::Haze(GetWorld(), Eye);
 	SmokeHaze->SetVisibility(Haze > .01f ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
@@ -86,10 +96,17 @@ void UExtractionWidget::Refresh()
 			                    ? TEXT("倒地待救援 · Esc 打开菜单")
 			                    : TEXT("本次行动已结束");
 		// 分栏 HUD 把时间和存活人数放进独立大字段，整段文本只留提示。
-		if (KeyHints)
-			HintText = FString(Hint) + TEXT("\nTab 背包 · M 地图") + TEXT("\nE 搜索/拾取 · F 开门/拉闸")
+        if (KeyHints)
+        {
+            if (CachedHintLife != int32(PS->Life))
+            {
+                CachedHintLife = int32(PS->Life);
+                CachedKeyHints = FString(Hint) + TEXT("\nTab 背包 · M 地图") + TEXT("\nE 搜索/拾取 · F 开门/拉闸")
 				+ TEXT("\nR 换弹 · 1/2 主副武器 · 3 刀") + TEXT("\nCtrl 蹲下 · Z 趴下 · Shift 冲刺")
 				+ TEXT("\nH 治疗 · G 手雷 · 中键 标点");
+            }
+            HintText = CachedKeyHints;
+        }
 		else Text = RaidTimer
 			       ? FString(Hint)
 			       : FString::Printf(TEXT("%s · 小队行动\n剩余 %02d:%02d · 存活 %d\n%s"), *MapName, Seconds / 60, Seconds % 60,
@@ -98,7 +115,7 @@ void UExtractionWidget::Refresh()
 	if (RaidTimer)
 	{
 		const bool bActive = GS->Phase == EExtractionPhase::Active;
-		RaidTimer->SetText(FText::FromString(bActive ? FString::Printf(TEXT("%02d:%02d"), Seconds / 60, Seconds % 60)
+		ExtractionHUDMetrics::SetText(RaidTimer, FText::FromString(bActive ? FString::Printf(TEXT("%02d:%02d"), Seconds / 60, Seconds % 60)
 			                                     : TEXT("--:--")));
 		// 最后五分钟转红，提醒尽快撤离。
 		RaidTimer->SetColorAndOpacity(FSlateColor(bActive && Seconds <= 300
@@ -106,23 +123,29 @@ void UExtractionWidget::Refresh()
 			                                          : FLinearColor::White));
 	}
 	if (RaidInfo)
-		RaidInfo->SetText(FText::FromString(FString::Printf(TEXT("%s  ·  存活 %d  ·  击杀守卫 %d"), *MapName,
+		ExtractionHUDMetrics::SetText(RaidInfo, FText::FromString(FString::Printf(TEXT("%s  ·  存活 %d  ·  击杀守卫 %d"), *MapName,
 		                                                    GS->AlivePlayers, PS->RaidProgress.GuardKills)));
 	if (!GS->StorageError.IsEmpty()) Text = GS->StorageError;
 	if (PC->ExtractionAccount && PS->Life == EExtractionLife::Alive)
 	{
+        const auto Key = MakeTuple(PC->ExtractionAccount->Profile.Profile, PC->ExtractionAccount->Profile.Revision, PS->RaidProgress.GuardKills);
+        if (!bQuestCacheValid || QuestKey != Key)
+        {
+            QuestKey = Key; bQuestCacheValid = true; CachedQuestText.Reset();
 		const auto& Progression = PC->ExtractionAccount->Profile.Progression;
 		const auto* Rules = GetDefault<UExtractionProgressionRules>();
         for (const auto& Quest : Progression.Quests)
         {
             const auto* Definition = Rules->Quest(Quest.QuestId);
             if (!Definition || !Quest.Accepted || Quest.Claimed) continue;
-            Text += TEXT("\n任务 · ") + Definition->Label;
+            CachedQuestText += TEXT("\n任务 · ") + Definition->Label;
             if (Definition->Type == EQuestObjective::KillGuards)
-                Text += FString::Printf(TEXT(" %d / %d（本局 +%d，撤离保存）"), Quest.Progress,
+                CachedQuestText += FString::Printf(TEXT(" %d / %d（本局 +%d，撤离保存）"), Quest.Progress,
                     Definition->Target, PS->RaidProgress.GuardKills);
-            else Text += Definition->Type == EQuestObjective::Extract ? TEXT(" · 成功撤离后推进") : TEXT(" · 文件带出后回大厅提交");
+            else CachedQuestText += Definition->Type == EQuestObjective::Extract ? TEXT(" · 成功撤离后推进") : TEXT(" · 文件带出后回大厅提交");
         }
+        }
+        Text += CachedQuestText;
 	}
 	FString ExitsText;
 	FString CountdownText;
@@ -130,8 +153,10 @@ void UExtractionWidget::Refresh()
 	bool bShowExitProgress = false;
 	if (PS->Life == EExtractionLife::Alive && GS->Phase == EExtractionPhase::Active && PC->GetPawn())
 	{
-		for (TActorIterator<AExtractionExit> It(GetWorld()); It; ++It)
+		for (const auto& Reference : GetWorld()->GetSubsystem<UExtractionExitRegistry>()->GetExits())
 		{
+			const auto* It = Reference.Get();
+			if (!IsValid(It)) continue;
 			const FString Reason = It->UnavailableReason(GS->GetServerWorldTimeSeconds());
 			FString Rule;
 			if (It->Definition.bRequireEmptyPack) Rule = TEXT(" · 需丢掉背包");
@@ -157,8 +182,8 @@ void UExtractionWidget::Refresh()
 			}
 		}
 	}
-	ExitStatus->SetText(FText::FromString(ExitsText));
-	ExtractionCountdown->SetText(FText::FromString(CountdownText));
+	ExtractionHUDMetrics::SetText(ExitStatus, FText::FromString(ExitsText));
+	ExtractionHUDMetrics::SetText(ExtractionCountdown, FText::FromString(CountdownText));
 	ExtractionProgress->SetPercent(ExitFraction);
 	ExtractionProgress->SetVisibility(bShowExitProgress
 		                                  ? ESlateVisibility::HitTestInvisible
@@ -249,20 +274,61 @@ void UExtractionWidget::Refresh()
 		if (const auto* I = C->GetExtractionInteraction(); I && I->OrdinaryDoorFocus)
 			HintText += I->OrdinaryDoorFocus->bOpen ? TEXT("\nF 关门") : TEXT("\nF 开门");
 	Text.TrimStartAndEndInline();
-	Status->SetText(FText::FromString(Text));
+	ExtractionHUDMetrics::SetText(Status, FText::FromString(Text));
 	if (KeyHints)
 	{
 		Hints.TrimStartAndEndInline();
-		KeyHints->SetText(FText::FromString(Hints));
+		ExtractionHUDMetrics::SetText(KeyHints, FText::FromString(Hints));
 		// 文本外面是卡片的竖排盒和边框，提示为空时整张卡片收起。
 		if (UWidget* Card = KeyHints->GetParent() ? KeyHints->GetParent()->GetParent() : nullptr)
 			Card->SetVisibility(Hints.IsEmpty() ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
 	}
 	UpdateMinimap(PS->Life == EExtractionLife::Alive || PS->Life == EExtractionLife::Downed ? PC->GetPawn() : nullptr);
+    UpdateDiscreteStatus(Cast<ABrokenEdgeCharacter>(PC->GetPawn()));
+	Previous->SetVisibility(PC->bExtractionSpectating ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	Next->SetVisibility(Previous->GetVisibility());
+	Previous->SetIsEnabled(PC->SpectatedPlayer != nullptr);
+	Next->SetIsEnabled(PC->SpectatedPlayer != nullptr);
+	Leave->SetVisibility(PC->IsMenuOpen() || PC->bExtractionSpectating || GS->Phase == EExtractionPhase::Ended
+		                     ? ESlateVisibility::Visible
+		                     : ESlateVisibility::Collapsed);
+}
+
+void UExtractionWidget::UnbindStatusEvents()
+{
+    if (ObservedCharacter.IsValid()) ObservedCharacter->OnVitalsChanged.Remove(VitalsHandle);
+    if (ObservedInventory.IsValid()) ObservedInventory->OnContentsChanged.Remove(InventoryHandle);
+    ObservedCharacter.Reset(); ObservedInventory.Reset(); ObservedWeapon.Reset();
+    VitalsHandle.Reset(); InventoryHandle.Reset(); bStatusDirty = true;
+}
+
+void UExtractionWidget::UpdateDiscreteStatus(ABrokenEdgeCharacter* ControlledCharacter)
+{
+    auto* Inventory = ControlledCharacter ? ControlledCharacter->GetExtractionInteraction()->Inventory() : nullptr;
+    if (ObservedCharacter.Get() != ControlledCharacter || ObservedInventory.Get() != Inventory)
+    {
+        UnbindStatusEvents();
+        ObservedCharacter = ControlledCharacter; ObservedInventory = Inventory;
+        if (ControlledCharacter) VitalsHandle = ControlledCharacter->OnVitalsChanged.AddWeakLambda(this,
+            [this](const FExtractionVitalsChange&) { bStatusDirty = true; });
+        if (Inventory) InventoryHandle = Inventory->OnContentsChanged.AddWeakLambda(this, [this] { bStatusDirty = true; });
+    }
+    auto* Weapon = ControlledCharacter ? ControlledCharacter->GetEquippedWeapon() : nullptr;
+    const auto* Trauma = ControlledCharacter ? ControlledCharacter->GetExtractionHealth() : nullptr;
+    const auto Key = MakeTuple(ControlledCharacter ? ControlledCharacter->GetHealth() : 0.f,
+        ControlledCharacter ? ControlledCharacter->GetMaxHealth() : 0.f,
+        Weapon ? Weapon->GetAmmo() : 0, ControlledCharacter ? ControlledCharacter->GetCombat()->GetCarriedAmmo() : 0,
+        ControlledCharacter && ControlledCharacter->Melee->Active, Trauma && Trauma->Bleeding, Trauma && Trauma->LegFracture,
+        Weapon ? Weapon->ExtractionDefinition : NAME_None, Weapon ? Weapon->ExtractionAmmoType : NAME_None,
+        Weapon ? Weapon->GetMagCapacity() : 0, Inventory ? Inventory->GetContents().Revision : INDEX_NONE);
+    // The cheap key also catches client prediction, replicated HP/trauma, and pawn
+    // changes. These must not depend on an authority-only damage event arriving.
+    if (!bStatusDirty && ObservedWeapon.Get() == Weapon && StatusKey == Key) return;
+    StatusKey = Key; ObservedWeapon = Weapon; bStatusDirty = false;
 	FString VitalText;
 	FString WeaponText;
-	HealthProgress->SetVisibility(PC->GetPawn() ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
-	if (auto* ControlledCharacter = Cast<ABrokenEdgeCharacter>(PC->GetPawn()))
+	HealthProgress->SetVisibility(ControlledCharacter ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
+	if (ControlledCharacter)
 	{
 		const float HealthFraction = ControlledCharacter->GetHealth() / FMath::Max(1.f, ControlledCharacter->GetMaxHealth());
 		HealthProgress->SetPercent(HealthFraction);
@@ -272,7 +338,7 @@ void UExtractionWidget::Refresh()
 			                                       : HealthFraction > .3f
 			                                       ? ExtractionUIStyle::Accent()
 			                                       : ExtractionUIStyle::Hex(TEXT("EA5A50")));
-		if (HealthText) HealthText->SetText(FText::AsNumber(FMath::CeilToInt(ControlledCharacter->GetHealth())));
+		if (HealthText) ExtractionHUDMetrics::SetText(HealthText, FText::AsNumber(FMath::CeilToInt(ControlledCharacter->GetHealth())));
 		else
 			VitalText = FString::Printf(TEXT("生命 %d / %d\n"),
 			                            FMath::CeilToInt(ControlledCharacter->GetHealth()),
@@ -288,7 +354,6 @@ void UExtractionWidget::Refresh()
 			}
 			VitalText += TEXT("\n");
 		}
-		const auto* Trauma = ControlledCharacter->GetExtractionHealth();
 		if (Trauma->Bleeding) VitalText += TEXT("流血 · 需绷带  ");
 		if (Trauma->LegFracture) VitalText += TEXT("腿部骨折 · 需夹板");
 		if (Trauma->Bleeding || Trauma->LegFracture) VitalText += TEXT("\n");
@@ -300,7 +365,7 @@ void UExtractionWidget::Refresh()
 			Name = TEXT("战术刀");
 			Detail = TEXT("左键轻击 / 右键重击");
 		}
-		else if (auto* Weapon = ControlledCharacter->GetEquippedWeapon())
+		else if (Weapon)
 		{
 			const auto* Definition = UExtractionItemDefinition::Get(Weapon->ExtractionDefinition);
 			const auto* Ammo = UExtractionItemDefinition::Get(Weapon->ExtractionAmmoType);
@@ -320,23 +385,23 @@ void UExtractionWidget::Refresh()
 		}
 		if (WeaponName && AmmoText)
 		{
-			WeaponName->SetText(FText::FromString(Name));
-			AmmoText->SetText(FText::FromString(Rounds));
+			ExtractionHUDMetrics::SetText(WeaponName, FText::FromString(Name));
+			ExtractionHUDMetrics::SetText(AmmoText, FText::FromString(Rounds));
 			AmmoText->SetColorAndOpacity(FSlateColor(bLowAmmo ? ExtractionUIStyle::Hex(TEXT("EA5A50")) : FLinearColor::White));
 			AmmoText->SetVisibility(Rounds.IsEmpty() ? ESlateVisibility::Collapsed : ESlateVisibility::HitTestInvisible);
 			WeaponText = Detail;
 		}
 		else WeaponText = Name + TEXT("\n") + (Rounds.IsEmpty() ? Detail : Rounds + TEXT(" ") + Detail);
-	}
-	Vitals->SetText(FText::FromString(VitalText));
-	WeaponStatus->SetText(FText::FromString(WeaponText));
-	Previous->SetVisibility(PC->bExtractionSpectating ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
-	Next->SetVisibility(Previous->GetVisibility());
-	Previous->SetIsEnabled(PC->SpectatedPlayer != nullptr);
-	Next->SetIsEnabled(PC->SpectatedPlayer != nullptr);
-	Leave->SetVisibility(PC->IsMenuOpen() || PC->bExtractionSpectating || GS->Phase == EExtractionPhase::Ended
-		                     ? ESlateVisibility::Visible
-		                     : ESlateVisibility::Collapsed);
+    }
+    else
+    {
+        if (HealthText) ExtractionHUDMetrics::SetText(HealthText, FText::FromString(TEXT("--")));
+        if (WeaponName) ExtractionHUDMetrics::SetText(WeaponName, FText::GetEmpty());
+        if (AmmoText) { ExtractionHUDMetrics::SetText(AmmoText, FText::GetEmpty()); AmmoText->SetVisibility(ESlateVisibility::Collapsed); }
+        HealthProgress->SetPercent(0.f);
+    }
+    ExtractionHUDMetrics::SetText(Vitals, FText::FromString(VitalText));
+	ExtractionHUDMetrics::SetText(WeaponStatus, FText::FromString(WeaponText));
 }
 
 int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Geometry, const FSlateRect& Culling,
@@ -477,8 +542,9 @@ int32 UExtractionWidget::NativePaint(const FPaintArgs& Args, const FGeometry& Ge
 			       FVector2D(X - 4, StripY - 4)}, Color, 2.f);
 		};
 		if (const auto* State = GetWorld()->GetGameState<AExtractionGameState>())
-			for (TActorIterator<AExtractionExit> It(GetWorld()); It; ++It)
-				Pin(It->GetActorLocation(), It->UnavailableReason(State->GetServerWorldTimeSeconds()).IsEmpty()
+			for (const auto& Reference : GetWorld()->GetSubsystem<UExtractionExitRegistry>()->GetExits())
+				if (const auto* Exit = Reference.Get(); IsValid(Exit))
+				Pin(Exit->GetActorLocation(), Exit->UnavailableReason(State->GetServerWorldTimeSeconds()).IsEmpty()
 					                            ? ExtractionUIStyle::Hex(TEXT("5DBB72"))
 					                            : FLinearColor(.7f, .72f, .75f, .6f));
 		for (const auto& Ping : PC->Pings)
@@ -658,6 +724,7 @@ void UExtractionWidget::LeaveClicked()
 
 void UExtractionWidget::NativeDestruct()
 {
+    UnbindStatusEvents(); bQuestCacheValid = false; CachedHintLife = INDEX_NONE;
 	MiniOverview = nullptr;
 	MiniDefinition = nullptr;
 	Super::NativeDestruct();

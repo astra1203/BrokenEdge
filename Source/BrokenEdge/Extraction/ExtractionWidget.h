@@ -28,6 +28,17 @@ protected:
 	                          bool bParentEnabled) const override;
 
 private:
+	void UpdateDiscreteStatus(class ABrokenEdgeCharacter* Character);
+	void UnbindStatusEvents();
+	TWeakObjectPtr<class ABrokenEdgeCharacter> ObservedCharacter;
+	TWeakObjectPtr<class UExtractionInventoryComponent> ObservedInventory;
+	TWeakObjectPtr<class AWeapon> ObservedWeapon;
+	FDelegateHandle VitalsHandle, InventoryHandle;
+	bool bStatusDirty = true, bQuestCacheValid = false;
+	TTuple<float, float, int32, int32, bool, bool, bool, FName, FName, int32, int32> StatusKey;
+	TTuple<FGuid, int32, int32> QuestKey;
+	FString CachedQuestText, CachedKeyHints;
+	int32 CachedHintLife = INDEX_NONE;
 	/** Refresh 时记下的相机位置与朝向，受击方向按它换算到屏幕。 */
 	FVector ViewEye = FVector::ZeroVector;
 	float ViewYaw = 0;

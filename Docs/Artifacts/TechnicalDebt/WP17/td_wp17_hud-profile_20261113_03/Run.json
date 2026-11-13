@@ -1,0 +1,43 @@
+{
+  "task": "hud-profile",
+  "started_utc": "2026-11-13T11:19:51.447609+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp17_hud-profile_20261113_03\\Editor.log",
+    "-RenderOffscreen",
+    "-ResX=1280",
+    "-ResY=720",
+    "-trace=cpu,frame,bookmark,counters",
+    "-tracefile=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp17_hud-profile_20261113_03\\HUD.utrace",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.HUDProfile.",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp17_hud-profile_20261113_03\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "53a583c6ad2ddb0055477c6f2f0cafb1b13a8ee3",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Extraction/run_editor_task.py\n M Source/BrokenEdge/Extraction/ExtractionExit.cpp\n M Source/BrokenEdge/Extraction/ExtractionExit.h\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h\n M Source/BrokenEdge/Extraction/ExtractionWidget.cpp\n M Source/BrokenEdge/Extraction/ExtractionWidget.h\n?? Scripts/Extraction/export_hud_trace.py\n?? Source/BrokenEdge/Extraction/ExtractionExitRegistry.cpp\n?? Source/BrokenEdge/Extraction/ExtractionExitRegistry.h\n?? Source/BrokenEdge/Extraction/ExtractionHUDMetrics.cpp\n?? Source/BrokenEdge/Extraction/ExtractionHUDMetrics.h\n?? Source/BrokenEdge/Tests/ExtractionHUDProfileTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "0564793c9071d62c230b7a60bc00ee6fa9282fff4fa9e500378645205961417f",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp17_hud-profile_20261113_03\\Run.json",
+  "exit_code": 0,
+  "pid": 27220,
+  "successful_tests": 0,
+  "result": "failed",
+  "finished_utc": "2026-11-13T11:21:35.985163+00:00"
+}

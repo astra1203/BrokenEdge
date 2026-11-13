@@ -1,0 +1,6 @@
+[2026.11.13-11.21.35:330][488]LogTemp: Display: EXTRACTION_HUD_PROFILE {
+[2026.11.13-11.21.35:504][490]LogAutomationController: Error: Test Completed. Result={Fail} Name={SixtySeconds} Path={BrokenEdge.Extraction.HUDProfile.SixtySeconds}
+[2026.11.13-11.21.35:506][490]LogAutomationController: LogTemp: EXTRACTION_HUD_PROFILE {
+[2026.11.13-11.21.35:506][490]LogAutomationController: Error: Expected 'Changed health is displayed without a stale cache' to be "54", but it was "100". [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\ExtractionHUDProfileTests.cpp(113)]
+[2026.11.13-11.21.35:506][490]LogAutomationController: Error: Expected 'Change equipped armor through committed inventory' to be true. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\ExtractionHUDProfileTests.cpp(116)]
+[2026.11.13-11.21.35:506][490]LogAutomationController: Error: Expected 'Committed armor change invalidates status text' to be true. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\ExtractionHUDProfileTests.cpp(123)]

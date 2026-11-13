@@ -1,4 +1,5 @@
 #include "ExtractionExit.h"
+#include "ExtractionExitRegistry.h"
 #include "ExtractionExitSwitch.h"
 #include "Engine/World.h"
 #include "Components/StaticMeshComponent.h"
@@ -38,6 +39,17 @@ AExtractionExit::AExtractionExit()
 	Label->SetTextRenderColor(FColor(70, 230, 170));
 	// The HUD owns localized point names and timing; world text obscures nearby players.
 	Label->SetHiddenInGame(true);
+}
+
+void AExtractionExit::BeginPlay()
+{
+	Super::BeginPlay();
+	GetWorld()->GetSubsystem<UExtractionExitRegistry>()->Register(this);
+}
+void AExtractionExit::EndPlay(const EEndPlayReason::Type Reason)
+{
+	if (auto* Registry = GetWorld()->GetSubsystem<UExtractionExitRegistry>()) Registry->Unregister(this);
+	Super::EndPlay(Reason);
 }
 
 // 把世界位置变换到撤离点局部坐标，再减去 BoundsOffset 检测半尺寸；不是依靠碰撞重叠事件。

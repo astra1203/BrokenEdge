@@ -1,0 +1,74 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "1ABC08874CB5FE4AEA6A0FAE55BE105A",
+			"instanceName": "OREKI-LEGION-14932",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-11.25.48",
+	"succeeded": 3,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.059548206627368927,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "AvailabilityTransitions",
+			"fullTestPath": "BrokenEdge.Extraction.ExitFeedback.AvailabilityTransitions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"1ABC08874CB5FE4AEA6A0FAE55BE105A"
+			],
+			"duration": 0.021880201995372772,
+			"dateTime": "2026.11.13-11.25.48",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "OverlappingAreas",
+			"fullTestPath": "BrokenEdge.Extraction.ExitFeedback.OverlappingAreas",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"1ABC08874CB5FE4AEA6A0FAE55BE105A"
+			],
+			"duration": 0.019975602626800537,
+			"dateTime": "2026.11.13-11.25.48",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PersonalConditionsAndIsolation",
+			"fullTestPath": "BrokenEdge.Extraction.ExitFeedback.PersonalConditionsAndIsolation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"1ABC08874CB5FE4AEA6A0FAE55BE105A"
+			],
+			"duration": 0.017692402005195618,
+			"dateTime": "2026.11.13-11.25.48",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

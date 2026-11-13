@@ -1,0 +1,32 @@
+{
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "53a583c6ad2ddb0055477c6f2f0cafb1b13a8ee3",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Extraction/run_editor_task.py\n M Source/BrokenEdge/Extraction/ExtractionExit.cpp\n M Source/BrokenEdge/Extraction/ExtractionExit.h\n M Source/BrokenEdge/Extraction/ExtractionWidget.cpp\n?? Scripts/Extraction/export_hud_trace.py\n?? Source/BrokenEdge/Extraction/ExtractionExitRegistry.cpp\n?? Source/BrokenEdge/Extraction/ExtractionExitRegistry.h\n?? Source/BrokenEdge/Extraction/ExtractionHUDMetrics.cpp\n?? Source/BrokenEdge/Extraction/ExtractionHUDMetrics.h\n?? Source/BrokenEdge/Tests/ExtractionHUDProfileTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\export_hud_trace.py",
+  "script_sha256": "fc28079fcbf0a32eb419dbd6924ebe9c1646786740cd976cc537e4e9ec1c3a7f",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealInsights.exe",
+    "-NoUI",
+    "-AutoQuit",
+    "-OpenTraceFile=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp17_baseline_20261113_01\\HUD.utrace",
+    "-ABSLOG=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp17_baseline_20261113_01\\Insights.log",
+    "-ExecOnAnalysisCompleteCmd=TimingInsights.ExportTimingEvents HUDTimingEvents.csv -threads=GameThread -timers=ExtractionHUDRefresh -columns=TimerName,StartTime,EndTime,Duration"
+  ],
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp17_baseline_20261113_01\\InsightsRun.json",
+  "exit_code": 0,
+  "windows_command_line": "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealInsights.exe -NoUI -AutoQuit -OpenTraceFile=\"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp17_baseline_20261113_01\\HUD.utrace\" -ABSLOG=\"D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp17_baseline_20261113_01\\Insights.log\" -ExecOnAnalysisCompleteCmd=\"TimingInsights.ExportTimingEvents HUDTimingEvents.csv -threads=GameThread -timers=ExtractionHUDRefresh -columns=TimerName,StartTime,EndTime,Duration\"",
+  "trace_sha256": "bb8e63ce6eeefba16abbdee307d21219ab8842b260dee89d048f3a183312aea5",
+  "trace_bytes": 162917310,
+  "result": "failed"
+}

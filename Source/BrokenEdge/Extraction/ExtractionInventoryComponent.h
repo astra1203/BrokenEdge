@@ -54,6 +54,8 @@ public:
 	void InitializeGuard();
 	// 刷新备弹并请求尽快网络更新；版本号由修改容器的调用方推进。
 	void Changed();
+	// Emitted after committed authority changes and owner replication notifications.
+	FSimpleMulticastDelegate OnContentsChanged;
 	// 按物品 ID 复用或创建主副武器 Actor，再同步弹药、附件、手持和背负挂点。
 	// 先准备所有需要的 Actor，生成失败则销毁本次新建对象并返回 false，让上层撤回库存变更。
 	bool SyncWeapons();

@@ -442,12 +442,13 @@ void UExtractionInventoryComponent::SyncReserve()
 }
 
 // 客户端收到背包快照后更新备弹显示；复制回调不执行入库或掉落。
-void UExtractionInventoryComponent::OnRep_Contents() { SyncReserve(); }
+void UExtractionInventoryComponent::OnRep_Contents() { SyncReserve(); OnContentsChanged.Broadcast(); }
 
 // 刷新备弹并请求尽快网络更新；版本号由修改容器的调用方推进。
 void UExtractionInventoryComponent::Changed()
 {
 	SyncReserve();
+	OnContentsChanged.Broadcast();
 	GetOwner()->ForceNetUpdate();
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_INVENTORY Owner=%s Container=%s Revision=%d Items=%d Ammo=%d"),
 	       *GetOwner()->GetName(), *Contents.Id.ToString(), Contents.Revision, Contents.Items.Num(),
