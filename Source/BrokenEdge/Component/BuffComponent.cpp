@@ -32,11 +32,9 @@ void UBuffComponent::BeginPlay()
  */
 void UBuffComponent::HealRampUp(float DeltaTime)
 {
-	if (!bHealing || Character == nullptr || Character->IsDefeated()) return;
+	if (!bHealing || Character == nullptr || !Character->HasAuthority() || Character->IsDefeated()) return;
 	const float HealThisFrame = HealingRate * DeltaTime;
-	// Character->SetHealth(FMath::Clamp(Character->GetHealth() + HealThisFrame, 0.f, Character->GetMaxHealth()));
-	Character->SetHealth(Character->GetHealth() + HealThisFrame);
-	Character->UpdateHUDHealth();
+	Character->ApplyVitalsChange({HealThisFrame});
 	AmountToHeal -= HealThisFrame;
 
 	if (AmountToHeal <= 0.f || Character->GetHealth() >= Character->GetMaxHealth())
@@ -48,10 +46,9 @@ void UBuffComponent::HealRampUp(float DeltaTime)
 
 void UBuffComponent::ShieldRampUp(float DeltaTime)
 {
-	if (!bReplenishingShield || Character == nullptr || Character->IsDefeated()) return;
+	if (!bReplenishingShield || Character == nullptr || !Character->HasAuthority() || Character->IsDefeated()) return;
 	const float ReplenishThisFrame = ShieldReplenishRate * DeltaTime;
-	Character->SetShield(FMath::Clamp(Character->GetShield() + ReplenishThisFrame, 0.f, Character->GetMaxShield()));
-	Character->UpdateHUDShield();
+	Character->ApplyVitalsChange({0, ReplenishThisFrame});
 	ShieldReplenishAmount -= ReplenishThisFrame;
 	if (ShieldReplenishAmount <= 0.f || Character->GetShield() >= Character->GetMaxShield())
 	{

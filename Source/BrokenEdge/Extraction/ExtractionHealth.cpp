@@ -77,8 +77,7 @@ bool UExtractionHealth::TickStim(float Delta)
 	}
 	if (bCanHeal && Heal > 0 && C->GetHealth() < C->GetMaxHealth())
 	{
-		C->SetHealth(FMath::Min(C->GetMaxHealth(), C->GetHealth() + Heal));
-		C->UpdateHUDHealth();
+		C->ApplyVitalsChange({Heal});
 		bChanged = true;
 	}
 	return bChanged;
@@ -121,18 +120,16 @@ void UExtractionHealth::Explosion(float Damage, AController* Attacker, AActor* C
 	auto* C = Character();
 	auto* GM = GetWorld()->GetAuthGameMode<AExtractionGameMode>();
 	if (!C || !C->HasAuthority() || !GM || C->IsDefeated() || !FMath::IsFinite(Damage)) return;
-	Damage = GM->CalculateDamage(Attacker, C->GetController(), Damage);
+	Damage = C->CalculateIncomingDamage(Damage, Attacker);
 	if (Damage <= 0) return;
 	LastBulletAt = GetWorld()->GetTimeSeconds();
 	if (C->GetExtractionAbilities()->IsDowned())
 	{
-		C->ReceiveDamage(C, Damage, nullptr, Attacker, Causer);
+		C->ApplyResolvedDamage(Damage, Attacker, Causer);
 		return;
 	}
-	C->GetExtractionInteraction()->CancelMedical();
-	C->GetExtractionAbilities()->Damaged();
 	const float Before = C->GetHealth();
-	C->ReceiveDamage(C, Damage, nullptr, Attacker, Causer);
+	C->ApplyResolvedDamage(Damage, Attacker, Causer);
 	if (Before - C->GetHealth() >= GetDefault<UExtractionEquipmentRules>()->TraumaThreshold && C->GetHealth() > 0
 		&& !C->IsDefeated())
 	{
@@ -151,12 +148,12 @@ void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController
 	auto* C = Character();
 	auto* GM = GetWorld()->GetAuthGameMode<AExtractionGameMode>();
 	if (!C || !C->HasAuthority() || !GM || C->IsDefeated() || !FMath::IsFinite(Damage)) return;
-	Damage = GM->CalculateDamage(Attacker, C->GetController(), Damage);
+	Damage = C->CalculateIncomingDamage(Damage, Attacker);
 	if (Damage <= 0) return; // Friendly fire cannot damage equipment or create trauma.
 	LastBulletAt = GetWorld()->GetTimeSeconds();
 	const auto* AmmoDef = UExtractionItemDefinition::Get(Ammo);
 	if (!AmmoDef || AmmoDef->Kind != EExtractionItemKind::Ammo) return;
-	// Bullet damage is validated again in ReceiveDamage; scale only at this entry.
+	// Team/mode damage was resolved once above; apply ammo and armor before publishing vitals.
 	// The attacker, not the weapon instance, determines guard difficulty after looting.
 	if (const auto* Shooter = Attacker ? Cast<ABrokenEdgeCharacter>(Attacker->GetPawn()) : nullptr;
 		Shooter && Shooter->bExtractionGuard)
@@ -164,11 +161,9 @@ void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController
 	Damage *= AmmoDef->DamageScale;
 	if (C->GetExtractionAbilities()->IsDowned())
 	{
-		C->ReceiveDamage(C, Damage, nullptr, Attacker, Causer);
+		C->ApplyResolvedDamage(Damage, Attacker, Causer);
 		return;
 	}
-	C->GetExtractionInteraction()->CancelMedical();
-	C->GetExtractionAbilities()->Damaged();
 	const int32 Slot = ArmorSlotForBone(Bone);
 	if (auto* Inv = C->GetExtractionInteraction()->Inventory(); Inv && Slot >= 0)
 	{
@@ -197,7 +192,7 @@ void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController
 	}
 	// 记录护甲后的实际生命变化，创伤判定不使用被护甲吸收的部分。
 	const float Before = C->GetHealth();
-	C->ReceiveDamage(C, Damage, nullptr, Attacker, Causer);
+	C->ApplyResolvedDamage(Damage, Attacker, Causer);
 	const float Lost = Before - C->GetHealth();
 #if WITH_DEV_AUTOMATION_TESTS
 	++TestBulletSequence;
@@ -223,6 +218,7 @@ void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController
 bool UExtractionHealth::Needs(EExtractionMedicalEffect Effect) const
 {
 	const auto* C = Character();
+	if (!C || C->IsDefeated() || C->GetExtractionAbilities()->IsDowned()) return false;
 	return C && (Effect == EExtractionMedicalEffect::Heal
 		             ? C->GetHealth() < C->GetMaxHealth()
 		             : Effect == EExtractionMedicalEffect::Bandage
@@ -234,15 +230,15 @@ bool UExtractionHealth::Needs(EExtractionMedicalEffect Effect) const
 bool UExtractionHealth::Treat(const UExtractionItemDefinition* D)
 {
 	auto* C = Character();
-	if (!C || !C->HasAuthority() || !D || !Needs(D->MedicalEffect)) return false;
-	if (D->MedicalEffect == EExtractionMedicalEffect::Heal) C->SetHealth(C->GetHealth() + D->HealAmount);
+	if (!C || !C->HasAuthority() || C->IsDefeated() || C->GetExtractionAbilities()->IsDowned()
+		|| !D || !Needs(D->MedicalEffect)) return false;
+	if (D->MedicalEffect == EExtractionMedicalEffect::Heal) return C->ApplyVitalsChange({D->HealAmount}).Applied;
 	else if (D->MedicalEffect == EExtractionMedicalEffect::Bandage)
 	{
 		Bleeding = false;
 		NextBleed = 0;
 	}
 	else LegFracture = false;
-	C->UpdateHUDHealth();
 	C->ForceNetUpdate();
 	return true;
 }
@@ -271,12 +267,6 @@ void UExtractionHealth::TickComponent(float Delta, ELevelTick Kind, FActorCompon
 	}
 	if (Now < NextBleed) return;
 	NextBleed = Now + FMath::Max(.1f, GetDefault<UExtractionEquipmentRules>()->BleedingInterval);
-	C->SetHealth(C->GetHealth() - FMath::Max(0.f, GetDefault<UExtractionEquipmentRules>()->BleedingDamage));
-	C->UpdateHUDHealth();
-	C->ForceNetUpdate();
-	// Internal bleeding bypasses armor and never interrupts treatment or applies a new wound.
-	if (C->GetHealth() <= 0)
-		if (auto* GM = GetWorld()->GetAuthGameMode<AExtractionGameMode>())
-			GM->
-				DefeatCombatant(C, BleedInstigator.Get());
+    C->ApplyVitalsChange({-FMath::Max(0.f, GetDefault<UExtractionEquipmentRules>()->BleedingDamage),
+        0, EExtractionVitalsReason::Bleeding, BleedInstigator.Get()});
 }

@@ -583,11 +583,10 @@ void UExtractionInteractionComponent::TickComponent(float Delta, ELevelTick Tick
 			auto* Inv = Inventory();
 			auto* I = Inv->GetContents().Find(MedicalItem);
 			const auto* D = I ? UExtractionItemDefinition::Get(I->Definition) : nullptr;
-			if (D && C->GetExtractionHealth()->Needs(D->MedicalEffect) && Inv->ConsumeOne(MedicalItem).Ok()
+			if (D && (D->MedicalEffect != EExtractionMedicalEffect::Heal || (FMath::IsFinite(D->HealAmount) && D->HealAmount > 0))
+				&& C->GetExtractionHealth()->Needs(D->MedicalEffect) && Inv->ConsumeOne(MedicalItem).Ok()
 				&& C->GetExtractionHealth()->Treat(D))
 			{
-				C->UpdateHUDHealth();
-				C->ForceNetUpdate();
 				UE_LOG(LogTemp, Display, TEXT("EXTRACTION_MEDICAL Item=%s Health=%.1f"), *MedicalItem.ToString(),
 				       C->GetHealth());
 			}

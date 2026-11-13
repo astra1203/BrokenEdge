@@ -496,8 +496,7 @@ public:
 								Character->GetController()->SetControlRotation(
 									FRotator(0, Yaw, 0));
 						}
-						Character->SetHealth(Item->GetNumberField(TEXT("health")));
-						Character->SetShield(Item->GetNumberField(TEXT("shield")));
+						Character->ApplyVitalsChange({static_cast<float>(Item->GetNumberField(TEXT("health"))) - Character->GetHealth(), static_cast<float>(Item->GetNumberField(TEXT("shield"))) - Character->GetShield(), EExtractionVitalsReason::Restore});
 						bool ClearTrauma = false;
 						if (Item->TryGetBoolField(TEXT("clear_trauma"), ClearTrauma) && ClearTrauma)
 						{

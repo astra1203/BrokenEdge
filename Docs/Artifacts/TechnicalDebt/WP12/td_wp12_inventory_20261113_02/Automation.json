@@ -1,0 +1,134 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "872703F547EB15BAC94F4888E465E9C9",
+			"instanceName": "OREKI-LEGION-27508",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-09.50.13",
+	"succeeded": 7,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.10901229083538055,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "CommitAndRollback",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.Transaction.CommitAndRollback",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"872703F547EB15BAC94F4888E465E9C9"
+			],
+			"duration": 0.0091756023466587067,
+			"dateTime": "2026.11.13-09.50.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "EquipmentAndValidation",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.EquipmentAndValidation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"872703F547EB15BAC94F4888E465E9C9"
+			],
+			"duration": 0.01685589924454689,
+			"dateTime": "2026.11.13-09.50.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "GearContainers",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.GearContainers",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"872703F547EB15BAC94F4888E465E9C9"
+			],
+			"duration": 0.016550797969102859,
+			"dateTime": "2026.11.13-09.50.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "GridTransactions",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.GridTransactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"872703F547EB15BAC94F4888E465E9C9"
+			],
+			"duration": 0.016651198267936707,
+			"dateTime": "2026.11.13-09.50.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "StackConservation",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.StackConservation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"872703F547EB15BAC94F4888E465E9C9"
+			],
+			"duration": 0.016422700136899948,
+			"dateTime": "2026.11.13-09.50.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SwapAndPockets",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.SwapAndPockets",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"872703F547EB15BAC94F4888E465E9C9"
+			],
+			"duration": 0.016565199941396713,
+			"dateTime": "2026.11.13-09.50.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SwapEquipmentSlots",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.SwapEquipmentSlots",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"872703F547EB15BAC94F4888E465E9C9"
+			],
+			"duration": 0.016790900379419327,
+			"dateTime": "2026.11.13-09.50.13",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

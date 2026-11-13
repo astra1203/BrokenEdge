@@ -19,6 +19,21 @@ class UInputMappingContext;
 enum class EVisibilityBasedAnimTickOption : uint8;
 enum class EFirstPersonPrimitiveType : uint8;
 
+enum class EExtractionVitalsReason : uint8 { Healing, Damage, Bleeding, Restore };
+struct FExtractionVitalsDelta
+{
+    float Health = 0, Shield = 0;
+    EExtractionVitalsReason Reason = EExtractionVitalsReason::Healing;
+    AController* Instigator = nullptr;
+    AActor* Causer = nullptr;
+};
+struct FExtractionVitalsChange
+{
+    float Health = 0, Shield = 0, DownedHealth = 0;
+    bool Applied = false, Downed = false, Defeated = false;
+};
+DECLARE_MULTICAST_DELEGATE_OneParam(FExtractionVitalsChanged, const FExtractionVitalsChange&);
+
 /** Camera-space weapon fit; source poses stay on a continuous, stationary body. */
 USTRUCT(BlueprintType)
 struct FStingerViewWeaponFit
@@ -267,6 +282,7 @@ public:
 	void TrackFirstPersonWorldWeapon(AWeapon* Weapon);
 
 private:
+	void HandleVitalsChanged(const FExtractionVitalsChange& Change);
 	void UpdateFirstPersonWeapon();
 	void PlayFirstPersonMontage(UAnimMontage* Montage, UAnimMontage* ThirdPersonMontage, FName Section = NAME_None);
 	void SyncFirstPersonAction();
@@ -643,14 +659,18 @@ public:
 	UExtractionAbilities* GetExtractionAbilities() const { return ExtractionAbilities; }
 	FORCEINLINE [[nodiscard]] float GetMaxHealth() const { return MaxHealth; }
 
-	/** 设置生命值 */
-	FORCEINLINE void SetHealth(float Amount) { Health = FMath::Clamp(Amount, 0.f, MaxHealth); }
+	/** 唯一服务器生命/护盾入口；返回钳制后的实际变化，非空变化只广播一次。 */
+	FExtractionVitalsChange ApplyVitalsChange(const FExtractionVitalsDelta& Delta);
+    FExtractionVitalsChanged OnVitalsChanged;
+    // Resolve team/mode damage exactly once before armor; application never recalculates it.
+    float CalculateIncomingDamage(float Damage, AController* Attacker);
+    FExtractionVitalsChange ApplyResolvedDamage(float Damage, AController* Attacker, AActor* Causer);
+#if WITH_DEV_AUTOMATION_TESTS
+    int32 TestDamageCalculations = 0;
+#endif
 
 	/// 获取当前护盾值
 	FORCEINLINE [[nodiscard]] float GetShield() const { return Shield; }
-
-	/// 设置护盾值
-	FORCEINLINE void SetShield(float Amount) { Shield = FMath::Clamp(Amount, 0.f, MaxShield); }
 
 	/// 获取最大护盾值
 	FORCEINLINE [[nodiscard]] float GetMaxShield() const { return MaxShield; }

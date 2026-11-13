@@ -1,0 +1,9 @@
+[2026.11.13-09.50.32:717][300]LogAutomationController: Display: Test Started. Name={ArmorCoverage} Path={BrokenEdge.Extraction.Equipment.ArmorCoverage}
+[2026.11.13-09.50.32:751][302]LogAutomationController: Display: Test Completed. Result={Success} Name={ArmorCoverage} Path={BrokenEdge.Extraction.Equipment.ArmorCoverage}
+[2026.11.13-09.50.32:752][303]LogAutomationController: Display: Test Started. Name={AtomicConfiguration} Path={BrokenEdge.Extraction.Equipment.AtomicConfiguration}
+[2026.11.13-09.50.32:785][304]LogAutomationController: Display: Test Completed. Result={Success} Name={AtomicConfiguration} Path={BrokenEdge.Extraction.Equipment.AtomicConfiguration}
+[2026.11.13-09.50.32:786][305]LogAutomationController: Display: Test Started. Name={LegacyMigration} Path={BrokenEdge.Extraction.Equipment.LegacyMigration}
+[2026.11.13-09.50.32:964][307]LogAutomationController: Error: Test Completed. Result={Fail} Name={LegacyMigration} Path={BrokenEdge.Extraction.Equipment.LegacyMigration}
+[2026.11.13-09.50.32:964][307]LogAutomationController: Error: Expected 'Migrated version' to be 7, but it was 8. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\ExtractionEquipmentTests.cpp(229)]
+[2026.11.13-09.50.32:965][308]LogAutomationController: Display: Test Started. Name={NestedExportRecovery} Path={BrokenEdge.Extraction.Equipment.NestedExportRecovery}
+[2026.11.13-09.50.33:035][309]LogAutomationController: Display: Test Completed. Result={Success} Name={NestedExportRecovery} Path={BrokenEdge.Extraction.Equipment.NestedExportRecovery}

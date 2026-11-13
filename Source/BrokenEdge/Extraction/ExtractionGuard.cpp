@@ -215,8 +215,7 @@ bool AExtractionGuard::StartGuardAI()
 	C->bExtractionGuard = true;
 	if (!C->GuardInventory->GetContents().Id.IsValid())
 	{
-		C->SetHealth(100);
-		C->SetShield(0);
+		C->ApplyVitalsChange({100 - C->GetHealth(), -C->GetShield(), EExtractionVitalsReason::Restore});
 	}
 	C->GetCharacterMovement()->MaxWalkSpeed = FMath::Max(0.f, GetDefault<UExtractionRules>()->GuardWalkSpeed);
 	C->GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
@@ -358,8 +357,7 @@ void AExtractionGameMode::SpawnGuards()
 		C->bExtractionGuard = true;
 		C->ExtractionGuardId = I;
 		C->FinishSpawning(Transform);
-		C->SetHealth(100);
-		C->SetShield(0);
+		C->ApplyVitalsChange({100 - C->GetHealth(), -C->GetShield(), EExtractionVitalsReason::Restore});
 		C->GetCharacterMovement()->MaxWalkSpeed = FMath::Max(0.f, GetDefault<UExtractionRules>()->GuardWalkSpeed);
 
 		C->GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;

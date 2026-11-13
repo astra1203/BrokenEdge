@@ -120,62 +120,85 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter(const FObjectInitializer& ObjectIniti
 void ABrokenEdgeCharacter::ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
                                          class AController* InstigatorController, AActor* DamageCauser)
 {
-	BrokenEdgeGameMode = BrokenEdgeGameMode == nullptr
-		                     ? GetWorld()->GetAuthGameMode<ABrokenEdgeGameMode>()
-		                     : BrokenEdgeGameMode;
+    const float Resolved = CalculateIncomingDamage(Damage, InstigatorController);
+    if (Resolved > 0) ApplyResolvedDamage(Resolved, InstigatorController, DamageCauser);
+}
 
-	if (bDefeated || BrokenEdgeGameMode == nullptr)return;
-	Damage = BrokenEdgeGameMode->CalculateDamage(InstigatorController, GetController(), Damage);
-	// 搜打撤模式在函数返回时统一发战斗反馈，覆盖倒地扣血、击倒、击杀各条返回路径。
-	bool bFeedback = false;
-	const bool bWasDowned = ExtractionAbilities->IsDowned();
-	ON_SCOPE_EXIT { if (bFeedback) NotifyCombatFeedback(InstigatorController, DamageCauser, bWasDowned, Damage); };
-	if (ExtractionInteraction->IsEnabled())
-	{
-		if (Damage <= 0) return;
-		bFeedback = true;
-		ExtractionInteraction->CancelMedical();
-		ExtractionAbilities->Damaged();
-		if (auto* GM = Cast<AExtractionGameMode>(BrokenEdgeGameMode); GM && GM->DamageDowned(this, Damage)) return;
-	}
+float ABrokenEdgeCharacter::CalculateIncomingDamage(float Damage, AController* Attacker)
+{
+    if (!HasAuthority() || bDefeated || !FMath::IsFinite(Damage) || Damage <= 0) return 0;
+    auto* GM = GetWorld()->GetAuthGameMode<ABrokenEdgeGameMode>();
+    if (!GM) return 0;
+#if WITH_DEV_AUTOMATION_TESTS
+    ++TestDamageCalculations;
+#endif
+    const float Resolved = GM->CalculateDamage(Attacker, GetController(), Damage);
+    return FMath::IsFinite(Resolved) ? FMath::Max(0.f, Resolved) : 0.f;
+}
 
-	float DamageToHealth = Damage;
-	if (Shield > 0.f && !ExtractionCombat->IsEnabled())
-	{
-		if (Shield >= Damage)
-		{
-			Shield = FMath::Clamp(Shield - Damage, 0.f, MaxShield);
-			DamageToHealth = 0.f;
-		}
-		else
-		{
-			DamageToHealth = FMath::Clamp(DamageToHealth - Shield, 0.f, Damage);
-			Shield = 0.f;
-		}
-	}
+FExtractionVitalsChange ABrokenEdgeCharacter::ApplyResolvedDamage(float Damage, AController* Attacker, AActor* Causer)
+{
+    if (!FMath::IsFinite(Damage) || Damage <= 0) return {};
+    return ApplyVitalsChange({-Damage, 0, EExtractionVitalsReason::Damage, Attacker, Causer});
+}
 
-	Health = FMath::Clamp(Health - DamageToHealth, 0.f, MaxHealth);
+FExtractionVitalsChange ABrokenEdgeCharacter::ApplyVitalsChange(const FExtractionVitalsDelta& Delta)
+{
+    FExtractionVitalsChange Result;
+    if (!HasAuthority() || !FMath::IsFinite(Delta.Health) || !FMath::IsFinite(Delta.Shield)
+        || bDefeated || (Delta.Reason == EExtractionVitalsReason::Healing && ExtractionAbilities->IsDowned())) return Result;
+    const bool bDamage = Delta.Reason == EExtractionVitalsReason::Damage && Delta.Health < 0;
+    const bool bWasDowned = ExtractionAbilities->IsDowned();
+    auto* GM = GetWorld()->GetAuthGameMode<ABrokenEdgeGameMode>();
+    auto* ExtractionGM = Cast<AExtractionGameMode>(GM);
+    const float BeforeHealth = Health, BeforeShield = Shield;
+    const auto* PS = GetPlayerState<AExtractionPlayerState>();
+    const float BeforeDowned = PS ? PS->DownHealth : 0;
+    bool bHandledDowned = false;
+    if (bDamage && ExtractionInteraction->IsEnabled())
+    {
+        ExtractionInteraction->CancelMedical();
+        ExtractionAbilities->Damaged();
+        bHandledDowned = ExtractionGM && ExtractionGM->DamageDowned(this, -Delta.Health);
+    }
+    if (!bHandledDowned)
+    {
+        float HealthDelta = Delta.Health, ShieldDelta = Delta.Shield;
+        if (bDamage && !ExtractionCombat->IsEnabled())
+        {
+            const float Absorbed = FMath::Min(Shield, -HealthDelta);
+            ShieldDelta -= Absorbed;
+            HealthDelta += Absorbed;
+        }
+        Health = FMath::Clamp(Health + HealthDelta, 0.f, MaxHealth);
+        Shield = FMath::Clamp(Shield + ShieldDelta, 0.f, MaxShield);
+        if (bDamage) PlayHitReactMontage();
+        // A failed persistent settlement may leave zero HP without final death; allow its next damage event to retry.
+        if (Health <= 0 && GM &&
+            (bDamage || Delta.Reason == EExtractionVitalsReason::Bleeding))
+        {
+            if (ExtractionGM) ExtractionGM->DefeatCombatant(this, Delta.Instigator);
+            else GM->PlayerDefeated(this, Cast<ABrokenEdgePlayerController>(Controller),
+                                   Cast<ABrokenEdgePlayerController>(Delta.Instigator));
+        }
+    }
+    Result.Health = Health - BeforeHealth;
+    Result.Shield = Shield - BeforeShield;
+    Result.DownedHealth = (PS ? PS->DownHealth : 0) - BeforeDowned;
+    Result.Downed = ExtractionAbilities->IsDowned();
+    Result.Defeated = bDefeated;
+    Result.Applied = Result.Health != 0 || Result.Shield != 0 || Result.DownedHealth != 0
+        || Result.Downed != bWasDowned || Result.Defeated;
+    if (Result.Applied) { ForceNetUpdate(); OnVitalsChanged.Broadcast(Result); }
+    if (bDamage && ExtractionInteraction->IsEnabled())
+        NotifyCombatFeedback(Delta.Instigator, Delta.Causer, bWasDowned, -Delta.Health);
+    return Result;
+}
 
-	UpdateHUDHealth();
-	UpdateHUDShield();
-	PlayHitReactMontage();
-
-	if (Health <= 0.f)
-	{
-		if (auto* GM = Cast<AExtractionGameMode>(BrokenEdgeGameMode))
-		{
-			GM->DefeatCombatant(this, InstigatorController);
-			return;
-		}
-		BrokenEdgePlayerController = BrokenEdgePlayerController == nullptr
-			                             ? Cast<ABrokenEdgePlayerController>(Controller)
-			                             : BrokenEdgePlayerController;
-
-		ABrokenEdgePlayerController* AttackerController = Cast<ABrokenEdgePlayerController>(InstigatorController);
-
-		BrokenEdgeGameMode->PlayerDefeated(this,
-		                                   BrokenEdgePlayerController, AttackerController);
-	}
+void ABrokenEdgeCharacter::HandleVitalsChanged(const FExtractionVitalsChange&)
+{
+    UpdateHUDHealth();
+    UpdateHUDShield();
 }
 
 void ABrokenEdgeCharacter::NotifyCombatFeedback(AController* Attacker, AActor* Causer, bool bWasDowned, float Damage)
@@ -211,6 +234,7 @@ void ABrokenEdgeCharacter::NotifyCombatFeedback(AController* Attacker, AActor* C
 void ABrokenEdgeCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	OnVitalsChanged.AddUObject(this, &ThisClass::HandleVitalsChanged);
 	if (ExtractionCombat->IsEnabled() && OverheadWidget)
 	{
 		// A name plate must not intercept the aiming ray or reveal enemies through cover.

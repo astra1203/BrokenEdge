@@ -393,11 +393,9 @@ void UExtractionAbilities::Complete()
 		PS->BleedAt = 0;
 		PS->DownHealth = 0;
 		PS->ForceNetUpdate();
-		Target->SetHealth(R->ReviveHealth);
-		Target->SetShield(0);
+		Target->ApplyVitalsChange({R->ReviveHealth - Target->GetHealth(), -Target->GetShield(), EExtractionVitalsReason::Restore});
 		Target->GetExtractionHealth()->Revived();
 		Target->UnCrouch();
-		Target->UpdateHUDHealth();
 		Target->ForceNetUpdate();
 	}
 	else if (Action == EExtractionAction::Heal)
