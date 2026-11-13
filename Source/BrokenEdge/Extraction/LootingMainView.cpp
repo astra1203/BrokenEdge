@@ -536,7 +536,6 @@ void ULootingMainView::Refresh()
 		}
 		Text(StatusText, bPendingPlacement ? TEXT("选择目标格子放置拆分物品 · R 旋转 · Esc 取消") : PC()->ItemMessage);
 		if (!bWasOpen) SetUserFocus(GetOwningPlayer());
-		UpdateDragRotation();
 	}
 	else UpdatePrompt();
 	bWasOpen = Open;
@@ -832,14 +831,6 @@ void ULootingMainView::RotateDrag()
 	}
 }
 
-void ULootingMainView::UpdateDragRotation()
-{
-	if (!PC()) return;
-	const bool Down = PC()->IsInputKeyDown(EKeys::R);
-	if (Down && !bRotationDown) RotateDrag();
-	bRotationDown = Down;
-}
-
 // 把鼠标落点换算成放置请求；只读，不提交。装备槽优先于容器网格命中。
 bool ULootingMainView::ResolveDrop(FVector2D Screen, FExtractionItemRequest& R, UCanvasPanel*& Canvas, FVector2D& At,
                                    FVector2D& Size) const
@@ -946,7 +937,6 @@ void ULootingMainView::HidePreview()
 
 void ULootingMainView::DragOver(FVector2D Screen)
 {
-	UpdateDragRotation();
 	FExtractionItemRequest R;
 	UCanvasPanel* Canvas = nullptr;
 	FVector2D At, Size;
@@ -1032,7 +1022,7 @@ bool ULootingMainView::PlaceAt(FVector2D Screen, UDragDropOperation* Operation)
 
 FReply ULootingMainView::NativeOnPreviewKeyDown(const FGeometry& G, const FKeyEvent& E)
 {
-	if (E.GetKey() == EKeys::Tab || E.GetKey() == EKeys::Escape || (E.GetKey() == EKeys::Enter && SplitDialog &&
+	if (E.GetKey() == EKeys::Escape || (E.GetKey() == EKeys::Enter && SplitDialog &&
 		SplitDialog->IsVisible()))
 		return NativeOnKeyDown(G, E);
 	return Super::NativeOnPreviewKeyDown(G, E);
@@ -1041,12 +1031,6 @@ FReply ULootingMainView::NativeOnPreviewKeyDown(const FGeometry& G, const FKeyEv
 FReply ULootingMainView::NativeOnKeyDown(const FGeometry& G, const FKeyEvent& E)
 {
 	if (!PC()) return FReply::Unhandled();
-	if (E.GetKey() == EKeys::Tab)
-	{
-		CancelDrag();
-		PC()->ToggleInventory();
-		return FReply::Handled();
-	}
 	if (E.GetKey() == EKeys::Escape)
 	{
 		PC()->ToggleExtractionMenu();
@@ -1057,12 +1041,6 @@ FReply ULootingMainView::NativeOnKeyDown(const FGeometry& G, const FKeyEvent& E)
 		MenuAction(-2);
 		return FReply::Handled();
 	}
-	if (E.GetKey() == EKeys::R && !E.IsRepeat())
-	{
-		if (!bRotationDown) RotateDrag();
-		bRotationDown = true;
-		return FReply::Handled();
-	}
 	if (E.GetKey() == EKeys::F && !E.IsRepeat())
 	{
 		TakeAllLoot();
@@ -1071,11 +1049,6 @@ FReply ULootingMainView::NativeOnKeyDown(const FGeometry& G, const FKeyEvent& E)
 	if (E.GetKey() == EKeys::T && !E.IsRepeat())
 	{
 		SortOwn();
-		return FReply::Handled();
-	}
-	if (E.GetKey() == EKeys::H)
-	{
-		PC()->UseMedical();
 		return FReply::Handled();
 	}
 	return Super::NativeOnKeyDown(G, E);

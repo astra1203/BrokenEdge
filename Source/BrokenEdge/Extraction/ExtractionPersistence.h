@@ -91,6 +91,8 @@ struct FExtractionRaidRecord
 	UPROPERTY()
 	bool Closed = false;
 	UPROPERTY()
+	int64 ClosedSequence = 0;
+	UPROPERTY()
 	TArray<FExtractionRaidParticipant> Players;
 	// 整局所有成功带出的来源批次数量，跨成员汇总，防止物资转交后被重复返还。
 	UPROPERTY()
@@ -104,7 +106,7 @@ struct FExtractionStoreState
 	// 4：出战配置改为携行容器（胸挂/背包/安全箱决定网格），旧配置迁移时补背包与基础安全箱。
 	UPROPERTY()
 	// 6：胸挂/背包改为分仓布局，旧档案里跨口袋的物品重新摆放；补发入门胸挂、头盔、护甲。
-	int32 Version = 7;
+	int32 Version = 8;
 	// 日志事务序号逐条递增，加载时拒绝跳号；Version 是结构版本，与事务序号不同。
 	UPROPERTY()
 	int64 Sequence = 0;
@@ -185,6 +187,7 @@ public:
 	friend class FExtractionDriver;
 	friend class FExtractionPersistenceCapacity;
 	friend class FExtractionJournalRolling;
+	friend class FExtractionRetention;
 	int32 FailRollStepForTest = 0;
 	// 自动化测试专用入口，显式指定隔离目录，避免访问玩家仓库。
 	bool LoadForTest(const FString& Directory);
@@ -194,6 +197,7 @@ public:
 #endif
 
 private:
+	static void PruneHistory(FExtractionStoreState& Candidate);
 	int32 JournalRecords = 0;
 	bool ReadSegment(const FString& Path, FExtractionStoreState& Out) const;
 	bool WriteSegment(const FString& Path) const;

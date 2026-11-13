@@ -270,7 +270,7 @@ bool UExtractionPersistence::Load(const FString& Directory)
 			FUTF8ToTCHAR Text(reinterpret_cast<const ANSICHAR*>(Bytes.GetData()), Bytes.Num());
 			FExtractionStoreState Next;
 			if (!FJsonObjectConverter::JsonObjectStringToUStruct(FString(Text.Length(), Text.Get()), &Next, 0, 0)
-				|| ((Flags & 1u) ? (Next.Sequence < 1 || Next.Version != 7) : Next.Sequence != State.Sequence + 1)
+				|| ((Flags & 1u) ? (Next.Sequence < 1 || (Next.Version < 7 || Next.Version > 8)) : Next.Sequence != State.Sequence + 1)
 				|| (State.Sequence > 0 && Next.Version < State.Version) || !
 				Validate(Next))
 			{
@@ -285,7 +285,7 @@ bool UExtractionPersistence::Load(const FString& Directory)
 		}
 	}
 	// Preserve exact legacy bytes before tail repair, recovery, or migration.
-	if (State.Sequence > 0 && State.Version < 7)
+	if (State.Sequence > 0 && State.Version < 8)
 	{
 		if (!PreserveLegacyJournal(Files, Journal, ValidEnd, State.Version))
 		{
@@ -396,13 +396,20 @@ bool UExtractionPersistence::Load(const FString& Directory)
 		if (!Commit(MoveTemp(Migrated))) return false;
 		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=7"));
 	}
+	if (State.Version < 8)
+	{
+		FExtractionStoreState Migrated = State;
+		Migrated.Version = 8;
+		if (!Commit(MoveTemp(Migrated))) return false;
+		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=8"));
+	}
 	return Recover();
 }
 
 // 检查存储版本、档案与出战身份唯一性、容器合法性及物品来源；不接受客户端自行拼出的结果状态。
 bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) const
 {
-	if (Candidate.Version < 1 || Candidate.Version > 7 || !Candidate.Id.IsValid()) return false;
+	if (Candidate.Version < 1 || Candidate.Version > 8 || !Candidate.Id.IsValid()) return false;
 	const ExtractionItems::FLegacyGridScope Grids(Candidate.Version < 6);
 	TSet<FGuid> Profiles, Items;
 	for (const auto& P : Candidate.Profiles)
@@ -451,7 +458,62 @@ bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) co
 	return true;
 }
 
-// 按值接收候选快照，成功刷盘后才发布为当前 State；写入失败锁定 Faulted，需恢复存储并重启。
+// Preserve open raids and provenance references while bounding unreferenced history.
+void UExtractionPersistence::PruneHistory(FExtractionStoreState& Candidate)
+{
+    TSet<FGuid> ReferencedLots;
+    auto Scan = [&](const TArray<FExtractionItem>& Items)
+    {
+        for (const auto& Item : Items)
+        {
+            for (const auto& O : Item.Origins) ReferencedLots.Add(O.Lot);
+            for (const auto& O : Item.MagazineOrigins) ReferencedLots.Add(O.Lot);
+            for (const auto& Part : Item.Attachments)
+                for (const auto& O : Part.Origins) ReferencedLots.Add(O.Lot);
+        }
+    };
+    for (auto& P : Candidate.Profiles)
+    {
+        if (P.EconomyReceipts.Num() > 1024)
+            P.EconomyReceipts.RemoveAt(0, P.EconomyReceipts.Num() - 1024);
+        Scan(P.View.Stash.Items); Scan(P.View.Loadout.Items);
+        Scan(P.View.Overflow); Scan(P.View.Result.Items);
+    }
+    TArray<int32> Closed;
+    for (int32 Index = 0; Index < Candidate.Raids.Num(); ++Index)
+    {
+        auto& Raid = Candidate.Raids[Index];
+        if (Raid.Closed)
+        {
+            if (!Raid.ClosedSequence) Raid.ClosedSequence = Candidate.Sequence;
+            Closed.Add(Index);
+        }
+        else for (const auto& Player : Raid.Players) Scan(Player.Original.Items);
+    }
+    Closed.Sort([&](int32 A, int32 B)
+    {
+        const auto SA = Candidate.Raids[A].ClosedSequence, SB = Candidate.Raids[B].ClosedSequence;
+        return SA == SB ? A > B : SA > SB;
+    });
+    TSet<FGuid> Keep;
+    for (int32 N = 0; N < FMath::Min(128, Closed.Num()); ++N) Keep.Add(Candidate.Raids[Closed[N]].Id);
+    Candidate.Raids.RemoveAll([&](const FExtractionRaidRecord& Raid)
+    {
+        if (!Raid.Closed || Keep.Contains(Raid.Id)) return false;
+        for (const auto& O : Raid.Exported) if (ReferencedLots.Contains(O.Lot)) return false;
+        // Original lots can still be referenced after recovery or an aborted deployment.
+        for (const auto& Player : Raid.Players)
+            for (const auto& Item : Player.Original.Items)
+            {
+                for (const auto& O : Item.Origins) if (ReferencedLots.Contains(O.Lot)) return false;
+                for (const auto& O : Item.MagazineOrigins) if (ReferencedLots.Contains(O.Lot)) return false;
+                for (const auto& Part : Item.Attachments)
+                    for (const auto& O : Part.Origins) if (ReferencedLots.Contains(O.Lot)) return false;
+            }
+        return true;
+    });
+}
+
 bool UExtractionPersistence::Commit(FExtractionStoreState Candidate)
 {
 	const double Started = FPlatformTime::Seconds();
@@ -462,6 +524,7 @@ bool UExtractionPersistence::Commit(FExtractionStoreState Candidate)
 		Error = TEXT("库存验证失败，未保存");
 		return false;
 	}
+	if (Candidate.Version >= 8) PruneHistory(Candidate);
 	FString Json;
 	if (!FJsonObjectConverter::UStructToJsonObjectString(Candidate, Json, 0, 0, 0, nullptr, false)) return false;
 	FTCHARToUTF8 Bytes(*Json);
@@ -494,7 +557,7 @@ bool UExtractionPersistence::Commit(FExtractionStoreState Candidate)
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_COMMIT Sequence=%lld Bytes=%d JournalBytes=%lld Profiles=%d Raids=%d Receipts=%lld ElapsedMs=%.2f"),
 		State.Sequence, Bytes.Length(), IFileManager::Get().FileSize(*Journal), State.Profiles.Num(), State.Raids.Num(),
 		Receipts, (FPlatformTime::Seconds() - Started) * 1000);
-	if (State.Version == 7 && ((JournalRollBytes > 0 && IFileManager::Get().FileSize(*Journal) >= JournalRollBytes)
+	if (State.Version == 8 && ((JournalRollBytes > 0 && IFileManager::Get().FileSize(*Journal) >= JournalRollBytes)
 		|| (JournalRollRecords > 0 && JournalRecords >= JournalRollRecords)))
 		if (!RollJournal()) UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_STORE_ROLL_FAILED Sequence=%lld"), State.Sequence);
 	return true;
@@ -513,7 +576,7 @@ bool UExtractionPersistence::ReadSegment(const FString& Path, FExtractionStoreSt
 	if (!File->Read(Bytes.GetData(), Bytes.Num()) || FCrc::MemCrc32(Bytes.GetData(), Bytes.Num()) != Header[3]) return false;
 	FUTF8ToTCHAR Text(reinterpret_cast<const ANSICHAR*>(Bytes.GetData()), Bytes.Num());
 	return FJsonObjectConverter::JsonObjectStringToUStruct(FString(Text.Length(), Text.Get()), &Out, 0, 0)
-		&& Out.Version == 7 && Out.Sequence > 0 && Validate(Out);
+		&& (Out.Version == 7 || Out.Version == 8) && Out.Sequence > 0 && Validate(Out);
 }
 
 bool UExtractionPersistence::WriteSegment(const FString& Path) const

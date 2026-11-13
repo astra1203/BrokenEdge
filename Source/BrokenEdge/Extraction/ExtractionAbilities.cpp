@@ -345,8 +345,10 @@ bool UExtractionAbilities::ValidTarget() const
 	if (Action == EExtractionAction::Heal && bHealDart && !IsValid(Target)) return true;
 	const auto* C = Character();
 	const auto* R = GetDefault<UExtractionRules>();
-	if (!IsValid(Target) || !Friendly(C, Target)) return false;
+	// Self treatment is valid in solo/training worlds without a squad assignment.
+	if (!IsValid(Target) || (Target != C && !Friendly(C, Target))) return false;
 	const auto* PS = Target->GetPlayerState<AExtractionPlayerState>();
+	if (!PS) return false;
 	if (Action == EExtractionAction::Revive)
 		return Target != C && PS->Life == EExtractionLife::Downed && Reach(C, Target, R->ReviveRange);
 	// 官方激素 Buff 不判血量（满血也有止痛），只排除倒地/阵亡（IncludeImpendingDeath=false）。

@@ -1,0 +1,119 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "355EC0444CD9742EF9BB7584AF0098E2",
+			"instanceName": "OREKI-LEGION-5160",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-09.32.46",
+	"succeeded": 6,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.51701277494430542,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "JournalFailures",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.JournalFailures",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"355EC0444CD9742EF9BB7584AF0098E2"
+			],
+			"duration": 0.032873399555683136,
+			"dateTime": "2026.11.13-09.32.45",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "JournalRolling",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.JournalRolling",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"355EC0444CD9742EF9BB7584AF0098E2"
+			],
+			"duration": 0.18602029979228973,
+			"dateTime": "2026.11.13-09.32.45",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PreparedCancellation",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.PreparedCancellation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"355EC0444CD9742EF9BB7584AF0098E2"
+			],
+			"duration": 0.053468599915504456,
+			"dateTime": "2026.11.13-09.32.45",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RecoveryProvenance",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.RecoveryProvenance",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"355EC0444CD9742EF9BB7584AF0098E2"
+			],
+			"duration": 0.12209410220384598,
+			"dateTime": "2026.11.13-09.32.46",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Retention",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.Retention",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"355EC0444CD9742EF9BB7584AF0098E2"
+			],
+			"duration": 0.059085700660943985,
+			"dateTime": "2026.11.13-09.32.46",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Transactions",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.Transactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"355EC0444CD9742EF9BB7584AF0098E2"
+			],
+			"duration": 0.063470698893070221,
+			"dateTime": "2026.11.13-09.32.46",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

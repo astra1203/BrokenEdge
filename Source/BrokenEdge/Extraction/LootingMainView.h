@@ -109,7 +109,7 @@ public:
  void MenuAction(int32 Index);
  void BeginDrag(ULootingWidgetPart* Source, UDragDropOperation*& Out);
  bool PlaceAt(FVector2D ScreenPosition, UDragDropOperation* Operation = nullptr);
- void UpdateDragRotation();
+ void RotateSelectedItem() { RotateDrag(); }
  // 拖拽经过时更新旋转与落点预览。
  void DragOver(FVector2D ScreenPosition);
  bool HasPendingPlacement() const { return bPendingPlacement; }
@@ -139,7 +139,7 @@ private:
  UPROPERTY(Transient) TArray<TObjectPtr<ULootingWidgetPart>> EquipmentTargets;
  UPROPERTY(Transient) TObjectPtr<ULootingDragDropOperation> ActiveDrag;
  FGuid Selected;
- bool SelectedLoot=false, Rotated=false, bPendingPlacement=false, bWasOpen=false, bRotationDown=false;
+ bool SelectedLoot=false, Rotated=false, bPendingPlacement=false, bWasOpen=false;
  int32 Quantity=1;
  uint32 LastSession=0;
  FGuid LastOwnId, LastLootId;

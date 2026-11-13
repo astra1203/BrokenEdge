@@ -1,0 +1,57 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "D4840FFF4F376C86536FE0A06E2D0499",
+			"instanceName": "OREKI-LEGION-12892",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-09.31.00",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.85536152124404907,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Capacity",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.Capacity",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"D4840FFF4F376C86536FE0A06E2D0499"
+			],
+			"duration": 0.85536152124404907,
+			"dateTime": "2026.11.13-09.30.59",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Capacity report: ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Extraction/Capacity/AD9A486345BEC9F947B27EA3F7000C78/Capacity.csv",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-09.31.00"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

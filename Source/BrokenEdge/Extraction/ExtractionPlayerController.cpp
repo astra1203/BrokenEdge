@@ -1,5 +1,11 @@
 #include "ExtractionPlayerController.h"
 #include "Framework/Application/SlateApplication.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedPlayerInput.h"
+#include "InputMappingContext.h"
+#include "InputAction.h"
+#include "ExtractionCombatComponent.h"
 #include "ExtractionDoor.h"
 #include "ExtractionWidget.h"
 #include "ExtractionTacticalMap.h"
@@ -46,26 +52,93 @@ void AExtractionPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimePro
 void AExtractionPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-	InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &ThisClass::ToggleExtractionMenu);
-	InputComponent->BindKey(EKeys::Tab, IE_Pressed, this, &ThisClass::ToggleInventory);
-	InputComponent->BindKey(EKeys::M, IE_Pressed, this, &ThisClass::ToggleTacticalMap);
-	InputComponent->BindKey(EKeys::H, IE_Pressed, this, &ThisClass::UseMedical);
-	// Z 趴下；激素枪改到 V。
-	InputComponent->BindKey(EKeys::Z, IE_Pressed, this, &ThisClass::ToggleProne);
-	InputComponent->BindKey(EKeys::V, IE_Pressed, this, &ThisClass::HealAbility);
-	InputComponent->BindKey(EKeys::V, IE_Released, this, &ThisClass::HealReleased);
-	InputComponent->BindKey(EKeys::X, IE_Pressed, this, &ThisClass::SmokeAbility);
-	// 官方蜂巢烟雾支持低抛；组合键要求修饰键完全匹配，单按 X 不会触发这一条。
-	InputComponent->BindKey(FInputChord(EKeys::X, false, false, true, false), IE_Pressed, this,
-	                        &ThisClass::SmokeAbilityLow);
-	InputComponent->BindKey(EKeys::G, IE_Pressed, this, &ThisClass::ThrowGrenade);
-	InputComponent->BindKey(EKeys::MiddleMouseButton, IE_Pressed, this, &ThisClass::PlacePing);
-	InputComponent->BindKey(FInputChord(EKeys::G, false, false, true, false), IE_Pressed, this,
-	                        &ThisClass::ThrowGrenadeLow);
-	InputComponent->BindKey(EKeys::E, IE_Released, this, &ThisClass::ReleaseInteract);
-	InputComponent->BindKey(EKeys::Three, IE_Pressed, this, &ThisClass::SelectKnife);
-	InputComponent->BindKey(EKeys::One, IE_Pressed, this, &ThisClass::SelectPrimaryGun);
-	InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &ThisClass::SelectSecondaryGun);
+    LoadedInputContext = ExtractionInputContext.LoadSynchronous();
+    LoadedUIInputContext = ExtractionUIInputContext.LoadSynchronous();
+    auto* Input = Cast<UEnhancedInputComponent>(InputComponent);
+    if (!Input || !LoadedInputContext || !LoadedUIInputContext)
+    {
+        UE_LOG(LogTemp, Error, TEXT("EXTRACTION_INPUT_CONFIGURATION_MISSING %s"), *GetName());
+        return;
+    }
+    auto Bind = [&](FName Name, ETriggerEvent Event, auto Method)
+    {
+        if (const auto* Action = FindExtractionInputAction(Name)) Input->BindAction(Action, Event, this, Method);
+        else UE_LOG(LogTemp, Error, TEXT("EXTRACTION_INPUT_ACTION_MISSING %s"), *Name.ToString());
+    };
+    Bind(TEXT("IA_Menu"), ETriggerEvent::Started, &ThisClass::ToggleExtractionMenu);
+    Bind(TEXT("IA_Inventory"), ETriggerEvent::Started, &ThisClass::ToggleInventory);
+    Bind(TEXT("IA_TacticalMap"), ETriggerEvent::Started, &ThisClass::ToggleTacticalMap);
+    Bind(TEXT("IA_UseMedical"), ETriggerEvent::Started, &ThisClass::UseMedical);
+    Bind(TEXT("IA_Prone"), ETriggerEvent::Started, &ThisClass::ToggleProne);
+    Bind(TEXT("IA_Heal"), ETriggerEvent::Started, &ThisClass::HealAbility);
+    Bind(TEXT("IA_Heal"), ETriggerEvent::Triggered, &ThisClass::HealTriggered);
+    Bind(TEXT("IA_Heal"), ETriggerEvent::Completed, &ThisClass::CancelHealInput);
+    Bind(TEXT("IA_Heal"), ETriggerEvent::Canceled, &ThisClass::CancelHealInput);
+    Bind(TEXT("IA_Smoke"), ETriggerEvent::Started, &ThisClass::SmokeAbility);
+    Bind(TEXT("IA_Grenade"), ETriggerEvent::Started, &ThisClass::ThrowGrenade);
+    Bind(TEXT("IA_Grenade"), ETriggerEvent::Completed, &ThisClass::ReleaseGrenade);
+    Bind(TEXT("IA_Grenade"), ETriggerEvent::Canceled, &ThisClass::CancelGrenade);
+    Bind(TEXT("IA_Ping"), ETriggerEvent::Started, &ThisClass::PlacePing);
+    Bind(TEXT("IA_Interact"), ETriggerEvent::Started, &ThisClass::Interact);
+    Bind(TEXT("IA_Interact"), ETriggerEvent::Completed, &ThisClass::ReleaseInteract);
+    Bind(TEXT("IA_Interact"), ETriggerEvent::Canceled, &ThisClass::ReleaseInteract);
+    Bind(TEXT("IA_InteractWorld"), ETriggerEvent::Started, &ThisClass::InteractDoor);
+    Bind(TEXT("IA_SelectPrimary"), ETriggerEvent::Started, &ThisClass::SelectPrimaryGun);
+    Bind(TEXT("IA_SelectSecondary"), ETriggerEvent::Started, &ThisClass::SelectSecondaryGun);
+    Bind(TEXT("IA_SelectKnife"), ETriggerEvent::Started, &ThisClass::SelectKnife);
+    Bind(TEXT("IA_HoldBreath"), ETriggerEvent::Started, &ThisClass::HoldBreath);
+    Bind(TEXT("IA_HoldBreath"), ETriggerEvent::Completed, &ThisClass::ReleaseBreath);
+    Bind(TEXT("IA_HoldBreath"), ETriggerEvent::Canceled, &ThisClass::ReleaseBreath);
+    Bind(TEXT("IA_RotateItem"), ETriggerEvent::Started, &ThisClass::RotateInventoryItem);
+    UpdateInputContexts();
+}
+
+const UInputAction* AExtractionPlayerController::FindExtractionInputAction(FName Name) const
+{
+    for (const auto* Context : {LoadedInputContext.Get(), LoadedUIInputContext.Get()})
+        if (Context)
+            for (const auto& Mapping : Context->GetMappings())
+                if (Mapping.Action && Mapping.Action->GetFName() == Name) return Mapping.Action;
+    return nullptr;
+}
+
+void AExtractionPlayerController::UpdateInputContexts()
+{
+    if (auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+    {
+        if (LoadedInputContext && !Subsystem->HasMappingContext(LoadedInputContext))
+            Subsystem->AddMappingContext(LoadedInputContext, 10);
+        const auto* I = Interaction();
+        const bool bUI = bMenuOpen || (I && I->InventoryOpen);
+        if (LoadedUIInputContext && Subsystem->HasMappingContext(LoadedUIInputContext) != bUI)
+        {
+            if (bUI) Subsystem->AddMappingContext(LoadedUIInputContext, 100);
+            else Subsystem->RemoveMappingContext(LoadedUIInputContext);
+        }
+    }
+}
+
+void AExtractionPlayerController::HoldBreath()
+{
+    if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
+        C->GetExtractionCombat()->HoldBreathPressed();
+}
+
+void AExtractionPlayerController::ReleaseBreath()
+{
+    if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn())) C->GetExtractionCombat()->HoldBreathReleased();
+}
+
+bool AExtractionPlayerController::IsLowThrowModifierHeld() const
+{
+    const auto* Input = Cast<UEnhancedPlayerInput>(PlayerInput);
+    const auto* Modifier = FindExtractionInputAction(TEXT("IA_HoldBreath"));
+    return Input && Modifier && Input->GetActionValue(Modifier).Get<bool>();
+}
+
+void AExtractionPlayerController::RotateInventoryItem()
+{
+    if (InventoryWidget && Interaction() && Interaction()->InventoryOpen) InventoryWidget->RotateSelectedItem();
 }
 
 // 菜单未打开时请求服务器选择刀槽；实际资格由近战组件检查。
@@ -205,7 +278,7 @@ void AExtractionPlayerController::ReleaseInteract()
 // 选择本地治疗焦点后发请求，服务器仍检查友方、距离和血量。
 void AExtractionPlayerController::HealAbility()
 {
-	// 按下只记时刻；松开时判断是轻点（切枪）还是长按（Tick 里到时就给自己打针）。
+	// Hold/Tap 触发器决定自用或切枪；这里仅标记有效手势。
 	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
 	{
 		HealDownAt = GetWorld()->GetTimeSeconds();
@@ -223,6 +296,22 @@ void AExtractionPlayerController::HealReleased()
 	}
 	HealDownAt = -1;
 	bHealHoldUsed = false;
+}
+
+void AExtractionPlayerController::HealTriggered(const FInputActionValue& Value)
+{
+    if (HealDownAt < 0) return;
+    if (!Value.Get<bool>()) { HealReleased(); return; } // Tap trigger fires on release.
+    if (bHealHoldUsed) return;
+    bHealHoldUsed = true;
+    if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
+        C->GetExtractionAbilities()->Request(EExtractionAction::Heal, C);
+}
+
+void AExtractionPlayerController::CancelHealInput()
+{
+    HealDownAt = -1;
+    bHealHoldUsed = false;
 }
 
 void AExtractionPlayerController::StopHeldActions()
@@ -261,7 +350,7 @@ void AExtractionPlayerController::SmokeAbility()
 {
 	if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
 		C->GetExtractionAbilities()->Request(
-			EExtractionAction::Smoke);
+			EExtractionAction::Smoke, nullptr, IsLowThrowModifierHeld());
 }
 
 // Alt+X 低抛：初速减半、出手点更低，用来把烟丢到脚前或门口。
@@ -324,9 +413,23 @@ void AExtractionPlayerController::ThrowGrenade()
 	if (auto* I = Interaction(); I && I->CanAct() && !I->InventoryOpen && !bMenuOpen)
 	{
 		bAimingGrenade = true;
-		// Alt+G 会同时触发 G 和 Alt+G 两条绑定，直接读 Alt 键状态，与触发顺序无关。
-		bAimingGrenadeLow = IsInputKeyDown(EKeys::LeftAlt) || IsInputKeyDown(EKeys::RightAlt);
+        // Read the remappable modifier action; never infer release from a physical key.
+        bAimingGrenadeLow = IsLowThrowModifierHeld();
 	}
+}
+
+void AExtractionPlayerController::ReleaseGrenade()
+{
+    const bool bWasAiming = bAimingGrenade, bLow = bAimingGrenadeLow;
+    CancelGrenade();
+    if (const auto* I = Interaction(); bWasAiming && I && I->CanAct() && !I->InventoryOpen && !bMenuOpen)
+        ServerThrowGrenade(bLow);
+}
+
+void AExtractionPlayerController::CancelGrenade()
+{
+    bAimingGrenade = false;
+    bAimingGrenadeLow = false;
 }
 
 void AExtractionPlayerController::PlacePing()
@@ -643,25 +746,12 @@ void AExtractionPlayerController::Tick(float Delta)
 		if (bInputWasActionable && !bActionable) StopHeldActions();
 		bInputWasActionable = bActionable;
 	}
-	// 长按 V 到时：给自己打针（播自用动作），松开时不再切枪。
-	if (HealDownAt >= 0 && !bHealHoldUsed && IsLocalController()
-		&& GetWorld()->GetTimeSeconds() - HealDownAt >= HealHoldSeconds)
-	{
-		bHealHoldUsed = true;
-		if (auto* C = Cast<ABrokenEdgeCharacter>(GetPawn()); C && !bMenuOpen)
-			C->GetExtractionAbilities()->Request(EExtractionAction::Heal, C);
-	}
-	// 手雷瞄准：打开背包/菜单或失去行动能力即取消；松开 G 时投出。
-	if (bAimingGrenade && IsLocalController())
-	{
-		const auto* I = Interaction();
-		if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen) bAimingGrenade = false;
-		else if (!IsInputKeyDown(EKeys::G))
-		{
-			bAimingGrenade = false;
-			ServerThrowGrenade(bAimingGrenadeLow);
-		}
-	}
+    UpdateInputContexts();
+    if (bAimingGrenade && IsLocalController())
+    {
+        const auto* I = Interaction();
+        if (!I || !I->CanAct() || I->InventoryOpen || bMenuOpen) CancelGrenade();
+    }
 	// 一次性提示到点自动消失；界面里直接给 ItemMessage 赋值的也按文本变化重新计时。
 	const double Now = GetWorld()->GetTimeSeconds();
 	if (ItemMessage.IsEmpty())
@@ -788,6 +878,11 @@ void AExtractionPlayerController::LocalSessionDestroyed(bool bSuccess)
 void AExtractionPlayerController::EndPlay(const EEndPlayReason::Type Reason)
 {
 	StopHeldActions();
+	if (auto* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		if (LoadedInputContext) Subsystem->RemoveMappingContext(LoadedInputContext);
+		if (LoadedUIInputContext) Subsystem->RemoveMappingContext(LoadedUIInputContext);
+	}
 	if (FSlateApplication::IsInitialized())
 		FSlateApplication::Get().OnApplicationActivationStateChanged().RemoveAll(this);
 	if (TacticalMap) TacticalMap->RemoveFromParent();

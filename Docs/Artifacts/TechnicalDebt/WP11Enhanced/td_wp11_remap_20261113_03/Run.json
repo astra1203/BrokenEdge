@@ -1,0 +1,41 @@
+{
+  "task": "input-pie",
+  "started_utc": "2026-11-13T09:25:37.301829+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp11_remap_20261113_03\\Editor.log",
+    "-RenderOffscreen",
+    "-ResX=1280",
+    "-ResY=720",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.InputPIE",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp11_remap_20261113_03\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "4348ef91a9aa27c78fb716130a421a1db952b4d7",
+  "git_status": "M BrokenEdge.uproject\n M Config/DefaultInput.ini\n M Scripts/Extraction/run_editor_task.py\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp\n M Source/BrokenEdge/Extraction/ExtractionAbilities.cpp\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.h\n M Source/BrokenEdge/Extraction/LootingMainView.cpp\n M Source/BrokenEdge/Extraction/LootingMainView.h\n?? Source/BrokenEdge/Tests/ExtractionInputPIETests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "a005c0639fde048123c9e142b1cdc53947db91fb1dcd51bd1a8798e7ef73df37",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp11_remap_20261113_03\\Run.json",
+  "exit_code": 0,
+  "pid": 13408,
+  "successful_tests": 1,
+  "result": "passed",
+  "finished_utc": "2026-11-13T09:26:27.596312+00:00"
+}

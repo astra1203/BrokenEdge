@@ -1,0 +1,39 @@
+{
+  "task": "input",
+  "started_utc": "2026-11-13T09:31:00.925607+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp10_input_20261113_02\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Input.",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp10_input_20261113_02\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "4348ef91a9aa27c78fb716130a421a1db952b4d7",
+  "git_status": "M BrokenEdge.uproject\n M Config/DefaultInput.ini\n M \"Docs/\\346\\212\\200\\346\\234\\257\\345\\200\\272\\346\\225\\264\\346\\224\\271\\345\\256\\236\\346\\226\\275\\346\\226\\271\\346\\241\\210.md\"\n M Scripts/Extraction/run_editor_task.py\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp\n M Source/BrokenEdge/Extraction/ExtractionAbilities.cpp\n M Source/BrokenEdge/Extraction/ExtractionPersistence.cpp\n M Source/BrokenEdge/Extraction/ExtractionPersistence.h\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp\n M Source/BrokenEdge/Extraction/ExtractionPlayerController.h\n M Source/BrokenEdge/Extraction/LootingMainView.cpp\n M Source/BrokenEdge/Extraction/LootingMainView.h\n M Source/BrokenEdge/Tests/ExtractionProgressionTests.cpp\n?? Source/BrokenEdge/Tests/ExtractionInputPIETests.cpp\n?? Source/BrokenEdge/Tests/ExtractionRetentionTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "b413afebb0e8c81a1b84919f81b3669a34fad7353076d4895f3172f2f291f3e0",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp10_input_20261113_02\\Run.json",
+  "exit_code": 0,
+  "pid": 9852,
+  "successful_tests": 1,
+  "result": "passed",
+  "finished_utc": "2026-11-13T09:31:21.063588+00:00"
+}

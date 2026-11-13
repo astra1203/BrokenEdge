@@ -29,8 +29,18 @@ class BROKENEDGE_API AExtractionPlayerController : public ABrokenEdgePlayerContr
 {
 	GENERATED_BODY()
 	friend class FExtractionDriver;
+#if WITH_DEV_AUTOMATION_TESTS
+	friend class FExtractionInputPIESequence;
+#endif
 
 public:
+	UPROPERTY(EditDefaultsOnly, Category="Extraction|Input")
+	TSoftObjectPtr<class UInputMappingContext> ExtractionInputContext = TSoftObjectPtr<UInputMappingContext>(
+		FSoftObjectPath(TEXT("/Game/Input/Extraction/IMC_Extraction.IMC_Extraction")));
+	UPROPERTY(EditDefaultsOnly, Category="Extraction|Input")
+	TSoftObjectPtr<class UInputMappingContext> ExtractionUIInputContext = TSoftObjectPtr<UInputMappingContext>(
+		FSoftObjectPath(TEXT("/Game/Input/Extraction/IMC_ExtractionUI.IMC_ExtractionUI")));
+	const class UInputAction* FindExtractionInputAction(FName Name) const;
 	UPROPERTY(EditDefaultsOnly, Category="Extraction|UI")
 	TSoftClassPtr<class UExtractionWidget> ExtractionWidgetClass = TSoftClassPtr<UExtractionWidget>(
 		FSoftObjectPath(TEXT("/Game/UI/Extraction/WBP_ExtractionHUD.WBP_ExtractionHUD_C")));
@@ -46,7 +56,7 @@ public:
 	virtual void Tick(float Delta) override;
 	// 远端观战连接在服务器的相关性视点跟随所选队友，避免仍用撤离点附近的旧相机位置。
 	virtual void GetPlayerViewPoint(FVector& OutLocation, FRotator& OutRotation) const override;
-	// 在父类输入之上绑定菜单、背包、地图、医疗、能力和武器槽；E 松开用于停止救援。
+	// Enhanced Input 动作绑定；交互 Completed/Canceled 均停止救援。
 	virtual void SetupInputComponent() override;
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void OnUnPossess() override;
@@ -86,6 +96,8 @@ public:
 	// G / Alt+G：按下进入瞄准（HUD 画预计轨迹与落点），松开 G 投出；服务器扣除物品并生成投掷物。
 	void ThrowGrenade();
 	void ThrowGrenadeLow();
+	void ReleaseGrenade();
+	void CancelGrenade();
 	/** 本地手雷瞄准状态：按住 G 期间为真，Low 表示按下时带 Alt（低抛）。 */
 	bool bAimingGrenade = false;
 	bool bAimingGrenadeLow = false;
@@ -119,7 +131,7 @@ public:
 	void ReleaseInteract();
 	// 选择本地治疗焦点后发请求，服务器仍检查友方、距离和血量。
 	void HealAbility();
-	// V：轻点切出/收起激素枪，长按（HealHoldSeconds）给自己打针。
+	// IA_Heal 的 Tap 切换激素枪，Hold 触发自用治疗，取消不解释为轻点。
 	void HealReleased();
 	double HealDownAt = -1;
 	bool bHealHoldUsed = false;
@@ -204,6 +216,15 @@ public:
 	double DeathRecapAt = -1;
 
 private:
+	void UpdateInputContexts();
+	void HoldBreath();
+	void ReleaseBreath();
+	bool IsLowThrowModifierHeld() const;
+	void HealTriggered(const struct FInputActionValue& Value);
+	void CancelHealInput();
+	void RotateInventoryItem();
+	UPROPERTY(Transient) TObjectPtr<class UInputMappingContext> LoadedInputContext;
+	UPROPERTY(Transient) TObjectPtr<class UInputMappingContext> LoadedUIInputContext;
 	void EnsureLocalWidgets();
 	bool bLocalWidgetsAttempted = false;
 	UPROPERTY(Transient)

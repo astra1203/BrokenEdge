@@ -248,7 +248,7 @@ bool FExtractionProgressionMigration::RunTest(const FString&)
 		FFileHelper::LoadFileToArray(Before, *(Directory / TEXT("Store.journal")));
 		auto* S = ProgressionStore(Directory);
 		TestTrue(TEXT("Migrate old store"), S->IsAvailable());
-		TestEqual(TEXT("Current payload version"), S->TestState().Version, 7);
+		TestEqual(TEXT("Current payload version"), S->TestState().Version, 8);
 		TestEqual(TEXT("Exactly one starting grant"), S->View(P)->Progression.Credits, int64(2000));
 		TestEqual(TEXT("Rifle identity unchanged"), S->View(P)->Stash.Items[0].Id, Rifle.Id);
 		TestEqual(TEXT("Rifle provenance unchanged"), S->View(P)->Stash.Items[0].Origins[0].Lot, Rifle.Origins[0].Lot);

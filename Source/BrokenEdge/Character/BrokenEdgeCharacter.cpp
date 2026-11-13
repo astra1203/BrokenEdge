@@ -459,13 +459,6 @@ void ABrokenEdgeCharacter::NotifyControllerChanged()
 // Called to bind functionality to input
 void ABrokenEdgeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	PlayerInputComponent->BindAction(TEXT("HoldBreath"), IE_Pressed, ExtractionCombat.Get(),
-	                                 &UExtractionCombatComponent::HoldBreathPressed);
-	PlayerInputComponent->BindAction(TEXT("HoldBreath"), IE_Released, ExtractionCombat.Get(),
-	                                 &UExtractionCombatComponent::HoldBreathReleased);
-	// F 键开门：独立于 Enhanced Input 的 IA_Equip，避免抢占换枪键位。
-	PlayerInputComponent->BindAction(TEXT("InteractDoor"), IE_Pressed, this,
-	                                 &ABrokenEdgeCharacter::InteractDoorPressed);
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 
