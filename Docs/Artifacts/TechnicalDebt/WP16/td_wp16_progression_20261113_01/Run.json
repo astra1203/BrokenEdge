@@ -1,0 +1,39 @@
+{
+  "task": "progression",
+  "started_utc": "2026-11-13T10:52:28.125529+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp16_progression_20261113_01\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Progression",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp16_progression_20261113_01\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "95d769ecafa4bcfec866153f28568a15acb490cc",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Extraction/progression_scenarios.py\n M Scripts/Extraction/run_editor_task.py\n M Source/BrokenEdge/Extraction/ExtractionPersistence.cpp\n M Source/BrokenEdge/Extraction/ExtractionPersistence.h\n M Source/BrokenEdge/Extraction/ExtractionProgression.cpp\n M Source/BrokenEdge/Extraction/ExtractionProgression.h\n M Source/BrokenEdge/Extraction/ExtractionProgressionWidget.cpp\n M Source/BrokenEdge/Extraction/ExtractionWidget.cpp\n M Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\n M Source/BrokenEdge/Tests/ExtractionEquipmentTests.cpp\n M Source/BrokenEdge/Tests/ExtractionProgressionTests.cpp\n M Source/BrokenEdge/Tests/ExtractionRetentionTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "16394b771b1f1fc97fcdeb421f98884d69d4299e472a303ab9d0902653181b6d",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp16_progression_20261113_01\\Run.json",
+  "exit_code": 3,
+  "pid": 24452,
+  "successful_tests": 6,
+  "result": "failed",
+  "finished_utc": "2026-11-13T10:52:56.593485+00:00"
+}

@@ -34,9 +34,9 @@ UExtractionProgressionRules::UExtractionProgressionRules()
 		{TEXT("BoltSniper"), 3600, 3}, {TEXT("Ammo_338"), 15, 3}
 	};
 	Quests = {
-		{TEXT("初次撤离"), TEXT("接取后成功撤离一次"), 1, 500, 100},
-		{TEXT("清理守卫"), TEXT("本人击杀两名守卫，成功撤离才保留本局进度"), 2, 1000, 200},
-		{TEXT("机密回收"), TEXT("接取后带出钥匙房文件，在仓库提交一份"), 1, 1500, 300}
+		{TEXT("初次撤离"), TEXT("接取后成功撤离一次"), 1, 500, 100, TEXT("FirstExtraction"), EQuestObjective::Extract, {}, 1},
+		{TEXT("清理守卫"), TEXT("本人击杀两名守卫，成功撤离才保留本局进度"), 2, 1000, 200, TEXT("ClearGuards"), EQuestObjective::KillGuards, {TEXT("FirstExtraction")}, 2},
+		{TEXT("机密回收"), TEXT("接取后带出钥匙房文件，在仓库提交一份"), 1, 1500, 300, TEXT("RecoverFiles"), EQuestObjective::DeliverFiles, {TEXT("ClearGuards")}, 3}
 	};
 }
 
@@ -44,6 +44,11 @@ UExtractionProgressionRules::UExtractionProgressionRules()
 const FExtractionOffer* UExtractionProgressionRules::Offer(FName Id) const
 {
 	return Offers.FindByPredicate([&](const auto& O) { return O.Definition == Id; });
+}
+
+const FExtractionQuestDefinition* UExtractionProgressionRules::Quest(FName Id) const
+{
+    return Quests.FindByPredicate([&](const auto& Q) { return Q.QuestId == Id; });
 }
 
 // 按累计经验阈值计算等级，经验不在升级时扣除。
@@ -54,10 +59,10 @@ int32 UExtractionProgressionRules::Level(int64 XP) const
 	return Result;
 }
 
-// 检查三等级三任务结构、单价与奖励范围、定义白名单和唯一商品；任务文件不允许作为商品。
+// 检查等级与任务依赖结构、单价与奖励范围、定义白名单和唯一商品；任务文件不允许作为商品。
 bool UExtractionProgressionRules::IsValidConfiguration() const
 {
-	if (StartingCredits < 0 || Quests.Num() != 3 || LevelExperience.Num() != 3 || LevelExperience[0] != 0
+	if (StartingCredits < 0 || Quests.IsEmpty() || Quests.Num() > 256 || LevelExperience.Num() != 3 || LevelExperience[0] != 0
 		|| LevelExperience[1] <= 0 || LevelExperience[2] <= LevelExperience[1]
 		|| ElectronicsSellPrice < 0 || ToolsSellPrice < 0)
 		return false;
@@ -70,10 +75,34 @@ bool UExtractionProgressionRules::IsValidConfiguration() const
 			return false;
 		Seen.Add(O.Definition);
 	}
-	for (const auto& Q : Quests)
-		if (Q.Target <= 0 || Q.Target > 1000 || Q.Credits < 0
-			|| Q.Experience < 0 || Q.Credits > 1000000 || Q.Experience > 1000000)
-			return false;
+    TSet<FName> QuestIds;
+    for (const auto& Q : Quests)
+    {
+        if (Q.QuestId.IsNone() || QuestIds.Contains(Q.QuestId) || Q.MinimumLevel < 1 || Q.MinimumLevel > LevelExperience.Num()
+            || Q.Target <= 0 || Q.Target > 1000 || Q.Credits < 0 || Q.Experience < 0
+            || Q.Credits > 1000000 || Q.Experience > 1000000 || uint8(Q.Type) > uint8(EQuestObjective::DeliverFiles)
+            || (Q.Type == EQuestObjective::DeliverFiles && Q.Target != 1)) return false;
+        QuestIds.Add(Q.QuestId);
+    }
+    TMap<FName, uint8> Visited;
+    TFunction<bool(FName)> Visit = [&](FName Id)
+    {
+        const uint8 Mark = Visited.FindRef(Id);
+        if (Mark == 1) return false;
+        if (Mark == 2) return true;
+        const auto* Definition = Quest(Id);
+        if (!Definition) return false;
+        Visited.Add(Id, 1);
+        TSet<FName> Unique;
+        for (FName Required : Definition->Prerequisites)
+        {
+            if (Unique.Contains(Required) || !Visit(Required)) return false;
+            Unique.Add(Required);
+        }
+        Visited.Add(Id, 2);
+        return true;
+    };
+    for (const auto& Q : Quests) if (!Visit(Q.QuestId)) return false;
 	return true;
 }
 
@@ -106,16 +135,21 @@ int64 UExtractionProgressionRules::SellPrice(const FExtractionItem& I, int32 Qua
 	return Value;
 }
 
-// 新档案或版本迁移时设置初始货币、经验和三个任务槽，不是每次进入大厅都重置。
+// 新档案设置初始货币、经验和按稳定 ID 标识的任务状态，不是每次进入大厅都重置。
 void FExtractionProgression::Initialize()
 {
 	Credits = GetDefault<UExtractionProgressionRules>()->StartingCredits;
 	Experience = 0;
-	Quests.SetNum(3);
+    Quests.Reset();
+    for (const auto& Definition : GetDefault<UExtractionProgressionRules>()->Quests)
+    {
+        FExtractionQuestState State; State.QuestId = Definition.QuestId;
+        Quests.Add(State);
+    }
 }
 
 // 校验余额经验范围和任务前置关系，保证未接任务不含进度、文件资格不重复。
-bool FExtractionProgression::Validate() const
+bool FExtractionProgression::ValidateLegacy() const
 {
 	if (Credits < 0 || Credits > 1000000000000LL || Experience < 0 || Experience > 1000000000LL || Quests.Num() != 3)
 		return false;
@@ -137,11 +171,63 @@ bool FExtractionProgression::Validate() const
 	return true;
 }
 
+FName ExtractionProgression::LegacyQuestId(int32 Index)
+{
+    static const FName Ids[] = {TEXT("FirstExtraction"), TEXT("ClearGuards"), TEXT("RecoverFiles")};
+    return Index >= 0 && Index < 3 ? Ids[Index] : NAME_None;
+}
+
+FExtractionQuestState* FExtractionProgression::FindQuest(FName Id)
+{
+    return Quests.FindByPredicate([&](const auto& Q) { return Q.QuestId == Id; });
+}
+const FExtractionQuestState* FExtractionProgression::FindQuest(FName Id) const
+{
+    return Quests.FindByPredicate([&](const auto& Q) { return Q.QuestId == Id; });
+}
+bool FExtractionProgression::PrerequisitesClaimed(const FExtractionQuestDefinition& Definition) const
+{
+    for (FName Id : Definition.Prerequisites)
+    {
+        const auto* State = FindQuest(Id);
+        if (!State || !State->Claimed) return false;
+    }
+    return true;
+}
+bool FExtractionProgression::MigrateLegacyQuests()
+{
+    if (!ValidateLegacy()) return false;
+    for (int32 Index = 0; Index < Quests.Num(); ++Index) Quests[Index].QuestId = ExtractionProgression::LegacyQuestId(Index);
+    return Validate();
+}
+bool FExtractionProgression::Validate() const
+{
+    if (Credits < 0 || Credits > 1000000000000LL || Experience < 0 || Experience > 1000000000LL || Quests.Num() > 256) return false;
+    const auto* Rules = GetDefault<UExtractionProgressionRules>();
+    TSet<FName> Seen;
+    for (const auto& Q : Quests)
+    {
+        const auto* D = Rules->Quest(Q.QuestId);
+        if (!D || Q.QuestId.IsNone() || Seen.Contains(Q.QuestId) || Q.Progress < 0 || Q.Progress > 1000
+            || (Q.Claimed && !Q.Accepted) || (Q.Accepted && !PrerequisitesClaimed(*D))
+            || (!Q.Accepted && (Q.Progress || Q.Delivered || !Q.EligibleFiles.IsEmpty()))
+            || (D->Type != EQuestObjective::DeliverFiles && (Q.Delivered || !Q.EligibleFiles.IsEmpty()))) return false;
+        Seen.Add(Q.QuestId);
+        TSet<FGuid> Lots;
+        for (FGuid Lot : Q.EligibleFiles)
+        {
+            if (!Lot.IsValid() || Lots.Contains(Lot)) return false;
+            Lots.Add(Lot);
+        }
+    }
+    return true;
+}
+
 // 把请求版本、操作类型及参数编码成回执签名；相同操作 ID 携带不同内容必须被拒绝。
 FString FExtractionEconomyRequest::Signature() const
 {
-	return FString::Printf(TEXT("%d:%d:%s:%s:%d:%d"), Revision, int32(Action), *Definition.ToString(),
-	                       *Item.ToString(EGuidFormats::Digits), Quantity, Quest);
+	return FString::Printf(TEXT("q9:%d:%d:%s:%s:%d:%s"), Revision, int32(Action), *Definition.ToString(),
+	                       *Item.ToString(EGuidFormats::Digits), Quantity, *QuestId.ToString().ToLower());
 }
 
 // 处理购买、出售、接任务、提交文件和领奖；返回 false 时调用者丢弃整个候选状态。
@@ -161,7 +247,7 @@ bool ExtractionProgression::Execute(FExtractionProgression& P, FExtractionContai
 	{
 		const auto* O = Rules->Offer(R.Definition);
 		const auto* D = UExtractionItemDefinition::Get(R.Definition);
-		if (!O || !D || R.Quest != INDEX_NONE || R.Item.IsValid()) return Reject(TEXT("商品请求无效"));
+		if (!O || !D || !R.QuestId.IsNone() || R.Item.IsValid()) return Reject(TEXT("商品请求无效"));
 		if (Rules->Level(P.Experience) < O->Level) return Reject(TEXT("等级不足，商品未解锁"));
 		// 用 64 位金额计算总价；最终提交发生在外层持久化事务，不在此逐件落盘。
 		const int64 Cost = int64(O->Price) * R.Quantity;
@@ -184,7 +270,7 @@ bool ExtractionProgression::Execute(FExtractionProgression& P, FExtractionContai
 	else if (R.Action == EExtractionEconomyAction::Sell)
 	{
 		auto* I = Stash.Find(R.Item);
-		if (!I || R.Quest != INDEX_NONE || !R.Definition.IsNone()) return Reject(TEXT("请选择仓库中的物品"));
+		if (!I || !R.QuestId.IsNone() || !R.Definition.IsNone()) return Reject(TEXT("请选择仓库中的物品"));
 		const int64 Price = Rules->SellPrice(*I, R.Quantity);
 		if (Price < 0) return Reject(TEXT("此物品不可出售或数量无效"));
 		P.Credits += Price;
@@ -195,21 +281,28 @@ bool ExtractionProgression::Execute(FExtractionProgression& P, FExtractionContai
 	}
 	else
 	{
-		if (!Rules->Quests.IsValidIndex(R.Quest) || R.Quantity != 1 || !R.Definition.IsNone() || R.Item.IsValid())
-			return Reject(TEXT("任务请求无效"));
-		auto& Q = P.Quests[R.Quest];
-		const auto& D = Rules->Quests[R.Quest];
+        const auto* Definition = Rules->Quest(R.QuestId);
+        if (!Definition || R.Quantity != 1 || !R.Definition.IsNone() || R.Item.IsValid())
+            return Reject(TEXT("任务请求无效"));
+        auto* State = P.FindQuest(R.QuestId);
+        if (!State)
+        {
+            if (R.Action != EExtractionEconomyAction::AcceptQuest) return Reject(TEXT("任务尚未接取"));
+            FExtractionQuestState Added; Added.QuestId = R.QuestId;
+            P.Quests.Add(Added); State = &P.Quests.Last();
+        }
+        auto& Q = *State;
+        const auto& D = *Definition;
 		if (R.Action == EExtractionEconomyAction::AcceptQuest)
 		{
-			if (Q.Accepted || (R.Quest > 0 && !P.Quests[R.Quest - 1].Claimed) || Rules->Level(P.Experience) < R.Quest +
-				1)
+			if (Q.Accepted || !P.PrerequisitesClaimed(D) || Rules->Level(P.Experience) < D.MinimumLevel)
 				return Reject(TEXT("任务已接取或前置条件未满足"));
 			Q.Accepted = true;
 		}
 		else if (R.Action == EExtractionEconomyAction::DeliverQuest)
 		{
-			// 只有第三步文件任务接受物品提交，已提交或已领奖不能再次消耗文件。
-			if (R.Quest != 2 || !Q.Accepted || Q.Claimed || Q.Delivered) return Reject(TEXT("当前任务无需提交物品"));
+			// 文件目标接受物品提交，已提交或已领奖不能再次消耗文件。
+			if (D.Type != EQuestObjective::DeliverFiles || !Q.Accepted || Q.Claimed || Q.Delivered) return Reject(TEXT("当前任务无需提交物品"));
 			const int32 Index = Stash.Items.IndexOfByPredicate([&](const auto& I)
 			{
 				return I.Definition == TEXT("Document") && I.Origins.ContainsByPredicate([&](const auto& O)
@@ -226,7 +319,7 @@ bool ExtractionProgression::Execute(FExtractionProgression& P, FExtractionContai
 		}
 		else if (R.Action == EExtractionEconomyAction::ClaimQuest)
 		{
-			if (!Q.Accepted || Q.Claimed || Q.Progress < D.Target || (R.Quest == 2 && !Q.Delivered))
+			if (!Q.Accepted || Q.Claimed || Q.Progress < D.Target || (D.Type == EQuestObjective::DeliverFiles && !Q.Delivered))
 				return Reject(TEXT("任务尚未完成或奖励已领取"));
 			P.Credits += D.Credits;
 			P.Experience += D.Experience;
@@ -242,16 +335,26 @@ void ExtractionProgression::Extract(FExtractionProgression& P, const FExtraction
                                     const FExtractionRaidProgress& Raid)
 {
 	const auto* Rules = GetDefault<UExtractionProgressionRules>();
-	if (P.Quests.Num() != 3) return;
-	if (P.Quests[0].Accepted && !P.Quests[0].Claimed) P.Quests[0].Progress = 1;
-	if (P.Quests[1].Accepted && !P.Quests[1].Claimed)
-		P.Quests[1].Progress = FMath::Min(Rules->Quests[1].Target,
-		                                  P.Quests[1].Progress + FMath::Clamp(Raid.GuardKills, 0, 1000));
-	auto& Files = P.Quests[2];
-	if (Files.Accepted && !Files.Claimed && !Files.Delivered)
-		for (const auto& I : Inventory.Items)
-			if (I.Definition == TEXT("Document"))
-				for (const auto& O : I.Origins) if (Raid.FileLots.Contains(O.Lot)) Files.EligibleFiles.AddUnique(O.Lot);
+    for (auto& Q : P.Quests)
+    {
+        const auto* Definition = Rules->Quest(Q.QuestId);
+        if (!Definition || !Q.Accepted || Q.Claimed) continue;
+        switch (Definition->Type)
+        {
+        case EQuestObjective::Extract:
+            Q.Progress = FMath::Min(Definition->Target, Q.Progress + 1);
+            break;
+        case EQuestObjective::KillGuards:
+            Q.Progress = FMath::Min(Definition->Target, Q.Progress + FMath::Clamp(Raid.GuardKills, 0, 1000));
+            break;
+        case EQuestObjective::DeliverFiles:
+            if (!Q.Delivered)
+                for (const auto& I : Inventory.Items)
+                    if (I.Definition == TEXT("Document"))
+                        for (const auto& O : I.Origins) if (Raid.FileLots.Contains(O.Lot)) Q.EligibleFiles.AddUnique(O.Lot);
+            break;
+        }
+    }
 }
 
 // 生成货币、等级和经验摘要；展示文本不参与金额或等级判定。

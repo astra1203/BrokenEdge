@@ -3,6 +3,7 @@
 #include "BrokenEdge/Extraction/ExtractionPersistence.h"
 #include "Engine/GameInstance.h"
 #include "Misc/Paths.h"
+#include "Misc/ScopeExit.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Crc.h"
 #include "HAL/PlatformFileManager.h"
@@ -27,7 +28,7 @@ namespace
 
 	FExtractionEconomyRequest EconomyRequest(const UExtractionPersistence* Store, FGuid Profile,
 	                                         EExtractionEconomyAction Action, FName Definition = NAME_None,
-	                                         int32 Quantity = 1, int32 Quest = INDEX_NONE)
+	                                         int32 Quantity = 1, FName QuestId = NAME_None)
 	{
 		FExtractionEconomyRequest R;
 		R.Operation = FGuid::NewGuid();
@@ -35,13 +36,13 @@ namespace
 		R.Action = Action;
 		R.Definition = Definition;
 		R.Quantity = Quantity;
-		R.Quest = Quest;
+		R.QuestId = QuestId;
 		return R;
 	}
 
-	bool QuestOperation(UExtractionPersistence* S, FGuid P, int32 Quest, EExtractionEconomyAction Action)
+	bool QuestOperation(UExtractionPersistence* S, FGuid P, FName QuestId, EExtractionEconomyAction Action)
 	{
-		return S->Economy(P, EconomyRequest(S, P, Action, NAME_None, 1, Quest));
+		return S->Economy(P, EconomyRequest(S, P, Action, NAME_None, 1, QuestId));
 	}
 
 	bool TestRaid(UExtractionPersistence* S, FGuid P, EExtractionOutcome Outcome, int32 Kills = 0,
@@ -80,14 +81,138 @@ namespace
 				Value->AsObject()->RemoveField(TEXT("economyReceipts"));
 				Value->AsObject()->GetObjectField(TEXT("view"))->RemoveField(TEXT("progression"));
 			}
-		FString Text;
-		FJsonSerializer::Serialize(Object.ToSharedRef(), TJsonWriterFactory<>::Create(&Text));
+        if (State.Version >= 3 && State.Version < 9)
+            for (const auto& Value : Object->GetArrayField(TEXT("profiles")))
+                for (const auto& Quest : Value->AsObject()->GetObjectField(TEXT("view"))->GetObjectField(TEXT("progression"))->GetArrayField(TEXT("quests")))
+                    Quest->AsObject()->RemoveField(TEXT("questId"));
+        FString Text;
+        FJsonSerializer::Serialize(Object.ToSharedRef(), TJsonWriterFactory<>::Create(&Text));
 		FTCHARToUTF8 Bytes(*Text);
 		uint32 Header[] = {0x34455842, 1, uint32(Bytes.Length()), FCrc::MemCrc32(Bytes.Get(), Bytes.Length())};
 		TUniquePtr<IFileHandle> File(Files.OpenWrite(*(Directory / TEXT("Store.journal"))));
 		return File && File->Write(reinterpret_cast<const uint8*>(Header), sizeof(Header))
 			&& File->Write(reinterpret_cast<const uint8*>(Bytes.Get()), Bytes.Length()) && File->Flush(true);
 	}
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionStableQuestIds, "BrokenEdge.Extraction.Progression.StableQuestIds",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+bool FExtractionStableQuestIds::RunTest(const FString&)
+{
+    auto* Rules = GetMutableDefault<UExtractionProgressionRules>();
+    const auto Original = Rules->Quests;
+    ON_SCOPE_EXIT { Rules->Quests = Original; };
+    auto* Store = ProgressionStore(ProgressionDirectory());
+    FGuid Profile; FString Credential;
+    if (!TestTrue(TEXT("Profile created before catalog changes"), Store->OpenProfile({}, {}, Profile, Credential))) return false;
+    Rules->Quests.Swap(0, 2);
+    auto Added = Original[0];
+    Added.QuestId = TEXT("TwoExtractions"); Added.Target = 2; Added.Credits = 50; Added.Experience = 10;
+    Added.Prerequisites = {TEXT("FirstExtraction")};
+    Rules->Quests.Insert(Added, 0);
+    TestTrue(TEXT("Reordered and expanded catalog is valid"), Rules->IsValidConfiguration());
+    TestFalse(TEXT("Prerequisite follows ID, not adjacent row"), QuestOperation(Store, Profile, Added.QuestId, EExtractionEconomyAction::AcceptQuest));
+    TestTrue(TEXT("Original task accepted after reorder"), QuestOperation(Store, Profile, TEXT("FirstExtraction"), EExtractionEconomyAction::AcceptQuest));
+    TestTrue(TEXT("Extraction advances the objective selected by ID"), TestRaid(Store, Profile, EExtractionOutcome::Extracted));
+    TestTrue(TEXT("Original reward follows its definition"), QuestOperation(Store, Profile, TEXT("FirstExtraction"), EExtractionEconomyAction::ClaimQuest));
+    TestEqual(TEXT("Correct reward despite row relocation"), Store->View(Profile)->Progression.Credits, int64(2500));
+    TestTrue(TEXT("New task gets state when first accepted"), QuestOperation(Store, Profile, Added.QuestId, EExtractionEconomyAction::AcceptQuest));
+    TestRaid(Store, Profile, EExtractionOutcome::Extracted);
+    TestFalse(TEXT("Two-extraction objective needs both raids"), QuestOperation(Store, Profile, Added.QuestId, EExtractionEconomyAction::ClaimQuest));
+    TestRaid(Store, Profile, EExtractionOutcome::Extracted);
+    auto Claim = EconomyRequest(Store, Profile, EExtractionEconomyAction::ClaimQuest, NAME_None, 1, Added.QuestId);
+    TestTrue(TEXT("Added objective reward commits"), Store->Economy(Profile, Claim));
+    TestTrue(TEXT("Stable-ID receipt retry stays idempotent"), Store->Economy(Profile, Claim));
+    TestEqual(TEXT("Added reward granted exactly once"), Store->View(Profile)->Progression.Credits, int64(2550));
+    auto Unknown = EconomyRequest(Store, Profile, EExtractionEconomyAction::AcceptQuest, NAME_None, 1, TEXT("UnknownQuest"));
+    const int32 Revision = Store->View(Profile)->Revision;
+    TestFalse(TEXT("Unknown ID rejected"), Store->Economy(Profile, Unknown));
+    TestEqual(TEXT("Unknown request leaves revision unchanged"), Store->View(Profile)->Revision, Revision);
+    auto Progress = Store->View(Profile)->Progression;
+    Progress.Quests.Swap(0, Progress.Quests.Num() - 1);
+    TestTrue(TEXT("State order has no semantic meaning"), Progress.Validate());
+    const auto Duplicate = Progress.Quests[0];
+    Progress.Quests.Add(Duplicate);
+    TestFalse(TEXT("Duplicate state IDs rejected"), Progress.Validate());
+    Rules->Quests[0].Prerequisites = {TEXT("UnknownQuest")};
+    TestFalse(TEXT("Unknown prerequisite rejected"), Rules->IsValidConfiguration());
+    Rules->Quests[0].Prerequisites = {Rules->Quests[0].QuestId};
+    TestFalse(TEXT("Dependency cycle rejected"), Rules->IsValidConfiguration());
+    Rules->Quests[0].Prerequisites.Reset();
+    Rules->Quests[0].QuestId = Rules->Quests[1].QuestId;
+    TestFalse(TEXT("Duplicate definition IDs rejected"), Rules->IsValidConfiguration());
+    return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionQuestIdMigration, "BrokenEdge.Extraction.Progression.QuestIdMigration",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+bool FExtractionQuestIdMigration::RunTest(const FString&)
+{
+    auto* Source = ProgressionStore(ProgressionDirectory());
+    FGuid Profile; FString Credential;
+    if (!Source->OpenProfile({}, {}, Profile, Credential)) return false;
+    auto State = Source->TestState(); State.Version = 8;
+    auto& View = State.Profiles[0].View;
+    View.Progression.Credits = 3500; View.Progression.Experience = 300;
+    for (int32 Index = 0; Index < 3; ++Index)
+    {
+        auto& Q = View.Progression.Quests[Index];
+        Q.Accepted = true; Q.Claimed = Index < 2; Q.Progress = Index == 0 ? 1 : Index == 1 ? 2 : 0;
+    }
+    auto File = ExtractionItems::Make(TEXT("Document"));
+    View.Progression.Quests[2].EligibleFiles = {File.Origins[0].Lot};
+    ExtractionItems::AutoPlace(View.Stash, File);
+    FExtractionEconomyRequest OldClaim;
+    OldClaim.Operation = FGuid::NewGuid(); OldClaim.Revision = View.Revision;
+    OldClaim.Action = EExtractionEconomyAction::ClaimQuest; OldClaim.QuestId = TEXT("ClearGuards");
+    const FString OldSignature = FString::Printf(TEXT("%d:%d:None:%s:1:1"), OldClaim.Revision,
+        int32(OldClaim.Action), *FGuid().ToString(EGuidFormats::Digits));
+    State.Profiles[0].EconomyReceipts.Add({OldClaim.Operation, OldSignature});
+    const FString Directory = ProgressionDirectory();
+    if (!TestTrue(TEXT("Write v8 payload without QuestId fields"), WriteProgressionFixture(Directory, State))) return false;
+    TArray<uint8> Before, Backup;
+    FFileHelper::LoadFileToArray(Before, *(Directory / TEXT("Store.journal")));
+    auto* Rules = GetMutableDefault<UExtractionProgressionRules>();
+    const auto Original = Rules->Quests;
+    ON_SCOPE_EXIT { Rules->Quests = Original; };
+    Rules->Quests.Swap(0, 2);
+    auto* Migrated = ProgressionStore(Directory);
+    if (!TestTrue(TEXT("v8 migrates despite reordered definitions"), Migrated->IsAvailable())) return false;
+    const auto* Result = Migrated->View(Profile);
+    TestEqual(TEXT("Version nine"), Migrated->TestState().Version, 9);
+    TestEqual(TEXT("Migration invalidates stale protocol revision"), Result->Revision, View.Revision + 1);
+    TestEqual(TEXT("Money preserved"), Result->Progression.Credits, int64(3500));
+    TestEqual(TEXT("Experience preserved"), Result->Progression.Experience, int64(300));
+    TestTrue(TEXT("Old index zero maps to first extraction"), Result->Progression.FindQuest(TEXT("FirstExtraction"))->Claimed);
+    TestEqual(TEXT("Old index one retains guard progress"), Result->Progression.FindQuest(TEXT("ClearGuards"))->Progress, 2);
+    TestTrue(TEXT("Eligible file provenance preserved"), Result->Progression.FindQuest(TEXT("RecoverFiles"))->EligibleFiles.Contains(File.Origins[0].Lot));
+    TestNotNull(TEXT("Document instance preserved"), Result->Stash.Find(File.Id));
+    TestFalse(TEXT("Old receipt cannot grant a second reward"), Migrated->Economy(Profile, OldClaim));
+    FFileHelper::LoadFileToArray(Backup, *(Directory / TEXT("Store.journal.v8.bak")));
+    TestTrue(TEXT("v8 backup is byte exact"), Backup == Before);
+    auto* Reloaded = ProgressionStore(Directory);
+    TestTrue(TEXT("Reload migrated journal"), Reloaded->IsAvailable());
+    TestEqual(TEXT("Restart never migrates twice"), Reloaded->View(Profile)->Revision, Result->Revision);
+    TestEqual(TEXT("Restart never grants money"), Reloaded->View(Profile)->Progression.Credits, int64(3500));
+    const FString Blocked = ProgressionDirectory();
+    WriteProgressionFixture(Blocked, State);
+    FPlatformFileManager::Get().GetPlatformFile().CreateDirectory(*(Blocked / TEXT("Store.journal.v8.bak")));
+    TestFalse(TEXT("Backup failure blocks v8 migration"), ProgressionStore(Blocked)->IsAvailable());
+    TArray<uint8> After;
+    FFileHelper::LoadFileToArray(After, *(Blocked / TEXT("Store.journal")));
+    TestTrue(TEXT("Failed backup leaves v8 journal intact"), After == Before);
+    const FString WriteFailure = ProgressionDirectory();
+    WriteProgressionFixture(WriteFailure, State);
+    auto* Failed = NewObject<UExtractionPersistence>(NewObject<UGameInstance>());
+    Failed->FailNextWrite = true;
+    AddExpectedError(TEXT("EXTRACTION_STORE_WRITE_FAILED"), EAutomationExpectedErrorFlags::Contains, 1);
+    TestFalse(TEXT("Failed v9 commit blocks migration"), Failed->LoadForTest(WriteFailure));
+    FFileHelper::LoadFileToArray(After, *(WriteFailure / TEXT("Store.journal")));
+    TestTrue(TEXT("Failed migration write preserves v8 bytes"), After == Before);
+    auto* Retried = ProgressionStore(WriteFailure);
+    TestTrue(TEXT("Migration retries successfully on restart"), Retried->IsAvailable());
+    if (Retried->View(Profile)) TestEqual(TEXT("Retry preserves original balance"), Retried->View(Profile)->Progression.Credits, int64(3500));
+    return true;
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionProgressionEconomy, "BrokenEdge.Extraction.Progression.Economy",
@@ -156,7 +281,7 @@ bool FExtractionProgressionEconomy::RunTest(const FString&)
 	          static_cast<const FExtractionOffer*>(nullptr));
 	S = ProgressionStore(Directory);
 	TestTrue(TEXT("Persisted sell receipt"), S->Economy(
-		         P, EconomyRequest(S, P, EExtractionEconomyAction::AcceptQuest, NAME_None, 1, 0)));
+		         P, EconomyRequest(S, P, EExtractionEconomyAction::AcceptQuest, NAME_None, 1, TEXT("FirstExtraction"))));
 	Sell = EconomyRequest(S, P, EExtractionEconomyAction::Sell);
 	Sell.Item = S->View(P)->Stash.Items[1].Id;
 	Sell.Quantity = 30;
@@ -175,54 +300,54 @@ bool FExtractionProgressionQuests::RunTest(const FString&)
 	FGuid P;
 	FString Credential;
 	S->OpenProfile({}, {}, P, Credential);
-	TestFalse(TEXT("Chain cannot skip first task"), QuestOperation(S, P, 1, EExtractionEconomyAction::AcceptQuest));
-	TestTrue(TEXT("Accept first task"), QuestOperation(S, P, 0, EExtractionEconomyAction::AcceptQuest));
+	TestFalse(TEXT("Chain cannot skip first task"), QuestOperation(S, P, TEXT("ClearGuards"), EExtractionEconomyAction::AcceptQuest));
+	TestTrue(TEXT("Accept first task"), QuestOperation(S, P, TEXT("FirstExtraction"), EExtractionEconomyAction::AcceptQuest));
 	for (auto O : {
 		     EExtractionOutcome::Dead, EExtractionOutcome::Left, EExtractionOutcome::Disconnected,
 		     EExtractionOutcome::TimedOut
 	     })
 	{
 		TestTrue(TEXT("Failed raid settles"), TestRaid(S, P, O, 9));
-		TestEqual(TEXT("Failure never advances first task"), S->View(P)->Progression.Quests[0].Progress, 0);
+		TestEqual(TEXT("Failure never advances first task"), S->View(P)->Progression.FindQuest(TEXT("FirstExtraction"))->Progress, 0);
 	}
 	TestTrue(TEXT("Successful extraction advances task"), TestRaid(S, P, EExtractionOutcome::Extracted));
 	TestEqual(TEXT("No automatic reward"), S->View(P)->Progression.Credits, int64(2000));
-	auto Claim = EconomyRequest(S, P, EExtractionEconomyAction::ClaimQuest, NAME_None, 1, 0);
+	auto Claim = EconomyRequest(S, P, EExtractionEconomyAction::ClaimQuest, NAME_None, 1, TEXT("FirstExtraction"));
 	TestTrue(TEXT("Claim first reward"), S->Economy(P, Claim));
 	TestTrue(TEXT("Duplicate reward request"), S->Economy(P, Claim));
-	TestFalse(TEXT("New request cannot claim twice"), QuestOperation(S, P, 0, EExtractionEconomyAction::ClaimQuest));
+	TestFalse(TEXT("New request cannot claim twice"), QuestOperation(S, P, TEXT("FirstExtraction"), EExtractionEconomyAction::ClaimQuest));
 	TestEqual(TEXT("Level two"), GetDefault<UExtractionProgressionRules>()->Level(S->View(P)->Progression.Experience),
 	          2);
-	TestTrue(TEXT("Accept guard task"), QuestOperation(S, P, 1, EExtractionEconomyAction::AcceptQuest));
+	TestTrue(TEXT("Accept guard task"), QuestOperation(S, P, TEXT("ClearGuards"), EExtractionEconomyAction::AcceptQuest));
 	TestRaid(S, P, EExtractionOutcome::Extracted, 1);
 	TestRaid(S, P, EExtractionOutcome::Dead, 2);
-	TestEqual(TEXT("Failed kills excluded; saved kills retained"), S->View(P)->Progression.Quests[1].Progress, 1);
+	TestEqual(TEXT("Failed kills excluded; saved kills retained"), S->View(P)->Progression.FindQuest(TEXT("ClearGuards"))->Progress, 1);
 	FGuid Unfinished;
 	S->BeginRaid({P}, Unfinished);
 	S->ActivateRaid(Unfinished);
 	TestFalse(TEXT("Trading cannot occur in active raid"), S->Economy(
 		          P, EconomyRequest(S, P, EExtractionEconomyAction::Buy, TEXT("Ammo"))));
 	S->Settle(Unfinished, P, EExtractionOutcome::Extracted, S->FindRaid(Unfinished)->Players[0].Original, {1, {}});
-	TestTrue(TEXT("Claim guard task"), QuestOperation(S, P, 1, EExtractionEconomyAction::ClaimQuest));
+	TestTrue(TEXT("Claim guard task"), QuestOperation(S, P, TEXT("ClearGuards"), EExtractionEconomyAction::ClaimQuest));
 	TestEqual(TEXT("Level three"), GetDefault<UExtractionProgressionRules>()->Level(S->View(P)->Progression.Experience),
 	          3);
-	TestTrue(TEXT("Accept final task"), QuestOperation(S, P, 2, EExtractionEconomyAction::AcceptQuest));
+	TestTrue(TEXT("Accept final task"), QuestOperation(S, P, TEXT("RecoverFiles"), EExtractionEconomyAction::AcceptQuest));
 	auto OldFile = ExtractionItems::Make(TEXT("Document"));
 	TestRaid(S, P, EExtractionOutcome::Extracted, 0, &OldFile, false);
 	TestFalse(
 		TEXT("Unqualified or previously brought-in file cannot be delivered"),
-		QuestOperation(S, P, 2, EExtractionEconomyAction::DeliverQuest));
+		QuestOperation(S, P, TEXT("RecoverFiles"), EExtractionEconomyAction::DeliverQuest));
 	auto File = ExtractionItems::Make(TEXT("Document"));
 	TestRaid(S, P, EExtractionOutcome::Dead, 0, &File, true);
-	TestFalse(TEXT("Death cannot qualify a file"), QuestOperation(S, P, 2, EExtractionEconomyAction::DeliverQuest));
+	TestFalse(TEXT("Death cannot qualify a file"), QuestOperation(S, P, TEXT("RecoverFiles"), EExtractionEconomyAction::DeliverQuest));
 	File = ExtractionItems::Make(TEXT("Document"));
 	TestRaid(S, P, EExtractionOutcome::Extracted, 0, &File, true);
 	TestTrue(TEXT("Deliver qualified file atomically"), QuestOperation(
-		         S, P, 2, EExtractionEconomyAction::DeliverQuest));
+		         S, P, TEXT("RecoverFiles"), EExtractionEconomyAction::DeliverQuest));
 	TestTrue(TEXT("Qualified file removed"), S->View(P)->Stash.Find(File.Id) == nullptr);
 	TestTrue(TEXT("Unqualified file retained"), S->View(P)->Stash.Find(OldFile.Id) != nullptr);
-	TestFalse(TEXT("Cannot deliver twice"), QuestOperation(S, P, 2, EExtractionEconomyAction::DeliverQuest));
-	TestTrue(TEXT("Claim final task"), QuestOperation(S, P, 2, EExtractionEconomyAction::ClaimQuest));
+	TestFalse(TEXT("Cannot deliver twice"), QuestOperation(S, P, TEXT("RecoverFiles"), EExtractionEconomyAction::DeliverQuest));
+	TestTrue(TEXT("Claim final task"), QuestOperation(S, P, TEXT("RecoverFiles"), EExtractionEconomyAction::ClaimQuest));
 	TestEqual(TEXT("All rewards once"), S->View(P)->Progression.Credits, int64(5000));
 	TestEqual(TEXT("All experience preserved"), S->View(P)->Progression.Experience, int64(600));
 	return true;
@@ -248,7 +373,7 @@ bool FExtractionProgressionMigration::RunTest(const FString&)
 		FFileHelper::LoadFileToArray(Before, *(Directory / TEXT("Store.journal")));
 		auto* S = ProgressionStore(Directory);
 		TestTrue(TEXT("Migrate old store"), S->IsAvailable());
-		TestEqual(TEXT("Current payload version"), S->TestState().Version, 8);
+		TestEqual(TEXT("Current payload version"), S->TestState().Version, 9);
 		TestEqual(TEXT("Exactly one starting grant"), S->View(P)->Progression.Credits, int64(2000));
 		TestEqual(TEXT("Rifle identity unchanged"), S->View(P)->Stash.Items[0].Id, Rifle.Id);
 		TestEqual(TEXT("Rifle provenance unchanged"), S->View(P)->Stash.Items[0].Origins[0].Lot, Rifle.Origins[0].Lot);
@@ -319,19 +444,19 @@ bool FExtractionProgressionAtomicity::RunTest(const FString&)
 		auto* F = ProgressionStore(FailureDirectory);
 		FGuid Owner;
 		F->OpenProfile({}, {}, Owner, Credential);
-		QuestOperation(F, Owner, 0, EExtractionEconomyAction::AcceptQuest);
+		QuestOperation(F, Owner, TEXT("FirstExtraction"), EExtractionEconomyAction::AcceptQuest);
 		TestRaid(F, Owner, EExtractionOutcome::Extracted);
-		QuestOperation(F, Owner, 0, EExtractionEconomyAction::ClaimQuest);
-		QuestOperation(F, Owner, 1, EExtractionEconomyAction::AcceptQuest);
+		QuestOperation(F, Owner, TEXT("FirstExtraction"), EExtractionEconomyAction::ClaimQuest);
+		QuestOperation(F, Owner, TEXT("ClearGuards"), EExtractionEconomyAction::AcceptQuest);
 		TestRaid(F, Owner, EExtractionOutcome::Extracted, 2);
-		QuestOperation(F, Owner, 1, EExtractionEconomyAction::ClaimQuest);
-		QuestOperation(F, Owner, 2, EExtractionEconomyAction::AcceptQuest);
+		QuestOperation(F, Owner, TEXT("ClearGuards"), EExtractionEconomyAction::ClaimQuest);
+		QuestOperation(F, Owner, TEXT("RecoverFiles"), EExtractionEconomyAction::AcceptQuest);
 		auto File = ExtractionItems::Make(TEXT("Document"));
 		TestRaid(F, Owner, EExtractionOutcome::Extracted, 0, &File, true);
 		if (Action == EExtractionEconomyAction::ClaimQuest)
-			QuestOperation(F, Owner, 2, EExtractionEconomyAction::DeliverQuest);
+			QuestOperation(F, Owner, TEXT("RecoverFiles"), EExtractionEconomyAction::DeliverQuest);
 		auto Request = EconomyRequest(F, Owner, Action, NAME_None, 1,
-		                              Action == EExtractionEconomyAction::Sell ? INDEX_NONE : 2);
+		                              Action == EExtractionEconomyAction::Sell ? NAME_None : FName(TEXT("RecoverFiles")));
 		if (Action == EExtractionEconomyAction::Sell) Request.Item = F->View(Owner)->Stash.Items[0].Id;
 		FString Before, After;
 		FJsonObjectConverter::UStructToJsonObjectString(*F->View(Owner), Before);
@@ -393,7 +518,7 @@ bool FExtractionEconomyCrashBoundary::RunTest(const FString&)
 			TestEqual(TEXT("Key quantity conserved"), V.Stash.Count(TEXT("Key")), Buy && !Pending ? 1 : 0);
 			if (!Buy && !Sell)
 			{
-				const auto& Q = V.Progression.Quests[2];
+				const auto& Q = *V.Progression.FindQuest(TEXT("RecoverFiles"));
 				TestEqual(TEXT("Document consumed and progress committed together"), V.Stash.Count(TEXT("Document")),
 				          Settlement ? (Before ? 0 : 1) : Claim ? 0 : Pending ? 1 : 0);
 				TestEqual(TEXT("Delivery state conserved"), Q.Delivered, !Settlement && (Claim || !Pending));
@@ -432,13 +557,13 @@ bool FExtractionEconomyCrashBoundary::RunTest(const FString&)
 	if (!S->OpenProfile({}, {}, P, Credential)) return false;
 	if (!Buy && !Sell)
 	{
-		if (!QuestOperation(S, P, 0, EExtractionEconomyAction::AcceptQuest)
+		if (!QuestOperation(S, P, TEXT("FirstExtraction"), EExtractionEconomyAction::AcceptQuest)
 			|| !TestRaid(S, P, EExtractionOutcome::Extracted)
-			|| !QuestOperation(S, P, 0, EExtractionEconomyAction::ClaimQuest)
-			|| !QuestOperation(S, P, 1, EExtractionEconomyAction::AcceptQuest)
+			|| !QuestOperation(S, P, TEXT("FirstExtraction"), EExtractionEconomyAction::ClaimQuest)
+			|| !QuestOperation(S, P, TEXT("ClearGuards"), EExtractionEconomyAction::AcceptQuest)
 			|| !TestRaid(S, P, EExtractionOutcome::Extracted, 2)
-			|| !QuestOperation(S, P, 1, EExtractionEconomyAction::ClaimQuest)
-			|| !QuestOperation(S, P, 2, EExtractionEconomyAction::AcceptQuest))
+			|| !QuestOperation(S, P, TEXT("ClearGuards"), EExtractionEconomyAction::ClaimQuest)
+			|| !QuestOperation(S, P, TEXT("RecoverFiles"), EExtractionEconomyAction::AcceptQuest))
 			return false;
 		auto File = ExtractionItems::Make(TEXT("Document"));
 		if (Settlement)
@@ -449,7 +574,7 @@ bool FExtractionEconomyCrashBoundary::RunTest(const FString&)
 			for (const auto& Origin : File.Origins) Progress.FileLots.Add(Origin.Lot);
 		}
 		else if (!TestRaid(S, P, EExtractionOutcome::Extracted, 0, &File, true)) return false;
-		if (Claim && !QuestOperation(S, P, 2, EExtractionEconomyAction::DeliverQuest)) return false;
+		if (Claim && !QuestOperation(S, P, TEXT("RecoverFiles"), EExtractionEconomyAction::DeliverQuest)) return false;
 	}
 	if (!Settlement)
 	{
@@ -460,7 +585,7 @@ bool FExtractionEconomyCrashBoundary::RunTest(const FString&)
 			                               : Claim
 			                               ? EExtractionEconomyAction::ClaimQuest
 			                               : EExtractionEconomyAction::DeliverQuest,
-		                         Buy ? FName(TEXT("Key")) : NAME_None, 1, Buy || Sell ? INDEX_NONE : 2);
+		                         Buy ? FName(TEXT("Key")) : NAME_None, 1, Buy || Sell ? NAME_None : FName(TEXT("RecoverFiles")));
 		if (Sell) Request.Item = S->View(P)->Stash.Items[0].Id;
 		FString Json;
 		FJsonObjectConverter::UStructToJsonObjectString(Request, Json);

@@ -52,7 +52,7 @@ bool FExtractionRetention::RunTest(const FString&)
     TestTrue(TEXT("Write legacy journal"), FFileHelper::SaveArrayToFile(Frame, *(LegacyDir / TEXT("Store.journal"))));
     auto* Migrated = NewStore();
     TestTrue(TEXT("Load and migrate v7"), Migrated->LoadForTest(LegacyDir));
-    TestEqual(TEXT("Version eight"), Migrated->TestState().Version, 8);
+    TestEqual(TEXT("Current version"), Migrated->TestState().Version, 9);
     TArray<uint8> Backup;
     TestTrue(TEXT("Read v7 backup"), FFileHelper::LoadFileToArray(Backup, *(LegacyDir / TEXT("Store.journal.v7.bak"))));
     TestTrue(TEXT("Backup preserves exact bytes"), Backup == Frame);

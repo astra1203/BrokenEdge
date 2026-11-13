@@ -98,11 +98,14 @@ public:
 		Text({1060, 55}, TEXT("返回大厅"), 18);
 		if (Tasks)
 		{
-			for (int32 I = 0; I < R->Quests.Num() && P.Quests.IsValidIndex(I); ++I)
+			for (int32 Row = 0; Row < 3 && R->Quests.IsValidIndex(QuestOffset + Row); ++Row)
 			{
+                const int32 I = QuestOffset + Row;
 				const auto& D = R->Quests[I];
-				const auto& Q = P.Quests[I];
-				const float Y = 145.f + I * 150;
+				const FExtractionQuestState Empty;
+                const auto* Existing = P.FindQuest(D.QuestId);
+                const auto& Q = Existing ? *Existing : Empty;
+				const float Y = 145.f + Row * 150;
 				Box({65, Y}, {1140, 132}, FLinearColor(.035, .065, .085));
 				Text({85, Y + 12}, FString::Printf(TEXT("%d  %s"), I + 1, *D.Label), 22);
 				Text({85, Y + 47}, D.Description, 16);
@@ -111,12 +114,12 @@ public:
 					                : !Q.Accepted
 					                ? TEXT("未接取")
 					                : FString::Printf(TEXT("进度 %d / %d"), Q.Progress, D.Target);
-				if (I == 2 && Q.Accepted && !Q.Delivered) State += FString::Printf(
+				if (D.Type == EQuestObjective::DeliverFiles && Q.Accepted && !Q.Delivered) State += FString::Printf(
 					TEXT(" · 已记录带出 %d 份文件"), Q.EligibleFiles.Num());
 				Text({85, Y + 80}, FString::Printf(TEXT("%s   ·   奖励 %d 货币 / %d 经验"), *State, D.Credits, D.Experience),
 				     16);
 				Box({1000, Y + 42}, {175, 44}, Button);
-				const bool Locked = !Q.Accepted && (R->Level(P.Experience) < I + 1 || (I && !P.Quests[I - 1].Claimed));
+				const bool Locked = !Q.Accepted && (R->Level(P.Experience) < D.MinimumLevel || !P.PrerequisitesClaimed(D));
 				Text({1015, Y + 54},
 				     Q.Claimed
 					     ? TEXT("已完成")
@@ -124,11 +127,11 @@ public:
 					     ? TEXT("前置任务未完成")
 					     : !Q.Accepted
 					     ? TEXT("接取任务")
-					     : I == 2 && !Q.Delivered
+					     : D.Type == EQuestObjective::DeliverFiles && !Q.Delivered
 					     ? TEXT("提交仓库文件")
 					     : TEXT("领取奖励"), 16);
 			}
-			Text({65, 610}, TEXT("个人任务 · 成功撤离保存本局进度 · 文件需从领取区移入仓库后提交"), 17);
+			Text({65, 610}, TEXT("个人任务 · 滚轮翻页 · 撤离保存进度 · 文件需移入仓库后提交"), 17);
 		}
 		else
 		{
@@ -199,7 +202,10 @@ public:
 	// 在非确认状态下分别滚动商品与回收列表，任务页不复用商店滚动行为。
 	virtual FReply OnMouseWheel(const FGeometry& G, const FPointerEvent& E) override
 	{
-		if (!Tasks && !Confirm && Account())
+		if (Tasks && !Confirm && Account())
+            QuestOffset = FMath::Clamp(QuestOffset + (E.GetWheelDelta() > 0 ? -1 : 1), 0,
+                FMath::Max(0, GetDefault<UExtractionProgressionRules>()->Quests.Num() - 3));
+        else if (!Tasks && !Confirm && Account())
 		{
 			const int32 Step = E.GetWheelDelta() > 0 ? -1 : 1;
 			if (Position(G, E).X < 630) OfferOffset = FMath::Clamp(OfferOffset + Step, 0,
@@ -235,15 +241,18 @@ public:
 		else if (Contains(P, {875, 45}, {130, 42})) Tasks = true;
 		else if (Tasks && !A->Locked)
 		{
-			for (int32 I = 0; I < 3; ++I)
-				if (A->Profile.Progression.Quests.IsValidIndex(I) && Contains(P, {1000, 187.f + I * 150}, {175, 44}))
+			for (int32 Row = 0; Row < 3 && R->Quests.IsValidIndex(QuestOffset + Row); ++Row)
+				if (Contains(P, {1000, 187.f + Row * 150}, {175, 44}))
 				{
-					const auto& Q = A->Profile.Progression.Quests[I];
+					const auto& D = R->Quests[QuestOffset + Row];
+                    const FExtractionQuestState Empty;
+                    const auto* Existing = A->Profile.Progression.FindQuest(D.QuestId);
+                    const auto& Q = Existing ? *Existing : Empty;
 					FExtractionEconomyRequest Request;
-					Request.Quest = I;
+					Request.QuestId = D.QuestId;
 					Request.Action = !Q.Accepted
 						                 ? EExtractionEconomyAction::AcceptQuest
-						                 : I == 2 && !Q.Delivered
+						                 : D.Type == EQuestObjective::DeliverFiles && !Q.Delivered
 						                 ? EExtractionEconomyAction::DeliverQuest
 						                 : EExtractionEconomyAction::ClaimQuest;
 					A->RequestEconomy(Request);
@@ -317,7 +326,7 @@ public:
 private:
 	TWeakObjectPtr<UExtractionProgressionWidget> Owner;
 	bool Tasks = false, Selling = false, Confirm = false, EditingQuantity = false;
-	int32 OfferOffset = 0, SellOffset = 0, Quantity = 1;
+	int32 OfferOffset = 0, SellOffset = 0, QuestOffset = 0, Quantity = 1;
 	FName SelectedOffer = TEXT("AK");
 	FGuid SelectedItem;
 	FExtractionEconomyRequest Pending;

@@ -270,7 +270,7 @@ bool UExtractionPersistence::Load(const FString& Directory)
 			FUTF8ToTCHAR Text(reinterpret_cast<const ANSICHAR*>(Bytes.GetData()), Bytes.Num());
 			FExtractionStoreState Next;
 			if (!FJsonObjectConverter::JsonObjectStringToUStruct(FString(Text.Length(), Text.Get()), &Next, 0, 0)
-				|| ((Flags & 1u) ? (Next.Sequence < 1 || (Next.Version < 7 || Next.Version > 8)) : Next.Sequence != State.Sequence + 1)
+				|| ((Flags & 1u) ? (Next.Sequence < 1 || (Next.Version < 7 || Next.Version > FExtractionStoreState::CurrentVersion)) : Next.Sequence != State.Sequence + 1)
 				|| (State.Sequence > 0 && Next.Version < State.Version) || !
 				Validate(Next))
 			{
@@ -285,7 +285,7 @@ bool UExtractionPersistence::Load(const FString& Directory)
 		}
 	}
 	// Preserve exact legacy bytes before tail repair, recovery, or migration.
-	if (State.Sequence > 0 && State.Version < 8)
+	if (State.Sequence > 0 && State.Version < FExtractionStoreState::CurrentVersion)
 	{
 		if (!PreserveLegacyJournal(Files, Journal, ValidEnd, State.Version))
 		{
@@ -315,7 +315,13 @@ bool UExtractionPersistence::Load(const FString& Directory)
 	{
 		FExtractionStoreState Migrated = State;
 		Migrated.Version = 3;
-		for (auto& Profile : Migrated.Profiles) Profile.View.Progression.Initialize();
+		for (auto& Profile : Migrated.Profiles)
+        {
+            Profile.View.Progression.Initialize();
+            // Version 3 payloads still use the historical three positional slots.
+            Profile.View.Progression.Quests.Reset();
+            Profile.View.Progression.Quests.SetNum(3);
+        }
 		if (!Commit(MoveTemp(Migrated))) return false;
 		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=3"));
 	}
@@ -403,13 +409,28 @@ bool UExtractionPersistence::Load(const FString& Directory)
 		if (!Commit(MoveTemp(Migrated))) return false;
 		UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=8"));
 	}
-	return Recover();
+    if (State.Version < 9)
+    {
+        FExtractionStoreState Migrated = State;
+        Migrated.Version = 9;
+        for (auto& Profile : Migrated.Profiles)
+        {
+            if (!Profile.View.Progression.MigrateLegacyQuests())
+            {
+                Faulted = true; Error = TEXT("旧版任务进度无法映射到稳定 ID，停止迁移"); return false;
+            }
+            ++Profile.View.Revision;
+        }
+        if (!Commit(MoveTemp(Migrated))) return false;
+        UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_MIGRATED Version=9"));
+    }
+    return Recover();
 }
 
 // 检查存储版本、档案与出战身份唯一性、容器合法性及物品来源；不接受客户端自行拼出的结果状态。
 bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) const
 {
-	if (Candidate.Version < 1 || Candidate.Version > 8 || !Candidate.Id.IsValid()) return false;
+	if (Candidate.Version < 1 || Candidate.Version > FExtractionStoreState::CurrentVersion || !Candidate.Id.IsValid()) return false;
 	const ExtractionItems::FLegacyGridScope Grids(Candidate.Version < 6);
 	TSet<FGuid> Profiles, Items;
 	for (const auto& P : Candidate.Profiles)
@@ -418,7 +439,7 @@ bool UExtractionPersistence::Validate(const FExtractionStoreState& Candidate) co
 			CredentialHash.Len() != 40)
 			return false;
 		Profiles.Add(P.View.Profile);
-		if (Candidate.Version >= 3 && !P.View.Progression.Validate()) return false;
+		if (Candidate.Version >= 3 && !(Candidate.Version < 9 ? P.View.Progression.ValidateLegacy() : P.View.Progression.Validate())) return false;
 		TSet<FGuid> Operations;
 		for (const auto& Receipt : P.EconomyReceipts)
 		{
@@ -557,7 +578,7 @@ bool UExtractionPersistence::Commit(FExtractionStoreState Candidate)
 	UE_LOG(LogTemp, Display, TEXT("EXTRACTION_STORE_COMMIT Sequence=%lld Bytes=%d JournalBytes=%lld Profiles=%d Raids=%d Receipts=%lld ElapsedMs=%.2f"),
 		State.Sequence, Bytes.Length(), IFileManager::Get().FileSize(*Journal), State.Profiles.Num(), State.Raids.Num(),
 		Receipts, (FPlatformTime::Seconds() - Started) * 1000);
-	if (State.Version == 8 && ((JournalRollBytes > 0 && IFileManager::Get().FileSize(*Journal) >= JournalRollBytes)
+	if (State.Version == FExtractionStoreState::CurrentVersion && ((JournalRollBytes > 0 && IFileManager::Get().FileSize(*Journal) >= JournalRollBytes)
 		|| (JournalRollRecords > 0 && JournalRecords >= JournalRollRecords)))
 		if (!RollJournal()) UE_LOG(LogTemp, Warning, TEXT("EXTRACTION_STORE_ROLL_FAILED Sequence=%lld"), State.Sequence);
 	return true;
@@ -576,7 +597,7 @@ bool UExtractionPersistence::ReadSegment(const FString& Path, FExtractionStoreSt
 	if (!File->Read(Bytes.GetData(), Bytes.Num()) || FCrc::MemCrc32(Bytes.GetData(), Bytes.Num()) != Header[3]) return false;
 	FUTF8ToTCHAR Text(reinterpret_cast<const ANSICHAR*>(Bytes.GetData()), Bytes.Num());
 	return FJsonObjectConverter::JsonObjectStringToUStruct(FString(Text.Length(), Text.Get()), &Out, 0, 0)
-		&& (Out.Version == 7 || Out.Version == 8) && Out.Sequence > 0 && Validate(Out);
+		&& Out.Version >= 7 && Out.Version <= FExtractionStoreState::CurrentVersion && Out.Sequence > 0 && Validate(Out);
 }
 
 bool UExtractionPersistence::WriteSegment(const FString& Path) const
@@ -937,18 +958,14 @@ bool UExtractionPersistence::Settle(FGuid RaidId, FGuid Profile, EExtractionOutc
 		ExtractionProgression::Extract(P->View.Progression, Inventory, Progress);
 		P->View.Result.ProgressMessage = TEXT("成功撤离 · 本局任务进度已保存，返回大厅查看任务");
 		const auto* Rules = GetDefault<UExtractionProgressionRules>();
-		for (int32 Index = 0; Index < P->View.Progression.Quests.Num(); ++Index)
-		{
-			const auto& Quest = P->View.Progression.Quests[Index];
-			if (Quest.Accepted && !Quest.Claimed)
-				P->View.Result.ProgressMessage += Index == 2
-					                                  ? FString::Printf(
-						                                  TEXT("\n%s：已带出 %d 份合格文件，回大厅提交"), *Rules->Quests[Index].Label,
-						                                  Quest.EligibleFiles.Num())
-					                                  : FString::Printf(
-						                                  TEXT("\n%s：%d / %d"), *Rules->Quests[Index].Label,
-						                                  Quest.Progress, Rules->Quests[Index].Target);
-		}
+        for (const auto& Quest : P->View.Progression.Quests)
+        {
+            const auto* Definition = Rules->Quest(Quest.QuestId);
+            if (!Definition || !Quest.Accepted || Quest.Claimed) continue;
+            P->View.Result.ProgressMessage += Definition->Type == EQuestObjective::DeliverFiles
+                ? FString::Printf(TEXT("\n%s：已带出 %d 份合格文件，回大厅提交"), *Definition->Label, Quest.EligibleFiles.Num())
+                : FString::Printf(TEXT("\n%s：%d / %d"), *Definition->Label, Quest.Progress, Definition->Target);
+        }
 	}
 	// 撤离带出全部物资；其他结局只保留安全箱及其中物品（死亡不掉落）。
 	TArray<FExtractionItem> Kept;

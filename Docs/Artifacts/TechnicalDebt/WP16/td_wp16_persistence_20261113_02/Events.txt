@@ -1,0 +1,11 @@
+LogAutomationController: Display: Test Completed. Result={Success} Name={JournalFailures} Path={BrokenEdge.Extraction.Persistence.JournalFailures}
+LogAutomationController: Error: Test Completed. Result={Fail} Name={JournalRolling} Path={BrokenEdge.Extraction.Persistence.JournalRolling}
+LogAutomationController: Error: Expected 'Keep configured archive count' to be 3, but it was 0. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\ExtractionJournalRollingTests.cpp(39)]
+LogAutomationController: Error: Expected 'Valid pending segment promoted' to be true. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\ExtractionJournalRollingTests.cpp(60)]
+LogAutomationController: Error: Expected 'Promotion preserves complete state' to be true. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\ExtractionJournalRollingTests.cpp(63)]
+LogAutomationController: Display: Test Completed. Result={Success} Name={PreparedCancellation} Path={BrokenEdge.Extraction.Persistence.PreparedCancellation}
+LogAutomationController: Display: Test Completed. Result={Success} Name={RecoveryProvenance} Path={BrokenEdge.Extraction.Persistence.RecoveryProvenance}
+LogTemp: Display: EXTRACTION_STORE_MIGRATED Version=8
+LogTemp: Display: EXTRACTION_STORE_MIGRATED Version=9
+LogAutomationController: Display: Test Completed. Result={Success} Name={Retention} Path={BrokenEdge.Extraction.Persistence.Retention}
+LogAutomationController: Display: Test Completed. Result={Success} Name={Transactions} Path={BrokenEdge.Extraction.Persistence.Transactions}

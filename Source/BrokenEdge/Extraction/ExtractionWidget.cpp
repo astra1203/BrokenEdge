@@ -113,15 +113,16 @@ void UExtractionWidget::Refresh()
 	{
 		const auto& Progression = PC->ExtractionAccount->Profile.Progression;
 		const auto* Rules = GetDefault<UExtractionProgressionRules>();
-		for (int32 Q = 0; Q < Progression.Quests.Num(); ++Q)
-			if (Progression.Quests[Q].Accepted && !Progression.Quests[Q].Claimed)
-			{
-				Text += TEXT("\n任务 · ") + Rules->Quests[Q].Label;
-				if (Q == 1)
-					Text += FString::Printf(TEXT(" %d / %d（本局 +%d，撤离保存）"), Progression.Quests[Q].Progress,
-					                        Rules->Quests[Q].Target, PS->RaidProgress.GuardKills);
-				else Text += Q == 0 ? TEXT(" · 成功撤离后完成") : TEXT(" · 文件带出后回大厅提交");
-			}
+        for (const auto& Quest : Progression.Quests)
+        {
+            const auto* Definition = Rules->Quest(Quest.QuestId);
+            if (!Definition || !Quest.Accepted || Quest.Claimed) continue;
+            Text += TEXT("\n任务 · ") + Definition->Label;
+            if (Definition->Type == EQuestObjective::KillGuards)
+                Text += FString::Printf(TEXT(" %d / %d（本局 +%d，撤离保存）"), Quest.Progress,
+                    Definition->Target, PS->RaidProgress.GuardKills);
+            else Text += Definition->Type == EQuestObjective::Extract ? TEXT(" · 成功撤离后推进") : TEXT(" · 文件带出后回大厅提交");
+        }
 	}
 	FString ExitsText;
 	FString CountdownText;

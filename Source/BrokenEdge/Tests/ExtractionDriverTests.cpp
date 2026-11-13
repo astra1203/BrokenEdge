@@ -939,6 +939,7 @@ private:
 		for (const auto& Q : P.Quests)
 		{
 			auto V = MakeShared<FJsonObject>();
+			V->SetStringField(TEXT("quest_id"), Q.QuestId.ToString());
 			V->SetBoolField(TEXT("accepted"), Q.Accepted);
 			V->SetBoolField(TEXT("claimed"), Q.Claimed);
 			V->SetNumberField(TEXT("progress"), Q.Progress);
@@ -983,7 +984,9 @@ private:
 				Command->TryGetStringField(TEXT("item"), Item);
 				FGuid::Parse(Item, R.Item);
 				Command->TryGetNumberField(TEXT("quantity"), R.Quantity);
-				Command->TryGetNumberField(TEXT("quest"), R.Quest);
+				FString QuestId;
+                Command->TryGetStringField(TEXT("quest_id"), QuestId);
+                R.QuestId = FName(*QuestId);
 			}
 			Command->TryGetNumberField(TEXT("revision"), R.Revision);
 			EconomyRequests.Add(Saved, R);

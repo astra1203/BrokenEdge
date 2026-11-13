@@ -9,6 +9,9 @@
 UENUM()
 enum class EExtractionEconomyAction : uint8 { Buy, Sell, AcceptQuest, DeliverQuest, ClaimQuest, SelectSafe };
 
+UENUM()
+enum class EQuestObjective : uint8 { Extract, KillGuards, DeliverFiles };
+
 USTRUCT()
 struct FExtractionOffer
 {
@@ -27,6 +30,10 @@ struct FExtractionQuestDefinition
 	UPROPERTY() int32 Target = 1;
 	UPROPERTY() int32 Credits = 0;
 	UPROPERTY() int32 Experience = 0;
+	UPROPERTY() FName QuestId;
+	UPROPERTY() EQuestObjective Type = EQuestObjective::Extract;
+	UPROPERTY() TArray<FName> Prerequisites;
+	UPROPERTY() int32 MinimumLevel = 1;
 };
 
 /** All prototype economy tuning lives here; Game.ini may override these defaults. */
@@ -45,11 +52,12 @@ public:
 	UPROPERTY(Config) int32 ToolsSellPrice = 200;
 	// 按定义 ID 查找商品，返回空表示不在当前商品表中。
 	const FExtractionOffer* Offer(FName Definition) const;
+	const FExtractionQuestDefinition* Quest(FName QuestId) const;
 	// 按累计经验阈值计算等级，经验不在升级时扣除。
 	int32 Level(int64 Experience) const;
 	// 计算指定数量的回收报价；护甲按耐久折价，整枪包括弹匣和附件，负数表示不允许出售。
 	int64 SellPrice(const FExtractionItem& Item, int32 Quantity) const;
-	// 检查三等级三任务结构、单价与奖励范围、定义白名单和唯一商品；任务文件不允许作为商品。
+	// 检查等级、任务 ID 与依赖图、单价与奖励范围；任务文件不允许作为商品。
 	bool IsValidConfiguration() const;
 };
 
@@ -64,6 +72,7 @@ struct FExtractionQuestState
 	/** Source lots personally extracted after accepting the file quest. */
 	// 本人在接任务后成功带出的合格批次；提交时还要求对应文件实际位于仓库。
 	UPROPERTY() TArray<FGuid> EligibleFiles;
+	UPROPERTY() FName QuestId;
 };
 
 USTRUCT()
@@ -73,10 +82,16 @@ struct FExtractionProgression
 	UPROPERTY() int64 Credits = 0;
 	UPROPERTY() int64 Experience = 0;
 	UPROPERTY() TArray<FExtractionQuestState> Quests;
-	// 新档案或版本迁移时设置初始货币、经验和三个任务槽，不是每次进入大厅都重置。
+	// 新档案按配置的稳定 ID 初始化；进入大厅不会重置已有进度。
 	void Initialize();
 	// 校验余额经验范围和任务前置关系，保证未接任务不含进度、文件资格不重复。
 	bool Validate() const;
+	// Only v3-v8 journal payloads use positional slots; keep this out of runtime dispatch.
+	bool ValidateLegacy() const;
+	bool MigrateLegacyQuests();
+	FExtractionQuestState* FindQuest(FName QuestId);
+	const FExtractionQuestState* FindQuest(FName QuestId) const;
+	bool PrerequisitesClaimed(const FExtractionQuestDefinition& Definition) const;
 };
 
 USTRUCT()
@@ -100,7 +115,7 @@ struct FExtractionEconomyRequest
 	UPROPERTY() FName Definition;
 	UPROPERTY() FGuid Item;
 	UPROPERTY() int32 Quantity = 1;
-	UPROPERTY() int32 Quest = INDEX_NONE;
+	UPROPERTY() FName QuestId;
 	// 把请求版本、操作类型及参数编码成回执签名；相同操作 ID 携带不同内容必须被拒绝。
 	FString Signature() const;
 };
@@ -115,6 +130,8 @@ struct FExtractionEconomyReceipt
 
 namespace ExtractionProgression
 {
+	// Only migration and historical fixtures may translate indices to these IDs.
+	FName LegacyQuestId(int32 Index);
 	/** Mutates a candidate only; persistence commits money, items and receipts together. */
 	// 处理购买、出售、接任务、提交文件和领奖；返回 false 时调用者丢弃整个候选状态。
 	// 购买分堆放入且枪械为空弹匣，出售同时扣来源，任务文件必须匹配本人接取后成功带出的批次。

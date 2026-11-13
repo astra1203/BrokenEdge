@@ -1,0 +1,432 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "09FD146E4959CFBB2BA392BDB5D6F0EC",
+			"instanceName": "OREKI-LEGION-27808",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-10.55.35",
+	"succeeded": 5,
+	"succeededWithWarnings": 0,
+	"failed": 1,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.54025179147720337,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "JournalFailures",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.JournalFailures",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"09FD146E4959CFBB2BA392BDB5D6F0EC"
+			],
+			"duration": 0.034536801278591156,
+			"dateTime": "2026.11.13-10.55.34",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "JournalRolling",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.JournalRolling",
+			"tags": [],
+			"state": "Fail",
+			"deviceInstance": [
+				"09FD146E4959CFBB2BA392BDB5D6F0EC"
+			],
+			"duration": 0.22360318899154663,
+			"dateTime": "2026.11.13-10.55.34",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_COMMIT Sequence=1 Bytes=91 JournalBytes=111 Profiles=0 Raids=0 Receipts=0 ElapsedMs=4.37",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=0 JournalBytes=111 ElapsedMs=5.36 Faulted=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_COMMIT Sequence=2 Bytes=7677 JournalBytes=7808 Profiles=1 Raids=0 Receipts=0 ElapsedMs=2.73",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=2 JournalBytes=7808 ElapsedMs=0.65 Faulted=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_COMMIT Sequence=3 Bytes=15264 JournalBytes=23092 Profiles=2 Raids=0 Receipts=0 ElapsedMs=2.87",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=3 JournalBytes=23092 ElapsedMs=1.35 Faulted=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_COMMIT Sequence=4 Bytes=22851 JournalBytes=45963 Profiles=3 Raids=0 Receipts=0 ElapsedMs=3.06",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=4 JournalBytes=45963 ElapsedMs=2.29 Faulted=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_COMMIT Sequence=5 Bytes=30438 JournalBytes=76421 Profiles=4 Raids=0 Receipts=0 ElapsedMs=3.37",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=5 JournalBytes=76421 ElapsedMs=3.54 Faulted=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_COMMIT Sequence=6 Bytes=38025 JournalBytes=114466 Profiles=5 Raids=0 Receipts=0 ElapsedMs=3.87",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=6 JournalBytes=114466 ElapsedMs=5.03 Faulted=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Keep configured archive count' to be 3, but it was 0.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionJournalRollingTests.cpp",
+					"lineNumber": 39,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_COMMIT Sequence=7 Bytes=45612 JournalBytes=160098 Profiles=6 Raids=0 Receipts=0 ElapsedMs=4.48",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=7 JournalBytes=160098 ElapsedMs=7.15 Faulted=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_COMMIT Sequence=8 Bytes=53199 JournalBytes=213317 Profiles=7 Raids=0 Receipts=0 ElapsedMs=4.34",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=8 JournalBytes=213317 ElapsedMs=9.77 Faulted=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_COMMIT Sequence=9 Bytes=60786 JournalBytes=274123 Profiles=8 Raids=0 Receipts=0 ElapsedMs=5.19",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=9 JournalBytes=274123 ElapsedMs=11.67 Faulted=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_COMMIT Sequence=10 Bytes=68374 JournalBytes=342517 Profiles=9 Raids=0 Receipts=0 ElapsedMs=5.48",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=10 JournalBytes=342517 ElapsedMs=14.62 Faulted=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=0 JournalBytes=-1 ElapsedMs=2.84 Faulted=1",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Valid pending segment promoted' to be true.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionJournalRollingTests.cpp",
+					"lineNumber": 60,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Promotion preserves complete state' to be true.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionJournalRollingTests.cpp",
+					"lineNumber": 63,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=1 JournalBytes=68389 ElapsedMs=3.30 Faulted=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=0 JournalBytes=-1 ElapsedMs=0.14 Faulted=1",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.13-10.55.34"
+				}
+			],
+			"warnings": 0,
+			"errors": 3,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PreparedCancellation",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.PreparedCancellation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"09FD146E4959CFBB2BA392BDB5D6F0EC"
+			],
+			"duration": 0.052289202809333801,
+			"dateTime": "2026.11.13-10.55.34",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RecoveryProvenance",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.RecoveryProvenance",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"09FD146E4959CFBB2BA392BDB5D6F0EC"
+			],
+			"duration": 0.10887099802494049,
+			"dateTime": "2026.11.13-10.55.34",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Retention",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.Retention",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"09FD146E4959CFBB2BA392BDB5D6F0EC"
+			],
+			"duration": 0.061477899551391602,
+			"dateTime": "2026.11.13-10.55.35",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Transactions",
+			"fullTestPath": "BrokenEdge.Extraction.Persistence.Transactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"09FD146E4959CFBB2BA392BDB5D6F0EC"
+			],
+			"duration": 0.059473700821399689,
+			"dateTime": "2026.11.13-10.55.35",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

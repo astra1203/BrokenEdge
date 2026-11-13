@@ -103,10 +103,12 @@ USTRUCT()
 struct FExtractionStoreState
 {
 	GENERATED_BODY()
+	static constexpr int32 CurrentVersion = 9;
 	// 4：出战配置改为携行容器（胸挂/背包/安全箱决定网格），旧配置迁移时补背包与基础安全箱。
 	UPROPERTY()
 	// 6：胸挂/背包改为分仓布局，旧档案里跨口袋的物品重新摆放；补发入门胸挂、头盔、护甲。
-	int32 Version = 8;
+	// 9：任务状态按稳定 QuestId 标识，不再以数组位置决定任务身份。
+	int32 Version = CurrentVersion;
 	// 日志事务序号逐条递增，加载时拒绝跳号；Version 是结构版本，与事务序号不同。
 	UPROPERTY()
 	int64 Sequence = 0;
