@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'Scripts'))
 from Common.ue_env import engine_root, run_record
 parser = argparse.ArgumentParser()
-parser.add_argument('task', choices=['combat', 'combat-pie', 'sprint-pie', 'vitals-pie', 'vitals', 'input-pie', 'input-assets', 'input', 'input-audit', 'capacity', 'respawn', 'prototype-audit', 'spawn-lifecycle', 'exit-feedback', 'guard-bt', 'loot-layout', 'weapon-range-assets', 'weapon-pie', 'gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
+parser.add_argument('task', choices=['presentation', 'presentation-validate', 'presentation-migrate', 'presentation-audit', 'combat', 'combat-pie', 'sprint-pie', 'vitals-pie', 'vitals', 'input-pie', 'input-assets', 'input', 'input-audit', 'capacity', 'respawn', 'prototype-audit', 'spawn-lifecycle', 'exit-feedback', 'guard-bt', 'loot-layout', 'weapon-range-assets', 'weapon-pie', 'gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
 parser.add_argument('--tag', required=True)
 parser.add_argument('--engine', type=Path)
 parser.add_argument('--store', type=Path, help='Existing store directory; only for recover-existing')
@@ -34,6 +34,8 @@ if args.task == 'capacity':
 elif args.task == 'respawn':
     command += ['-ExecCmds=Automation RunTests BrokenEdge.GameMode.Respawn.',
                 '-TestExit=Automation Test Queue Empty', '-ReportExportPath=' + str(out / 'Automation')]
+elif args.task in ['presentation-audit', 'presentation-migrate', 'presentation-validate']:
+    command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Stinger/character_presentation.py')]
 elif args.task == 'input-assets':
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/prepare_input_actions.py')]
 elif args.task == 'input-audit':
@@ -61,7 +63,7 @@ elif args.task == 'phase6a-assets':
 elif args.task in ['assets', 'exit', 'phase5-assets']:
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction' / ('prepare_phase5.py' if args.task == 'phase5-assets' else 'prepare_exit.py' if args.task == 'exit' else 'prepare_items.py'))]
 else:
-    test = {'combat': 'CombatMode.', 'combat-pie': 'WeaponPIE.InputAndAssembly', 'sprint-pie': 'WeaponPIE.SprintTransitions', 'vitals-pie': 'VitalsPIE.', 'vitals': 'Vitals.', 'input-pie': 'InputPIE', 'input': 'Input.', 'spawn-lifecycle': 'SpawnLifecycle', 'exit-feedback': 'ExitFeedback', 'guard-bt': 'GuardBT', 'loot-layout': 'LootLayout', 'weapon-pie': 'WeaponPIE', 'weapon-mechanics': 'WeaponMechanics', 'persistence': 'Persistence', 'inventory': 'Inventory', 'recover-existing': 'RecoverExistingStore', 'equipment': 'Equipment', 'progression': 'Progression'}[args.task]
+    test = {'presentation': 'Presentation.', 'combat': 'CombatMode.', 'combat-pie': 'WeaponPIE.InputAndAssembly', 'sprint-pie': 'WeaponPIE.SprintTransitions', 'vitals-pie': 'VitalsPIE.', 'vitals': 'Vitals.', 'input-pie': 'InputPIE', 'input': 'Input.', 'spawn-lifecycle': 'SpawnLifecycle', 'exit-feedback': 'ExitFeedback', 'guard-bt': 'GuardBT', 'loot-layout': 'LootLayout', 'weapon-pie': 'WeaponPIE', 'weapon-mechanics': 'WeaponMechanics', 'persistence': 'Persistence', 'inventory': 'Inventory', 'recover-existing': 'RecoverExistingStore', 'equipment': 'Equipment', 'progression': 'Progression'}[args.task]
     if args.task in ['weapon-pie', 'input-pie', 'vitals-pie', 'combat-pie', 'sprint-pie']:
         command[0] = str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe')
         command.remove('-NullRHI')
@@ -80,6 +82,8 @@ metadata.update(run_record(command, out / 'Run.json', engine=ENGINE, script=__fi
 environment = os.environ.copy()
 environment['UE_SKIP_UBT_SDK_SETUP'] = '1'
 environment['EXTRACTION_RUN_DIR'] = str(out)
+if args.task.startswith('presentation-'):
+    environment['CHARACTER_PRESENTATION_MODE'] = args.task
 if args.task == 'north-import':
     environment.update(SPACECENTER_WORK=str(ROOT / 'Saved/SpaceCenter/Phase7A'), SPACECENTER_ASSETS_ONLY='1')
 with (out / 'Process.log').open('wb') as log:
@@ -96,7 +100,13 @@ with (out / 'Process.log').open('wb') as log:
         metadata['error'] = 'Editor task timed out'
 text = (out / 'Editor.log').read_text(encoding='utf-8', errors='replace')
 passed = metadata['exit_code'] == 0 and 'Fatal error:' not in text and 'Traceback (most recent call last)' not in text
-if args.task == 'input-assets':
+if args.task == 'presentation-validate':
+    passed = passed and 'CHARACTER_PRESENTATION_VALIDATION_COMPLETE' in text
+elif args.task == 'presentation-migrate':
+    passed = passed and 'CHARACTER_PRESENTATION_MIGRATION_COMPLETE' in text
+elif args.task == 'presentation-audit':
+    passed = passed and 'CHARACTER_PRESENTATION_AUDIT_COMPLETE' in text
+elif args.task == 'input-assets':
     passed = passed and 'EXTRACTION_INPUT_ASSETS_COMPLETE' in text
 elif args.task == 'input-audit':
     passed = passed and 'INPUT_ACTION_AUDIT_COMPLETE' in text
@@ -122,7 +132,7 @@ elif args.task in ['assets', 'exit', 'phase5-assets']:
 else:
     successes = re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text)
     metadata['successful_tests'] = len(successes)
-    expected = {'combat': 1, 'combat-pie': 1, 'sprint-pie': 1, 'vitals-pie': 1, 'vitals': 1, 'input-pie': 1, 'input': 1, 'capacity': 1, 'respawn': 1, 'spawn-lifecycle': 3, 'exit-feedback': 3, 'guard-bt': 12, 'loot-layout': 1, 'weapon-pie': 4, 'weapon-mechanics': 5, 'persistence': 6, 'inventory': 7, 'recover-existing': 1, 'equipment': 4, 'progression': 5}[args.task]
+    expected = {'presentation': 1, 'combat': 1, 'combat-pie': 1, 'sprint-pie': 1, 'vitals-pie': 1, 'vitals': 1, 'input-pie': 1, 'input': 1, 'capacity': 1, 'respawn': 1, 'spawn-lifecycle': 3, 'exit-feedback': 3, 'guard-bt': 12, 'loot-layout': 1, 'weapon-pie': 4, 'weapon-mechanics': 5, 'persistence': 6, 'inventory': 7, 'recover-existing': 1, 'equipment': 4, 'progression': 5}[args.task]
     passed = passed and len(successes) == expected and not re.search(r'Test Completed\. Result=\{(?:Fail|Failure|\u5931\u8d25)', text)
 metadata['result'] = 'passed' if passed else 'failed'
 metadata['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()

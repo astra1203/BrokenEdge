@@ -2,6 +2,7 @@
 
 
 #include "CombatComponent.h"
+#include "BrokenEdge/Character/BrokenEdgeCharacterPresentation.h"
 #include "CombatModeAdapter.h"
 #include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
@@ -606,7 +607,7 @@ void UCombatComponent::AttachFlagToLeftHand(AActor* Flag)
 void UCombatComponent::AttachActorToRightHand(AActor* ActorToAttach)
 {
 	if (Character == nullptr || Character->GetMesh() == nullptr || ActorToAttach == nullptr) return;
-	if (const USkeletalMeshSocket* HandSocket = Character->GetMesh()->GetSocketByName(FName("RightHandSocket")))
+	if (const USkeletalMeshSocket* HandSocket = Character->GetMesh()->GetSocketByName(Character->GetPresentation().WeaponHandSocket))
 	{
 		HandSocket->AttachActor(ActorToAttach, Character->GetMesh());
 		if (const auto* Weapon = Cast<AWeapon>(ActorToAttach); Weapon && Weapon->Presentation)
@@ -617,7 +618,7 @@ void UCombatComponent::AttachActorToRightHand(AActor* ActorToAttach)
 void UCombatComponent::AttachActorToBackpack(AActor* ActorToAttach)
 {
 	if (Character == nullptr || Character->GetMesh() == nullptr || ActorToAttach == nullptr) return;
-	if (const USkeletalMeshSocket* BackpackSocket = Character->GetMesh()->GetSocketByName(FName("BackpackSocket")))
+	if (const USkeletalMeshSocket* BackpackSocket = Character->GetMesh()->GetSocketByName(Character->GetPresentation().WeaponBackSocket))
 	{
 		BackpackSocket->AttachActor(ActorToAttach, Character->GetMesh());
 		if (const auto* Weapon = Cast<AWeapon>(ActorToAttach); Weapon && Weapon->Presentation)
@@ -902,7 +903,7 @@ void UCombatComponent::OnRep_Aiming()
 void UCombatComponent::InterpFOV(float DeltaTime)
 {
 	if (EquippedWeapon == nullptr) return;
-	if (Character && Character->FirstPersonMeshAsset && Character->IsFirstPersonView())
+	if (Character && Character->GetPresentation().FirstPersonMeshAsset && Character->IsFirstPersonView())
 	{
 		const float AimFOV = EquippedWeapon->Presentation && EquippedWeapon->Presentation->ScopeOverlay
 			                     ? EquippedWeapon->Presentation->ScopeFOV

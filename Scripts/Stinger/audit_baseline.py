@@ -1,4 +1,8 @@
 """Read the saved Stinger baseline assets in a fresh process; never save them."""
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import get_character_property
 import json
 import math
 import os
@@ -28,14 +32,14 @@ try:
     for name in ['BP_StingerCharacter', 'BP_StingerCharacter_Repaired']:
         bp = unreal.load_asset(root + '/Blueprints/' + name)
         cdo = unreal.get_default_object(bp.generated_class())
-        body = cdo.get_editor_property('mesh')
+        body = get_character_property(cdo, 'mesh')
         row = {'name': name, 'parent': unreal.BlueprintEditorLibrary.get_blueprint_parent_class(bp).get_path_name(),
-               'spawn_health': cdo.get_editor_property('health'), 'max_health': cdo.get_editor_property('max_health'),
+               'spawn_health': get_character_property(cdo, 'health'), 'max_health': get_character_property(cdo, 'max_health'),
                'body': body.get_skeletal_mesh_asset().get_path_name(), 'anim_class': body.get_editor_property('anim_class').get_path_name(),
-               'first_person_mesh': cdo.get_editor_property('first_person_mesh_asset').get_path_name(), 'montages': {}}
+               'first_person_mesh': get_character_property(cdo, 'first_person_mesh_asset').get_path_name(), 'montages': {}}
         check(name + '_cpp_parent', row['parent'] == '/Script/BrokenEdge.BrokenEdgeCharacter', row['parent'])
         for field in ['fire_weapon_montage', 'reload_montage', 'swap_montage', 'defeated_montage']:
-            value = cdo.get_editor_property(field)
+            value = get_character_property(cdo, field)
             row['montages'][field] = value.get_path_name() if value else None
             check(name + '_' + field, value is not None, row['montages'][field])
         report['characters'].append(row)

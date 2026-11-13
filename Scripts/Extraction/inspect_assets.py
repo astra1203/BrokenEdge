@@ -1,11 +1,15 @@
 """Read-only inspection of first-person slots and SpaceCenter render compatibility."""
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import get_character_property
 import json
 from pathlib import Path
 import unreal
 
 lib = unreal.EditorAssetLibrary
 cdo = unreal.get_default_object(lib.load_blueprint_class('/Game/Characters/Stinger/Blueprints/BP_StingerCharacter'))
-mesh = cdo.get_editor_property('first_person_mesh_asset')
+mesh = get_character_property(cdo, 'first_person_mesh_asset')
 report = {'first_person_mesh': mesh.get_path_name(), 'slots': [], 'materials': {}}
 for item in mesh.get_editor_property('materials'):
     material = item.get_editor_property('material_interface')

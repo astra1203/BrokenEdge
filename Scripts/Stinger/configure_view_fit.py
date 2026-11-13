@@ -1,4 +1,8 @@
 """Fit the capped first-person sleeves to AK anchors; promote only after visual review."""
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import get_character_property, set_character_property, save_character_presentation
 import unreal, json, sys
 from pathlib import Path
 root='/Game/Characters/Stinger';lib=unreal.EditorAssetLibrary
@@ -22,13 +26,13 @@ for prop,name in [('idle_animation','AR_M_1P_Idle01'),('aim_animation','AR_M_1P_
     anim_defaults.set_editor_property(prop,sequence(name))
 anim_defaults.set_editor_property('jump_animation',None)
 assert lib.save_loaded_asset(fp,only_if_is_dirty=False)
-character.set_editor_property('first_person_anim_class',fp.generated_class())
+set_character_property(character, 'first_person_anim_class',fp.generated_class())
 source_body=next(unreal.load_asset(p) for p in lib.list_assets(root+'/Meshes/Gameplay',recursive=True) if isinstance(unreal.load_asset(p),unreal.SkeletalMesh))
 body=next(unreal.load_asset(p) for p in lib.list_assets(root+'/Meshes/FirstPerson/CappedView',recursive=True) if isinstance(unreal.load_asset(p),unreal.SkeletalMesh))
 assert lib.save_loaded_asset(body,only_if_is_dirty=False)
-character.set_editor_property('first_person_mesh_asset',body)
-character.set_editor_property('first_person_mesh_transform',unreal.Transform(location=unreal.Vector(20,0,-165),rotation=unreal.Rotator(yaw=-90)))
-character.set_editor_property('first_person_aim_mesh_offset',unreal.Vector())
+set_character_property(character, 'first_person_mesh_asset',body)
+set_character_property(character, 'first_person_mesh_transform',unreal.Transform(location=unreal.Vector(20,0,-165),rotation=unreal.Rotator(yaw=-90)))
+set_character_property(character, 'first_person_aim_mesh_offset',unreal.Vector())
 actors=unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 weapon=actors.spawn_actor_from_class(lib.load_blueprint_class('/Game/Blueprints/Weapon/BP_AK47'),unreal.Vector())
 component=weapon.get_editor_property('weapon_mesh')
@@ -64,26 +68,27 @@ fit.set_editor_property('magazine_grip',unreal.Transform(location=magazine.trans
 fit.set_editor_property('magazine_out',.12)
 fit.set_editor_property('magazine_in',.52)
 actors.destroy_actor(weapon)
-character.set_editor_property('first_person_weapon_fit',fit)
-character.set_editor_property('first_person_weapon_source_mesh',source_weapon)
-character.set_editor_property('first_person_weapon_visual_mesh',view_weapon)
-character.set_editor_property('first_person_weapon_transform',unreal.Transform())
+set_character_property(character, 'first_person_weapon_fit',fit)
+set_character_property(character, 'first_person_weapon_source_mesh',source_weapon)
+set_character_property(character, 'first_person_weapon_visual_mesh',view_weapon)
+set_character_property(character, 'first_person_weapon_transform',unreal.Transform())
 timings={}
 for prop,name in [('first_person_fire_montage','AR_M_1P_Fire'),('first_person_reload_montage','AR_M_1P_ChangeClipFull'),('first_person_swap_montage','AR_M_1P_GetWeapon')]:
     montage=unreal.load_asset(root+'/Animations/Corrected/MontagesV4/AM_'+name)
     assert montage is not None
     montage=unreal.StingerAssetLibrary.create_visual_montage(sequence(name),root+'/Animations/Corrected/MontagesV4/AM_'+name)
     assert lib.save_loaded_asset(montage,only_if_is_dirty=False)
-    character.set_editor_property(prop,montage)
+    set_character_property(character, prop,montage)
     description=json.loads(unreal.StingerAssetLibrary.get_montage_description(montage))
     assert not description['notifies'],'First-person montage must be visual only'
     timings[prop]=description
 for prop in ['reload_montage','swap_montage','fire_weapon_montage']:
-    timings[prop]=json.loads(unreal.StingerAssetLibrary.get_montage_description(character.get_editor_property(prop)))
+    timings[prop]=json.loads(unreal.StingerAssetLibrary.get_montage_description(get_character_property(character, prop)))
 (saved/'view_fit_montage_timings.json').write_text(json.dumps(timings,indent=2),encoding='utf-8')
+save_character_presentation(character)
 assert lib.save_loaded_asset(bp,only_if_is_dirty=False)
-assert character.get_editor_property('first_person_mesh_asset')==body
-assert character.get_editor_property('first_person_anim_class')==fp.generated_class()
+assert get_character_property(character, 'first_person_mesh_asset')==body
+assert get_character_property(character, 'first_person_anim_class')==fp.generated_class()
 (saved/'view_fit_configuration.json').write_text(json.dumps({'character':bp.get_path_name(),'body':body.get_path_name(),
     'weapon':view_weapon.get_path_name(),'hip':[40,14,-22],'aim':[20,0,-13.95],'aim_pitch':.75,
     'body_offset':[20,0,-165],'magazine_out':.12,'magazine_in':.52,

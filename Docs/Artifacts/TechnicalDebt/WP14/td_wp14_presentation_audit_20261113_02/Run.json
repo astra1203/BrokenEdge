@@ -1,0 +1,37 @@
+{
+  "task": "presentation-audit",
+  "started_utc": "2026-11-13T10:11:21.643141+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp14_presentation_audit_20261113_02\\Editor.log",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Stinger\\character_presentation.py"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "4e863f62124b04d161239ca9d2e1e3616d58b9a3",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Extraction/run_editor_task.py\n?? Scripts/Stinger/character_presentation.py",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "9844b2281ec80671696a1445fc6dbdd719b3a8f41a809f466e24d8fd1f56e5c1",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp14_presentation_audit_20261113_02\\Run.json",
+  "exit_code": 0,
+  "pid": 24100,
+  "result": "passed",
+  "finished_utc": "2026-11-13T10:11:34.909634+00:00"
+}

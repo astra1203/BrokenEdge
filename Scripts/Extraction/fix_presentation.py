@@ -1,4 +1,8 @@
 """Narrow, recorded fixes for view-only accessories and imported Nanite materials."""
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import set_character_property, save_character_presentation, presentation_for
 import hashlib
 import json
 from pathlib import Path
@@ -24,7 +28,9 @@ for name in ['BP_StingerCharacter', 'BP_StingerCharacter_Repaired']:
     blueprint = lib.load_asset('/Game/Characters/Stinger/Blueprints/' + name)
     backup(blueprint)
     cdo = unreal.get_default_object(blueprint.generated_class())
-    cdo.set_editor_property('first_person_hidden_material_slots', ['M_Roy_016_BP_LOD'])
+    backup(presentation_for(cdo))
+    set_character_property(cdo, 'first_person_hidden_material_slots', ['M_Roy_016_BP_LOD'])
+    save_character_presentation(cdo)
     assert lib.save_loaded_asset(blueprint, only_if_is_dirty=False)
 
 surface = lib.load_asset('/Game/Maps/SpaceCenter/Materials/M_SC_Surface')

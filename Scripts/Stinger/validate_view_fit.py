@@ -1,4 +1,8 @@
 """Record complete view actions at fixed simulation steps and validate live grip/action state."""
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import get_character_property
 import unreal,json,time,traceback
 from pathlib import Path
 lib=unreal.StingerAssetLibrary
@@ -27,7 +31,7 @@ def check(name,ok,detail=None):
     report['checks'].append({'name':name,'passed':bool(ok),'detail':detail})
     print('VIEW_FIT_CHECK',name,ok)
 def input_action(name,value=(1,0,0)):
-    lib.inject_validation_input(pawn.get_controller(),pawn.get_editor_property(name),unreal.Vector(*value))
+    lib.inject_validation_input(pawn.get_controller(),get_character_property(pawn, name),unreal.Vector(*value))
 def once(key,fn):
     if key not in state['flags']: fn();state['flags'].add(key)
 
@@ -41,12 +45,12 @@ def snapshot():
     body=next((m for m in meshes if isinstance(m.get_anim_instance(),unreal.StingerFirstPersonAnimInstance)),None)
     weapon=next((m for m in meshes if isinstance(m.get_anim_instance(),unreal.StingerFirstPersonWeaponAnimInstance)),None)
     native=json.loads(lib.get_validation_state(pawn))
-    body_anim=pawn.get_editor_property('mesh').get_anim_instance()
+    body_anim=get_character_property(pawn, 'mesh').get_anim_instance()
     body_montage=body_anim.get_current_active_montage()
     native['body_montage']=body_montage.get_path_name() if body_montage else None
     native['body_montage_position']=body_anim.montage_get_position(body_montage) if body_montage else None
     if body and weapon:
-        fit=pawn.get_editor_property('first_person_weapon_fit')
+        fit=get_character_property(pawn, 'first_person_weapon_fit')
         ref=fit.get_editor_property('magazine_reference');grip=fit.get_editor_property('magazine_grip')
         mag=weapon.get_socket_transform('b_gun_mag')
         local=ref.rotation.inversed().rotate_vector(grip.translation-ref.translation)
@@ -83,7 +87,7 @@ def record(phase,t):
         check(phase+'_action_sync_'+str(state['frame']),abs(n['view_montage_fraction']-expected)<.035,[n['view_montage_fraction'],expected])
     if 'view_montage_fraction' in n and n.get('body_montage_position') is not None and phase in ['swap','swap_repeat']:
         fraction=min(n['body_montage_position']/swap_finish,.999);key=swap_attach/swap_finish
-        source_key=pawn.get_editor_property('first_person_weapon_fit').get_editor_property('swap_attach_fraction')
+        source_key=get_character_property(pawn, 'first_person_weapon_fit').get_editor_property('swap_attach_fraction')
         expected=fraction/key*source_key if fraction<key else source_key+(fraction-key)/(1-key)*(1-source_key)
         check(phase+'_action_sync_'+str(state['frame']),abs(n['view_montage_fraction']-expected)<.05,[n['view_montage_fraction'],expected])
     path=frames/('%05d.png'%len(report['samples']))
@@ -103,8 +107,8 @@ def tick(delta):
             world=next(w for w in worlds if unreal.GameplayStatics.get_game_mode(w))
             pawn=next(p for p in unreal.GameplayStatics.get_all_actors_of_class(world,unreal.BrokenEdgeCharacter) if p.is_locally_controlled())
             lib.isolate_validation_input(pawn.get_controller())
-            assert pawn.get_editor_property('first_person_mesh_asset') is not None
-            assert pawn.get_editor_property('first_person_anim_class') is not None
+            assert get_character_property(pawn, 'first_person_mesh_asset') is not None
+            assert get_character_property(pawn, 'first_person_anim_class') is not None
             for w in unreal.GameplayStatics.get_all_actors_of_class(world,unreal.Weapon):w.set_actor_location(unreal.Vector(8000,8000,100),False,False)
             place_weapon()
             lib.set_validation_fixed_step(1/30)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
+#include "CharacterPresentationTypes.h"
 #include "BrokenEdge/BrokenEdgeTypes/CombatState.h"
 #include "BrokenEdge/BrokenEdgeTypes/TurningInPlace.h"
 #include "GameFramework/Character.h"
@@ -35,43 +36,19 @@ struct FExtractionVitalsChange
 DECLARE_MULTICAST_DELEGATE_OneParam(FExtractionVitalsChanged, const FExtractionVitalsChange&);
 
 /** Camera-space weapon fit; source poses stay on a continuous, stationary body. */
-USTRUCT(BlueprintType)
-struct FStingerViewWeaponFit
-{
-	GENERATED_BODY()
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bEnabled = false;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FTransform Hip = FTransform(FRotator(0, -90, 0), FVector(45, 12, -20));
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FTransform Aim = FTransform(FRotator(0, -90, 0), FVector(45, 0, -8));
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FTransform SourceRightHand;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FTransform SourceLeftHand;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FTransform SourceLeftMagazineOut;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FTransform SourceLeftMagazineIn;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FTransform MagazineGrip;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FTransform MagazineReference;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FName MagazineBone = TEXT("b_gun_mag");
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0", ClampMax="1"))
-	float MagazineOut = .12f;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0", ClampMax="1"))
-	float MagazineIn = .52f;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0.01", ClampMax="0.99"))
-	float SwapAttachFraction = .55f;
-};
 
 UCLASS()
 class BROKENEDGE_API ABrokenEdgeCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+public:
+	UPROPERTY(EditDefaultsOnly, Category="Presentation")
+	TSoftObjectPtr<class UBrokenEdgeCharacterPresentation> CharacterPresentation;
+    const class UBrokenEdgeCharacterPresentation& GetPresentation() const;
+private:
+    UPROPERTY(Transient)
+    TObjectPtr<class UBrokenEdgeCharacterPresentation> LoadedCharacterPresentation;
 public:
 	class UExtractionInteractionComponent* GetExtractionInteraction() const { return ExtractionInteraction; }
 	friend class UExtractionHealth;
@@ -193,29 +170,6 @@ public:
 	UFUNCTION(BlueprintPure, Category = Camera)
 	bool IsFirstPersonView() const { return bFirstPersonView; }
 
-	// 蜂医等角色使用专用第一人称表现；未配置时使用全身网格副本呈现第一人称。
-	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
-	TObjectPtr<USkeletalMesh> FirstPersonMeshAsset = nullptr;
-	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
-	TSubclassOf<UAnimInstance> FirstPersonAnimClass;
-	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
-	FTransform FirstPersonMeshTransform = FTransform(FRotator(0, -90, 0), FVector(-10, 0, -165));
-	UPROPERTY(EditDefaultsOnly, Category = "FirstPerson")
-	FVector FirstPersonAimMeshOffset = FVector(20.f, 0.f, 14.f);
-	UPROPERTY(EditDefaultsOnly, Category = "FirstPerson")
-	TObjectPtr<USkeletalMesh> FirstPersonWeaponSourceMesh;
-	UPROPERTY(EditDefaultsOnly, Category = "FirstPerson")
-	TObjectPtr<USkeletalMesh> FirstPersonWeaponVisualMesh;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera|First Person")
-	FStingerViewWeaponFit FirstPersonWeaponFit;
-	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
-	FTransform FirstPersonWeaponTransform = FTransform::Identity;
-	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
-	TObjectPtr<UAnimMontage> FirstPersonFireMontage = nullptr;
-	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
-	TObjectPtr<UAnimMontage> FirstPersonReloadMontage = nullptr;
-	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
-	TObjectPtr<UAnimMontage> FirstPersonSwapMontage = nullptr;
 	// 技能表现只影响动画，不参与救援、治疗、烟雾的服务器结算。
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Animation")
 	TObjectPtr<UAnimMontage> HealMontage = nullptr;
@@ -353,16 +307,6 @@ private:
 	 * 第三人称趴姿动画（AnimStarterPack 重定向到 Stinger，retarget_prone.py 生成）：
 	 * 趴下先播 StandToProne，再循环 ProneIdle；起身播 ProneToStand；趴着开火 / 换弹改用趴姿版本。
 	 */
-	UPROPERTY(EditDefaultsOnly, Category="Extraction|Prone")
-	TSoftObjectPtr<class UAnimSequence> StandToProneAnim;
-	UPROPERTY(EditDefaultsOnly, Category="Extraction|Prone")
-	TSoftObjectPtr<class UAnimSequence> ProneIdleAnim;
-	UPROPERTY(EditDefaultsOnly, Category="Extraction|Prone")
-	TSoftObjectPtr<class UAnimSequence> ProneToStandAnim;
-	UPROPERTY(EditDefaultsOnly, Category="Extraction|Prone")
-	TSoftObjectPtr<class UAnimSequence> ProneFireAnim;
-	UPROPERTY(EditDefaultsOnly, Category="Extraction|Prone")
-	TSoftObjectPtr<class UAnimSequence> ProneReloadAnim;
 	// 各端按复制的 bProne 播放趴姿动画（含模拟代理），被其他蒙太奇打断后自动接回趴姿待机。
 	void UpdateProneAnimation();
 	// 当前处于趴姿表现时返回趴姿序列（未加载则同步加载），否则返回空。
@@ -415,16 +359,6 @@ private:
 	TObjectPtr<class UPoseableMeshComponent> FirstPersonBody = nullptr;
 	EVisibilityBasedAnimTickOption OriginalMeshAnimTickOption{};
 
-	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
-	FName FirstPersonHeadBone = TEXT("head");
-
-	// Hide accessory sections on the local view mesh without changing the world body.
-	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
-	TArray<FName> FirstPersonHiddenMaterialSlots;
-
-	// Offset from BaseEyeHeight, aligned with view yaw (centimeters).
-	UPROPERTY(EditDefaultsOnly, Category = "Camera|First Person")
-	FVector FirstPersonCameraOffset = FVector(10.f, 0.f, 0.f);
 
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))

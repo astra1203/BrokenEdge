@@ -3,6 +3,10 @@
 Run with the rebuilt UE 5.8.3 editor in isolation. Imported geometry is the
 original GLB bind mesh; its source ZIPs and prior evidence are never modified.
 """
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import get_character_property
 import json
 import shutil
 import sys
@@ -162,7 +166,7 @@ mounts = {'RedDot': RED_DOT_MOUNT, 'VerticalGrip': (0, 34, 5.5), 'Compensator': 
 # actual lens center on the camera's forward ray instead of drawing a HUD dot.
 character_bp = lib.load_blueprint_class('/Game/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired')
 character_defaults = unreal.get_default_object(character_bp)
-aim_fit = character_defaults.get_editor_property('first_person_weapon_fit').get_editor_property('aim')
+aim_fit = get_character_property(character_defaults, 'first_person_weapon_fit').get_editor_property('aim')
 optic_config = optic_settings(aim_fit)
 optic_view_mount = optic_config['first_person_mount']
 optic_offset = optic_config['optic_aim_offset']

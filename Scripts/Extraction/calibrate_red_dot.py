@@ -1,4 +1,8 @@
 """Update only the existing RedDot definition; never recreate maps/supply crates."""
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import get_character_property
 import hashlib
 import json
 import os
@@ -20,7 +24,7 @@ lib = unreal.EditorAssetLibrary
 definition = lib.load_asset(asset_path)
 assert definition, asset_path
 character = unreal.get_default_object(lib.load_blueprint_class('/Game/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired'))
-aim = character.get_editor_property('first_person_weapon_fit').get_editor_property('aim')
+aim = get_character_property(character, 'first_person_weapon_fit').get_editor_property('aim')
 values = settings(aim)
 old = describe({key: definition.get_editor_property(key) for key in values})
 for key, value in values.items():

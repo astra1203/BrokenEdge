@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/Character/CharacterPresentationTypes.h"
 #include "WeaponPresentation.generated.h"
 
 class UAnimSequence;

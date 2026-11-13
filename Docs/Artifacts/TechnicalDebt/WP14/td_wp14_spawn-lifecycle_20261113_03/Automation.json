@@ -1,0 +1,74 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "98BC941B47C728C0069064957C68F301",
+			"instanceName": "OREKI-LEGION-20656",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-10.27.48",
+	"succeeded": 3,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.056813199073076248,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "CurrentMissingStateIsAnError",
+			"fullTestPath": "BrokenEdge.Extraction.SpawnLifecycle.CurrentMissingStateIsAnError",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"98BC941B47C728C0069064957C68F301"
+			],
+			"duration": 0.020191799849271774,
+			"dateTime": "2026.11.13-10.27.48",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RetiredControllersDoNotRestart",
+			"fullTestPath": "BrokenEdge.Extraction.SpawnLifecycle.RetiredControllersDoNotRestart",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"98BC941B47C728C0069064957C68F301"
+			],
+			"duration": 0.020111799240112305,
+			"dateTime": "2026.11.13-10.27.48",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RetiredPawnDoesNotCountReady",
+			"fullTestPath": "BrokenEdge.Extraction.SpawnLifecycle.RetiredPawnDoesNotCountReady",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"98BC941B47C728C0069064957C68F301"
+			],
+			"duration": 0.016509599983692169,
+			"dateTime": "2026.11.13-10.27.48",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

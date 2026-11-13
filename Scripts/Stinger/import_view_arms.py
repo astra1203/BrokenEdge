@@ -1,3 +1,7 @@
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import set_character_property, save_character_presentation
 import unreal
 from pathlib import Path
 lib=unreal.EditorAssetLibrary
@@ -13,7 +17,8 @@ assert lib.save_loaded_asset(mesh,only_if_is_dirty=False)
 bp=unreal.load_asset('/Game/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired')
 unreal.BlueprintEditorLibrary.compile_blueprint(bp)
 cdo=unreal.get_default_object(bp.generated_class())
-cdo.set_editor_property('first_person_mesh_asset',mesh)
+set_character_property(cdo, 'first_person_mesh_asset',mesh)
 # Weapon calibration is configured separately by configure_view_fit.py.
+save_character_presentation(cdo)
 assert lib.save_loaded_asset(bp,only_if_is_dirty=False)
 print('STINGER_CAPPED_VIEW_ARMS_CONFIGURED',mesh.get_path_name())

@@ -2,6 +2,10 @@
 
 不调用同步导入；不操作 Rider 中暂停的编辑器。退出前保存完整实测快照。
 """
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import get_character_property
 import unreal, time, json, traceback, os
 from pathlib import Path
 
@@ -15,19 +19,19 @@ def check(name, passed, detail):
     print('STINGER_CHECK',name,passed,detail)
 
 def snapshot(pawn):
-    move = pawn.get_editor_property('character_movement')
+    move = get_character_property(pawn, 'character_movement')
     native = json.loads(lib.get_validation_state(pawn))
     fp = [m for m in pawn.get_components_by_class(unreal.SkeletalMeshComponent)
           if m.get_editor_property('only_owner_see') and isinstance(m.get_anim_instance(),unreal.StingerFirstPersonAnimInstance)]
-    camera = pawn.get_editor_property('follow_camera')
+    camera = get_character_property(pawn, 'follow_camera')
     return {'name':pawn.get_name(),'local':pawn.is_locally_controlled(),
-            'fp_config_mesh':str(pawn.get_editor_property('first_person_mesh_asset')),
-            'fp_config_class':str(pawn.get_editor_property('first_person_anim_class')),
+            'fp_config_mesh':str(get_character_property(pawn, 'first_person_mesh_asset')),
+            'fp_config_class':str(get_character_property(pawn, 'first_person_anim_class')),
             'all_meshes':[{'name':m.get_name(),'asset':str(m.get_skeletal_mesh_asset()),'anim':str(m.get_anim_instance())} for m in pawn.get_components_by_class(unreal.SkeletalMeshComponent)],
             'location':str(pawn.get_actor_location()),'speed':pawn.get_velocity().length(),
             'max_speed':move.get_editor_property('max_walk_speed'),
             'crouch_speed':move.get_editor_property('max_walk_speed_crouched'),
-            'crouched':pawn.get_editor_property('is_crouched'),'falling':move.is_falling(),
+            'crouched':get_character_property(pawn, 'is_crouched'),'falling':move.is_falling(),
             'sprinting':pawn.is_sprinting(),'first_person':pawn.is_first_person_view(),
             'fov':camera.get_editor_property('field_of_view'),'ammo':native['ammo'] if native['ammo']>=0 else None,
             'combat_state':native['combat_state'],'native':native,
@@ -37,11 +41,11 @@ def snapshot(pawn):
             'animation_source':fp[0].get_anim_instance().get_editor_property('current_animation_name') if fp and os.environ.get('STINGER_ISOLATE_INPUT') else None,
             'hand':str(fp[0].get_socket_location('RightHand')) if fp else None,
             'camera':str(camera.get_world_location()),
-            'body_owner_hidden':pawn.get_editor_property('mesh').get_editor_property('owner_no_see')}
+            'body_owner_hidden':get_character_property(pawn, 'mesh').get_editor_property('owner_no_see')}
 
 def inputs(prop,value):
     for pawn in state['pawns']:
-        lib.inject_validation_input(pawn.get_controller(),pawn.get_editor_property(prop),unreal.Vector(*value))
+        lib.inject_validation_input(pawn.get_controller(),get_character_property(pawn, prop),unreal.Vector(*value))
 
 def pulse(prop):
     if not state['pulse']:

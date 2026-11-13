@@ -1,4 +1,8 @@
 """独立 UE Commandlet 中建立蜂医动画、角色和测试地图。"""
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import get_character_property, set_character_property, save_character_presentation
 import unreal
 import json
 import os
@@ -132,22 +136,22 @@ def configure():
     bp = unreal.load_asset(bp_path)
     unreal.BlueprintEditorLibrary.compile_blueprint(bp)
     cdo = unreal.get_default_object(bp.generated_class())
-    mesh = cdo.get_editor_property('mesh')
+    mesh = get_character_property(cdo, 'mesh')
     mesh.set_skeletal_mesh_asset(MESH)
     mesh.set_anim_instance_class(LIB.load_blueprint_class(ROOT+'/Animations/ThirdPerson/ABP_BrokenEdgeAnimInstance_Stinger'))
     mesh.set_editor_property('relative_location',unreal.Vector(0,0,-92))
     mesh.set_editor_property('relative_rotation',unreal.Rotator(pitch=0,yaw=-90,roll=0))
-    cdo.get_editor_property('capsule_component').set_capsule_size(34,92)
+    get_character_property(cdo, 'capsule_component').set_capsule_size(34,92)
     for prop,value in {'first_person_mesh_asset':fp_mesh,'first_person_anim_class':fp.generated_class(),
                        'enable_sprint':True,'right_hand_bone':'RightHand',
                        'first_person_head_bone':'Head','sprint_speed':850.0,
                        'first_person_aim_fov':65.0,'first_person_aim_interp_speed':20.0,**montages}.items():
-        cdo.set_editor_property(prop,value)
-    cdo.set_editor_property('first_person_mesh_transform',unreal.Transform(location=unreal.Vector(55,0,-177),rotation=unreal.Rotator(pitch=0,yaw=-90,roll=0)))
-    move = cdo.get_editor_property('character_movement')
+        set_character_property(cdo, prop,value)
+    set_character_property(cdo, 'first_person_mesh_transform',unreal.Transform(location=unreal.Vector(55,0,-177),rotation=unreal.Rotator(pitch=0,yaw=-90,roll=0)))
+    move = get_character_property(cdo, 'character_movement')
     move.set_editor_property('max_walk_speed_crouched',300)
     move.set_editor_property('max_acceleration',2048)
-    cdo.get_editor_property('follow_camera').set_editor_property('field_of_view',90)
+    get_character_property(cdo, 'follow_camera').set_editor_property('field_of_view',90)
     sprint = create('IA_StingerSprint',ROOT+'/Blueprints/Input',unreal.InputAction,unreal.InputAction_Factory())
     sprint.set_editor_property('value_type',unreal.InputActionValueType.BOOLEAN)
     mapping_path = ROOT+'/Blueprints/Input/IMC_Stinger'
@@ -157,11 +161,11 @@ def configure():
     shift = unreal.Key()
     shift.set_editor_property('key_name', 'LeftShift')
     mapping.map_key(sprint, shift)
-    cdo.set_editor_property('default_mapping_context',mapping)
-    cdo.set_editor_property('sprint_action',sprint)
+    set_character_property(cdo, 'default_mapping_context',mapping)
+    set_character_property(cdo, 'sprint_action',sprint)
     for prop,name in [('reload_montage','AM_Reload'),('fire_weapon_montage','AM_FireWeapon'),
                       ('swap_montage','AM_Swap'),('hit_react_montage','AM_HitReact'),('defeated_montage','AM_Defeated')]:
-        cdo.set_editor_property(prop,unreal.load_asset(ROOT+'/Animations/ThirdPerson/'+name+'_Stinger'))
+        set_character_property(cdo, prop,unreal.load_asset(ROOT+'/Animations/ThirdPerson/'+name+'_Stinger'))
     for box in cdo.get_components_by_class(unreal.BoxComponent):
         key = box.get_name()
         if key in BONES:
@@ -171,6 +175,7 @@ def configure():
         if key in ['backpack','blanket']: box.set_box_extent(unreal.Vector())
     LIB.save_loaded_asset(sprint)
     LIB.save_loaded_asset(mapping)
+    save_character_presentation(cdo)
     LIB.save_loaded_asset(bp)
     gm_path = ROOT+'/Blueprints/BP_StingerTestGameMode'
     if not LIB.does_asset_exist(gm_path): LIB.duplicate_asset('/Game/Blueprints/GameMode/BP_BrokenEdgeGameMode',gm_path)

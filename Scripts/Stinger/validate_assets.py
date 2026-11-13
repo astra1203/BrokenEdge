@@ -1,4 +1,8 @@
 """在新进程重新加载并验证保存后的资产，结果写入 Saved/Stinger。"""
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import get_character_property
 import unreal, json
 from pathlib import Path
 
@@ -8,23 +12,23 @@ bp = unreal.load_asset(root+'/Blueprints/BP_StingerCharacter')
 parent = unreal.BlueprintEditorLibrary.get_blueprint_parent_class(bp)
 assert parent == unreal.BrokenEdgeCharacter.static_class()
 cdo = unreal.get_default_object(bp.generated_class())
-mesh = cdo.get_editor_property('mesh')
+mesh = get_character_property(cdo, 'mesh')
 report = {'parent':str(parent), 'mesh':str(mesh.get_skeletal_mesh_asset()),
           'anim_class':str(mesh.get_editor_property('anim_class')), 'properties':{}, 'hitboxes':{}, 'input':[]}
 for prop in ['first_person_mesh_asset','first_person_anim_class','enable_sprint',
              'right_hand_bone','first_person_head_bone','sprint_speed','first_person_aim_fov',
              'fire_weapon_montage','reload_montage','swap_montage','default_mapping_context','sprint_action']:
-    value = cdo.get_editor_property(prop)
+    value = get_character_property(cdo, prop)
     report['properties'][prop] = str(value)
     assert value is not None, prop
-assert cdo.get_editor_property('enable_sprint')
+assert get_character_property(cdo, 'enable_sprint')
 assert '/Stinger/' in mesh.get_skeletal_mesh_asset().get_path_name()
-fp_mesh = cdo.get_editor_property('first_person_mesh_asset')
+fp_mesh = get_character_property(cdo, 'first_person_mesh_asset')
 assert '/Meshes/FirstPerson/' in fp_mesh.get_path_name()
 assert fp_mesh.get_editor_property('skeleton') == mesh.get_skeletal_mesh_asset().get_editor_property('skeleton')
 for box in cdo.get_components_by_class(unreal.BoxComponent):
     report['hitboxes'][box.get_name()] = str(box.get_attach_socket_name())
-for mapping in cdo.get_editor_property('default_mapping_context').get_editor_property('default_key_mappings').get_editor_property('mappings'):
+for mapping in get_character_property(cdo, 'default_mapping_context').get_editor_property('default_key_mappings').get_editor_property('mappings'):
     report['input'].append({'action':mapping.get_editor_property('action').get_name(),
                             'key':str(mapping.get_editor_property('key').get_editor_property('key_name'))})
 assert any(m['action']=='IA_StingerSprint' and m['key']=='LeftShift' for m in report['input'])

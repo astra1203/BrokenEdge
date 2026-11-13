@@ -1,0 +1,37 @@
+{
+  "task": "presentation-migrate",
+  "started_utc": "2026-11-13T10:13:50.287732+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp14_presentation_migrate_20261113_01\\Editor.log",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Stinger\\character_presentation.py"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "4e863f62124b04d161239ca9d2e1e3616d58b9a3",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Extraction/run_editor_task.py\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.h\n M Source/BrokenEdge/Weapon/WeaponPresentation.h\n?? Scripts/Stinger/character_presentation.py\n?? Source/BrokenEdge/Character/BrokenEdgeCharacterPresentation.cpp\n?? Source/BrokenEdge/Character/BrokenEdgeCharacterPresentation.h\n?? Source/BrokenEdge/Character/CharacterPresentationTypes.h",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "0a9df7d23c4a5f9ab8950e3c57314f058fceb72b373f78147b5b2323064cdfdb",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp14_presentation_migrate_20261113_01\\Run.json",
+  "exit_code": 0,
+  "pid": 13372,
+  "result": "passed",
+  "finished_utc": "2026-11-13T10:14:10.179243+00:00"
+}

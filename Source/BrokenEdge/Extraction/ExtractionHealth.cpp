@@ -1,4 +1,5 @@
 #include "ExtractionHealth.h"
+#include "BrokenEdge/Character/BrokenEdgeCharacterPresentation.h"
 #include "ExtractionAbilities.h"
 #include "ExtractionCombatComponent.h"
 #include "ExtractionGameMode.h"
@@ -86,20 +87,13 @@ bool UExtractionHealth::TickStim(float Delta)
 // 兼容项目骨架的腿部骨名，用于决定有效创伤是否附带骨折。
 bool UExtractionHealth::IsLeg(FName Bone)
 {
-	const FString Name = Bone.ToString();
-	return Name.StartsWith(TEXT("thigh_")) || Name.StartsWith(TEXT("calf_")) || Name.StartsWith(TEXT("foot_")) || Name.
-		StartsWith(TEXT("ball_"))
-		|| Name == TEXT("LeftUpLeg") || Name == TEXT("RightUpLeg") || Name == TEXT("LeftLeg") || Name == TEXT(
-			"RightLeg")
-		|| Name == TEXT("LeftFoot") || Name == TEXT("RightFoot") || Name == TEXT("LeftToeBase") || Name == TEXT(
-			"RightToeBase");
+    return GetDefault<UBrokenEdgeCharacterPresentation>()->IsLeg(Bone);
 }
 
 // 头部映射头盔槽 2，骨盆/脊柱映射护甲槽 3；其余部位返回 -1 不套用护甲。
 int32 UExtractionHealth::ArmorSlotForBone(FName Bone)
 {
-	if (Bone == TEXT("head")) return 2;
-	return Bone == TEXT("pelvis") || Bone == TEXT("Hips") || Bone.ToString().StartsWith(TEXT("spine")) ? 3 : -1;
+    return GetDefault<UBrokenEdgeCharacterPresentation>()->ArmorSlotForBone(Bone);
 }
 
 // 按穿透等级选择吸收率，并受剩余耐久限制；引用参数扣耐久，返回未被吸收的伤害。
@@ -164,7 +158,7 @@ void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController
 		C->ApplyResolvedDamage(Damage, Attacker, Causer);
 		return;
 	}
-	const int32 Slot = ArmorSlotForBone(Bone);
+	const int32 Slot = C->GetPresentation().ArmorSlotForBone(Bone);
 	if (auto* Inv = C->GetExtractionInteraction()->Inventory(); Inv && Slot >= 0)
 	{
 		float AppliedDamage = Damage;
@@ -206,7 +200,7 @@ void UExtractionHealth::Bullet(float Damage, FName Bone, FName Ammo, AController
 				BleedingInterval;
 		Bleeding = true;
 		BleedInstigator = Attacker;
-		if (IsLeg(Bone)) LegFracture = true;
+		if (C->GetPresentation().IsLeg(Bone)) LegFracture = true;
 		C->ForceNetUpdate();
 	}
 	UE_LOG(LogTemp, Display,

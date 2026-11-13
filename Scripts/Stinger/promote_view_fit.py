@@ -1,4 +1,8 @@
 """Apply a visually reviewed fit to the original Stinger character and test map."""
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import get_character_property, set_character_property, save_character_presentation
 import unreal,json
 from pathlib import Path
 saved=Path(unreal.Paths.project_saved_dir())/'Stinger'
@@ -15,7 +19,8 @@ a=unreal.get_default_object(source.generated_class());b=unreal.get_default_objec
 properties=['first_person_mesh_asset','first_person_anim_class','first_person_mesh_transform','first_person_aim_mesh_offset',
     'first_person_weapon_fit','first_person_weapon_source_mesh','first_person_weapon_visual_mesh','first_person_weapon_transform',
     'first_person_fire_montage','first_person_reload_montage','first_person_swap_montage']
-for name in properties:b.set_editor_property(name,a.get_editor_property(name))
+for name in properties:set_character_property(b, name,get_character_property(a, name))
+save_character_presentation(b)
 assert lib.save_loaded_asset(target,only_if_is_dirty=False)
 gm=unreal.load_asset(root+'/Blueprints/BP_StingerTestGameMode')
 unreal.BlueprintEditorLibrary.compile_blueprint(gm)

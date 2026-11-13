@@ -1,3 +1,7 @@
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import set_character_property, save_character_presentation
 import unreal,json,math,sys
 from pathlib import Path
 root='/Game/Characters/Stinger'
@@ -14,21 +18,21 @@ fp=duplicate(root+'/Animations/FirstPerson/ABP_StingerFirstPerson',root+'/Animat
 unreal.BlueprintEditorLibrary.compile_blueprint(fp)
 cdo=unreal.get_default_object(fp.generated_class())
 for prop,name in [('idle_animation','AR_M_1P_Idle01'),('aim_animation','AR_M_1P_AimIdle_Pose'),('sprint_animation','AR_M_1P_RelaxIdle')]:
-    cdo.set_editor_property(prop,animation(name))
-cdo.set_editor_property('jump_animation',None)
+    set_character_property(cdo, prop,animation(name))
+set_character_property(cdo, 'jump_animation',None)
 assert lib.save_loaded_asset(fp)
 bp=duplicate(root+'/Blueprints/BP_StingerCharacter',root+'/Blueprints/BP_StingerCharacter_Repaired')
 assert unreal.BlueprintEditorLibrary.get_blueprint_parent_class(bp).get_name()=='BrokenEdgeCharacter'
 unreal.BlueprintEditorLibrary.compile_blueprint(bp)
 character=unreal.get_default_object(bp.generated_class())
-character.set_editor_property('first_person_anim_class',fp.generated_class())
-character.set_editor_property('first_person_mesh_transform',unreal.Transform(location=unreal.Vector(0,0,-165),rotation=unreal.Rotator(yaw=-90)))
-character.set_editor_property('first_person_aim_mesh_offset',unreal.Vector(55,1,9))
-character.set_editor_property('first_person_weapon_transform',unreal.Transform())
+set_character_property(character, 'first_person_anim_class',fp.generated_class())
+set_character_property(character, 'first_person_mesh_transform',unreal.Transform(location=unreal.Vector(0,0,-165),rotation=unreal.Rotator(yaw=-90)))
+set_character_property(character, 'first_person_aim_mesh_offset',unreal.Vector(55,1,9))
+set_character_property(character, 'first_person_weapon_transform',unreal.Transform())
 old_mesh=next(unreal.load_asset(p) for p in lib.list_assets(root+'/Meshes/FirstPerson',recursive=True)
               if p.endswith('/Stinger_1P_Arms.Stinger_1P_Arms'))
 mesh=duplicate(old_mesh.get_path_name(),root+'/Meshes/FirstPerson/Repaired/SK_StingerArms_Repaired')
-character.set_editor_property('first_person_mesh_asset',mesh)
+set_character_property(character, 'first_person_mesh_asset',mesh)
 actors=unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 weapon=actors.spawn_actor_from_class(lib.load_blueprint_class('/Game/Blueprints/Weapon/BP_AK47'),unreal.Vector())
 weapon_mesh=weapon.get_editor_property('weapon_mesh')
@@ -41,8 +45,8 @@ for socket,position in [('Hand_R',unreal.Vector(0,-8,0)),('LeftHandSocket',unrea
     unreal.StingerAssetLibrary.add_mesh_socket(visual_weapon_mesh,socket,'b_gun_Root',offset)
 assert lib.save_loaded_asset(visual_weapon_mesh)
 weapon_mesh.set_skeletal_mesh_asset(visual_weapon_mesh)
-character.set_editor_property('first_person_weapon_source_mesh',source_weapon_mesh)
-character.set_editor_property('first_person_weapon_visual_mesh',visual_weapon_mesh)
+set_character_property(character, 'first_person_weapon_source_mesh',source_weapon_mesh)
+set_character_property(character, 'first_person_weapon_visual_mesh',visual_weapon_mesh)
 assert weapon_mesh.does_socket_exist('Hand_R') and weapon_mesh.does_socket_exist('LeftHandSocket')
 muzzle=weapon_mesh.get_socket_transform('MuzzleFlash',unreal.RelativeTransformSpace.RTS_COMPONENT).translation
 grip=weapon_mesh.get_socket_transform('Hand_R',unreal.RelativeTransformSpace.RTS_COMPONENT).translation
@@ -60,7 +64,8 @@ for prop,name in [('first_person_fire_montage','AR_M_1P_Fire'),('first_person_re
     if montage is None:
         montage=unreal.StingerAssetLibrary.create_visual_montage(animation(name),montage_path)
         assert lib.save_loaded_asset(montage)
-    character.set_editor_property(prop,montage)
+    set_character_property(character, prop,montage)
+save_character_presentation(character)
 assert lib.save_loaded_asset(bp)
 gm=duplicate(root+'/Blueprints/BP_StingerTestGameMode',root+'/Blueprints/BP_StingerRepairGameMode')
 unreal.BlueprintEditorLibrary.compile_blueprint(gm)

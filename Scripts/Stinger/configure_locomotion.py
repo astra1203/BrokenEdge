@@ -1,4 +1,8 @@
 """Build opt-in rifle blend spaces and record reversible binding changes."""
+import sys as _presentation_sys
+from pathlib import Path as _PresentationPath
+_presentation_sys.path.insert(0, str(_PresentationPath(__file__).resolve().parents[1] / "Stinger"))
+from character_presentation import get_character_property
 import json
 import math
 import struct
@@ -144,7 +148,7 @@ for path in character_paths:
     character_bp=unreal.load_asset(path)
     if not character_bp: continue
     cdo=unreal.get_default_object(character_bp.generated_class())
-    mesh=cdo.get_editor_property('mesh')
+    mesh=get_character_property(cdo, 'mesh')
     old=mesh.get_editor_property('anim_class')
     report['bindings'].append({'asset':path,'property':'mesh.anim_class','before':old.get_path_name() if old else None,'after':dest_bp+'_C'})
     characters.append((character_bp,cdo,mesh))
@@ -157,8 +161,8 @@ report['bindings'].append({'asset':weapon_bp.get_path_name(),'property':'present
 backup=work/'BindingsBefore.json'
 if not backup.exists(): backup.write_text(json.dumps(report['bindings'],indent=2),encoding='utf-8')
 character=characters[0][1]
-profile.set_editor_property('view_fit',character.get_editor_property('first_person_weapon_fit'))
-profile.set_editor_property('view_mesh',character.get_editor_property('first_person_weapon_visual_mesh'))
+profile.set_editor_property('view_fit',get_character_property(character, 'first_person_weapon_fit'))
+profile.set_editor_property('view_mesh',get_character_property(character, 'first_person_weapon_visual_mesh'))
 profile.set_editor_property('locomotion',movement)
 assert lib.save_loaded_asset(profile)
 for character_bp,cdo,mesh in characters:

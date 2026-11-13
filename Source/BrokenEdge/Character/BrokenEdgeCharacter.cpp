@@ -2,6 +2,7 @@
 
 
 #include "BrokenEdgeCharacter.h"
+#include "BrokenEdgeCharacterPresentation.h"
 #include "Misc/ScopeExit.h"
 #include "GameFramework/PlayerState.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
@@ -57,12 +58,6 @@ ABrokenEdgeCharacter::ABrokenEdgeCharacter(const FObjectInitializer& ObjectIniti
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	// 趴姿动画默认路径（retarget_prone.py 生成），蓝图可覆盖。
-	StandToProneAnim = TSoftObjectPtr<UAnimSequence>(FSoftObjectPath(TEXT("/Game/Characters/Stinger/Animations/Prone/Stand_To_Prone_Stinger.Stand_To_Prone_Stinger")));
-	ProneIdleAnim = TSoftObjectPtr<UAnimSequence>(FSoftObjectPath(TEXT("/Game/Characters/Stinger/Animations/Prone/Prone_Idle_Stinger.Prone_Idle_Stinger")));
-	ProneToStandAnim = TSoftObjectPtr<UAnimSequence>(FSoftObjectPath(TEXT("/Game/Characters/Stinger/Animations/Prone/Prone_To_Stand_Stinger.Prone_To_Stand_Stinger")));
-	ProneFireAnim = TSoftObjectPtr<UAnimSequence>(FSoftObjectPath(TEXT("/Game/Characters/Stinger/Animations/Prone/Prone_Fire_1_Stinger.Prone_Fire_1_Stinger")));
-	ProneReloadAnim = TSoftObjectPtr<UAnimSequence>(FSoftObjectPath(TEXT("/Game/Characters/Stinger/Animations/Prone/Prone_Reload_Rifle_Stinger.Prone_Reload_Rifle_Stinger")));
 
 	// 固定第一人称：相机始终挂在胶囊体，位置由角色眼高更新。
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -645,13 +640,13 @@ void ABrokenEdgeCharacter::RefreshFirstPersonWorldWeapons()
 
 bool ABrokenEdgeCharacter::CreateFirstPersonBody()
 {
-	if (FirstPersonMeshAsset && FirstPersonAnimClass)
+	if (GetPresentation().FirstPersonMeshAsset && GetPresentation().FirstPersonAnimClass)
 	{
 		DedicatedFirstPersonMesh = NewObject<USkeletalMeshComponent>(this);
 		DedicatedFirstPersonMesh->SetupAttachment(FollowCamera);
-		DedicatedFirstPersonMesh->SetSkeletalMeshAsset(FirstPersonMeshAsset);
-		DedicatedFirstPersonMesh->SetAnimInstanceClass(FirstPersonAnimClass);
-		DedicatedFirstPersonMesh->SetRelativeTransform(FirstPersonMeshTransform);
+		DedicatedFirstPersonMesh->SetSkeletalMeshAsset(GetPresentation().FirstPersonMeshAsset);
+		DedicatedFirstPersonMesh->SetAnimInstanceClass(GetPresentation().FirstPersonAnimClass);
+		DedicatedFirstPersonMesh->SetRelativeTransform(GetPresentation().FirstPersonMeshTransform);
 		DedicatedFirstPersonMesh->SetOnlyOwnerSee(true);
 		DedicatedFirstPersonMesh->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::FirstPerson);
 		DedicatedFirstPersonMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -661,8 +656,8 @@ bool ABrokenEdgeCharacter::CreateFirstPersonBody()
 		DedicatedFirstPersonMesh->VisibilityBasedAnimTickOption =
 			EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 		DedicatedFirstPersonMesh->RegisterComponent();
-		DedicatedFirstPersonMesh->HideBoneByName(FirstPersonHeadBone, PBO_None);
-		for (const FName Slot : FirstPersonHiddenMaterialSlots)
+		DedicatedFirstPersonMesh->HideBoneByName(GetPresentation().FirstPersonHeadBone, PBO_None);
+		for (const FName Slot : GetPresentation().FirstPersonHiddenMaterialSlots)
 		{
 			const int32 MaterialIndex = DedicatedFirstPersonMesh->GetMaterialIndex(Slot);
 			if (MaterialIndex != INDEX_NONE)
@@ -674,10 +669,10 @@ bool ABrokenEdgeCharacter::CreateFirstPersonBody()
 				this, &ABrokenEdgeCharacter::UpdateFirstPersonWeaponPose));
 		return true;
 	}
-	if (!GetMesh()->GetSkeletalMeshAsset() || GetMesh()->GetBoneIndex(FirstPersonHeadBone) == INDEX_NONE)
+	if (!GetMesh()->GetSkeletalMeshAsset() || GetMesh()->GetBoneIndex(GetPresentation().FirstPersonHeadBone) == INDEX_NONE)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cannot enter first person: head bone '%s' is missing on %s."),
-		       *FirstPersonHeadBone.ToString(), *GetName());
+		       *GetPresentation().FirstPersonHeadBone.ToString(), *GetName());
 		return false;
 	}
 
@@ -695,7 +690,7 @@ bool ABrokenEdgeCharacter::CreateFirstPersonBody()
 	FirstPersonBody->SetCanEverAffectNavigation(false);
 	FirstPersonBody->RegisterComponent();
 	FirstPersonBody->SetComponentTickEnabled(false);
-	FirstPersonBody->HideBoneByName(FirstPersonHeadBone, PBO_None);
+	FirstPersonBody->HideBoneByName(GetPresentation().FirstPersonHeadBone, PBO_None);
 
 	// Copy only after animation/IK finishes, so the visible hands match the weapon sockets.
 	FirstPersonPoseDelegateHandle = GetMesh()->RegisterOnBoneTransformsFinalizedDelegate(
@@ -714,12 +709,14 @@ void ABrokenEdgeCharacter::SetLadderBodyView(bool bOn)
 		// 世界表示图元在拥有者第一人称画面里会被隐藏，爬梯期间临时当普通图元渲染。
 		GetMesh()->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::None);
 		// 从脖子起隐藏（没有 Neck 骨骼才只藏头），否则低头会看到头被藏后留下的脖子断口和模型内壁。
-		LadderHiddenBone = GetMesh()->GetBoneIndex(TEXT("Neck")) != INDEX_NONE ? FName(TEXT("Neck")) : FirstPersonHeadBone;
+		LadderHiddenBone = GetPresentation().FirstPersonHeadBone;
+        for (FName Bone : GetPresentation().NeckBoneCandidates)
+            if (GetMesh()->GetBoneIndex(Bone) != INDEX_NONE) { LadderHiddenBone = Bone; break; }
 		GetMesh()->HideBoneByName(LadderHiddenBone, PBO_None);
 	}
 	else
 	{
-		GetMesh()->UnHideBoneByName(LadderHiddenBone.IsNone() ? FirstPersonHeadBone : LadderHiddenBone);
+		GetMesh()->UnHideBoneByName(LadderHiddenBone.IsNone() ? GetPresentation().FirstPersonHeadBone : LadderHiddenBone);
 		GetMesh()->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::WorldSpaceRepresentation);
 		GetMesh()->SetOwnerNoSee(true);
 	}
@@ -739,12 +736,12 @@ void ABrokenEdgeCharacter::UpdateFirstPersonCameraLocation()
 {
 	// BaseEyeHeight is updated by ACharacter when entering or leaving crouch.
 	const FRotator ViewYaw(0.f, GetViewRotation().Yaw, 0.f);
-	FVector Target = GetPawnViewLocation() + ViewYaw.RotateVector(FirstPersonCameraOffset);
+	FVector Target = GetPawnViewLocation() + ViewYaw.RotateVector(GetPresentation().FirstPersonCameraOffset);
 	// 爬梯显示整个身体时，爬梯动作会把身体往梯子推几十厘米，相机仍在胶囊眼高就会落进脖子和后背里。
 	// 做法同“真第一人称”游戏：相机跟着头骨，放在脸前一点；头和脖子已隐藏。
 	if (bLadderBodyView && GetMesh())
 	{
-		const FName Bone = GetMesh()->GetBoneIndex(FirstPersonHeadBone) != INDEX_NONE ? FirstPersonHeadBone : FName(TEXT("Head"));
+		const FName Bone = GetMesh()->GetBoneIndex(GetPresentation().FirstPersonHeadBone) != INDEX_NONE ? GetPresentation().FirstPersonHeadBone : FName(TEXT("Head"));
 		if (GetMesh()->GetBoneIndex(Bone) != INDEX_NONE)
 			Target = GetMesh()->GetBoneLocation(Bone) + GetActorForwardVector() * 14.f + FVector(0, 0, 6.f);
 	}
@@ -763,12 +760,12 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 	// 未启用武器适配时，用人物网格偏移表现瞄准；启用适配后由枪械姿势处理，避免重复偏移。
 	const FVector AimOffset = GetViewWeaponFit().bEnabled
 		                          ? FVector::ZeroVector
-		                          : (IsAiming() ? FirstPersonAimMeshOffset : FVector::ZeroVector);
+		                          : (IsAiming() ? GetPresentation().FirstPersonAimMeshOffset : FVector::ZeroVector);
 	// 切枪放下：手和枪（枪跟右手走）一起往下、往后退出画面，单独叠加，不参与插值。
 	const FVector SwapOffset = FVector(-12.f, 0.f, -42.f) * SyncFirstPersonSwap();
 	DedicatedFirstPersonMesh->SetRelativeLocation(FMath::VInterpTo(
 		DedicatedFirstPersonMesh->GetRelativeLocation() - ViewSwapOffsetApplied,
-		FirstPersonMeshTransform.GetLocation() + AimOffset, GetWorld()->GetDeltaSeconds(),
+		GetPresentation().FirstPersonMeshTransform.GetLocation() + AimOffset, GetWorld()->GetDeltaSeconds(),
 		FirstPersonAimInterpSpeed) + SwapOffset);
 	ViewSwapOffsetApplied = SwapOffset;
 	AWeapon* Weapon = GetEquippedWeapon();
@@ -790,7 +787,7 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 					                                       : static_cast<USceneComponent*>(DedicatedFirstPersonMesh),
 				                                       GetViewWeaponFit().bEnabled
 					                                       ? NAME_None
-					                                       : FName(TEXT("RightHandSocket")));
+					                                       : GetPresentation().FirstPersonWeaponSocket);
 				// 该组件只负责拥有者的第一人称表现，不参与碰撞、重叠、阴影或导航。
 				FirstPersonWeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				FirstPersonWeaponMesh->SetGenerateOverlapEvents(false);
@@ -805,8 +802,8 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 			FirstPersonWeaponMesh->SetSkeletalMeshAsset(
 				Weapon->Presentation && Weapon->Presentation->ViewMesh
 					? Weapon->Presentation->ViewMesh.Get()
-					: FirstPersonWeaponVisualMesh && SourceMesh == FirstPersonWeaponSourceMesh
-					? FirstPersonWeaponVisualMesh.Get()
+					: GetPresentation().FirstPersonWeaponVisualMesh && SourceMesh == GetPresentation().FirstPersonWeaponSourceMesh
+					? GetPresentation().FirstPersonWeaponVisualMesh.Get()
 					: SourceMesh);
 			// 清除上一把枪的材质覆盖；专用表现网格使用自身材质，其余路径复制世界武器材质。
 			FirstPersonWeaponMesh->EmptyOverrideMaterials();
@@ -816,14 +813,14 @@ void ABrokenEdgeCharacter::UpdateFirstPersonWeapon()
 					FirstPersonWeaponMesh->SetMaterial(Index, Weapon->GetWeaponMesh()->GetMaterial(Index));
 			}
 			// 切换武器后重设基础变换，并按当前武器是否实际启用适配重新确定挂载位置。
-			FirstPersonWeaponMesh->SetRelativeTransform(FirstPersonWeaponTransform);
+			FirstPersonWeaponMesh->SetRelativeTransform(GetPresentation().FirstPersonWeaponTransform);
 			FirstPersonWeaponMesh->AttachToComponent(UsesFirstPersonWeaponFit()
 				                                         ? static_cast<USceneComponent*>(FollowCamera)
 				                                         : static_cast<USceneComponent*>(DedicatedFirstPersonMesh),
 			                                         FAttachmentTransformRules::KeepRelativeTransform,
 			                                         UsesFirstPersonWeaponFit()
 				                                         ? NAME_None
-				                                         : FName(TEXT("RightHandSocket")));
+				                                         : GetPresentation().FirstPersonWeaponSocket);
 			// 适配模式使用专用枪械动画实例；让枪模在人物网格之后更新，再从腰射姿势开始。
 			FirstPersonWeaponMesh->SetAnimInstanceClass(UsesFirstPersonWeaponFit()
 				                                            ? UStingerFirstPersonWeaponAnimInstance::StaticClass()
@@ -883,7 +880,7 @@ bool ABrokenEdgeCharacter::UsesFirstPersonWeaponFit() const
 	return !Melee->Active && !IsTraversing() && GetViewWeaponFit().bEnabled && FirstPersonSourceWeapon &&
 		FirstPersonWeaponMesh &&
 		(FirstPersonSourceWeapon->Presentation || FirstPersonSourceWeapon->GetWeaponMesh()->GetSkeletalMeshAsset() ==
-			FirstPersonWeaponSourceMesh);
+			GetPresentation().FirstPersonWeaponSourceMesh);
 }
 
 FTransform ABrokenEdgeCharacter::GetFirstPersonGripTarget(FName Socket) const
@@ -1103,14 +1100,14 @@ void ABrokenEdgeCharacter::UpdateProneAnimation()
 		ProneMontage = nullptr;
 		if (bWant)
 		{
-			if (auto* Down = StandToProneAnim.LoadSynchronous())
+			if (auto* Down = GetPresentation().StandToProneAnim.LoadSynchronous())
 			{
 				ProneMontage = Anim->PlaySlotAnimationAsDynamicMontage(Down, TEXT("DefaultSlot"), .15f, .25f, 1.f, 1);
 				ProneIdleAt = Now + FMath::Max(.1f, Down->GetPlayLength() - .25f);
 			}
 			else ProneIdleAt = Now;
 		}
-		else if (auto* Up = ProneToStandAnim.LoadSynchronous())
+		else if (auto* Up = GetPresentation().ProneToStandAnim.LoadSynchronous())
 			Anim->PlaySlotAnimationAsDynamicMontage(Up, TEXT("DefaultSlot"), .1f, .25f, 1.f, 1);
 		return;
 	}
@@ -1118,11 +1115,11 @@ void ABrokenEdgeCharacter::UpdateProneAnimation()
 	// 过渡播完、或被开火 / 换弹等蒙太奇打断且已结束时，循环趴姿待机。
 	const bool bIdlePlaying = ProneMontage && Anim->Montage_IsPlaying(ProneMontage)
 		&& ProneMontage->SlotAnimTracks.Num() > 0 && ProneMontage->SlotAnimTracks[0].AnimTrack.AnimSegments.Num() > 0
-		&& ProneMontage->SlotAnimTracks[0].AnimTrack.AnimSegments[0].GetAnimReference() == ProneIdleAnim.Get();
+		&& ProneMontage->SlotAnimTracks[0].AnimTrack.AnimSegments[0].GetAnimReference() == GetPresentation().ProneIdleAnim.Get();
 	if (bIdlePlaying) return;
 	if (ProneMontage && Anim->Montage_IsPlaying(ProneMontage) && Now < ProneIdleAt + .05) return;
 	if (Anim->IsAnyMontagePlaying() && !(ProneMontage && Anim->Montage_IsPlaying(ProneMontage))) return;
-	if (auto* Idle = ProneIdleAnim.LoadSynchronous())
+	if (auto* Idle = GetPresentation().ProneIdleAnim.LoadSynchronous())
 		ProneMontage = Anim->PlaySlotAnimationAsDynamicMontage(Idle, TEXT("DefaultSlot"), .25f, .2f, 1.f, 100000);
 }
 
@@ -1257,8 +1254,23 @@ void ABrokenEdgeCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProp
 	DOREPLIFETIME(ABrokenEdgeCharacter, Shield);
 }
 
+const UBrokenEdgeCharacterPresentation& ABrokenEdgeCharacter::GetPresentation() const
+{
+    return LoadedCharacterPresentation ? *LoadedCharacterPresentation : *GetDefault<UBrokenEdgeCharacterPresentation>();
+}
+
 void ABrokenEdgeCharacter::PostInitializeComponents()
 {
+    LoadedCharacterPresentation = CharacterPresentation.LoadSynchronous();
+    if (!CharacterPresentation.IsNull() && !LoadedCharacterPresentation)
+        UE_LOG(LogTemp, Error, TEXT("CHARACTER_PRESENTATION_LOAD_FAILED %s"), *CharacterPresentation.ToString());
+    if (LoadedCharacterPresentation)
+    {
+        const auto& P = *LoadedCharacterPresentation;
+        if (P.WorldMesh) GetMesh()->SetSkeletalMeshAsset(P.WorldMesh);
+        if (P.WorldAnimClass) GetMesh()->SetAnimInstanceClass(P.WorldAnimClass);
+        GetMesh()->SetRelativeTransform(P.WorldTransform);
+    }
 	// 使用 ExtractionGuard（含 BP_EnemyAIController 子类）的角色自动按敌人处理。
 	// 必须放在 Super 前：APawn::PostInitializeComponents 会在其中决定是否生成 AI Controller。
 	// 这使现有 BP_EnemyCharacter 无需重新设父类，在任意地图放置或运行时生成都能被接管。
@@ -1331,7 +1343,7 @@ void ABrokenEdgeCharacter::PlaySwapMontage()
 		const AWeapon* Next = Combat->SecondaryWeapon;
 		ViewSwapDraw = Next && Next->Presentation && Next->Presentation->ViewSwap
 			               ? Next->Presentation->ViewSwap.Get()
-			               : FirstPersonSwapMontage.Get();
+			               : GetPresentation().FirstPersonSwapMontage.Get();
 		ViewSwapFrom = Combat->EquippedWeapon;
 		ViewSwapStart = GetWorld()->GetTimeSeconds();
 		ViewSwapDrawStart = -1.f;
@@ -1610,7 +1622,7 @@ void ABrokenEdgeCharacter::PlayReloadMontage()
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance == nullptr)return;
 
-	if (auto* Reload = ProneAnim(ProneReloadAnim))
+	if (auto* Reload = ProneAnim(GetPresentation().ProneReloadAnim))
 	{
 		// 趴着换弹：身体播趴姿换弹并按武器换弹时间缩放，第一人称照常。
 		float Rate = 1.f;
@@ -1678,13 +1690,13 @@ void ABrokenEdgeCharacter::PlayReloadMontage()
 
 void ABrokenEdgeCharacter::PlayFireMontage(bool bAiming)
 {
-	if (auto* Fire = ProneAnim(ProneFireAnim))
+	if (auto* Fire = ProneAnim(GetPresentation().ProneFireAnim))
 	{
 		// 趴着开火：身体播趴姿开火，第一人称照常播武器开火。
 		if (auto* Anim = GetMesh()->GetAnimInstance())
 			Anim->PlaySlotAnimationAsDynamicMontage(Fire, TEXT("DefaultSlot"), .05f, .1f, 1.f, 1);
 		const auto* Profile = Combat && Combat->EquippedWeapon ? Combat->EquippedWeapon->Presentation.Get() : nullptr;
-		PlayFirstPersonMontage(Profile && Profile->ViewFire ? Profile->ViewFire.Get() : FirstPersonFireMontage.Get(),
+		PlayFirstPersonMontage(Profile && Profile->ViewFire ? Profile->ViewFire.Get() : GetPresentation().FirstPersonFireMontage.Get(),
 		                       Profile && Profile->BodyFire ? Profile->BodyFire.Get() : static_cast<UAnimMontage*>(FireWeaponMontage));
 		return;
 	}
@@ -1711,7 +1723,7 @@ void ABrokenEdgeCharacter::PlayFireMontage(bool bAiming)
 		//        TEXT(""));
 		AnimInstance->Montage_JumpToSection(SectionName);
 		const auto* Profile = Combat->EquippedWeapon->Presentation.Get();
-		PlayFirstPersonMontage(Profile && Profile->ViewFire ? Profile->ViewFire.Get() : FirstPersonFireMontage.Get(),
+		PlayFirstPersonMontage(Profile && Profile->ViewFire ? Profile->ViewFire.Get() : GetPresentation().FirstPersonFireMontage.Get(),
 		                       FireWeaponMontage, SectionName);
 	}
 }
@@ -2331,7 +2343,7 @@ void ABrokenEdgeCharacter::DropWeapons()
 const FStingerViewWeaponFit& ABrokenEdgeCharacter::GetViewWeaponFit() const
 {
 	const auto* Weapon = Combat ? Combat->EquippedWeapon : nullptr;
-	return Weapon && Weapon->Presentation ? Weapon->Presentation->ViewFit : FirstPersonWeaponFit;
+	return Weapon && Weapon->Presentation ? Weapon->Presentation->ViewFit : GetPresentation().FirstPersonWeaponFit;
 }
 
 UAnimMontage* ABrokenEdgeCharacter::GetReloadMontage() const
@@ -2355,7 +2367,7 @@ UAnimMontage* ABrokenEdgeCharacter::GetViewReloadMontage() const
 	const auto* Weapon = Combat ? Combat->EquippedWeapon : nullptr;
 	return Weapon && Weapon->Presentation && Weapon->Presentation->ViewReload
 		       ? Weapon->Presentation->ViewReload.Get()
-		       : FirstPersonReloadMontage.Get();
+		       : GetPresentation().FirstPersonReloadMontage.Get();
 }
 
 UAnimMontage* ABrokenEdgeCharacter::GetViewSwapMontage() const
@@ -2363,7 +2375,7 @@ UAnimMontage* ABrokenEdgeCharacter::GetViewSwapMontage() const
 	const auto* Weapon = Combat ? Combat->EquippedWeapon : nullptr;
 	return Weapon && Weapon->Presentation && Weapon->Presentation->ViewSwap
 		       ? Weapon->Presentation->ViewSwap.Get()
-		       : FirstPersonSwapMontage.Get();
+		       : GetPresentation().FirstPersonSwapMontage.Get();
 }
 
 void ABrokenEdgeCharacter::StartZipline(AExtractionZipline* Line, const FVector& From, const FVector& To)

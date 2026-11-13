@@ -1,0 +1,1290 @@
+[
+  {
+    "blueprint": "/Game/Blueprints/Ai/BP_EnemyCharacter",
+    "world_mesh": {
+      "asset": "/Game/Characters/Stinger/Meshes/Gameplay/Stinger_3P_Textured/SkeletalMeshes/Stinger_3P_Textured.Stinger_3P_Textured"
+    },
+    "world_anim_class": {
+      "asset": "/Game/Characters/Stinger/Animations/ThirdPerson/ABP_BrokenEdgeAnimInstance_Stinger.ABP_BrokenEdgeAnimInstance_Stinger_C"
+    },
+    "world_transform": {
+      "translation": [
+        0.0,
+        0.0,
+        -84.07986068725586
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "properties": {
+      "first_person_mesh_asset": null,
+      "first_person_anim_class": null,
+      "first_person_mesh_transform": {
+        "translation": [
+          -10.0,
+          0.0,
+          -165.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          -0.7071067811865476,
+          0.7071067811865477
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "first_person_aim_mesh_offset": [
+        20.0,
+        0.0,
+        14.0
+      ],
+      "first_person_weapon_source_mesh": null,
+      "first_person_weapon_visual_mesh": null,
+      "first_person_weapon_fit": {
+        "enabled": false,
+        "hip": {
+          "translation": [
+            45.0,
+            12.0,
+            -20.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.7071067811865476,
+            0.7071067811865477
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "aim": {
+          "translation": [
+            45.0,
+            0.0,
+            -8.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.7071067811865476,
+            0.7071067811865477
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_right_hand": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_left_hand": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_left_magazine_out": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_left_magazine_in": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "magazine_grip": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "magazine_reference": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "magazine_bone": "b_gun_mag",
+        "magazine_out": 0.11999999731779099,
+        "magazine_in": 0.5199999809265137,
+        "swap_attach_fraction": 0.550000011920929
+      },
+      "first_person_weapon_transform": {
+        "translation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "first_person_fire_montage": {
+        "asset": "/Game/Characters/Stinger/Animations/Corrected/MontagesV4/AM_AR_M_1P_Fire.AM_AR_M_1P_Fire"
+      },
+      "first_person_reload_montage": {
+        "asset": "/Game/Characters/Stinger/Animations/Corrected/MontagesV4/AM_AR_M_1P_Fire.AM_AR_M_1P_Fire"
+      },
+      "first_person_swap_montage": {
+        "asset": "/Game/Characters/Stinger/Animations/Corrected/MontagesV4/AM_AR_M_1P_GetWeapon.AM_AR_M_1P_GetWeapon"
+      },
+      "stand_to_prone_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Stand_To_Prone_Stinger.Stand_To_Prone_Stinger"
+      },
+      "prone_idle_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Idle_Stinger.Prone_Idle_Stinger"
+      },
+      "prone_to_stand_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_To_Stand_Stinger.Prone_To_Stand_Stinger"
+      },
+      "prone_fire_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Fire_1_Stinger.Prone_Fire_1_Stinger"
+      },
+      "prone_reload_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Reload_Rifle_Stinger.Prone_Reload_Rifle_Stinger"
+      },
+      "first_person_head_bone": "head",
+      "first_person_hidden_material_slots": [],
+      "first_person_camera_offset": [
+        10.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "blueprint": "/Game/Blueprints/Character/BP_BrokenEdgeCharacter",
+    "world_mesh": {
+      "asset": "/Game/ParagonMuriel/Characters/Heroes/Muriel/Meshes/Muriel_GDC.Muriel_GDC"
+    },
+    "world_anim_class": {
+      "asset": "/Game/Blueprints/Character/Muriel/Animations/ABP_BrokenEdgeAnimInstance_Muriel.ABP_BrokenEdgeAnimInstance_Muriel_C"
+    },
+    "world_transform": {
+      "translation": [
+        0.0,
+        0.0,
+        -88.0
+      ],
+      "rotation": [
+        -0.0,
+        0.0,
+        -0.7071067811865476,
+        0.7071067811865477
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "properties": {
+      "first_person_mesh_asset": null,
+      "first_person_anim_class": null,
+      "first_person_mesh_transform": {
+        "translation": [
+          -10.0,
+          0.0,
+          -165.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          -0.7071067811865476,
+          0.7071067811865477
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "first_person_aim_mesh_offset": [
+        20.0,
+        0.0,
+        14.0
+      ],
+      "first_person_weapon_source_mesh": null,
+      "first_person_weapon_visual_mesh": null,
+      "first_person_weapon_fit": {
+        "enabled": false,
+        "hip": {
+          "translation": [
+            45.0,
+            12.0,
+            -20.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.7071067811865476,
+            0.7071067811865477
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "aim": {
+          "translation": [
+            45.0,
+            0.0,
+            -8.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.7071067811865476,
+            0.7071067811865477
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_right_hand": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_left_hand": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_left_magazine_out": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_left_magazine_in": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "magazine_grip": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "magazine_reference": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "magazine_bone": "b_gun_mag",
+        "magazine_out": 0.11999999731779099,
+        "magazine_in": 0.5199999809265137,
+        "swap_attach_fraction": 0.550000011920929
+      },
+      "first_person_weapon_transform": {
+        "translation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "first_person_fire_montage": null,
+      "first_person_reload_montage": null,
+      "first_person_swap_montage": null,
+      "stand_to_prone_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Stand_To_Prone_Stinger.Stand_To_Prone_Stinger"
+      },
+      "prone_idle_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Idle_Stinger.Prone_Idle_Stinger"
+      },
+      "prone_to_stand_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_To_Stand_Stinger.Prone_To_Stand_Stinger"
+      },
+      "prone_fire_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Fire_1_Stinger.Prone_Fire_1_Stinger"
+      },
+      "prone_reload_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Reload_Rifle_Stinger.Prone_Reload_Rifle_Stinger"
+      },
+      "first_person_head_bone": "head",
+      "first_person_hidden_material_slots": [],
+      "first_person_camera_offset": [
+        10.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "blueprint": "/Game/Blueprints/Character/BP_BrokenEdgeCharacter1",
+    "world_mesh": {
+      "asset": "/Game/LearningKit_Games/Assets/Characters/Character/Mesh/SK_EpicCharacter_Optimized.SK_EpicCharacter_Optimized"
+    },
+    "world_anim_class": {
+      "asset": "/Game/Blueprints/Character/Animation/ABP_BrokenEdgeAnimInstance.ABP_BrokenEdgeAnimInstance_C"
+    },
+    "world_transform": {
+      "translation": [
+        0.0,
+        0.0,
+        -88.0
+      ],
+      "rotation": [
+        -0.0,
+        0.0,
+        -0.7071067811865476,
+        0.7071067811865477
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "properties": {
+      "first_person_mesh_asset": null,
+      "first_person_anim_class": null,
+      "first_person_mesh_transform": {
+        "translation": [
+          -10.0,
+          0.0,
+          -165.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          -0.7071067811865476,
+          0.7071067811865477
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "first_person_aim_mesh_offset": [
+        20.0,
+        0.0,
+        14.0
+      ],
+      "first_person_weapon_source_mesh": null,
+      "first_person_weapon_visual_mesh": null,
+      "first_person_weapon_fit": {
+        "enabled": false,
+        "hip": {
+          "translation": [
+            45.0,
+            12.0,
+            -20.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.7071067811865476,
+            0.7071067811865477
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "aim": {
+          "translation": [
+            45.0,
+            0.0,
+            -8.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.7071067811865476,
+            0.7071067811865477
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_right_hand": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_left_hand": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_left_magazine_out": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_left_magazine_in": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "magazine_grip": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "magazine_reference": {
+          "translation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "magazine_bone": "b_gun_mag",
+        "magazine_out": 0.11999999731779099,
+        "magazine_in": 0.5199999809265137,
+        "swap_attach_fraction": 0.550000011920929
+      },
+      "first_person_weapon_transform": {
+        "translation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "first_person_fire_montage": null,
+      "first_person_reload_montage": null,
+      "first_person_swap_montage": null,
+      "stand_to_prone_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Stand_To_Prone_Stinger.Stand_To_Prone_Stinger"
+      },
+      "prone_idle_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Idle_Stinger.Prone_Idle_Stinger"
+      },
+      "prone_to_stand_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_To_Stand_Stinger.Prone_To_Stand_Stinger"
+      },
+      "prone_fire_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Fire_1_Stinger.Prone_Fire_1_Stinger"
+      },
+      "prone_reload_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Reload_Rifle_Stinger.Prone_Reload_Rifle_Stinger"
+      },
+      "first_person_head_bone": "head",
+      "first_person_hidden_material_slots": [],
+      "first_person_camera_offset": [
+        10.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "blueprint": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter",
+    "world_mesh": {
+      "asset": "/Game/Characters/Stinger/Meshes/Gameplay/Stinger_3P_Textured/SkeletalMeshes/Stinger_3P_Textured.Stinger_3P_Textured"
+    },
+    "world_anim_class": {
+      "asset": "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/ABP_StingerRifleLocomotion.ABP_StingerRifleLocomotion_C"
+    },
+    "world_transform": {
+      "translation": [
+        0.0,
+        0.0,
+        -80.0
+      ],
+      "rotation": [
+        -0.0,
+        0.0,
+        -0.7071067811865476,
+        0.7071067811865477
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "properties": {
+      "first_person_mesh_asset": {
+        "asset": "/Game/Characters/Stinger/Meshes/FirstPerson/CappedView/Stinger_CappedViewArms/SkeletalMeshes/Stinger_CappedViewArms.Stinger_CappedViewArms"
+      },
+      "first_person_anim_class": {
+        "asset": "/Game/Characters/Stinger/Animations/Corrected/ABP_StingerFirstPerson_Repaired.ABP_StingerFirstPerson_Repaired_C"
+      },
+      "first_person_mesh_transform": {
+        "translation": [
+          20.0,
+          0.0,
+          -165.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          -0.7071067811865476,
+          0.7071067811865477
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "first_person_aim_mesh_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "first_person_weapon_source_mesh": {
+        "asset": "/Game/FPS_Weapon_Bundle/Weapons/Meshes/Ka47/SK_KA47.SK_KA47"
+      },
+      "first_person_weapon_visual_mesh": {
+        "asset": "/Game/Characters/Stinger/Meshes/FirstPerson/ViewFit/SK_KA47_ViewFit.SK_KA47_ViewFit"
+      },
+      "first_person_weapon_fit": {
+        "enabled": true,
+        "hip": {
+          "translation": [
+            40.0,
+            14.0,
+            -22.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.7071067811865476,
+            0.7071067811865477
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "aim": {
+          "translation": [
+            20.0,
+            0.0,
+            -13.95
+          ],
+          "rotation": [
+            0.004627970019159798,
+            -0.004627970019159801,
+            -0.7070916361360117,
+            0.7070916361360116
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_right_hand": {
+          "translation": [
+            -8.452389949689085,
+            16.424960283688666,
+            144.57357766819663
+          ],
+          "rotation": [
+            -0.6436403113742084,
+            0.755271879770337,
+            0.1185822896117453,
+            -0.035068187759434946
+          ],
+          "scale": [
+            0.9999977350244755,
+            1.0000001192077834,
+            1.000001668928576
+          ]
+        },
+        "source_left_hand": {
+          "translation": [
+            -3.4230925062746493,
+            44.477266058742195,
+            151.10328182954675
+          ],
+          "rotation": [
+            0.142516854447375,
+            0.1269768575550346,
+            0.8273942435142265,
+            0.5281899181576604
+          ],
+          "scale": [
+            1.000001788139869,
+            0.9999974966045324,
+            1.0000015497207608
+          ]
+        },
+        "source_left_magazine_out": {
+          "translation": [
+            27.19302326372197,
+            5.468021655549439,
+            126.4285232094154
+          ],
+          "rotation": [
+            -0.42099826736081025,
+            -0.16157178384463677,
+            0.7884830473472589,
+            0.4182696517683762
+          ],
+          "scale": [
+            1.000001788139869,
+            0.9999974966045324,
+            1.0000015497207608
+          ]
+        },
+        "source_left_magazine_in": {
+          "translation": [
+            1.677871565765475,
+            44.77332844077708,
+            142.30989310009414
+          ],
+          "rotation": [
+            0.04519497636204212,
+            -0.6435565554776839,
+            0.6702039638764697,
+            0.3669046481275515
+          ],
+          "scale": [
+            1.000001788139869,
+            0.9999974966045324,
+            1.0000015497207608
+          ]
+        },
+        "magazine_grip": {
+          "translation": [
+            -3.0,
+            16.682221128991717,
+            -9.617250602820567
+          ],
+          "rotation": [
+            -0.42099826736081036,
+            -0.1615717838446371,
+            0.7884830473472589,
+            0.41826965176837544
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "magazine_reference": {
+          "translation": [
+            0.0,
+            16.682221128991717,
+            -1.617250602820567
+          ],
+          "rotation": [
+            0.7071067215818992,
+            0.0,
+            0.0,
+            -0.7071068407911908
+          ],
+          "scale": [
+            1.0,
+            0.9999999403953552,
+            0.9999999403953552
+          ]
+        },
+        "magazine_bone": "b_gun_mag",
+        "magazine_out": 0.11999999731779099,
+        "magazine_in": 0.5199999809265137,
+        "swap_attach_fraction": 0.550000011920929
+      },
+      "first_person_weapon_transform": {
+        "translation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "first_person_fire_montage": {
+        "asset": "/Game/Characters/Stinger/Animations/Corrected/MontagesV4/AM_AR_M_1P_Fire.AM_AR_M_1P_Fire"
+      },
+      "first_person_reload_montage": {
+        "asset": "/Game/Characters/Stinger/Animations/Corrected/MontagesV4/AM_AR_M_1P_ChangeClipFull.AM_AR_M_1P_ChangeClipFull"
+      },
+      "first_person_swap_montage": {
+        "asset": "/Game/Characters/Stinger/Animations/Corrected/MontagesV4/AM_AR_M_1P_GetWeapon.AM_AR_M_1P_GetWeapon"
+      },
+      "stand_to_prone_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Stand_To_Prone_Stinger.Stand_To_Prone_Stinger"
+      },
+      "prone_idle_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Idle_Stinger.Prone_Idle_Stinger"
+      },
+      "prone_to_stand_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_To_Stand_Stinger.Prone_To_Stand_Stinger"
+      },
+      "prone_fire_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Fire_1_Stinger.Prone_Fire_1_Stinger"
+      },
+      "prone_reload_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Reload_Rifle_Stinger.Prone_Reload_Rifle_Stinger"
+      },
+      "first_person_head_bone": "head",
+      "first_person_hidden_material_slots": [
+        "M_Roy_016_BP_LOD"
+      ],
+      "first_person_camera_offset": [
+        10.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "blueprint": "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired",
+    "world_mesh": {
+      "asset": "/Game/Characters/Stinger/Meshes/Gameplay/Stinger_3P_Textured/SkeletalMeshes/Stinger_3P_Textured.Stinger_3P_Textured"
+    },
+    "world_anim_class": {
+      "asset": "/Game/Characters/Stinger/Animations/DeltaForceLocomotion/ABP_StingerRifleLocomotion.ABP_StingerRifleLocomotion_C"
+    },
+    "world_transform": {
+      "translation": [
+        0.0,
+        0.0,
+        -92.0
+      ],
+      "rotation": [
+        -0.0,
+        0.0,
+        -0.7071067811865476,
+        0.7071067811865477
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "properties": {
+      "first_person_mesh_asset": {
+        "asset": "/Game/Characters/Stinger/Meshes/FirstPerson/CappedView/Stinger_CappedViewArms/SkeletalMeshes/Stinger_CappedViewArms.Stinger_CappedViewArms"
+      },
+      "first_person_anim_class": {
+        "asset": "/Game/Characters/Stinger/Animations/Corrected/ABP_StingerFirstPerson_Repaired.ABP_StingerFirstPerson_Repaired_C"
+      },
+      "first_person_mesh_transform": {
+        "translation": [
+          20.0,
+          0.0,
+          -165.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          -0.7071067811865476,
+          0.7071067811865477
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "first_person_aim_mesh_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "first_person_weapon_source_mesh": {
+        "asset": "/Game/FPS_Weapon_Bundle/Weapons/Meshes/Ka47/SK_KA47.SK_KA47"
+      },
+      "first_person_weapon_visual_mesh": {
+        "asset": "/Game/Characters/Stinger/Meshes/FirstPerson/ViewFit/SK_KA47_ViewFit.SK_KA47_ViewFit"
+      },
+      "first_person_weapon_fit": {
+        "enabled": true,
+        "hip": {
+          "translation": [
+            40.0,
+            14.0,
+            -22.0
+          ],
+          "rotation": [
+            -0.0,
+            0.0,
+            -0.7071067811865476,
+            0.7071067811865477
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "aim": {
+          "translation": [
+            20.0,
+            0.0,
+            -13.95
+          ],
+          "rotation": [
+            0.004627970019159798,
+            -0.004627970019159801,
+            -0.7070916361360117,
+            0.7070916361360116
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "source_right_hand": {
+          "translation": [
+            -8.452389949689085,
+            16.424960283688666,
+            144.57357766819663
+          ],
+          "rotation": [
+            -0.6436403113742084,
+            0.755271879770337,
+            0.1185822896117453,
+            -0.035068187759434946
+          ],
+          "scale": [
+            0.9999977350244755,
+            1.0000001192077834,
+            1.000001668928576
+          ]
+        },
+        "source_left_hand": {
+          "translation": [
+            -3.4230925062746493,
+            44.477266058742195,
+            151.10328182954675
+          ],
+          "rotation": [
+            0.142516854447375,
+            0.1269768575550346,
+            0.8273942435142265,
+            0.5281899181576604
+          ],
+          "scale": [
+            1.000001788139869,
+            0.9999974966045324,
+            1.0000015497207608
+          ]
+        },
+        "source_left_magazine_out": {
+          "translation": [
+            27.19302326372197,
+            5.468021655549439,
+            126.4285232094154
+          ],
+          "rotation": [
+            -0.42099826736081025,
+            -0.16157178384463677,
+            0.7884830473472589,
+            0.4182696517683762
+          ],
+          "scale": [
+            1.000001788139869,
+            0.9999974966045324,
+            1.0000015497207608
+          ]
+        },
+        "source_left_magazine_in": {
+          "translation": [
+            1.677871565765475,
+            44.77332844077708,
+            142.30989310009414
+          ],
+          "rotation": [
+            0.04519497636204212,
+            -0.6435565554776839,
+            0.6702039638764697,
+            0.3669046481275515
+          ],
+          "scale": [
+            1.000001788139869,
+            0.9999974966045324,
+            1.0000015497207608
+          ]
+        },
+        "magazine_grip": {
+          "translation": [
+            -3.0,
+            16.682221128991717,
+            -9.617250602820567
+          ],
+          "rotation": [
+            -0.42099826736081036,
+            -0.1615717838446371,
+            0.7884830473472589,
+            0.41826965176837544
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "magazine_reference": {
+          "translation": [
+            0.0,
+            16.682221128991717,
+            -1.617250602820567
+          ],
+          "rotation": [
+            0.7071067215818992,
+            0.0,
+            0.0,
+            -0.7071068407911908
+          ],
+          "scale": [
+            1.0,
+            0.9999999403953552,
+            0.9999999403953552
+          ]
+        },
+        "magazine_bone": "b_gun_mag",
+        "magazine_out": 0.11999999731779099,
+        "magazine_in": 0.5199999809265137,
+        "swap_attach_fraction": 0.550000011920929
+      },
+      "first_person_weapon_transform": {
+        "translation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "first_person_fire_montage": {
+        "asset": "/Game/Characters/Stinger/Animations/Corrected/MontagesV4/AM_AR_M_1P_Fire.AM_AR_M_1P_Fire"
+      },
+      "first_person_reload_montage": {
+        "asset": "/Game/Characters/Stinger/Animations/Corrected/MontagesV4/AM_AR_M_1P_ChangeClipFull.AM_AR_M_1P_ChangeClipFull"
+      },
+      "first_person_swap_montage": {
+        "asset": "/Game/Characters/Stinger/Animations/Corrected/MontagesV4/AM_AR_M_1P_GetWeapon.AM_AR_M_1P_GetWeapon"
+      },
+      "stand_to_prone_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Stand_To_Prone_Stinger.Stand_To_Prone_Stinger"
+      },
+      "prone_idle_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Idle_Stinger.Prone_Idle_Stinger"
+      },
+      "prone_to_stand_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_To_Stand_Stinger.Prone_To_Stand_Stinger"
+      },
+      "prone_fire_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Fire_1_Stinger.Prone_Fire_1_Stinger"
+      },
+      "prone_reload_anim": {
+        "asset": "/Game/Characters/Stinger/Animations/Prone/Prone_Reload_Rifle_Stinger.Prone_Reload_Rifle_Stinger"
+      },
+      "first_person_head_bone": "head",
+      "first_person_hidden_material_slots": [
+        "M_Roy_016_BP_LOD"
+      ],
+      "first_person_camera_offset": [
+        10.0,
+        0.0,
+        0.0
+      ]
+    }
+  }
+]

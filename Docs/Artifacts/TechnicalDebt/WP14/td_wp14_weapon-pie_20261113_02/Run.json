@@ -1,0 +1,41 @@
+{
+  "task": "weapon-pie",
+  "started_utc": "2026-11-13T10:22:37.968374+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp14_weapon-pie_20261113_02\\Editor.log",
+    "-RenderOffscreen",
+    "-ResX=1280",
+    "-ResY=720",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.WeaponPIE",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp14_weapon-pie_20261113_02\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "4e863f62124b04d161239ca9d2e1e3616d58b9a3",
+  "git_status": "M BrokenEdge.uproject\n M Config/DefaultGame.ini\n M Content/Blueprints/Ai/BP_EnemyCharacter.uasset\n M Content/Blueprints/Character/BP_BrokenEdgeCharacter.uasset\n M Content/Blueprints/Character/BP_BrokenEdgeCharacter1.uasset\n M Content/Characters/Stinger/Blueprints/BP_StingerCharacter.uasset\n M Content/Characters/Stinger/Blueprints/BP_StingerCharacter_Repaired.uasset\n M Scripts/Extraction/calibrate_red_dot.py\n M Scripts/Extraction/fix_presentation.py\n M Scripts/Extraction/inspect_assets.py\n M Scripts/Extraction/inspect_fp_bones.py\n M Scripts/Extraction/inspect_fp_transform.py\n M Scripts/Extraction/prepare_phase6a.py\n M Scripts/Extraction/run_editor_task.py\n M Scripts/Stinger/audit_baseline.py\n M Scripts/Stinger/configure_locomotion.py\n M Scripts/Stinger/configure_repaired.py\n M Scripts/Stinger/configure_view_fit.py\n M Scripts/Stinger/import_view_arms.py\n M Scripts/Stinger/inspect_view_configuration.py\n M Scripts/Stinger/promote_view_fit.py\n M Scripts/Stinger/setup_character.py\n M Scripts/Stinger/validate_assets.py\n M Scripts/Stinger/validate_pie.py\n M Scripts/Stinger/validate_view_fit.py\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.h\n M Source/BrokenEdge/Component/CombatComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionHealth.cpp\n M Source/BrokenEdge/Weapon/WeaponPresentation.h\n?? Content/Characters/Presentation/\n?? Scripts/Stinger/character_presentation.py\n?? Source/BrokenEdge/Character/BrokenEdgeCharacterPresentation.cpp\n?? Source/BrokenEdge/Character/BrokenEdgeCharacterPresentation.h\n?? Source/BrokenEdge/Character/CharacterPresentationTypes.h\n?? Source/BrokenEdge/Tests/CharacterPresentationTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "b4c48e4fa145fb9d7b2ead761949341320e3609bdc0ae28f8000523d06e518d0",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp14_weapon-pie_20261113_02\\Run.json",
+  "exit_code": 0,
+  "pid": 12832,
+  "successful_tests": 3,
+  "result": "failed",
+  "finished_utc": "2026-11-13T10:24:05.194646+00:00"
+}

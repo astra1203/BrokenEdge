@@ -1,0 +1,89 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "4D6AC2BA4E25320392B7319FCA0654FB",
+			"instanceName": "OREKI-LEGION-7984",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.13-10.19.18",
+	"succeeded": 4,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.12689639627933502,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "ArmorCoverage",
+			"fullTestPath": "BrokenEdge.Extraction.Equipment.ArmorCoverage",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"4D6AC2BA4E25320392B7319FCA0654FB"
+			],
+			"duration": 0.0013157986104488373,
+			"dateTime": "2026.11.13-10.19.18",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "AtomicConfiguration",
+			"fullTestPath": "BrokenEdge.Extraction.Equipment.AtomicConfiguration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"4D6AC2BA4E25320392B7319FCA0654FB"
+			],
+			"duration": 0.020543597638607025,
+			"dateTime": "2026.11.13-10.19.18",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "LegacyMigration",
+			"fullTestPath": "BrokenEdge.Extraction.Equipment.LegacyMigration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"4D6AC2BA4E25320392B7319FCA0654FB"
+			],
+			"duration": 0.050948400050401688,
+			"dateTime": "2026.11.13-10.19.18",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "NestedExportRecovery",
+			"fullTestPath": "BrokenEdge.Extraction.Equipment.NestedExportRecovery",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"4D6AC2BA4E25320392B7319FCA0654FB"
+			],
+			"duration": 0.054088599979877472,
+			"dateTime": "2026.11.13-10.19.18",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}
