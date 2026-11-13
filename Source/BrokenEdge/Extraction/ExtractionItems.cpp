@@ -1,4 +1,5 @@
 #include "ExtractionItems.h"
+#include "ExtractionItemRegistry.h"
 // 物品定义与实例分离：DataAsset 提供稳定规则，实例保存数量、格位、弹匣、耐久与装配。
 // Id 表示独立实例，Definition 指向物品种类，Origins 的 Lot 表示可追踪的来源批次，三者不能混用。
 // 容器算法采用副本校验后提交；失败返回 false 并保留原数据，调用方负责权限与网络版本检查。
@@ -44,8 +45,8 @@ FVector UExtractionItemDefinition::AimOffsetFor(FName WeaponDefinition) const
 	return Explicit ? *Explicit : OpticAimOffset;
 }
 
-// 返回可识别的定义白名单，未知名称不会被当作任意资源路径加载。
-const TArray<FName>& UExtractionItemDefinition::Ids()
+// 仅供过渡回退；正常运行时的身份集合来自注册表。
+static const TArray<FName>& LegacyItemIds()
 {
 	static const TArray<FName> Names = {
 		TEXT("AK"), TEXT("Ammo"), TEXT("Medkit"), TEXT("Electronics"), TEXT("Tools"),
@@ -71,15 +72,44 @@ const TArray<FName>& UExtractionItemDefinition::Ids()
 	return Names;
 }
 
-// 按固定目录加载白名单定义；未知 ID 返回空指针，调用方需处理缺失资源。
+const TArray<FName>& UExtractionItemDefinition::Ids()
+{
+	static const TArray<FName> Names = []
+	{
+		TArray<FName> Result;
+		if (const auto* Registry = UExtractionItemRegistry::Get())
+		{
+			Registry->Entries.GenerateKeyArray(Result);
+			Result.Sort(FNameLexicalLess());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Item registry missing; using legacy ID whitelist"));
+			Result = LegacyItemIds();
+		}
+		return Result;
+	}();
+	return Names;
+}
+
+// 登记过的坏引用直接失败，不能由旧路径悄悄掩盖配置错误。
 const UExtractionItemDefinition* UExtractionItemDefinition::Get(FName Id)
 {
-	static const TSet<FName> Known(Ids());
+	if (const auto* Registry = UExtractionItemRegistry::Get(); Registry && Registry->Entries.Contains(Id))
+		return Registry->Resolve(Id);
+	static const TSet<FName> Known(LegacyItemIds());
 	if (!Known.Contains(Id)) return nullptr;
-	return LoadObject<UExtractionItemDefinition>(nullptr,
+	static TSet<FName> Warned;
+	if (!Warned.Contains(Id))
+	{
+		Warned.Add(Id);
+		UE_LOG(LogTemp, Warning, TEXT("Item %s is absent from registry; using legacy path fallback"), *Id.ToString());
+	}
+	const auto* Definition = LoadObject<UExtractionItemDefinition>(nullptr,
 	                                             *FString::Printf(
 		                                             TEXT("/Game/Extraction/Items/DA_Item_%s.DA_Item_%s"),
 		                                             *Id.ToString(), *Id.ToString()));
+	return Definition && Definition->ItemId == Id ? Definition : nullptr;
 }
 
 // 按实例 GUID 查找当前容器条目；返回内部数组元素指针，增删数组后应重新查找。

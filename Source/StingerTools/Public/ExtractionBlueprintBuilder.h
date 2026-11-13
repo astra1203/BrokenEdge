@@ -4,7 +4,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ExtractionBlueprintBuilder.generated.h"
 
-/** One-time templates. Existing designer assets are validated, never rebuilt. */
+/** Rebuilds the HUD only after generation baseline checks; existing loot actor defaults are preserved. */
 UCLASS()
 class STINGERTOOLS_API UExtractionBlueprintBuilder : public UBlueprintFunctionLibrary
 {

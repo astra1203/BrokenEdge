@@ -1,0 +1,39 @@
+{
+  "task": "inventory",
+  "started_utc": "2026-11-13T10:35:30.019954+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15_inventory_20261113_01\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Inventory",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15_inventory_20261113_01\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "41058003628c0fa803c9bf15df557f7a7c8a3837",
+  "git_status": "M BrokenEdge.uproject\n M Config/DefaultGame.ini\n M Scripts/Extraction/check_runtime_cook_coverage.py\n M Scripts/Extraction/run_editor_task.py\n M Scripts/Extraction/test_runtime_cook_coverage.py\n M Source/BrokenEdge/Extraction/ExtractionItems.cpp\n?? Config/ExtractionItemRegistry.json\n?? Content/Extraction/Registry/\n?? Scripts/Extraction/item_registry.py\n?? Source/BrokenEdge/Extraction/ExtractionItemRegistry.cpp\n?? Source/BrokenEdge/Extraction/ExtractionItemRegistry.h\n?? Source/BrokenEdge/Tests/ExtractionItemRegistryTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "aadeb169f1de02f75986a44365b5e5be1e81113f986b1e4564d6d6a3481ddd9a",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15_inventory_20261113_01\\Run.json",
+  "exit_code": 0,
+  "pid": 5152,
+  "successful_tests": 7,
+  "result": "passed",
+  "finished_utc": "2026-11-13T10:35:49.394176+00:00"
+}

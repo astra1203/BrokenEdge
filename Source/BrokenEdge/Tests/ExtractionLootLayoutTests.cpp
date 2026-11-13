@@ -55,6 +55,11 @@ bool FExtractionLootLayoutTest::RunTest(const FString&)
 	for (const auto& P : Authored->Points)
 	{
 		if (!P.Enabled || P.Kind == UExtractionLootLayout::LooseKind) continue;
+		// Spawn supports static container meshes as well as the original skeletal meshes.
+		// Validate each candidate once, before the 1000-seed coverage loop.
+		if (!TestTrue(*FString::Printf(TEXT("Source model configured at %s"), *P.Id.ToString()),
+			P.StaticAppearance != nullptr || P.Appearance != nullptr)) return false;
+		if (!TestNotNull(*FString::Printf(TEXT("Project recipe configured at %s"), *P.Id.ToString()), P.Recipe.Get())) return false;
 		if (P.Group.IsNone()) Fixed.Add(P.Id);
 		else Groups.FindOrAdd(P.Group).Add(P.Id);
 	}
@@ -74,8 +79,6 @@ bool FExtractionLootLayoutTest::RunTest(const FString&)
 			if (P.Group.IsNone()) ++FixedHits;
 			else ++GroupHits.FindOrAdd(P.Group);
 			TestTrue(TEXT("Selected point is enabled"), P.Enabled);
-			TestNotNull(TEXT("Source model configured"), P.Appearance.Get());
-			TestNotNull(TEXT("Separate project recipe configured"), P.Recipe.Get());
 			if (P.Kind == UExtractionLootLayout::LooseKind)
 				AddError(TEXT("A loose site occupied an authored container slot"));
 		}

@@ -1,0 +1,310 @@
+{
+  "full_report": "Saved\\Extraction\\td_wp15_loot-layout_20261113_02\\Automation\\index.json",
+  "full_report_sha256": "414f50accf011df804b6951bb26b6997d4817df7f4c5780a175f3a2b0df51d58",
+  "tests": [
+    {
+      "test": "BrokenEdge.Extraction.LootLayout.Selection",
+      "state": "Fail",
+      "errors": 24000,
+      "unique_events": [
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogStreaming: FlushAsyncLoading(736): 1 QueuedPackages, 0 AsyncPackages",
+            "type": "Info"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_SpaceCenter_Ma1_Loot.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_Project7FGearRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_Project7FMedicalRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_Project7FSupplyRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_Project7FValuableRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectFieldCrateRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectKeyContractRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectKeyCoreRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectKeyEastBridgeRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectKeyMonitorRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectKeyPresidentRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectKeyStaffPassageRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectLargeSafeRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectLooseLootRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\FlightCase\\SM_FlightCase_Body.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\FlightCase\\SM_FlightCase_Lid.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_box_546_3P\\props_collect_box_546_3P\\SkeletalMeshes\\props_collect_box_546_3P.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_SmallSafeBox_802_3P\\props_collect_SmallSafeBox_802_3P\\SkeletalMeshes\\props_collect_SmallSafeBox_802_3P.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\FlightCase\\M_FlightCase_Body.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_box_546_3P\\props_collect_box_546_3P\\Materials\\props_collect_box_546.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_box_546_3P\\props_collect_box_546_3P\\SkeletalMeshes\\props_collect_box_546_3P_PhysicsAsset.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_box_546_3P\\props_collect_box_546_3P\\SkeletalMeshes\\props_collect_box_546_3P_Skeleton.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_SmallSafeBox_802_3P\\props_collect_SmallSafeBox_802_3P\\Materials\\props_collect_SmallSafeBox_802.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_SmallSafeBox_802_3P\\props_collect_SmallSafeBox_802_3P\\SkeletalMeshes\\props_collect_SmallSafeBox_802_3P_PhysicsAsset.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_SmallSafeBox_802_3P\\props_collect_SmallSafeBox_802_3P\\SkeletalMeshes\\props_collect_SmallSafeBox_802_3P_Skeleton.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_box_546_3P\\props_collect_box_546_3P\\Textures\\T_VMGen_BaseColorMap_cd9e8b2671efac2811969edd6eca214f.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_SmallSafeBox_802_3P\\props_collect_SmallSafeBox_802_3P\\Textures\\T_VMGen_BaseColorMap_60a194e75a36508dbde0e120b87756cd.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+            "type": "Warning"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "",
+            "message": "Expected 'Source model configured' to be not null.",
+            "type": "Error"
+          },
+          "count": 24000
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 1166.269531 MiB ",
+            "type": "Info"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 1064.785156 MiB ",
+            "type": "Info"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 1063.648438 MiB ",
+            "type": "Info"
+          },
+          "count": 1
+        },
+        {
+          "event": {
+            "artifact": "00000000000000000000000000000000",
+            "context": "log",
+            "message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 1063.140625 MiB ",
+            "type": "Info"
+          },
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

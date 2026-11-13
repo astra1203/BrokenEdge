@@ -1,10 +1,12 @@
 """Pure checks for native runtime asset coverage; never start UE or cook."""
+import hashlib
+import json
 import tempfile
 import unittest
 from pathlib import Path
 
 from check_runtime_cook_coverage import (
-    covered_by, cook_directories, inspect_requirement, item_packages, package_path,
+    covered_by, cook_directories, inspect_requirement, registry_packages, inspect_cooked_output, package_path,
 )
 
 
@@ -42,18 +44,39 @@ class CookCoverageTests(unittest.TestCase):
 """
         self.assertEqual(cook_directories(ini), ['/Game/UI/Looting'])
 
-    def test_id_list_controls_formatted_runtime_packages(self):
-        source = """
-const TArray<FName>& UExtractionItemDefinition::Ids() {
-static const TArray<FName> Names = {TEXT("AK"), TEXT("M4A1")}; return Names;
-}
-TEXT("/Game/Extraction/Items/DA_Item_%s.DA_Item_%s")
-"""
-        self.assertEqual(item_packages(source), ['/Game/Extraction/Items/DA_Item_AK', '/Game/Extraction/Items/DA_Item_M4A1'])
-        with self.assertRaises(ValueError):
-            item_packages(source.replace('TEXT("M4A1")', 'TEXT("AK")'))
-        with self.assertRaises(ValueError):
-            item_packages(source.replace('/Items/', '/Changed/'))
+    def test_registry_export_uses_relocated_asset_and_rejects_stale_source(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            asset = root / 'Content/Extraction/Registry/DA_ItemRegistry.uasset'
+            asset.parent.mkdir(parents=True)
+            asset.write_bytes(b'fixture serialized registry')
+            export = root / 'Config/ExtractionItemRegistry.json'
+            export.parent.mkdir()
+            data = dict(schema_version=1, registry='/Game/Extraction/Registry/DA_ItemRegistry.DA_ItemRegistry',
+                        registry_sha256=hashlib.sha256(asset.read_bytes()).hexdigest(),
+                        entries={'AK': '/Game/Relocated/Rifle.Rifle', 'Collectible': '/Game/Other/Valuable.Valuable'})
+            export.write_text(json.dumps(data), encoding='utf-8')
+            packages = registry_packages(root)
+            self.assertIn('/Game/Relocated/Rifle', packages)
+            self.assertIn('/Game/Other/Valuable', packages)
+            self.assertNotIn('/Game/Extraction/Items/DA_Item_AK', packages)
+            asset.write_bytes(b'edited registry')
+            with self.assertRaisesRegex(ValueError, 'stale'):
+                registry_packages(root)
+
+    def test_cook_output_is_a_separate_stage(self):
+        packages = ['/Game/Relocated/Rifle', '/Game/Other/Valuable']
+        self.assertEqual(inspect_cooked_output(packages, None)['status'], 'not_run')
+        with tempfile.TemporaryDirectory() as directory:
+            content = Path(directory)
+            (content / 'Relocated').mkdir()
+            (content / 'Relocated/Rifle.uasset').write_bytes(b'cooked fixture')
+            result = inspect_cooked_output(packages, content)
+            self.assertEqual(result['status'], 'failed')
+            self.assertEqual(result['missing'], ['/Game/Other/Valuable'])
+            (content / 'Other').mkdir()
+            (content / 'Other/Valuable.uasset').write_bytes(b'cooked fixture')
+            self.assertEqual(inspect_cooked_output(packages, content)['status'], 'passed')
 
     def test_source_presence_and_cook_policy_are_independent(self):
         package = '/Game/UI/Looting/Widget'

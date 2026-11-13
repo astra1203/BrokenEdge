@@ -1,4 +1,5 @@
 #include "InventoryWidgetBuilder.h"
+#include "GeneratedWidgetGuard.h"
 #include "BrokenEdge/Extraction/LootingMainView.h"
 #include "BrokenEdge/Extraction/ExtractionUIStyle.h"
 #include "Blueprint/WidgetTree.h"
@@ -177,6 +178,14 @@ namespace
 
 FString UInventoryWidgetBuilder::CreateInventoryWidgets()
 {
+    TArray<FString> Targets;
+    for (const TCHAR* Name : {TEXT("WBP_LootingSlotView"), TEXT("WBP_LootingGridCell"), TEXT("WBP_LootEquipSlot"),
+        TEXT("WBP_LootingMenuAction"), TEXT("WBP_LootingBackpackV2_Pc"), TEXT("WBP_LootingContextMenu"),
+        TEXT("WBP_LootingSplitDialog"), TEXT("WBP_LootingInteractionPrompt"), TEXT("WBP_LootingPickupView_Pc")})
+        Targets.Add(Folder + Name);
+    const FString Protection = GeneratedWidgetGuard::Preflight(Targets);
+    if (!Protection.IsEmpty()) return Protection;
+
 	TArray<UWidgetBlueprint*> All;
 	const FLinearColor Muted = ExtractionUIStyle::Muted();
 	auto* Item = Create(TEXT("WBP_LootingSlotView"), ULootingWidgetPart::StaticClass(), [](UWidgetTree* T)
@@ -385,7 +394,7 @@ FString UInventoryWidgetBuilder::CreateInventoryWidgets()
 	CDO->CellClass = Cell->GeneratedClass;
 	CDO->SlotClass = Slot->GeneratedClass;
 	CDO->ActionClass = Action->GeneratedClass;
-	for (auto* BP : All) if (!Save(BP)) return TEXT("FAILED: ") + BP->GetPathName();
+	for (auto* BP : All) if (!Save(BP) || !GeneratedWidgetGuard::Record(BP)) return TEXT("FAILED: ") + BP->GetPathName();
 	return ValidateInventoryWidgets();
 }
 

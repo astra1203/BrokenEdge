@@ -1,4 +1,5 @@
 #include "ExtractionBlueprintBuilder.h"
+#include "GeneratedWidgetGuard.h"
 #include "BrokenEdge/Extraction/ExtractionWidget.h"
 #include "BrokenEdge/Extraction/ExtractionLootActor.h"
 #include "BrokenEdge/Extraction/ExtractionUIStyle.h"
@@ -228,6 +229,8 @@ namespace
 FString UExtractionBlueprintBuilder::CreateExtractionBlueprints()
 {
 	const TCHAR* HUDPath = TEXT("/Game/UI/Extraction/WBP_ExtractionHUD");
+    const FString Protection = GeneratedWidgetGuard::Preflight({FString(HUDPath)});
+    if (!Protection.IsEmpty()) return Protection;
 	auto* HUD = LoadObject<UWidgetBlueprint>(nullptr, HUDPath);
 	if (!HUD)
 	{
@@ -253,7 +256,7 @@ FString UExtractionBlueprintBuilder::CreateExtractionBlueprints()
 	HUD->WidgetTree->ForEachWidget([HUD](UWidget* X) { HUD->OnVariableAdded(X->GetFName()); });
 	FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(HUD);
 	HUD->MarkPackageDirty();
-	if (!Save(HUD)) return TEXT("FAILED saving HUD");
+	if (!Save(HUD) || !GeneratedWidgetGuard::Record(HUD)) return TEXT("FAILED saving HUD or generation baseline");
 	if (HUD->ParentClass != UExtractionWidget::StaticClass()) return TEXT("FAILED HUD parent");
 	FKismetEditorUtilities::CompileBlueprint(HUD);
 	if (HUD->Status == BS_Error) return TEXT("FAILED HUD compilation");

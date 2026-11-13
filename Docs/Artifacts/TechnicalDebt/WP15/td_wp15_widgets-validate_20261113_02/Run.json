@@ -1,0 +1,37 @@
+{
+  "task": "widgets-validate",
+  "started_utc": "2026-11-13T10:40:19.213779+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15_widgets-validate_20261113_02\\Editor.log",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\validate_generated_widgets.py"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "41058003628c0fa803c9bf15df557f7a7c8a3837",
+  "git_status": "M BrokenEdge.uproject\n M Config/DefaultGame.ini\n M Scripts/Extraction/check_runtime_cook_coverage.py\n M Scripts/Extraction/run_editor_task.py\n M Scripts/Extraction/test_runtime_cook_coverage.py\n M Source/BrokenEdge/Extraction/ExtractionItems.cpp\n M Source/StingerTools/Private/ExtractionBlueprintBuilder.cpp\n M Source/StingerTools/Private/InventoryWidgetBuilder.cpp\n M Source/StingerTools/Public/ExtractionBlueprintBuilder.h\n?? Config/ExtractionItemRegistry.json\n?? Content/Extraction/Registry/\n?? Scripts/Extraction/item_registry.py\n?? Scripts/Extraction/validate_generated_widgets.py\n?? Source/BrokenEdge/Extraction/ExtractionItemRegistry.cpp\n?? Source/BrokenEdge/Extraction/ExtractionItemRegistry.h\n?? Source/BrokenEdge/Tests/ExtractionItemRegistryTests.cpp\n?? Source/StingerTools/Private/GeneratedWidgetGuard.cpp\n?? Source/StingerTools/Private/GeneratedWidgetGuard.h\n?? Source/StingerTools/Private/GeneratedWidgetGuardTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "abb87029a8731594bab7ed9f3f603266a3d2c9949bcfc868d1b006890848a846",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15_widgets-validate_20261113_02\\Run.json",
+  "exit_code": 0,
+  "pid": 9508,
+  "result": "passed",
+  "finished_utc": "2026-11-13T10:40:32.787378+00:00"
+}

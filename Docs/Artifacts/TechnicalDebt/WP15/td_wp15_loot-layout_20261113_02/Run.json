@@ -1,0 +1,39 @@
+{
+  "task": "loot-layout",
+  "started_utc": "2026-11-13T10:40:52.172539+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15_loot-layout_20261113_02\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.LootLayout",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15_loot-layout_20261113_02\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "41058003628c0fa803c9bf15df557f7a7c8a3837",
+  "git_status": "M BrokenEdge.uproject\n M Config/DefaultGame.ini\n M Docs/Artifacts/TechnicalDebt/WP14/td_wp14_equipment_20261113_01/Events.txt\n M Docs/Artifacts/TechnicalDebt/WP14/td_wp14_guard-bt_20261113_03/Events.txt\n M Docs/Artifacts/TechnicalDebt/WP14/td_wp14_presentation-validate_20261113_03/Events.txt\n M Docs/Artifacts/TechnicalDebt/WP14/td_wp14_presentation_20261113_03/Events.txt\n M Docs/Artifacts/TechnicalDebt/WP14/td_wp14_presentation_audit_20261113_01/Events.txt\n M Docs/Artifacts/TechnicalDebt/WP14/td_wp14_presentation_audit_20261113_02/Events.txt\n M Docs/Artifacts/TechnicalDebt/WP14/td_wp14_presentation_migrate_20261113_01/Events.txt\n M Docs/Artifacts/TechnicalDebt/WP14/td_wp14_spawn-lifecycle_20261113_03/Events.txt\n M Docs/Artifacts/TechnicalDebt/WP14/td_wp14_vitals-pie_20261113_01/Events.txt\n M Docs/Artifacts/TechnicalDebt/WP14/td_wp14_weapon-pie_20261113_02/Events.txt\n M Scripts/Extraction/check_runtime_cook_coverage.py\n M Scripts/Extraction/run_editor_task.py\n M Scripts/Extraction/test_runtime_cook_coverage.py\n M Source/BrokenEdge/Extraction/ExtractionItems.cpp\n M Source/StingerTools/Private/ExtractionBlueprintBuilder.cpp\n M Source/StingerTools/Private/InventoryWidgetBuilder.cpp\n M Source/StingerTools/Public/ExtractionBlueprintBuilder.h\n?? Config/ExtractionItemRegistry.json\n?? Content/Extraction/Registry/\n?? Scripts/Extraction/item_registry.py\n?? Scripts/Extraction/validate_generated_widgets.py\n?? Source/BrokenEdge/Extraction/ExtractionItemRegistry.cpp\n?? Source/BrokenEdge/Extraction/ExtractionItemRegistry.h\n?? Source/BrokenEdge/Tests/ExtractionItemRegistryTests.cpp\n?? Source/StingerTools/Private/GeneratedWidgetGuard.cpp\n?? Source/StingerTools/Private/GeneratedWidgetGuard.h\n?? Source/StingerTools/Private/GeneratedWidgetGuardTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "abb87029a8731594bab7ed9f3f603266a3d2c9949bcfc868d1b006890848a846",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15_loot-layout_20261113_02\\Run.json",
+  "exit_code": 0,
+  "pid": 12884,
+  "successful_tests": 0,
+  "result": "failed",
+  "finished_utc": "2026-11-13T10:41:23.448130+00:00"
+}

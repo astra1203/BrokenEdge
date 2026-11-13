@@ -27,3 +27,4 @@ if existed:
     print('EXTRACTION_BINDINGS', validation)
 else:
     print('EXTRACTION_BINDINGS rerun in a fresh editor process to validate native class defaults')
+print('EXTRACTION_BLUEPRINTS_COMPLETE')

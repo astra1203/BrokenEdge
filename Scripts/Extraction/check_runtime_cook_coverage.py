@@ -6,6 +6,7 @@ Native constructor references are checked for source presence separately; they
 need not each have an AlwaysCook root because the cooker follows hard references.
 """
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -18,11 +19,10 @@ RUNTIME_SOURCES = (
     'Source/BrokenEdge/Extraction/ExtractionPlayerController.h',
     'Source/BrokenEdge/Extraction/ExtractionAbilities.h',
     'Source/BrokenEdge/Extraction/ExtractionKeyRoom.cpp',
-    'Source/BrokenEdge/Extraction/ExtractionTacticalMap.cpp',
     'Source/BrokenEdge/Extraction/WeaponRangeGameMode.cpp',
     'Source/BrokenEdge/Traversal/ExtractionTraversalComponent.cpp',
 )
-ITEM_SOURCE = 'Source/BrokenEdge/Extraction/ExtractionItems.cpp'
+REGISTRY_EXPORT = 'Config/ExtractionItemRegistry.json'
 GAME_LITERAL = re.compile(r'"(/Game/[^"\r\n]+)"')
 
 
@@ -73,14 +73,35 @@ def covered_by(package, roots):
     return any(package.startswith(root.rstrip('/') + '/') for root in roots)
 
 
-def item_packages(source):
-    match = re.search(r'UExtractionItemDefinition::Ids\(\).*?Names\s*=\s*\{(.*?)\};', source, re.S)
-    if not match or '"/Game/Extraction/Items/DA_Item_%s.DA_Item_%s"' not in source:
-        raise ValueError('Item loader or ID declaration changed; update the cook audit')
-    names = re.findall(r'TEXT\("([A-Za-z0-9_]+)"\)', match[1])
-    if not names or len(set(names)) != len(names):
-        raise ValueError('Item ID list is empty or duplicated')
-    return [f'/Game/Extraction/Items/DA_Item_{name}' for name in names]
+def registry_packages(root):
+    """Read an editor export bound to the exact serialized registry asset."""
+    root = Path(root)
+    data = json.loads((root / REGISTRY_EXPORT).read_text(encoding='utf-8-sig'))
+    if data.get('schema_version') != 1 or not data.get('entries'):
+        raise ValueError('Missing/unsupported item registry export')
+    package = package_path(data['registry'])
+    asset = source_asset(root, package)
+    if not asset or hashlib.sha256((root / asset).read_bytes()).hexdigest() != data.get('registry_sha256'):
+        raise ValueError('Registry export is stale or its source is missing; run item-registry-export')
+    identities = list(data['entries'])
+    if any(not name or name.lower() == 'none' for name in identities) or len({name.lower() for name in identities}) != len(identities):
+        raise ValueError('Empty or duplicate stable item IDs')
+    return [package] + sorted({package_path(value) for value in data['entries'].values()})
+
+
+def inspect_cooked_output(packages, cooked_content):
+    """Check loose cook output under <platform>/<project>/Content, before packing."""
+    if cooked_content is None:
+        return dict(status='not_run', missing=[])
+    content = Path(cooked_content)
+    if not content.is_dir():
+        raise ValueError(f'Cooked Content directory does not exist: {content}')
+    missing = []
+    for package in packages:
+        relative = package.removeprefix('/Game/')
+        if not any((content / (relative + suffix)).is_file() for suffix in ('.uasset', '.umap')):
+            missing.append(package)
+    return dict(status='passed' if not missing else 'failed', content=str(content.resolve()), missing=missing)
 
 
 def source_asset(root, package):
@@ -100,7 +121,7 @@ def inspect_requirement(root, package, sources, cook_roots):
                 cook_directory_covered=covered_by(package, cook_roots))
 
 
-def audit(root):
+def audit(root, cooked_content=None):
     root = Path(root)
     roots = cook_directories((root / 'Config/DefaultGame.ini').read_text(encoding='utf-8-sig'))
     required = {}
@@ -110,8 +131,12 @@ def audit(root):
             raise ValueError(f'No runtime asset literals in audited site: {source}')
         for path in paths:
             required.setdefault(package_path(path), set()).add(source)
-    for package in item_packages((root / ITEM_SOURCE).read_text(encoding='utf-8-sig')):
-        required.setdefault(package, set()).add(ITEM_SOURCE + ':UExtractionItemDefinition::Get/Ids')
+    # Map definitions moved from native literals into the authored config registry.
+    config = (root / 'Config/DefaultGame.ini').read_text(encoding='utf-8-sig')
+    for path in re.findall(r'^\+?(?:Maps|MapDefinition)\s*=\s*(/Game/[^\s]+)', config, re.M):
+        required.setdefault(package_path(path), set()).add('Config/DefaultGame.ini:MapRegistry')
+    for package in registry_packages(root):
+        required.setdefault(package, set()).add(REGISTRY_EXPORT)
     requirements = [inspect_requirement(root, package, sources, roots)
                     for package, sources in sorted(required.items())]
     issues = []
@@ -132,7 +157,13 @@ def audit(root):
     for package in sorted(literals - required.keys()):
         if not source_asset(root, package):
             issues.append('missing_literal_source:' + package)
-    return dict(passed=not issues, scope='source existence and DefaultGame.ini cook policy only',
+    cooked = inspect_cooked_output(required.keys(), cooked_content)
+    issues.extend('missing_cook_output:' + package for package in cooked['missing'])
+    stages = dict(source='failed' if any('source:' in x for x in issues) else 'passed',
+                  cook_policy='failed' if any(x.startswith('missing_cook_root:') for x in issues) else 'passed',
+                  cook_output=cooked, packaged_runtime='not_run')
+    return dict(passed=not issues, all_four_stages_passed=False, stages=stages,
+                scope='Source/cook policy; optional loose cook output. Packaged Client/Server gameplay requires a separate run.',
                 cook_directories=roots, runtime_requirements=requirements,
                 other_literal_packages=sorted(literals - required.keys()), issues=issues)
 
@@ -140,10 +171,11 @@ def audit(root):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--project', type=Path, default=ROOT)
+    parser.add_argument('--cooked-content', type=Path, help='Loose cooked <platform>/<project>/Content directory')
     parser.add_argument('--json', action='store_true', help='Print the full audited package inventory')
     args = parser.parse_args()
     try:
-        result = audit(args.project)
+        result = audit(args.project, args.cooked_content)
     except (OSError, ValueError) as error:
         parser.exit(1, f'Cook coverage audit failed: {error}\n')
     if args.json:
