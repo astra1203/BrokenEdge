@@ -9,20 +9,31 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
+sys.path.insert(0, str(ROOT / 'Scripts'))
+from Common.ue_env import engine_root, run_record
 parser = argparse.ArgumentParser()
-parser.add_argument('task', choices=['spawn-lifecycle', 'exit-feedback', 'guard-bt', 'loot-layout', 'weapon-range-assets', 'weapon-pie', 'gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
+parser.add_argument('task', choices=['respawn', 'prototype-audit', 'spawn-lifecycle', 'exit-feedback', 'guard-bt', 'loot-layout', 'weapon-range-assets', 'weapon-pie', 'gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
 parser.add_argument('--tag', required=True)
+parser.add_argument('--engine', type=Path)
 parser.add_argument('--store', type=Path, help='Existing store directory; only for recover-existing')
 parser.add_argument('--verify-profile')
 parser.add_argument('--verify-item')
 args = parser.parse_args()
+try:
+    ENGINE = engine_root(args.engine)
+except (ValueError, OSError, KeyError) as exc:
+    parser.error(str(exc))
 assert args.tag and all(c.isalnum() or c in '-_' for c in args.tag)
 out = ROOT / 'Saved/Extraction' / args.tag
 out.mkdir(parents=True, exist_ok=False)
 command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor-Cmd.exe'), str(ROOT / 'BrokenEdge.uproject'),
            '-unattended', '-nosplash', '-nosound', '-NoLoadingScreen', '-NullRHI', '-abslog=' + str(out / 'Editor.log')]
-if args.task == 'weapon-range-assets':
+if args.task == 'respawn':
+    command += ['-ExecCmds=Automation RunTests BrokenEdge.GameMode.Respawn.',
+                '-TestExit=Automation Test Queue Empty', '-ReportExportPath=' + str(out / 'Automation')]
+elif args.task == 'prototype-audit':
+    command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Common/audit_prototype_references.py')]
+elif args.task == 'weapon-range-assets':
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/prepare_weapon_range.py')]
 elif args.task == 'gunsmith-assets':
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction/configure_gunsmith.py')]
@@ -58,6 +69,7 @@ else:
     command += ['-ExecCmds=Automation RunTests BrokenEdge.Extraction.' + test,
                 '-TestExit=Automation Test Queue Empty', '-ReportExportPath=' + str(out / 'Automation')]
 metadata = {'task': args.task, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'command': command}
+metadata.update(run_record(command, out / 'Run.json', engine=ENGINE, script=__file__))
 environment = os.environ.copy()
 environment['UE_SKIP_UBT_SDK_SETUP'] = '1'
 environment['EXTRACTION_RUN_DIR'] = str(out)
@@ -77,7 +89,9 @@ with (out / 'Process.log').open('wb') as log:
         metadata['error'] = 'Editor task timed out'
 text = (out / 'Editor.log').read_text(encoding='utf-8', errors='replace')
 passed = metadata['exit_code'] == 0 and 'Fatal error:' not in text and 'Traceback (most recent call last)' not in text
-if args.task in ['north-import', 'phase7a-assets', 'phase7a-audit']:
+if args.task == 'prototype-audit':
+    passed = passed and 'PROTOTYPE_REFERENCE_AUDIT_COMPLETE' in text
+elif args.task in ['north-import', 'phase7a-assets', 'phase7a-audit']:
     marker = {'north-import': 'SPACE_REGION_ASSETS_COMPLETE', 'phase7a-assets': 'EXTRACTION_PHASE7A_ASSETS_PREPARED', 'phase7a-audit': 'EXTRACTION_PHASE7A_AUDIT_PASSED'}[args.task]
     passed = passed and marker in text
 elif args.task == 'weapon-range-assets':
@@ -97,7 +111,7 @@ elif args.task in ['assets', 'exit', 'phase5-assets']:
 else:
     successes = re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text)
     metadata['successful_tests'] = len(successes)
-    expected = {'spawn-lifecycle': 3, 'exit-feedback': 3, 'guard-bt': 12, 'loot-layout': 1, 'weapon-pie': 2, 'weapon-mechanics': 5, 'persistence': 4, 'inventory': 3, 'recover-existing': 1, 'equipment': 4, 'progression': 4}[args.task]
+    expected = {'respawn': 1, 'spawn-lifecycle': 3, 'exit-feedback': 3, 'guard-bt': 12, 'loot-layout': 1, 'weapon-pie': 2, 'weapon-mechanics': 5, 'persistence': 4, 'inventory': 7, 'recover-existing': 1, 'equipment': 4, 'progression': 4}[args.task]
     passed = passed and len(successes) == expected and not re.search(r'Test Completed\. Result=\{(?:Fail|Failure|\u5931\u8d25)', text)
 metadata['result'] = 'passed' if passed else 'failed'
 metadata['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()

@@ -1,0 +1,39 @@
+{
+  "task": "respawn",
+  "started_utc": "2026-11-12T17:46:11.518527+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_respawn_20261113_02\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.GameMode.Respawn.",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_respawn_20261113_02\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "ad5d23b81d12338c21b2f5fa1517eec76b3f576c",
+  "git_status": "M .gitignore\n M BrokenEdge.uproject\n M \"Docs/\\346\\212\\200\\346\\234\\257\\345\\200\\272\\346\\242\\263\\347\\220\\206\\344\\270\\216\\346\\225\\264\\346\\224\\271\\350\\267\\257\\347\\272\\277.md\"\n M Scripts/Extraction/run_editor_task.py\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp\n M Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h\n M Source/BrokenEdge/GameMode/BrokenEdgeGameMode.cpp\n?? Docs/Artifacts/\n?? \"Docs/\\351\\252\\214\\350\\257\\201\\347\\264\\242\\345\\274\\225.md\"\n?? Scripts/Common/\n?? Scripts/local_config.example.json\n?? Source/BrokenEdge/Tests/ExtractionInventoryTransactionTests.cpp\n?? Source/BrokenEdge/Tests/GameModeRespawnTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "de970ed514e54ef0b125a316ee4506f5fe72b5bedd2ad328ea32fcacee97f817",
+  "ue_env_sha256": "7999162131eb1cca58c4c49e2f4426ad704711e5b0c204317baaa65c5361f5c1",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_respawn_20261113_02\\Run.json",
+  "exit_code": 0,
+  "pid": 28296,
+  "successful_tests": 1,
+  "result": "passed",
+  "finished_utc": "2026-11-12T17:46:34.336868+00:00"
+}

@@ -1,0 +1,22 @@
+[2026.11.12-17.46.33:689][295]LogAutomationController: Received FindWorkersResponseMessage from 66539A104DEDAEE53F8D65A3EC5E640F
+[2026.11.12-17.46.33:689][295]LogAutomationController: Requesting test list from 66539A104DEDAEE53F8D65A3EC5E640F
+[2026.11.12-17.46.33:928][296]LogAutomationController: Received RequestTestsReplyCompleteMessage from 66539A104DEDAEE53F8D65A3EC5E640F
+[2026.11.12-17.46.33:932][296]LogAutomationController: 9054 tests available on 66539A104DEDAEE53F8D65A3EC5E640F
+[2026.11.12-17.46.33:968][296]LogAutomationController: Sending StopTests to 66539A104DEDAEE53F8D65A3EC5E640F
+[2026.11.12-17.46.33:971][296]LogAutomationController: Display: Loading results html template...
+[2026.11.12-17.46.33:972][296]LogAutomationController: Display: Successfully wrote html results file!
+[2026.11.12-17.46.33:972][296]LogAutomationController: Sending StartTestSession to 66539A104DEDAEE53F8D65A3EC5E640F
+[2026.11.12-17.46.33:972][296]LogAutomationController: Display: Clearing ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Logs/ and ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Tmp/
+[2026.11.12-17.46.33:974][296]LogAutomationController: Sending RunTest EmptyStarts to 66539A104DEDAEE53F8D65A3EC5E640F
+[2026.11.12-17.46.33:974][297]LogAutomationController: Display: Test Started. Name={EmptyStarts} Path={BrokenEdge.GameMode.Respawn.EmptyStarts}
+[2026.11.12-17.46.33:988][297]LogTemp: Verbose: RESPAWN_NO_PLAYERSTART Map=Untitled_1 Controller=PlayerController_0
+[2026.11.12-17.46.34:004][298]LogAutomationController: Display: Test Completed. Result={Success} Name={EmptyStarts} Path={BrokenEdge.GameMode.Respawn.EmptyStarts}
+[2026.11.12-17.46.34:004][298]LogAutomationController: BeginEvents: BrokenEdge.GameMode.Respawn.EmptyStarts
+[2026.11.12-17.46.34:004][298]LogAutomationController: EndEvents: BrokenEdge.GameMode.Respawn.EmptyStarts
+[2026.11.12-17.46.34:005][298]LogAutomationController: Display: Exporting Automation Report.
+[2026.11.12-17.46.34:005][298]LogAutomationController: Display: Converting results to json object...
+[2026.11.12-17.46.34:006][298]LogAutomationController: Writing reports to D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_respawn_20261113_02\Automation...
+[2026.11.12-17.46.34:007][298]LogAutomationController: Display: Successfully wrote json results file!
+[2026.11.12-17.46.34:007][298]LogAutomationController: Exported report to 'D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_respawn_20261113_02\Automation' in 0.00 Seconds
+[2026.11.12-17.46.34:007][299]LogAutomationController: Display: Report can be opened in the editor at 'D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_respawn_20261113_02\Automation'
+[2026.11.12-17.46.34:007][299]LogAutomationController: Sending StopTestSession to 66539A104DEDAEE53F8D65A3EC5E640F

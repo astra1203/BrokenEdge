@@ -8,6 +8,15 @@
 // Contents 保存物品实例，武器 Actor 是其场景表现；操作时要同步两者，不能只改变可见枪械。
 // 背包内容只复制给拥有者，来源批次用于服务器的消耗、转移和崩溃恢复。
 
+enum class EExtractionInventoryCommit : uint8 { Ok, NoChange, Stale, Rejected, WeaponSyncFailed };
+
+struct FExtractionInventoryResult
+{
+	EExtractionInventoryCommit Code = EExtractionInventoryCommit::Rejected;
+	FString Error;
+	bool Ok() const { return Code == EExtractionInventoryCommit::Ok || Code == EExtractionInventoryCommit::NoChange; }
+};
+
 UCLASS()
 class BROKENEDGE_API UExtractionInventoryComponent : public UActorComponent
 {
@@ -16,6 +25,19 @@ class BROKENEDGE_API UExtractionInventoryComponent : public UActorComponent
 public:
 	// 启用组件复制；具体哪些字段复制及发给谁由 GetLifetimeReplicatedProps 指定。
 	UExtractionInventoryComponent();
+	// Server only. Edit receives copies and must not mutate actors or live inventories.
+	// Rejected/stale edits leave state untouched. Primitive revision advances are preserved;
+	// otherwise a changed container advances once. Publish only after weapon sync succeeds.
+	// Origin/GUID changes (including split, merge and consumption) belong to Edit's primitives.
+	FExtractionInventoryResult Mutate(TFunctionRef<bool(FExtractionContainer&, FString&)> Edit,
+		int32 ExpectedRevision = INDEX_NONE, bool bSyncWeapons = true);
+	static FExtractionInventoryResult MutatePair(UExtractionInventoryComponent& Inventory,
+		class AExtractionLootActor& Loot,
+		TFunctionRef<bool(FExtractionContainer&, FExtractionContainer&, FString&)> Edit,
+		int32 ExpectedInventoryRevision = INDEX_NONE, int32 ExpectedLootRevision = INDEX_NONE);
+#if WITH_DEV_AUTOMATION_TESTS
+	void FailNextWeaponSyncForTest() { bFailNextWeaponSync = true; }
+#endif
 	// 背包 Contents 仅复制给所属客户端，避免把玩家完整库存广播给所有人。
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out) const override;
 	// 运行时权威背包快照，Revision 用于拒绝基于旧界面的操作。
@@ -60,6 +82,11 @@ public:
 	bool WasDropped() const { return bDropped; }
 
 private:
+	FExtractionInventoryResult CommitCandidate(FExtractionContainer Candidate, bool bSyncWeapons,
+		class AExtractionLootActor* Loot = nullptr, FExtractionContainer* OtherCandidate = nullptr);
+#if WITH_DEV_AUTOMATION_TESTS
+	bool bFailNextWeaponSync = false;
+#endif
 	bool bInitialized = false;
 	TWeakObjectPtr<UWorld> InitializedWorld;
 	// 整体掉落或结算清理完成标志；同一批物品只能转移一次。

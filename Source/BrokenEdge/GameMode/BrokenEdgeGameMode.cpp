@@ -7,9 +7,8 @@
 #include "BrokenEdge/GameState/BrokenEdgeGameState.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "BrokenEdge/PlayerState/BrokenEdgePlayerState.h"
-#include "BrokenEdge/test/CombatObserver.h"
-#include "BrokenEdge/test/MyCharacter.h"
 #include "GameFramework/PlayerStart.h"
+#include "GameFramework/WorldSettings.h"
 #include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
 
@@ -76,7 +75,8 @@ void ABrokenEdgeGameMode::PlayerDefeated(class ABrokenEdgeCharacter* DefeatedCha
 
 void ABrokenEdgeGameMode::RequestRespawn(ACharacter* DefeatedCharacter, AController* DefeatedController)
 {
-	if (DefeatedCharacter)
+	if (!IsValid(DefeatedController)) return;
+	if (IsValid(DefeatedCharacter))
 	{
 		DefeatedCharacter->Reset();
 		DefeatedCharacter->Destroy();
@@ -86,6 +86,17 @@ void ABrokenEdgeGameMode::RequestRespawn(ACharacter* DefeatedCharacter, AControl
 	{
 		TArray<AActor*> PlayerStarts;
 		UGameplayStatics::GetAllActorsOfClass(this, APlayerStart::StaticClass(), PlayerStarts);
+		if (PlayerStarts.IsEmpty())
+		{
+			UE_LOG(LogTemp, Error, TEXT("RESPAWN_NO_PLAYERSTART Map=%s Controller=%s"),
+			       *GetWorld()->GetMapName(), *GetNameSafe(DefeatedController));
+			// FindPlayerStart falls back to WorldSettings (the origin) in UE 5.8.
+			// Preserve custom/cached starts, but never accept that synthetic fallback.
+			AActor* Fallback = FindPlayerStart(DefeatedController);
+			if (IsValid(Fallback) && !Fallback->IsA<AWorldSettings>())
+				RestartPlayerAtPlayerStart(DefeatedController, Fallback);
+			return;
+		}
 		
 		int32 Selection = FMath::RandRange(0, PlayerStarts.Num() - 1);
 		

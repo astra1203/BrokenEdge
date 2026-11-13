@@ -12,12 +12,85 @@
 #include "Net/UnrealNetwork.h"
 #include "EngineUtils.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "UObject/Class.h"
 // 局内物品的权威容器：玩家挂在 PlayerState 上，守卫可挂在角色上。
 // Contents 保存物品实例，武器 Actor 是其场景表现；操作时要同步两者，不能只改变可见枪械。
 // 背包内容只复制给拥有者，来源批次用于服务器的消耗、转移和崩溃恢复。
 
 // 启用组件复制；具体哪些字段复制及发给谁由 GetLifetimeReplicatedProps 指定。
 UExtractionInventoryComponent::UExtractionInventoryComponent() { SetIsReplicatedByDefault(true); }
+
+namespace
+{
+	bool SameContainer(const FExtractionContainer& A, const FExtractionContainer& B)
+	{
+		return FExtractionContainer::StaticStruct()->CompareScriptStruct(&A, &B, 0);
+	}
+	bool PrepareRevision(FExtractionContainer& Candidate, const FExtractionContainer& Before)
+	{
+		if (Candidate.Revision < Before.Revision) return false;
+		if (Candidate.Revision == Before.Revision && !SameContainer(Candidate, Before))
+		{
+			if (Before.Revision == MAX_int32) return false;
+			++Candidate.Revision;
+		}
+		return true;
+	}
+}
+
+FExtractionInventoryResult UExtractionInventoryComponent::Mutate(
+	TFunctionRef<bool(FExtractionContainer&, FString&)> Edit, int32 ExpectedRevision, bool bSyncWeapons)
+{
+	if (!GetOwner() || !GetOwner()->HasAuthority())
+		return {EExtractionInventoryCommit::Rejected, TEXT("Inventory mutation requires authority")};
+	if (ExpectedRevision != INDEX_NONE && ExpectedRevision != Contents.Revision)
+		return {EExtractionInventoryCommit::Stale, TEXT("Inventory revision changed")};
+	FExtractionContainer Candidate = Contents;
+	FString Error;
+	if (!Edit(Candidate, Error)) return {EExtractionInventoryCommit::Rejected, Error};
+	return CommitCandidate(MoveTemp(Candidate), bSyncWeapons);
+}
+
+FExtractionInventoryResult UExtractionInventoryComponent::MutatePair(UExtractionInventoryComponent& Inventory,
+	AExtractionLootActor& Loot, TFunctionRef<bool(FExtractionContainer&, FExtractionContainer&, FString&)> Edit,
+	int32 ExpectedInventoryRevision, int32 ExpectedLootRevision)
+{
+	if (!Inventory.GetOwner() || !Inventory.GetOwner()->HasAuthority() || !Loot.HasAuthority()
+		|| Inventory.GetWorld() != Loot.GetWorld())
+		return {EExtractionInventoryCommit::Rejected, TEXT("Pair mutation requires authority in the same world")};
+	if ((ExpectedInventoryRevision != INDEX_NONE && ExpectedInventoryRevision != Inventory.Contents.Revision)
+		|| (ExpectedLootRevision != INDEX_NONE && ExpectedLootRevision != Loot.Contents.Revision))
+		return {EExtractionInventoryCommit::Stale, TEXT("Container revision changed")};
+	FExtractionContainer Candidate = Inventory.Contents, Other = Loot.Contents;
+	FString Error;
+	if (!Edit(Candidate, Other, Error)) return {EExtractionInventoryCommit::Rejected, Error};
+	return Inventory.CommitCandidate(MoveTemp(Candidate), true, &Loot, &Other);
+}
+
+FExtractionInventoryResult UExtractionInventoryComponent::CommitCandidate(FExtractionContainer Candidate,
+	bool bSyncWeapons, AExtractionLootActor* Loot, FExtractionContainer* OtherCandidate)
+{
+	const bool bInventoryChanged = !SameContainer(Candidate, Contents);
+	const bool bOtherChanged = Loot && !SameContainer(*OtherCandidate, Loot->Contents);
+	if (!bInventoryChanged && !bOtherChanged) return {EExtractionInventoryCommit::NoChange, {}};
+	if (!PrepareRevision(Candidate, Contents) || (Loot && !PrepareRevision(*OtherCandidate, Loot->Contents)))
+		return {EExtractionInventoryCommit::Rejected, TEXT("Invalid container revision")};
+	const FExtractionContainer Before = Contents;
+	FExtractionContainer OtherBefore;
+	Contents = MoveTemp(Candidate);
+	if (Loot) { OtherBefore = Loot->Contents; Loot->Contents = MoveTemp(*OtherCandidate); }
+	if (bSyncWeapons && !SyncWeapons())
+	{
+		Contents = Before;
+		if (Loot) Loot->Contents = MoveTemp(OtherBefore);
+		if (!SyncWeapons())
+			UE_LOG(LogTemp, Error, TEXT("EXTRACTION_INVENTORY_ROLLBACK_SYNC_FAILED Owner=%s"), *GetNameSafe(GetOwner()));
+		return {EExtractionInventoryCommit::WeaponSyncFailed, TEXT("Weapon synchronization failed")};
+	}
+	if (bInventoryChanged) Changed();
+	if (bOtherChanged) Loot->Changed();
+	return {EExtractionInventoryCommit::Ok, {}};
+}
 
 // 背包 Contents 仅复制给所属客户端，避免把玩家完整库存广播给所有人。
 void UExtractionInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -360,6 +433,9 @@ void UExtractionInventoryComponent::Changed()
 // 先准备所有需要的 Actor，生成失败则销毁本次新建对象并返回 false，让上层撤回库存变更。
 bool UExtractionInventoryComponent::SyncWeapons()
 {
+#if WITH_DEV_AUTOMATION_TESTS
+	if (bFailNextWeaponSync) { bFailNextWeaponSync = false; return false; }
+#endif
 	auto* C = Character();
 	if (!C || !C->HasAuthority()) return false;
 	auto* Combat = C->GetCombat().Get();

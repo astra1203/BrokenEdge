@@ -1,0 +1,27 @@
+[2026.11.12-17.44.42:259][295]LogAutomationController: Received FindWorkersResponseMessage from DAD59F73407EF72F332EEE8D84A811AF
+[2026.11.12-17.44.42:259][295]LogAutomationController: Requesting test list from DAD59F73407EF72F332EEE8D84A811AF
+[2026.11.12-17.44.42:632][296]LogAutomationController: Received RequestTestsReplyCompleteMessage from DAD59F73407EF72F332EEE8D84A811AF
+[2026.11.12-17.44.42:634][296]LogAutomationController: 9054 tests available on DAD59F73407EF72F332EEE8D84A811AF
+[2026.11.12-17.44.42:671][296]LogAutomationController: Sending StopTests to DAD59F73407EF72F332EEE8D84A811AF
+[2026.11.12-17.44.42:674][296]LogAutomationController: Display: Loading results html template...
+[2026.11.12-17.44.42:676][296]LogAutomationController: Display: Successfully wrote html results file!
+[2026.11.12-17.44.42:676][296]LogAutomationController: Sending StartTestSession to DAD59F73407EF72F332EEE8D84A811AF
+[2026.11.12-17.44.42:676][296]LogAutomationController: Display: Clearing ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Logs/ and ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Tmp/
+[2026.11.12-17.44.42:677][296]LogAutomationController: Sending RunTest EmptyStarts to DAD59F73407EF72F332EEE8D84A811AF
+[2026.11.12-17.44.42:677][296]LogAutomationController: Display: Test Started. Name={EmptyStarts} Path={BrokenEdge.GameMode.Respawn.EmptyStarts}
+[2026.11.12-17.44.42:700][297]LogTemp: Verbose: RESPAWN_NO_PLAYERSTART Map=Untitled_1 Controller=PlayerController_0
+[2026.11.12-17.44.42:802][298]LogAutomationController: Error: Test Completed. Result={Fail} Name={EmptyStarts} Path={BrokenEdge.GameMode.Respawn.EmptyStarts}
+[2026.11.12-17.44.42:802][298]LogAutomationController: BeginEvents: BrokenEdge.GameMode.Respawn.EmptyStarts
+[2026.11.12-17.44.42:802][298]LogAutomationController: Warning: LogSpawn: UWorld::DestroyActor: World has no context! World: Untitled, Actor: /Temp/Untitled_1.Untitled:PersistentLevel.Character_0 [log]
+[2026.11.12-17.44.42:802][298]LogAutomationController: Error: Expected 'No start does not fabricate a pawn at the origin' to be null. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\GameModeRespawnTests.cpp(36)]
+[2026.11.12-17.44.42:802][298]LogAutomationController: Error: Expected 'Single start selected' to be true. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\GameModeRespawnTests.cpp(39)]
+[2026.11.12-17.44.42:802][298]LogAutomationController: Warning: LogSpawn: UWorld::DestroyActor: World has no context! World: Untitled, Actor: /Temp/Untitled_1.Untitled:PersistentLevel.DefaultPawn_0 [log]
+[2026.11.12-17.44.42:802][298]LogAutomationController: Error: Expected 'Multiple starts select a valid start' to be true. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\GameModeRespawnTests.cpp(43)]
+[2026.11.12-17.44.42:802][298]LogAutomationController: EndEvents: BrokenEdge.GameMode.Respawn.EmptyStarts
+[2026.11.12-17.44.42:803][298]LogAutomationController: Display: Exporting Automation Report.
+[2026.11.12-17.44.42:803][298]LogAutomationController: Display: Converting results to json object...
+[2026.11.12-17.44.42:804][298]LogAutomationController: Writing reports to D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_respawn_20261113_01\Automation...
+[2026.11.12-17.44.42:804][298]LogAutomationController: Display: Successfully wrote json results file!
+[2026.11.12-17.44.42:804][298]LogAutomationController: Exported report to 'D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_respawn_20261113_01\Automation' in 0.00 Seconds
+[2026.11.12-17.44.42:804][299]LogAutomationController: Display: Report can be opened in the editor at 'D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_respawn_20261113_01\Automation'
+[2026.11.12-17.44.42:804][299]LogAutomationController: Sending StopTestSession to DAD59F73407EF72F332EEE8D84A811AF

@@ -1,0 +1,207 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "36ADF89F404FF017B70172B679ABDCFE",
+			"instanceName": "OREKI-LEGION-28436",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.12-17.46.55",
+	"succeeded": 6,
+	"succeededWithWarnings": 0,
+	"failed": 1,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.20055030286312103,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "CommitAndRollback",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.Transaction.CommitAndRollback",
+			"tags": [],
+			"state": "Fail",
+			"deviceInstance": [
+				"36ADF89F404FF017B70172B679ABDCFE"
+			],
+			"duration": 0.10217690467834473,
+			"dateTime": "2026.11.12-17.46.55",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=2 Items=0 Ammo=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.12-17.46.55"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=3 Items=0 Ammo=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.12-17.46.55"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=4 Items=0 Ammo=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.12-17.46.55"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_INVENTORY Owner=BrokenEdgeCharacter_0 Container=00000000000000000000000000000000 Revision=5 Items=1 Ammo=19",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.12-17.46.55"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Source relinquishes GUID' to be null.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionInventoryTransactionTests.cpp",
+					"lineNumber": 82,
+					"timestamp": "2026.11.12-17.46.55"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Destination retains GUID' to be not null.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionInventoryTransactionTests.cpp",
+					"lineNumber": 83,
+					"timestamp": "2026.11.12-17.46.55"
+				}
+			],
+			"warnings": 0,
+			"errors": 2,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "EquipmentAndValidation",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.EquipmentAndValidation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"36ADF89F404FF017B70172B679ABDCFE"
+			],
+			"duration": 0.015994399785995483,
+			"dateTime": "2026.11.12-17.46.55",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "GearContainers",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.GearContainers",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"36ADF89F404FF017B70172B679ABDCFE"
+			],
+			"duration": 0.01650639995932579,
+			"dateTime": "2026.11.12-17.46.55",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "GridTransactions",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.GridTransactions",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"36ADF89F404FF017B70172B679ABDCFE"
+			],
+			"duration": 0.016322199255228043,
+			"dateTime": "2026.11.12-17.46.55",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "StackConservation",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.StackConservation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"36ADF89F404FF017B70172B679ABDCFE"
+			],
+			"duration": 0.016492899507284164,
+			"dateTime": "2026.11.12-17.46.55",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SwapAndPockets",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.SwapAndPockets",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"36ADF89F404FF017B70172B679ABDCFE"
+			],
+			"duration": 0.016663599759340286,
+			"dateTime": "2026.11.12-17.46.55",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SwapEquipmentSlots",
+			"fullTestPath": "BrokenEdge.Extraction.Inventory.SwapEquipmentSlots",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"36ADF89F404FF017B70172B679ABDCFE"
+			],
+			"duration": 0.016393899917602539,
+			"dateTime": "2026.11.12-17.46.55",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}
