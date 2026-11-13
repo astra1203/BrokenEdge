@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "BrokenEdge/BrokenEdgeTypes/CombatState.h"
 #include "BrokenEdge/Weapon/WeaponMechanics.h"
 #include "BrokenEdge/Weapon/WeaponSprintState.h"
 #include "ExtractionCombatComponent.generated.h"
@@ -24,6 +25,7 @@ public:
 	UExtractionCombatComponent();
 	// 通过当前 GameState 判断是否启用撤离协议，其他模式保持原战斗入口。
 	bool IsEnabled() const;
+	ECombatState GetState() const { return ActionState; }
 	// 要求活动对局、存活或守卫身份、未失能且未攀爬；这是多种战斗交互共用的前置条件。
 	bool CanAct() const;
 	// 本地验证基础条件，非权威拥有者先预测开火并登记待确认射击，再向服务器发送目标。
@@ -98,6 +100,15 @@ public:
 	void ServerHoldBreath(bool bHeld);
 
 private:
+#if WITH_DEV_AUTOMATION_TESTS
+	friend struct FExtractionCombatTestAccess;
+#endif
+	// Authority-owned extraction state. Legacy CombatState is never read or written here.
+	UPROPERTY(ReplicatedUsing=OnRep_ActionState)
+	ECombatState ActionState = ECombatState::ECS_Unoccuiped;
+	void SetActionState(ECombatState State);
+	UFUNCTION()
+	void OnRep_ActionState();
 	// 组件所属 Actor 应为 BrokenEdgeCharacter，转换失败时返回空指针。
 	ABrokenEdgeCharacter* Character() const;
 	FResolvedWeaponStats Stats;

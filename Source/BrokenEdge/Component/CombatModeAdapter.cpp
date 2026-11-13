@@ -54,6 +54,14 @@ public:
     }
     void SetReloadPrediction(UCombatComponent& C, bool Reloading) const override { C.bLocallyReloading = Reloading; }
     bool IsReloadPredicted(const UCombatComponent& C) const override { return C.bLocallyReloading; }
+    ECombatState GetState(const UCombatComponent& C) const override { return C.CombatState; }
+    void PredictSwap(UCombatComponent& C) const override
+    {
+        if (!C.Character || C.Character->HasAuthority() || C.CombatState != ECombatState::ECS_Unoccuiped) return;
+        C.Character->PlaySwapMontage();
+        C.CombatState = ECombatState::ECS_SwappingWeapon;
+        C.Character->bFinishedSwapping = false;
+    }
 };
 
 class FExtractionCombatModeAdapter final : public ICombatModeAdapter
@@ -76,6 +84,9 @@ public:
     void StartFireTimer(UCombatComponent& C) const override { C.Character->GetExtractionCombat()->StartFireCooldown(); }
     void SetReloadPrediction(UCombatComponent& C, bool Reloading) const override { C.Character->GetExtractionCombat()->SetReloadPrediction(Reloading); }
     bool IsReloadPredicted(const UCombatComponent& C) const override { return C.Character->GetExtractionCombat()->IsReloadPredicted(); }
+    ECombatState GetState(const UCombatComponent& C) const override { return C.Character->GetExtractionCombat()->GetState(); }
+    // Extraction swap starts on the server and is presented through its multicast.
+    void PredictSwap(UCombatComponent&) const override {}
 };
 
 const ICombatModeAdapter& UCombatComponent::ModeAdapter() const
@@ -91,3 +102,5 @@ void UCombatComponent::CancelFireInput() { ModeAdapter().CancelFire(*this); }
 void UCombatComponent::ClearLocalFireInput() { bFireButtonPressed = false; }
 void UCombatComponent::SetReloadPrediction(bool Reloading) { ModeAdapter().SetReloadPrediction(*this, Reloading); }
 bool UCombatComponent::IsReloadPredicted() const { return ModeAdapter().IsReloadPredicted(*this); }
+ECombatState UCombatComponent::GetState() const { return ModeAdapter().GetState(*this); }
+void UCombatComponent::PredictSwap() { ModeAdapter().PredictSwap(*this); }

@@ -1,4 +1,5 @@
 #pragma once
+#include "BrokenEdge/BrokenEdgeTypes/CombatState.h"
 
 class UCombatComponent;
 
@@ -17,4 +18,6 @@ public:
     virtual void StartFireTimer(UCombatComponent& Combat) const = 0;
     virtual void SetReloadPrediction(UCombatComponent& Combat, bool Reloading) const = 0;
     virtual bool IsReloadPredicted(const UCombatComponent& Combat) const = 0;
+    virtual ECombatState GetState(const UCombatComponent& Combat) const = 0;
+    virtual void PredictSwap(UCombatComponent& Combat) const = 0;
 };

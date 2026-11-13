@@ -1356,7 +1356,7 @@ float ABrokenEdgeCharacter::SyncFirstPersonSwap()
 	UAnimInstance* View = DedicatedFirstPersonMesh->GetAnimInstance();
 	const float Now = GetWorld()->GetTimeSeconds();
 	const bool bChanged = GetEquippedWeapon() != ViewSwapFrom.Get();
-	const bool bSwapping = Combat && Combat->CombatState == ECombatState::ECS_SwappingWeapon;
+	const bool bSwapping = Combat && Combat->GetState() == ECombatState::ECS_SwappingWeapon;
 	const auto End = [&]
 	{
 		ViewSwapStart = -1.f;
@@ -1929,18 +1929,16 @@ void ABrokenEdgeCharacter::EquipButtonPressed()
 
 	if (Combat->bHoldingTheFlag) return;
 
-	if (Combat->CombatState == ECombatState::ECS_Unoccuiped) ServerEquipButtonPressed();
+	if (Combat->GetState() == ECombatState::ECS_Unoccuiped) ServerEquipButtonPressed();
 
 	bool bSwap = Combat->ShouldSwapWeapons() &&
 		!HasAuthority() &&
-		Combat->CombatState == ECombatState::ECS_Unoccuiped &&
+		Combat->GetState() == ECombatState::ECS_Unoccuiped &&
 		OverlappingWeapon == nullptr;
 
 	if (bSwap)
 	{
-		PlaySwapMontage();
-		Combat->CombatState = ECombatState::ECS_SwappingWeapon;
-		bFinishedSwapping = false;
+		Combat->PredictSwap();
 	}
 }
 
@@ -2201,7 +2199,7 @@ FVector ABrokenEdgeCharacter::GetHitTarget() const
 ECombatState ABrokenEdgeCharacter::GetCombatState() const
 {
 	if (Combat == nullptr) return ECombatState::ECS_MAX;
-	return Combat->CombatState;
+	return Combat->GetState();
 }
 
 /**

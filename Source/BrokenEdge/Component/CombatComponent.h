@@ -31,7 +31,8 @@ public:
 	void CancelFireInput();
 	// Clears only this component's legacy input; never forwards back to the mode adapter.
 	void ClearLocalFireInput();
-	void PublishExtractionCombatState(ECombatState State);
+	ECombatState GetState() const;
+	void PredictSwap();
 	void SetReloadPrediction(bool Reloading);
 	bool IsReloadPredicted() const;
 	void SyncReserveFromInventory(int32 Ammo);

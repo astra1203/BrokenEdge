@@ -94,7 +94,7 @@ void UCombatComponent::EquipWeapon(class AWeapon* WeaponToEquip)
 void UCombatComponent::SwapWeapons()
 {
 	UE_LOG(LogTemp, Verbose, TEXT("EXTRACTION_SWAP Request Owner=%s State=%d"), *GetNameSafe(Character),
-	       static_cast<int32>(CombatState));
+	       static_cast<int32>(GetState()));
 	if (Character && Character->GetExtractionCombat()->IsEnabled())
 	{
 		Character->GetExtractionCombat()->BeginServerSwap();
@@ -112,7 +112,7 @@ void UCombatComponent::SwapWeapons()
 void UCombatComponent::FinishSwap()
 {
 	UE_LOG(LogTemp, Verbose, TEXT("EXTRACTION_SWAP Finish Owner=%s State=%d"), *GetNameSafe(Character),
-	       static_cast<int32>(CombatState));
+	       static_cast<int32>(GetState()));
 	if (Character && Character->GetExtractionCombat()->IsEnabled()) return;
 	if (Character && Character->HasAuthority())
 	{
@@ -127,7 +127,7 @@ void UCombatComponent::FinishSwap()
 void UCombatComponent::FinishSwapAttachWeapons()
 {
 	UE_LOG(LogTemp, Verbose, TEXT("EXTRACTION_SWAP Attach Owner=%s State=%d"), *GetNameSafe(Character),
-	       static_cast<int32>(CombatState));
+	       static_cast<int32>(GetState()));
 	if (Character && Character->GetExtractionCombat()->IsEnabled()) return;
 	AttachSwappedWeapons();
 }
@@ -137,7 +137,7 @@ void UCombatComponent::AttachSwappedWeapons()
 	if (!EquippedWeapon || !SecondaryWeapon) return;
 	if (Character == nullptr || !Character->HasAuthority()) return;
 	if (Character->GetExtractionCombat()->IsEnabled() &&
-		(!Character->GetExtractionCombat()->CanAct() || CombatState != ECombatState::ECS_SwappingWeapon))
+		(!Character->GetExtractionCombat()->CanAct() || GetState() != ECombatState::ECS_SwappingWeapon))
 		return;
 	// PlayEquipWeaponSound(SecondaryWeapon);//@TODO
 	AWeapon* TempWeapon = EquippedWeapon;
@@ -920,36 +920,9 @@ void UCombatComponent::OnRep_HoldingTheFlag()
 
 void UCombatComponent::OnRep_CombatState()
 {
-	//@TODO
-
-	switch (CombatState)
-	{
-	case ECombatState::ECS_Reloading:
-		if (Character && !Character->IsLocallyControlled()) HandleReload();
-		break;
-	case ECombatState::ECS_Unoccuiped:
-		if (Character && Character->GetExtractionCombat()->IsEnabled()) Character->bFinishedSwapping = true;
-		// if (bFireButtonPressed)
-		// {
-		// 	Fire();
-		// }
-		break;
-	case ECombatState::ECS_ThrowingGrenade:
-		// if (Character && !Character->IsLocallyControlled())
-		// {
-		// 	Character->PlayThrowGrenadeMontage();
-		// 	AttachActorToLeftHand(EquippedWeapon);
-		// 	ShowAttachedGrenade(true);
-		// }
-		break;
-	case ECombatState::ECS_SwappingWeapon:
-		if (Character && Character->GetExtractionCombat()->IsEnabled()) Character->bFinishedSwapping = false;
-		// if (Character && !Character->IsLocallyControlled())
-		// {
-		// 	Character->PlaySwapMontage();
-		// }
-		break;
-	}
+    // Delayed legacy replication must not drive extraction presentation.
+    if (!Character || Character->GetExtractionCombat()->IsEnabled()) return;
+    if (CombatState == ECombatState::ECS_Reloading && !Character->IsLocallyControlled()) HandleReload();
 }
 
 void UCombatComponent::OnRep_Flag()
@@ -997,12 +970,6 @@ bool UCombatComponent::ShouldSwapWeapons()
 	// 	SecondaryWeapon != nullptr?TEXT("有副武器"):TEXT("没有副武器"));
 
 	return (EquippedWeapon != nullptr && SecondaryWeapon != nullptr);
-}
-
-// Replicated presentation state remains on Combat during the staged protocol split.
-void UCombatComponent::PublishExtractionCombatState(ECombatState State)
-{
-    if (Character && Character->GetExtractionCombat()->IsEnabled()) CombatState = State;
 }
 
 void UCombatComponent::SyncReserveFromInventory(int32 Ammo)

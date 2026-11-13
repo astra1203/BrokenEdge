@@ -10,6 +10,11 @@
 #include "TimerManager.h"
 #include "UObject/UnrealType.h"
 
+struct FExtractionCombatTestAccess
+{
+    static void SetState(UExtractionCombatComponent* Combat, ECombatState State) { Combat->SetActionState(State); }
+};
+
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCombatModeAdapterTest, "BrokenEdge.Extraction.CombatMode.DispatchAndOwnership",
     EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
 bool FCombatModeAdapterTest::RunTest(const FString&)
@@ -34,7 +39,10 @@ bool FCombatModeAdapterTest::RunTest(const FString&)
     Combat->FireButtonPressed(true);
     TestFalse(TEXT("Extraction rejects held fire without a usable weapon"), Combat->IsFireInputHeld());
     Combat->SetReloadPrediction(true);
-    Combat->PublishExtractionCombatState(ECombatState::ECS_Reloading);
+    FExtractionCombatTestAccess::SetState(C->GetExtractionCombat(), ECombatState::ECS_Reloading);
+    W->SetGameState(nullptr);
+    TestTrue(TEXT("Extraction reload does not write legacy state"), C->GetCombatState() == ECombatState::ECS_Unoccuiped);
+    W->SetGameState(GS);
     Combat->FinishReloading();
     TestTrue(TEXT("Extraction ignores animation reload completion"), Combat->IsReloadPredicted());
     TestTrue(TEXT("Animation notify cannot finish authoritative reload"), C->GetCombatState() == ECombatState::ECS_Reloading);
@@ -57,6 +65,9 @@ bool FCombatModeAdapterTest::RunTest(const FString&)
     Combat->SyncReserveFromInventory(40);
     Combat->Reload();
     TestTrue(TEXT("Legacy empty magazine starts reload"), C->GetCombatState() == ECombatState::ECS_Reloading);
+    W->SetGameState(GS);
+    TestTrue(TEXT("Legacy reload does not write extraction state"), C->GetCombatState() == ECombatState::ECS_Unoccuiped);
+    W->SetGameState(nullptr);
     Combat->FinishReloading();
     TestEqual(TEXT("Legacy notify fills magazine once"), Weapon->GetAmmo(), Weapon->GetMagCapacity());
     TestEqual(TEXT("Legacy reload conserves reserve"), Combat->GetCarriedAmmo(), 40 - Weapon->GetMagCapacity());
