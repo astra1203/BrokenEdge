@@ -29,6 +29,7 @@ parser.add_argument('--engine', type=Path)
 parser.add_argument('--loot-seed', type=int, help='Deterministic authority seed for authored loot validation')
 parser.add_argument('--guards', type=int, help='Override the scenario guard count (server clamps to its own maximum)')
 parser.add_argument('--starting-kit-validation', action='store_true', help='Validate current M4A1 test-kit startup instead of legacy AK fixtures')
+parser.add_argument('--exit-feedback-id', help='Authored exit ID for the exit-feedback scenario; defaults to the plaza')
 parser.add_argument('--soviet-route', action='store_true', help='Walk from real spawns through authored loot to an exit; no position fixtures')
 parser.add_argument('--soviet-lifecycle', action='store_true', help='Three-player death, abrupt disconnect and real round timeout on the military map')
 parser.add_argument('--packaged', action='store_true')
@@ -49,7 +50,7 @@ parser.add_argument('--traversal-lifecycle', action='store_true', help='Three-pl
 parser.add_argument('--optic-validation', action='store_true', help='Additional mounted-optic visual acceptance in the equipment scenario')
 parser.add_argument('--optic-remote-only', action='store_true', help='Stop equipment acceptance after observer mount captures; not a full combat regression')
 parser.add_argument('--resolution', choices=['1280x720', '1920x1080', '2560x1440', '3440x1440'], help='Rendered client size for visual acceptance')
-parser.add_argument('--scenario', choices=['soviet', 'flight-matrix', 'overnight-route', 'exit-feedback', 'lobby-ui', 'loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
+parser.add_argument('--scenario', choices=['soviet', 'flight-matrix', 'overnight-route', 'exit-feedback', 'input-ui', 'lobby-ui', 'loot-layout', 'weapon-mechanics', 'combat', 'spectator', 'timeout', 'load_timeout', 'disconnect', 'smoke', 'knife', 'scar', 'inventory', 'swap', 'settlement', 'recovery', 'four', 'identity', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal'], default='combat')
 parser.add_argument('--players', type=int, choices=[1, 2, 3, 6])
 parser.add_argument('--rendered-clients', type=int, choices=[1, 2, 3, 6], help='Other clients use NullRHI; report this as functional-only coverage')
 parser.add_argument('--rendered-role', choices=['A', 'B'], help='Render only this client; the other clients remain connected with NullRHI')
@@ -73,6 +74,10 @@ except (ValueError, OSError, KeyError) as error:
 print('engine:', ENGINE)
 if args.players == 1 and args.scenario != 'lobby-ui':
     parser.error('Single-player acceptance currently supports lobby-ui only')
+if args.exit_feedback_id and args.scenario != 'exit-feedback':
+    parser.error('--exit-feedback-id requires --scenario exit-feedback')
+if args.scenario in ['exit-feedback', 'input-ui'] and args.players not in [None, 2]:
+    parser.error('exit-feedback and input-ui require exactly two clients')
 if args.scenario == 'flight-matrix' and (args.players != 2 or args.guards != 0 or not args.flight_diagnostics):
     parser.error('--scenario flight-matrix requires --players 2 --guards 0 --flight-diagnostics')
 if not 1024 <= args.port <= 65535:
@@ -364,7 +369,7 @@ def join(role):
 
 
 def begin_round():
-    phase4 = args.scenario in ['soviet', 'exit-feedback', 'lobby-ui', 'weapon-mechanics', 'knife', 'scar', 'settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
+    phase4 = args.scenario in ['soviet', 'exit-feedback', 'input-ui', 'lobby-ui', 'weapon-mechanics', 'knife', 'scar', 'settlement', 'recovery', 'four', 'abilities', 'squad', 'pvpve', 'guard_tuning', 'lifecycle', 'equipment', 'progression', 'streaming', 'performance', 'northcombat', 'east', 'traversal']
     for role in ROLES:
         check(role + ' persistent account ready', lambda r=role: state(r).get('account', {}).get('bound'))
         for definition in (['AK'] if phase4 else []) + ['Ammo', 'Ammo', 'Medkit', 'Medkit']:
@@ -539,6 +544,9 @@ try:
         run(globals())
     elif args.scenario == 'exit-feedback':
         from exit_feedback_scenarios import run
+        run(globals())
+    elif args.scenario == 'input-ui':
+        from input_ui_scenarios import run
         run(globals())
     elif args.scenario == 'identity':
         check('Same credential cannot bind two simultaneous clients', lambda: not state('B').get('account', {}).get('bound') and bool(state('B').get('account', {}).get('message')))

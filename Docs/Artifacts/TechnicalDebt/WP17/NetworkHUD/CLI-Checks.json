@@ -1,0 +1,69 @@
+[
+  {
+    "command": [
+      "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+      "Scripts/Extraction/run_network.py",
+      "--engine",
+      "D:/OrekiFiles/EpicGames/UE_5.8",
+      "--tag",
+      "td_final_invalid_network_20261114_0",
+      "--editor-server"
+    ],
+    "exit_code": 2,
+    "report_created": false,
+    "expected": "--editor-server requires --packaged",
+    "passed": true
+  },
+  {
+    "command": [
+      "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+      "Scripts/Extraction/run_network.py",
+      "--engine",
+      "D:/OrekiFiles/EpicGames/UE_5.8",
+      "--tag",
+      "td_final_invalid_network_20261114_1",
+      "--exit-feedback-id",
+      "OfficialExitTestrange"
+    ],
+    "exit_code": 2,
+    "report_created": false,
+    "expected": "--exit-feedback-id requires --scenario exit-feedback",
+    "passed": true
+  },
+  {
+    "command": [
+      "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+      "Scripts/Extraction/run_network.py",
+      "--engine",
+      "D:/OrekiFiles/EpicGames/UE_5.8",
+      "--tag",
+      "td_final_invalid_input-ui_three_20261114",
+      "--scenario",
+      "input-ui",
+      "--players",
+      "3"
+    ],
+    "exit_code": 2,
+    "expected": "exit-feedback and input-ui require exactly two clients",
+    "report_created": false,
+    "passed": true
+  },
+  {
+    "command": [
+      "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+      "Scripts/Extraction/run_network.py",
+      "--engine",
+      "D:/OrekiFiles/EpicGames/UE_5.8",
+      "--tag",
+      "td_final_invalid_exit-feedback_three_20261114",
+      "--scenario",
+      "exit-feedback",
+      "--players",
+      "3"
+    ],
+    "exit_code": 2,
+    "expected": "exit-feedback and input-ui require exactly two clients",
+    "report_created": false,
+    "passed": true
+  }
+]

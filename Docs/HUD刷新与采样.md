@@ -22,4 +22,4 @@ python Scripts/Extraction/export_hud_trace.py Saved/Extraction/<唯一标签> --
 
 `HUDProfile.json` 只计算 60 秒区间；`HUD.utrace` 保存 CPU/frame/bookmark/counters，Insights 导出 `HUDTimingEvents.csv` 包含预热及后续断言期间的 Refresh，行数会更多。原始 trace 留在 Saved，归档保留其 SHA-256、大小、导出命令和 CSV。该导出入口使用无界面 Insights，不经过 shell；当前要求导出目录不含空白字符。
 
-采样后的同一 PIE 检查动态撤离点增删、死亡/恢复显示、生命与库存提交、失去/重新占有 Pawn、Widget 移除重挂、任务版本变化。完整断线重连、远端观战切换和真实子关卡流送尚待验收。实际数据与执行结果见 [验证索引](验证索引.md)。
+采样后的同一 PIE 检查动态撤离点增删、死亡/恢复显示、生命与库存提交、失去/重新占有 Pawn、Widget 移除重挂、任务版本变化。随后双打包客户端加编辑器专服完成 26 项撤离 HUD/私有反馈检查，每方向 50 ms / 2% 丢包，详见 [网络证据](Artifacts/TechnicalDebt/WP17/NetworkHUD/README.md)。完整断线重连、远端观战切换和真实子关卡流送尚待验收。实际数据与执行结果见 [验证索引](验证索引.md)。

@@ -1,7 +1,7 @@
-"""Authority/replication/HUD rule checks at the authored plaza exit.
+"""Authority/replication/HUD timing and capacity checks at an authored exit.
 
 Positions and exit schedules are explicit Development-driver fixtures. This
-scenario does not prove spawn-to-exit traversal, official timing or settlement.
+scenario does not prove traversal, official timing, mechanisms, eligibility or settlement.
 The runner must start two clients in an active raid with no guards and render A.
 """
 import hashlib
@@ -44,21 +44,22 @@ def run(g):
     check('Exit-feedback fixture starts in an active raid with two live players and no guards',
           lambda: state('Server').get('phase') == 1 and not state('Server').get('guards')
           and all(player('Server', role).get('life') == 0 for role in ('A', 'B')))
+    requested = g['args'].exit_feedback_id
     candidates = [entry for entry in state('Server')['exits']
-                  if '308' in entry['id'] or '广场' in entry['label']]
-    assert candidates, 'The formal map must export its authored plaza/308 exit'
+                  if (entry['id'] == requested if requested else '308' in entry['id'] or '广场' in entry['label'])]
+    assert candidates, 'The formal map must export the requested authored exit'
     selected = sorted(candidates, key=lambda entry: entry['id'])[0]
     exit_id, label = selected['id'], selected['label']
     centre = selected['bounds_center']
     assert len(centre) == 3 and len(selected['half_extent']) == 3, 'Driver must export authored exit bounds'
-    assert min(selected['half_extent']) > 70, 'Plaza fixture needs space for two separate character centres'
+    assert min(selected['half_extent']) > 70, 'Exit fixture needs space for two separate character centres'
     outside = {role: list(player('Server', role)['position']) for role in ('A', 'B')}
     inside = {'A': [centre[0] - 60, centre[1], centre[2]],
               'B': [centre[0] + 60, centre[1], centre[2]]}
     evidence = g['report']['exit_feedback'] = dict(
-        scope='teleported rule/replication/rendered-HUD fixtures; not continuous-route or settlement evidence',
+        scope='teleported timing/capacity/replication/rendered-HUD fixtures; not route, mechanisms, inventory eligibility or settlement evidence',
         exit_id=exit_id, label=label, original_exit=selected,
-        outside_positions=outside, inside_positions=inside, screenshots=[])
+        outside_positions=outside, inside_positions=inside, configurations=[], screenshots=[])
 
     def command(role, op, **fields):
         error = send(role, op, **fields)
@@ -68,6 +69,7 @@ def run(g):
         return next((entry for entry in state(role).get('exits', []) if entry['id'] == exit_id), {})
 
     def configure(**fields):
+        evidence['configurations'].append(fields.copy())
         command('Server', 'exit_config', exit_id=exit_id, **fields)
         expected = {key: value for key, value in fields.items() if key != 'reset_start'}
         wait(lambda: all(all(exit_state(peer).get(key) == value for key, value in expected.items())
@@ -103,13 +105,14 @@ def run(g):
         evidence['screenshots'].append(dict(path=str(path), sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
 
     # Keep production hold time comfortably longer than all fixture assertions.
-    configure(opens_after=300, closes_after=0, hold_seconds=300, capacity=2, used=0, reset_start=True)
+    configure(opens_after=300, closes_after=0, hold_seconds=300, capacity=2, used=0,
+              require_empty_pack=False, reset_start=True)
     check('Both spawn positions are outside all exit areas before the rule fixture',
           lambda: all(cleared(role) for role in ('A', 'B')))
     place({'A': inside['A']})
-    check('Unopened plaza reaches authority and owner only, with observer feedback isolated',
+    check('Unopened exit reaches authority and owner only, with observer feedback isolated',
           lambda: blocked('A', '秒后开放') and cleared('B'), 15)
-    check('Rendered central HUD names the unopened plaza and hides extraction progress',
+    check('Rendered central HUD names the unopened exit and hides extraction progress',
           lambda: hud_matches('A', '秒后开放', False), 10)
     screenshot('exit-feedback-unopened')
 
@@ -117,7 +120,7 @@ def run(g):
     check('Opening starts the hold on authority and owner while observer feedback stays private',
           lambda: counting('A') and cleared('B'), 15)
     first_deadline = player('Server', 'A')['extract_at']
-    check('Rendered central HUD shows the plaza countdown and active progress',
+    check('Rendered central HUD shows the exit countdown and active progress',
           lambda: hud_matches('A', '正在撤离', True), 10)
     screenshot('exit-feedback-countdown')
 

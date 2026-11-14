@@ -1,0 +1,395 @@
+{
+  "started_utc": "2026-11-14T02:44:08.524230+00:00",
+  "options": {
+    "tag": "td_final_packaged_hud_20261114_01",
+    "engine": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+    "loot_seed": null,
+    "guards": 0,
+    "starting_kit_validation": true,
+    "exit_feedback_id": "OfficialExitTestrange",
+    "soviet_route": false,
+    "soviet_lifecycle": false,
+    "packaged": true,
+    "editor_server": true,
+    "package_root": "Packaged/TechnicalDebt-20261114-Final",
+    "port": 27777,
+    "isolated_room": true,
+    "lag": true,
+    "unacked": false,
+    "debug_hold": false,
+    "traversal_record": false,
+    "traversal_route_only": false,
+    "traversal_source_only": false,
+    "traversal_top_only": false,
+    "traversal_debug_point": "vault",
+    "traversal_route": false,
+    "traversal_lifecycle": false,
+    "optic_validation": false,
+    "optic_remote_only": false,
+    "resolution": null,
+    "scenario": "exit-feedback",
+    "players": 2,
+    "rendered_clients": 1,
+    "rendered_role": null,
+    "performance_route": "north",
+    "performance_samples": 3,
+    "performance_seconds": 180,
+    "network_stats": false,
+    "flight_diagnostics": false,
+    "bounded_rendering": true,
+    "streaming_loops": 10
+  },
+  "roles": [
+    "A",
+    "B"
+  ],
+  "processes": {
+    "Server": {
+      "pid": 8288,
+      "command": [
+        "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-server",
+        "-DisablePython",
+        "/Game/Maps/Lobby",
+        "-nosound",
+        "-unattended",
+        "-nosplash",
+        "-NoLoadingScreen",
+        "-ExtractionGuards=0",
+        "-MatchType=Extraction",
+        "-NumPublicConnections=2",
+        "-MinPlayersToStart=2",
+        "-port=27777",
+        "-ExtractionTestPort=27777",
+        "-ExtractionRoundSeconds=600",
+        "-ExtractionTestRole=Server",
+        "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01",
+        "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01\\Store",
+        "-ExtractionProfile=td_final_packaged_hud_20261114_01_Server",
+        "-ExecCmds=t.MaxFPS 30,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01\\Server.log",
+        "-RoomName=td_final_packaged_hud_20261114_01",
+        "-ExtractionTestRoom=td_final_packaged_hud_20261114_01",
+        "-nullrhi"
+      ],
+      "environment_overrides": {
+        "UE_SKIP_UBT_SDK_SETUP": "1"
+      },
+      "finish_command": 11,
+      "finish_ack": true,
+      "exit_code": 0,
+      "finish_info_logged": true,
+      "automation_success": true
+    },
+    "A": {
+      "pid": 31032,
+      "command": [
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\TechnicalDebt-20261114-Final\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+        "/Game/Maps/Lobby",
+        "-nosound",
+        "-unattended",
+        "-nosplash",
+        "-NoLoadingScreen",
+        "-ExtractionGuards=0",
+        "-MatchType=Extraction",
+        "-NumPublicConnections=2",
+        "-MinPlayersToStart=2",
+        "-port=27777",
+        "-ExtractionTestPort=27777",
+        "-ExtractionRoundSeconds=600",
+        "-ExtractionTestRole=A",
+        "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01",
+        "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01\\Store",
+        "-ExtractionProfile=td_final_packaged_hud_20261114_01_A",
+        "-ExecCmds=sg.ViewDistanceQuality 1,sg.AntiAliasingQuality 1,sg.ShadowQuality 1,sg.GlobalIlluminationQuality 1,sg.ReflectionQuality 1,sg.PostProcessQuality 1,sg.TextureQuality 1,sg.EffectsQuality 1,sg.FoliageQuality 1,sg.ShadingQuality 1,r.Streaming.PoolSize 768,t.MaxFPS 30,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01\\A.log",
+        "-RoomName=td_final_packaged_hud_20261114_01",
+        "-ExtractionTestRoom=td_final_packaged_hud_20261114_01",
+        "-RenderOffscreen",
+        "-windowed",
+        "-ResX=1280",
+        "-ResY=720",
+        "-noraytracing"
+      ],
+      "environment_overrides": {
+        "UE_SKIP_UBT_SDK_SETUP": "1"
+      },
+      "finish_command": 16,
+      "finish_ack": true,
+      "exit_code": 0,
+      "finish_info_logged": true,
+      "automation_success": true
+    },
+    "B": {
+      "pid": 28756,
+      "command": [
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\TechnicalDebt-20261114-Final\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+        "/Game/Maps/Lobby",
+        "-nosound",
+        "-unattended",
+        "-nosplash",
+        "-NoLoadingScreen",
+        "-ExtractionGuards=0",
+        "-MatchType=Extraction",
+        "-NumPublicConnections=2",
+        "-MinPlayersToStart=2",
+        "-port=27777",
+        "-ExtractionTestPort=27777",
+        "-ExtractionRoundSeconds=600",
+        "-ExtractionTestRole=B",
+        "-ExtractionTestDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01",
+        "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01\\Store",
+        "-ExtractionProfile=td_final_packaged_hud_20261114_01_B",
+        "-ExecCmds=t.MaxFPS 30,BrokenEdge.Debug.HitScan 1,Automation RunTests BrokenEdge.Extraction.ProcessDriver",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01\\B.log",
+        "-RoomName=td_final_packaged_hud_20261114_01",
+        "-ExtractionTestRoom=td_final_packaged_hud_20261114_01",
+        "-nullrhi"
+      ],
+      "environment_overrides": {
+        "UE_SKIP_UBT_SDK_SETUP": "1"
+      },
+      "finish_command": 11,
+      "finish_ack": true,
+      "exit_code": 0,
+      "finish_info_logged": true,
+      "automation_success": true
+    }
+  },
+  "result": "passed",
+  "execution_scope": "packaged clients with dedicated editor authority; no packaged Server target",
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "bfb02aab2b159570c7d67d0677c7e1d35b9db0ac",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Common/test_ue_env.py\n M Scripts/Common/ue_env.py\n M Scripts/Extraction/exit_feedback_scenarios.py\n M Scripts/Extraction/run_network.py\n M Scripts/Extraction/run_pie_lobby.py\n M Source/StingerTools/Private/ExtractionPIELobbyTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+  "script_sha256": "800a3eb9f9252baf292e4ceb8ab20fc2b12a3900310907a045270fdabb211b4e",
+  "ue_env_sha256": "40b4453320036a42bb52548ae4b2059021a29935129e1b01ed68c4b296254022",
+  "inherited_cache_environment": {
+    "UE-LocalDataCachePath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Files",
+    "UE-ZenDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen",
+    "UE-ZenSubprocessDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen"
+  },
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_network.py",
+    "--packaged",
+    "--editor-server",
+    "--package-root",
+    "Packaged/TechnicalDebt-20261114-Final",
+    "--scenario",
+    "exit-feedback",
+    "--exit-feedback-id",
+    "OfficialExitTestrange",
+    "--players",
+    "2",
+    "--rendered-clients",
+    "1",
+    "--guards",
+    "0",
+    "--isolated-room",
+    "--starting-kit-validation",
+    "--lag",
+    "--bounded-rendering",
+    "--engine",
+    "D:/OrekiFiles/EpicGames/UE_5.8",
+    "--tag",
+    "td_final_packaged_hud_20261114_01"
+  ],
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01\\Report.json",
+  "exit_code": 0,
+  "base_commit": "bfb02aab2b159570c7d67d0677c7e1d35b9db0ac",
+  "input_sha256": {
+    "Scripts/Extraction/run_network.py": "800a3eb9f9252baf292e4ceb8ab20fc2b12a3900310907a045270fdabb211b4e",
+    "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp": "d8a298b079a56e265d998ed1689c33ee2a62efcf8630e3fe6b88ec2cbe1ad6eb",
+    "Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.h": "3673268d017d6997d7ee9036e8487d774f492ecc40e926e3c714b0a2dd6e91b5",
+    "Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.cpp": "0644c1d5b3818ff6979d7b86fe19f47e85ce4883f8aaa1493974660acac9049f",
+    "Source/BrokenEdge/Extraction/UI/ExtractionStashWidget.cpp": "4fabb6fd4b2e21751a8088dad30c3fb860d7b0a11d5e8bd106edaa680b6423ad",
+    "Scripts/Extraction/inventory_scenarios.py": "35407549fb84a286e849c64c1116f68fdbf8762d3fec77811269488c53e27f25",
+    "Scripts/Extraction/lobby_ui_scenarios.py": "d0489a4f2ca75f251687abb624ae996b39730e1026ca79d6eb5ff7fca85e1125",
+    "Scripts/Extraction/storage_scenarios.py": "6363e795d87ae0c93d845eff10d8cdc88bb34af9942ccd02d727e49d0f83b655",
+    "Scripts/Extraction/phase5_scenarios.py": "af5611c3c37941e905d66de5d179f94a31fd4176b0842b933cd2b596785dc846",
+    "Scripts/Extraction/equipment_scenarios.py": "42f0754672ea7e0bfaedab798a5b8a86df68dfc8ca69a25b8e1aa022aabb0fa1",
+    "Scripts/Extraction/optic_scenarios.py": "8876daef334ac0dd36918ee76aeb05d6f98367edc855b96d47730b3e0641ae2c",
+    "Scripts/Extraction/verify_optic_capture.py": "c5e894069d491f5ea55296927a95b2791b69613cd0ddee552e436ee8735c2f75",
+    "Scripts/Extraction/optic_calibration.py": "50e49e632abce2b37e31f55f82f82ec143dfc8ba37a75e03b4286241c3d07cea",
+    "Content/Extraction/Items/DA_Item_RedDot.uasset": "725d666e818365afea42829474453a45662770c747cb6a03b0e4cdba33af9d63",
+    "Scripts/Extraction/progression_scenarios.py": "e6ebb41961861c701ca83e268ddccf298f80f4c3b2455dca1b3a38a10eb283f4",
+    "Scripts/Extraction/streaming_scenarios.py": "224df03c674d565284b90cfd4452b5473a60a3652e79cda1bb749fbfb9c8ec22",
+    "Scripts/Extraction/north_combat_scenarios.py": "8a350796dd9ae0c58cc9f53cc31b0d576a7595aebd140896782be87af6f56d69",
+    "Scripts/Extraction/resource_guard.py": "529efa1585a05dbca206ec58c1c1ab40a989b3c7ab1a1da11867b9567e609b9c",
+    "Scripts/SpaceCenter/north_route.json": "57ed4b492ba3ce84999b2a68d58f95f8bc5d0e9ae02b1f024386cdb6d958e9c6",
+    "Scripts/SpaceCenter/route.json": "ea51685ea6904efb0d8547ae4d0768b529cb3be6e12396483b1f4996c356d8c9",
+    "Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap": "65669b51f65c1f73f71cff6a1003e546abd916ce49c2cd2cbfa08e940c179eba",
+    "BrokenEdge.uproject": "59efe489552557f06518c90824a5d6956a8cc5bb9e66c6facc1d26413e9f5366",
+    "Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap": "e9dd0443309203daf72f700e219e9c25566d386841a2b765efd0aae6ba538fe8",
+    "Scripts/Extraction/exit_feedback_scenarios.py": "e372c1f2a128da19f01f726a89566558abb5044fb67785f157b69f50aa1fa746"
+  },
+  "executables": {
+    "A": {
+      "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\TechnicalDebt-20261114-Final\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+      "bytes": 340282880,
+      "sha256": "e37db5aeadc52d0b6bf8a0a88148e04bb9c5dc984b6f21eccddf6d8685472e0b",
+      "machine": "AMD64",
+      "sections": 13
+    },
+    "B": {
+      "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\TechnicalDebt-20261114-Final\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+      "bytes": 340282880,
+      "sha256": "e37db5aeadc52d0b6bf8a0a88148e04bb9c5dc984b6f21eccddf6d8685472e0b",
+      "machine": "AMD64",
+      "sections": 13
+    }
+  },
+  "exit_feedback": {
+    "scope": "teleported timing/capacity/replication/rendered-HUD fixtures; not route, mechanisms, inventory eligibility or settlement evidence",
+    "exit_id": "OfficialExitTestrange",
+    "label": "\u8bd5\u9a8c\u573a\u64a4\u79bb\u70b9",
+    "original_exit": {
+      "id": "OfficialExitTestrange",
+      "label": "\u8bd5\u9a8c\u573a\u64a4\u79bb\u70b9",
+      "bounds_center": [
+        23504.700032513174,
+        23586.160036834044,
+        345.3325926726412
+      ],
+      "half_extent": [
+        250,
+        250,
+        132.5
+      ],
+      "position": [
+        23504.700032513174,
+        23586.160036834044,
+        227.83259267264123
+      ],
+      "opens_after": 540,
+      "closes_after": 0,
+      "round_started": 60.04699080064893,
+      "hold_seconds": 10,
+      "capacity": 3,
+      "require_empty_pack": true,
+      "used": 0,
+      "available": false,
+      "reason": "535 \u79d2\u540e\u5f00\u653e"
+    },
+    "outside_positions": {
+      "A": [
+        -6095.499981822726,
+        33967.12002015596,
+        1785.2103905560748
+      ],
+      "B": [
+        -21605.2,
+        -3443.06,
+        -128.89102736377828
+      ]
+    },
+    "inside_positions": {
+      "A": [
+        23444.700032513174,
+        23586.160036834044,
+        345.3325926726412
+      ],
+      "B": [
+        23564.700032513174,
+        23586.160036834044,
+        345.3325926726412
+      ]
+    },
+    "configurations": [
+      {
+        "opens_after": 300,
+        "closes_after": 0,
+        "hold_seconds": 300,
+        "capacity": 2,
+        "used": 0,
+        "require_empty_pack": false,
+        "reset_start": true
+      },
+      {
+        "opens_after": 0
+      },
+      {
+        "capacity": 1,
+        "used": 1
+      },
+      {
+        "capacity": 2,
+        "used": 0
+      },
+      {
+        "opens_after": 0,
+        "closes_after": 1,
+        "reset_start": true
+      }
+    ],
+    "screenshots": [
+      {
+        "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01\\A-exit-feedback-unopened.png",
+        "sha256": "d4058118c4674f0cee5cb9a328a72d14d1be13ebed4d03444297183c45812a13"
+      },
+      {
+        "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01\\A-exit-feedback-countdown.png",
+        "sha256": "4bac42fd73ed37e71e64047b722cb8a915f7dddf49503d1aa189a26d78c16524"
+      },
+      {
+        "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01\\A-exit-feedback-capacity.png",
+        "sha256": "8dd4cfb4850515ceb59eec324ad51ca3ad58b84b8dd5c0bd1aa3c1a6cecc56ea"
+      },
+      {
+        "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_hud_20261114_01\\A-exit-feedback-left-area.png",
+        "sha256": "8bec7c14838b8a28b84c414e5b731e6b3398180591a6fae842ef634405a56b5b"
+      }
+    ],
+    "independent_deadlines": {
+      "A": 367.8100754097104,
+      "B": 369.17705200985074
+    },
+    "result": "passed"
+  },
+  "finished_utc": "2026-11-14T02:45:48.606973+00:00",
+  "checks": [
+    "A joined LAN lobby",
+    "A name replicated",
+    "B joined LAN lobby",
+    "B name replicated",
+    "A persistent account ready",
+    "B persistent account ready",
+    "All players loaded in Extraction",
+    "Dedicated authority and Stinger pawns",
+    "A current M4A1 primary equipped",
+    "B current M4A1 primary equipped",
+    "First-person backpack section hidden on each owner",
+    "Packet simulation applied: 50ms each direction and 2 percent loss",
+    "Exit-feedback fixture starts in an active raid with two live players and no guards",
+    "Both spawn positions are outside all exit areas before the rule fixture",
+    "Unopened exit reaches authority and owner only, with observer feedback isolated",
+    "Rendered central HUD names the unopened exit and hides extraction progress",
+    "Opening starts the hold on authority and owner while observer feedback stays private",
+    "Rendered central HUD shows the exit countdown and active progress",
+    "Each owner receives an independent private deadline without resetting the other player",
+    "Capacity cancels both holds for authority and each owner without leaking feedback to observers",
+    "Rendered central HUD shows exhausted capacity and hides progress",
+    "Leaving clears only that player while the remaining player keeps the blocked exit",
+    "Rendered central HUD and progress disappear after leaving",
+    "Remaining player restarts a fresh hold while the departed player stays clear",
+    "Closing the occupied area cancels the remaining hold and retains its closed reason",
+    "Both players leave with cleared feedback and neither is falsely marked extracted"
+  ],
+  "full_report": "FullReport.json.gz",
+  "raw_report_sha256": "664506eebbc403697ed3de4b4dfd02e87ad31accca96e156fd01a5be84289e75"
+}
