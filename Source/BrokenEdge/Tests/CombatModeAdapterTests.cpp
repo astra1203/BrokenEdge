@@ -151,4 +151,60 @@ bool FCombatModeCadenceTest::RunTest(const FString&)
     W->DestroyWorld(false);
     return true;
 }
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FLegacyCombatRequestTest, "BrokenEdge.Extraction.CombatMode.LegacyRequestValidation",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+bool FLegacyCombatRequestTest::RunTest(const FString&)
+{
+    const auto Init = UWorld::InitializationValues().AllowAudioPlayback(false).CreatePhysicsScene(true)
+        .CreateNavigation(false).CreateAISystem(false).ShouldSimulatePhysics(false);
+    auto* W = UWorld::CreateWorld(EWorldType::Game, false, NAME_None, nullptr, true, ERHIFeatureLevel::Num, &Init);
+    if (!TestNotNull(TEXT("World"), W)) return false;
+    auto* C = W->SpawnActor<ABrokenEdgeCharacter>(); C->PostInitializeComponents();
+    auto* Combat = C->GetCombat().Get();
+    auto* Capacity = FindFProperty<FIntProperty>(AWeapon::StaticClass(), TEXT("MagCapacity"));
+    if (!TestNotNull(TEXT("Magazine fixture"), Capacity)) { W->DestroyWorld(false); return false; }
+    auto* Gun = W->SpawnActor<AHitScanWeapon>();
+    Capacity->SetPropertyValue_InContainer(Gun, 30); Gun->SetExtractionAmmo(5); Combat->EquipWeapon(Gun);
+    auto RequestReload = [&] { Combat->ProcessEvent(Combat->FindFunctionChecked(TEXT("ServerReload")), nullptr); };
+    auto Idle = [&] { return Combat->GetState() == ECombatState::ECS_Unoccuiped; };
+
+    Combat->SyncReserveFromInventory(0); RequestReload();
+    TestTrue(TEXT("Authority rejects reload with no reserve"), Idle());
+    Combat->CancelActions(); Combat->SyncReserveFromInventory(40); Gun->SetExtractionAmmo(30); RequestReload();
+    TestTrue(TEXT("Authority rejects reload of a full magazine"), Idle());
+    Combat->CancelActions(); Gun->SetExtractionAmmo(5);
+    Combat->SwapWeapons();
+    TestTrue(TEXT("Swap without a second weapon keeps idle"), Idle());
+    Combat->CancelActions();
+    auto* Second = W->SpawnActor<AHitScanWeapon>();
+    Capacity->SetPropertyValue_InContainer(Second, 30); Second->SetExtractionAmmo(7); Combat->EquipWeapon(Second);
+    Combat->SwapWeapons();
+    TestTrue(TEXT("Valid two-weapon swap starts"), Combat->GetState() == ECombatState::ECS_SwappingWeapon);
+    RequestReload();
+    TestTrue(TEXT("Late reload request cannot replace an active swap"), Combat->GetState() == ECombatState::ECS_SwappingWeapon);
+    Combat->FinishSwapAttachWeapons(); Combat->FinishSwap();
+    TestTrue(TEXT("Rejected reload preserves pending swap attachment"), C->GetEquippedWeapon() == Second);
+    Combat->CancelActions();
+
+    C->bDisableGameplay = true;
+    RequestReload(); TestTrue(TEXT("Authority rejects reload while gameplay is disabled"), Idle());
+    Combat->CancelActions(); Combat->Reload();
+    TestTrue(TEXT("Disabled local reload keeps idle"), Idle());
+    TestFalse(TEXT("Disabled local reload does not predict"), Combat->IsReloadPredicted());
+    Combat->CancelActions(); Combat->SwapWeapons();
+    TestTrue(TEXT("Disabled gameplay cannot start a swap"), Idle());
+    Combat->CancelActions(); C->bDisableGameplay = false;
+
+    // After rejection, a valid production request must still transfer ammunition once.
+    auto* Equipped = C->GetEquippedWeapon(); Equipped->SetExtractionAmmo(7); Combat->SyncReserveFromInventory(40);
+    RequestReload();
+    TestTrue(TEXT("Valid authority reload starts after rejected requests"), Combat->GetState() == ECombatState::ECS_Reloading);
+    RequestReload(); Combat->FinishReloading();
+    TestEqual(TEXT("Reload fills the current magazine"), Equipped->GetAmmo(), 30);
+    TestEqual(TEXT("Duplicate request cannot duplicate ammunition"), Combat->GetCarriedAmmo(), 17);
+    Combat->FinishReloading();
+    TestEqual(TEXT("Duplicate completion preserves reserve"), Combat->GetCarriedAmmo(), 17);
+    W->DestroyWorld(false);
+    return true;
+}
 #endif

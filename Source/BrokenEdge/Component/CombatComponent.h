@@ -25,6 +25,7 @@ class BROKENEDGE_API UCombatComponent : public UActorComponent
 	friend class FExtractionCombatModeAdapter;
 	const ICombatModeAdapter& ModeAdapter() const;
 	void AttachSwappedWeapons();
+	bool CanStartLegacyReload() const;
 
 public:
 	bool IsFireInputHeld() const;

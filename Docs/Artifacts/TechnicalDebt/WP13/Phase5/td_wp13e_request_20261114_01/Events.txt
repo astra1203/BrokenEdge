@@ -1,0 +1,49 @@
+[2026.11.14-02.26.11:670][296]LogAutomationController: Received FindWorkersResponseMessage from 1FA530F3426F5EA87B3D299B08BCD1A6
+[2026.11.14-02.26.11:670][297]LogAutomationController: Requesting test list from 1FA530F3426F5EA87B3D299B08BCD1A6
+[2026.11.14-02.26.11:910][298]LogAutomationController: Received RequestTestsReplyCompleteMessage from 1FA530F3426F5EA87B3D299B08BCD1A6
+[2026.11.14-02.26.11:913][298]LogAutomationController: 9073 tests available on 1FA530F3426F5EA87B3D299B08BCD1A6
+[2026.11.14-02.26.11:947][298]LogAutomationController: Sending StopTests to 1FA530F3426F5EA87B3D299B08BCD1A6
+[2026.11.14-02.26.11:950][298]LogAutomationController: Display: Loading results html template...
+[2026.11.14-02.26.11:952][298]LogAutomationController: Display: Successfully wrote html results file!
+[2026.11.14-02.26.11:952][298]LogAutomationController: Sending StartTestSession to 1FA530F3426F5EA87B3D299B08BCD1A6
+[2026.11.14-02.26.11:952][298]LogAutomationController: Display: Clearing ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Logs/ and ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Tmp/
+[2026.11.14-02.26.11:954][298]LogAutomationController: Sending RunTest DispatchAndOwnership to 1FA530F3426F5EA87B3D299B08BCD1A6
+[2026.11.14-02.26.11:954][298]LogAutomationController: Display: Test Started. Name={DispatchAndOwnership} Path={BrokenEdge.Extraction.CombatMode.DispatchAndOwnership}
+[2026.11.14-02.26.11:990][300]LogAutomationController: Display: Test Completed. Result={Success} Name={DispatchAndOwnership} Path={BrokenEdge.Extraction.CombatMode.DispatchAndOwnership}
+[2026.11.14-02.26.11:990][300]LogAutomationController: BeginEvents: BrokenEdge.Extraction.CombatMode.DispatchAndOwnership
+[2026.11.14-02.26.11:990][300]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_1.Untitled:PersistentLevel.BrokenEdgeCharacter_0) [log]
+[2026.11.14-02.26.11:990][300]LogAutomationController: EndEvents: BrokenEdge.Extraction.CombatMode.DispatchAndOwnership
+[2026.11.14-02.26.11:990][300]LogAutomationController: Sending RunTest LegacyLifecycle to 1FA530F3426F5EA87B3D299B08BCD1A6
+[2026.11.14-02.26.11:990][301]LogAutomationController: Display: Test Started. Name={LegacyLifecycle} Path={BrokenEdge.Extraction.CombatMode.LegacyLifecycle}
+[2026.11.14-02.26.12:021][302]LogAutomationController: Display: Test Completed. Result={Success} Name={LegacyLifecycle} Path={BrokenEdge.Extraction.CombatMode.LegacyLifecycle}
+[2026.11.14-02.26.12:021][302]LogAutomationController: BeginEvents: BrokenEdge.Extraction.CombatMode.LegacyLifecycle
+[2026.11.14-02.26.12:021][302]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0) [log]
+[2026.11.14-02.26.12:021][302]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(MuzzleFlash): No SkeletalMesh for Component(WeaponMesh) Actor(Shotgun /Temp/Untitled_2.Untitled:PersistentLevel.Shotgun_0) [log]
+[2026.11.14-02.26.12:021][302]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0) [log]
+[2026.11.14-02.26.12:021][302]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(BackpackSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0) [log]
+[2026.11.14-02.26.12:021][302]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0) [log]
+[2026.11.14-02.26.12:021][302]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(BackpackSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0) [log]
+[2026.11.14-02.26.12:021][302]LogAutomationController: EndEvents: BrokenEdge.Extraction.CombatMode.LegacyLifecycle
+[2026.11.14-02.26.12:021][302]LogAutomationController: Sending RunTest LegacyRequestValidation to 1FA530F3426F5EA87B3D299B08BCD1A6
+[2026.11.14-02.26.12:022][303]LogAutomationController: Display: Test Started. Name={LegacyRequestValidation} Path={BrokenEdge.Extraction.CombatMode.LegacyRequestValidation}
+[2026.11.14-02.26.12:070][305]LogAutomationController: Display: Test Completed. Result={Success} Name={LegacyRequestValidation} Path={BrokenEdge.Extraction.CombatMode.LegacyRequestValidation}
+[2026.11.14-02.26.12:070][305]LogAutomationController: BeginEvents: BrokenEdge.Extraction.CombatMode.LegacyRequestValidation
+[2026.11.14-02.26.12:070][305]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_3.Untitled:PersistentLevel.BrokenEdgeCharacter_0) [log]
+[2026.11.14-02.26.12:070][305]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(BackpackSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_3.Untitled:PersistentLevel.BrokenEdgeCharacter_0) [log]
+[2026.11.14-02.26.12:070][305]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_3.Untitled:PersistentLevel.BrokenEdgeCharacter_0) [log]
+[2026.11.14-02.26.12:070][305]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(BackpackSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_3.Untitled:PersistentLevel.BrokenEdgeCharacter_0) [log]
+[2026.11.14-02.26.12:070][305]LogAutomationController: EndEvents: BrokenEdge.Extraction.CombatMode.LegacyRequestValidation
+[2026.11.14-02.26.12:072][305]LogAutomationController: Sending RunTest PredictionAndCadenceIsolation to 1FA530F3426F5EA87B3D299B08BCD1A6
+[2026.11.14-02.26.12:072][305]LogAutomationController: Display: Test Started. Name={PredictionAndCadenceIsolation} Path={BrokenEdge.Extraction.CombatMode.PredictionAndCadenceIsolation}
+[2026.11.14-02.26.12:118][308]LogAutomationController: Display: Test Completed. Result={Success} Name={PredictionAndCadenceIsolation} Path={BrokenEdge.Extraction.CombatMode.PredictionAndCadenceIsolation}
+[2026.11.14-02.26.12:118][308]LogAutomationController: BeginEvents: BrokenEdge.Extraction.CombatMode.PredictionAndCadenceIsolation
+[2026.11.14-02.26.12:118][308]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_4.Untitled:PersistentLevel.BrokenEdgeCharacter_0) [log]
+[2026.11.14-02.26.12:118][308]LogAutomationController: Warning: LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_4.Untitled:PersistentLevel.BrokenEdgeCharacter_0) [log]
+[2026.11.14-02.26.12:118][308]LogAutomationController: EndEvents: BrokenEdge.Extraction.CombatMode.PredictionAndCadenceIsolation
+[2026.11.14-02.26.12:119][308]LogAutomationController: Display: Exporting Automation Report.
+[2026.11.14-02.26.12:119][308]LogAutomationController: Display: Converting results to json object...
+[2026.11.14-02.26.12:120][308]LogAutomationController: Writing reports to D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_wp13e_request_20261114_01\Automation...
+[2026.11.14-02.26.12:121][308]LogAutomationController: Display: Successfully wrote json results file!
+[2026.11.14-02.26.12:121][308]LogAutomationController: Exported report to 'D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_wp13e_request_20261114_01\Automation' in 0.00 Seconds
+[2026.11.14-02.26.12:121][308]LogAutomationController: Display: Report can be opened in the editor at 'D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_wp13e_request_20261114_01\Automation'
+[2026.11.14-02.26.12:121][308]LogAutomationController: Sending StopTestSession to 1FA530F3426F5EA87B3D299B08BCD1A6

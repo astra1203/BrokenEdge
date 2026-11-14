@@ -1,0 +1,46 @@
+{
+  "task": "combat-net-pie",
+  "started_utc": "2026-11-14T02:26:12.463113+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp13e_network_20261114_01\\Editor.log",
+    "-RenderOffscreen",
+    "-ResX=1280",
+    "-ResY=720",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CombatNetworkPIE.",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp13e_network_20261114_01\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "2ad490f30519e6cc1e74b04a1bc2e19416ffbb7b",
+  "git_status": "M BrokenEdge.uproject\n M \"Docs/\\346\\212\\200\\346\\234\\257\\345\\200\\272\\346\\225\\264\\346\\224\\271\\345\\256\\236\\346\\226\\275\\346\\226\\271\\346\\241\\210.md\"\n M \"Docs/\\351\\252\\214\\350\\257\\201\\347\\264\\242\\345\\274\\225.md\"\n M Scripts/Extraction/lobby_ui_scenarios.py\n M Scripts/Extraction/run_editor_task.py\n M Scripts/Extraction/run_network.py\n M Scripts/Test-LanSessions.ps1\n M Source/BrokenEdge/Component/CombatComponent.cpp\n M Source/BrokenEdge/Component/CombatComponent.h\n M Source/BrokenEdge/Component/CombatModeAdapter.cpp\n M Source/BrokenEdge/Extraction/UI/ExtractionStashWidget.cpp\n M Source/BrokenEdge/Tests/CombatModeAdapterTests.cpp\n M Source/BrokenEdge/Tests/ExtractionDriverTests.cpp\n?? Docs/Artifacts/TechnicalDebt/WP18/LobbyUI/",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "46783fe6d32dc4b162ad82fbc72e4d11a176e2bc5c6f51b249652353b26218e2",
+  "ue_env_sha256": "e811f0a4231046c4c5df0ccd3fc450353c604b27a4d874e5ee747108e773f915",
+  "inherited_cache_environment": {
+    "UE-LocalDataCachePath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Files",
+    "UE-ZenDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen",
+    "UE-ZenSubprocessDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen"
+  },
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp13e_network_20261114_01\\Run.json",
+  "exit_code": 0,
+  "pid": 31112,
+  "successful_tests": 1,
+  "result": "passed",
+  "finished_utc": "2026-11-14T02:27:13.345780+00:00"
+}

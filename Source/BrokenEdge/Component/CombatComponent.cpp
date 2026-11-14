@@ -100,7 +100,8 @@ void UCombatComponent::SwapWeapons()
 		Character->GetExtractionCombat()->BeginServerSwap();
 		return;
 	}
-	if (CombatState != ECombatState::ECS_Unoccuiped || Character == nullptr || !Character->HasAuthority()) return;
+	if (CombatState != ECombatState::ECS_Unoccuiped || !Character || !Character->HasAuthority()
+		|| Character->IsDefeated() || Character->bDisableGameplay || !EquippedWeapon || !SecondaryWeapon) return;
 
 	Character->PlaySwapMontage();
 	CombatState = ECombatState::ECS_SwappingWeapon;
@@ -488,6 +489,13 @@ int32 UCombatComponent::AmountToReload()
 	return 0;
 }
 
+bool UCombatComponent::CanStartLegacyReload() const
+{
+	return Character && !Character->IsDefeated() && !Character->bDisableGameplay
+		&& CombatState == ECombatState::ECS_Unoccuiped && EquippedWeapon
+		&& !EquippedWeapon->IsFull() && CarriedAmmo > 0;
+}
+
 void UCombatComponent::ServerReload_Implementation()
 {
 	if (Character && Character->GetExtractionCombat()->IsEnabled())
@@ -495,7 +503,8 @@ void UCombatComponent::ServerReload_Implementation()
 		Character->GetExtractionCombat()->BeginServerReload();
 		return;
 	}
-	if (Character == nullptr || EquippedWeapon == nullptr)return;
+	// Requests can arrive after the owner's idle/ammo snapshot has become stale.
+	if (!CanStartLegacyReload()) return;
 
 	CombatState = ECombatState::ECS_Reloading;
 

@@ -11,8 +11,7 @@ class FLegacyCombatModeAdapter final : public ICombatModeAdapter
 public:
     void Reload(UCombatComponent& C) const override
     {
-        if (C.CarriedAmmo > 0 && C.CombatState == ECombatState::ECS_Unoccuiped && C.EquippedWeapon
-            && !C.EquippedWeapon->IsFull() && !C.bLocallyReloading)
+        if (C.CanStartLegacyReload() && !C.bLocallyReloading)
         {
             C.ServerReload(); C.HandleReload(); C.bLocallyReloading = true;
         }
@@ -72,7 +71,8 @@ public:
     ECombatState GetState(const UCombatComponent& C) const override { return C.CombatState; }
     void PredictSwap(UCombatComponent& C) const override
     {
-        if (!C.Character || C.Character->HasAuthority() || C.CombatState != ECombatState::ECS_Unoccuiped) return;
+        if (!C.Character || C.Character->HasAuthority() || C.Character->IsDefeated() || C.Character->bDisableGameplay
+            || !C.EquippedWeapon || !C.SecondaryWeapon || C.CombatState != ECombatState::ECS_Unoccuiped) return;
         C.Character->PlaySwapMontage();
         C.CombatState = ECombatState::ECS_SwappingWeapon;
         C.Character->bFinishedSwapping = false;
