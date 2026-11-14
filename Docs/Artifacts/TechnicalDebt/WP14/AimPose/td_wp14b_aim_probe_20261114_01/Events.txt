@@ -1,0 +1,28 @@
+[2026.11.14-00.45.05:480][824]LogAutomationController: Error: Test Completed. Result={Fail} Name={ThirdPersonAimPose} Path={BrokenEdge.Extraction.WeaponPIE.ThirdPersonAimPose}
+[2026.11.14-00.45.05:482][824]LogAutomationController: Aim probe hip: eye=(X=0.000 Y=0.000 Z=160.150) gun=(X=30.279 Y=18.315 Z=142.207) muzzle=(X=73.575 Y=35.608 Z=183.671) muzzleForward=(X=0.769 Y=0.307 Z=0.561) muzzleAxisEye=26.88
+[2026.11.14-00.45.05:482][824]LogAutomationController: Aim probe hip Head=(X=13.631 Y=4.792 Z=160.474)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe hip RightArm=(X=0.609 Y=22.899 Z=151.336)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe hip RightForeArm=(X=5.184 Y=33.280 Z=127.031)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe hip RightHand=(X=24.128 Y=15.858 Z=137.720)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe hip LeftArm=(X=13.308 Y=-14.056 Z=150.851)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe hip LeftForeArm=(X=37.413 Y=-2.325 Z=149.975)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe hip LeftHand=(X=47.833 Y=20.972 Z=161.169)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim: eye=(X=0.000 Y=0.000 Z=160.150) gun=(X=33.922 Y=16.518 Z=143.503) muzzle=(X=95.551 Y=17.603 Z=153.175) muzzleForward=(X=0.999 Y=0.026 Z=0.024) muzzleAxisEye=17.78
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim Head=(X=12.293 Y=7.912 Z=162.219)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim RightArm=(X=-3.597 Y=20.772 Z=155.513)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim RightForeArm=(X=7.886 Y=36.659 Z=137.205)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim RightHand=(X=25.927 Y=16.313 Z=143.307)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim LeftArm=(X=15.427 Y=-12.548 Z=151.003)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim LeftForeArm=(X=40.363 Y=-6.766 Z=142.988)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim LeftHand=(X=58.925 Y=12.849 Z=149.873)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Third-person aim pose: hip eye-to-barrel=37.1cm angle=46.1 deg, aim eye-to-barrel=27.0cm angle=9.0 deg
+[2026.11.14-00.45.05:483][824]LogAutomationController: Error: Expected 'Raised gun stays near the eye line' to be true. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\WeaponPIETests.cpp(653)]
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe without reach correction: eye=37.51 angle=7.02
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim-no-reach: eye=(X=0.000 Y=0.000 Z=160.150) gun=(X=51.747 Y=25.170 Z=140.584) muzzle=(X=113.672 Y=21.677 Z=147.367) muzzleForward=(X=0.998 Y=-0.052 Z=-0.022) muzzleAxisEye=29.37
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim-no-reach Head=(X=13.040 Y=9.476 Z=160.885)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim-no-reach RightArm=(X=-2.971 Y=22.318 Z=155.007)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim-no-reach RightForeArm=(X=16.419 Y=30.404 Z=138.331)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim-no-reach RightHand=(X=43.760 Y=25.584 Z=140.764)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim-no-reach LeftArm=(X=15.249 Y=-11.412 Z=149.881)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim-no-reach LeftForeArm=(X=39.137 Y=0.686 Z=148.322)
+[2026.11.14-00.45.05:483][824]LogAutomationController: Aim probe aim-no-reach LeftHand=(X=63.958 Y=13.255 Z=146.703)

@@ -1,0 +1,1677 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "E90E7A34437CF49112D6308B3AE46AF4",
+			"instanceName": "OREKI-LEGION-14976",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "D3D12_SM6",
+			"rHI": "D3D12 (SM6)",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.14-00.45.05",
+	"succeeded": 0,
+	"succeededWithWarnings": 0,
+	"failed": 1,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 4.6639065742492676,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "ThirdPersonAimPose",
+			"fullTestPath": "BrokenEdge.Extraction.WeaponPIE.ThirdPersonAimPose",
+			"tags": [],
+			"state": "Fail",
+			"deviceInstance": [
+				"E90E7A34437CF49112D6308B3AE46AF4"
+			],
+			"duration": 4.6639065742492676,
+			"dateTime": "2026.11.14-00.45.00",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogStreaming: FlushAsyncLoading(742): 1 QueuedPackages, 0 AsyncPackages",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.00"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Training\\L_WeaponRange.umap: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.00"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogEditorAutomationTests: L_WeaponRange took 0.156 to load.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.00"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Maps\\DA_SpaceCenterGameplay.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_SpaceCenter_Ma1_Loot.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_Project7FGearRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_Project7FMedicalRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_Project7FSupplyRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_Project7FValuableRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectFieldCrateRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectKeyContractRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectKeyCoreRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectKeyEastBridgeRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectKeyMonitorRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectKeyPresidentRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectKeyStaffPassageRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectLargeSafeRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_ProjectLooseLootRecipe.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\FlightCase\\SM_FlightCase_Body.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\FlightCase\\SM_FlightCase_Lid.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_box_546_3P\\props_collect_box_546_3P\\SkeletalMeshes\\props_collect_box_546_3P.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_SmallSafeBox_802_3P\\props_collect_SmallSafeBox_802_3P\\SkeletalMeshes\\props_collect_SmallSafeBox_802_3P.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\FlightCase\\M_FlightCase_Body.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_box_546_3P\\props_collect_box_546_3P\\Materials\\props_collect_box_546.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_box_546_3P\\props_collect_box_546_3P\\SkeletalMeshes\\props_collect_box_546_3P_PhysicsAsset.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_box_546_3P\\props_collect_box_546_3P\\SkeletalMeshes\\props_collect_box_546_3P_Skeleton.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_SmallSafeBox_802_3P\\props_collect_SmallSafeBox_802_3P\\Materials\\props_collect_SmallSafeBox_802.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_SmallSafeBox_802_3P\\props_collect_SmallSafeBox_802_3P\\SkeletalMeshes\\props_collect_SmallSafeBox_802_3P_PhysicsAsset.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_SmallSafeBox_802_3P\\props_collect_SmallSafeBox_802_3P\\SkeletalMeshes\\props_collect_SmallSafeBox_802_3P_Skeleton.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_box_546_3P\\props_collect_box_546_3P\\Textures\\T_VMGen_BaseColorMap_cd9e8b2671efac2811969edd6eca214f.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\Models\\props_collect_SmallSafeBox_802_3P\\props_collect_SmallSafeBox_802_3P\\Textures\\T_VMGen_BaseColorMap_60a194e75a36508dbde0e120b87756cd.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 1177.355469 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 1177.355469 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Maps\\DA_SovietMilitaryGameplay.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_SovietMilitaryLoot.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_SovietGear.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_SovietMedical.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 1176.617188 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 1176.617188 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_SovietSupply.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Loot\\DA_SovietValuable.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Training\\DA_WeaponRangeMap.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_SPAWN_SEED 30614",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Animations\\Corrected\\ABP_StingerFirstPerson_Repaired.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Animations\\Corrected\\MontagesV4\\AM_AR_M_1P_ChangeClipFull.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Animations\\Corrected\\MontagesV4\\AM_AR_M_1P_Fire.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Animations\\Corrected\\MontagesV4\\AM_AR_M_1P_GetWeapon.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Meshes\\FirstPerson\\CappedView\\Stinger_CappedViewArms\\SkeletalMeshes\\Stinger_CappedViewArms.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Meshes\\FirstPerson\\CappedView\\Stinger_CappedViewArms\\Materials\\M_Roy_016_BP_LOD.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Meshes\\FirstPerson\\CappedView\\Stinger_CappedViewArms\\Materials\\M_Roy_016_Upper_lod0.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Meshes\\FirstPerson\\CappedView\\Stinger_CappedViewArms\\Textures\\M_Roy_016_BP_LOD_BaseColor.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Meshes\\FirstPerson\\CappedView\\Stinger_CappedViewArms\\Textures\\M_Roy_016_BP_N_LOD_OpenGL.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Meshes\\FirstPerson\\CappedView\\Stinger_CappedViewArms\\Textures\\M_Roy_016_Upper_lod0_BaseColor.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Characters\\Stinger\\Meshes\\FirstPerson\\CappedView\\Stinger_CappedViewArms\\Textures\\M_Roy_016_Upper_N_lod0_OpenGL.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 1173.800781 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 1173.800781 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_INVENTORY Owner=ExtractionPlayerState_0 Container=D5C9EA9447211CABF9D8D49F37D12B51 Revision=2 Items=7 Ammo=60",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogGameMode: Match State Changed from EnteringMap to WaitingToStart",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_COMMIT Sequence=1 Bytes=91 JournalBytes=111 Profiles=0 Raids=0 Receipts=0 ElapsedMs=5.60",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_STORE_LOAD Records=0 JournalBytes=111 ElapsedMs=7.38 Faulted=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\UI\\Extraction\\WBP_ExtractionHUD.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\UI\\Looting\\WBP_LootingPickupView_Pc.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\UI\\Looting\\WBP_LootEquipSlot.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\UI\\Looting\\WBP_LootingBackpackV2_Pc.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\UI\\Looting\\WBP_LootingContextMenu.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\UI\\Looting\\WBP_LootingGridCell.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\UI\\Looting\\WBP_LootingInteractionPrompt.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\UI\\Looting\\WBP_LootingMenuAction.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\UI\\Looting\\WBP_LootingSlotView.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\UI\\Looting\\WBP_LootingSplitDialog.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogSlate: Font face '../../Content/Slate/Fonts/Roboto-Bold.ttf' subface index 0 successfully added to font face map in Game thread.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogSlate: Font face '../../Content/Slate/Fonts/Roboto-Regular.ttf' subface index 0 successfully added to font face map in Game thread.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogSlate: Font face 'F:\\Perforce\\Releases\\4.24\\Engine\\Content\\Slate\\Fonts\\DroidSansFallback.ttf' subface index 0 successfully added to font face map in Game thread.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\1P\\Support_C101_MedicalGun_01_1P\\SkeletalMeshes\\Support_C101_MedicalGun_01_1P.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\3P\\Support_C101_MedicalGun_01_3P\\SkeletalMeshes\\Support_C101_MedicalGun_01_3P.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\SmokeScreen\\1P\\Surport_C101_SmokeScreen_M_1P\\SkeletalMeshes\\Surport_C101_SmokeScreen_M_1P.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\SmokeScreen\\3P\\Surport_C101_SmokeScreen_M_3P\\SkeletalMeshes\\Surport_C101_SmokeScreen_M_3P.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\1P\\Support_C101_MedicalGun_01_1P\\Materials\\M_Temporary_Liquid_Inst.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\1P\\Support_C101_MedicalGun_01_1P\\Materials\\MI_Energy_Grid_Inst_01.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\1P\\Support_C101_MedicalGun_01_1P\\Materials\\Support_C101_MedicalGun_01.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\1P\\Support_C101_MedicalGun_01_1P\\Materials\\Support_C101_MedicalGun_03.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\1P\\Support_C101_MedicalGun_01_1P\\SkeletalMeshes\\Support_C101_MedicalGun_01_1P_PhysicsAsset.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\1P\\Support_C101_MedicalGun_01_1P\\SkeletalMeshes\\Support_C101_MedicalGun_01_1P_Skeleton.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\3P\\Support_C101_MedicalGun_01_3P\\Materials\\M_Temporary_Liquid_Inst.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\3P\\Support_C101_MedicalGun_01_3P\\Materials\\MI_Energy_Grid_Inst_01.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\3P\\Support_C101_MedicalGun_01_3P\\Materials\\Support_C101_MedicalGun_01.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\3P\\Support_C101_MedicalGun_01_3P\\Materials\\Support_C101_MedicalGun_03.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\3P\\Support_C101_MedicalGun_01_3P\\SkeletalMeshes\\Support_C101_MedicalGun_01_3P_PhysicsAsset.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\3P\\Support_C101_MedicalGun_01_3P\\SkeletalMeshes\\Support_C101_MedicalGun_01_3P_Skeleton.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\SmokeScreen\\1P\\Surport_C101_SmokeScreen_M_1P\\Materials\\Support_C101_HiveTechDrone01.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\SmokeScreen\\1P\\Surport_C101_SmokeScreen_M_1P\\SkeletalMeshes\\Surport_C101_SmokeScreen_M_1P_PhysicsAsset.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\SmokeScreen\\1P\\Surport_C101_SmokeScreen_M_1P\\SkeletalMeshes\\Surport_C101_SmokeScreen_M_1P_Skeleton.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\SmokeScreen\\3P\\Surport_C101_SmokeScreen_M_3P\\Materials\\Support_C101_HiveTechDrone01.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\SmokeScreen\\3P\\Surport_C101_SmokeScreen_M_3P\\SkeletalMeshes\\Surport_C101_SmokeScreen_M_3P_PhysicsAsset.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\SmokeScreen\\3P\\Surport_C101_SmokeScreen_M_3P\\SkeletalMeshes\\Surport_C101_SmokeScreen_M_3P_Skeleton.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\1P\\Support_C101_MedicalGun_01_1P\\Textures\\T_VMGen_BaseColorMap_9f581070420761725e17fda08393bdcf.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\1P\\Support_C101_MedicalGun_01_1P\\Textures\\T_VMGen_BaseColorMap_6a59f31379bc3a6a076bcd1fb893afe0.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\3P\\Support_C101_MedicalGun_01_3P\\Textures\\T_VMGen_BaseColorMap_9f581070420761725e17fda08393bdcf.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogLinker: [AssetLog] D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Content\\Extraction\\Abilities\\MedicalGun\\3P\\Support_C101_MedicalGun_01_3P\\Textures\\T_VMGen_BaseColorMap_6a59f31379bc3a6a076bcd1fb893afe0.uasset: Asset has been saved with empty engine version. The asset will be loaded but may be incompatible.",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 1011.433594 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 1011.492188 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 968.257812 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 968.320312 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 965.582031 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 965.511719 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.01"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 928.554688 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.02"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogAsyncCompilation: 注意：AssetCompile内存估计值大于可用值，但无论如何我们都会运行它[SkinnedAsset]！所需内存 = 0.000 MiB + 4608.000 MiB，内存限制 = 927.691406 MiB ",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.02"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe hip: eye=(X=0.000 Y=0.000 Z=160.150) gun=(X=30.279 Y=18.315 Z=142.207) muzzle=(X=73.575 Y=35.608 Z=183.671) muzzleForward=(X=0.769 Y=0.307 Z=0.561) muzzleAxisEye=26.88",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.02"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe hip Head=(X=13.631 Y=4.792 Z=160.474)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.02"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe hip RightArm=(X=0.609 Y=22.899 Z=151.336)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.02"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe hip RightForeArm=(X=5.184 Y=33.280 Z=127.031)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.02"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe hip RightHand=(X=24.128 Y=15.858 Z=137.720)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.02"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe hip LeftArm=(X=13.308 Y=-14.056 Z=150.851)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.02"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe hip LeftForeArm=(X=37.413 Y=-2.325 Z=149.975)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.02"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe hip LeftHand=(X=47.833 Y=20.972 Z=161.169)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.02"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim: eye=(X=0.000 Y=0.000 Z=160.150) gun=(X=33.922 Y=16.518 Z=143.503) muzzle=(X=95.551 Y=17.603 Z=153.175) muzzleForward=(X=0.999 Y=0.026 Z=0.024) muzzleAxisEye=17.78",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.03"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim Head=(X=12.293 Y=7.912 Z=162.219)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.03"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim RightArm=(X=-3.597 Y=20.772 Z=155.513)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.03"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim RightForeArm=(X=7.886 Y=36.659 Z=137.205)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.03"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim RightHand=(X=25.927 Y=16.313 Z=143.307)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.03"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim LeftArm=(X=15.427 Y=-12.548 Z=151.003)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.03"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim LeftForeArm=(X=40.363 Y=-6.766 Z=142.988)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.03"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim LeftHand=(X=58.925 Y=12.849 Z=149.873)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.03"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Third-person aim pose: hip eye-to-barrel=37.1cm angle=46.1 deg, aim eye-to-barrel=27.0cm angle=9.0 deg",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.03"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Raised gun stays near the eye line' to be true.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\WeaponPIETests.cpp",
+					"lineNumber": 653,
+					"timestamp": "2026.11.14-00.45.03"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe without reach correction: eye=37.51 angle=7.02",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.05"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim-no-reach: eye=(X=0.000 Y=0.000 Z=160.150) gun=(X=51.747 Y=25.170 Z=140.584) muzzle=(X=113.672 Y=21.677 Z=147.367) muzzleForward=(X=0.998 Y=-0.052 Z=-0.022) muzzleAxisEye=29.37",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.05"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim-no-reach Head=(X=13.040 Y=9.476 Z=160.885)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.05"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim-no-reach RightArm=(X=-2.971 Y=22.318 Z=155.007)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.05"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim-no-reach RightForeArm=(X=16.419 Y=30.404 Z=138.331)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.05"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim-no-reach RightHand=(X=43.760 Y=25.584 Z=140.764)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.05"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim-no-reach LeftArm=(X=15.249 Y=-11.412 Z=149.881)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.05"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim-no-reach LeftForeArm=(X=39.137 Y=0.686 Z=148.322)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.05"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Aim probe aim-no-reach LeftHand=(X=63.958 Y=13.255 Z=146.703)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.05"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogTemp: EXTRACTION_INVENTORY Owner=ExtractionPlayerState_0 Container=D5C9EA9447211CABF9D8D49F37D12B51 Revision=3 Items=0 Ammo=0",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.05"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "LogPlayLevel: Shutting down PIE online subsystems",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.45.05"
+				}
+			],
+			"warnings": 83,
+			"errors": 1,
+			"artifacts": []
+		}
+	]
+}

@@ -602,11 +602,21 @@ public:
 		// Head 骨骼在后脑与颈部交界，离眼睛十几厘米，不能当作眼睛位置。
 		auto Measure = [&](float& EyeDistance, float& Angle)
 		{
-			const FVector Root = Gun->GetComponentLocation();
-			const FVector Axis = (Gun->GetSocketLocation(TEXT("MuzzleFlash")) - Root).GetSafeNormal();
-			EyeDistance = FMath::PointDistToLine(C->GetPawnViewLocation(), Axis, Root);
+			// The mesh origin is near the grip, below the bore; origin-to-muzzle is not the barrel axis.
+			const FTransform Muzzle = Gun->GetSocketTransform(TEXT("MuzzleFlash"));
+			const FVector Axis = Muzzle.GetUnitAxis(EAxis::X);
+			EyeDistance = FMath::PointDistToLine(C->GetPawnViewLocation(), Axis, Muzzle.GetLocation());
 			Angle = FMath::RadiansToDegrees(FMath::Acos(FMath::Clamp(
 				FVector::DotProduct(Axis, C->GetBaseAimRotation().Vector()), -1.f, 1.f)));
+		};
+		auto DescribePose = [&](const TCHAR* Label)
+		{
+			const auto Muzzle = Gun->GetSocketTransform(TEXT("MuzzleFlash"));
+			const FVector Eye = C->GetPawnViewLocation();
+			Test->AddInfo(FString::Printf(TEXT("Aim probe %s: eye=(%s) gun=(%s) muzzle=(%s) muzzleForward=(%s) muzzleAxisEye=%.2f"),
+				Label, *Eye.ToString(), *Gun->GetComponentLocation().ToString(), *Muzzle.GetLocation().ToString(),
+				*Muzzle.GetRotation().GetForwardVector().ToString(),
+				FMath::PointDistToLine(Eye, Muzzle.GetRotation().GetForwardVector(), Muzzle.GetLocation())));
 		};
 		auto Mouse = [&](bool Down)
 		{
@@ -616,12 +626,14 @@ public:
 		switch (Step)
 		{
 		case 0:
+			if (!Test->TestTrue(TEXT("World weapon defines its muzzle axis"), Gun->DoesSocketExist(TEXT("MuzzleFlash")))) return true;
 			StepAt = Now;
 			++Step;
 			return false;
 		case 1:
 			if (Now - StepAt < 1.0) return false;
 			Measure(HipDistance, HipAngle);
+			DescribePose(TEXT("hip"));
 			Mouse(true);
 			StepAt = Now;
 			++Step;
@@ -630,6 +642,7 @@ public:
 			// 等开镜混合（0.15 秒）和旧状态机的过渡结束。
 			if (Now - StepAt < 1.0) return false;
 			Measure(AimDistance, AimAngle);
+			DescribePose(TEXT("aim"));
 			Test->AddInfo(FString::Printf(
 				TEXT("Third-person aim pose: hip eye-to-barrel=%.1fcm angle=%.1f deg, aim eye-to-barrel=%.1fcm angle=%.1f deg"),
 				HipDistance, HipAngle, AimDistance, AimAngle));
