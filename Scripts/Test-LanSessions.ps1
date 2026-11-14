@@ -164,7 +164,12 @@ try {
         Wait-SessionTest $clientTwo
         Wait-SessionTest $hostRun
         $otherRun.Process.Refresh()
-        if (!$otherRun.Process.HasExited) { Stop-Process -Id $otherRun.Process.Id }
+        if (!$otherRun.Process.HasExited) {
+            Stop-Process -Id $otherRun.Process.Id
+            foreach ($entry in $runReport.processes) {
+                if ($entry.pid -eq $otherRun.Process.Id) { $entry.intentional_stop = $true }
+            }
+        }
     }
     Write-Host "All room browser and readiness tests passed. Logs: $resultRoot"
     $runReport.result = 'passed'
@@ -178,7 +183,15 @@ finally {
     # 仅清理此脚本创建的测试进程。
     foreach ($process in $ownedProcesses) {
         $process.Refresh()
-        if (!$process.HasExited) { Stop-Process -Id $process.Id }
+        $stopped = !$process.HasExited
+        if ($stopped) { Stop-Process -Id $process.Id }
+        $process.WaitForExit()
+        foreach ($entry in $runReport.processes) {
+            if ($entry.pid -eq $process.Id) {
+                $entry.exit_code = $process.ExitCode
+                if ($stopped) { $entry.intentional_stop = $true }
+            }
+        }
     }
     $runReport.exit_code = if ($runReport.result -eq 'passed') { 0 } else { 1 }
     $runReport.finished_utc = [DateTime]::UtcNow.ToString('o')

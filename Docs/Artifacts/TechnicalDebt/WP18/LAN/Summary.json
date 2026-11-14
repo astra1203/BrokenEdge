@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Empty",
+    "role": "Empty",
+    "exit_code": 0,
+    "intentional_stop": false,
+    "successful_tests": 1
+  },
+  {
+    "name": "Server-FreeForAll",
+    "role": "Server",
+    "exit_code": 0,
+    "intentional_stop": false,
+    "successful_tests": 1
+  },
+  {
+    "name": "Other-FreeForAll",
+    "role": "Advertise",
+    "exit_code": -1,
+    "intentional_stop": true,
+    "successful_tests": 0
+  },
+  {
+    "name": "Client1-FreeForAll",
+    "role": "Join",
+    "exit_code": 0,
+    "intentional_stop": false,
+    "successful_tests": 1
+  },
+  {
+    "name": "Client2-FreeForAll",
+    "role": "Cancel",
+    "exit_code": 0,
+    "intentional_stop": false,
+    "successful_tests": 1
+  },
+  {
+    "name": "Server-Teams",
+    "role": "Server",
+    "exit_code": 0,
+    "intentional_stop": false,
+    "successful_tests": 1
+  },
+  {
+    "name": "Other-Teams",
+    "role": "Advertise",
+    "exit_code": -1,
+    "intentional_stop": true,
+    "successful_tests": 0
+  },
+  {
+    "name": "Client1-Teams",
+    "role": "Join",
+    "exit_code": 0,
+    "intentional_stop": false,
+    "successful_tests": 1
+  },
+  {
+    "name": "Client2-Teams",
+    "role": "Cancel",
+    "exit_code": 0,
+    "intentional_stop": false,
+    "successful_tests": 1
+  }
+]

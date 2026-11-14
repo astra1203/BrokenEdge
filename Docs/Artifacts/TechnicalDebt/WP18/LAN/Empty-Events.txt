@@ -1,0 +1,14 @@
+[2026.11.14-02.27.32:379][186]LogAutomationController: Received FindWorkersResponseMessage from E552BACC428B61789A4A2A980AA8ED9F
+[2026.11.14-02.27.32:379][186]LogAutomationController: Requesting test list from E552BACC428B61789A4A2A980AA8ED9F
+[2026.11.14-02.27.32:390][188]LogAutomationController: Received RequestTestsReplyCompleteMessage from E552BACC428B61789A4A2A980AA8ED9F
+[2026.11.14-02.27.32:390][188]LogAutomationController: 2379 tests available on E552BACC428B61789A4A2A980AA8ED9F
+[2026.11.14-02.27.32:399][188]LogAutomationController: Sending StopTests to E552BACC428B61789A4A2A980AA8ED9F
+[2026.11.14-02.27.32:399][188]LogAutomationController: Sending StartTestSession to E552BACC428B61789A4A2A980AA8ED9F
+[2026.11.14-02.27.32:399][188]LogAutomationController: Display: Clearing ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Logs/ and ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Tmp/
+[2026.11.14-02.27.32:401][188]LogAutomationController: Sending RunTest MenuFlow to E552BACC428B61789A4A2A980AA8ED9F
+[2026.11.14-02.27.32:401][188]LogAutomationController: Display: Test Started. Name={MenuFlow} Path={MultiplayerSessions.LAN.MenuFlow}
+[2026.11.14-02.27.37:392][444]LogAutomationController: Display: Test Completed. Result={Success} Name={MenuFlow} Path={MultiplayerSessions.LAN.MenuFlow}
+[2026.11.14-02.27.37:392][444]LogAutomationController: BeginEvents: MultiplayerSessions.LAN.MenuFlow
+[2026.11.14-02.27.37:392][444]LogAutomationController: SESSION_FLOW_OK Role=Empty
+[2026.11.14-02.27.37:392][444]LogAutomationController: EndEvents: MultiplayerSessions.LAN.MenuFlow
+[2026.11.14-02.27.37:392][444]LogAutomationController: Sending StopTestSession to E552BACC428B61789A4A2A980AA8ED9F
