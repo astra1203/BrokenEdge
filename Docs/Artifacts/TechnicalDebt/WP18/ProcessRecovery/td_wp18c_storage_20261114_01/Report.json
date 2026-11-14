@@ -1,0 +1,82 @@
+{
+  "started_utc": "2026-11-14T01:50:00.173177+00:00",
+  "runs": [
+    {
+      "boundary": "prepared",
+      "attempt": 0,
+      "pid": 17236,
+      "command": [
+        "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp18c_storage_20261114_01\\prepared-0.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp18c_storage_20261114_01\\prepared",
+        "-ExtractionBoundary=prepared"
+      ],
+      "intentional_crash": true,
+      "exit_code": 1
+    },
+    {
+      "boundary": "prepared",
+      "attempt": 1,
+      "pid": 13760,
+      "command": [
+        "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-unattended",
+        "-nosplash",
+        "-nosound",
+        "-NullRHI",
+        "-NoLoadingScreen",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.CrashBoundary",
+        "-TestExit=Automation Test Queue Empty",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp18c_storage_20261114_01\\prepared-1.log",
+        "-ExtractionBoundaryDir=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp18c_storage_20261114_01\\prepared",
+        "-ExtractionBoundary=prepared",
+        "-ExtractionVerifyRecovery",
+        "-ExtractionRecoveryAttempt=1"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "result": "failed",
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "7a8b58d202ffabfb352eea9b1c31896e87b61ca7",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Extraction/run_soviet_audit.py\n M Scripts/Extraction/validate_soviet_layout.py",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_storage_restarts.py",
+  "script_sha256": "0201f695ccf24e8699af4ced1335666d32ce0a3e2eb4878900237327e263af80",
+  "ue_env_sha256": "e811f0a4231046c4c5df0ccd3fc450353c604b27a4d874e5ee747108e773f915",
+  "inherited_cache_environment": {
+    "UE-LocalDataCachePath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Files",
+    "UE-ZenDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen",
+    "UE-ZenSubprocessDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen"
+  },
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_storage_restarts.py",
+    "--engine",
+    "D:/OrekiFiles/EpicGames/UE_5.8",
+    "--tag",
+    "td_wp18c_storage_20261114_01"
+  ],
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp18c_storage_20261114_01\\Report.json",
+  "exit_code": 1,
+  "error": "AssertionError('D:\\\\SourceFiles\\\\UnrealProjects\\\\BrokenEdge\\\\Saved\\\\Extraction\\\\td_wp18c_storage_20261114_01\\\\prepared-1.log')",
+  "finished_utc": "2026-11-14T01:50:38.514813+00:00"
+}

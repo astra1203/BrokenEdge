@@ -8,6 +8,7 @@
 #include "Misc/Parse.h"
 #include "Misc/FileHelper.h"
 #include "HAL/PlatformProcess.h"
+#include "JsonObjectConverter.h"
 
 namespace
 {
@@ -336,7 +337,30 @@ bool FExtractionCrashBoundary::RunTest(const FString&)
 		TestEqual(TEXT("No duplicate or lost rifles after process restart"), V.Stash.Count(TEXT("AK")),
 		          Boundary == TEXT("death") ? 2 : 3);
 		TestEqual(TEXT("No starter regrant after restart"), V.Stash.Count(TEXT("Ammo")), 360);
-		TestEqual(TEXT("Loadout remains deducted"), V.Loadout.Items.Num(), 0);
+		TestEqual(TEXT("Only the three reusable gear slots return to loadout"), V.Loadout.Items.Num(), 3);
+		TestEqual(TEXT("Carried rifle is not duplicated into loadout"), V.Loadout.Count(TEXT("AK")), 0);
+		if (!TestEqual(TEXT("One durable raid record"), S->TestState().Raids.Num(), 1)) return false;
+		const auto& Record = S->TestState().Raids[0];
+		TestTrue(TEXT("Recovery closes the durable raid"), Record.Closed);
+		if (!TestEqual(TEXT("One durable raid member"), Record.Players.Num(), 1)) return false;
+		for (int32 Slot : {ExtractionGear::RigSlot, ExtractionGear::BagSlot, ExtractionGear::SafeSlot})
+		{
+			const auto* Gear = V.Loadout.InSlot(Slot);
+			const auto* Original = Record.Players[0].Original.InSlot(Slot);
+			if (!TestNotNull(TEXT("Reusable gear restored"), Gear) || !TestNotNull(TEXT("Original gear recorded"), Original)) return false;
+			TestEqual(TEXT("Gear definition preserved"), Gear->Definition, Original->Definition);
+			TestEqual(TEXT("One item per gear slot"), Gear->Quantity, 1);
+			if (Boundary != TEXT("death") || Slot == ExtractionGear::SafeSlot)
+				TestEqual(TEXT("Refunded or protected gear keeps its identity"), Gear->Id, Original->Id);
+			else TestTrue(TEXT("Lost rig and backpack get fresh starter identities"), Gear->Id != Original->Id);
+		}
+		TSet<FGuid> Identities;
+		for (const auto* Items : {&V.Stash.Items, &V.Loadout.Items, &V.Overflow})
+			for (const auto& Item : *Items)
+			{
+				TestTrue(TEXT("Recovered items have valid unique identities"), Item.Id.IsValid() && !Identities.Contains(Item.Id));
+				Identities.Add(Item.Id);
+			}
 		const auto Expected = Boundary == TEXT("prepared")
 			                      ? EExtractionOutcome::Aborted
 			                      : Boundary == TEXT("active")
@@ -345,6 +369,18 @@ bool FExtractionCrashBoundary::RunTest(const FString&)
 			                      ? EExtractionOutcome::Dead
 			                      : EExtractionOutcome::Extracted;
 		TestTrue(TEXT("Committed terminal result or recovery result retained"), V.Result.Outcome == Expected);
+		int32 Attempt = 1;
+		FParse::Value(FCommandLine::Get(), TEXT("ExtractionRecoveryAttempt="), Attempt);
+		FString Snapshot, Previous;
+		if (!TestTrue(TEXT("Recovered profile serializes"), FJsonObjectConverter::UStructToJsonObjectString(V, Snapshot))) return false;
+		const FString SnapshotPath = Path / TEXT("VerifiedProfile.json");
+		if (Attempt == 1)
+			TestTrue(TEXT("First independent recovery recorded"), FFileHelper::SaveStringToFile(Snapshot, *SnapshotPath));
+		else
+		{
+			TestTrue(TEXT("First recovery snapshot exists"), FFileHelper::LoadFileToString(Previous, *SnapshotPath));
+			TestEqual(TEXT("Second independent restart preserves complete profile and revisions"), Snapshot, Previous);
+		}
 		return true;
 	}
 	FGuid P, Raid;

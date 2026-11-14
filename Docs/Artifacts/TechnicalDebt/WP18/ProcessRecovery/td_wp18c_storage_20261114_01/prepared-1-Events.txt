@@ -1,0 +1,7 @@
+[2026.11.14-01.50.38:112][298]LogAutomationController: Display: Test Started. Name={CrashBoundary} Path={BrokenEdge.Extraction.CrashBoundary}
+[2026.11.14-01.50.38:133][299]LogTemp: Display: EXTRACTION_STORE_COMMIT Sequence=5 Bytes=11943 JournalBytes=35500 Profiles=1 Raids=1 Receipts=0 ElapsedMs=3.08
+[2026.11.14-01.50.38:133][299]LogTemp: Display: EXTRACTION_STORE_LOAD Records=4 JournalBytes=35500 ElapsedMs=19.46 Faulted=0
+[2026.11.14-01.50.38:236][301]LogAutomationController: Error: Test Completed. Result={Fail} Name={CrashBoundary} Path={BrokenEdge.Extraction.CrashBoundary}
+[2026.11.14-01.50.38:236][301]LogAutomationController: LogTemp: EXTRACTION_STORE_COMMIT Sequence=5 Bytes=11943 JournalBytes=35500 Profiles=1 Raids=1 Receipts=0 ElapsedMs=3.08 [log]
+[2026.11.14-01.50.38:236][301]LogAutomationController: LogTemp: EXTRACTION_STORE_LOAD Records=4 JournalBytes=35500 ElapsedMs=19.46 Faulted=0 [log]
+[2026.11.14-01.50.38:236][301]LogAutomationController: Error: Expected 'Loadout remains deducted' to be 0, but it was 3. [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\ExtractionPersistenceTests.cpp(340)]

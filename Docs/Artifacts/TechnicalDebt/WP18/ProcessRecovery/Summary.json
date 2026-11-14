@@ -1,0 +1,344 @@
+{
+  "td_wp18c_storage_20261114_01": {
+    "result": "failed",
+    "processes": [
+      {
+        "boundary": "prepared",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "prepared",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 0
+      }
+    ],
+    "verified_profile_sha256": {}
+  },
+  "td_wp18c_storage_20261114_02": {
+    "result": "passed",
+    "processes": [
+      {
+        "boundary": "prepared",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "prepared",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "prepared",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "active",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "active",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "active",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "success",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "success",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "success",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "death",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "death",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "death",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      }
+    ],
+    "verified_profile_sha256": {
+      "active": "bc9c790ad96b19770256307e95701ef2b06998657a8fa00d0bc9d2f655fb2c4d",
+      "death": "9dd6a85f8bcccb76e428573f469486d43ce895ca8cc6909996cba27ef680e1e7",
+      "prepared": "5e7e7ebbc833d0caac08398f401dfa7a398526d5f462756638986251d124c4f0",
+      "success": "9ed7fafbb53562223f803acbda187304b3f1356583720c06b06b66818898f208"
+    }
+  },
+  "td_wp18c_economy_20261114_02": {
+    "result": "passed",
+    "processes": [
+      {
+        "boundary": "buy-before",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "buy-before",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "buy-before",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "buy-after",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "buy-after",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "buy-after",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "sell-before",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "sell-before",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "sell-before",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "sell-after",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "sell-after",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "sell-after",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "deliver-before",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "deliver-before",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "deliver-before",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "deliver-after",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "deliver-after",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "deliver-after",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "claim-before",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "claim-before",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "claim-before",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "claim-after",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "claim-after",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "claim-after",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "settlement-before",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "settlement-before",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "settlement-before",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "settlement-after",
+        "attempt": 0,
+        "exit_code": 1,
+        "intentional_crash": true,
+        "successes": 0
+      },
+      {
+        "boundary": "settlement-after",
+        "attempt": 1,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      },
+      {
+        "boundary": "settlement-after",
+        "attempt": 2,
+        "exit_code": 0,
+        "intentional_crash": false,
+        "successes": 1
+      }
+    ],
+    "verified_profile_sha256": {
+      "buy-after": "7444d24e505fb04c919104b3b5b8a4cda88f5e7e7947a8819920195e3ca24204",
+      "buy-before": "e3c01fd05bc0f306d8dc16993d077eb1eeb4381fbcd4329eb2fc048e98e8d6f5",
+      "claim-after": "9e631109e2feaceedcf02178c7bdc89a7e6279429c9226fea563911abeaaf70c",
+      "claim-before": "36593640be25b67ba5f3d794eb141fa76419e2041bf18f5c00d138ecec7a8a1f",
+      "deliver-after": "b1539ec9ce9698c4bfa0746513e8dc45946c38d503ced9307245a12f4d8d882e",
+      "deliver-before": "0bca2cf3a3efecbbd761aa10a69caee14e2f26a19db0c1c353e0513832a0656c",
+      "sell-after": "b5a4b14b3ec4f9013a35e50ccdc109bf45db1f95ca1fda5aeb05a8e6804f6d0b",
+      "sell-before": "b84eb11f85e0016cf42ce03ee1e4850f6f199ab02228230d80e02a55367e28bc",
+      "settlement-after": "8cadb507fa6a6666e1c032c147e58b69432cad82fbaccca0ace9cba2498248e3",
+      "settlement-before": "b2ee08468eaf01e5eded567a8e56054d4cd3880390fa4019dbe9198b6593c847"
+    }
+  }
+}
