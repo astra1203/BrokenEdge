@@ -9,14 +9,20 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
+sys.path.insert(0, str(ROOT / 'Scripts'))
+from Common.ue_env import engine_root, run_record
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
+parser.add_argument('--engine', type=Path)
 parser.add_argument('--mode', choices=['Extraction', 'Teams', 'FreeForAll'], default='Extraction')
 parser.add_argument('--players', type=int, choices=[2, 3, 6], default=2)
 parser.add_argument('--cross-maps', action='store_true')
 parser.add_argument('--nullrhi', action='store_true', help='Functional multi-world validation without rendering')
 args = parser.parse_args()
+try:
+    ENGINE = engine_root(args.engine)
+except (ValueError, OSError, KeyError) as error:
+    parser.error(str(error))
 if not args.tag or not all(c.isalnum() or c in '-_' for c in args.tag):
     raise ValueError('Use an alphanumeric run tag')
 out = ROOT / 'Saved/Extraction' / args.tag
@@ -32,6 +38,7 @@ command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe'), str(ROOT / 'B
 if args.cross_maps: command.append('-ExtractionPIECrossMaps')
 if args.nullrhi: command.append('-NullRHI')
 metadata = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'mode': args.mode, 'command': command}
+metadata.update(run_record(command, out / 'Run.json', engine=ENGINE, script=__file__))
 environment = os.environ.copy()
 environment['UE_SKIP_UBT_SDK_SETUP'] = '1'
 with (out / 'Process.log').open('wb') as log:

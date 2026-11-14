@@ -1,0 +1,37 @@
+﻿[
+    {
+        "case":  "EnglishSuccess",
+        "accepted":  true,
+        "expected":  true
+    },
+    {
+        "case":  "ChineseSuccess",
+        "accepted":  true,
+        "expected":  true
+    },
+    {
+        "case":  "CrashAfterSuccess",
+        "accepted":  false,
+        "expected":  false
+    },
+    {
+        "case":  "Failure",
+        "accepted":  false,
+        "expected":  false
+    },
+    {
+        "case":  "MixedFailure",
+        "accepted":  false,
+        "expected":  false
+    },
+    {
+        "case":  "Empty",
+        "accepted":  false,
+        "expected":  false
+    },
+    {
+        "case":  "InvalidEngine",
+        "accepted":  false,
+        "expected":  false
+    }
+]

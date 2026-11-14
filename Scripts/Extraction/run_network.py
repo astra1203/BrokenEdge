@@ -20,52 +20,12 @@ sys.stdout.reconfigure(encoding='utf-8')
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def read_engine_version():
-    """从 .uproject 的 EngineAssociation 读目标引擎版本，例如 '5.8'。"""
-    uproject = ROOT / 'BrokenEdge.uproject'
-    if uproject.is_file():
-        try:
-            return json.loads(uproject.read_text(encoding='utf-8')).get('EngineAssociation', '')
-        except (ValueError, OSError):
-            return ''
-    return ''
+sys.path.insert(0, str(ROOT / 'Scripts'))
+from Common.ue_env import engine_root, run_record
 
-
-def find_engine(version):
-    """定位引擎安装目录。
-
-    原代码写死 C:/UnrealProjects/UnrealEngine-5.8.3-release，本机不存在，
-    直接导致 FileNotFoundError。这里按 .uproject 的 EngineAssociation 定位版本，
-    再在常见安装位置里找匹配的那一份 —— 本机同时装了 5.4 / 5.6 / 5.8，
-    只按名字排序会挑到 5.4，引擎版本不符会直接崩在 Server driver ready。
-    """
-    env = os.environ.get('UE_ENGINE_ROOT')
-    exact, loose = [], []
-    if env:
-        exact.append(Path(env))
-    for drive in ('C:/', 'D:/', 'E:/'):
-        for base in ('Program Files/Epic Games', 'Epic Games', 'UnrealProjects'):
-            root = Path(drive) / base
-            if not root.is_dir():
-                continue
-            if version:
-                # 精确匹配该版本，例如 5.8 -> UE_5.8
-                exact.extend(sorted(root.glob('UE_{0}'.format(version))))
-                exact.extend(sorted(root.glob('UnrealEngine-{0}*'.format(version))))
-            loose.extend(sorted(root.glob('UE_5*')))
-            loose.extend(sorted(root.glob('UnrealEngine-5*')))
-    # 精确匹配的候选必须优先，否则会先命中别的盘上的旧版本（实测会挑到 UE_5.4）。
-    for c in exact + loose:
-        if (c / 'Engine/Binaries/Win64/UnrealEditor.exe').is_file():
-            return c
-    raise SystemExit('UE engine not found; set UE_ENGINE_ROOT to the engine root')
-
-
-ENGINE_VERSION = read_engine_version()
-ENGINE = find_engine(ENGINE_VERSION)
-print('engine:', ENGINE, 'wanted:', ENGINE_VERSION or 'any')
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
+parser.add_argument('--engine', type=Path)
 parser.add_argument('--loot-seed', type=int, help='Deterministic authority seed for authored loot validation')
 parser.add_argument('--guards', type=int, help='Override the scenario guard count (server clamps to its own maximum)')
 parser.add_argument('--starting-kit-validation', action='store_true', help='Validate current M4A1 test-kit startup instead of legacy AK fixtures')
@@ -100,6 +60,16 @@ parser.add_argument('--flight-diagnostics', action='store_true', help='Opt-in au
 parser.add_argument('--bounded-rendering', action='store_true', help='Functional/HUD validation with Medium scalability, 768 MiB texture pool and no ray tracing; not default visual/performance acceptance')
 parser.add_argument('--streaming-loops', type=int, choices=[1, 2, 10], default=10)
 args = parser.parse_args()
+selection_env = os.environ.copy()
+# Keep existing invocations working, with canonical settings taking precedence.
+if not args.engine and not selection_env.get('BROKENEDGE_UE_ROOT') and selection_env.get('UE_ENGINE_ROOT'):
+    selection_env['BROKENEDGE_UE_ROOT'] = selection_env['UE_ENGINE_ROOT']
+    print('UE_ENGINE_ROOT is deprecated; use --engine or BROKENEDGE_UE_ROOT.', file=sys.stderr)
+try:
+    ENGINE = engine_root(args.engine, environ=selection_env)
+except (ValueError, OSError, KeyError) as error:
+    parser.error(str(error))
+print('engine:', ENGINE)
 if args.players == 1 and args.scenario != 'lobby-ui':
     parser.error('Single-player acceptance currently supports lobby-ui only')
 if args.scenario == 'flight-matrix' and (args.players != 2 or args.guards != 0 or not args.flight_diagnostics):
@@ -143,7 +113,8 @@ processes, commands, checks = {}, {}, []
 last_states = {}
 finishing = set()
 report = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
-          'options': vars(args), 'roles': ROLES, 'checks': checks, 'processes': {}, 'result': 'running'}
+          'options': {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()}, 'roles': ROLES, 'checks': checks, 'processes': {}, 'result': 'running'}
+report.update(run_record([sys.executable, __file__, *sys.argv[1:]], OUT / 'Report.json', engine=ENGINE, script=__file__))
 report['base_commit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
 report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(p.read_bytes()).hexdigest()
                          for p in [Path(__file__).resolve(), ROOT / 'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
@@ -295,7 +266,7 @@ def launch(role):
         report.setdefault('executables',{})[role]=validate_executable(executable)
     else:
         command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe'), str(ROOT / 'BrokenEdge.uproject'),
-                   '-server' if role == 'Server' else '-game']
+                   '-server' if role == 'Server' else '-game', '-DisablePython']
     entry = '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction?ExpectedPlayers=3' if role == 'Server' and args.scenario == 'load_timeout' else '/Game/Maps/Lobby'
     command += [entry, '-nosound', '-unattended', '-nosplash', '-NoLoadingScreen',
                 '-ExtractionGuards=' + (str(args.guards) if args.guards is not None else '8' if args.scenario == 'overnight-route' else '4' if args.scenario in ['pvpve', 'guard_tuning', 'progression', 'northcombat'] or args.scenario == 'equipment' and len(ROLES) == 6 else '0'),
@@ -824,6 +795,8 @@ finally:
                 proc.wait(timeout=15)
             except subprocess.TimeoutExpired:
                 proc.kill()
+    report['exit_code'] = 0 if report['result'] == 'passed' else 1
+    report['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     save()
 print('RESULT', report['result'], len(checks), OUT, flush=True)
 sys.exit(0 if report['result'] == 'passed' else 1)

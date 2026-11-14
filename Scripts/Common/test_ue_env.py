@@ -58,6 +58,11 @@ class EngineSelectionTests(unittest.TestCase):
         entries = [
             ('Extraction/run_editor_task.py', ['inventory'], 'Saved/Extraction'),
             ('Extraction/run_build.py', [], 'Saved/Extraction'),
+            ('Extraction/run_network.py', [], 'Saved/Extraction'),
+            ('Extraction/run_pie_lobby.py', [], 'Saved/Extraction'),
+            ('Extraction/run_storage_restarts.py', [], 'Saved/Extraction'),
+            ('Extraction/run_soviet_audit.py', [], 'Saved/Extraction'),
+            ('Extraction/run_nanite_usage.py', [], 'Saved/Extraction/NaniteUsage'),
             ('Extraction/run_pie_teardown.py', [], 'Saved/Extraction'),
             ('Traversal/run_entry_tests.py', [], 'Saved/Traversal/EditorRuns'),
             ('Traversal/run_editor.py', ['geometry'], 'Saved/Traversal/EditorRuns'),

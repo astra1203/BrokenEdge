@@ -57,6 +57,8 @@ def run_record(cmd, report_path, *, engine, script, project_root=ROOT):
         'script': str(script),
         'script_sha256': hashlib.sha256(script.read_bytes()).hexdigest(),
         'ue_env_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        'inherited_cache_environment': {key: os.environ[key] for key in (
+            'UE-LocalDataCachePath', 'UE-ZenDataPath', 'UE-ZenSubprocessDataPath') if key in os.environ},
         'command': list(map(str, cmd)),
         'report_path': str(Path(report_path).resolve()),
         'exit_code': None,

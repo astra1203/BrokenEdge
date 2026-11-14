@@ -5,18 +5,27 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[2]
-ENGINE = Path('C:/UnrealProjects/UnrealEngine-5.8.3-release')
+sys.path.insert(0, str(ROOT / 'Scripts'))
+from Common.ue_env import engine_root, run_record
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
+parser.add_argument('--engine', type=Path)
 parser.add_argument('--economy', action='store_true', help='Buy, sell, file delivery, reward and settlement before/after commit')
 args = parser.parse_args()
+try:
+    ENGINE = engine_root(args.engine)
+except (ValueError, OSError, KeyError) as error:
+    parser.error(str(error))
 assert args.tag and all(c.isalnum() or c in '-_' for c in args.tag)
 out = ROOT / 'Saved/Extraction' / args.tag
 out.mkdir(parents=True, exist_ok=False)
 report = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'runs': [], 'result': 'running'}
+report.update(run_record([sys.executable, __file__, *sys.argv[1:]], out / 'Report.json', engine=ENGINE, script=__file__))
+(out / 'Report.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
 env = dict(os.environ, UE_SKIP_UBT_SDK_SETUP='1')
 try:
     boundaries = [kind + '-' + point for kind in ['buy', 'sell', 'deliver', 'claim', 'settlement']
@@ -37,6 +46,7 @@ try:
                                         creationflags=subprocess.CREATE_NO_WINDOW)
                 record = {'boundary': boundary, 'attempt': attempt, 'pid': proc.pid, 'command': command}
                 report['runs'].append(record)
+                (out / 'Report.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
                 try:
                     if attempt == 0:
                         deadline = time.monotonic() + 180
@@ -62,5 +72,6 @@ except Exception as error:
     report['error'] = repr(error)
     raise
 finally:
+    report['exit_code'] = 0 if report['result'] == 'passed' else 1
     report['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     (out / 'Report.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')

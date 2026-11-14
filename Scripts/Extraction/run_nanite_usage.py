@@ -20,6 +20,8 @@ import sys
 from repair_nanite_usage import sha, validate_manifest
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'Scripts'))
+from Common.ue_env import engine_root, run_record
 
 
 def create_run_directory(root, tag):
@@ -35,7 +37,7 @@ def main():
     parser.add_argument('--tag', required=True)
     parser.add_argument('--verify-only', action='store_true')
     parser.add_argument('--baseline-report', type=Path)
-    parser.add_argument('--engine', type=Path, default=Path('C:/UnrealProjects/UnrealEngine-5.8.3-release'))
+    parser.add_argument('--engine', type=Path)
     parser.add_argument('--timeout-seconds', type=int, default=1800)
     parser.add_argument('--shader-workers', type=int, default=2)
     args = parser.parse_args()
@@ -43,10 +45,11 @@ def main():
         parser.error('timeout-seconds and shader-workers must be positive')
     if args.verify_only != bool(args.baseline_report):
         parser.error('--verify-only requires --baseline-report; repair must not use a baseline')
-    engine = args.engine.resolve()
+    try:
+        engine = engine_root(args.engine)
+    except (ValueError, OSError, KeyError) as error:
+        parser.error(str(error))
     executable = engine / 'Engine/Binaries/Win64/UnrealEditor-Cmd.exe'
-    if not executable.is_file():
-        parser.error('UnrealEditor-Cmd.exe was not found in the supplied engine')
     baseline = (ROOT / args.baseline_report).resolve() if args.baseline_report else None
     if baseline and not baseline.is_file():
         parser.error('Baseline Report.json does not exist')
@@ -70,9 +73,10 @@ def main():
     else:
         environment.pop('EXTRACTION_NANITE_BASELINE', None)
     metadata = dict(mode=mode, command=command, started_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                    script_sha256=sha(script), wrapper_sha256=sha(Path(__file__)), manifest_sha256=sha(manifest),
+                    task_script_sha256=sha(script), wrapper_sha256=sha(Path(__file__)), manifest_sha256=sha(manifest),
                     baseline_report=str(baseline) if baseline else None, shader_workers=args.shader_workers)
     run_file = out / 'Run.json'
+    metadata.update(run_record(command, run_file, engine=engine, script=__file__))
     try:
         subprocess.run(['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
                         str(ROOT / 'Scripts/Assert-EditorClosed.ps1'), '-ProjectFile', str(ROOT / 'BrokenEdge.uproject')],
