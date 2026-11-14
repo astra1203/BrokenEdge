@@ -2261,7 +2261,7 @@ void ABrokenEdgeCharacter::Defeated(bool bPlayerLeftGame)
 	// 死亡时立即终止行为树及延迟启动，避免尸体继续执行关注、移动或其他任务。
 	if (HasAuthority())
 		if (auto* Guard = Cast<AExtractionGuard>(GetController())) Guard->StopGuardAI();
-	if (ExtractionCombat->IsEnabled()) ExtractionCombat->CancelReload();
+	if (Combat) Combat->CancelActions();
 	DropWeapons();
 	MulticastDefeated(bPlayerLeftGame);
 }
@@ -2286,7 +2286,7 @@ void ABrokenEdgeCharacter::MulticastDefeated_Implementation(bool bPlayerLeftGame
 
 	if (Combat)
 	{
-		Combat->FireButtonPressed(false);
+		Combat->CancelActions();
 	}
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);

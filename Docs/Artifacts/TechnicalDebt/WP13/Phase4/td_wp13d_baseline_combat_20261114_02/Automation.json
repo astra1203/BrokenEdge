@@ -1,0 +1,389 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "5661CD5840D95A1500656B846FDFAD9B",
+			"instanceName": "OREKI-LEGION-29120",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.14-00.16.07",
+	"succeeded": 0,
+	"succeededWithWarnings": 2,
+	"failed": 1,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.16660560667514801,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "DispatchAndOwnership",
+			"fullTestPath": "BrokenEdge.Extraction.CombatMode.DispatchAndOwnership",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5661CD5840D95A1500656B846FDFAD9B"
+			],
+			"duration": 0.023981999605894089,
+			"dateTime": "2026.11.14-00.16.07",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_1.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				}
+			],
+			"warnings": 1,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "LegacyLifecycle",
+			"fullTestPath": "BrokenEdge.Extraction.CombatMode.LegacyLifecycle",
+			"tags": [],
+			"state": "Fail",
+			"deviceInstance": [
+				"5661CD5840D95A1500656B846FDFAD9B"
+			],
+			"duration": 0.12565380334854126,
+			"dateTime": "2026.11.14-00.16.07",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Shotgun completion does not bulk fill the magazine' to be 1, but it was 3.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 41,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Shotgun completion preserves unused reserve' to be 2, but it was 0.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 42,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Late shell notify after completion does not add ammo' to be 3, but it was 4.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 45,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Late shell notify after completion does not consume reserve' to be 0, but it was -1.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 46,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Full magazine never consumes an extra shell' to be 1, but it was 0.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 49,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'No reserve cannot create a shell' to be 7, but it was 8.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 51,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Reserve cannot become negative' to be 0, but it was -1.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 52,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(MuzzleFlash): No SkeletalMesh for Component(WeaponMesh) Actor(Shotgun /Temp/Untitled_2.Untitled:PersistentLevel.Shotgun_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Interrupted reload cannot add a late shell' to be 1, but it was 2.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 60,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Drop cancels reload state' to be true.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 62,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Drop clears local reload prediction' to be false.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 63,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(BackpackSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(BackpackSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(BackpackSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Repeated swap notify cannot swap back: The two values are not equal.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 70,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(BackpackSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_2.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Old swap completion cannot unlock a new reload' to be true.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 77,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Defeat cancels reload prediction' to be false.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\LegacyCombatLifecycleTests.cpp",
+					"lineNumber": 80,
+					"timestamp": "2026.11.14-00.16.07"
+				}
+			],
+			"warnings": 10,
+			"errors": 13,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PredictionAndCadenceIsolation",
+			"fullTestPath": "BrokenEdge.Extraction.CombatMode.PredictionAndCadenceIsolation",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5661CD5840D95A1500656B846FDFAD9B"
+			],
+			"duration": 0.016969799995422363,
+			"dateTime": "2026.11.14-00.16.07",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_3.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				},
+				{
+					"event":
+					{
+						"type": "Warning",
+						"message": "LogSkinnedMeshComp: GetSocketByName(RightHandSocket): No SkeletalMesh for Component(CharacterMesh0) Actor(BrokenEdgeCharacter /Temp/Untitled_3.Untitled:PersistentLevel.BrokenEdgeCharacter_0)",
+						"context": "log",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-00.16.07"
+				}
+			],
+			"warnings": 2,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

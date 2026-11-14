@@ -20,16 +20,19 @@ public:
     void FinishReload(UCombatComponent& C) const override
     {
         if (!C.Character) return;
+        if (C.CombatState != ECombatState::ECS_Reloading && !C.bLocallyReloading) return;
         C.bLocallyReloading = false;
-        if (C.Character->HasAuthority())
+        if (C.Character->HasAuthority() && C.CombatState == ECombatState::ECS_Reloading)
         {
             C.CombatState = ECombatState::ECS_Unoccuiped;
-            C.UpdateAmmoValues();
+            // Per-shell notifies already transferred shotgun ammo; end only unlocks the action.
+            if (C.EquippedWeapon && C.EquippedWeapon->GetWeaponType() != EWeaponType::EWT_Shotgun) C.UpdateAmmoValues();
         }
         if (C.bFireButtonPressed) C.Fire();
     }
     void Drop(UCombatComponent& C) const override
     {
+        CancelActions(C);
         if (C.EquippedWeapon) { C.EquippedWeapon->Dropped(); C.EquippedWeapon = nullptr; }
     }
     void SetFireHeld(UCombatComponent& C, bool Held) const override
@@ -38,6 +41,18 @@ public:
         if (Held) C.Fire();
     }
     void CancelFire(UCombatComponent& C) const override { C.ClearLocalFireInput(); }
+    void CancelActions(UCombatComponent& C) const override
+    {
+        C.ClearLocalFireInput(); C.bLocallyReloading = false; C.bSwapAttachPending = false;
+        C.CombatState = ECombatState::ECS_Unoccuiped; C.bCanFire = true;
+        if (C.Character)
+        {
+            C.Character->GetWorldTimerManager().ClearTimer(C.FireTimer);
+            C.Character->bFinishedSwapping = true;
+            C.Character->ForceNetUpdate();
+        }
+        if (C.SecondaryWeapon) C.SecondaryWeapon->EnableCustomDepth(true);
+    }
     bool IsFireHeld(const UCombatComponent& C) const override { return C.bFireButtonPressed; }
     bool CanFire(const UCombatComponent& C) const override
     {
@@ -79,6 +94,11 @@ public:
         if (C.Character->GetExtractionCombat()->SetFireInputHeld(Held)) C.Fire();
     }
     void CancelFire(UCombatComponent& C) const override { C.Character->GetExtractionCombat()->CancelFireInput(); }
+    void CancelActions(UCombatComponent& C) const override
+    {
+        auto* Extraction = C.Character->GetExtractionCombat();
+        Extraction->CancelFireInput(); Extraction->CancelReload(); Extraction->CancelSwap();
+    }
     bool IsFireHeld(const UCombatComponent& C) const override { return C.Character->GetExtractionCombat()->IsFireInputHeld(); }
     bool CanFire(const UCombatComponent& C) const override { return C.Character->GetExtractionCombat()->CanFire(); }
     void StartFireTimer(UCombatComponent& C) const override { C.Character->GetExtractionCombat()->StartFireCooldown(); }
@@ -99,6 +119,7 @@ const ICombatModeAdapter& UCombatComponent::ModeAdapter() const
 
 bool UCombatComponent::IsFireInputHeld() const { return ModeAdapter().IsFireHeld(*this); }
 void UCombatComponent::CancelFireInput() { ModeAdapter().CancelFire(*this); }
+void UCombatComponent::CancelActions() { ModeAdapter().CancelActions(*this); }
 void UCombatComponent::ClearLocalFireInput() { bFireButtonPressed = false; }
 void UCombatComponent::SetReloadPrediction(bool Reloading) { ModeAdapter().SetReloadPrediction(*this, Reloading); }
 bool UCombatComponent::IsReloadPredicted() const { return ModeAdapter().IsReloadPredicted(*this); }

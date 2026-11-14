@@ -10,8 +10,12 @@
 #include "BrokenEdge/Component/CombatComponent.h"
 #include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
 #include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
+#include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
+#include "BrokenEdge/Extraction/ExtractionLootActor.h"
+#include "BrokenEdge/Extraction/ExtractionPlayerController.h"
 #include "BrokenEdge/Extraction/ExtractionState.h"
 #include "BrokenEdge/Weapon/Weapon.h"
+#include "UObject/UnrealType.h"
 
 namespace
 {
@@ -73,9 +77,9 @@ public:
                 else if (W->GetNetMode() == NM_Client) Clients.Add(W);
             }
         if (!Server || Clients.Num() != 2) return false;
-        auto* PC = Clients[0]->GetFirstPlayerController();
+        auto* PC = Cast<AExtractionPlayerController>(Clients[0]->GetFirstPlayerController());
         auto* Owner = PC ? Cast<ABrokenEdgeCharacter>(PC->GetPawn()) : nullptr;
-        if (!Owner || !Owner->GetPlayerState() || !Owner->GetEquippedWeapon()) return false;
+        if (!Owner || !Owner->GetPlayerState() || (Step < 11 && !Owner->GetEquippedWeapon())) return false;
         const int32 PlayerId = Owner->GetPlayerState()->GetPlayerId();
         auto FindPawn = [PlayerId](UWorld* World) -> ABrokenEdgeCharacter*
         {
@@ -85,13 +89,42 @@ public:
         };
         auto* Authority = FindPawn(Server);
         auto* Observer = FindPawn(Clients[1]);
-        if (!Authority || !Observer || !Authority->GetEquippedWeapon() || !Observer->GetEquippedWeapon()) return false;
+        if (!Authority || !Observer || (Step < 11 && (!Authority->GetEquippedWeapon() || !Observer->GetEquippedWeapon()))) return false;
         ABrokenEdgeCharacter* Pawns[] = {Authority, Owner, Observer};
         auto AllState = [&](ECombatState State)
         {
             for (auto* C : Pawns) if (C->GetCombatState() != State) return false;
             return true;
         };
+        if (Step == 11)
+        {
+            if (Now - StepAt < 5) return false; // Past swap/reload deadlines, without advancing timers artificially.
+            for (auto* C : Pawns)
+                if (!C->IsDefeated() || C->GetEquippedWeapon() || C->GetCombat()->IsReloadPredicted()
+                    || C->GetCombatState() != ECombatState::ECS_Unoccuiped) return false;
+            auto* Inventory = Authority->GetExtractionInteraction()->Inventory();
+            Test->TestTrue(TEXT("Defeat commits inventory drop exactly once"), Inventory->WasDropped() && Inventory->GetContents().Items.IsEmpty());
+            for (const auto& Item : BeforeDefeatItems)
+            {
+                int32 Copies = 0;
+                for (TActorIterator<AExtractionLootActor> It(Server); It; ++It)
+                    if (const auto* Dropped = It->GetContents().Find(Item.Id))
+                    {
+                        ++Copies;
+                        Test->TestEqual(TEXT("Dropped item quantity is conserved"), Dropped->Quantity, Item.Quantity);
+                        Test->TestEqual(TEXT("Pending reload/swap cannot refill a dropped magazine"), Dropped->Magazine, Item.Magazine);
+                    }
+                Test->TestEqual(TEXT("Each inventory instance is dropped once"), Copies, 1);
+            }
+            for (auto* C : Pawns)
+            {
+                Test->TestFalse(TEXT("Defeat clears held input on all peers"), C->GetCombat()->IsFireInputHeld());
+                Test->TestFalse(TEXT("Defeated peers cannot fire"), C->GetCombat()->CanFire());
+                Test->TestTrue(TEXT("Interrupted swap unlocks presentation"), C->bFinishedSwapping);
+            }
+            Test->AddInfo(TEXT("Network combat step 11 passed: defeat during client-requested swap; no delayed action or duplicate inventory drop"));
+            return true;
+        }
         auto AmmoConverged = [&]
         {
             const auto* Gun = Authority->GetEquippedWeapon();
@@ -123,6 +156,8 @@ public:
                 Driver->SetPacketSimulationSettings(Settings);
                 Test->TestEqual(TEXT("150 ms outgoing packet lag"), Driver->PacketSimulationSettings.PktLag, 150);
                 Test->TestEqual(TEXT("5 percent packet loss"), Driver->PacketSimulationSettings.PktLoss, 5);
+                Test->AddInfo(FString::Printf(TEXT("Network emulation mode=%d outgoing lag=%d loss=%d"),
+                    int32(W->GetNetMode()), Driver->PacketSimulationSettings.PktLag, Driver->PacketSimulationSettings.PktLoss));
             }
             InitialAmmo = Authority->GetEquippedWeapon()->GetAmmo();
             InitialReserve = Authority->GetCombat()->GetCarriedAmmo();
@@ -163,16 +198,56 @@ public:
             Test->TestEqual(TEXT("Rejected reload cannot create ammunition"), Authority->GetEquippedWeapon()->GetAmmo(), RejectedAmmo);
             Authority->GetExtractionInteraction()->InventoryOpen = false;
             BeforeSwap = Authority->GetEquippedWeapon()->ExtractionDefinition;
-            Authority->GetExtractionCombat()->BeginServerSwap();
+            PC->SelectSecondaryGun(); // Production 2-key handler -> melee selection RPC -> server swap.
             Next();
         }
         else if (Step == 5)
         {
             for (int32 I = 0; I < 3; ++I) SwapSeen[I] |= Pawns[I]->GetCombatState() == ECombatState::ECS_SwappingWeapon;
             if (!SwapSeen[0] || !SwapSeen[1] || !SwapSeen[2] || !AllState(ECombatState::ECS_Unoccuiped)
-                || !AmmoConverged() || Authority->GetEquippedWeapon()->ExtractionDefinition == BeforeSwap) return false;
+                || !AmmoConverged() || Authority->GetEquippedWeapon()->ExtractionDefinition == BeforeSwap
+                || !Owner->GetExtractionCombat()->CanFire() || !Authority->GetExtractionCombat()->CanFire()) return false;
             for (auto* C : Pawns) Test->TestTrue(TEXT("Swap presentation flag clears on every peer"), C->bFinishedSwapping);
-            Next(); return true;
+            Test->TestEqual(TEXT("Client secondary-slot request equips SCAR"), Owner->GetEquippedWeapon()->ExtractionDefinition, FName(TEXT("SCARH")));
+            Shoot(); Next();
+        }
+        else if (Step == 6)
+        {
+            if (Authority->GetExtractionCombat()->GetAcceptedShots() != InitialShots + 3 || !AmmoConverged()) return false;
+            InterruptedAmmo = Authority->GetEquippedWeapon()->GetAmmo();
+            InterruptedReserve = Authority->GetCombat()->GetCarriedAmmo();
+            Owner->GetCombat()->Reload(); Next();
+        }
+        else if (Step == 7)
+        {
+            if (!AllState(ECombatState::ECS_Reloading)) return false;
+            PC->RequestOpenInventory(nullptr, true); Next();
+        }
+        else if (Step == 8)
+        {
+            if (Now - StepAt < 5 || !AllState(ECombatState::ECS_Unoccuiped) || Owner->GetCombat()->IsReloadPredicted()
+                || !Authority->GetExtractionInteraction()->InventoryOpen || !Owner->GetExtractionInteraction()->InventoryOpen) return false;
+            Test->TestTrue(TEXT("Interrupted reload ammo converges"), AmmoConverged());
+            Test->TestEqual(TEXT("Opening inventory cancels delayed magazine refill"), Authority->GetEquippedWeapon()->GetAmmo(), InterruptedAmmo);
+            Test->TestEqual(TEXT("Interrupted reload preserves reserve"), Authority->GetCombat()->GetCarriedAmmo(), InterruptedReserve);
+            PC->RequestOpenInventory(nullptr, false); Next();
+        }
+        else if (Step == 9)
+        {
+            if (Authority->GetExtractionInteraction()->InventoryOpen || Owner->GetExtractionInteraction()->InventoryOpen) return false;
+            PC->SelectPrimaryGun(); Next();
+        }
+        else if (Step == 10)
+        {
+            if (Authority->GetCombatState() != ECombatState::ECS_SwappingWeapon) return false;
+            auto* Delay = FindFProperty<FFloatProperty>(ABrokenEdgeCharacter::StaticClass(), TEXT("RespawnDelay"));
+            if (!Test->TestNotNull(TEXT("Delay fixture respawn until interruption checks finish"), Delay)) return true;
+            Delay->SetPropertyValue_InContainer(Authority, 60.f);
+            auto* Inventory = Authority->GetExtractionInteraction()->Inventory();
+            Inventory->CaptureWeapons(); BeforeDefeatItems = Inventory->GetContents().Items;
+            Test->TestTrue(TEXT("Death fixture has carried items"), !BeforeDefeatItems.IsEmpty());
+            // Advance before defeat: the normal progress logger requires a held weapon.
+            Next(); Authority->Defeated(false); Authority->Defeated(false);
         }
         return false;
     }
@@ -180,6 +255,8 @@ private:
     FAutomationTestBase* Test;
     double Started = FPlatformTime::Seconds(), StepAt = 0;
     int32 Step = 0, InitialAmmo = 0, InitialReserve = 0, RejectedAmmo = 0;
+    int32 InterruptedAmmo = 0, InterruptedReserve = 0;
+    TArray<FExtractionItem> BeforeDefeatItems;
     uint32 InitialShots = 0;
     bool ReloadSeen[3] = {}, SwapSeen[3] = {};
     FName BeforeSwap;

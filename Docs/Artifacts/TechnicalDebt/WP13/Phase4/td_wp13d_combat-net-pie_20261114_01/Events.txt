@@ -1,0 +1,11 @@
+[2026.11.14-00.19.40:058][988]LogAutomationController: Error: Test Completed. Result={Fail} Name={StateAndAmmo} Path={BrokenEdge.Extraction.CombatNetworkPIE.StateAndAmmo}
+[2026.11.14-00.19.40:060][988]LogAutomationController: Network emulation mode=1 outgoing lag=150 loss=5
+[2026.11.14-00.19.40:060][988]LogAutomationController: Network emulation mode=3 outgoing lag=150 loss=5
+[2026.11.14-00.19.40:060][988]LogAutomationController: Network emulation mode=3 outgoing lag=150 loss=5
+[2026.11.14-00.19.40:060][988]LogAutomationController: Network combat step 0 passed; server/owner/observer state=0/0/0 ammo=30/29/30
+[2026.11.14-00.19.40:060][988]LogAutomationController: Network combat step 1 passed; server/owner/observer state=0/0/0 ammo=29/29/29
+[2026.11.14-00.19.40:060][988]LogAutomationController: Network combat step 2 passed; server/owner/observer state=0/0/0 ammo=30/29/30
+[2026.11.14-00.19.40:060][988]LogAutomationController: Network combat step 3 passed; server/owner/observer state=0/0/0 ammo=29/29/29
+[2026.11.14-00.19.40:061][988]LogAutomationController: Network combat step 4 passed; server/owner/observer state=0/0/0 ammo=29/29/29
+[2026.11.14-00.19.40:061][988]LogAutomationController: Network combat step 5 passed; server/owner/observer state=0/0/0 ammo=20/20/20
+[2026.11.14-00.19.40:061][988]LogAutomationController: Error: Network combat timeout at step 6; reload seen=111 swap seen=111 [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\CombatStateNetworkPIETests.cpp(67)]

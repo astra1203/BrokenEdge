@@ -104,6 +104,7 @@ void UCombatComponent::SwapWeapons()
 
 	Character->PlaySwapMontage();
 	CombatState = ECombatState::ECS_SwappingWeapon;
+	bSwapAttachPending = true;
 	Character->bFinishedSwapping = false;
 	if (SecondaryWeapon) SecondaryWeapon->EnableCustomDepth(false);
 }
@@ -114,6 +115,8 @@ void UCombatComponent::FinishSwap()
 	UE_LOG(LogTemp, Verbose, TEXT("EXTRACTION_SWAP Finish Owner=%s State=%d"), *GetNameSafe(Character),
 	       static_cast<int32>(GetState()));
 	if (Character && Character->GetExtractionCombat()->IsEnabled()) return;
+	if (CombatState != ECombatState::ECS_SwappingWeapon) return;
+	bSwapAttachPending = false;
 	if (Character && Character->HasAuthority())
 	{
 		CombatState = ECombatState::ECS_Unoccuiped;
@@ -129,6 +132,8 @@ void UCombatComponent::FinishSwapAttachWeapons()
 	UE_LOG(LogTemp, Verbose, TEXT("EXTRACTION_SWAP Attach Owner=%s State=%d"), *GetNameSafe(Character),
 	       static_cast<int32>(GetState()));
 	if (Character && Character->GetExtractionCombat()->IsEnabled()) return;
+	if (!Character || !Character->HasAuthority() || CombatState != ECombatState::ECS_SwappingWeapon || !bSwapAttachPending) return;
+	bSwapAttachPending = false;
 	AttachSwappedWeapons();
 }
 
@@ -433,14 +438,11 @@ void UCombatComponent::UpdateAmmoValues()
 
 void UCombatComponent::UpdateShotgunAmmoValues()
 {
-	if (Character == nullptr || EquippedWeapon == nullptr) return;
-
-	// int32 ReloadAmount = AmountToReload();
-	if (CarriedAmmoMap.Contains(EquippedWeapon->GetWeaponType()))
-	{
-		CarriedAmmoMap[EquippedWeapon->GetWeaponType()] -= 1;
-		CarriedAmmo = CarriedAmmoMap[EquippedWeapon->GetWeaponType()];
-	}
+	if (!Character || !Character->HasAuthority() || Character->IsDefeated() || !EquippedWeapon
+		|| CombatState != ECombatState::ECS_Reloading || EquippedWeapon->GetWeaponType() != EWeaponType::EWT_Shotgun) return;
+	int32* Reserve = CarriedAmmoMap.Find(EWeaponType::EWT_Shotgun);
+	if (!Reserve || *Reserve <= 0 || EquippedWeapon->IsFull()) { JumpToShotgunEnd(); return; }
+	CarriedAmmo = --*Reserve;
 	Controller = Controller == nullptr ? Cast<ABrokenEdgePlayerController>(Character->Controller) : Controller;
 	if (Controller)
 	{
@@ -923,6 +925,9 @@ void UCombatComponent::OnRep_CombatState()
     // Delayed legacy replication must not drive extraction presentation.
     if (!Character || Character->GetExtractionCombat()->IsEnabled()) return;
     if (CombatState == ECombatState::ECS_Reloading && !Character->IsLocallyControlled()) HandleReload();
+    // Authority may replicate Idle before the predicted montage reaches its end notify.
+    if (CombatState == ECombatState::ECS_Unoccuiped) Character->bFinishedSwapping = true;
+    else if (CombatState == ECombatState::ECS_SwappingWeapon) Character->bFinishedSwapping = false;
 }
 
 void UCombatComponent::OnRep_Flag()

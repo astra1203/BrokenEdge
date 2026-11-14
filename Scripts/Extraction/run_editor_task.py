@@ -151,7 +151,7 @@ elif args.task in ['assets', 'exit', 'phase5-assets']:
 else:
     successes = re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text)
     metadata['successful_tests'] = len(successes)
-    expected = {'combat-net-pie': 1, 'hud-profile': 1, 'generated-widgets': 1, 'item-registry': 1, 'presentation': 1, 'combat': 2, 'combat-pie': 1, 'sprint-pie': 1, 'vitals-pie': 1, 'vitals': 1, 'input-pie': 1, 'input': 1, 'capacity': 1, 'respawn': 1, 'spawn-lifecycle': 3, 'exit-feedback': 3, 'guard-bt': 12, 'loot-layout': 1, 'weapon-pie': 4, 'weapon-mechanics': 5, 'persistence': 6, 'inventory': 7, 'recover-existing': 1, 'equipment': 4, 'progression': 7}[args.task]
+    expected = {'combat-net-pie': 1, 'hud-profile': 1, 'generated-widgets': 1, 'item-registry': 1, 'presentation': 1, 'combat': 3, 'combat-pie': 1, 'sprint-pie': 1, 'vitals-pie': 1, 'vitals': 1, 'input-pie': 1, 'input': 1, 'capacity': 1, 'respawn': 1, 'spawn-lifecycle': 3, 'exit-feedback': 3, 'guard-bt': 12, 'loot-layout': 1, 'weapon-pie': 4, 'weapon-mechanics': 5, 'persistence': 6, 'inventory': 7, 'recover-existing': 1, 'equipment': 4, 'progression': 7}[args.task]
     passed = passed and len(successes) == expected and not re.search(r'Test Completed\. Result=\{(?:Fail|Failure|\u5931\u8d25)', text)
 if passed and args.task in ['inventory-widgets', 'extraction-widgets']:
     reload_tag = args.tag + '_reload'

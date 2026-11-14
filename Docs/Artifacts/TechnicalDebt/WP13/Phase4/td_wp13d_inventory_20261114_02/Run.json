@@ -1,0 +1,39 @@
+{
+  "task": "inventory",
+  "started_utc": "2026-11-14T00:26:03.132098+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp13d_inventory_20261114_02\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Inventory",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp13d_inventory_20261114_02\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "c84a28bb173a3d5c575353fdb12a999a85e43594",
+  "git_status": "M BrokenEdge.uproject\n M \"Docs/\\346\\210\\230\\346\\226\\227\\347\\212\\266\\346\\200\\201\\346\\211\\200\\346\\234\\211\\346\\235\\203.md\"\n M Scripts/Extraction/run_editor_task.py\n M Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp\n M Source/BrokenEdge/Component/CombatComponent.cpp\n M Source/BrokenEdge/Component/CombatComponent.h\n M Source/BrokenEdge/Component/CombatModeAdapter.cpp\n M Source/BrokenEdge/Component/CombatModeAdapter.h\n M Source/BrokenEdge/Tests/CombatStateNetworkPIETests.cpp\n?? Docs/Artifacts/TechnicalDebt/WP13/Phase4/\n?? Source/BrokenEdge/Tests/LegacyCombatLifecycleTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "a93e745ae407b59e99de21fe6b1d5b32b74bc52ac5aae9384e49c1f6382d7a03",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp13d_inventory_20261114_02\\Run.json",
+  "exit_code": 0,
+  "pid": 5988,
+  "successful_tests": 7,
+  "result": "passed",
+  "finished_utc": "2026-11-14T00:26:22.664186+00:00"
+}

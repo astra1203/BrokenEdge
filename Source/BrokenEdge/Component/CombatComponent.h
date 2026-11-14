@@ -29,6 +29,8 @@ class BROKENEDGE_API UCombatComponent : public UActorComponent
 public:
 	bool IsFireInputHeld() const;
 	void CancelFireInput();
+	// Invalidate action callbacks before defeat or legacy weapon removal; not an input-release shortcut.
+	void CancelActions();
 	// Clears only this component's legacy input; never forwards back to the mode adapter.
 	void ClearLocalFireInput();
 	ECombatState GetState() const;
@@ -284,6 +286,7 @@ private:
 	bool bFireButtonPressed = false;
 	/** Legacy-only owning-client prediction; adapter queries the active mode. */
 	bool bLocallyReloading = false;
+	bool bSwapAttachPending = false;
 
 	/** 是否可以开火,防止玩家连续点击开火大于射速 */
 	bool bCanFire = true;
