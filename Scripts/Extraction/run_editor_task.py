@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'Scripts'))
 from Common.ue_env import engine_root, run_record
 parser = argparse.ArgumentParser()
-parser.add_argument('task', choices=['aim-pie', 'automation-list', 'native-blueprints', 'combat-net-pie', 'hud-profile', 'generated-widgets', 'inventory-widgets', 'extraction-widgets', 'widgets-validate', 'item-registry', 'item-registry-create', 'item-registry-export', 'presentation', 'presentation-validate', 'presentation-migrate', 'presentation-audit', 'combat', 'combat-pie', 'sprint-pie', 'vitals-pie', 'vitals', 'input-pie', 'input-assets', 'input', 'input-audit', 'capacity', 'respawn', 'prototype-audit', 'spawn-lifecycle', 'exit-feedback', 'guard-bt', 'loot-layout', 'weapon-range-assets', 'weapon-pie', 'gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
+parser.add_argument('task', choices=['runtime-assets', 'aim-pie', 'automation-list', 'native-blueprints', 'combat-net-pie', 'hud-profile', 'generated-widgets', 'inventory-widgets', 'extraction-widgets', 'widgets-validate', 'item-registry', 'item-registry-create', 'item-registry-export', 'presentation', 'presentation-validate', 'presentation-migrate', 'presentation-audit', 'combat', 'combat-pie', 'sprint-pie', 'vitals-pie', 'vitals', 'input-pie', 'input-assets', 'input', 'input-audit', 'capacity', 'respawn', 'prototype-audit', 'spawn-lifecycle', 'exit-feedback', 'guard-bt', 'loot-layout', 'weapon-range-assets', 'weapon-pie', 'gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
 parser.add_argument('--tag', required=True)
 parser.add_argument('--engine', type=Path)
 parser.add_argument('--force', action='store_true', help='Explicitly overwrite changed/untracked generated widgets')
@@ -77,11 +77,16 @@ elif args.task == 'phase6a-assets':
 elif args.task in ['assets', 'exit', 'phase5-assets']:
     command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Extraction' / ('prepare_phase5.py' if args.task == 'phase5-assets' else 'prepare_exit.py' if args.task == 'exit' else 'prepare_items.py'))]
 else:
-    test = {'aim-pie': 'WeaponPIE.ThirdPersonAimPose', 'combat-net-pie': 'CombatNetworkPIE.', 'hud-profile': 'HUDProfile.', 'generated-widgets': 'GeneratedWidgets.', 'item-registry': 'ItemRegistry.', 'presentation': 'Presentation.', 'combat': 'CombatMode.', 'combat-pie': 'WeaponPIE.InputAndAssembly', 'sprint-pie': 'WeaponPIE.SprintTransitions', 'vitals-pie': 'VitalsPIE.', 'vitals': 'Vitals.', 'input-pie': 'InputPIE', 'input': 'Input.', 'spawn-lifecycle': 'SpawnLifecycle', 'exit-feedback': 'ExitFeedback', 'guard-bt': 'GuardBT', 'loot-layout': 'LootLayout', 'weapon-pie': 'WeaponPIE', 'weapon-mechanics': 'WeaponMechanics', 'persistence': 'Persistence', 'inventory': 'Inventory', 'recover-existing': 'RecoverExistingStore', 'equipment': 'Equipment', 'progression': 'Progression'}[args.task]
-    if args.task in ['aim-pie', 'combat-net-pie', 'hud-profile', 'weapon-pie', 'input-pie', 'vitals-pie', 'combat-pie', 'sprint-pie']:
+    test = {'runtime-assets': 'RuntimeAssets.', 'aim-pie': 'WeaponPIE.ThirdPersonAimPose', 'combat-net-pie': 'CombatNetworkPIE.', 'hud-profile': 'HUDProfile.', 'generated-widgets': 'GeneratedWidgets.', 'item-registry': 'ItemRegistry.', 'presentation': 'Presentation.', 'combat': 'CombatMode.', 'combat-pie': 'WeaponPIE.InputAndAssembly', 'sprint-pie': 'WeaponPIE.SprintTransitions', 'vitals-pie': 'VitalsPIE.', 'vitals': 'Vitals.', 'input-pie': 'InputPIE', 'input': 'Input.', 'spawn-lifecycle': 'SpawnLifecycle', 'exit-feedback': 'ExitFeedback', 'guard-bt': 'GuardBT', 'loot-layout': 'LootLayout', 'weapon-pie': 'WeaponPIE', 'weapon-mechanics': 'WeaponMechanics', 'persistence': 'Persistence', 'inventory': 'Inventory', 'recover-existing': 'RecoverExistingStore', 'equipment': 'Equipment', 'progression': 'Progression'}[args.task]
+    if args.task in ['runtime-assets', 'aim-pie', 'combat-net-pie', 'hud-profile', 'weapon-pie', 'input-pie', 'vitals-pie', 'combat-pie', 'sprint-pie']:
         command[0] = str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor.exe')
         command.remove('-NullRHI')
         command += ['-RenderOffscreen', '-ResX=1280', '-ResY=720']
+    if args.task == 'runtime-assets':
+        command.insert(2, '/Game/Extraction/Training/L_WeaponRange')
+        # Standalone game validation uses only C++ automation. Editor Python
+        # startup toolsets depend on editor-only types unavailable with -game.
+        command += ['-game', '-DisablePython', '-RuntimeAssetsScreenshot=' + str(out / 'Inventory.png')]
     if args.task == 'hud-profile':
         command += ['-trace=cpu,frame,bookmark,counters', '-tracefile=' + str(out / 'HUD.utrace')]
     if args.task == 'recover-existing':
@@ -162,7 +167,7 @@ elif args.task in ['assets', 'exit', 'phase5-assets']:
 else:
     successes = re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text)
     metadata['successful_tests'] = len(successes)
-    expected = {'aim-pie': 1, 'combat-net-pie': 1, 'hud-profile': 1, 'generated-widgets': 1, 'item-registry': 1, 'presentation': 1, 'combat': 3, 'combat-pie': 1, 'sprint-pie': 1, 'vitals-pie': 1, 'vitals': 1, 'input-pie': 1, 'input': 1, 'capacity': 1, 'respawn': 1, 'spawn-lifecycle': 3, 'exit-feedback': 3, 'guard-bt': 12, 'loot-layout': 1, 'weapon-pie': 4, 'weapon-mechanics': 5, 'persistence': 6, 'inventory': 7, 'recover-existing': 1, 'equipment': 4, 'progression': 7}[args.task]
+    expected = {'runtime-assets': 1, 'aim-pie': 1, 'combat-net-pie': 1, 'hud-profile': 1, 'generated-widgets': 1, 'item-registry': 1, 'presentation': 1, 'combat': 3, 'combat-pie': 1, 'sprint-pie': 1, 'vitals-pie': 1, 'vitals': 1, 'input-pie': 1, 'input': 1, 'capacity': 1, 'respawn': 1, 'spawn-lifecycle': 3, 'exit-feedback': 3, 'guard-bt': 12, 'loot-layout': 1, 'weapon-pie': 4, 'weapon-mechanics': 5, 'persistence': 6, 'inventory': 7, 'recover-existing': 1, 'equipment': 4, 'progression': 7}[args.task]
     passed = passed and len(successes) == expected and not re.search(r'Test Completed\. Result=\{(?:Fail|Failure|\u5931\u8d25)', text)
 if passed and args.task in ['inventory-widgets', 'extraction-widgets']:
     reload_tag = args.tag + '_reload'
