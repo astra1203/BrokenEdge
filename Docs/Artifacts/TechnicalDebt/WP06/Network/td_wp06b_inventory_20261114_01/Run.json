@@ -1,0 +1,44 @@
+{
+  "task": "inventory",
+  "started_utc": "2026-11-14T02:07:21.775335+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp06b_inventory_20261114_01\\Editor.log",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Inventory",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp06b_inventory_20261114_01\\Automation"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "5552a0c0be48d72afb4b763a2df9053c73b2ee11",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Extraction/run_editor_task.py\n M Scripts/Extraction/run_soviet_audit.py\n M Scripts/Extraction/validate_soviet_layout.py\n M Scripts/Test-LanSessions.ps1\n M Source/StingerTools/Private/StingerAssetLibrary.cpp\n?? Source/BrokenEdge/Tests/ExtractionInventoryNetworkPIETests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "15911c2bccac910680c4036c1ab9c50a83c41518ba72d7c33456abad0d9d471d",
+  "ue_env_sha256": "e811f0a4231046c4c5df0ccd3fc450353c604b27a4d874e5ee747108e773f915",
+  "inherited_cache_environment": {
+    "UE-LocalDataCachePath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Files",
+    "UE-ZenDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen",
+    "UE-ZenSubprocessDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen"
+  },
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp06b_inventory_20261114_01\\Run.json",
+  "exit_code": 0,
+  "pid": 27700,
+  "successful_tests": 7,
+  "result": "passed",
+  "finished_utc": "2026-11-14T02:07:43.563731+00:00"
+}
