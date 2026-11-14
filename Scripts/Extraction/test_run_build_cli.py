@@ -24,6 +24,18 @@ class BuildCliTests(unittest.TestCase):
         self.assertIn('--fast-link-symbols', result.stdout)
         self.assertIn('FASTLINK', result.stdout)
 
+    def test_cache_root_rejects_relative_directory_before_run_creation(self):
+        result = self.invoke('--cache-root', 'relative-cache', '--tag', INVALID_TAG)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn('--cache-root must be an absolute directory', result.stderr)
+        self.assertNotIn('BUILD_STARTED', result.stdout)
+
+    def test_training_map_requires_a_package(self):
+        result = self.invoke('--include-training-map', '--tag', INVALID_TAG)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn('--include-training-map requires --package', result.stderr)
+        self.assertNotIn('BUILD_STARTED', result.stdout)
+
     def test_fast_link_symbols_rejects_default_and_explicit_editor(self):
         for target in ([], ['--target', 'Editor']):
             with self.subTest(target=target):

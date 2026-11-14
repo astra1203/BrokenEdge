@@ -18,9 +18,11 @@ ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
 parser.add_argument('--target', choices=['Editor', 'Client', 'Server'], default='Editor')
 parser.add_argument('--package', action='store_true')
+parser.add_argument('--include-training-map', action='store_true', help='Include the isolated weapon-range map for packaged runtime acceptance')
 parser.add_argument('--package-root', help='Separate archive root containing Client/Server; must be inside Packaged')
 parser.add_argument('--file-cook', action='store_true', help='Fresh isolated filesystem cook with SkipZenStore; still builds IoStore packages')
 parser.add_argument('--cook-root', help='New short absolute cook directory, required with --file-cook to avoid Windows package path limits')
+parser.add_argument('--cache-root', type=Path, help='Absolute run-only DDC root; local and Zen caches use separate subdirectories')
 parser.add_argument('--direct-stage', action='store_true', help='Stage the fresh distributable directly in the archive root, avoiding a duplicate archive copy')
 parser.add_argument('--no-uba', action='store_true', help='Use UE non-detoured local builds for this process tree through UBT environment configuration')
 parser.add_argument('--compile-only', action='store_true', help='Compile objects with UBT -NoLink; never report an executable from this step')
@@ -30,6 +32,10 @@ parser.add_argument('--cook-workers', type=int, default=0, help='Optional shader
 parser.add_argument('--tag', required=True)
 parser.add_argument('--engine', type=Path)
 args = parser.parse_args()
+if args.include_training_map and not args.package:
+    parser.error('--include-training-map requires --package')
+if args.cache_root and not args.cache_root.is_absolute():
+    parser.error('--cache-root must be an absolute directory')
 if args.jobs < 0:
     raise ValueError('jobs must be zero or positive')
 if args.cook_workers < 0:
@@ -68,10 +74,14 @@ if args.package:
         raise ValueError('Choose Client or Server for packaging')
     subprocess.run(['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', str(ROOT / 'Scripts/Assert-EditorClosed.ps1'),
                     '-ProjectFile', str(ROOT / 'BrokenEdge.uproject')], check=True)
+    package_maps = ['/Game/Maps/Lobby', '/Game/Maps/FreeForAll', '/Game/Maps/Teams',
+                    '/Game/Maps/SpaceCenter/L_SpaceCenterExtraction', '/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction']
+    if args.include_training_map:
+        package_maps.append('/Game/Extraction/Training/L_WeaponRange')
     command = [str(ENGINE / 'Engine/Build/BatchFiles/RunUAT.bat'), 'BuildCookRun', '-project=' + str(ROOT / 'BrokenEdge.uproject'),
                '-nop4', '-build', '-cook', '-stage', '-pak', '-iostore', '-archive',
                '-archivedirectory=' + str(archive),
-               '-map=/Game/Maps/Lobby+/Game/Maps/FreeForAll+/Game/Maps/Teams+/Game/Maps/SpaceCenter/L_SpaceCenterExtraction+/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction',
+               '-map=' + '+'.join(package_maps),
                '-prereqs', '-ubtargs=-NoHotReloadFromIDE -WaitMutex' + (f' -MaxParallelActions={args.jobs}' if args.jobs else '')
                + (' -LinkerArguments=/DEBUG:FASTLINK' if args.fast_link_symbols else ''), '-utf8output']
     if args.fast_link_symbols:
@@ -121,6 +131,7 @@ if args.fast_link_symbols:
                                      + ('; omitted from package' if args.package else ''))
 if args.package:
     metadata.update(archive_root=str(archive_root), direct_stage=args.direct_stage, cook_store='filesystem' if args.file_cook else 'project-default')
+    metadata['package_maps'] = package_maps
     if cook_root:
         metadata['cook_root'] = str(cook_root)
 metadata['input_sha256'] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in [
@@ -130,12 +141,22 @@ metadata['input_sha256'] = {name: hashlib.sha256((ROOT / name).read_bytes()).hex
     'Content/Maps/SovietMilitary/L_SovietMilitaryExtraction.umap',
     'Content/Extraction/Maps/DA_SovietMilitaryGameplay.uasset',
     'Content/Extraction/Maps/DA_SpaceCenterGameplay.uasset']}
+if args.include_training_map:
+    name = 'Content/Extraction/Training/L_WeaponRange.umap'
+    metadata['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
 for source in sorted((ROOT/'Source/BrokenEdge').rglob('*')):
     if source.suffix in ('.h','.cpp'):
         metadata['input_sha256'][source.relative_to(ROOT).as_posix()] = hashlib.sha256(source.read_bytes()).hexdigest()
 start = time.monotonic()
 environment = os.environ.copy()
 overrides = {}
+if args.cache_root:
+    cache_root = args.cache_root.resolve()
+    for name in ('Files', 'Zen'):
+        (cache_root / name).mkdir(parents=True, exist_ok=True)
+    overrides.update({'UE-LocalDataCachePath': str(cache_root / 'Files'),
+                      'UE-ZenDataPath': str(cache_root / 'Zen'),
+                      'UE-ZenSubprocessDataPath': str(cache_root / 'Zen')})
 if args.package:
     overrides['UE_SKIP_UBT_SDK_SETUP'] = '1'
 if args.no_uba:
@@ -175,11 +196,17 @@ if args.package and metadata['exit_code'] == 0:
         if source.exists():
             shutil.copy2(source, archive / platform / launcher)
 (out / 'Run.json').write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8')
+messages = {}
 for line in (out / 'Build.log').read_bytes().splitlines():
     if b'error ' in line.lower() or b'Result:' in line or b'AutomationTool exiting' in line:
         try:
-            print(line.decode('utf-8'))
+            message = line.decode('utf-8')
         except UnicodeDecodeError:
-            print(line.decode('gb18030', errors='replace'))
+            message = line.decode('gb18030', errors='replace')
+        messages[message] = messages.get(message, 0) + 1
+for message, count in list(messages.items())[:40]:
+    print(message + (f' [repeated {count} times]' if count > 1 else ''))
+if len(messages) > 40:
+    print(f'{len(messages) - 40} additional unique build messages; full log: {out / "Build.log"}')
 print('BUILD_EXIT', metadata['exit_code'], flush=True)
 sys.exit(metadata['exit_code'])
