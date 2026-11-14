@@ -1,0 +1,8 @@
+[2026.11.14-01.27.22:384][606]LogAutomationController: Display: Test Started. Name={ReplicationAndRescue} Path={BrokenEdge.Extraction.VitalsNetworkPIE.ReplicationAndRescue}
+[2026.11.14-01.27.58:328][694]LogAutomationController: Error: Test Completed. Result={Fail} Name={ReplicationAndRescue} Path={BrokenEdge.Extraction.VitalsNetworkPIE.ReplicationAndRescue}
+[2026.11.14-01.27.58:331][694]LogAutomationController: Network vitals step 0 passed; HP=100.00/80.00/80.00 Shield=25.00/0.00/0.00 Down=0.00
+[2026.11.14-01.27.58:331][694]LogAutomationController: Network vitals step 1 passed; HP=83.00/100.00/100.00 Shield=25.00/25.00/25.00 Down=0.00
+[2026.11.14-01.27.58:331][694]LogAutomationController: Network vitals step 2 passed; HP=100.00/83.00/83.00 Shield=25.00/25.00/25.00 Down=0.00
+[2026.11.14-01.27.58:331][694]LogAutomationController: Network vitals step 3 passed; HP=50.00/100.00/100.00 Shield=40.00/25.00/25.00 Down=0.00
+[2026.11.14-01.27.58:331][694]LogAutomationController: Network vitals step 4 passed; HP=50.00/50.00/50.00 Shield=40.00/40.00/40.00 Down=0.00
+[2026.11.14-01.27.58:331][694]LogAutomationController: Error: Network vitals timeout at step 5 [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\BrokenEdge\Tests\CombatStateNetworkPIETests.cpp(280)]
