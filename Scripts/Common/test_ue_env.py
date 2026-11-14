@@ -19,7 +19,7 @@ class EngineSelectionTests(unittest.TestCase):
                     good + '\nFatal error: crash after completion',
                     good + '\nTraceback (most recent call last):',
                     *[good + '\nTest Completed. Result={' + failure + '}'
-                      for failure in ('Fail', 'Failed', 'Failure', '\u5931\u8d25')]]:
+                      for failure in ('Fail', 'Failed', 'Failure', '\u5931\u8d25', 'Skipped', 'Cancelled', 'Unknown')]]:
             with self.subTest(log=log):
                 self.assertFalse(automation_succeeded(log))
         with self.assertRaises(ValueError):

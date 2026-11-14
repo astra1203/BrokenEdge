@@ -1,0 +1,19 @@
+{
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "Scripts/Common",
+    "-p",
+    "test_ue_env.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "result": "passed",
+  "source_sha256": {
+    "Scripts\\Common\\ue_env.py": "40b4453320036a42bb52548ae4b2059021a29935129e1b01ed68c4b296254022",
+    "Scripts\\Common\\test_ue_env.py": "c4077532e12aa0901ff9d9ce33a0bbe96bae506165927a4536c93eb2c253ef0c"
+  }
+}

@@ -13,8 +13,9 @@ def automation_succeeded(log, expected=1):
     """Require the exact success count and reject mixed failures/crashes."""
     if expected < 1:
         raise ValueError('Expected automation count must be positive')
-    return (len(re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', log)) == expected
-            and not re.search(r'Test Completed\. Result=\{(?:Fail(?:ed|ure)?|\u5931\u8d25)\}|Fatal error:|Traceback \(most recent call last\)', log))
+    completions = re.findall(r'Test Completed\. Result=\{([^}]*)\}', log)
+    return (len(completions) == expected and all(result in ('Success', '\u6210\u529f') for result in completions)
+            and not re.search(r'Fatal error:|Traceback \(most recent call last\)', log))
 
 
 def engine_root(engine=None, *, project_root=ROOT, environ=None):

@@ -1,0 +1,59 @@
+{
+  "td_final_crossmaps_20261114_01": {
+    "result": "failed",
+    "tests": [
+      {
+        "name": "BrokenEdge.Extraction.PIE.Lobby",
+        "state": "Fail",
+        "errors": [
+          "Expected 'Rifle quantity conserved' to be 3, but it was 2.",
+          "Expected 'Rifle quantity conserved' to be 3, but it was 2.",
+          "Expected rifle absent from returned stash"
+        ]
+      }
+    ],
+    "active": [
+      "1",
+      "2",
+      "1",
+      "2"
+    ],
+    "settled": [
+      "1",
+      "2",
+      "1",
+      "2"
+    ],
+    "returned": [
+      "1",
+      "2",
+      "1",
+      "2"
+    ]
+  },
+  "td_final_crossmaps_20261114_02": {
+    "result": "passed",
+    "tests": [
+      {
+        "name": "BrokenEdge.Extraction.PIE.Lobby",
+        "state": "Success",
+        "errors": []
+      }
+    ],
+    "active": [
+      "1",
+      "2",
+      "3"
+    ],
+    "settled": [
+      "1",
+      "2",
+      "3"
+    ],
+    "returned": [
+      "1",
+      "2",
+      "3"
+    ]
+  }
+}

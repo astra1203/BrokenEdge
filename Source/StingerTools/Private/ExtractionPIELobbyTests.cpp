@@ -115,6 +115,61 @@ namespace
 						if (!ClientLobby || ClientLobby->ExtractionMapId != Wanted) return false;
 					}
 				}
+				// Repeated starting-supply exports can fill the stash. Recover the same
+				// rifle through the real overflow/economy RPCs before preparing the next raid.
+				for (auto* Client : Clients)
+				{
+					auto* Account = Client->GetFirstPlayerController()->FindComponentByClass<UExtractionAccountComponent>();
+					const auto& View = Account->Profile;
+					if (PendingPreparation == View.Profile)
+					{
+						if (View.Revision <= PreparationRevision)
+						{
+							if (Now - PreparationStarted > 15)
+							{
+								Test->AddError(FString::Printf(TEXT("Overflow preparation RPC did not commit: %s"), *Account->Message));
+								return true;
+							}
+							return false;
+						}
+						UE_LOG(LogTemp, Display, TEXT("EXTRACTION_PIE_LOBBY_PREPARATION_COMMITTED Action=%s Profile=%s Revision=%d"),
+							*PreparationAction, *View.Profile.ToString(), View.Revision);
+						PendingPreparation.Invalidate();
+					}
+					if (Round == 0 || View.Stash.Find(Weapons.FindRef(View.Profile))) continue;
+					const auto* Overflow = View.Overflow.FindByPredicate([&](const auto& Item) { return Item.Id == Weapons.FindRef(View.Profile); });
+					if (!Test->TestNotNull(TEXT("Returned rifle exists in overflow when stash is full"), Overflow)) return true;
+					auto Placement = View.Stash;
+					if (ExtractionItems::AutoPlace(Placement, *Overflow))
+					{
+						FExtractionStorageRequest Request;
+						Request.From = EExtractionStorageSide::Overflow;
+						Request.To = EExtractionStorageSide::Stash;
+						Request.Move.Item = Overflow->Id;
+						Request.Move.Quantity = 1;
+						Request.Move.AutoPlace = true;
+						Account->RequestMove(Request);
+						PreparationAction = TEXT("ClaimOriginalRifle");
+					}
+					else
+					{
+						const auto* Surplus = View.Stash.Items.FindByPredicate([](const auto& Item)
+						{
+							return Item.Definition != TEXT("AK") && GetDefault<UExtractionProgressionRules>()->SellPrice(Item, Item.Quantity) > 0;
+						});
+						if (!Test->TestNotNull(TEXT("Saleable surplus can make room for overflow rifle"), Surplus)) return true;
+						FExtractionEconomyRequest Request;
+						Request.Action = EExtractionEconomyAction::Sell;
+						Request.Item = Surplus->Id;
+						Request.Quantity = Surplus->Quantity;
+						Account->RequestEconomy(Request);
+						PreparationAction = TEXT("SellSurplus");
+					}
+					PendingPreparation = View.Profile;
+					PreparationRevision = View.Revision;
+					PreparationStarted = Now;
+					return false;
+				}
 				for (auto* Client : Clients)
 				{
 					auto* Account = Client->GetFirstPlayerController()->FindComponentByClass<
@@ -367,8 +422,16 @@ namespace
 				for (const auto& Pair : Weapons)
 				{
 					Test->TestFalse(TEXT("Completed profile unlocked"), Store->IsInRaid(Pair.Key));
-					Test->TestEqual(TEXT("Rifle quantity conserved"), Store->View(Pair.Key)->Stash.Count(TEXT("AK")),
-					                3);
+					const auto* View = Store->View(Pair.Key);
+					int32 TotalRifles = 0, OriginalInstances = 0;
+					for (const auto* Items : {&View->Stash.Items, &View->Loadout.Items, &View->Overflow})
+						for (const auto& Item : *Items)
+						{
+							if (Item.Definition == TEXT("AK")) TotalRifles += Item.Quantity;
+							if (Item.Id == Pair.Value) OriginalInstances += Item.Quantity;
+						}
+					Test->TestEqual(TEXT("Rifle quantity conserved across stash loadout and overflow"), TotalRifles, 3);
+					Test->TestEqual(TEXT("Original rifle returns exactly once"), OriginalInstances, 1);
 				}
 				UE_LOG(LogTemp, Display, TEXT("EXTRACTION_PIE_LOBBY_RETURNED Round=%d"), ++Round);
 				if (Round == (CrossMaps ? 3 : 2)) Stop();
@@ -414,6 +477,10 @@ namespace
 		double Since = 0;
 		int64 BeforeBlocked = 0;
 		TMap<FGuid, FGuid> Weapons;
+		FGuid PendingPreparation;
+		int32 PreparationRevision = 0;
+		double PreparationStarted = 0;
+		FString PreparationAction;
 		FGuid LastRaid;
 		TWeakObjectPtr<ABrokenEdgeCharacter> LegacyVictim;
 		TWeakObjectPtr<AController> LegacyController;

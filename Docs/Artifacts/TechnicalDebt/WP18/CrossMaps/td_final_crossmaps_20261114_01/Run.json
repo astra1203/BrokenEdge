@@ -1,0 +1,75 @@
+{
+  "started_utc": "2026-11-14T02:37:36.652964+00:00",
+  "mode": "Extraction",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "/Game/Maps/Lobby",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-RenderOffscreen",
+    "-windowed",
+    "-ResX=1280",
+    "-ResY=720",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_crossmaps_20261114_01\\Editor.log",
+    "-ExtractionStore=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_crossmaps_20261114_01\\Store",
+    "-ExtractionProfile=td_final_crossmaps_20261114_01",
+    "-MatchType=Extraction",
+    "-ExtractionPIEMode=Extraction",
+    "-NumPublicConnections=6",
+    "-MinPlayersToStart=2",
+    "-ExtractionPIEPlayers=2",
+    "-ExtractionGuards=0",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.PIE.Lobby",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_crossmaps_20261114_01\\Automation",
+    "-ExtractionPIECrossMaps",
+    "-NullRHI"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "93d8becc334dd67f5e7d32038cfa69524f9c4e9c",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Common/test_ue_env.py\n M Scripts/Common/ue_env.py\n M Scripts/Extraction/run_network.py\n M Scripts/Extraction/run_packaged_assets.py\n M Source/BrokenEdge/Tests/CombatModeAdapterTests.cpp\n M Source/BrokenEdge/Tests/LegacyCombatLifecycleTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_pie_lobby.py",
+  "script_sha256": "15422eb964aab971f2456f1ef86a7f24a0eaa461136f8efa6ffa1825abbb48dc",
+  "ue_env_sha256": "9385ff9654db99e2165f2087ad62391573272c10a3cbc9cae4799ed702213826",
+  "inherited_cache_environment": {
+    "UE-LocalDataCachePath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Files",
+    "UE-ZenDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen",
+    "UE-ZenSubprocessDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen"
+  },
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_crossmaps_20261114_01\\Run.json",
+  "exit_code": 0,
+  "pid": 29180,
+  "active_rounds": [
+    "1",
+    "2",
+    "1",
+    "2"
+  ],
+  "settled_rounds": [
+    "1",
+    "2",
+    "1",
+    "2"
+  ],
+  "returned_rounds": [
+    "1",
+    "2",
+    "1",
+    "2"
+  ],
+  "result": "failed",
+  "finished_utc": "2026-11-14T02:39:39.409083+00:00"
+}

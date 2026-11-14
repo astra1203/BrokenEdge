@@ -1,6 +1,7 @@
 """Real two-client PIE lobby travel, including consecutive raids and the disabled-travel guard."""
 import argparse
 import datetime
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -10,7 +11,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'Scripts'))
-from Common.ue_env import engine_root, run_record
+from Common.ue_env import engine_root, run_record, automation_succeeded
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
 parser.add_argument('--engine', type=Path)
@@ -39,6 +40,8 @@ if args.cross_maps: command.append('-ExtractionPIECrossMaps')
 if args.nullrhi: command.append('-NullRHI')
 metadata = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'mode': args.mode, 'command': command}
 metadata.update(run_record(command, out / 'Run.json', engine=ENGINE, script=__file__))
+metadata['input_sha256'] = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in
+                          ['Source/StingerTools/Private/ExtractionPIELobbyTests.cpp', 'Scripts/Extraction/run_pie_lobby.py']}
 environment = os.environ.copy()
 environment['UE_SKIP_UBT_SDK_SETUP'] = '1'
 with (out / 'Process.log').open('wb') as log:
@@ -54,12 +57,11 @@ with (out / 'Process.log').open('wb') as log:
         metadata['exit_code'] = proc.wait(timeout=30)
         metadata['error'] = 'PIE lobby test timed out'
 text = (out / 'Editor.log').read_text(encoding='utf-8', errors='replace')
-metadata['active_rounds'] = re.findall(r'EXTRACTION_PIE_LOBBY_ACTIVE Round=(\d)', text)
-metadata['settled_rounds'] = re.findall(r'EXTRACTION_PIE_LOBBY_SETTLED Round=(\d)', text)
-metadata['returned_rounds'] = re.findall(r'EXTRACTION_PIE_LOBBY_RETURNED Round=(\d)', text)
-successes = re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text)
+metadata['active_rounds'] = re.findall(r'LogTemp: Display: EXTRACTION_PIE_LOBBY_ACTIVE Round=(\d+)', text)
+metadata['settled_rounds'] = re.findall(r'LogTemp: Display: EXTRACTION_PIE_LOBBY_SETTLED Round=(\d+)', text)
+metadata['returned_rounds'] = re.findall(r'LogTemp: Display: EXTRACTION_PIE_LOBBY_RETURNED Round=(\d+)', text)
 rounds = (3 if args.cross_maps else 2) if args.mode == 'Extraction' else 1
-passed = (metadata['exit_code'] == 0 and len(successes) == 1 and 'Fatal error:' not in text
+passed = (metadata['exit_code'] == 0 and automation_succeeded(text)
           and f'EXTRACTION_PIE_LOBBY_STOPPED Mode={args.mode} Rounds={rounds} Worlds=0' in text
           and 'Seamless travel is disabled in PIE' not in text
           and not re.search(r'Test Completed\. Result=\{(?:Fail|Failure|\u5931\u8d25)', text))

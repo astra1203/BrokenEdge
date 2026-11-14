@@ -1,0 +1,15 @@
+{
+  "full_report": "Automation.json.gz",
+  "sha256": "bb24e25fa7cd89948328b324eaa70fc026933e1600986c8f06ba511677c21be8",
+  "tests": [
+    {
+      "name": "BrokenEdge.Extraction.PIE.Lobby",
+      "state": "Fail",
+      "errors": [
+        "Expected 'Rifle quantity conserved' to be 3, but it was 2.",
+        "Expected 'Rifle quantity conserved' to be 3, but it was 2.",
+        "Expected rifle absent from returned stash"
+      ]
+    }
+  ]
+}
