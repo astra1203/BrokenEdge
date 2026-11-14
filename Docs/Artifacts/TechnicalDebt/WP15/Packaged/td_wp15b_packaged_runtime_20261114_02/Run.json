@@ -1,0 +1,62 @@
+{
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "ed5e23c3008c530c2578cad103e2c0f9e932cd2c",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Extraction/run_build.py\n M Scripts/Extraction/test_run_build_cli.py\n?? Scripts/Extraction/run_packaged_assets.py",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_packaged_assets.py",
+  "script_sha256": "42a028229abf98632dfdc6137edc3d70513035a3b82e7e25bd218e392363b99e",
+  "ue_env_sha256": "e811f0a4231046c4c5df0ccd3fc450353c604b27a4d874e5ee747108e773f915",
+  "inherited_cache_environment": {},
+  "command": [
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\TechnicalDebt-20261114-Training\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+    "/Game/Extraction/Training/L_WeaponRange",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-RenderOffscreen",
+    "-ResX=1280",
+    "-ResY=720",
+    "-RuntimeAssetsScreenshot=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15b_packaged_runtime_20261114_02\\Inventory.png",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.RuntimeAssets.TrainingInventory",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15b_packaged_runtime_20261114_02\\Automation",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15b_packaged_runtime_20261114_02\\Game.log"
+  ],
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15b_packaged_runtime_20261114_02\\Run.json",
+  "exit_code": 0,
+  "started_utc": "2026-11-14T01:21:55.839494+00:00",
+  "build_report": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15b_client_package_20261114_03\\Run.json",
+  "build_report_sha256": "25778980577626a241ae6db55fadf7f7412e9340e17f5ce03d38e20b1d781cd3",
+  "build_head": "a1e05d4a96f2d2c243ef258df8441820766239ab",
+  "build_engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "executable": {
+    "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\TechnicalDebt-20261114-Training\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+    "bytes": 340269568,
+    "sha256": "c3de6ac71940110e556c1a5b3cfd24a28e4cdd6963c20fd193b84b6f0f486c7e",
+    "machine": "AMD64",
+    "sections": 13
+  },
+  "pid": 9140,
+  "successful_tests": 1,
+  "result": "passed",
+  "finished_utc": "2026-11-14T01:22:12.113518+00:00"
+}

@@ -1,0 +1,3101 @@
+{
+  "passed": true,
+  "all_four_stages_passed": false,
+  "stages": {
+    "source": "passed",
+    "cook_policy": "passed",
+    "cook_output": {
+      "status": "passed",
+      "content": "D:\\BEc14b\\Windows\\BrokenEdge\\Content",
+      "missing": []
+    },
+    "packaged_runtime": "not_run"
+  },
+  "scope": "Source/cook policy; optional loose cook output. Packaged Client/Server gameplay requires a separate run.",
+  "cook_directories": [
+    "/Game/Extraction/Traversal",
+    "/Game/Extraction/Maps",
+    "/Game/Extraction/Training",
+    "/Game/UI/Extraction",
+    "/Game/UI/Looting",
+    "/Game/Extraction/Abilities/MedicalGun",
+    "/Game/Extraction/Abilities/SmokeScreen",
+    "/Engine/EngineFonts",
+    "/Game/Extraction/Items",
+    "/Game/Extraction/Registry",
+    "/Game/Input/Extraction",
+    "/Game/MilitaryWeapSilver/FX",
+    "/Game/MilitaryWeapSilver/Sound/GrenadeLauncher",
+    "/Game/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/StaticMeshes"
+  ],
+  "runtime_requirements": [
+    {
+      "package": "/Game/Extraction/Abilities/MedicalGun/1P/Support_C101_MedicalGun_01_1P/SkeletalMeshes/Support_C101_MedicalGun_01_1P",
+      "sources": [
+        "Source/BrokenEdge/Extraction/Combat/ExtractionAbilities.h"
+      ],
+      "source_asset": "Content/Extraction/Abilities/MedicalGun/1P/Support_C101_MedicalGun_01_1P/SkeletalMeshes/Support_C101_MedicalGun_01_1P.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Abilities/MedicalGun/3P/Support_C101_MedicalGun_01_3P/SkeletalMeshes/Support_C101_MedicalGun_01_3P",
+      "sources": [
+        "Source/BrokenEdge/Extraction/Combat/ExtractionAbilities.h"
+      ],
+      "source_asset": "Content/Extraction/Abilities/MedicalGun/3P/Support_C101_MedicalGun_01_3P/SkeletalMeshes/Support_C101_MedicalGun_01_3P.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Abilities/SmokeScreen/1P/Surport_C101_SmokeScreen_M_1P/SkeletalMeshes/Surport_C101_SmokeScreen_M_1P",
+      "sources": [
+        "Source/BrokenEdge/Extraction/Combat/ExtractionAbilities.h"
+      ],
+      "source_asset": "Content/Extraction/Abilities/SmokeScreen/1P/Surport_C101_SmokeScreen_M_1P/SkeletalMeshes/Surport_C101_SmokeScreen_M_1P.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Abilities/SmokeScreen/3P/Surport_C101_SmokeScreen_M_3P/SkeletalMeshes/Surport_C101_SmokeScreen_M_3P",
+      "sources": [
+        "Source/BrokenEdge/Extraction/Combat/ExtractionAbilities.h"
+      ],
+      "source_asset": "Content/Extraction/Abilities/SmokeScreen/3P/Surport_C101_SmokeScreen_M_3P/SkeletalMeshes/Surport_C101_SmokeScreen_M_3P.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_AK",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_AK.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Ammo",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Ammo.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Ammo55645",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Ammo55645.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Ammo76251",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Ammo76251.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_AmmoAP",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_AmmoAP.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Ammo_12G",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Ammo_12G.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Ammo_338",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Ammo_338.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Ammo_9mm",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Ammo_9mm.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Bag_ALS",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Bag_ALS.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Bag_Climb",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Bag_Climb.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Bag_GTO",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Bag_GTO.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Bag_Hike",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Bag_Hike.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Bag_Test",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Bag_Test.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Bandage",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Bandage.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_BoltSniper",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_BoltSniper.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15010010004",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15010010004.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15010010008",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15010010008.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15010010013",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15010010013.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15010010015",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15010010015.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15010050001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15010050001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010004",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010004.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010005",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010005.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010006",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010006.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010007",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010007.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010008",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010008.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010010",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010010.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010012",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010012.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010014",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010014.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010015",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010015.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010016",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010016.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010017",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010017.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010018",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010018.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010019",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010019.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010020",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010020.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010021",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010021.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010023",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010023.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010024",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010024.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010026",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010026.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010027",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010027.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010030",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010030.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010031",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010031.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010032",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010032.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010033",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010033.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010034",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010034.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010036",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010036.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020010037",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020010037.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020040002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020040002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020040003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020040003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020040004",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020040004.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020050001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020050001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020050002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020050002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020050003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020050003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020050005",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020050005.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020050007",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020050007.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15020050008",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15020050008.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030010001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030010001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030010002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030010002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030010007",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030010007.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030010008",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030010008.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030010009",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030010009.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030010011",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030010011.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030010012",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030010012.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030010013",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030010013.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030010014",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030010014.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030010018",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030010018.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030010019",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030010019.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030040001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030040001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030040002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030040002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030040003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030040003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030040005",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030040005.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030040006",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030040006.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030040007",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030040007.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030040010",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030040010.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030040011",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030040011.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030040012",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030040012.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030040013",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030040013.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030040014",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030040014.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050004",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050004.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050005",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050005.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050006",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050006.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050007",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050007.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050008",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050008.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050011",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050011.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050012",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050012.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050013",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050013.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050014",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050014.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050016",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050016.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050017",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050017.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050018",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050018.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15030050019",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15030050019.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010007",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010007.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010008",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010008.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010009",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010009.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010012",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010012.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010014",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010014.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010015",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010015.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010016",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010016.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010017",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010017.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010019",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010019.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010021",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010021.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010022",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010022.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040010023",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040010023.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040040007",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040040007.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040050002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040050002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15040050003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15040050003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060010001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060010001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060010002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060010002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060010003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060010003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060010004",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060010004.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060010006",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060010006.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060010007",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060010007.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060010008",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060010008.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060010009",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060010009.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060010010",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060010010.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060010012",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060010012.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060040001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060040001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060040002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060040002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060040003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060040003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060040004",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060040004.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080004",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080004.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080005",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080005.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080006",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080006.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080007",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080007.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080008",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080008.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080009",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080009.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080010",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080010.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080011",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080011.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080013",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080013.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080014",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080014.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080015",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080015.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15060080016",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15060080016.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070010001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070010001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070010002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070010002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070010005",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070010005.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070010006",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070010006.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070010007",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070010007.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070010008",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070010008.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070010009",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070010009.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070040001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070040001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070040002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070040002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070040003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070040003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070050001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070050001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070050002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070050002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15070050003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15070050003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080010003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080010003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080010004",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080010004.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080040001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080040001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080040002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080040002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080040003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080040003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080040004",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080040004.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080040005",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080040005.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050001",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050001.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050003",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050003.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050004",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050004.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050006",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050006.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050007",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050007.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050008",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050008.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050009",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050009.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050010",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050010.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050011",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050011.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050012",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050012.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050014",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050014.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050015",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050015.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050016",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050016.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050017",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050017.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050018",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050018.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050019",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050019.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050020",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050020.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050021",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050021.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050022",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050022.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050023",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050023.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050025",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050025.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050026",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050026.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050027",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050027.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050030",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050030.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050031",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050031.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050032",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050032.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050033",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050033.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050034",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050034.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050035",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050035.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050036",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050036.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050037",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050037.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050038",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050038.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050039",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050039.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050040",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050040.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050041",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050041.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050042",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050042.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050043",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050043.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050044",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050044.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050045",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050045.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050046",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050046.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050047",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050047.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050048",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050048.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050049",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050049.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050050",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050050.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050051",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050051.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050052",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050052.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050053",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050053.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050054",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050054.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050055",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050055.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050056",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050056.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050057",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050057.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050058",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050058.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050059",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050059.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050060",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050060.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050061",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050061.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050062",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050062.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050063",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050063.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050064",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050064.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050065",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050065.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050066",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050066.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050067",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050067.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050068",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050068.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050069",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050069.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050070",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050070.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050071",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050071.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050072",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050072.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050073",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050073.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050074",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050074.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050075",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050075.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050076",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050076.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050077",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050077.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050078",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050078.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050079",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050079.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050080",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050080.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050081",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050081.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050082",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050082.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050083",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050083.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050084",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050084.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050085",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050085.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050086",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050086.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050087",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050087.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050088",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050088.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050089",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050089.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050090",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050090.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050091",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050091.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050096",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050096.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050097",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050097.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050098",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050098.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050099",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050099.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050100",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050100.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050101",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050101.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050102",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050102.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050103",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050103.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050105",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050105.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050106",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050106.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050107",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050107.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050108",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050108.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050109",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050109.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050110",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050110.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050111",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050111.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050112",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050112.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050113",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050113.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050114",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050114.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050115",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050115.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050116",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050116.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050117",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050117.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050118",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050118.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050119",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050119.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050120",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050120.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050124",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050124.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050125",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050125.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050126",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050126.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050127",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050127.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050128",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050128.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050129",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050129.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050130",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050130.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050131",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050131.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050132",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050132.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050133",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050133.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050134",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050134.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050135",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050135.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050136",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050136.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050137",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050137.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050138",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050138.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050139",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050139.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050140",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050140.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050141",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050141.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050162",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050162.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050163",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050163.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050165",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050165.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050166",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050166.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050167",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050167.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050168",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050168.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050169",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050169.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050170",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050170.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050171",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050171.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050172",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050172.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050174",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050174.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050176",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050176.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050177",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050177.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050178",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050178.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050179",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050179.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050180",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050180.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050181",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050181.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050182",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050182.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050183",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050183.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050184",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050184.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050185",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050185.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050186",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050186.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050187",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050187.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050188",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050188.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050189",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050189.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050190",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050190.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050191",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050191.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050192",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050192.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050193",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050193.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050194",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050194.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050210",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050210.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050211",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050211.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050212",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050212.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050213",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050213.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050214",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050214.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050215",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050215.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050216",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050216.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050217",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050217.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050218",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050218.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050219",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050219.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050226",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050226.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050227",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050227.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080050229",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080050229.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15080090002",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15080090002.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15090010041",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15090010041.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Col_15090010077",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Col_15090010077.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Compensator",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Compensator.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Document",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Document.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Electronics",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Electronics.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_FragGrenade",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_FragGrenade.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Helmet2",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Helmet2.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Helmet3",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Helmet3.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Key",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Key.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Key_Contract",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Key_Contract.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Key_Core",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Key_Core.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Key_EastBridge",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Key_EastBridge.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Key_Monitor",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Key_Monitor.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Key_President",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Key_President.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Key_StaffPassage",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Key_StaffPassage.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_M4A1",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_M4A1.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Medkit",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Medkit.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Pistol9",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Pistol9.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_PumpShotgun",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_PumpShotgun.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_RedDot",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_RedDot.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Rig_Ammo",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Rig_Ammo.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Rig_Assault",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Rig_Assault.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Rig_Hurricane",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Rig_Hurricane.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Rig_Pouch",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Rig_Pouch.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_SCARH",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_SCARH.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Safe_Advanced",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Safe_Advanced.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Safe_Basic",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Safe_Basic.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Safe_Field",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Safe_Field.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Safe_Premium",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Safe_Premium.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Splint",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Splint.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Tools",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Tools.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_VerticalGrip",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_VerticalGrip.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Vest2",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Vest2.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Items/DA_Item_Vest3",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Items/DA_Item_Vest3.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Maps/DA_SovietMilitaryGameplay",
+      "sources": [
+        "Config/DefaultGame.ini:MapRegistry"
+      ],
+      "source_asset": "Content/Extraction/Maps/DA_SovietMilitaryGameplay.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Maps/DA_SpaceCenterGameplay",
+      "sources": [
+        "Config/DefaultGame.ini:MapRegistry"
+      ],
+      "source_asset": "Content/Extraction/Maps/DA_SpaceCenterGameplay.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Registry/DA_ItemRegistry",
+      "sources": [
+        "Config/ExtractionItemRegistry.json"
+      ],
+      "source_asset": "Content/Extraction/Registry/DA_ItemRegistry.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Training/DA_WeaponRangeMap",
+      "sources": [
+        "Source/BrokenEdge/Extraction/Core/WeaponRangeGameMode.cpp"
+      ],
+      "source_asset": "Content/Extraction/Training/DA_WeaponRangeMap.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Extraction/Traversal/DA_TraversalAnimations",
+      "sources": [
+        "Source/BrokenEdge/Traversal/ExtractionTraversalComponent.cpp"
+      ],
+      "source_asset": "Content/Extraction/Traversal/DA_TraversalAnimations.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Input/Extraction/IMC_Extraction",
+      "sources": [
+        "Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.h"
+      ],
+      "source_asset": "Content/Input/Extraction/IMC_Extraction.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Input/Extraction/IMC_ExtractionUI",
+      "sources": [
+        "Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.h"
+      ],
+      "source_asset": "Content/Input/Extraction/IMC_ExtractionUI.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/StaticMeshes/SM_H_Small_Door_11",
+      "sources": [
+        "Source/BrokenEdge/Extraction/World/ExtractionKeyRoom.cpp"
+      ],
+      "source_asset": "Content/Maps/SpaceCenter/Assets/0f02cdffc1c62311/SM_H_Small_Door_11/StaticMeshes/SM_H_Small_Door_11.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/UI/Extraction/WBP_ExtractionHUD",
+      "sources": [
+        "Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.h"
+      ],
+      "source_asset": "Content/UI/Extraction/WBP_ExtractionHUD.uasset",
+      "cook_directory_covered": true
+    },
+    {
+      "package": "/Game/UI/Looting/WBP_LootingPickupView_Pc",
+      "sources": [
+        "Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.h"
+      ],
+      "source_asset": "Content/UI/Looting/WBP_LootingPickupView_Pc.uasset",
+      "cook_directory_covered": true
+    }
+  ],
+  "other_literal_packages": [
+    "/Game/Blueprints/Ai/BT_ExtractionGuard",
+    "/Game/Blueprints/Extraction/BP_ExtractionLootActor",
+    "/Game/Blueprints/UI/WBP_Menu",
+    "/Game/Characters/Stinger/Animations/Corrected/MappedV4/ac5ff8b5/M_Roy_016_Show_idle",
+    "/Game/Characters/Stinger/Animations/ThirdPerson/Idle_Rifle_Hip_Retargeted_Stinger",
+    "/Game/Characters/Stinger/Blueprints/BP_StingerCharacter",
+    "/Game/Characters/Stinger/Meshes/Gameplay/Stinger_3P_Textured/SkeletalMeshes/Stinger_3P_Textured",
+    "/Game/Extraction/Abilities/M_ExtractionSmoke",
+    "/Game/Extraction/Abilities/M_ExtractionSmokeShell",
+    "/Game/Extraction/Loot/FlightCase/M_FlightCase_Metal",
+    "/Game/Extraction/Materials/M_ExtractionExit",
+    "/Game/Extraction/UI/M_LobbyStudio",
+    "/Game/LearningKit_Games/Blueprints/PlayerCharacter/BP_LearningKit_PlayerCharacter",
+    "/Game/Lightning_Electricity_Pack/Particles/P_Clouds",
+    "/Game/Maps/Lobby",
+    "/Game/MilitaryWeapSilver/FX/P_Grenade_Explosion_01",
+    "/Game/MilitaryWeapSilver/Sound/GrenadeLauncher/Cues/GrenadeLauncher_Explosion_Cue"
+  ],
+  "issues": []
+}

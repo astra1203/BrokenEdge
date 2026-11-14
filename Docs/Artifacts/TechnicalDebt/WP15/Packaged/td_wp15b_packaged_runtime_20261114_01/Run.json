@@ -1,0 +1,62 @@
+{
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "a1e05d4a96f2d2c243ef258df8441820766239ab",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Common/test_ue_env.py\n M Scripts/Common/ue_env.py\n M Scripts/Extraction/run_build.py\n M Scripts/Extraction/run_nanite_usage.py\n M Scripts/Extraction/run_network.py\n M Scripts/Extraction/run_pie_lobby.py\n M Scripts/Extraction/run_soviet_audit.py\n M Scripts/Extraction/run_storage_restarts.py\n M Scripts/Extraction/test_run_build_cli.py\n M Scripts/Test-LanSessions.ps1\n?? Scripts/Common/test_lan_sessions.ps1\n?? Scripts/Extraction/run_packaged_assets.py",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_packaged_assets.py",
+  "script_sha256": "648e54c83233a89514b70f18e4a6b902b5bbc751e3d2edc0abd433e068a9cd9f",
+  "ue_env_sha256": "e811f0a4231046c4c5df0ccd3fc450353c604b27a4d874e5ee747108e773f915",
+  "inherited_cache_environment": {},
+  "command": [
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\TechnicalDebt-20261114-Retry\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+    "/Game/Extraction/Training/L_WeaponRange",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-RenderOffscreen",
+    "-ResX=1280",
+    "-ResY=720",
+    "-RuntimeAssetsScreenshot=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15b_packaged_runtime_20261114_01\\Inventory.png",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.RuntimeAssets.TrainingInventory",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15b_packaged_runtime_20261114_01\\Automation",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15b_packaged_runtime_20261114_01\\Game.log"
+  ],
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15b_packaged_runtime_20261114_01\\Run.json",
+  "exit_code": 0,
+  "started_utc": "2026-11-14T01:17:44.502130+00:00",
+  "build_report": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp15b_client_package_20261114_02\\Run.json",
+  "build_report_sha256": "fdfc7cf4156f9d4fd5bbfe959600de75e950c0e10f99b2660fd622d992acbc8f",
+  "build_head": "a1e05d4a96f2d2c243ef258df8441820766239ab",
+  "build_engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "executable": {
+    "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\TechnicalDebt-20261114-Retry\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+    "bytes": 340269568,
+    "sha256": "c3de6ac71940110e556c1a5b3cfd24a28e4cdd6963c20fd193b84b6f0f486c7e",
+    "machine": "AMD64",
+    "sections": 13
+  },
+  "pid": 31184,
+  "error": "[Errno 2] No such file or directory: 'D:\\\\SourceFiles\\\\UnrealProjects\\\\BrokenEdge\\\\Saved\\\\Extraction\\\\td_wp15b_packaged_runtime_20261114_01\\\\Automation\\\\index.json'",
+  "result": "failed",
+  "finished_utc": "2026-11-14T01:18:14.039692+00:00"
+}
