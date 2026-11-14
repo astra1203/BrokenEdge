@@ -58,6 +58,8 @@ namespace
 
 	FString StashGridTitle(const FExtractionContainer& C, const ExtractionItems::FGrid& Grid)
 	{
+		if (Grid.Section == ExtractionGear::PocketGrid)
+			return FString::Printf(TEXT("口袋 · %d 个独立单格"), Grid.Cells);
 		const auto* Gear = C.InSlot(ExtractionGear::SlotForGrid(Grid.Section));
 		const auto* D = Gear ? UExtractionItemDefinition::Get(Gear->Definition) : nullptr;
 		return FString::Printf(TEXT("%s %s · %d 格"), Grid.Section == ExtractionGear::RigGrid
@@ -164,7 +166,8 @@ public:
 				for (int32 I = 0; I <= ExtractionGear::SafeSlot; ++I)
 				{
 					Box(Slot(I), SlotSize, FLinearColor(.09, .15, .18));
-					Text(Slot(I) + FVector2D(5, 11), SlotNames[I], 13);
+					const bool Occupied = C->InSlot(I) != nullptr;
+					Text(Slot(I) + FVector2D(5, Occupied ? 4 : 11), SlotNames[I], Occupied ? 10 : 13);
 				}
 			for (const auto& I : C->Items)
 			{
@@ -173,12 +176,19 @@ public:
 				const FVector2D P = Origin(I, Side), S = Size(I, Side);
 				Box(P + FVector2D(1, 1), S - FVector2D(3, 3), FLinearColor(.035f, .055f, .06f));
 				Box(P + FVector2D(1, 1), FVector2D(S.X - 3, 2), ExtractionUIStyle::Rarity(D ? D->DisplayRarity : 0), 1);
+				const FString Label = D ? D->Label.ToString() : I.Definition.ToString();
+				if (I.Slot >= 0)
+				{
+					// Keep the slot caption, item name and icon in separate parts of the card.
+					ExtractionUIStyle::Icon(Draw, Layer + 1, G, P + FVector2D(114, 4), FVector2D(32), Scale, D);
+					Text(P + FVector2D(5, 23), Label.Left(9), 11, 2);
+					continue;
+				}
 				const bool HasIcon = ExtractionUIStyle::Icon(Draw, Layer + 1, G, P + FVector2D(3, 3),
 				                                             S - FVector2D(6, 17), Scale, D);
-				const FString Label = D ? D->Label.ToString() : I.Definition.ToString();
 				if (!HasIcon) Text(P + FVector2D(4, 4), S.X < 75 ? Label.Left(2) : Label.Left(12), S.X < 75 ? 10 : 12);
 				Text(P + FVector2D(4, S.Y - 15),
-				     I.Slot >= 0 ? Label.Left(12) : FString::Printf(TEXT("×%d"), I.Quantity), S.X < 75 ? 9 : 11, 2);
+				     FString::Printf(TEXT("×%d"), I.Quantity), S.X < 75 ? 9 : 11, 2);
 			}
 		}
 		Text({900, 405}, FString::Printf(TEXT("溢出领取区 · %d 件"), A->Profile.Overflow.Num()), 14);

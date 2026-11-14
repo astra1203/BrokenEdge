@@ -120,7 +120,9 @@ report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.s
                          for p in [Path(__file__).resolve(), ROOT / 'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
                                    ROOT / 'Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.h',
                                    ROOT / 'Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.cpp',
+                                   ROOT / 'Source/BrokenEdge/Extraction/UI/ExtractionStashWidget.cpp',
                                    ROOT / 'Scripts/Extraction/inventory_scenarios.py',
+                                   ROOT / 'Scripts/Extraction/lobby_ui_scenarios.py',
                                    ROOT / 'Scripts/Extraction/storage_scenarios.py', ROOT / 'Scripts/Extraction/phase5_scenarios.py',
                                    ROOT / 'Scripts/Extraction/equipment_scenarios.py',
                                    ROOT / 'Scripts/Extraction/optic_scenarios.py',
@@ -432,6 +434,7 @@ def begin_round():
             import math
             p = player('Server', role)['position']
             send(role, 'look', yaw=math.degrees(math.atan2(-p[1], -p[0])))
+        if args.scenario in ['soviet', 'lobby-ui']:
             # Current production starting supply equips M4A1 and retains the carried AK in the pack.
             check(role + ' current starting supply equipped and carried rifle retained', lambda r=role:
                   'M4A1' in player('Server',r).get('weapon','') and
@@ -442,7 +445,9 @@ def begin_round():
             check(role + ' equipped AK', lambda r=role: 'AK47' in player('Server', r).get('weapon', ''))
     time.sleep(1)
     check('First-person backpack section hidden on each owner', lambda: all(player(r, r).get('fp_gear_visible') is False for r in ROLES))
-    if args.scenario != 'soviet' and not args.starting_kit_validation:
+    # This two-hand target belongs to the legacy AK fixture. Current M4A1
+    # supply uses its separately authored presentation calibration.
+    if args.scenario not in ['soviet', 'lobby-ui'] and not args.starting_kit_validation:
         check('Server and owners keep both hands within two cm of weapon grips', lambda: all(
             player(peer, r).get('left_grip_distance', 999) <= 2 and player(peer, r).get('right_grip_distance', 999) <= 2
             for r in ROLES for peer in ['Server', r]))

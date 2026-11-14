@@ -1,0 +1,10 @@
+[2026.11.14-02.12.09:256][305]LogAutomationController: Received FindWorkersResponseMessage from F7FC89B9465DDD949F611496E160D0C9
+[2026.11.14-02.12.09:257][305]LogAutomationController: Requesting test list from F7FC89B9465DDD949F611496E160D0C9
+[2026.11.14-02.12.09:321][307]LogAutomationController: Received RequestTestsReplyCompleteMessage from F7FC89B9465DDD949F611496E160D0C9
+[2026.11.14-02.12.09:323][307]LogAutomationController: 2383 tests available on F7FC89B9465DDD949F611496E160D0C9
+[2026.11.14-02.12.09:331][307]LogAutomationController: Sending StopTests to F7FC89B9465DDD949F611496E160D0C9
+[2026.11.14-02.12.09:332][307]LogAutomationController: Sending StartTestSession to F7FC89B9465DDD949F611496E160D0C9
+[2026.11.14-02.12.09:332][307]LogAutomationController: Display: Clearing ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Logs/ and ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Tmp/
+[2026.11.14-02.12.09:334][307]LogAutomationController: Sending RunTest ProcessDriver to F7FC89B9465DDD949F611496E160D0C9
+[2026.11.14-02.12.09:334][307]LogAutomationController: Display: Test Started. Name={ProcessDriver} Path={BrokenEdge.Extraction.ProcessDriver}
+[2026.11.14-02.12.55:087][482]LogAutomationController: Ignoring very large delta of 3.25 seconds in calls to FAutomationControllerManager::Tick() and not penalizing unresponsive tests

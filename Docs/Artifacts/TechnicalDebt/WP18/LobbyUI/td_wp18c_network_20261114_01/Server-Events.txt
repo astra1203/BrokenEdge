@@ -1,0 +1,12 @@
+[2026.11.14-02.08.44:022][  0]LogTemp: Display: EXTRACTION_STORE_COMMIT Sequence=1 Bytes=91 JournalBytes=111 Profiles=0 Raids=0 Receipts=0 ElapsedMs=4.43
+[2026.11.14-02.08.44:456][  0]LogAutomationController: Ignoring very large delta of 17084465.19 seconds in calls to FAutomationControllerManager::Tick() and not penalizing unresponsive tests
+[2026.11.14-02.08.49:612][154]LogAutomationController: Received FindWorkersResponseMessage from E4A711F8451991FE928228B29AD197B8
+[2026.11.14-02.08.49:612][154]LogAutomationController: Requesting test list from E4A711F8451991FE928228B29AD197B8
+[2026.11.14-02.08.49:645][155]LogAutomationController: Received RequestTestsReplyCompleteMessage from E4A711F8451991FE928228B29AD197B8
+[2026.11.14-02.08.49:646][155]LogAutomationController: 1419 tests available on E4A711F8451991FE928228B29AD197B8
+[2026.11.14-02.08.49:650][155]LogAutomationController: Sending StopTests to E4A711F8451991FE928228B29AD197B8
+[2026.11.14-02.08.49:651][155]LogAutomationController: Sending StartTestSession to E4A711F8451991FE928228B29AD197B8
+[2026.11.14-02.08.49:651][155]LogAutomationController: Display: Clearing ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Logs/ and ../../../../../../SourceFiles/UnrealProjects/BrokenEdge/Saved/Automation/Tmp/
+[2026.11.14-02.08.49:652][155]LogAutomationController: Sending RunTest ProcessDriver to E4A711F8451991FE928228B29AD197B8
+[2026.11.14-02.08.49:652][155]LogAutomationController: Display: Test Started. Name={ProcessDriver} Path={BrokenEdge.Extraction.ProcessDriver}
+[2026.11.14-02.09.15:021][917]LogTemp: Display: EXTRACTION_STORE_COMMIT Sequence=2 Bytes=7677 JournalBytes=7808 Profiles=1 Raids=0 Receipts=0 ElapsedMs=27.67

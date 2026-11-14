@@ -330,6 +330,9 @@ public:
 								Value;
 						if (Command->TryGetNumberField(TEXT("hold_seconds"), Value)) Definition.HoldSeconds = Value;
 						if (Command->TryGetNumberField(TEXT("capacity"), Value)) Definition.Capacity = Value;
+						bool RequireEmptyPack;
+						if (Command->TryGetBoolField(TEXT("require_empty_pack"), RequireEmptyPack))
+							Definition.bRequireEmptyPack = RequireEmptyPack;
 						if (!Definition.IsValid()) Error = TEXT("Invalid test exit definition");
 						else
 						{
@@ -890,6 +893,8 @@ private:
 				TEXT("sell_price"), GetDefault<UExtractionProgressionRules>()->SellPrice(I, I.Quantity));
 			Entry->SetNumberField(TEXT("x"), I.Cell.X);
 			Entry->SetNumberField(TEXT("y"), I.Cell.Y);
+			Entry->SetNumberField(TEXT("width"), I.Extent().X);
+			Entry->SetNumberField(TEXT("height"), I.Extent().Y);
 			Entry->SetNumberField(TEXT("slot"), I.Slot);
 			Entry->SetNumberField(TEXT("magazine"), I.Magazine);
 			Entry->SetStringField(TEXT("ammo_type"), I.MagazineAmmo.ToString());
@@ -1551,6 +1556,7 @@ private:
 				Entry->SetNumberField(TEXT("round_started"), It->RoundStartedAt);
 				Entry->SetNumberField(TEXT("hold_seconds"), It->Definition.HoldSeconds);
 				Entry->SetNumberField(TEXT("capacity"), It->Definition.Capacity);
+				Entry->SetBoolField(TEXT("require_empty_pack"), It->Definition.bRequireEmptyPack);
 				Entry->SetNumberField(TEXT("used"), It->UsedCapacity);
 				Entry->SetBoolField(TEXT("available"), It->Available(GS->GetServerWorldTimeSeconds()));
 				Entry->SetStringField(TEXT("reason"), It->UnavailableReason(GS->GetServerWorldTimeSeconds()));
