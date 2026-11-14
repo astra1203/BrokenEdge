@@ -124,7 +124,8 @@ else:
     if args.fast_link_symbols:
         command.append('-LinkerArguments=/DEBUG:FASTLINK')
 metadata = {'command': command, 'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-            'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'compile_only': args.compile_only}
+            'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'compile_only': args.compile_only,
+            'result': 'running'}
 metadata.update(run_record(command, out / 'Run.json', engine=ENGINE, script=__file__))
 if args.fast_link_symbols:
     metadata['linker_debug_info'] = ('MSVC FASTLINK index PDB; local-only symbols'
@@ -144,8 +145,8 @@ metadata['input_sha256'] = {name: hashlib.sha256((ROOT / name).read_bytes()).hex
 if args.include_training_map:
     name = 'Content/Extraction/Training/L_WeaponRange.umap'
     metadata['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
-for source in sorted((ROOT/'Source/BrokenEdge').rglob('*')):
-    if source.suffix in ('.h','.cpp'):
+for source in sorted((ROOT/'Source').rglob('*')):
+    if source.suffix in ('.h','.cpp','.cs'):
         metadata['input_sha256'][source.relative_to(ROOT).as_posix()] = hashlib.sha256(source.read_bytes()).hexdigest()
 start = time.monotonic()
 environment = os.environ.copy()
@@ -195,6 +196,8 @@ if args.package and metadata['exit_code'] == 0:
         source = ROOT / 'Deployment' / launcher
         if source.exists():
             shutil.copy2(source, archive / platform / launcher)
+metadata['result'] = 'passed' if metadata['exit_code'] == 0 else 'failed'
+metadata['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
 (out / 'Run.json').write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8')
 messages = {}
 for line in (out / 'Build.log').read_bytes().splitlines():

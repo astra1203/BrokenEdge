@@ -95,8 +95,8 @@ void ATeamsGameMode::PlayerDefeated(ABrokenEdgeCharacter* DefeatedCharacter,
 
 float ATeamsGameMode::CalculateDamage(AController* Attacker, AController* Victim, float BaseDamage)
 {
-	ABrokenEdgePlayerState* AttackerPlayerState = Attacker->GetPlayerState<ABrokenEdgePlayerState>();
-	ABrokenEdgePlayerState* VictimPlayerState = Victim->GetPlayerState<ABrokenEdgePlayerState>();
+	ABrokenEdgePlayerState* AttackerPlayerState = Attacker ? Attacker->GetPlayerState<ABrokenEdgePlayerState>() : nullptr;
+	ABrokenEdgePlayerState* VictimPlayerState = Victim ? Victim->GetPlayerState<ABrokenEdgePlayerState>() : nullptr;
 	if (AttackerPlayerState == nullptr || VictimPlayerState == nullptr)return BaseDamage;
 
 	if (Attacker == Victim)

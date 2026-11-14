@@ -22,6 +22,10 @@
 #include "BrokenEdge/Extraction/Map/ExtractionMapRegistry.h"
 #include "BrokenEdge/Extraction/World/ExtractionExit.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
+#include "BrokenEdge/Character/BrokenEdgeCharacter.h"
+#include "BrokenEdge/GameMode/BrokenEdgeGameMode.h"
+#include "GameFramework/PlayerStart.h"
+#include "Kismet/GameplayStatics.h"
 
 namespace
 {
@@ -183,7 +187,7 @@ namespace
 					                       HasSession());
 					Round = 1;
 					UE_LOG(LogTemp, Display, TEXT("EXTRACTION_PIE_LOBBY_LEGACY_OK Mode=%s"), *Mode);
-					Stop();
+					Advance(7);
 					return false;
 				}
 				const auto* Game = Server->GetGameState<AExtractionGameState>();
@@ -258,6 +262,78 @@ namespace
 				}
 				UE_LOG(LogTemp, Display, TEXT("EXTRACTION_PIE_LOBBY_ACTIVE Round=%d"), Round + 1);
 				Advance(4);
+				return false;
+			}
+			if (Stage == 7)
+			{
+				auto* ClientPawn = Cast<ABrokenEdgeCharacter>(Clients[0]->GetFirstPlayerController()->GetPawn());
+				if (!ClientPawn || !ClientPawn->GetPlayerState()) return false;
+				LegacyPlayerId = ClientPawn->GetPlayerState()->GetPlayerId();
+				ABrokenEdgeCharacter* Victim = nullptr;
+				for (TActorIterator<ABrokenEdgeCharacter> It(Server); It; ++It)
+					if (It->GetPlayerState() && It->GetPlayerState()->GetPlayerId() == LegacyPlayerId) Victim = *It;
+				if (!Victim || !Victim->GetController()) return false;
+				for (auto* Client : Clients)
+				{
+					bool Found = false;
+					for (TActorIterator<ABrokenEdgeCharacter> It(Client); It; ++It)
+						if (It->GetPlayerState() && It->GetPlayerState()->GetPlayerId() == LegacyPlayerId) Found = true;
+					if (!Found) return false;
+				}
+				LegacyVictim = Victim; LegacyController = Victim->GetController(); LegacyState = Victim->GetPlayerState();
+				const auto* Defaults = Victim->GetClass()->GetDefaultObject<ABrokenEdgeCharacter>();
+				LegacySpawnHealth = Defaults->GetHealth(); LegacySpawnShield = Defaults->GetShield();
+				auto* Game = Server->GetAuthGameMode<ABrokenEdgeGameMode>();
+				if (!Test->TestNotNull(TEXT("Legacy production game mode"), Game)) return true;
+				Test->TestEqual(TEXT("Missing victim does not crash damage calculation"), Game->CalculateDamage(Victim->GetController(), nullptr, 20), 20.f);
+				// Environmental damage has no attacker; exercise the normal damage -> death -> respawn timer path.
+				UGameplayStatics::ApplyDamage(Victim, Victim->GetHealth() + Victim->GetShield() + 1, nullptr, nullptr, nullptr);
+				if (!Test->TestTrue(TEXT("Environmental damage defeats the legacy character"), Victim->IsDefeated())) return true;
+				UE_LOG(LogTemp, Display, TEXT("EXTRACTION_PIE_LEGACY_DEFEATED Mode=%s Player=%d Pawn=%s"), *Mode, LegacyPlayerId, *Victim->GetName());
+				Advance(8);
+				Deadline = Now + 45;
+				return false;
+			}
+			if (Stage == 8)
+			{
+				if (Now - LegacyReportAt > 5)
+				{
+					LegacyReportAt = Now;
+					auto* Current = LegacyController.IsValid() ? Cast<ABrokenEdgeCharacter>(LegacyController->GetPawn()) : nullptr;
+					UE_LOG(LogTemp, Display, TEXT("EXTRACTION_PIE_RESPAWN_WAIT Time=%.2f Old=%s Current=%s Defeated=%d HP=%.2f/%.2f"),
+						Server->GetTimeSeconds(), *GetNameSafe(LegacyVictim.Get()), *GetNameSafe(Current), Current ? Current->IsDefeated() : -1,
+						Current ? Current->GetHealth() : -1.f, Current ? Current->GetMaxHealth() : -1.f);
+					for (auto* Client : Clients)
+						for (TActorIterator<ABrokenEdgeCharacter> It(Client); It; ++It)
+							UE_LOG(LogTemp, Display, TEXT("EXTRACTION_PIE_RESPAWN_COPY World=%s Pawn=%s Player=%d Defeated=%d HP=%.2f/%.2f"),
+								*Client->GetName(), *It->GetName(), It->GetPlayerState() ? It->GetPlayerState()->GetPlayerId() : -1,
+								It->IsDefeated(), It->GetHealth(), It->GetMaxHealth());
+				}
+				if (!LegacyController.IsValid()) { Test->AddError(TEXT("Legacy controller disappeared during respawn")); return true; }
+				auto* Pawn = Cast<ABrokenEdgeCharacter>(LegacyController->GetPawn());
+				if (!Pawn || Pawn == LegacyVictim.Get() || Pawn->IsDefeated()) return false;
+				for (auto* Client : Clients)
+				{
+					ABrokenEdgeCharacter* Copy = nullptr;
+					for (TActorIterator<ABrokenEdgeCharacter> It(Client); It; ++It)
+						if (It->GetPlayerState() && It->GetPlayerState()->GetPlayerId() == LegacyPlayerId && !It->IsDefeated()) Copy = *It;
+					if (!Copy || !FMath::IsNearlyEqual(Copy->GetHealth(), LegacySpawnHealth) || !FMath::IsNearlyEqual(Copy->GetShield(), LegacySpawnShield)) return false;
+					if (Client->GetFirstPlayerController()->PlayerState->GetPlayerId() == LegacyPlayerId
+						&& Client->GetFirstPlayerController()->GetPawn() != Copy) return false;
+				}
+				Test->TestFalse(TEXT("Normal respawn destroys the old pawn"), LegacyVictim.IsValid());
+				Test->TestEqual(TEXT("Respawn retains PlayerState"), Pawn->GetPlayerState(), LegacyState.Get());
+				Test->TestEqual(TEXT("Respawn restores authored initial health"), Pawn->GetHealth(), LegacySpawnHealth);
+				Test->TestEqual(TEXT("Respawn restores authored initial shield"), Pawn->GetShield(), LegacySpawnShield);
+				Test->TestFalse(TEXT("Respawn enables gameplay"), Pawn->bDisableGameplay);
+				double NearestStart = TNumericLimits<double>::Max();
+				for (TActorIterator<APlayerStart> It(Server); It; ++It)
+					NearestStart = FMath::Min(NearestStart, FVector::Dist(Pawn->GetActorLocation(), It->GetActorLocation()));
+				Test->TestTrue(TEXT("Respawn uses an authored PlayerStart"), NearestStart < 250);
+				Test->TestFalse(TEXT("Respawn does not use the world origin"), Pawn->GetActorLocation().IsNearlyZero());
+				Test->TestTrue(TEXT("Legacy session survives death and respawn"), Server->GetGameInstance()->GetSubsystem<UMultiplayerSessionsSubsystem>()->HasSession());
+				UE_LOG(LogTemp, Display, TEXT("EXTRACTION_PIE_LEGACY_RESPAWN_OK Mode=%s Player=%d Pawn=%s NearestStart=%.2f"), *Mode, LegacyPlayerId, *Pawn->GetName(), NearestStart);
+				Stop();
 				return false;
 			}
 			if (Stage == 4)
@@ -339,6 +415,12 @@ namespace
 		int64 BeforeBlocked = 0;
 		TMap<FGuid, FGuid> Weapons;
 		FGuid LastRaid;
+		TWeakObjectPtr<ABrokenEdgeCharacter> LegacyVictim;
+		TWeakObjectPtr<AController> LegacyController;
+		TWeakObjectPtr<APlayerState> LegacyState;
+		int32 LegacyPlayerId = INDEX_NONE;
+		double LegacyReportAt = 0;
+		float LegacySpawnHealth = 0, LegacySpawnShield = 0;
 	};
 }
 

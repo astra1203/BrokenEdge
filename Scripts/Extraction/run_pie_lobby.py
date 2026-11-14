@@ -67,7 +67,8 @@ if args.mode == 'Extraction':
     passed = (passed and 'EXTRACTION_PIE_LOBBY_DISABLED_GUARD_OK' in text
               and all(metadata[key] == [str(i+1) for i in range(rounds)] for key in ['active_rounds', 'settled_rounds', 'returned_rounds']))
 else:
-    passed = passed and f'EXTRACTION_PIE_LOBBY_LEGACY_OK Mode={args.mode}' in text
+    passed = (passed and f'EXTRACTION_PIE_LOBBY_LEGACY_OK Mode={args.mode}' in text
+              and f'EXTRACTION_PIE_LEGACY_RESPAWN_OK Mode={args.mode}' in text)
 metadata['result'] = 'passed' if passed else 'failed'
 metadata['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
 (out / 'Run.json').write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8')

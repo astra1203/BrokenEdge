@@ -1,0 +1,44 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "34EE177E4582BDE6F42C37B00B8A18E1",
+			"instanceName": "OREKI-LEGION-29560",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.14-01.48.52",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.021899200975894928,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "EmptyStarts",
+			"fullTestPath": "BrokenEdge.GameMode.Respawn.EmptyStarts",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"34EE177E4582BDE6F42C37B00B8A18E1"
+			],
+			"duration": 0.021899200975894928,
+			"dateTime": "2026.11.14-01.48.52",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

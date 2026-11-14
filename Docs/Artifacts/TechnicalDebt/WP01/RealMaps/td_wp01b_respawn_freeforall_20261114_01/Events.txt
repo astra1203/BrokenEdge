@@ -1,0 +1,7 @@
+[2026.11.14-01.43.25:566][298]LogAutomationController: Display: Test Started. Name={Lobby} Path={BrokenEdge.Extraction.PIE.Lobby}
+[2026.11.14-01.43.29:894][510]LogTemp: Display: EXTRACTION_PIE_LOBBY_LEGACY_OK Mode=FreeForAll
+[2026.11.14-01.43.29:973][511]LogTemp: Display: EXTRACTION_PIE_LEGACY_DEFEATED Mode=FreeForAll Player=256 Pawn=BP_StingerCharacter_C_0
+[2026.11.14-01.44.15:102][199]LogAutomationController: Error: Test Completed. Result={Fail} Name={Lobby} Path={BrokenEdge.Extraction.PIE.Lobby}
+[2026.11.14-01.44.15:103][199]LogAutomationController: LogTemp: EXTRACTION_PIE_LOBBY_LEGACY_OK Mode=FreeForAll [log]
+[2026.11.14-01.44.15:103][199]LogAutomationController: LogTemp: EXTRACTION_PIE_LEGACY_DEFEATED Mode=FreeForAll Player=256 Pawn=BP_StingerCharacter_C_0 [log]
+[2026.11.14-01.44.15:103][199]LogAutomationController: Error: PIE lobby timeout Mode=FreeForAll Stage=8 Round=1 Worlds=3 [D:\SourceFiles\UnrealProjects\BrokenEdge\Source\StingerTools\Private\ExtractionPIELobbyTests.cpp(64)]
