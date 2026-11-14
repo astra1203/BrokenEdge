@@ -1,0 +1,86 @@
+{
+  "started_utc": "2026-11-14T02:07:43.653505+00:00",
+  "steps": [
+    {
+      "name": "Registry",
+      "command": [
+        "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-NullRHI",
+        "-unattended",
+        "-nosound",
+        "-SCCProvider=None",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp18c_soviet_20261114_01\\Registry.log",
+        "-ExecCmds=Automation RunTests BrokenEdge.Extraction.Maps",
+        "-TestExit=Automation Test Queue Empty",
+        "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp18c_soviet_20261114_01\\Automation"
+      ],
+      "exit_code": 0,
+      "result": "passed",
+      "started_utc": "2026-11-14T02:07:44.344794+00:00",
+      "pid": 31272,
+      "passed": true,
+      "finished_utc": "2026-11-14T02:08:02.969528+00:00"
+    },
+    {
+      "name": "Navigation",
+      "command": [
+        "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+        "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+        "-NullRHI",
+        "-unattended",
+        "-nosound",
+        "-SCCProvider=None",
+        "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp18c_soviet_20261114_01\\Navigation.log",
+        "-run=pythonscript",
+        "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\validate_soviet_layout.py"
+      ],
+      "exit_code": 0,
+      "result": "passed",
+      "started_utc": "2026-11-14T02:08:02.970528+00:00",
+      "pid": 21620,
+      "passed": true,
+      "finished_utc": "2026-11-14T02:08:16.677612+00:00"
+    }
+  ],
+  "result": "passed",
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "5552a0c0be48d72afb4b763a2df9053c73b2ee11",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Extraction/run_editor_task.py\n M Scripts/Extraction/run_soviet_audit.py\n M Scripts/Extraction/validate_soviet_layout.py\n M Scripts/Test-LanSessions.ps1\n M Source/StingerTools/Private/StingerAssetLibrary.cpp\n?? Source/BrokenEdge/Tests/ExtractionInventoryNetworkPIETests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_soviet_audit.py",
+  "script_sha256": "af26be32b8b55c03c2009431a3ea3340856e064473391748c369b8b8e4543d43",
+  "ue_env_sha256": "e811f0a4231046c4c5df0ccd3fc450353c604b27a4d874e5ee747108e773f915",
+  "inherited_cache_environment": {
+    "UE-LocalDataCachePath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Files",
+    "UE-ZenDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen",
+    "UE-ZenSubprocessDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen"
+  },
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\ThirdParty\\Python3\\Win64\\python.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_soviet_audit.py",
+    "--engine",
+    "D:/OrekiFiles/EpicGames/UE_5.8",
+    "--tag",
+    "td_wp18c_soviet_20261114_01"
+  ],
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp18c_soviet_20261114_01\\Run.json",
+  "exit_code": 0,
+  "input_sha256": {
+    "Content/Maps/SovietMilitary/L_SovietMilitaryExtraction.umap": "e9db6ec0dfa31f997480e8c4cf1311ed31224d32915cee6a34c6da19748fe591",
+    "Content/Extraction/Maps/DA_SovietMilitaryGameplay.uasset": "3adb7eac7bc05f77879ac0c110bd256d290026d0efd0d5bb885d832b15742e5b",
+    "Content/Extraction/Loot/DA_SovietMilitaryLoot.uasset": "ca7b731b670a30053db471cdfd36bdee79b972a0a861e2e8e323bbf9ff83baa1",
+    "Scripts/Extraction/validate_soviet_layout.py": "e1a63a85ae13076b1ebdf52a4c5098658e5886e7a242441cf7b9fc2d779525d4",
+    "Source/BrokenEdge/Tests/ExtractionMapTests.cpp": "c357ea36c2ee7570f08b9508608e5ff0b4d67fbb72cbb631e3a3a9b58bee3bfc"
+  },
+  "finished_utc": "2026-11-14T02:08:16.677612+00:00"
+}

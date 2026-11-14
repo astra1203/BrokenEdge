@@ -1,9 +1,11 @@
 """Offline collision/navigation audit; does not claim player traversal coverage."""
 import json
+import os
 from pathlib import Path
 import unreal
 
-out=Path(unreal.Paths.project_saved_dir())/'Extraction/SovietMilitary'
+out=Path(os.environ.get('EXTRACTION_RUN_DIR', str(Path(unreal.Paths.project_saved_dir())/'Extraction/SovietMilitary')))
+out.mkdir(parents=True, exist_ok=True)
 levels=unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
 assert levels.load_level('/Game/Maps/SovietMilitary/L_SovietMilitaryExtraction')
 world=unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()

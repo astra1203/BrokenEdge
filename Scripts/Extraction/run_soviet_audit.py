@@ -3,9 +3,9 @@ import argparse
 import datetime
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
-import shutil
 import subprocess
 import sys
 
@@ -34,6 +34,7 @@ report['input_sha256'] = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest()
     'Source/BrokenEdge/Tests/ExtractionMapTests.cpp',
 ]}
 (out / 'Run.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+environment = dict(os.environ, EXTRACTION_RUN_DIR=str(out), UE_SKIP_UBT_SDK_SETUP='1')
 for name, options in [
     ('Registry', ['-ExecCmds=Automation RunTests BrokenEdge.Extraction.Maps',
                   '-TestExit=Automation Test Queue Empty', '-ReportExportPath=' + str(out / 'Automation')]),
@@ -42,22 +43,40 @@ for name, options in [
     command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor-Cmd.exe'), str(ROOT / 'BrokenEdge.uproject'),
                '-NullRHI', '-unattended', '-nosound', '-SCCProvider=None', '-abslog=' + str(out / (name + '.log'))] + options
     print('SOVIET_AUDIT_STARTED', name, flush=True)
+    step = dict(name=name, command=command, exit_code=None, result='running',
+                started_utc=datetime.datetime.now(datetime.timezone.utc).isoformat())
+    report['steps'].append(step)
+    (out / 'Run.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     with (out / (name + '-process.log')).open('wb') as log:
-        code = subprocess.run(command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT,
-                              creationflags=subprocess.CREATE_NO_WINDOW).returncode
+        proc = subprocess.Popen(command, cwd=ROOT, env=environment, stdout=log, stderr=subprocess.STDOUT,
+                                creationflags=subprocess.CREATE_NO_WINDOW)
+        step['pid'] = proc.pid
+        (out / 'Run.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+        try:
+            code = proc.wait(timeout=900)
+        except subprocess.TimeoutExpired:
+            subprocess.run(['taskkill', '/PID', str(proc.pid), '/T', '/F'], capture_output=True)
+            code = proc.wait(timeout=30)
+            step['error'] = 'Audit step timed out'
     text = (out / (name + '.log')).read_text(encoding='utf-8', errors='replace')
-    passed = code == 0 and 'Fatal error:' not in text
+    passed = code == 0 and 'Fatal error:' not in text and 'Traceback (most recent call last)' not in text and 'error' not in step
     if name == 'Registry':
         passed &= len(re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text)) == 1
+        passed &= not bool(re.search(r'Test Completed\. Result=\{(?:Fail|Failure|\u5931\u8d25)', text))
     else:
         passed &= 'SOVIET_NAVIGATION_AUDIT {"points": 77, "failed": []}' in text
-        audit = ROOT / 'Saved/Extraction/SovietMilitary/NavigationAudit.json'
-        if audit.exists():
-            shutil.copy2(audit, out / audit.name)
-    report['steps'].append(dict(name=name, command=command, exit_code=code, passed=bool(passed)))
+        try:
+            audit = json.loads((out / 'NavigationAudit.json').read_text(encoding='utf-8'))
+            passed &= len(audit['open']) == 77 and len(audit['closed']) == 77 and all(p['reachable'] is True for p in audit['open'])
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            passed = False
+            step['error'] = str(error)
+    step.update(exit_code=code, passed=bool(passed), result='passed' if passed else 'failed',
+                finished_utc=datetime.datetime.now(datetime.timezone.utc).isoformat())
     report['result'] = 'failed' if not passed else 'passed' if len(report['steps']) == 2 else 'running'
     report['exit_code'] = None if report['result'] == 'running' else 0 if passed else (code or 1)
-    report['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    if report['result'] != 'running':
+        report['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     (out / 'Run.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print('SOVIET_AUDIT_FINISHED', name, passed, flush=True)
     if not passed:

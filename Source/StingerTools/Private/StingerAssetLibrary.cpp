@@ -410,7 +410,7 @@ FString UStingerAssetLibrary::DescribeComponentCollision(UPrimitiveComponent* Co
 		static_cast<int32>(Component->Mobility.GetValue()));
 	if (const auto* Instanced = Cast<UInstancedStaticMeshComponent>(Component))
 		Out += FString::Printf(TEXT(" instances=%d bodies=%d disableCollision=%d"), Instanced->GetInstanceCount(),
-		                       Instanced->InstanceBodies.Num(), Instanced->bDisableCollision ? 1 : 0);
+		                       Instanced->GetInstanceBodies().Num(), Instanced->bDisableCollision ? 1 : 0);
 	if (const UStaticMesh* Mesh = Cast<UStaticMeshComponent>(Component)
 		                              ? Cast<UStaticMeshComponent>(Component)->GetStaticMesh().Get()
 		                              : nullptr)
