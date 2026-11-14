@@ -1,5 +1,5 @@
 #include "CombatNetworkTestMode.h"
-#include "BrokenEdge/Extraction/ExtractionState.h"
+#include "BrokenEdge/Extraction/Core/ExtractionState.h"
 
 void ACombatNetworkTestMode::HandleStartingNewPlayer_Implementation(APlayerController* Player)
 {

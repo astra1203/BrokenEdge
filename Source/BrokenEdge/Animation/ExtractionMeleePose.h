@@ -3,7 +3,7 @@
 #include "Animation/AnimInstance.h"
 #include "BonePose.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
-#include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionMeleeComponent.h"
 
 /** Snapshot on the game thread. Retain locomotion below the shoulders and attack montages. */
 struct FExtractionMeleePose

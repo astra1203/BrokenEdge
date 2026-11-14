@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BrokenEdge/Extraction/ExtractionGameMode.h"
+#include "BrokenEdge/Extraction/Core/ExtractionGameMode.h"
 #include "ExtractionBlueprintTestMode.generated.h"
 
 /** Editor-only lifecycle fixture. Uses production controllers/state/loot without raid tickets. */

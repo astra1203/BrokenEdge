@@ -15,7 +15,7 @@
 #include "BrokenEdge/GameMode/LobbyGameMode.h"
 #include "BrokenEdge/GameState/LobbyGameState.h"
 #include "BrokenEdge/UI/LobbyWidget.h"
-#include "BrokenEdge/Extraction/ExtractionAccountComponent.h"
+#include "BrokenEdge/Extraction/Core/ExtractionAccountComponent.h"
 
 ABrokenEdgePlayerController::ABrokenEdgePlayerController()
 {

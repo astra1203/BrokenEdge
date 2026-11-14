@@ -8,12 +8,12 @@
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
 #include "BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
-#include "BrokenEdge/Extraction/ExtractionAbilities.h"
-#include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
-#include "BrokenEdge/Extraction/ExtractionGuard.h"
-#include "BrokenEdge/Extraction/ExtractionHealth.h"
-#include "BrokenEdge/Extraction/ExtractionSmoke.h"
-#include "BrokenEdge/Extraction/ExtractionState.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionAbilities.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionCombatComponent.h"
+#include "BrokenEdge/Extraction/AI/ExtractionGuard.h"
+#include "BrokenEdge/Extraction/Health/ExtractionHealth.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionSmoke.h"
+#include "BrokenEdge/Extraction/Core/ExtractionState.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 
 UBTTask_EngageTarget::UBTTask_EngageTarget()

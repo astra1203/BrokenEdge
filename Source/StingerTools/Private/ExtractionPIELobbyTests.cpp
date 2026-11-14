@@ -14,13 +14,13 @@
 #include "GameFramework/Pawn.h"
 #include "BrokenEdge/GameState/LobbyGameState.h"
 #include "BrokenEdge/UI/LobbyWidget.h"
-#include "BrokenEdge/Extraction/ExtractionAccountComponent.h"
-#include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
-#include "BrokenEdge/Extraction/ExtractionState.h"
+#include "BrokenEdge/Extraction/Core/ExtractionAccountComponent.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionInventoryComponent.h"
+#include "BrokenEdge/Extraction/Core/ExtractionState.h"
 #include "MultiplayerSessionsSubsystem.h"
 #include "EngineUtils.h"
-#include "BrokenEdge/Extraction/ExtractionMapRegistry.h"
-#include "BrokenEdge/Extraction/ExtractionExit.h"
+#include "BrokenEdge/Extraction/Map/ExtractionMapRegistry.h"
+#include "BrokenEdge/Extraction/World/ExtractionExit.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 
 namespace

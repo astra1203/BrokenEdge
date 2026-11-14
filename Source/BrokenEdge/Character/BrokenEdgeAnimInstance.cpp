@@ -4,7 +4,7 @@
 #include "BrokenEdgeAnimInstance.h"
 
 #include "BrokenEdgeCharacter.h"
-#include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionMeleeComponent.h"
 #include "BrokenEdge/BrokenEdgeTypes/CombatState.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "BrokenEdge/Weapon/WeaponPresentation.h"

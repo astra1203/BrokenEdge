@@ -3,8 +3,8 @@
 #include "Engine/World.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/CombatComponent.h"
-#include "BrokenEdge/Extraction/ExtractionAbilities.h"
-#include "BrokenEdge/Extraction/ExtractionPlayerController.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionAbilities.h"
+#include "BrokenEdge/Extraction/Core/ExtractionPlayerController.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionInputCancellation,
     "BrokenEdge.Extraction.Input.CancelHeldActions",

@@ -1,13 +1,13 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
 #include "BrokenEdge/Weapon/WeaponMechanics.h"
-#include "BrokenEdge/Extraction/ExtractionItems.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionItems.h"
 #include "JsonObjectConverter.h"
 #include "BrokenEdge/Weapon/ExtractionBullet.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "BrokenEdge/Weapon/Weapon.h"
-#include "BrokenEdge/Extraction/ExtractionWeaponVisuals.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionWeaponVisuals.h"
 #include "Engine/World.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FWeaponMechanicsSourceTest, "BrokenEdge.Extraction.WeaponMechanics.SourceAndSampling",

@@ -1,8 +1,8 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
 #include "Templates/UnrealTemplate.h"
-#include "BrokenEdge/Extraction/ExtractionItems.h"
-#include "BrokenEdge/Extraction/ExtractionMapDefinition.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionItems.h"
+#include "BrokenEdge/Extraction/Map/ExtractionMapDefinition.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionWeaponDefinitionTest,
                                  "BrokenEdge.Extraction.Expansion.WeaponDefinitionTransactions",

@@ -1,7 +1,7 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
-#include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
-#include "BrokenEdge/Extraction/ExtractionPersistence.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionInventoryComponent.h"
+#include "BrokenEdge/Extraction/Persistence/ExtractionPersistence.h"
 #include "Engine/GameInstance.h"
 #include "Misc/Paths.h"
 

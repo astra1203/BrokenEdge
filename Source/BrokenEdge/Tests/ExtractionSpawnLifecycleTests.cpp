@@ -1,8 +1,8 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
-#include "BrokenEdge/Extraction/ExtractionGameMode.h"
-#include "BrokenEdge/Extraction/ExtractionPlayerController.h"
-#include "BrokenEdge/Extraction/ExtractionState.h"
+#include "BrokenEdge/Extraction/Core/ExtractionGameMode.h"
+#include "BrokenEdge/Extraction/Core/ExtractionPlayerController.h"
+#include "BrokenEdge/Extraction/Core/ExtractionState.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "Engine/GameInstance.h"
 #include "Engine/Engine.h"

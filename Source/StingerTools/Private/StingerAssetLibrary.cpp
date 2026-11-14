@@ -57,7 +57,7 @@
 #include "PhysicsEngine/PhysicsAsset.h"
 #include "PhysicsEngine/SkeletalBodySetup.h"
 #include "PhysicsAssetUtils.h"
-#include "BrokenEdge/Extraction/ExtractionWater.h"
+#include "BrokenEdge/Extraction/World/ExtractionWater.h"
 #include "MeshDescription.h"
 #include "AssetCompilingManager.h"
 

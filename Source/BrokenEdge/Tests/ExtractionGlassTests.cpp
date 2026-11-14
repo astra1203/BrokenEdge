@@ -1,7 +1,7 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
-#include "BrokenEdge/Extraction/ExtractionBreakableGlass.h"
-#include "BrokenEdge/Extraction/ExtractionState.h"
+#include "BrokenEdge/Extraction/World/ExtractionBreakableGlass.h"
+#include "BrokenEdge/Extraction/Core/ExtractionState.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/DamageEvents.h"
 #include "Engine/StaticMesh.h"

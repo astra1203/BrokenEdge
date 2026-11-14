@@ -436,12 +436,12 @@ Ended
 | --- | --- |
 | 专服会话与客户端加入 | `Plugins/MultiplayerSessions/Source/MultiplayerSessions/Private/MultiplayerSessionsSubsystem.cpp`、`Menu.cpp` |
 | 大厅准备 → ServerTravel | `Source/BrokenEdge/GameMode/LobbyGameMode.cpp`（`TryStartGame:258`、`OnStartSession:328`） |
-| 战局状态机 | `Source/BrokenEdge/Extraction/ExtractionGameMode.cpp:610-730` |
+| 战局状态机 | `Source/BrokenEdge/Extraction/Core/ExtractionGameMode.cpp:610-730` |
 | 射击分流 | `Source/BrokenEdge/Weapon/HitScanWeapon.cpp:61-90`、`Weapon/ExtractionBullet.cpp:71-132` |
 | 武器参数 | `Content/Extraction/Data/WeaponMechanics.json`、`Source/BrokenEdge/Weapon/WeaponMechanics.cpp:49` |
-| 物品网格与溯源 | `Source/BrokenEdge/Extraction/ExtractionItems.h:20, 230-330`、`ExtractionItems.cpp` |
-| 持久化格式 | `Source/BrokenEdge/Extraction/ExtractionPersistence.cpp:16, 173-195, 412-442` |
-| 守卫 AI | `Source/BrokenEdge/Extraction/ExtractionGuard.cpp`、`Source/BrokenEdge/Character/BTService_UpdateGuardContext.cpp`、`BTTask_EngageTarget.cpp` |
+| 物品网格与溯源 | `Source/BrokenEdge/Extraction/Inventory/ExtractionItems.h:20, 230-330`、`ExtractionItems.cpp` |
+| 持久化格式 | `Source/BrokenEdge/Extraction/Persistence/ExtractionPersistence.cpp:16, 173-195, 412-442` |
+| 守卫 AI | `Source/BrokenEdge/Extraction/AI/ExtractionGuard.cpp`、`Source/BrokenEdge/Character/BTService_UpdateGuardContext.cpp`、`BTTask_EngageTarget.cpp` |
 | 遍历预测 | `Source/BrokenEdge/Traversal/TraversalMovementComponent.cpp` |
 | 复制注册 | 各类的 `GetLifetimeReplicatedProps()`，重点 `ExtractionState.cpp`、`LobbyGameState.cpp` |
 | 配置 | `Config/DefaultEngine.ini`、`Config/DefaultGame.ini`、`Config/DefaultInput.ini` |

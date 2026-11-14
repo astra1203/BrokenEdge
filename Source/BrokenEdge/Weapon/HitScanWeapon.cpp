@@ -3,12 +3,12 @@
 
 #include "HitScanWeapon.h"
 #include "ExtractionBullet.h"
-#include "BrokenEdge/Extraction/ExtractionBreakableGlass.h"
-#include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
+#include "BrokenEdge/Extraction/World/ExtractionBreakableGlass.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionCombatComponent.h"
 #include "WeaponMechanics.h"
-#include "BrokenEdge/Extraction/ExtractionState.h"
-#include "BrokenEdge/Extraction/ExtractionHealth.h"
-#include "BrokenEdge/Extraction/ExtractionAbilities.h"
+#include "BrokenEdge/Extraction/Core/ExtractionState.h"
+#include "BrokenEdge/Extraction/Health/ExtractionHealth.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionAbilities.h"
 
 #include "BrokenEdge/BrokenEdge.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"

@@ -2,8 +2,8 @@
 
 
 #include "Weapon.h"
-#include "BrokenEdge/Extraction/ExtractionWeaponVisuals.h"
-#include "BrokenEdge/Extraction/ExtractionItems.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionWeaponVisuals.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionItems.h"
 
 #include "VectorTypes.h"
 #include "BrokenEdge/BrokenEdge.h"

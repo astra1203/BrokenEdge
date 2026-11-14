@@ -1,8 +1,8 @@
 #include "CombatModeAdapter.h"
 #include "CombatComponent.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
-#include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
-#include "BrokenEdge/Extraction/ExtractionPlayerController.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionCombatComponent.h"
+#include "BrokenEdge/Extraction/Core/ExtractionPlayerController.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "TimerManager.h"
 

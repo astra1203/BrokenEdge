@@ -1,0 +1,1166 @@
+{
+  "baseline": "065f4ccebd085dd940dee72d086c103ae73f44db",
+  "moved_files": 93,
+  "changed_files": [
+    {
+      "old": "Scripts/Extraction/check_runtime_cook_coverage.py",
+      "new": "Scripts/Extraction/check_runtime_cook_coverage.py",
+      "before_sha256": "f6cc6c6d44bd25403ffe68b087d39b35c34e267fc425f3138ef19cbc2181ae34",
+      "after_sha256": "8f545ca76b47ce00daa1e84e1810e11d732fe94fc89566073c1553834433f60f",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Scripts/Extraction/export_7f_container_bounds.py",
+      "new": "Scripts/Extraction/export_7f_container_bounds.py",
+      "before_sha256": "b0d8188df112a09f284baf6e2eb6758cb01b4a0c3de0b84e32663b31ddb8d24d",
+      "after_sha256": "1dda5915459a7db348dbcd09424e43451165891b9380edf1681f36685f2ff503",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Scripts/Extraction/generate_collectibles.py",
+      "new": "Scripts/Extraction/generate_collectibles.py",
+      "before_sha256": "6c8f282f367f3d5552150091abd5112f8df27d9b23a788df1d8c067f407f5ae2",
+      "after_sha256": "8a27527b3c03d7d99952e6f5f570f86f4be33b2a3013c9e3f3918b17e9f0dff4",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Scripts/Extraction/item_registry.py",
+      "new": "Scripts/Extraction/item_registry.py",
+      "before_sha256": "7dad1c312e322bbf8c9afc1b24c93e2db6db5d8b57afa01a5b03d4d340079db5",
+      "after_sha256": "78a6bbff6f48633983e3baaaf65de34d641488a68f6ead83ccc9a02ed7ecc8bd",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Scripts/Extraction/run_network.py",
+      "new": "Scripts/Extraction/run_network.py",
+      "before_sha256": "f71e4b21e85b75249afdcc32e927bdea713f0df9004976ab7e1da648f866d0fc",
+      "after_sha256": "597d7bc00b2289678971749a233d7c5b6e225d9e924bb62c02de9fe408415719",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Scripts/SpaceCenter/archive_restoration.py",
+      "new": "Scripts/SpaceCenter/archive_restoration.py",
+      "before_sha256": "86d07d321193768eda241d7ce587747b002ad8136f6d76bc9341f77e3a905ae9",
+      "after_sha256": "02cb5c7363aa2517555af5787076c8b4cec060e33669588b884029f5dfd42708",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Animation/AnimNode_RifleLocomotion.cpp",
+      "new": "Source/BrokenEdge/Animation/AnimNode_RifleLocomotion.cpp",
+      "before_sha256": "85d8e199ad8e23460fa112152eccd1b90581d1815fe4233053f23ed78e1fd007",
+      "after_sha256": "1b5bf00159f41d0d0c9c6dd349536336133bb34f81629b0921d5a9c734a5d780",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Animation/ExtractionMeleePose.h",
+      "new": "Source/BrokenEdge/Animation/ExtractionMeleePose.h",
+      "before_sha256": "50583aac229c0332a55431b0a5944c8c3c2bae3b36ff3b26a5d4acfb4c3aad9d",
+      "after_sha256": "2b2148899ee7513410f2f462d6aebcf45acfcf575008a2e6ec729fa6da1cda6f",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Character/BTService_UpdateGuardContext.cpp",
+      "new": "Source/BrokenEdge/Character/BTService_UpdateGuardContext.cpp",
+      "before_sha256": "37221a9c2c3b21a9dd58d16f4c77a60ac7572675be8246d51e45f7e5ea85c864",
+      "after_sha256": "d79d5bde1389f2d956418867789653b883e84a88f8f45bef571c8508fcb35673",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Character/BTTask_CompletePatrolArrival.cpp",
+      "new": "Source/BrokenEdge/Character/BTTask_CompletePatrolArrival.cpp",
+      "before_sha256": "3ee8fb74b24117cd67869a224cc79cba203f4f7f0812a44ca59649508fb77059",
+      "after_sha256": "575876f36e002bfa9fd3f7ccf0675ac71c1e43ed191feaf36d17d5d0e608ea50",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Character/BTTask_EngageTarget.cpp",
+      "new": "Source/BrokenEdge/Character/BTTask_EngageTarget.cpp",
+      "before_sha256": "5b90c65dc032a4046c9b0ebc33f97a1d1f0cf0f00e3e15214f55a74d534e33aa",
+      "after_sha256": "4dec4516ae1fdf449e0c4980e6ef18017e043a147ccde72852f0ed38e8677401",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Character/BTTask_SetPatrolDestination.cpp",
+      "new": "Source/BrokenEdge/Character/BTTask_SetPatrolDestination.cpp",
+      "before_sha256": "ef8099d93ef4759036f27ce8c271e5017579a1a3929331babd1a9cb68932b221",
+      "after_sha256": "fd65b1448c57205bfef86bc5628afc8842431604652b32c60ef557eb3cc3138d",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Character/BTTask_StopGuardActions.cpp",
+      "new": "Source/BrokenEdge/Character/BTTask_StopGuardActions.cpp",
+      "before_sha256": "be55b9bb0c8d6d65d0a54af184e50529bbfca92ade133d448328efef8148e311",
+      "after_sha256": "f3bbf7423edd3382a99c0090cbf62fa2a698fb755a30535f42814519307e5122",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Character/BrokenEdgeAnimInstance.cpp",
+      "new": "Source/BrokenEdge/Character/BrokenEdgeAnimInstance.cpp",
+      "before_sha256": "9216df91704b111bb4522e51eb544ae2d6c86af77a9debc258c97e901c983aff",
+      "after_sha256": "6dbb4c52ff5a288569d86784d93382a53b292179d16c8f53774c4e6e898de2f8",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp",
+      "new": "Source/BrokenEdge/Character/BrokenEdgeCharacter.cpp",
+      "before_sha256": "6acae7d7dd5179436ced95b690ccd2489658909ade6177e8a3c471b11a85f02a",
+      "after_sha256": "97608f5ce5ad7f760188925e6e42ee9ca29fde435c1108cce6e94239f25a10b7",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Character/StingerFirstPersonAnimInstance.cpp",
+      "new": "Source/BrokenEdge/Character/StingerFirstPersonAnimInstance.cpp",
+      "before_sha256": "5967f429cf61ea1d5f0c364a5ffebe888742a00ab00c94301b6b6e97eba33a8d",
+      "after_sha256": "d9e68254a350e7b0565b873794ac5ec0874db69935bef98ad7530f9b633502ac",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Component/CombatComponent.cpp",
+      "new": "Source/BrokenEdge/Component/CombatComponent.cpp",
+      "before_sha256": "fa4d0764d78667b0527fb04894ce2dd764ca0c650329fd560028b00e77ca0fbc",
+      "after_sha256": "a28d14263b865e70c772305e6fd5e73b2b10fbe569cded82fa8f3678b0a33429",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Component/CombatModeAdapter.cpp",
+      "new": "Source/BrokenEdge/Component/CombatModeAdapter.cpp",
+      "before_sha256": "5a1aa5423601edf5979e5bd47b1ce99bd70949bc78df1fed45ee8e4602a2bfec",
+      "after_sha256": "0439f4e9a3f01b88f4727a46f5da35937f3c4632a27e8ace0c7d22b144a23eab",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Component/LagCompensationComponent.cpp",
+      "new": "Source/BrokenEdge/Component/LagCompensationComponent.cpp",
+      "before_sha256": "7fc92bbf4ce2329fa585cceb9e9a7813768e9c00dc3b994d685752cecf410270",
+      "after_sha256": "04b18a27bfa7a26b7c8bed4c853c243e25808234d1faa4784b05aa6ef2b74d46",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionAbilities.cpp",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionAbilities.cpp",
+      "before_sha256": "6b3d27ba2769740e74b03653ab9739f8483de814aaf0effae92fb69d3ac22601",
+      "after_sha256": "b3bd49ceebf1697e66106d63c9ce5f1ead2e27243bb452b28bbc25bb6fb83e68",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionAbilities.h",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionAbilities.h",
+      "before_sha256": "00e27fd122f721d3522144d3013fdca031828ce77c48e15d030aa3108299a7ef",
+      "after_sha256": "00e27fd122f721d3522144d3013fdca031828ce77c48e15d030aa3108299a7ef",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionAccountComponent.cpp",
+      "new": "Source/BrokenEdge/Extraction/Core/ExtractionAccountComponent.cpp",
+      "before_sha256": "b50ce1cf2276904007a5c05872cf5b91cb8349a098f61988176a902ac043f619",
+      "after_sha256": "f2b9adcd1ec2f6b2ccca663c292db19a0daa67e9b568b5ca15e3c0c979d19829",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionAccountComponent.h",
+      "new": "Source/BrokenEdge/Extraction/Core/ExtractionAccountComponent.h",
+      "before_sha256": "e6d330a85dc061ab8ae4e233762a5a3df37b3ce8fe8c343fb44b53d5a4be4fba",
+      "after_sha256": "3b381c12ab9d35e87771ae5074bf94e71c1e78413aa4a37ad1e27f0e7d2811db",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionBreakableGlass.cpp",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionBreakableGlass.cpp",
+      "before_sha256": "d0d9a8476e5e1845d9cd6b29e86234aba4b9944606eab0d96dd88491326fc689",
+      "after_sha256": "5a8ece26b5c5d4f246968fd00e01bc14897d5293c861f3f75fa284d8d630b596",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionBreakableGlass.h",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionBreakableGlass.h",
+      "before_sha256": "ee2112b3b10b43c87ba964905db06c4242926abe52251c3d1d554e8305435b38",
+      "after_sha256": "ee2112b3b10b43c87ba964905db06c4242926abe52251c3d1d554e8305435b38",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionBrokenBridge.cpp",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionBrokenBridge.cpp",
+      "before_sha256": "1f5828d3104b6e5791ef908935675a941f3e96c9f43ef70d464cce10710a379b",
+      "after_sha256": "ca85e3c76ceb4c0630526c009cc6131e69579ca2aa745b092d28503b22cc260f",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionBrokenBridge.h",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionBrokenBridge.h",
+      "before_sha256": "b58ba2b343562caf3d9b678d907d764da1c642b93e6ba3782f3c1ed117cb3452",
+      "after_sha256": "b58ba2b343562caf3d9b678d907d764da1c642b93e6ba3782f3c1ed117cb3452",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionCollectibles.inl",
+      "new": "Source/BrokenEdge/Extraction/Inventory/ExtractionCollectibles.inl",
+      "before_sha256": "be6457a90114e5e4a83ca297f6477c827af3eb3621a5eb6c230af54995e9566c",
+      "after_sha256": "be6457a90114e5e4a83ca297f6477c827af3eb3621a5eb6c230af54995e9566c",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionCombatComponent.cpp",
+      "before_sha256": "53474f0a4b8d36922d06c4af807a2f2ca01ca88888b0a53b9325cb2011382cfe",
+      "after_sha256": "a09f190b6ecac969d2f0c1cf9436b74a593ddd6e482b41a47cd3443459b2bcaf",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionCombatComponent.h",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionCombatComponent.h",
+      "before_sha256": "44fa2e6939206b51e54e675f4e0d5a2326fcd9fc398b4b1ac885b4c55139f01f",
+      "after_sha256": "44fa2e6939206b51e54e675f4e0d5a2326fcd9fc398b4b1ac885b4c55139f01f",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionDoor.cpp",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionDoor.cpp",
+      "before_sha256": "967c7df038b8b56ac970f9775ffd5b964fb056acf9a2c3b698f260087df76a07",
+      "after_sha256": "06db04be16ba066c25bd0f01193748e98f71b4e097ce1709c0a5e61fac96172f",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionDoor.h",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionDoor.h",
+      "before_sha256": "e31ee2749dd79f4637fafeb45a701e846548146770680d8afdcc5444f104bcc3",
+      "after_sha256": "e31ee2749dd79f4637fafeb45a701e846548146770680d8afdcc5444f104bcc3",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionDrawbridge.cpp",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionDrawbridge.cpp",
+      "before_sha256": "7e8c730693db39b9276e1124d6fa223faa168bef0d6e43535fbbd9df9bbf1fd7",
+      "after_sha256": "795137f908b28c298088408fe03459857790b8853464387cbaeadc245b732533",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionDrawbridge.h",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionDrawbridge.h",
+      "before_sha256": "6f76815ee14a84451b229de7571f53fe3efbf416f31d6201d3e3f12a6081d763",
+      "after_sha256": "6f76815ee14a84451b229de7571f53fe3efbf416f31d6201d3e3f12a6081d763",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionEquipment.cpp",
+      "new": "Source/BrokenEdge/Extraction/Inventory/ExtractionEquipment.cpp",
+      "before_sha256": "0c1b1bbc0013b7faca9827799d377f6dd3e14880a0c83956ddb7752e914d6fff",
+      "after_sha256": "76d41bdd1888e4da3e4fd6fb72b9627ea9ee6d22147286f10261588cc5e0fe36",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionExit.cpp",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionExit.cpp",
+      "before_sha256": "2816703ae92e75014b3758038e621f7006deeebfbca5253eb0c74b5f7ead9d8e",
+      "after_sha256": "f84682d7605fe716918cfb1673502520360788c1e4527fa517cdba7e646db73c",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionExit.h",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionExit.h",
+      "before_sha256": "45274dd92a169be3dd91298c6923738a2d410e2c3184b79e9138fdd2c9399437",
+      "after_sha256": "ba7026bf5e5ccde5fbe57445076e84f3eec19a583a1ed5592c1f53d5957d01c7",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionExitRegistry.cpp",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionExitRegistry.cpp",
+      "before_sha256": "4aefa3f2932b4b5605924449e9397969fe11f18d6f634ee0c13b6421cbca998e",
+      "after_sha256": "b134539d54b91ecf85a7511c3a4032144f07411103a48399c4af64321151896b",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionExitRegistry.h",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionExitRegistry.h",
+      "before_sha256": "ddf3c5c8179f818a446c3577430fb7262740586fb82c148c90b8c88d55781166",
+      "after_sha256": "ddf3c5c8179f818a446c3577430fb7262740586fb82c148c90b8c88d55781166",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionExitSwitch.cpp",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionExitSwitch.cpp",
+      "before_sha256": "787d9df07248529dfa2db641a5038c47d6e898e1395aa3420f6709a46310f6b6",
+      "after_sha256": "2b2d412c93768aba33f2c6774357a2d4fd49ad237341300e36815099ce3ffb3f",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionExitSwitch.h",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionExitSwitch.h",
+      "before_sha256": "7dbdde94c7b966c07f29b166d795417ea894e0c6eb4a8f3c1dd959e3ccee2402",
+      "after_sha256": "7dbdde94c7b966c07f29b166d795417ea894e0c6eb4a8f3c1dd959e3ccee2402",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionFragGrenade.cpp",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionFragGrenade.cpp",
+      "before_sha256": "95e1ad83377a06e492ac6c3e8c35f7ddcb2037a21c24325ff05bc4760f0917d5",
+      "after_sha256": "78d23c1b41184a17956f87281c92a73e6eff31a55cdca35ac73877ded1a1f871",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionFragGrenade.h",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionFragGrenade.h",
+      "before_sha256": "55c542bb75616d24ff63e87164556892e4d075170c285fbcc00c0626696ed69a",
+      "after_sha256": "55c542bb75616d24ff63e87164556892e4d075170c285fbcc00c0626696ed69a",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionGameMode.cpp",
+      "new": "Source/BrokenEdge/Extraction/Core/ExtractionGameMode.cpp",
+      "before_sha256": "5886864d54a6eb7d407b7f60c02a93bdf1e8ddd061327ebea9cc341e65761879",
+      "after_sha256": "68714eae8b101eabb46968b536f2124616a2d0d8948795b8ee20fdc9cacf29c6",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionGameMode.h",
+      "new": "Source/BrokenEdge/Extraction/Core/ExtractionGameMode.h",
+      "before_sha256": "381a2fb9ec43f090a88f7b91b748cf938675bb166fee7c14f160b6a33c24ff78",
+      "after_sha256": "28c1a92d7db5daedb21e4559b25d6ab7d3767c63b618901c1b70b1d3896fb330",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionGuard.cpp",
+      "new": "Source/BrokenEdge/Extraction/AI/ExtractionGuard.cpp",
+      "before_sha256": "1d011e22834dd0826e1aa51e4d745e1807bf19858eb4cf8481818d4d44bb809a",
+      "after_sha256": "23ad55a753656efbf3d11abee9cbdc6603f43162861e33abe0103acb795c633a",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionGuard.h",
+      "new": "Source/BrokenEdge/Extraction/AI/ExtractionGuard.h",
+      "before_sha256": "0b25ee0900a93ba7d031c6d08b27915523fc8916180844fc25f1f402b314c003",
+      "after_sha256": "0b25ee0900a93ba7d031c6d08b27915523fc8916180844fc25f1f402b314c003",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionGuardAim.h",
+      "new": "Source/BrokenEdge/Extraction/AI/ExtractionGuardAim.h",
+      "before_sha256": "603179522885dbae6e222025388077aaa3f6166233dd8dad7c103399569713fd",
+      "after_sha256": "603179522885dbae6e222025388077aaa3f6166233dd8dad7c103399569713fd",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionGunsmith.cpp",
+      "new": "Source/BrokenEdge/Extraction/Inventory/ExtractionGunsmith.cpp",
+      "before_sha256": "4c9dffd5275826d05cb14c0a925d363307a28e1284983004d73758c1fa4b5bdc",
+      "after_sha256": "99f16aedd94fc35f0c5296714984fce4789a75d0e537f9e3d438dcb57d18bf36",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionGunsmith.h",
+      "new": "Source/BrokenEdge/Extraction/Inventory/ExtractionGunsmith.h",
+      "before_sha256": "43212f973dccf475c6b0ad0c98c9fa3f1d4bff611a876d10032ac11f51977367",
+      "after_sha256": "9a5a227501ccc7ff4e92c0c8d2865b49e3749daa9543797ee9ead5c5862f0d99",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionHUDMetrics.cpp",
+      "new": "Source/BrokenEdge/Extraction/UI/ExtractionHUDMetrics.cpp",
+      "before_sha256": "7bc785285ceb1c3cda91eef4c43753dd83a0c0cf77e47dd381030830c83f4fb3",
+      "after_sha256": "f477fd468d21143941207af9e2fa78a57a3e101dd3d958ec88f080e70dbc6f54",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionHUDMetrics.h",
+      "new": "Source/BrokenEdge/Extraction/UI/ExtractionHUDMetrics.h",
+      "before_sha256": "765c403f04c7424b30598a8686f58a393143ac2aa1229753765b68a124fd2d59",
+      "after_sha256": "765c403f04c7424b30598a8686f58a393143ac2aa1229753765b68a124fd2d59",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionHealth.cpp",
+      "new": "Source/BrokenEdge/Extraction/Health/ExtractionHealth.cpp",
+      "before_sha256": "6224d38ec3bc39efe10eb34888788182a6958d341ca6dfc2a992192be09f24a2",
+      "after_sha256": "a84224e9c64bac6673fcd4594c9f8d4df9e744319bbcf9a31739aa7febf4ecf0",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionHealth.h",
+      "new": "Source/BrokenEdge/Extraction/Health/ExtractionHealth.h",
+      "before_sha256": "86035618493f1daa1e0ec98a456baa7081fe3a7f76e77862262fcbdf230fc74c",
+      "after_sha256": "6f6b69ebee6294ac86c8c69b3808feaf583e33dc1668c89a94f1bd79c3800b6d",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionInteractionComponent.cpp",
+      "new": "Source/BrokenEdge/Extraction/Core/ExtractionInteractionComponent.cpp",
+      "before_sha256": "55e0d06614adc5447fb7a8b2a91593a254d50642417975afcab98e7d3331fc20",
+      "after_sha256": "0937118b93babe1a6b7d17127c1c45411aaf3df8f694b65286b3bf6dc58c76c7",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionInteractionComponent.h",
+      "new": "Source/BrokenEdge/Extraction/Core/ExtractionInteractionComponent.h",
+      "before_sha256": "1da4e1f30d46bedfd6f0999ae76c1b9a8af4cacda3768b5643d0c8692be11699",
+      "after_sha256": "bdc9d2500d4576dfb00cf9644a51041f7622e9ff91f5c2327efe8d91e8e39fdc",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp",
+      "new": "Source/BrokenEdge/Extraction/Inventory/ExtractionInventoryComponent.cpp",
+      "before_sha256": "ab94ea3d7bb3951e447ba9d9a400420b80f4a6cc19c0a6151d4711c847adee58",
+      "after_sha256": "6feefcb9cb6e8c24da9e60ec400723bc2a3866f8ee8c8bef530566dd11e5de60",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionInventoryComponent.h",
+      "new": "Source/BrokenEdge/Extraction/Inventory/ExtractionInventoryComponent.h",
+      "before_sha256": "8591cf947c88fa5b9f5df96c12a9abc2c6ddbff98e7d4a1b1e2e441113d68381",
+      "after_sha256": "980834c1e7558484c7ee609e10633ace37239daea00fb7c695dcbf695b93bcf8",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionItemRegistry.cpp",
+      "new": "Source/BrokenEdge/Extraction/Inventory/ExtractionItemRegistry.cpp",
+      "before_sha256": "2f0152dc1c90f7cfe0acc450cd0853674e07f52f6c3c8ccb688a493374a864c5",
+      "after_sha256": "3e4f2593bc96e0f137b82a2685aae44a4ca34059e604b7d447218ecb0cc4c5c2",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionItemRegistry.h",
+      "new": "Source/BrokenEdge/Extraction/Inventory/ExtractionItemRegistry.h",
+      "before_sha256": "0ce05e406dca52208fd079336583015443b0a9a54a402b54d07da86cdbe4083b",
+      "after_sha256": "0ce05e406dca52208fd079336583015443b0a9a54a402b54d07da86cdbe4083b",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionItems.cpp",
+      "new": "Source/BrokenEdge/Extraction/Inventory/ExtractionItems.cpp",
+      "before_sha256": "598fedcfe1483dea3e352288f2b1973cffc0660d70513393d3fc41b6edf5b411",
+      "after_sha256": "7043a3d4e705820788ecba4fe19481f5424e02d34963ea9b0092cfac9ef6486c",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionItems.h",
+      "new": "Source/BrokenEdge/Extraction/Inventory/ExtractionItems.h",
+      "before_sha256": "c9872493c2440dccbd8c569b69ee4bf4b8d9fefcd6776f749da182775c139442",
+      "after_sha256": "c9872493c2440dccbd8c569b69ee4bf4b8d9fefcd6776f749da182775c139442",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionKeyRoom.cpp",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionKeyRoom.cpp",
+      "before_sha256": "ecaa65b9837238043cb5e9f861b9fd52262cea0931430d601e1e659aa5d7fd3d",
+      "after_sha256": "8e1958b9efd88e8538f538eb459e8935deb4b415cd927e4ec4a416dd29d6fe99",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionKeyRoom.h",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionKeyRoom.h",
+      "before_sha256": "e88e27310b43dc7e9dea58fc7ee4b9064160afecfaf59d6eb17d8fa529d24ccb",
+      "after_sha256": "e88e27310b43dc7e9dea58fc7ee4b9064160afecfaf59d6eb17d8fa529d24ccb",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionLootActor.cpp",
+      "new": "Source/BrokenEdge/Extraction/Inventory/ExtractionLootActor.cpp",
+      "before_sha256": "d6bfed9c969bafe5f80cf98bc6e41a9c31ba74afcff0845aea81f85719411d4b",
+      "after_sha256": "61fb1161b9c6f5e70072d90d0036f189c01af7eb1bd0e646ce3fc2bc1a723ab4",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionLootActor.h",
+      "new": "Source/BrokenEdge/Extraction/Inventory/ExtractionLootActor.h",
+      "before_sha256": "2a1fddd8c1cf982ccaeba38eb957029b500a5b23e93a75e728be7e228ab2e421",
+      "after_sha256": "939483d4cb01477149579c557b7f28e9fd978cef65ef4da0aa1e518fc8aaedd7",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionLootLayout.cpp",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionLootLayout.cpp",
+      "before_sha256": "b9b4a7bb848a5548ecdfe71a5aaf5eb86bd655b4bfeead5858e56ab21fb4f7ee",
+      "after_sha256": "bde9fe97975b2b8cdc537583139b15d5b5928fd01a7ca1ad40eb5020814be6ec",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionLootLayout.h",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionLootLayout.h",
+      "before_sha256": "3f3fdba3e3180320b4df466ac0972c09056953fc7f6191f1a21292b1e68724ea",
+      "after_sha256": "3f3fdba3e3180320b4df466ac0972c09056953fc7f6191f1a21292b1e68724ea",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionMapDefinition.h",
+      "new": "Source/BrokenEdge/Extraction/Map/ExtractionMapDefinition.h",
+      "before_sha256": "cce43e7f43070101a0d494440b8499e0bb2f883f7075687523c215045cd3507f",
+      "after_sha256": "cce43e7f43070101a0d494440b8499e0bb2f883f7075687523c215045cd3507f",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionMapRegistry.cpp",
+      "new": "Source/BrokenEdge/Extraction/Map/ExtractionMapRegistry.cpp",
+      "before_sha256": "0cc09a385feda8b6b6b8e18e1f20f0d807dfb5099c39638fcd1afb5201839279",
+      "after_sha256": "01b43b61506ec96217fd77d049fc54f16c701400b49f0257eb480c7d8ddc1ed5",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionMapRegistry.h",
+      "new": "Source/BrokenEdge/Extraction/Map/ExtractionMapRegistry.h",
+      "before_sha256": "7ebfadc51aa153f718a2e15e2fd33e1faa462e1b47c4d90abb5efe991748967b",
+      "after_sha256": "5fad01c1f1de9c61b78483bd70ca451655fcb2c902caf98cee11a031d487ab95",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionMeleeComponent.cpp",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionMeleeComponent.cpp",
+      "before_sha256": "bdce6d5ccf2f78cfbb59d8ec43da7f41414749895e9edcdb93101b496d7355da",
+      "after_sha256": "2ac90896c858ed5665cbece6230baff7726ce085f111fde2deba6e6bc28493e3",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionMeleeComponent.h",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionMeleeComponent.h",
+      "before_sha256": "5d2e71cd663b40b2a6e77e63e06dfed367c14c96361b570ae9d12e27c6d12c4a",
+      "after_sha256": "5d2e71cd663b40b2a6e77e63e06dfed367c14c96361b570ae9d12e27c6d12c4a",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionNavigation.cpp",
+      "new": "Source/BrokenEdge/Extraction/AI/ExtractionNavigation.cpp",
+      "before_sha256": "beddd47ea9d98d05b647aba73ef03042ce22d45314434407e8ce712a02370fd5",
+      "after_sha256": "31d801fc28298dbfaa2b0e4225640cfde448368c4771089f65c512a9d881daf6",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionNavigation.h",
+      "new": "Source/BrokenEdge/Extraction/AI/ExtractionNavigation.h",
+      "before_sha256": "177e1421a5ff6c69248c65f845fef0f04a8c19f9a7b156b8fed7272a05015eeb",
+      "after_sha256": "177e1421a5ff6c69248c65f845fef0f04a8c19f9a7b156b8fed7272a05015eeb",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionPatrolArea.cpp",
+      "new": "Source/BrokenEdge/Extraction/AI/ExtractionPatrolArea.cpp",
+      "before_sha256": "773015829c99dff420d6a2bb5805eed868d7c111138a1942c9ff3d35979702fe",
+      "after_sha256": "6e0f1f03ff78359344b88a6b87a9a1340a5aa2e62fc2901d9ce7c5bf1e1eb0e0",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionPatrolArea.h",
+      "new": "Source/BrokenEdge/Extraction/AI/ExtractionPatrolArea.h",
+      "before_sha256": "31a2ee473ce2361cb278ecc9be39805c7a1e5bbba192b1c84a8bc88329b15585",
+      "after_sha256": "31a2ee473ce2361cb278ecc9be39805c7a1e5bbba192b1c84a8bc88329b15585",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionPersistence.cpp",
+      "new": "Source/BrokenEdge/Extraction/Persistence/ExtractionPersistence.cpp",
+      "before_sha256": "6d8755397c6380f884335f60e5da4fd0d3f2e717d43c7ddce297be167b744dc5",
+      "after_sha256": "d652b858bd8cfb79d298de11aaae268c0e01da0458052e583e2fe1eb1a22c5ab",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionPersistence.h",
+      "new": "Source/BrokenEdge/Extraction/Persistence/ExtractionPersistence.h",
+      "before_sha256": "2a5740edce712df6a02173e5674bf2dd62d3c8a2a8d27b12491ae9625edd0618",
+      "after_sha256": "26a9b33934c97fb89336b8bb7faac64e0c74b47f5ff8ed16eadf09e574bb873a",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp",
+      "new": "Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.cpp",
+      "before_sha256": "34267be8f78587f3138988ff3908a97fa79355dd6c9868060e7ff7c4b9a294de",
+      "after_sha256": "0644c1d5b3818ff6979d7b86fe19f47e85ce4883f8aaa1493974660acac9049f",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionPlayerController.h",
+      "new": "Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.h",
+      "before_sha256": "43b1bbd464b613f37925ef1f194e66f403fda8b7ca076454fb6a8ebf351e082a",
+      "after_sha256": "3673268d017d6997d7ee9036e8487d774f492ecc40e926e3c714b0a2dd6e91b5",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionProgression.cpp",
+      "new": "Source/BrokenEdge/Extraction/Progression/ExtractionProgression.cpp",
+      "before_sha256": "7f2c638e13945ebe0ee040ffb8910383a3e826b7de469a9f9111719f1ec943fa",
+      "after_sha256": "33743a278bd894c048cd571d49c6dced184b501fb52c869abc092705ac68767b",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionProgression.h",
+      "new": "Source/BrokenEdge/Extraction/Progression/ExtractionProgression.h",
+      "before_sha256": "9cb4826f0c68171f9e9cddf30fccb558fbc03bf3a8c9a8624aedc8b8a7ee9557",
+      "after_sha256": "a9ded6436c717b2a82de22e99ce4112b038f4fe84e2831dbd8138e0c9a3d6983",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionProgressionWidget.cpp",
+      "new": "Source/BrokenEdge/Extraction/UI/ExtractionProgressionWidget.cpp",
+      "before_sha256": "cd2b5f1e6d5a6024f7b43c3f43fbd5d3b92d115bccc95e02a71f597b667ff466",
+      "after_sha256": "62c068e7469f88447cf2cd24af279ab767766f2b7a04d8961873ffd57deab977",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionProgressionWidget.h",
+      "new": "Source/BrokenEdge/Extraction/UI/ExtractionProgressionWidget.h",
+      "before_sha256": "d119f2cd4815f6c8e1b01f1909aeaa195e4e71f05d3fcb23cb013c8789c0078b",
+      "after_sha256": "d119f2cd4815f6c8e1b01f1909aeaa195e4e71f05d3fcb23cb013c8789c0078b",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionRegionStream.cpp",
+      "new": "Source/BrokenEdge/Extraction/Map/ExtractionRegionStream.cpp",
+      "before_sha256": "97ac515ed04d6bd3c4413e112f23e7532d9368d5fd20845f482e8ec71414750d",
+      "after_sha256": "99a0dcd1f673b42fb76461f032a9b03edae6536ef9cb831c4926e307941d2876",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionRegionStream.h",
+      "new": "Source/BrokenEdge/Extraction/Map/ExtractionRegionStream.h",
+      "before_sha256": "fb391d26305f90d55f93355a26955859cdc19d7aa9caa6adabd46e2a5d1070cc",
+      "after_sha256": "fb391d26305f90d55f93355a26955859cdc19d7aa9caa6adabd46e2a5d1070cc",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionSmoke.cpp",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionSmoke.cpp",
+      "before_sha256": "813b33af72a6af80ab5605c1277dacfc1ecf1866b0f74d163d32a14dddeb069e",
+      "after_sha256": "1d0fc97bb42496a1cac79cc0b0f1f9e0ae5eea2cae8a62f74be3158bbb163d63",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionSmoke.h",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionSmoke.h",
+      "before_sha256": "ac96cd6bfcb19dc3a21158772880d480c16c01f5368cfa815ce90df0f22d55b5",
+      "after_sha256": "ac96cd6bfcb19dc3a21158772880d480c16c01f5368cfa815ce90df0f22d55b5",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionSmokeGrenade.cpp",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionSmokeGrenade.cpp",
+      "before_sha256": "04cb84f816b9e014254b83496aa02ee3d78f82b23c1a6e2504d9d92c1808fe1f",
+      "after_sha256": "efb5e38be86ff71e9a0b4e439065eeae8c4ecf0b4eba5e038f20a822a7dc22fe",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionSmokeGrenade.h",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionSmokeGrenade.h",
+      "before_sha256": "de1c196844f11574e715514948a4d6327afd1af5c841fe51f8bf8fcc3c963b03",
+      "after_sha256": "de1c196844f11574e715514948a4d6327afd1af5c841fe51f8bf8fcc3c963b03",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionStashWidget.cpp",
+      "new": "Source/BrokenEdge/Extraction/UI/ExtractionStashWidget.cpp",
+      "before_sha256": "af441c4386031d0dc224ab79eb4faf0346ccc2a7e0f7d6c245b0c7ecda2e7afc",
+      "after_sha256": "3d95f2910a8ab45afed0964bbaf8370523f852816c8cfde0bb0049631f9f8e1f",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionStashWidget.h",
+      "new": "Source/BrokenEdge/Extraction/UI/ExtractionStashWidget.h",
+      "before_sha256": "32fbcb895210cae6fe57efffb1c917cd9898d9cfd1362519115916cafa5b8787",
+      "after_sha256": "32fbcb895210cae6fe57efffb1c917cd9898d9cfd1362519115916cafa5b8787",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionState.cpp",
+      "new": "Source/BrokenEdge/Extraction/Core/ExtractionState.cpp",
+      "before_sha256": "181fe06cee0ea6621a88e8111ac6c21ab5e9d4692a742ce447c64437931a124a",
+      "after_sha256": "23e5a9801cc9d1e08ba7e1fbdf2aeebf60c0404330c8d03f5de40432b5e11d94",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionState.h",
+      "new": "Source/BrokenEdge/Extraction/Core/ExtractionState.h",
+      "before_sha256": "c35a1417afd4078f7ea2e68043e834b196f3b7e82533b689d33b02b51b2a0a8a",
+      "after_sha256": "610ae1f3bd4adc6177034039788e13395d2d0afbde2dae9e2f6cc38f0f774b78",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionStimDart.cpp",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionStimDart.cpp",
+      "before_sha256": "b0fa5c309243fa2dbb2705433a56f1982d21a5e57b50c765b50888d840e150f9",
+      "after_sha256": "261f41702e19a0ea1adae0a8a8694aae357b098213931602b9951c0edfdc791a",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionStimDart.h",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionStimDart.h",
+      "before_sha256": "b5a710236053c822cc08000391350c1e7ad59c70865a655b9fe8279d6875adf7",
+      "after_sha256": "b5a710236053c822cc08000391350c1e7ad59c70865a655b9fe8279d6875adf7",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionTacticalMap.cpp",
+      "new": "Source/BrokenEdge/Extraction/UI/ExtractionTacticalMap.cpp",
+      "before_sha256": "5c823ca38da4dccd17754e4aba43c94759ce16d9e61f49d5c399af26ddd2e810",
+      "after_sha256": "5e7d91b72e56614b614da171c6d27f94ba28d211e4e251051d71333333eaed61",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionTacticalMap.h",
+      "new": "Source/BrokenEdge/Extraction/UI/ExtractionTacticalMap.h",
+      "before_sha256": "4b451f36c5c7530362ffd750d18b69a4c1d975af94fb0733f0b1f0cdd1ea5ad0",
+      "after_sha256": "4b451f36c5c7530362ffd750d18b69a4c1d975af94fb0733f0b1f0cdd1ea5ad0",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionUIStyle.h",
+      "new": "Source/BrokenEdge/Extraction/UI/ExtractionUIStyle.h",
+      "before_sha256": "e64a49fd6bbfa9b2ffd81b605e9a95dd5fb64bdf579c8eb4ced9286d9958431b",
+      "after_sha256": "396bc4cb187783628d8a94ff9e136fdd8e2a5f6828af99a91e0a19bc730023c8",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionWater.cpp",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionWater.cpp",
+      "before_sha256": "f54f92beecb830144501ee76ad91498542b3ea48dd1a76ed78d6b56f79c0584f",
+      "after_sha256": "b6f732c439aea914f6891b1f0cff1f0895498c35162b64057d599039cdad0bba",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionWater.h",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionWater.h",
+      "before_sha256": "6c96de27d209427300f091bed238c4b4a74c73f693a9239d1e3a2cbd8edaab49",
+      "after_sha256": "6c96de27d209427300f091bed238c4b4a74c73f693a9239d1e3a2cbd8edaab49",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionWeaponVisuals.cpp",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionWeaponVisuals.cpp",
+      "before_sha256": "95f8db48af02f13cc24c13865db10912b2128d8a573c5546fba185039ef7d709",
+      "after_sha256": "eebce63f8c409b031c281a071d93fc97a154c8daab520d2f0d4cdf386efab366",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionWeaponVisuals.h",
+      "new": "Source/BrokenEdge/Extraction/Combat/ExtractionWeaponVisuals.h",
+      "before_sha256": "165ed19301bf7076eb024153163d4fdc0c43c556f56da3d33f60ac71feed00a0",
+      "after_sha256": "165ed19301bf7076eb024153163d4fdc0c43c556f56da3d33f60ac71feed00a0",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionWidget.cpp",
+      "new": "Source/BrokenEdge/Extraction/UI/ExtractionWidget.cpp",
+      "before_sha256": "e194ca4403309821dba6a2513c7d9d6b66d460c2ca278c4f1ffa3d79af141d34",
+      "after_sha256": "9589bdff16027bfeb72337dfd84b4edd90d85419fdb0c198bfd97621ed513320",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionWidget.h",
+      "new": "Source/BrokenEdge/Extraction/UI/ExtractionWidget.h",
+      "before_sha256": "1270c12ed369f3582c17ef1b7eb400121da4e37829f38f56c64e0f74dc2af1d2",
+      "after_sha256": "1270c12ed369f3582c17ef1b7eb400121da4e37829f38f56c64e0f74dc2af1d2",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionZipline.cpp",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionZipline.cpp",
+      "before_sha256": "aa33f7c4c21824f43f909cad104e2168bd2708843f19b9473ae888d16795df07",
+      "after_sha256": "8214a8b3e748ac31d8bdc3b0fcc39fea4c6429e89a95407b75e58da529229933",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/ExtractionZipline.h",
+      "new": "Source/BrokenEdge/Extraction/World/ExtractionZipline.h",
+      "before_sha256": "2e911cc1ce58a8781eb78d662befc94b1b9080ce3338f980e7076a5f363ea561",
+      "after_sha256": "2e911cc1ce58a8781eb78d662befc94b1b9080ce3338f980e7076a5f363ea561",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/LootingMainView.cpp",
+      "new": "Source/BrokenEdge/Extraction/UI/LootingMainView.cpp",
+      "before_sha256": "5b8eb8f94b5136d6d458a5a40df8f6c6522f1059b7ef9382b92272874cdb2ee9",
+      "after_sha256": "a1ecb9f713ef6e7f9ec919568d20216d0bf7382c6c90d1507a55e2fdde29a021",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/LootingMainView.h",
+      "new": "Source/BrokenEdge/Extraction/UI/LootingMainView.h",
+      "before_sha256": "619219f1de34c287c2e5a288a20a7b5ef7f8f640a20f04f51ee355a3a2359ed5",
+      "after_sha256": "3b5fd661f1b2b5a47fbbe4955d79f25f17d8b6d0e4fc4d5acaf570632822a9f2",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/WeaponRangeGameMode.cpp",
+      "new": "Source/BrokenEdge/Extraction/Core/WeaponRangeGameMode.cpp",
+      "before_sha256": "4bcd1c48b4dd1b7068ffeb6d666204081ad23746252671e297c5607d6e9401c3",
+      "after_sha256": "4387513a2a35537d6cc8fd4395e8114fabf2cf2bf481c6385d314e041a7477c1",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Extraction/WeaponRangeGameMode.h",
+      "new": "Source/BrokenEdge/Extraction/Core/WeaponRangeGameMode.h",
+      "before_sha256": "b75da79254429041934ff5d4a15751f811409ed5e5aba26ef1c315b1e274897a",
+      "after_sha256": "53545e87b5eb8c1bab60da2edcdaa663ab90bb3c863d7061579a8ac152ec8173",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/GameMode/LobbyGameMode.cpp",
+      "new": "Source/BrokenEdge/GameMode/LobbyGameMode.cpp",
+      "before_sha256": "c907823144c72f8dc7f74278d1099cb3bdc6e6e4b0b799dfde01b2f572c71eec",
+      "after_sha256": "96447be1d908d4a24003c0636c67a63e734d037d25d23082b8161ddc264da270",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Pickups/HealthPickup.cpp",
+      "new": "Source/BrokenEdge/Pickups/HealthPickup.cpp",
+      "before_sha256": "cf4b45d4fe5bc454a079dc97d470d3531b1b7de5f444331a58fdb7e1dde6fac0",
+      "after_sha256": "a4eb4b36fcd16336578ce1457ae0c540c1dee7b4134f842ebe35b9c3c3940890",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.cpp",
+      "new": "Source/BrokenEdge/PlayerController/BrokenEdgePlayerController.cpp",
+      "before_sha256": "d8590dfc6c993a9a92e24f9839be17832a8549dd02e9bfe1f610a45302f96e3c",
+      "after_sha256": "97cbae705d0374d137281906de33c4b3a5a48086f91372040153ae4d3fc7f530",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/CombatModeAdapterTests.cpp",
+      "new": "Source/BrokenEdge/Tests/CombatModeAdapterTests.cpp",
+      "before_sha256": "4c470798c937003e3fe63b5508dd81a1d86b3556ea7c1620232f862c9c2a6d38",
+      "after_sha256": "4073492c9be445d69e6cfa3b94811dce54511105e4f97eb52f2d6900e3339aa2",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/CombatStateNetworkPIETests.cpp",
+      "new": "Source/BrokenEdge/Tests/CombatStateNetworkPIETests.cpp",
+      "before_sha256": "ccfbee37fbff6d4a71a0edd7f3e4c9db5ae640d58acc59d60c22a27d408e3abf",
+      "after_sha256": "6cd5fe2e66210b0fadad7dd54d1a84bc7feee32ad2ce202b28d0df17b356476e",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionAbilityTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionAbilityTests.cpp",
+      "before_sha256": "cd14db1c438d38f7658800c3b8e090c435917da98f5ca4bc9d9c6c4910fa8dbd",
+      "after_sha256": "7469eaebf189d98e305f8dd29081b4102ca95d1b155e228c6498a9353f08d455",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionBlueprintTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionBlueprintTests.cpp",
+      "before_sha256": "bd0abcf4524b1adb3dd801758d645911f8ea5b36d12f7eaca38b8b8f48cad79d",
+      "after_sha256": "6290778e210f2ee74ee2f5910947c83d94afe5c2f60dfe0dd68b57e937d74d97",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionDriverTests.cpp",
+      "before_sha256": "5e72fa8a010943e06d0a446d952bab538b1a1c7e684fa029c687c2b31d5073bd",
+      "after_sha256": "9cb9698c691ad264a32f801fa4f01c22e525b9c79643e2f8377e2ae8afeafa6b",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionEquipmentTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionEquipmentTests.cpp",
+      "before_sha256": "e8c72654fb7f4d6ba78844e789d8dcfb8b7da253a75cec05dc9cc9604ef8b277",
+      "after_sha256": "a11be3016f36056b421295c260bce2ca491793c7138b554cabf99d3ffeebd356",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionExitFeedbackTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionExitFeedbackTests.cpp",
+      "before_sha256": "6ebd180887f7d936d092e95643dfe5aff85089430b9fb247e399a67b2bec9364",
+      "after_sha256": "4d732cb3573a66706282e9397a83bf52c5ee1c75f3c1b3392936786417c12291",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionExpansionTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionExpansionTests.cpp",
+      "before_sha256": "c40613a03ca3181741d56899b4cd0ea10309b39c8fcef9d61cd13e4155cd7d64",
+      "after_sha256": "d6f63bcd9e153186ffea0805e5149d1c7d9f1f97e6be1583a8f081e421c14f91",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionGlassTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionGlassTests.cpp",
+      "before_sha256": "c18b1689d0c56f2e12af0d20edf1d5eeb3d4f5726a5f9f1ef56d7fb1f21a9227",
+      "after_sha256": "67c881e5743effbafd383488b4597ceaaa5aa823372fb5cd5fba8390525eb17b",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionHUDProfileTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionHUDProfileTests.cpp",
+      "before_sha256": "527d65786d785407a75e9e644405c3c1a80bf92daf9bf7eb3e7caaa698616338",
+      "after_sha256": "b5431bb9c6edc7b1b81b4d2c025e920212a7e1ffc6706c50801ada1f2b6520e6",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionInputPIETests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionInputPIETests.cpp",
+      "before_sha256": "6e45e7db8843649d3bc3f9b559f6fe89f4d6ebde1be0b9fc9d3bd55dc1d54a86",
+      "after_sha256": "c586b14835702570dbccb83eac3b60a5a6b78a49fafc7f1c13029b19cb32ba85",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionInputTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionInputTests.cpp",
+      "before_sha256": "e2ac37d89b16d9c1fe5a2951dc8251938ea08230a2ab138264b3475e9864257c",
+      "after_sha256": "411dfa41fc3240858bcd77366f71594fa1429f1baeeae405157651a69abebdf5",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionInventoryTestAccess.h",
+      "new": "Source/BrokenEdge/Tests/ExtractionInventoryTestAccess.h",
+      "before_sha256": "369ba1f11a047771980cd0a6aa21ecf66a9cd7406dd6660f57d7cd8eb43558d9",
+      "after_sha256": "939d1c439a778e3354e9caf37fc0aca1bb2bc89a2d7b16f0ec7ca018bbb5c98e",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionInventoryTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionInventoryTests.cpp",
+      "before_sha256": "cc7a46a97864ba93d48fc4b61cf964b0e0b6e7bf64d74b6260e795a64384fb0d",
+      "after_sha256": "3e38cc851a11bf2d2b9fd88cb91a0adf30125aca0c7c39c3c7fc644853a7be9e",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionInventoryTransactionTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionInventoryTransactionTests.cpp",
+      "before_sha256": "94e906589559be8743b99d9062682b441d6a9ba7647c213005bde2a3bafb8165",
+      "after_sha256": "9c897f5cc486749a4d54e615fe1f5eb06b0ea55372d9c5b1d4b8bf09990e4bb3",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionItemRegistryTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionItemRegistryTests.cpp",
+      "before_sha256": "39b3bae3000d571a5c79ce1cbd98c06ba3bd606f5d8118a7dd35107045da7406",
+      "after_sha256": "5135477d6c43c3b176be938920a22808bc1f5df191ee7a36c47e70849eb0fc7b",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionJournalRollingTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionJournalRollingTests.cpp",
+      "before_sha256": "14c5c9c12da2a4aef876c5a068193ecefc8f3f75d4491241440e8ff9521d73a4",
+      "after_sha256": "4dc4e704733b39f8d29c96b7e60a2b69b35c5399e6d7b8fcb26aa3a0689b357b",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionLootLayoutTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionLootLayoutTests.cpp",
+      "before_sha256": "32cc588aac2ce53ee8a66681ce76c7fc0dc2712b969ddb1a7a793b8ca701d6da",
+      "after_sha256": "23ecc8330b457e716d27d82365f9a1077b96a43e23f6237cdecb1612c076f1f4",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionMapTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionMapTests.cpp",
+      "before_sha256": "be6aa504b321caf39dbd2d7b40aa55783b3e3224b716b8ccbb36224bd75e638c",
+      "after_sha256": "c357ea36c2ee7570f08b9508608e5ff0b4d67fbb72cbb631e3a3a9b58bee3bfc",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionPersistenceCapacityTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionPersistenceCapacityTests.cpp",
+      "before_sha256": "469e082ca48437331b080b8b47f1befde4b647716e774683cef38a65a8f1f301",
+      "after_sha256": "480535988f2dc13968ee36fa440abfcec0f7fc6b72b04934fb6caff18a60426b",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionPersistenceTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionPersistenceTests.cpp",
+      "before_sha256": "ef1070ad6f9822201dc5b8ea0f9131548b82d4767d6812333bbd13e6cfc9fb11",
+      "after_sha256": "3636200b2349aefdfc92b744ca8ba3876f33eb8bb149262663c1d89bbed76751",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionProgressionTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionProgressionTests.cpp",
+      "before_sha256": "3318f97625e3ebaf3e5739e01241f2f9a27cb95e82779bbbbfbe1c6c1372d0b5",
+      "after_sha256": "16642144af389f5dc181a6cfded41315d9a381056aede1c87ddb065a3e22b40e",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionRetentionTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionRetentionTests.cpp",
+      "before_sha256": "884cc6d8127204ef8cefac157d9c7990f911e31d8a7b3d4867d5fd1e6267851b",
+      "after_sha256": "339d4723fabd7d472fa65f138e82e375b92cb32918b1c634e7e4de71d876e3f7",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionScarTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionScarTests.cpp",
+      "before_sha256": "d5e1f99be14444f81851142c925be1a1be523789a556aa9a38fb5d2d5affee5d",
+      "after_sha256": "3390eb3f6585776f9b24a1f7dbb75979bf0a4ac2e6a0a1bfb898eda47b163b3d",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionSpawnLifecycleTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionSpawnLifecycleTests.cpp",
+      "before_sha256": "8150a05e73c6e9e829944a8911cf388a677da888863bd8e08485194264794ff1",
+      "after_sha256": "53b03feefaa2402121ada2f7ad55d05bc42daf0d26c03ad7bdced5d03a088d4f",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionStartingSupplyTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionStartingSupplyTests.cpp",
+      "before_sha256": "23b88d9465947f6134ee098ddf0b9762d50470bc779bea8a1d1dbe874131d239",
+      "after_sha256": "00c7159337f724ba0f699c57f129a7ba673e7f17d3cb03278561a6ee355a8590",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionSwapPocketTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionSwapPocketTests.cpp",
+      "before_sha256": "ec2304361c6bab2a681ff4edb0d46d52f544d23ad13162ba9bd0526bdbff10a5",
+      "after_sha256": "3a0757959341b5f1ba9ae1e362e293d16c8d6784180bcd54d9bc91463c4aa8cf",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionVitalsPIETests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionVitalsPIETests.cpp",
+      "before_sha256": "95acd0796eee176d2dafdb4b8f16f852666c7186de6a46f4653395c07ab50b7a",
+      "after_sha256": "24689e308b0134e4bb2b4fdada6c905c94cd7dc689a6e03b13d3c5c4202a27f3",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/ExtractionVitalsTests.cpp",
+      "new": "Source/BrokenEdge/Tests/ExtractionVitalsTests.cpp",
+      "before_sha256": "3218927fdea42fb44d250b27d152fac4a4cd7e2e976ee24fa499adb09d1b1aa1",
+      "after_sha256": "a870dcb5b8972b506e542e7a9cf4715bdcb4ef1001dae48facd2a986c2f6fa56",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/GuardBTTaskTests.cpp",
+      "new": "Source/BrokenEdge/Tests/GuardBTTaskTests.cpp",
+      "before_sha256": "d1c96d16482ae21ba3da9da9cea8b0a389e5c3efe9286523214f8434685d6e08",
+      "after_sha256": "d5f3ec2f75b7e76f154d526acaaa59921baf15e1008457e72a0c3d485bbfe889",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/WeaponMechanicsTests.cpp",
+      "new": "Source/BrokenEdge/Tests/WeaponMechanicsTests.cpp",
+      "before_sha256": "4fca1342f5ffed8b5e46eaa784143018440d03e885671b9916d45adc983d084f",
+      "after_sha256": "99617370391ad4e2f40101f151323495b7ed48d523eb2a343180adca269bde49",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/WeaponPIETests.cpp",
+      "new": "Source/BrokenEdge/Tests/WeaponPIETests.cpp",
+      "before_sha256": "0aab9376eea9e38e6131d6e93b2aec895950a8929799548d0e5fe304a12fd663",
+      "after_sha256": "459097fe9d8dcfbd8a3a659fb1defaa265191cdecfdf7dd3baeca2dbe2ca4bed",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Tests/WeaponPatternTests.cpp",
+      "new": "Source/BrokenEdge/Tests/WeaponPatternTests.cpp",
+      "before_sha256": "c45ce51e5743845d1199d5aec82d479f8780a8423515455dc7638bb4071a4486",
+      "after_sha256": "34fb7f3f7359cab30c5061fae6631e3d4f3a28b0fe6c4fbf5ecc18ec415372f0",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Traversal/TraversalMovementComponent.cpp",
+      "new": "Source/BrokenEdge/Traversal/TraversalMovementComponent.cpp",
+      "before_sha256": "fe2532821c1ec95a204da26b2cec067055cd77ecc8ef5d3e39b7f952acb649c6",
+      "after_sha256": "95c02915de8bc26c3c489f01a5ae98065164c30943128cc847d665e966641cf5",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/UI/BrokenEdgeHUD.cpp",
+      "new": "Source/BrokenEdge/UI/BrokenEdgeHUD.cpp",
+      "before_sha256": "13e143b0029f8a9c82fd6f7e42d6bb90c1fd921d0dbee44f5f02ea2ae5b603ad",
+      "after_sha256": "81d4c968ad45bf48880f120bc971a58a9d2099c5071665d12d4fd737b4bcf01b",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/UI/LobbyShowcase.cpp",
+      "new": "Source/BrokenEdge/UI/LobbyShowcase.cpp",
+      "before_sha256": "9a60ba11abaad3f59d2720917fc66197a38f4d31aaf9c359f71e8b12264adb02",
+      "after_sha256": "fa71b3019ca05d0cf72e81d46b6691ec56bfb4f29f31a8b123acf0df2282bfb7",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/UI/LobbyWidget.cpp",
+      "new": "Source/BrokenEdge/UI/LobbyWidget.cpp",
+      "before_sha256": "3dd0fc4b21c9cb575b997ca01a4dfe0f175db234118786517c7be07cbe9294e7",
+      "after_sha256": "423eea9fd9cf763b964864bd7e4787471036d669b39af2831231bf28c25d3b81",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Weapon/ExtractionBullet.cpp",
+      "new": "Source/BrokenEdge/Weapon/ExtractionBullet.cpp",
+      "before_sha256": "9ef2afcb579b13ebbdf0b60992dfff79fe0e1dcb5012469ff7b391089e8d01da",
+      "after_sha256": "a3ddf28e52f8feeaddf71b5907c9f0c5d184ccc6d9b9cd3342d0f92762ca49f7",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Weapon/HitScanWeapon.cpp",
+      "new": "Source/BrokenEdge/Weapon/HitScanWeapon.cpp",
+      "before_sha256": "5c7facecc6e7cb57a613a8519547ffd1eac2bd8684d5fb338b1c1b0e30a12e93",
+      "after_sha256": "5c9624889105462fb5e913f4d27fa61e10ed78f790e2a28344337fe672c801bb",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Weapon/Weapon.cpp",
+      "new": "Source/BrokenEdge/Weapon/Weapon.cpp",
+      "before_sha256": "accbecd6ca5e8986b19996b7030b12cfd0a1ed5f8bc29b5580a50276c0d551f4",
+      "after_sha256": "ae59e1cb1dd264f744f44fd5b3a50084c5765fd7f44f8c1f17997805e072186c",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Weapon/Weapon.h",
+      "new": "Source/BrokenEdge/Weapon/Weapon.h",
+      "before_sha256": "1ec95e90ae26fed73e5b32053c6e41a1cecc24c6fb693ba0085604baf6014d7a",
+      "after_sha256": "d37b45b2079ba8c41377638e0b3ae1b56b02d36116a087912965598d277ed7a4",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/BrokenEdge/Weapon/WeaponMechanics.cpp",
+      "new": "Source/BrokenEdge/Weapon/WeaponMechanics.cpp",
+      "before_sha256": "ded07f1aed6baa0cc6c4d7ca99ccc38cf26d8264eb68dd3016877a0776ed947f",
+      "after_sha256": "2ac0ea221de7d2a6c0c77349c96fca275be0c32120898456ddf09d8bb1884bd9",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/StingerTools/Private/CombatNetworkTestMode.cpp",
+      "new": "Source/StingerTools/Private/CombatNetworkTestMode.cpp",
+      "before_sha256": "34ef6aa8c32cd0494e55a92c02eff6f902ebddbd311081d19baa89db040caf63",
+      "after_sha256": "c1e14a1cf8d6158ea9f446bbf06f3cfbfe2c549af8b4631cdb645a5f35e955ac",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/StingerTools/Private/ExtractionBlueprintBuilder.cpp",
+      "new": "Source/StingerTools/Private/ExtractionBlueprintBuilder.cpp",
+      "before_sha256": "8ab968c7c20930b73766c341d713d5706469fee4df8a74a0735dcb71dc51c541",
+      "after_sha256": "8faf5d49567d63dc4b1654b19ee55d3f6a5f00adb1a4c13d969fde47adb45d35",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/StingerTools/Private/ExtractionPIELobbyTests.cpp",
+      "new": "Source/StingerTools/Private/ExtractionPIELobbyTests.cpp",
+      "before_sha256": "c978207ffbf20d8f9226a484ba5464e93266aae0cb610eb3411d559c1db05077",
+      "after_sha256": "fd83faa6ae40787413d94607fddc9520c1c99a3c737295657c56c28d1567d1ea",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/StingerTools/Private/ExtractionPIETeardownTests.cpp",
+      "new": "Source/StingerTools/Private/ExtractionPIETeardownTests.cpp",
+      "before_sha256": "602232a2074951059a9b7e41690b7257ea69c2513de7108c79612400a43b2f0e",
+      "after_sha256": "13f21e24a7f709a9b687f46e7393fb3f871645725a34db6f70ce2f1ee0c597e6",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/StingerTools/Private/InventoryWidgetBuilder.cpp",
+      "new": "Source/StingerTools/Private/InventoryWidgetBuilder.cpp",
+      "before_sha256": "f363a5df5a2820a8da1130594df1aef83822f0a9d435d609800d4194c435ea7f",
+      "after_sha256": "4bbfd3b558d72d3e512a2c1fc40c5d2e9c63e800fd301895d0b7bec24e0e61f1",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/StingerTools/Private/StingerAssetLibrary.cpp",
+      "new": "Source/StingerTools/Private/StingerAssetLibrary.cpp",
+      "before_sha256": "1488082c7462492e6c665408ff51dd105a16dd1e0a03bb5b00732e9a0c72eb44",
+      "after_sha256": "57009cd76cc5b81e47586b531911e8450b820e631e61845b2855b33227500ff4",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/StingerTools/Public/CombatNetworkTestMode.h",
+      "new": "Source/StingerTools/Public/CombatNetworkTestMode.h",
+      "before_sha256": "99d3b1a17dd1910ebdf983601f4e36acf2ef6390177336cf7206a2b73253d915",
+      "after_sha256": "c8d39f260e79d6268dfac87dd635931d59ee0e4657af696c000c64a424b5fa07",
+      "include_or_path_changes_only": true
+    },
+    {
+      "old": "Source/StingerTools/Public/ExtractionBlueprintTestMode.h",
+      "new": "Source/StingerTools/Public/ExtractionBlueprintTestMode.h",
+      "before_sha256": "98d7fd49f520448a59acd321146736457ba67de2050a19e3f96a0bbc9cf0bb85",
+      "after_sha256": "7bde9ef67fadbfc1ef7787266a52a1f16042211300c966deff76c18ffda67111",
+      "include_or_path_changes_only": true
+    }
+  ],
+  "source_logic_verified_files": 159,
+  "automation_names_unchanged": 85,
+  "blueprint_reports_unchanged": 56,
+  "baseline_automation_run": "td_wp02_automation-list_after_20261114_01",
+  "baseline_blueprint_run": "td_wp02_native-blueprints_after_20261114_01"
+}

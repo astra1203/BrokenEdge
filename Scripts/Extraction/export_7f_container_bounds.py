@@ -27,10 +27,10 @@ import unreal
 LAYOUT = '/Game/Extraction/Loot/DA_SpaceCenter_Ma1_Loot'
 MODE = '/Script/BrokenEdge.ExtractionGameMode'
 PLAN = 'Artifacts/Extraction/RestorationEvidence/Phase7FGameplay/Plan.json'
-SOURCE_FILES = ('Source/BrokenEdge/Extraction/ExtractionLootActor.cpp',
-                'Source/BrokenEdge/Extraction/ExtractionLootActor.h',
-                'Source/BrokenEdge/Extraction/ExtractionLootLayout.cpp',
-                'Source/BrokenEdge/Extraction/ExtractionGameMode.cpp',
+SOURCE_FILES = ('Source/BrokenEdge/Extraction/Inventory/ExtractionLootActor.cpp',
+                'Source/BrokenEdge/Extraction/Inventory/ExtractionLootActor.h',
+                'Source/BrokenEdge/Extraction/World/ExtractionLootLayout.cpp',
+                'Source/BrokenEdge/Extraction/Core/ExtractionGameMode.cpp',
                 'Scripts/Extraction/place_7f_loot_guards.py', 'Config/DefaultGame.ini',
                 'Scripts/Extraction/export_7f_container_bounds.py', PLAN)
 

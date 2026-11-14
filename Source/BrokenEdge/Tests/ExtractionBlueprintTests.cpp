@@ -13,10 +13,10 @@
 #include "Blueprint/WidgetTree.h"
 #include "Components/Button.h"
 #include "Components/StaticMeshComponent.h"
-#include "BrokenEdge/Extraction/ExtractionWidget.h"
-#include "BrokenEdge/Extraction/ExtractionPlayerController.h"
-#include "BrokenEdge/Extraction/ExtractionLootActor.h"
-#include "BrokenEdge/Extraction/ExtractionGameMode.h"
+#include "BrokenEdge/Extraction/UI/ExtractionWidget.h"
+#include "BrokenEdge/Extraction/Core/ExtractionPlayerController.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionLootActor.h"
+#include "BrokenEdge/Extraction/Core/ExtractionGameMode.h"
 
 namespace
 {

@@ -4,7 +4,7 @@
 #include "Misc/Paths.h"
 #include "HAL/FileManager.h"
 #include "BrokenEdge/Weapon/WeaponMechanics.h"
-#include "BrokenEdge/Extraction/ExtractionItems.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionItems.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FWeaponPatternTest, "BrokenEdge.Extraction.WeaponMechanics.PatternSamples",
                                  EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)

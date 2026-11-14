@@ -1,6 +1,6 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
-#include "BrokenEdge/Extraction/ExtractionPersistence.h"
+#include "BrokenEdge/Extraction/Persistence/ExtractionPersistence.h"
 #include "Engine/GameInstance.h"
 #include "Misc/Paths.h"
 #include "HAL/PlatformFileManager.h"

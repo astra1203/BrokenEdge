@@ -16,10 +16,10 @@ PACKAGING_SECTION = '/Script/UnrealEd.ProjectPackagingSettings'
 # These sites load native string/soft defaults at runtime rather than depending
 # on a particular map or blueprint to serialize the same reference first.
 RUNTIME_SOURCES = (
-    'Source/BrokenEdge/Extraction/ExtractionPlayerController.h',
-    'Source/BrokenEdge/Extraction/ExtractionAbilities.h',
-    'Source/BrokenEdge/Extraction/ExtractionKeyRoom.cpp',
-    'Source/BrokenEdge/Extraction/WeaponRangeGameMode.cpp',
+    'Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.h',
+    'Source/BrokenEdge/Extraction/Combat/ExtractionAbilities.h',
+    'Source/BrokenEdge/Extraction/World/ExtractionKeyRoom.cpp',
+    'Source/BrokenEdge/Extraction/Core/WeaponRangeGameMode.cpp',
     'Source/BrokenEdge/Traversal/ExtractionTraversalComponent.cpp',
 )
 REGISTRY_EXPORT = 'Config/ExtractionItemRegistry.json'

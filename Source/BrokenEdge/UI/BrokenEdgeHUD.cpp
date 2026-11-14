@@ -15,7 +15,7 @@
 #include "BrokenEdge/Weapon/WeaponPresentation.h"
 #include "Engine/Texture2D.h"
 #include "Camera/PlayerCameraManager.h"
-#include "BrokenEdge/Extraction/ExtractionCombatComponent.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionCombatComponent.h"
 
 
 void ABrokenEdgeHUD::BeginPlay()

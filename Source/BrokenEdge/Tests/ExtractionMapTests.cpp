@@ -1,8 +1,8 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
 #include "Templates/UnrealTemplate.h"
-#include "BrokenEdge/Extraction/ExtractionMapRegistry.h"
-#include "BrokenEdge/Extraction/ExtractionLootLayout.h"
+#include "BrokenEdge/Extraction/Map/ExtractionMapRegistry.h"
+#include "BrokenEdge/Extraction/World/ExtractionLootLayout.h"
 #include "Engine/StaticMesh.h"
 #include "PhysicsEngine/BodySetup.h"
 

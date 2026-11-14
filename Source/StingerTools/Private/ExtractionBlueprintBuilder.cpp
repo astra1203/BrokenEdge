@@ -1,8 +1,8 @@
 #include "ExtractionBlueprintBuilder.h"
 #include "GeneratedWidgetGuard.h"
-#include "BrokenEdge/Extraction/ExtractionWidget.h"
-#include "BrokenEdge/Extraction/ExtractionLootActor.h"
-#include "BrokenEdge/Extraction/ExtractionUIStyle.h"
+#include "BrokenEdge/Extraction/UI/ExtractionWidget.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionLootActor.h"
+#include "BrokenEdge/Extraction/UI/ExtractionUIStyle.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/Border.h"
 #include "Components/Button.h"
@@ -28,8 +28,8 @@
 #include "EngineUtils.h"
 #include "ActorFactories/ActorFactoryBlueprint.h"
 #include "Subsystems/EditorActorSubsystem.h"
-#include "BrokenEdge/Extraction/ExtractionGameMode.h"
-#include "BrokenEdge/Extraction/ExtractionPlayerController.h"
+#include "BrokenEdge/Extraction/Core/ExtractionGameMode.h"
+#include "BrokenEdge/Extraction/Core/ExtractionPlayerController.h"
 #include "UObject/UnrealType.h"
 
 namespace

@@ -9,7 +9,7 @@
 #include "Engine/SkeletalMesh.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Materials/MaterialInterface.h"
-#include "BrokenEdge/Extraction/ExtractionItems.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionItems.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 
 ALobbyShowcase::ALobbyShowcase()

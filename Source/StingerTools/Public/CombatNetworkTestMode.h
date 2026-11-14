@@ -1,5 +1,5 @@
 #pragma once
-#include "BrokenEdge/Extraction/WeaponRangeGameMode.h"
+#include "BrokenEdge/Extraction/Core/WeaponRangeGameMode.h"
 #include "CombatNetworkTestMode.generated.h"
 
 /** Editor-only network training fixture; never used by production map assets. */

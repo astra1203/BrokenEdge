@@ -1,5 +1,5 @@
 #include "LobbyGameMode.h"
-#include "BrokenEdge/Extraction/ExtractionMapRegistry.h"
+#include "BrokenEdge/Extraction/Map/ExtractionMapRegistry.h"
 #include "SessionModes.h"
 
 #include "Menu.h"
@@ -18,7 +18,7 @@
 #include "BrokenEdge/GameState/LobbyGameState.h"
 #include "BrokenEdge/PlayerController/BrokenEdgePlayerController.h"
 #include "BrokenEdge/PlayerState/BrokenEdgePlayerState.h"
-#include "BrokenEdge/Extraction/ExtractionAccountComponent.h"
+#include "BrokenEdge/Extraction/Core/ExtractionAccountComponent.h"
 
 ALobbyGameMode::ALobbyGameMode()
 {

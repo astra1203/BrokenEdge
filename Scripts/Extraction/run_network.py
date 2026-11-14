@@ -147,8 +147,8 @@ report = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(
 report['base_commit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
 report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(p.read_bytes()).hexdigest()
                          for p in [Path(__file__).resolve(), ROOT / 'Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
-                                   ROOT / 'Source/BrokenEdge/Extraction/ExtractionPlayerController.h',
-                                   ROOT / 'Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp',
+                                   ROOT / 'Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.h',
+                                   ROOT / 'Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.cpp',
                                    ROOT / 'Scripts/Extraction/inventory_scenarios.py',
                                    ROOT / 'Scripts/Extraction/storage_scenarios.py', ROOT / 'Scripts/Extraction/phase5_scenarios.py',
                                    ROOT / 'Scripts/Extraction/equipment_scenarios.py',
@@ -169,10 +169,10 @@ if args.scenario == 'east' or args.scenario == 'performance' and args.performanc
         report['input_sha256'][name]=hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
 if args.scenario == 'guard_tuning':
     for name in ['Scripts/Extraction/guard_tuning_scenarios.py', 'Config/DefaultGame.ini',
-                 'Source/BrokenEdge/Extraction/ExtractionAbilities.h',
-                 'Source/BrokenEdge/Extraction/ExtractionGuard.h',
-                 'Source/BrokenEdge/Extraction/ExtractionGuard.cpp',
-                 'Source/BrokenEdge/Extraction/ExtractionHealth.cpp']:
+                 'Source/BrokenEdge/Extraction/Combat/ExtractionAbilities.h',
+                 'Source/BrokenEdge/Extraction/AI/ExtractionGuard.h',
+                 'Source/BrokenEdge/Extraction/AI/ExtractionGuard.cpp',
+                 'Source/BrokenEdge/Extraction/Health/ExtractionHealth.cpp']:
         report['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
 if args.scenario == 'overnight-route':
     for name in ['Scripts/Extraction/overnight_route_scenarios.py', 'Scripts/Extraction/overnight_route.json']:
@@ -185,7 +185,7 @@ if args.scenario == 'flight-matrix':
 if args.scenario == 'soviet':
     for name in ['Scripts/Extraction/soviet_scenarios.py', 'Content/Maps/SovietMilitary/L_SovietMilitaryExtraction.umap',
                  'Content/Extraction/Maps/DA_SovietMilitaryGameplay.uasset', 'Content/Extraction/Loot/DA_SovietMilitaryLoot.uasset',
-                 'Source/BrokenEdge/Extraction/ExtractionDoor.cpp', 'Source/BrokenEdge/Extraction/ExtractionMapRegistry.cpp']:
+                 'Source/BrokenEdge/Extraction/World/ExtractionDoor.cpp', 'Source/BrokenEdge/Extraction/Map/ExtractionMapRegistry.cpp']:
         report['input_sha256'][name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
 
 if args.flight_diagnostics:

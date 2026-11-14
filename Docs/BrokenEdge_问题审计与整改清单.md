@@ -26,7 +26,7 @@
 
 ### U01：首次背包枪图标比例异常
 
-**证据。** [LootingMainView.cpp](../Source/BrokenEdge/Extraction/LootingMainView.cpp) 的 `ULootingWidgetPart::SetItem`（约 130 行）同步加载图标，以纹理尺寸和占格面积计算等比 Brush 尺寸。`Refresh`（459 行）在首次打开或容器版本变化时重建卡片。[InventoryWidgetBuilder.cpp](../Source/StingerTools/Private/InventoryWidgetBuilder.cpp) 的生成模板使用 `ScaleToFit`。
+**证据。** [LootingMainView.cpp](../Source/BrokenEdge/Extraction/UI/LootingMainView.cpp) 的 `ULootingWidgetPart::SetItem`（约 130 行）同步加载图标，以纹理尺寸和占格面积计算等比 Brush 尺寸。`Refresh`（459 行）在首次打开或容器版本变化时重建卡片。[InventoryWidgetBuilder.cpp](../Source/StingerTools/Private/InventoryWidgetBuilder.cpp) 的生成模板使用 `ScaleToFit`。
 
 编辑器实读 `/Game/UI/Looting/WBP_LootingSlotView`：`WeaponIconFit` 确为 `ScaleToFit`，外层 Fill，内部 Image 为 Center；M4A1 定义占格为 4×2，引用 `T_ItemIcon_W_M4A1`。因此不能再把“缺少 ScaleBox”写成已确认原因，也不能据此否定首次显示异常。
 
@@ -36,7 +36,7 @@
 
 ### U02：武器与装备槽双向交换
 
-**已确认限制。** `ULootingMainView::ResolveDrop`（842 行起）命中装备槽后设置 `Slot` 就返回，不检查已有武器，也不设置 `SwapWith`。[ExtractionItems.cpp](../Source/BrokenEdge/Extraction/ExtractionItems.cpp) 的 `SwapGridItems`（518 行起）明确拒绝 `A->Slot >= 0 || B->Slot >= 0`；普通 `Fits` 又要求目标装备槽为空。两个方向均有阻断点。
+**已确认限制。** `ULootingMainView::ResolveDrop`（842 行起）命中装备槽后设置 `Slot` 就返回，不检查已有武器，也不设置 `SwapWith`。[ExtractionItems.cpp](../Source/BrokenEdge/Extraction/Inventory/ExtractionItems.cpp) 的 `SwapGridItems`（518 行起）明确拒绝 `A->Slot >= 0 || B->Slot >= 0`；普通 `Fits` 又要求目标装备槽为空。两个方向均有阻断点。
 
 **目标规则。** 背包武器拖到已有枪的手持／背负槽，应把被替换的枪放回来源背包分区；装备槽武器拖到背包另一把枪上，应原子交换。回放位置可以优先原格，再在来源分区寻找合法空位；放不下则整体失败，并解释原因，不丢枪、不复制枪、不悄悄移动第三件物品。
 
@@ -46,7 +46,7 @@
 
 ### U03：口袋、胸挂与可换弹备弹
 
-**已确认。** [ExtractionInventoryComponent.cpp](../Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp)：
+**已确认。** [ExtractionInventoryComponent.cpp](../Source/BrokenEdge/Extraction/Inventory/ExtractionInventoryComponent.cpp)：
 
 - `GrantStartingSupply`（110 行起）补充四类备弹，并在约 261 行明确 `AutoPlace(..., BagGrid)`。
 - `SyncReserve`（334 行起）直接使用 `Contents.Count(AmmoType)`。
@@ -69,7 +69,7 @@
 
 ### U05：G 扔雷同时丢枪
 
-**已确认双重绑定。** 编辑器读取 `IMC_CharacterDefault` 和 `IMC_Stinger`，两者都是 `IA_Drop → G`；`BP_StingerCharacter` 默认使用后者。[ExtractionPlayerController.cpp](../Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp) 又在 `SetupInputComponent` 约 60 行绑定 G 投掷手雷，Tick 中松开 G 时提交投掷。
+**已确认双重绑定。** 编辑器读取 `IMC_CharacterDefault` 和 `IMC_Stinger`，两者都是 `IA_Drop → G`；`BP_StingerCharacter` 默认使用后者。[ExtractionPlayerController.cpp](../Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.cpp) 又在 `SetupInputComponent` 约 60 行绑定 G 投掷手雷，Tick 中松开 G 时提交投掷。
 
 角色侧 `DropButtonPressed → Combat::Drop → DropEquippedItem` 在搜打撤模式仍然有效。[CombatComponent.cpp](../Source/BrokenEdge/Component/CombatComponent.cpp) 204 行证明搜打撤分支确实调用丢弃事务。11 月 7 日已通过实际 G 输入复现并核对原枪 GUID，详见 10.5。
 
@@ -79,7 +79,7 @@
 
 ### U06：注水开关与拉闸点模型
 
-**已确认。** [ExtractionExitSwitch.cpp](../Source/BrokenEdge/Extraction/ExtractionExitSwitch.cpp) 构造函数直接使用 `/Engine/BasicShapes/Cube` 与 `Sphere`。撤离点、注水和吊桥分别在 `ExtractionExit.cpp`、`ExtractionWater.cpp`、`ExtractionDrawbridge.cpp` 直接生成 `AExtractionExitSwitch`。仅创建一个好看的子蓝图并不会自动替换这些生成路径。
+**已确认。** [ExtractionExitSwitch.cpp](../Source/BrokenEdge/Extraction/World/ExtractionExitSwitch.cpp) 构造函数直接使用 `/Engine/BasicShapes/Cube` 与 `Sphere`。撤离点、注水和吊桥分别在 `ExtractionExit.cpp`、`ExtractionWater.cpp`、`ExtractionDrawbridge.cpp` 直接生成 `AExtractionExitSwitch`。仅创建一个好看的子蓝图并不会自动替换这些生成路径。
 
 **整改。** 把开关类型和外观配置化，分别提供电闸箱、注水阀／控制台、吊桥控制器；保留服务器权威交互，增加可配置 Mesh／Blueprint 类、把手或阀门运动、开关状态材质、音效与提示锚点。外观碰撞与交互查询分开设置。
 
@@ -95,7 +95,7 @@
 | --- | --- | --- |
 | 局内 `ULootingMainView` | 遇到不同物品会生成 `Swap`；网格交换允许负数 Slot，包含背包 -1、安全箱 -3 | 不能认定完全没实现；需捕获失败物品、落点、分区与服务端返回 |
 | 大厅 `SExtractionStash` | `OnMouseButtonUp`（约 369 行）命中已有物品就填 `MergeInto`，不生成 `Swap` | 已确认 UI 缺口：不同物品也会被当作堆叠候选 |
-| 大厅持久化入口 | [ExtractionPersistence.cpp](../Source/BrokenEdge/Extraction/ExtractionPersistence.cpp) 626 行只把 `Transfer` 交给 `ExtractionItems::Transfer`，其他操作走 `Configure` | 已确认后端分派缺口；仅改大厅前端也不够 |
+| 大厅持久化入口 | [ExtractionPersistence.cpp](../Source/BrokenEdge/Extraction/Persistence/ExtractionPersistence.cpp) 626 行只把 `Transfer` 交给 `ExtractionItems::Transfer`，其他操作走 `Configure` | 已确认后端分派缺口；仅改大厅前端也不够 |
 
 **区分约束。** “安全箱内的物品”与“安全箱装备本身”不同，后者有保护／卸下限制。局内交换要求整件，且被换物品必须能放回来源分区；容积不足应合法拒绝。相同可堆叠物品优先合并，不能把合并和交换混为一谈。
 
@@ -109,7 +109,7 @@
 
 1. 库存实例是否实际带 RedDot。开局补件只在 `Attachments.IsEmpty()` 时执行；已有其他附件但没有瞄具的旧枪不会自动补红点。这是确定的配置策略，是否解释本次偶发待验证。
 2. 库存有红点时，复制到武器 Actor 的 `ExtractionParts/ExtractionAssembly/ExtractionConfiguration` 是否一致。
-3. [ExtractionWeaponVisuals.cpp](../Source/BrokenEdge/Extraction/ExtractionWeaponVisuals.cpp) 按配置、父组件和模型哈希重建两套附件；第一人称枪组件由角色复用。检查切枪时的实际父组件、可见性、机械瞄具材质隐藏及装配完成顺序。
+3. [ExtractionWeaponVisuals.cpp](../Source/BrokenEdge/Extraction/Combat/ExtractionWeaponVisuals.cpp) 按配置、父组件和模型哈希重建两套附件；第一人称枪组件由角色复用。检查切枪时的实际父组件、可见性、机械瞄具材质隐藏及装配完成顺序。
 4. 瞄具外壳存在但瞄点不见时，检查镜片／瞄点材质、瞄准偏移和遮挡，不应误判为附件丢失。
 
 **验收。** 新枪、已有存档枪、切主副武器、背包交换、掉落捡回、装卸配件、死亡重生、重新进入战局；记录物品 ID 与装配版本，分别对比本地第一人称和另一客户端第三人称。至少捕获一次异常时的数据与画面后再选修复点。
@@ -143,7 +143,7 @@
 | F07 | `DefaultPlatformService=Null`，当前持久化为本地文件状态／日志系统 | 明确局域网与单服务器边界；公网匹配、多服务器账号共享是独立建设项 | 配置／架构边界，不直接判为 Bug／P2 |
 | F08 | 重生 `RequestRespawn` 直接对 PlayerStarts 随机并索引，未处理零出生点 | 缺失出生点时给出可诊断失败或安全回退 | 源码边界缺口／P2 |
 
-F01 对照 [LagCompensationComponent.cpp](../Source/BrokenEdge/Component/LagCompensationComponent.cpp)、[ExtractionCombatComponent.cpp](../Source/BrokenEdge/Extraction/ExtractionCombatComponent.cpp)；F02 同前；F03–F04 对照 [ExtractionInventoryComponent.cpp](../Source/BrokenEdge/Extraction/ExtractionInventoryComponent.cpp)；F05 对照 `RebuildEquipment` 与 `HeldSlot`；F06、F08 对照 [BrokenEdgeGameMode.cpp](../Source/BrokenEdge/GameMode/BrokenEdgeGameMode.cpp)。
+F01 对照 [LagCompensationComponent.cpp](../Source/BrokenEdge/Component/LagCompensationComponent.cpp)、[ExtractionCombatComponent.cpp](../Source/BrokenEdge/Extraction/Combat/ExtractionCombatComponent.cpp)；F02 同前；F03–F04 对照 [ExtractionInventoryComponent.cpp](../Source/BrokenEdge/Extraction/Inventory/ExtractionInventoryComponent.cpp)；F05 对照 `RebuildEquipment` 与 `HeldSlot`；F06、F08 对照 [BrokenEdgeGameMode.cpp](../Source/BrokenEdge/GameMode/BrokenEdgeGameMode.cpp)。
 
 ## 4. 代码与蓝图架构问题
 
@@ -151,7 +151,7 @@ F01 对照 [LagCompensationComponent.cpp](../Source/BrokenEdge/Component/LagComp
 
 库存以服务器物品实例为准、拥有者专属复制；物品变更有 Sequence／Revision 校验、快照与失败回滚；战利品完整 `Contents` 不广播给所有客户端，搜索视图由交互组件提供。这些设计应继续保留。不能为修 UI 而改成客户端直接移动权威物品，也不能让蓝图外观成为第二份库存。
 
-用户指定的 [ExtractionLootActor.h](../Source/BrokenEdge/Extraction/ExtractionLootActor.h) 已分离交互盒、阻挡盒、可见模型，完整库存留在服务器。其主要维护问题是下述内容耦合，而不是“Actor 不该持有容器”。
+用户指定的 [ExtractionLootActor.h](../Source/BrokenEdge/Extraction/Inventory/ExtractionLootActor.h) 已分离交互盒、阻挡盒、可见模型，完整库存留在服务器。其主要维护问题是下述内容耦合，而不是“Actor 不该持有容器”。
 
 ### 4.2 需要整改的结构
 
@@ -258,7 +258,7 @@ Content/
 
 ### 9.2 指定文件 `ExtractionLootActor.cpp` 的专项审查
 
-文件：[ExtractionLootActor.cpp](../Source/BrokenEdge/Extraction/ExtractionLootActor.cpp)。它负责世界中的战利品外观、打开状态和容器内容入口；背包图标比例、拖放事务、R 换弹及技能输入分别由 UI、库存和能力模块处理，不能把九项问题都修在这个 Actor 里。
+文件：[ExtractionLootActor.cpp](../Source/BrokenEdge/Extraction/Inventory/ExtractionLootActor.cpp)。它负责世界中的战利品外观、打开状态和容器内容入口；背包图标比例、拖放事务、R 换弹及技能输入分别由 UI、库存和能力模块处理，不能把九项问题都修在这个 Actor 里。
 
 | 编号 | 证据与结论 | 整改及验收 |
 | --- | --- | --- |

@@ -16,9 +16,9 @@ OUT = Path(os.environ['EXTRACTION_RUN_DIR'])
 
 
 def legacy_ids():
-    source = (ROOT / 'Source/BrokenEdge/Extraction/ExtractionItems.cpp').read_text(encoding='utf-8-sig')
+    source = (ROOT / 'Source/BrokenEdge/Extraction/Inventory/ExtractionItems.cpp').read_text(encoding='utf-8-sig')
     source = source.replace('#include "ExtractionCollectibles.inl"',
-                            (ROOT / 'Source/BrokenEdge/Extraction/ExtractionCollectibles.inl').read_text(encoding='utf-8-sig'))
+                            (ROOT / 'Source/BrokenEdge/Extraction/Inventory/ExtractionCollectibles.inl').read_text(encoding='utf-8-sig'))
     match = re.search(r'LegacyItemIds\(\).*?Names\s*=\s*\{(.*?)\};', source, re.S)
     assert match, 'Legacy migration source changed'
     ids = re.findall(r'TEXT\("([A-Za-z0-9_]+)"\)', match[1])

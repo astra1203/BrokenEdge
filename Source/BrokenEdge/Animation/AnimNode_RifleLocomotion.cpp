@@ -4,7 +4,7 @@
 #include "BrokenEdge/Character/BrokenEdgeAnimInstance.h"
 #include "Animation/BlendSpace.h"
 #include "Animation/AnimSequence.h"
-#include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionMeleeComponent.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "BrokenEdge/Weapon/WeaponPresentation.h"
 #include "GameFramework/CharacterMovementComponent.h"

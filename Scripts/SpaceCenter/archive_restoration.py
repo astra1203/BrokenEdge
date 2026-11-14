@@ -61,8 +61,8 @@ def main():
         overrides[name]=tag
     regression_runs={}
     shared_inputs=['Scripts/Extraction/run_network.py','Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
-                   'Source/BrokenEdge/Extraction/ExtractionPlayerController.h',
-                   'Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp',
+                   'Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.h',
+                   'Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.cpp',
                    'BrokenEdge.uproject','Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap',
                    'Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap']
     spectator_run=None
@@ -129,8 +129,8 @@ def main():
         # These are the inputs executed by the streaming scenario. Unrelated
         # equipment fixtures are recorded by run_network but are not used here.
         relevant=['Scripts/Extraction/run_network.py','Source/BrokenEdge/Tests/ExtractionDriverTests.cpp',
-                   'Source/BrokenEdge/Extraction/ExtractionPlayerController.h',
-                   'Source/BrokenEdge/Extraction/ExtractionPlayerController.cpp',
+                   'Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.h',
+                   'Source/BrokenEdge/Extraction/Core/ExtractionPlayerController.cpp',
                   'Scripts/Extraction/streaming_scenarios.py','Scripts/Extraction/north_combat_scenarios.py',
                   'Scripts/SpaceCenter/north_route.json','BrokenEdge.uproject',
                   'Content/Maps/SpaceCenter/L_SpaceCenterExtraction.umap','Content/Maps/SpaceCenter/L_SpaceCenterNorth.umap']

@@ -1,8 +1,8 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
-#include "BrokenEdge/Extraction/ExtractionItems.h"
-#include "BrokenEdge/Extraction/ExtractionHealth.h"
-#include "BrokenEdge/Extraction/ExtractionPersistence.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionItems.h"
+#include "BrokenEdge/Extraction/Health/ExtractionHealth.h"
+#include "BrokenEdge/Extraction/Persistence/ExtractionPersistence.h"
 #include "Engine/GameInstance.h"
 #include "JsonObjectConverter.h"
 #include "HAL/PlatformFileManager.h"

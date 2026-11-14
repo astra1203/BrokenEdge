@@ -4,7 +4,7 @@
 #include "LagCompensationComponent.h"
 
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
-#include "BrokenEdge/Extraction/ExtractionState.h"
+#include "BrokenEdge/Extraction/Core/ExtractionState.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "DrawDebugHelpers.h"

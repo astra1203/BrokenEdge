@@ -6,7 +6,7 @@
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Bool.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Vector.h"
 #include "BrokenEdgeCharacter.h"
-#include "BrokenEdge/Extraction/ExtractionGuard.h"
+#include "BrokenEdge/Extraction/AI/ExtractionGuard.h"
 
 UBTTask_CompletePatrolArrival::UBTTask_CompletePatrolArrival()
 {

@@ -1,0 +1,134 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "8AB3F45D4D900FC5518F5BBC8195E165",
+			"instanceName": "OREKI-LEGION-18852",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.14-00.40.45",
+	"succeeded": 7,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.59000247716903687,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Atomicity",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Atomicity",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"8AB3F45D4D900FC5518F5BBC8195E165"
+			],
+			"duration": 0.23049139976501465,
+			"dateTime": "2026.11.14-00.40.44",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Economy",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Economy",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"8AB3F45D4D900FC5518F5BBC8195E165"
+			],
+			"duration": 0.028802700340747833,
+			"dateTime": "2026.11.14-00.40.45",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "KeyCardShop",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.KeyCardShop",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"8AB3F45D4D900FC5518F5BBC8195E165"
+			],
+			"duration": 0.020725201815366745,
+			"dateTime": "2026.11.14-00.40.45",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Migration",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Migration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"8AB3F45D4D900FC5518F5BBC8195E165"
+			],
+			"duration": 0.095862105488777161,
+			"dateTime": "2026.11.14-00.40.45",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "QuestIdMigration",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.QuestIdMigration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"8AB3F45D4D900FC5518F5BBC8195E165"
+			],
+			"duration": 0.034786000847816467,
+			"dateTime": "2026.11.14-00.40.45",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Quests",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.Quests",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"8AB3F45D4D900FC5518F5BBC8195E165"
+			],
+			"duration": 0.13253700733184814,
+			"dateTime": "2026.11.14-00.40.45",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "StableQuestIds",
+			"fullTestPath": "BrokenEdge.Extraction.Progression.StableQuestIds",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"8AB3F45D4D900FC5518F5BBC8195E165"
+			],
+			"duration": 0.046798098832368851,
+			"dateTime": "2026.11.14-00.40.45",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

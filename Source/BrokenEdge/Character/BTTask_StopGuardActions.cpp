@@ -2,7 +2,7 @@
 
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BrokenEdgeCharacter.h"
-#include "BrokenEdge/Extraction/ExtractionGuard.h"
+#include "BrokenEdge/Extraction/AI/ExtractionGuard.h"
 
 UBTTask_StopGuardActions::UBTTask_StopGuardActions()
 {

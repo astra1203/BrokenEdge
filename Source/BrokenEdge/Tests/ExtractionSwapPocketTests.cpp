@@ -1,6 +1,6 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
-#include "BrokenEdge/Extraction/ExtractionItems.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionItems.h"
 #include "JsonObjectConverter.h"
 
 namespace

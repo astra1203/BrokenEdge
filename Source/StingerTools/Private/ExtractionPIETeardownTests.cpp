@@ -5,8 +5,8 @@
 #include "PlayInEditorDataTypes.h"
 #include "Settings/LevelEditorPlaySettings.h"
 #include "GameFramework/PlayerController.h"
-#include "BrokenEdge/Extraction/ExtractionGameMode.h"
-#include "BrokenEdge/Extraction/ExtractionState.h"
+#include "BrokenEdge/Extraction/Core/ExtractionGameMode.h"
+#include "BrokenEdge/Extraction/Core/ExtractionState.h"
 
 namespace
 {

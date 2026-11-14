@@ -1,6 +1,6 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
-#include "BrokenEdge/Extraction/ExtractionItems.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionItems.h"
 #include "BrokenEdge/Weapon/Weapon.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionScarDefinitionTest,

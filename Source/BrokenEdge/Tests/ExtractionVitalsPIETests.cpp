@@ -6,12 +6,12 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
 #include "BrokenEdge/Component/BuffComponent.h"
-#include "BrokenEdge/Extraction/ExtractionAbilities.h"
-#include "BrokenEdge/Extraction/ExtractionHealth.h"
-#include "BrokenEdge/Extraction/ExtractionInteractionComponent.h"
-#include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
-#include "BrokenEdge/Extraction/ExtractionPlayerController.h"
-#include "BrokenEdge/Extraction/ExtractionState.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionAbilities.h"
+#include "BrokenEdge/Extraction/Health/ExtractionHealth.h"
+#include "BrokenEdge/Extraction/Core/ExtractionInteractionComponent.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionInventoryComponent.h"
+#include "BrokenEdge/Extraction/Core/ExtractionPlayerController.h"
+#include "BrokenEdge/Extraction/Core/ExtractionState.h"
 
 class FExtractionVitalsPIESequence : public IAutomationLatentCommand
 {

@@ -5,7 +5,7 @@
 #include "BrokenEdge/Animation/RifleLocomotionSet.h"
 #include "Animation/AnimSequence.h"
 #include "Animation/Skeleton.h"
-#include "BrokenEdge/Extraction/ExtractionMeleeComponent.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionMeleeComponent.h"
 #include "Animation/AnimInstanceProxy.h"
 #include "Animation/AnimNode_SequencePlayer.h"
 #include "AnimNodes/AnimNode_Slot.h"

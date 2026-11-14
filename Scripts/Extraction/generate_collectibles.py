@@ -10,7 +10,7 @@ Every row whose `SourceMapId` contains 3902 (航天基地) and whose id starts w
 1520 rows (task/event items such as 商业机密) are left out.
 
 Writes:
-    Source/BrokenEdge/Extraction/ExtractionCollectibles.inl  (whitelist entries)
+    Source/BrokenEdge/Extraction/Inventory/ExtractionCollectibles.inl  (whitelist entries)
     Scripts/Extraction/data/spacecenter_collectibles.json    (read by configure_collectibles.py)
 """
 import argparse
@@ -65,7 +65,7 @@ def main():
                    ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
     lines = ['// 由 Scripts/Extraction/generate_collectibles.py 生成，勿手改。航天基地官方收集品白名单。']
     lines += ['TEXT("%s"),' % item['id'] for item in items]
-    (ROOT / 'Source/BrokenEdge/Extraction/ExtractionCollectibles.inl').write_text(
+    (ROOT / 'Source/BrokenEdge/Extraction/Inventory/ExtractionCollectibles.inl').write_text(
         '\n'.join(lines) + '\n', encoding='utf-8')
     print('COLLECTIBLES_GENERATED', len(items))
 

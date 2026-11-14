@@ -1,0 +1,44 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "01CDC76848EB123838D59298F5AC4D19",
+			"instanceName": "OREKI-LEGION-20668",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.14-00.41.06",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.0017694979906082153,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "IdentityAndLoading",
+			"fullTestPath": "BrokenEdge.Extraction.ItemRegistry.IdentityAndLoading",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"01CDC76848EB123838D59298F5AC4D19"
+			],
+			"duration": 0.0017694979906082153,
+			"dateTime": "2026.11.14-00.41.06",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

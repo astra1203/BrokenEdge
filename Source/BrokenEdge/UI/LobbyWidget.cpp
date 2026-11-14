@@ -1,5 +1,5 @@
 #include "LobbyWidget.h"
-#include "BrokenEdge/Extraction/ExtractionMapRegistry.h"
+#include "BrokenEdge/Extraction/Map/ExtractionMapRegistry.h"
 #include "Engine/GameInstance.h"
 #include "LobbyShowcase.h"
 #include "Components/Image.h"
@@ -15,9 +15,9 @@
 #include "Components/HorizontalBox.h"
 #include "Components/HorizontalBoxSlot.h"
 #include "SessionWidgetStyle.h"
-#include "BrokenEdge/Extraction/ExtractionAccountComponent.h"
-#include "BrokenEdge/Extraction/ExtractionStashWidget.h"
-#include "BrokenEdge/Extraction/ExtractionProgressionWidget.h"
+#include "BrokenEdge/Extraction/Core/ExtractionAccountComponent.h"
+#include "BrokenEdge/Extraction/UI/ExtractionStashWidget.h"
+#include "BrokenEdge/Extraction/UI/ExtractionProgressionWidget.h"
 
 bool ULobbyWidget::Initialize()
 {

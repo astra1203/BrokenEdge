@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "BrokenEdge/BrokenEdgeTypes/WeaponType.h"
 #include "GameFramework/Actor.h"
-#include "BrokenEdge/Extraction/ExtractionItems.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionItems.h"
 #include "Weapon.generated.h"
 
 enum class EFirstPersonPrimitiveType : uint8;

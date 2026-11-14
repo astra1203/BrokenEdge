@@ -1,6 +1,6 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
-#include "BrokenEdge/Extraction/ExtractionLootLayout.h"
+#include "BrokenEdge/Extraction/World/ExtractionLootLayout.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionLootLayoutTest, "BrokenEdge.Extraction.LootLayout.Selection",
                                  EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)

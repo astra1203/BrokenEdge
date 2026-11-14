@@ -1,6 +1,6 @@
 #pragma once
 #if WITH_DEV_AUTOMATION_TESTS
-#include "BrokenEdge/Extraction/ExtractionInventoryComponent.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionInventoryComponent.h"
 
 // Test fixtures can construct states without exposing a mutable production accessor.
 struct FExtractionInventoryTestAccess

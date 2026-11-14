@@ -2,7 +2,7 @@
 #include "Misc/AutomationTest.h"
 #include "Engine/World.h"
 #include "BrokenEdge/Character/BrokenEdgeCharacter.h"
-#include "BrokenEdge/Extraction/ExtractionState.h"
+#include "BrokenEdge/Extraction/Core/ExtractionState.h"
 #include <limits>
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionVitalsTest, "BrokenEdge.Extraction.Vitals.AuthoritativeChanges",

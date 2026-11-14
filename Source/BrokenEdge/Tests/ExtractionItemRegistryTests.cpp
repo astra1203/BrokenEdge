@@ -1,7 +1,7 @@
 #if WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
-#include "BrokenEdge/Extraction/ExtractionItemRegistry.h"
-#include "BrokenEdge/Extraction/ExtractionItems.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionItemRegistry.h"
+#include "BrokenEdge/Extraction/Inventory/ExtractionItems.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionItemRegistryTest, "BrokenEdge.Extraction.ItemRegistry.IdentityAndLoading",
     EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)

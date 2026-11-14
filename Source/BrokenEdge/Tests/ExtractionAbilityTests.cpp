@@ -1,7 +1,7 @@
 // 技能施放规则的非 PIE 测试：治疗允许移动施放并降速，救援与烟雾仍需站定。
 #if WITH_EDITOR && WITH_DEV_AUTOMATION_TESTS
 #include "Misc/AutomationTest.h"
-#include "BrokenEdge/Extraction/ExtractionAbilities.h"
+#include "BrokenEdge/Extraction/Combat/ExtractionAbilities.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExtractionAbilityMovementTest, "BrokenEdge.Extraction.Abilities.MovementRules",
                                  EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
