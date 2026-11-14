@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 sys.path.insert(0, str(ROOT / 'Scripts'))
-from Common.ue_env import engine_root, run_record
+from Common.ue_env import engine_root, run_record, automation_succeeded
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--tag', required=True)
@@ -32,6 +32,7 @@ parser.add_argument('--starting-kit-validation', action='store_true', help='Vali
 parser.add_argument('--soviet-route', action='store_true', help='Walk from real spawns through authored loot to an exit; no position fixtures')
 parser.add_argument('--soviet-lifecycle', action='store_true', help='Three-player death, abrupt disconnect and real round timeout on the military map')
 parser.add_argument('--packaged', action='store_true')
+parser.add_argument('--editor-server', action='store_true', help='Use a dedicated editor authority with packaged clients; this is not a packaged Server-target acceptance')
 parser.add_argument('--package-root', default='Packaged', help='Archive root containing the Client/Server packages')
 parser.add_argument('--port', type=int, default=27777, help='Isolated test server port')
 parser.add_argument('--isolated-room', action='store_true', help='Only join the room advertised with this run tag; requires the current driver')
@@ -82,6 +83,8 @@ if args.traversal_source_only and (args.scenario!='traversal' or args.traversal_
     parser.error('--traversal-source-only requires a separate traversal round')
 if not args.packaged and args.package_root != 'Packaged':
     parser.error('--package-root requires --packaged')
+if args.editor_server and not args.packaged:
+    parser.error('--editor-server requires --packaged')
 package_root = (ROOT / args.package_root).resolve()
 if args.optic_validation and args.scenario != 'equipment':
     parser.error('--optic-validation requires --scenario equipment')
@@ -114,6 +117,8 @@ last_states = {}
 finishing = set()
 report = {'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
           'options': {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()}, 'roles': ROLES, 'checks': checks, 'processes': {}, 'result': 'running'}
+report['execution_scope'] = ('packaged clients with dedicated editor authority; no packaged Server target'
+                             if args.editor_server else 'packaged server and clients' if args.packaged else 'editor server and clients')
 report.update(run_record([sys.executable, __file__, *sys.argv[1:]], OUT / 'Report.json', engine=ENGINE, script=__file__))
 report['base_commit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
 report['input_sha256'] = {str(p.relative_to(ROOT)).replace('\\', '/'): hashlib.sha256(p.read_bytes()).hexdigest()
@@ -261,7 +266,7 @@ def send(role, op, **fields):
 
 
 def launch(role):
-    if args.packaged:
+    if args.packaged and not (role == 'Server' and args.editor_server):
         executable = package_root / ('Server/WindowsServer/BrokenEdge/Binaries/Win64/BrokenEdgeServer.exe'
                                      if role == 'Server' else 'Client/Windows/BrokenEdge/Binaries/Win64/BrokenEdge.exe')
         command = [str(executable)]
@@ -782,7 +787,8 @@ try:
         # as UE's completed-test result and the process exit code.
         record = report['processes'][role]
         record['finish_info_logged'] = 'EXTRACTION_DRIVER_OK' in text
-        record['automation_success'] = bool(re.search(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', text))
+        record['automation_success'] = (automation_succeeded(text)
+                                        and 'Path={BrokenEdge.Extraction.ProcessDriver}' in text)
         if code != 0 or not record.get('finish_ack') or 'Fatal error:' in text or not record['automation_success']:
             raise RuntimeError(f'{role} driver did not finish normally ({code})')
     report['result'] = 'passed'
@@ -795,11 +801,14 @@ except Exception as error:
 finally:
     for role, proc in processes.items():
         if proc.poll() is None:
+            report['processes'][role]['intentional_stop'] = True
             subprocess.run(['taskkill', '/PID', str(proc.pid), '/T', '/F'], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             try:
                 proc.wait(timeout=15)
             except subprocess.TimeoutExpired:
                 proc.kill()
+                proc.wait(timeout=15)
+        report['processes'][role]['exit_code'] = proc.poll()
     report['exit_code'] = 0 if report['result'] == 'passed' else 1
     report['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     save()

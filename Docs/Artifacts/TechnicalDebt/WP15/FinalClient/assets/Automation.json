@@ -1,0 +1,69 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "0C7E21584FFD48A21DBEA6805630CCDF",
+			"instanceName": "OREKI-LEGION-4324",
+			"platform": "Windows",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "D3D12_SM6",
+			"rHI": "D3D12 (SM6)",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.14-02.34.25",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 3.0201408863067627,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "TrainingInventory",
+			"fullTestPath": "BrokenEdge.Extraction.RuntimeAssets.TrainingInventory",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"0C7E21584FFD48A21DBEA6805630CCDF"
+			],
+			"duration": 3.0201408863067627,
+			"dateTime": "2026.11.14-02.34.22",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Runtime assets: registry=367 carried=7 map=L_WeaponRange netmode=0",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-02.34.22"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "RUNTIME_ASSETS_COMPLETE: definitions, presentation, input, icons, HUD and inventory open/close",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.14-02.34.25"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

@@ -6,10 +6,25 @@ import subprocess
 import sys
 import uuid
 
-from ue_env import engine_root
+from ue_env import engine_root, automation_succeeded
 
 
 class EngineSelectionTests(unittest.TestCase):
+    def test_automation_completion_rejects_mixed_or_incomplete_results(self):
+        good = 'Test Completed. Result={Success}'
+        self.assertTrue(automation_succeeded(good))
+        self.assertTrue(automation_succeeded('Test Completed. Result={\u6210\u529f}'))
+        self.assertTrue(automation_succeeded(good + '\n' + good, expected=2))
+        for log in ['', good + '\n' + good, 'Test Started. Name={ProcessDriver}',
+                    good + '\nFatal error: crash after completion',
+                    good + '\nTraceback (most recent call last):',
+                    *[good + '\nTest Completed. Result={' + failure + '}'
+                      for failure in ('Fail', 'Failed', 'Failure', '\u5931\u8d25')]]:
+            with self.subTest(log=log):
+                self.assertFalse(automation_succeeded(log))
+        with self.assertRaises(ValueError):
+            automation_succeeded(good, expected=0)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

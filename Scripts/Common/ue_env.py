@@ -9,6 +9,14 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def automation_succeeded(log, expected=1):
+    """Require the exact success count and reject mixed failures/crashes."""
+    if expected < 1:
+        raise ValueError('Expected automation count must be positive')
+    return (len(re.findall(r'Test Completed\. Result=\{(?:Success|\u6210\u529f)\}', log)) == expected
+            and not re.search(r'Test Completed\. Result=\{(?:Fail(?:ed|ure)?|\u5931\u8d25)\}|Fatal error:|Traceback \(most recent call last\)', log))
+
+
 def engine_root(engine=None, *, project_root=ROOT, environ=None):
     project_root = Path(project_root)
     environ = os.environ if environ is None else environ

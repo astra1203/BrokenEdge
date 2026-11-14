@@ -14,12 +14,15 @@ sys.path.insert(0, str(ROOT / 'Scripts'))
 from Common.ue_env import run_record
 
 TEST = 'BrokenEdge.Extraction.RuntimeAssets.TrainingInventory'
+COMBAT_TESTS = {'BrokenEdge.Extraction.CombatMode.' + name for name in (
+    'DispatchAndOwnership', 'LegacyLifecycle', 'LegacyRequestValidation', 'PredictionAndCadenceIsolation')}
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build-report', type=Path, required=True, help='Successful run_build.py Client package Run.json')
     parser.add_argument('--tag', required=True)
+    parser.add_argument('--suite', choices=['assets', 'combat'], default='assets')
     args = parser.parse_args()
     if not args.tag or not all(c.isascii() and (c.isalnum() or c in '-_') for c in args.tag):
         parser.error('Use a new ASCII alphanumeric, hyphen or underscore tag')
@@ -40,17 +43,20 @@ def main():
         parser.error(str(error))
     out = ROOT / 'Saved/Extraction' / args.tag
     out.mkdir(parents=True, exist_ok=False)
+    expected = {TEST} if args.suite == 'assets' else COMBAT_TESTS
+    test_filter = TEST if args.suite == 'assets' else 'BrokenEdge.Extraction.CombatMode.'
     command = [str(executable), '/Game/Extraction/Training/L_WeaponRange',
                '-unattended', '-nosplash', '-nosound', '-NoLoadingScreen',
                '-RenderOffscreen', '-ResX=1280', '-ResY=720',
                '-RuntimeAssetsScreenshot=' + str(out / 'Inventory.png'),
-               '-ExecCmds=Automation RunTests ' + TEST,
+               '-ExecCmds=Automation RunTests ' + test_filter,
                '-TestExit=Automation Test Queue Empty',
                '-ReportExportPath=' + str(out / 'Automation'), '-abslog=' + str(out / 'Game.log')]
     metadata = run_record(command, out / 'Run.json', engine=build['engine_root'], script=__file__)
     metadata.update(started_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
                     build_report=str(build_path), build_report_sha256=hashlib.sha256(build_path.read_bytes()).hexdigest(),
-                    build_head=build['git_head'], build_engine_version=build['engine_version'], executable=binary)
+                    build_head=build['git_head'], build_engine_version=build['engine_version'], executable=binary,
+                    suite=args.suite, expected_tests=sorted(expected))
     with (out / 'Process.log').open('wb') as log:
         process = subprocess.Popen(command, cwd=executable.parent, stdout=log, stderr=subprocess.STDOUT,
                                    creationflags=subprocess.CREATE_NO_WINDOW)
@@ -69,11 +75,11 @@ def main():
         tests = automation.get('tests', [])
         metadata['successful_tests'] = sum(test.get('state') == 'Success' for test in tests)
         passed = (metadata['exit_code'] == 0 and 'error' not in metadata
-                  and len(tests) == 1 and tests[0].get('fullTestPath') == TEST
-                  and metadata['successful_tests'] == 1 and automation.get('failed') == 0
-                  and 'RUNTIME_ASSETS_COMPLETE' in text and 'Fatal error:' not in text
-                  and 'Traceback (most recent call last)' not in text
-                  and (out / 'Inventory.png').is_file())
+                  and len(tests) == len(expected) and {test.get('fullTestPath') for test in tests} == expected
+                  and metadata['successful_tests'] == len(expected) and automation.get('failed') == 0
+                  and 'Fatal error:' not in text and 'Traceback (most recent call last)' not in text)
+        if args.suite == 'assets':
+            passed = passed and 'RUNTIME_ASSETS_COMPLETE' in text and (out / 'Inventory.png').is_file()
     except (OSError, ValueError) as error:
         metadata['error'] = str(error)
         passed = False

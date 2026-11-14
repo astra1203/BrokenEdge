@@ -16,7 +16,7 @@ struct FExtractionCombatTestAccess
 };
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCombatModeAdapterTest, "BrokenEdge.Extraction.CombatMode.DispatchAndOwnership",
-    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ClientContext | EAutomationTestFlags::ProductFilter)
 bool FCombatModeAdapterTest::RunTest(const FString&)
 {
     const auto Init = UWorld::InitializationValues().AllowAudioPlayback(false).CreatePhysicsScene(true)
@@ -80,7 +80,7 @@ bool FCombatModeAdapterTest::RunTest(const FString&)
     return true;
 }
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCombatModeCadenceTest, "BrokenEdge.Extraction.CombatMode.PredictionAndCadenceIsolation",
-    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ClientContext | EAutomationTestFlags::ProductFilter)
 bool FCombatModeCadenceTest::RunTest(const FString&)
 {
     const auto Init = UWorld::InitializationValues().AllowAudioPlayback(false).CreatePhysicsScene(true)
@@ -152,7 +152,7 @@ bool FCombatModeCadenceTest::RunTest(const FString&)
     return true;
 }
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FLegacyCombatRequestTest, "BrokenEdge.Extraction.CombatMode.LegacyRequestValidation",
-    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ClientContext | EAutomationTestFlags::ProductFilter)
 bool FLegacyCombatRequestTest::RunTest(const FString&)
 {
     const auto Init = UWorld::InitializationValues().AllowAudioPlayback(false).CreatePhysicsScene(true)

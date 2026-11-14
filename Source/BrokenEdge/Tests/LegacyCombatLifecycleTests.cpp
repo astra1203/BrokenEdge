@@ -7,7 +7,7 @@
 #include "UObject/UnrealType.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FLegacyCombatLifecycleTest, "BrokenEdge.Extraction.CombatMode.LegacyLifecycle",
-    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::ClientContext | EAutomationTestFlags::ProductFilter)
 bool FLegacyCombatLifecycleTest::RunTest(const FString&)
 {
     const auto Init = UWorld::InitializationValues().AllowAudioPlayback(false).CreatePhysicsScene(true)

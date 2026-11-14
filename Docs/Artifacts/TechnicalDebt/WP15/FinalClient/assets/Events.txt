@@ -1,0 +1,23 @@
+[2026.11.14-02.34.22:460][486]LogAutomationController: Received FindWorkersResponseMessage from 42FD7AAE41166580D841D0AF5A8999B3
+[2026.11.14-02.34.22:460][486]LogAutomationController: Requesting test list from 42FD7AAE41166580D841D0AF5A8999B3
+[2026.11.14-02.34.22:488][487]LogAutomationController: Received RequestTestsReplyCompleteMessage from 42FD7AAE41166580D841D0AF5A8999B3
+[2026.11.14-02.34.22:490][487]LogAutomationController: 1929 tests available on 42FD7AAE41166580D841D0AF5A8999B3
+[2026.11.14-02.34.22:503][487]LogAutomationController: Sending StopTests to 42FD7AAE41166580D841D0AF5A8999B3
+[2026.11.14-02.34.22:503][487]LogAutomationController: Display: Loading results html template...
+[2026.11.14-02.34.22:504][487]LogAutomationController: Error: Failed to load test report html template - No report will be generated.
+[2026.11.14-02.34.22:504][487]LogAutomationController: Sending StartTestSession to 42FD7AAE41166580D841D0AF5A8999B3
+[2026.11.14-02.34.22:504][487]LogAutomationController: Display: Clearing ../../../BrokenEdge/Saved/Automation/Logs/ and ../../../BrokenEdge/Saved/Automation/Tmp/
+[2026.11.14-02.34.22:506][487]LogAutomationController: Sending RunTest TrainingInventory to 42FD7AAE41166580D841D0AF5A8999B3
+[2026.11.14-02.34.22:506][488]LogAutomationController: Display: Test Started. Name={TrainingInventory} Path={BrokenEdge.Extraction.RuntimeAssets.TrainingInventory}
+[2026.11.14-02.34.25:531][836]LogAutomationController: Display: Test Completed. Result={Success} Name={TrainingInventory} Path={BrokenEdge.Extraction.RuntimeAssets.TrainingInventory}
+[2026.11.14-02.34.25:531][836]LogAutomationController: BeginEvents: BrokenEdge.Extraction.RuntimeAssets.TrainingInventory
+[2026.11.14-02.34.25:531][836]LogAutomationController: Runtime assets: registry=367 carried=7 map=L_WeaponRange netmode=0
+[2026.11.14-02.34.25:531][836]LogAutomationController: RUNTIME_ASSETS_COMPLETE: definitions, presentation, input, icons, HUD and inventory open/close
+[2026.11.14-02.34.25:531][836]LogAutomationController: EndEvents: BrokenEdge.Extraction.RuntimeAssets.TrainingInventory
+[2026.11.14-02.34.25:536][836]LogAutomationController: Display: Exporting Automation Report.
+[2026.11.14-02.34.25:536][836]LogAutomationController: Display: Converting results to json object...
+[2026.11.14-02.34.25:537][836]LogAutomationController: Writing reports to D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_final_packaged_assets_20261114_01\Automation...
+[2026.11.14-02.34.25:539][836]LogAutomationController: Display: Successfully wrote json results file!
+[2026.11.14-02.34.25:539][836]LogAutomationController: Exported report to 'D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_final_packaged_assets_20261114_01\Automation' in 0.00 Seconds
+[2026.11.14-02.34.25:539][836]LogAutomationController: Display: Report can be opened in the editor at 'D:\SourceFiles\UnrealProjects\BrokenEdge\Saved\Extraction\td_final_packaged_assets_20261114_01\Automation'
+[2026.11.14-02.34.25:539][836]LogAutomationController: Sending StopTestSession to 42FD7AAE41166580D841D0AF5A8999B3

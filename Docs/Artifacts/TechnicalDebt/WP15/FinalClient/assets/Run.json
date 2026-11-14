@@ -1,0 +1,70 @@
+{
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "93d8becc334dd67f5e7d32038cfa69524f9c4e9c",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Common/test_ue_env.py\n M Scripts/Common/ue_env.py\n M Scripts/Extraction/run_network.py\n M Scripts/Extraction/run_packaged_assets.py\n M Source/BrokenEdge/Tests/CombatModeAdapterTests.cpp\n M Source/BrokenEdge/Tests/LegacyCombatLifecycleTests.cpp",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_packaged_assets.py",
+  "script_sha256": "c6d9dc0519e24198cf7a613b34cba8fac930d695a0f17bdb115c0f4477433a38",
+  "ue_env_sha256": "9385ff9654db99e2165f2087ad62391573272c10a3cbc9cae4799ed702213826",
+  "inherited_cache_environment": {
+    "UE-LocalDataCachePath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Files",
+    "UE-ZenDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen",
+    "UE-ZenSubprocessDataPath": "D:/SourceFiles/UnrealProjects/BrokenEdge/Saved/TechnicalDebtCache/Zen"
+  },
+  "command": [
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\TechnicalDebt-20261114-Final\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+    "/Game/Extraction/Training/L_WeaponRange",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-RenderOffscreen",
+    "-ResX=1280",
+    "-ResY=720",
+    "-RuntimeAssetsScreenshot=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_assets_20261114_01\\Inventory.png",
+    "-ExecCmds=Automation RunTests BrokenEdge.Extraction.RuntimeAssets.TrainingInventory",
+    "-TestExit=Automation Test Queue Empty",
+    "-ReportExportPath=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_assets_20261114_01\\Automation",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_assets_20261114_01\\Game.log"
+  ],
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_packaged_assets_20261114_01\\Run.json",
+  "exit_code": 0,
+  "started_utc": "2026-11-14T02:34:08.762205+00:00",
+  "build_report": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_final_client_package_20261114_01\\Run.json",
+  "build_report_sha256": "69858b7fe33c91bb3764130ff0e34b93850c1eb139baa7c443838c1fd3ff8ae4",
+  "build_head": "bd75ea4e00b4ac0e869662a43cd038c5ed0ae9dc",
+  "build_engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "executable": {
+    "path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Packaged\\TechnicalDebt-20261114-Final\\Client\\Windows\\BrokenEdge\\Binaries\\Win64\\BrokenEdge.exe",
+    "bytes": 340282880,
+    "sha256": "e37db5aeadc52d0b6bf8a0a88148e04bb9c5dc984b6f21eccddf6d8685472e0b",
+    "machine": "AMD64",
+    "sections": 13
+  },
+  "suite": "assets",
+  "expected_tests": [
+    "BrokenEdge.Extraction.RuntimeAssets.TrainingInventory"
+  ],
+  "pid": 4324,
+  "successful_tests": 1,
+  "result": "passed",
+  "finished_utc": "2026-11-14T02:34:25.813750+00:00"
+}

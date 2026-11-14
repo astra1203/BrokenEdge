@@ -1,0 +1,22 @@
+[2026.11.14-02.35.18:213][154]LogAutomationController: Received FindWorkersResponseMessage from 03E25F594381274FD82E1B947F1E9B27
+[2026.11.14-02.35.18:213][154]LogAutomationController: Requesting test list from 03E25F594381274FD82E1B947F1E9B27
+[2026.11.14-02.35.18:246][155]LogAutomationController: Received RequestTestsReplyCompleteMessage from 03E25F594381274FD82E1B947F1E9B27
+[2026.11.14-02.35.18:248][155]LogAutomationController: 1925 tests available on 03E25F594381274FD82E1B947F1E9B27
+[2026.11.14-02.35.18:258][155]LogAutomationController: Sending StopTests to 03E25F594381274FD82E1B947F1E9B27
+[2026.11.14-02.35.18:258][155]LogAutomationController: Sending StartTestSession to 03E25F594381274FD82E1B947F1E9B27
+[2026.11.14-02.35.18:258][155]LogAutomationController: Display: Clearing ../../../BrokenEdge/Saved/Automation/Logs/ and ../../../BrokenEdge/Saved/Automation/Tmp/
+[2026.11.14-02.35.18:260][156]LogAutomationController: Sending RunTest ProcessDriver to 03E25F594381274FD82E1B947F1E9B27
+[2026.11.14-02.35.18:260][156]LogAutomationController: Display: Test Started. Name={ProcessDriver} Path={BrokenEdge.Extraction.ProcessDriver}
+[2026.11.14-02.36.44:935][614]LogAutomationController: Ignoring very large delta of 2.51 seconds in calls to FAutomationControllerManager::Tick() and not penalizing unresponsive tests
+[2026.11.14-02.36.52:637][846]LogAutomationController: Display: Test Completed. Result={Success} Name={ProcessDriver} Path={BrokenEdge.Extraction.ProcessDriver}
+[2026.11.14-02.36.52:638][846]LogAutomationController: BeginEvents: BrokenEdge.Extraction.ProcessDriver
+[2026.11.14-02.36.52:638][846]LogAutomationController: Warning: LogOnlineSession: OSS: Player Oreki-LEGION-007FB73E44B1645233314688F1338E21 is not part of session (GameSession) [log]
+[2026.11.14-02.36.52:638][846]LogAutomationController: Warning: LogOnlineSession: OSS: Player Oreki-LEGION-007FB73E44B1645233314688F1338E21 is not part of session (GameSession) [log]
+[2026.11.14-02.36.52:638][846]LogAutomationController: Warning: LogNet: UNetDriver::ProcessRemoteFunction: Remote function ServerSetFireInputHeld called from actor BP_StingerCharacter_C_2147481524 while actor is being destroyed. Function will not be processed. [log]
+[2026.11.14-02.36.52:638][846]LogAutomationController: Warning: LogNet: UNetDriver::ProcessRemoteFunction: Remote function ServerSetAiming called from actor BP_StingerCharacter_C_2147481524 while actor is being destroyed. Function will not be processed. [log]
+[2026.11.14-02.36.52:638][846]LogAutomationController: Warning: LogNet: UNetDriver::ProcessRemoteFunction: Remote function ServerHoldBreath called from actor BP_StingerCharacter_C_2147481524 while actor is being destroyed. Function will not be processed. [log]
+[2026.11.14-02.36.52:638][846]LogAutomationController: Warning: LogNet: UNetDriver::ProcessRemoteFunction: Remote function ServerSetSprintRequested called from actor BP_StingerCharacter_C_2147481524 while actor is being destroyed. Function will not be processed. [log]
+[2026.11.14-02.36.52:638][846]LogAutomationController: Warning: LogNet: UNetDriver::ProcessRemoteFunction: Remote function ServerCancel called from actor BP_StingerCharacter_C_2147481524 while actor is being destroyed. Function will not be processed. [log]
+[2026.11.14-02.36.52:638][846]LogAutomationController: EXTRACTION_DRIVER_OK B
+[2026.11.14-02.36.52:638][846]LogAutomationController: EndEvents: BrokenEdge.Extraction.ProcessDriver
+[2026.11.14-02.36.52:644][846]LogAutomationController: Sending StopTestSession to 03E25F594381274FD82E1B947F1E9B27
