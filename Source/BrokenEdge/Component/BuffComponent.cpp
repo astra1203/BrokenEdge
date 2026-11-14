@@ -32,8 +32,9 @@ void UBuffComponent::BeginPlay()
  */
 void UBuffComponent::HealRampUp(float DeltaTime)
 {
-	if (!bHealing || Character == nullptr || !Character->HasAuthority() || Character->IsDefeated()) return;
-	const float HealThisFrame = HealingRate * DeltaTime;
+	if (!bHealing || Character == nullptr || !Character->HasAuthority() || Character->IsDefeated()
+		|| !FMath::IsFinite(DeltaTime) || DeltaTime <= 0.f) return;
+	const float HealThisFrame = FMath::Min(HealingRate * DeltaTime, AmountToHeal);
 	Character->ApplyVitalsChange({HealThisFrame});
 	AmountToHeal -= HealThisFrame;
 
@@ -46,8 +47,9 @@ void UBuffComponent::HealRampUp(float DeltaTime)
 
 void UBuffComponent::ShieldRampUp(float DeltaTime)
 {
-	if (!bReplenishingShield || Character == nullptr || !Character->HasAuthority() || Character->IsDefeated()) return;
-	const float ReplenishThisFrame = ShieldReplenishRate * DeltaTime;
+	if (!bReplenishingShield || Character == nullptr || !Character->HasAuthority() || Character->IsDefeated()
+		|| !FMath::IsFinite(DeltaTime) || DeltaTime <= 0.f) return;
+	const float ReplenishThisFrame = FMath::Min(ShieldReplenishRate * DeltaTime, ShieldReplenishAmount);
 	Character->ApplyVitalsChange({0, ReplenishThisFrame});
 	ShieldReplenishAmount -= ReplenishThisFrame;
 	if (ShieldReplenishAmount <= 0.f || Character->GetShield() >= Character->GetMaxShield())
@@ -157,14 +159,24 @@ void UBuffComponent::MulticastSpeedBuff_Implementation(float BaseSpeed, float Cr
 
 void UBuffComponent::BuffHeal(float HealAmount, float HealingTime)
 {
+	if (!Character || !Character->HasAuthority() || Character->IsDefeated()
+		|| !FMath::IsFinite(HealAmount) || !FMath::IsFinite(HealingTime) || HealAmount <= 0.f || HealingTime <= 0.f) return;
+	const float Rate = HealAmount / HealingTime;
+	const float Pending = AmountToHeal + HealAmount;
+	if (!FMath::IsFinite(Rate) || Rate <= 0.f || !FMath::IsFinite(Pending)) return;
 	bHealing = true;
-	HealingRate = HealAmount / HealingTime;
-	AmountToHeal += HealAmount;
+	HealingRate = Rate;
+	AmountToHeal = Pending;
 }
 
 void UBuffComponent::ReplenishShield(float ShieldAmount, float ReplenishTime)
 {
+	if (!Character || !Character->HasAuthority() || Character->IsDefeated()
+		|| !FMath::IsFinite(ShieldAmount) || !FMath::IsFinite(ReplenishTime) || ShieldAmount <= 0.f || ReplenishTime <= 0.f) return;
+	const float Rate = ShieldAmount / ReplenishTime;
+	const float Pending = ShieldReplenishAmount + ShieldAmount;
+	if (!FMath::IsFinite(Rate) || Rate <= 0.f || !FMath::IsFinite(Pending)) return;
 	bReplenishingShield = true;
-	ShieldReplenishRate = ShieldAmount / ReplenishTime;
-	ShieldReplenishAmount += ShieldAmount;
+	ShieldReplenishRate = Rate;
+	ShieldReplenishAmount = Pending;
 }

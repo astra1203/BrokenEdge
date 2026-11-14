@@ -1,0 +1,297 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "OREKI-LEGION",
+			"instance": "A557FC5B4110687AE350B58E56DA7E41",
+			"instanceName": "OREKI-LEGION-21060",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Microsoft Remote Display Adapter",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i9-13900HX",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.14-01.25.08",
+	"succeeded": 0,
+	"succeededWithWarnings": 0,
+	"failed": 1,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.11716630309820175,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "AuthoritativeChanges",
+			"fullTestPath": "BrokenEdge.Extraction.Vitals.AuthoritativeChanges",
+			"tags": [],
+			"state": "Fail",
+			"deviceInstance": [
+				"A557FC5B4110687AE350B58E56DA7E41"
+			],
+			"duration": 0.11716630309820175,
+			"dateTime": "2026.11.14-01.25.08",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Last healing frame cannot exceed remaining budget' to be 40.000000, but it was 45.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 60,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Last shield frame cannot exceed remaining budget' to be 40.000000, but it was 50.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 61,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid healing request 0 preserves active budget' to be 40.000000, but it was 30.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 75,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid shield request 0 preserves active budget' to be 40.000000, but it was 20.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 76,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid healing request 1 preserves active budget' to be 40.000000, but it was 20.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 75,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid shield request 1 preserves active budget' to be 40.000000, but it was 10.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 76,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid healing request 2 preserves active budget' to be 40.000000, but it was 20.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 75,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid shield request 2 preserves active budget' to be 40.000000, but it was 10.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 76,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid healing request 3 preserves active budget' to be 40.000000, but it was 30.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 75,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid shield request 3 preserves active budget' to be 40.000000, but it was 20.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 76,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid healing request 4 preserves active budget' to be 40.000000, but it was 30.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 75,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid shield request 4 preserves active budget' to be 40.000000, but it was 20.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 76,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid healing request 5 preserves active budget' to be 40.000000, but it was 30.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 75,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid shield request 5 preserves active budget' to be 40.000000, but it was 20.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 76,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid healing request 6 preserves active budget' to be 40.000000, but it was 30.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 75,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid shield request 6 preserves active budget' to be 40.000000, but it was 20.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 76,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid healing request 7 preserves active budget' to be 40.000000, but it was 30.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 75,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid shield request 7 preserves active budget' to be 40.000000, but it was 20.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 76,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid frame intervals cannot change vitals' to be 0, but it was 2.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 83,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid frame interval preserves healing budget' to be 40.000000, but it was 30.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 85,
+					"timestamp": "2026.11.14-01.25.08"
+				},
+				{
+					"event":
+					{
+						"type": "Error",
+						"message": "Expected 'Invalid frame interval preserves shield budget' to be 40.000000, but it was 20.000000 and outside tolerance 0.000100.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Source\\BrokenEdge\\Tests\\ExtractionVitalsTests.cpp",
+					"lineNumber": 85,
+					"timestamp": "2026.11.14-01.25.08"
+				}
+			],
+			"warnings": 0,
+			"errors": 21,
+			"artifacts": []
+		}
+	]
+}

@@ -170,7 +170,13 @@ void UExtractionAbilities::Request(EExtractionAction Kind, ABrokenEdgeCharacter*
 }
 
 // 松开救援输入时发送带新序号的取消，避免旧开始请求覆盖较新的取消。
-void UExtractionAbilities::ReleaseRescue() { ServerCancel(++LocalSequence); }
+void UExtractionAbilities::ReleaseRescue()
+{
+	// Authority lifecycle cancellation must not consume the remote owner's request sequence.
+	// Possession can cancel before the client has sent its first input.
+	if (GetOwner()->HasAuthority()) Cancel();
+	else ServerCancel(++LocalSequence);
+}
 
 // 只接受更新序号，取消当前能力并释放对目标的救援占用。
 void UExtractionAbilities::ServerCancel_Implementation(uint32 Sequence)
