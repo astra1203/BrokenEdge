@@ -1,0 +1,38 @@
+{
+  "task": "automation-list",
+  "started_utc": "2026-11-14T00:31:20.733216+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp02_automation-list_baseline_20261114_01\\Editor.log",
+    "-ExecCmds=Automation SetFilter All;List",
+    "-TestExit=Automation Test Queue Empty"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "5acd54968979d19341858579aa4ec2a091a58e3a",
+  "git_status": "M BrokenEdge.uproject\n M Scripts/Common/audit_prototype_references.py\n M Scripts/Extraction/run_editor_task.py\n?? Scripts/Common/audit_native_blueprints.py\n?? Source/StingerTools/Private/NativeReferenceAudit.cpp\n?? Source/StingerTools/Public/NativeReferenceAudit.h",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "2146aca8b59523adfabd45192714a6d83ae0b391e367615107ba6d86a0f7c87f",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp02_automation-list_baseline_20261114_01\\Run.json",
+  "exit_code": 0,
+  "pid": 31368,
+  "discovered_tests": 85,
+  "result": "passed",
+  "finished_utc": "2026-11-14T00:31:42.234392+00:00"
+}

@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'Scripts'))
 from Common.ue_env import engine_root, run_record
 parser = argparse.ArgumentParser()
-parser.add_argument('task', choices=['combat-net-pie', 'hud-profile', 'generated-widgets', 'inventory-widgets', 'extraction-widgets', 'widgets-validate', 'item-registry', 'item-registry-create', 'item-registry-export', 'presentation', 'presentation-validate', 'presentation-migrate', 'presentation-audit', 'combat', 'combat-pie', 'sprint-pie', 'vitals-pie', 'vitals', 'input-pie', 'input-assets', 'input', 'input-audit', 'capacity', 'respawn', 'prototype-audit', 'spawn-lifecycle', 'exit-feedback', 'guard-bt', 'loot-layout', 'weapon-range-assets', 'weapon-pie', 'gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
+parser.add_argument('task', choices=['automation-list', 'native-blueprints', 'combat-net-pie', 'hud-profile', 'generated-widgets', 'inventory-widgets', 'extraction-widgets', 'widgets-validate', 'item-registry', 'item-registry-create', 'item-registry-export', 'presentation', 'presentation-validate', 'presentation-migrate', 'presentation-audit', 'combat', 'combat-pie', 'sprint-pie', 'vitals-pie', 'vitals', 'input-pie', 'input-assets', 'input', 'input-audit', 'capacity', 'respawn', 'prototype-audit', 'spawn-lifecycle', 'exit-feedback', 'guard-bt', 'loot-layout', 'weapon-range-assets', 'weapon-pie', 'gunsmith-assets', 'weapon-mechanics', 'weapon-names', 'assets', 'exit', 'inventory', 'persistence', 'recover-existing', 'phase5-assets', 'phase6a-assets', 'optic-assets', 'equipment', 'phase6b-assets', 'progression', 'north-import', 'phase7a-assets', 'phase7a-audit'])
 parser.add_argument('--tag', required=True)
 parser.add_argument('--engine', type=Path)
 parser.add_argument('--force', action='store_true', help='Explicitly overwrite changed/untracked generated widgets')
@@ -33,7 +33,11 @@ command = [str(ENGINE / 'Engine/Binaries/Win64/UnrealEditor-Cmd.exe'), str(ROOT 
            '-unattended', '-nosplash', '-nosound', '-NoLoadingScreen', '-NullRHI', '-abslog=' + str(out / 'Editor.log')]
 if args.force:
     command += ['-ForceGeneratedWidgets']
-if args.task == 'capacity':
+if args.task == 'automation-list':
+    command += ['-ExecCmds=Automation SetFilter All;List', '-TestExit=Automation Test Queue Empty']
+elif args.task == 'native-blueprints':
+    command += ['-run=pythonscript', '-script=' + str(ROOT / 'Scripts/Common/audit_native_blueprints.py')]
+elif args.task == 'capacity':
     command += ['-ExecCmds=Automation SetFilter Stress;RunTests BrokenEdge.Extraction.Persistence.Capacity',
                 '-TestExit=Automation Test Queue Empty', '-ReportExportPath=' + str(out / 'Automation')]
 elif args.task == 'respawn':
@@ -114,7 +118,14 @@ with (out / 'Process.log').open('wb') as log:
         metadata['error'] = 'Editor task timed out'
 text = (out / 'Editor.log').read_text(encoding='utf-8', errors='replace')
 passed = metadata['exit_code'] == 0 and 'Fatal error:' not in text and 'Traceback (most recent call last)' not in text
-if args.task in ['inventory-widgets', 'extraction-widgets', 'widgets-validate']:
+if args.task == 'automation-list':
+    names = sorted(set(re.findall(r"LogAutomationCommandLine: Display:\s*'(BrokenEdge\.[^']+)'", text)))
+    metadata['discovered_tests'] = len(names)
+    (out / 'AutomationList.json').write_text(json.dumps(names, indent=2) + '\n', encoding='utf-8')
+    passed = passed and bool(names) and 'Automation Test Queue Empty' in text
+elif args.task == 'native-blueprints':
+    passed = passed and 'NATIVE_BLUEPRINT_AUDIT_COMPLETE' in text
+elif args.task in ['inventory-widgets', 'extraction-widgets', 'widgets-validate']:
     marker = {'inventory-widgets': 'INVENTORY_WIDGETS PASSED', 'extraction-widgets': 'EXTRACTION_BLUEPRINTS_COMPLETE', 'widgets-validate': 'GENERATED_WIDGETS_VALIDATION_COMPLETE'}[args.task]
     passed = passed and marker in text
 elif args.task in ['item-registry-create', 'item-registry-export']:
