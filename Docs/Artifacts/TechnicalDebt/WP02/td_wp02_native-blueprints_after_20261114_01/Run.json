@@ -1,0 +1,37 @@
+{
+  "task": "native-blueprints",
+  "started_utc": "2026-11-14T00:34:26.662758+00:00",
+  "command": [
+    "D:\\OrekiFiles\\EpicGames\\UE_5.8\\Engine\\Binaries\\Win64\\UnrealEditor-Cmd.exe",
+    "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\BrokenEdge.uproject",
+    "-unattended",
+    "-nosplash",
+    "-nosound",
+    "-NoLoadingScreen",
+    "-NullRHI",
+    "-abslog=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp02_native-blueprints_after_20261114_01\\Editor.log",
+    "-run=pythonscript",
+    "-script=D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Common\\audit_native_blueprints.py"
+  ],
+  "engine_root": "D:\\OrekiFiles\\EpicGames\\UE_5.8",
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 4,
+    "Changelist": 58902052,
+    "CompatibleChangelist": 55116800,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 1,
+    "BranchName": "++UE5+Release-5.8"
+  },
+  "git_head": "c7b0cc6881e9dd18ccd6c645046ac3a524ecf010",
+  "git_status": "M BrokenEdge.uproject\n D Source/BrokenEdge/test/CombatObserver.cpp\n D Source/BrokenEdge/test/CombatObserver.h\n D Source/BrokenEdge/test/MyCharacter.cpp\n D Source/BrokenEdge/test/MyCharacter.h\n?? Source/BrokenEdge/Prototype/",
+  "script": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Scripts\\Extraction\\run_editor_task.py",
+  "script_sha256": "2146aca8b59523adfabd45192714a6d83ae0b391e367615107ba6d86a0f7c87f",
+  "ue_env_sha256": "30117014d38b1bf26746bec2dfb0a9793aeea73f33c60e1f1efb669d0c23e2e2",
+  "report_path": "D:\\SourceFiles\\UnrealProjects\\BrokenEdge\\Saved\\Extraction\\td_wp02_native-blueprints_after_20261114_01\\Run.json",
+  "exit_code": 0,
+  "pid": 30148,
+  "result": "passed",
+  "finished_utc": "2026-11-14T00:34:44.529801+00:00"
+}
